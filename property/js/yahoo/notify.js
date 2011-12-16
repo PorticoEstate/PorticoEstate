@@ -21,6 +21,14 @@ var Button_0_0, Button_0_1, Button_0_2;
 	};
 */
 
+//	var notify_table_count defined in property_notify::get_yui_table_def()
+//	var notify_lang_view defined in property_notify::get_yui_table_def()
+
+	YAHOO.widget.DataTable.formatLink_notify = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+datatable[notify_table_count][0]["edit_action"]+"&ab_id="+oData+" title='"+oData+"'>"+notify_lang_view+"</a>";
+	};
+
 	var FormatterRight_notify = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
@@ -69,7 +77,7 @@ var Button_0_0, Button_0_1, Button_0_2;
 	{
 		if(!base_java_url['location_item_id'])
 		{
-			alert('Posten må lagres før kontakter kan tilordnes');
+			alert(notify_lang_alert); // notify_lang_alert is defined in php-class property_notify::get_yui_table_def()
 			return;
 		}	
 		var oArgs = {menuaction:'property.uilookup.addressbook',column:'notify_contact'};

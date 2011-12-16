@@ -825,11 +825,33 @@
 
 	</div>
 
-	<xsl:choose>
-		<xsl:when test="suppresscoordination =''">
-
-			<div id="coordination">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+	<div id="coordination">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:variable name="lang_contact_statustext"><xsl:value-of select="php:function('lang', 'click this link to select')" /></xsl:variable>
+			<tr>
+				<td valign="top">
+					<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
+						<xsl:value-of select="php:function('lang', 'contact')" />
+					</a>
+				</td>
+				<td><table><tr><td>
+					<input type="hidden" id = "notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
+					</input>
+					<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly = 'readonly' title="{$lang_contact_statustext}"/>
+				</td></tr></table></td>
+			</tr>
+			<tr>
+				<td valign = "top" class="th_text">
+					<xsl:value-of select="php:function('lang', 'notify')" />
+				</td>
+				<td >
+					<div id="paging_3"> </div>
+					<div id="datatable-container_3"></div>
+					<div id="datatable-buttons_3"></div>
+				</td>
+			</tr>
+			<xsl:choose>
+				<xsl:when test="suppresscoordination =''">
 					<tr>
 						<td>
 							<xsl:value-of select="lang_key_fetch"/>
@@ -868,41 +890,37 @@
 							</xsl:for-each>
 						</td>
 					</tr>
-				</table>
-			</div>
-		</xsl:when>
-	</xsl:choose>
-
-	<div id="documents">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-
-			<xsl:choose>
-				<xsl:when test="files!=''">
-					<!-- <xsl:call-template name="file_list"/> -->
+				</xsl:when>
+			</xsl:choose>
+		</table>
+	</div>
+	<xsl:choose>
+		<xsl:when test="value_workorder_id!=''">
+			<div id="documents">
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<tr>
 						<td align="left" valign="top">
 							<xsl:value-of select="//lang_files"/>
 						</td>
 						<td>
-							<div id="datatable-container_1"></div>
+						<div id="datatable-container_1"></div>
 						</td>
 					</tr>				
-				</xsl:when>
-			</xsl:choose>
-
-			<xsl:call-template name="file_upload"/>
-		</table>
-
-	</div>
-	<div id="history">
-
-		<div id="paging_0"> </div>
-		<div id="datatable-container_0"></div>	
-
+					<xsl:call-template name="file_upload"/>
+				</table>
+			</div>
+			<div id="history">
+				<div id="paging_0"> </div>
+				<div id="datatable-container_0"></div>	
+			</div>
+		</xsl:when>
+	</xsl:choose>
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
+			var myButtons = new Array();
 
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
@@ -919,9 +937,11 @@
 			<xsl:for-each select="myColumnDefs">
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
 		</script>
 
-	</div>
 </div>
 </div>
 <table>

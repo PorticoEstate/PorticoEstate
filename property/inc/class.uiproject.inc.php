@@ -1241,7 +1241,7 @@
 							)
 							{
 								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
-								$to[] = $prefs_coordinator['email'];
+								$toarray[] = $prefs_coordinator['email'];
 							}
 						}
 						
@@ -1691,12 +1691,7 @@
 
 				);
 
-			
-			$content_notify = array();
-
-			$notify				= CreateObject('property.notify');
-
-			$notify_info = $notify->get_yui_table_def(array
+			$notify_info = execMethod('property.notify.get_yui_table_def',array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id,

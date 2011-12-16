@@ -845,8 +845,9 @@
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
 
-			$config->read();
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 
+			$config->read();
 
 			$origin						= phpgw::get_var('origin');
 			$origin_id					= phpgw::get_var('origin_id', 'int');
@@ -1056,6 +1057,84 @@
 							$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 						}
 					}
+					$toarray = array();
+					$toarray_sms = array();
+
+					if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
+//				 		&& $config->config_data['mailnotification'])
+						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
+					)
+					{
+						if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
+						{
+							$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
+							$toarray[] = $prefs_coordinator['email'];
+						}
+					}
+
+						$notify_list = execMethod('property.notify.read', array
+							(
+								'location_id'		=> $location_id,
+								'location_item_id'	=> $id
+							)
+						);
+
+					$subject=lang('workorder %1 has been edited',$id);
+					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+					$sms	= CreateObject('sms.sms');
+
+					foreach($notify_list as $entry)
+					{
+						if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+						{
+							$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+						}
+						else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+						{
+							$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+							$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+						}
+					}
+					unset($entry);
+
+					if($toarray_sms)
+					{
+						$historylog->add('MS',$id,implode(',',$toarray_sms));						
+					}
+						
+					if ($toarray)
+					{
+						$to = implode(';',$toarray);
+						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
+						foreach($receipt['notice_owner'] as $notice)
+						{
+							$body .= $notice . "\n";
+						}
+						$body .= lang('Altered by') . ': ' . $from_name . "\n";
+						$body .= lang('remark') . ': ' . $values['remark'] . "\n";
+						$body = nl2br($body);
+
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+
+						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+
+						if (!$returncode)	// not nice, but better than failing silently
+						{
+							$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
+							$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+						}
+						else
+						{
+							$historylog->add('ON', $id, lang('%1 is notified',$to));
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
+						}
+					}
 				}
 			}
 
@@ -1093,45 +1172,7 @@
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
-				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
-					//				 		&& $config->config_data['mailnotification'])
-					&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-				)
-				{
-					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
-					{
-						$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
-						$to = $prefs_coordinator['email'];
-						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
-						foreach($receipt['notice_owner'] as $notice)
-						{
-							$body .= $notice . "\n";
-						}
-						$body .= lang('Altered by') . ': ' . $from_name . "\n";
-						$body .= lang('remark') . ': ' . $values['remark'] . "\n";
-						$body = nl2br($body);
 
-						if (!is_object($GLOBALS['phpgw']->send))
-						{
-							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-						}
-
-						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('workorder %1 has been edited',$id),$body, false,false,false, $from_email, $from_name, 'html');
-
-						if (!$returncode)	// not nice, but better than failing silently
-						{
-							$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
-							$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-						}
-						else
-						{
-							$historylog->add('ON', $id, lang('%1 is notified',$to));
-							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
-						}
-					}
-				}
 
 				if( $project['key_fetch'] && !$values['key_fetch'])
 				{
@@ -1507,8 +1548,18 @@
 														))
 				);
 
-
-
+			$notify_info = execMethod('property.notify.get_yui_table_def',array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id,
+									'count'				=> count($myColumnDefs)
+								)
+							);
+			
+			$datavalues[] 	= $notify_info['datavalues'];
+			$myColumnDefs[]	= $notify_info['column_defs'];
+			$myButtons		= array();
+			$myButtons[]	= $notify_info['buttons'];
 
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
@@ -1541,8 +1592,9 @@
 					'suppresscoordination'					=> $suppresscoordination,
 					'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'								=> $datavalues,
-					'myColumnDefs'							=> $myColumnDefs,		
-					'tabs'									=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
+					'myColumnDefs'							=> $myColumnDefs,
+					'myButtons'								=> $myButtons,
+					'tabs'									=> self::_generate_tabs(array(),array('documents' => $id?false:true, 'history' => $id?false:true)),
 					'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'						=> isset($origin)?$origin:'',
@@ -1709,6 +1761,7 @@
 					'lang_upload_file'						=> lang('Upload file'),
 					'lang_file_statustext'					=> lang('Select file to upload'),
 					'value_billable_hours'					=> $values['billable_hours'],
+					'base_java_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 				);
 
 			$appname						= lang('Workorder');

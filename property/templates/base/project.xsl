@@ -561,8 +561,8 @@
 					</script>
 		</div>
 		<div id="coordination">
-		<xsl:variable name="lang_contact_statustext"><xsl:value-of select="php:function('lang', 'click this link to select')" /></xsl:variable>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+				<xsl:variable name="lang_contact_statustext"><xsl:value-of select="php:function('lang', 'click this link to select')" /></xsl:variable>
 				<tr>
 					<td valign="top">
 						<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
@@ -570,7 +570,7 @@
 						</a>
 					</td>
 					<td><table><tr><td>
-						<input size="5" type="hidden" id = "notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
+						<input type="hidden" id = "notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
 						</input>
 						<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly = 'readonly' title="{$lang_contact_statustext}"/>
 					</td></tr></table></td>
