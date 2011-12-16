@@ -70,20 +70,20 @@
 
 		public function read($data = array())
 		{
-			if(!isset($data['location_id']) || !isset($data['location_item_id']))
+			if(!isset($data['location_id']) || !isset($data['location_item_id']) || !$data['location_item_id'])
 			{
 				throw new Exception("property_notify::read() - Missing location info in input");
 			}	
 
 			$location_id = (int) $data['location_id'];
-			$location_item_id = (int) $data['location_item_id'];
+			$location_item_id = $data['location_item_id']; // in case of bigint
 			
 			$sql = "SELECT phpgw_notification.id, phpgw_notification.contact_id,phpgw_notification.user_id,"
 			. " phpgw_notification.is_active,phpgw_notification.entry_date,phpgw_notification.notification_method,"
 			. " first_name, last_name"
 			. " FROM phpgw_notification"
 			. " {$this->_join} phpgw_contact_person ON phpgw_notification.contact_id = phpgw_contact_person.person_id"
-			. " WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
+			. " WHERE location_id = {$location_id} AND location_item_id = '{$location_item_id}'";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$values		= array();
@@ -115,7 +115,7 @@
 				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];
 				$entry['is_active_text'] = $entry['is_active'] ? $lang_yes : $lang_no;
 			}
-//_debug_array($values);
+
 			return $values;
 		}
 
@@ -128,18 +128,17 @@
 
 		public function get_yui_table_def($data = array())
 		{
-//_debug_array($data);die();
-			if(!isset($data['location_id']) || !isset($data['location_item_id']))
-			{
-				throw new Exception("property_notify::get_yui_table_def() - Missing location info in input");
-			}	
-
 			if(!isset($data['count']))
 			{
 				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");			
 			}	
 
-			$content = $this->read($data);
+			$content = array();
+
+			if(isset($data['location_id']) && isset($data['location_item_id']))
+			{
+				$content = $this->read($data);
+			}	
 
 			$count = (int)$data['count'];
 			$datavalues = array
@@ -183,15 +182,13 @@
 				))
 			);
 
-
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'notify', 'property' );
 
 			$lang_view = lang('view');
 			$code = <<<JS
-	YAHOO.widget.DataTable.formatLink_notify = function(elCell, oRecord, oColumn, oData)
-	{
-	  	elCell.innerHTML = "<a href="+datatable[{$count}][0]["edit_action"]+"&ab_id="+oData+" title='"+oData+"'>{$lang_view}</a>";
-	};
+	var notify_table_count = {$count};
+	var notify_lang_view = "{$lang_view}";
+	var notify_lang_alert = "Posten må lagres før kontakter kan tilordnes";
 
 	this.refresh_notify_contact=function()
 	{
@@ -236,14 +233,11 @@
 			execute_async(myDataTable_{$count});
 		}
 	}
-
-
 JS;
 			$GLOBALS['phpgw']->js->add_code($namespace, $code);
 
 			return array('datavalues' => $datavalues, 'column_defs' => $column_defs, 'buttons' => $buttons);
 		}
-
 
 		public function update_data()
 		{
