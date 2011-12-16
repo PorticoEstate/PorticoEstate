@@ -69,7 +69,8 @@ criteria_helptext	activitycalendarfrontend	no	Feltene må fylles ut for at aktiv
 what	activitycalendarfrontend	no	HVA
 where_when	activitycalendarfrontend	no	HVOR/NÅR
 who	activitycalendarfrontend	no	HVEM
-arena_helptext	activitycalendarfrontend	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.
+arena_helptext	activitycalendarfrontend	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.<br/>Dersom ikke arena som skal benyttes finnes i listen, kan du registrere en ny.<br/>Velg "Ny arena" i nedtrekksmenyen for Eksterne bygg og oppgi deretter riktig navn og adresse på arenaen.
+new_arena	activitycalendarfrontend	no	Ny Arena
 external_arena	activitycalendarfrontend	no	Eksterne bygg
 category_helptext	activitycalendarfrontend	no	Velg kategori
 target_helptext	activitycalendarfrontend	no	Velg målgruppe(r)
@@ -89,3 +90,4 @@ edit_activity	activitycalendarfrontend	no	Endre aktivitet
 activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker å endre fra listen under.
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
+address	activitycalendarfrontend	no	Adresse

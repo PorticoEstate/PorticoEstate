@@ -20,6 +20,19 @@ function checkNewGroup()
 	}
 }
 
+function checkNewArena()
+{
+	var arena_selected = document.getElementById('arena_id').value;
+	if(arena_selected == 'new_arena')
+	{
+		document.getElementById('new_arena_fields').style.display = "block";
+	}
+	else
+	{
+		document.getElementById('new_arena_fields').style.display = "none";
+	}
+}
+
 function get_address_search()
 {
 	var address = document.getElementById('address_txt').value;
@@ -28,6 +41,28 @@ function get_address_search()
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+
+function get_address_search_arena()
+{
+	var address = document.getElementById('arena_address_txt').value;
+	var div_address = document.getElementById('arena_address_container');
+
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"arena_address\" id=\"arena_address\" size\"5\">";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -64,12 +99,19 @@ var divcontent_end = "</select>";
 	
 }
 
+function run_checks()
+{
+	check_external();
+	checkNewArena();
+}
+
 function check_internal()
 {
 	if(document.getElementById('internal_arena_id').value != null && document.getElementById('internal_arena_id').value > 0)
 	{
 		//disable external arena drop-down
 		document.getElementById('arena_id').disabled="disabled";
+		document.getElementById('new_arena_fields').style.display = "none";
 	}
 	else
 	{
@@ -80,7 +122,7 @@ function check_internal()
 
 function check_external()
 {
-	if(document.getElementById('arena_id').value != null && document.getElementById('arena_id').value > 0)
+	if(document.getElementById('arena_id').value != null && (document.getElementById('arena_id').value > 0 || document.getElementById('arena_id').value == 'new_arena'))
 	{
 		//disable internal arena drop-down
 		document.getElementById('internal_arena_id').disabled="disabled";
@@ -89,6 +131,7 @@ function check_external()
 	{
 		//enable internal arena drop-down
 		document.getElementById('internal_arena_id').disabled="";
+		document.getElementById('new_arena_fields').style.display = "none";
 	}
 }
 
@@ -236,8 +279,9 @@ function allOK()
 					<?php
 					$current_arena_id = $activity->get_arena();
 					?>
-					<select name="arena_id" id="arena_id" onchange="javascript: check_external();">
+					<select name="arena_id" id="arena_id" onchange="javascript: run_checks();">
 						<option value="0">Ingen arena valgt</option>
+						<option value="new_arena">Ny arena</option>
 						<?php
 						foreach($arenas as $arena)
 						{
@@ -246,6 +290,20 @@ function allOK()
 						?>
 					</select>
 				</dd>
+				<span id="new_arena_fields" style="display: none;">
+					<dt>
+						<label for="new_arena"><?php echo lang('new_arena') ?></label>
+					</dt>
+					<dt><label for="arena_name"><?php echo lang('name') ?></label></dt>
+					<dd><input type="text" name="arena_name" id="arena_name" /></dd>
+					<dt><label for="arena_address"><?php echo lang('address') ?></label></dt>
+					<dd><input type="text" name="arena_address_txt" id="arena_address_txt" onkeyup="javascript:get_address_search_arena()"/>
+					<div id="arena_address_container"></div>
+					<label for="arena_number">Nummer</label>
+					<input type="text" name="arena_number"/><br/>
+					<label for="arena_postaddress">Postnummer og Sted</label>
+					<input type="text" name="arena_postaddress"/></dd>
+				</span>
 				<dt>
 					<label for="time"><?php echo lang('time') ?></label>
 				</dt>
