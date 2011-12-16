@@ -358,7 +358,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id);
-			
+		
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$data = array
@@ -366,7 +366,7 @@
 				'check_list' 		=> $check_list,
 				'date_format' 		=> $date_format
 			);
-	
+			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');

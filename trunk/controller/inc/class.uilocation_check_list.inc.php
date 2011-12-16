@@ -77,7 +77,6 @@
 		
 		public function view_calendar_for_month()
 		{
-			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
@@ -88,9 +87,7 @@
 			$from_date = strtotime("$from_month/01/$year");
 			$to_month = $from_month + 1;
 			$to_date = strtotime("$to_month/01/$year+1");
-						
-			$control = $this->so_control->get_single($control_id);
-			
+									
 			if(empty($location_code)){
 				$location_code = "1101";	
 			}
@@ -125,7 +122,6 @@
 		
 		public function view_calendar_for_year()
 		{
-			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			
@@ -134,22 +130,20 @@
 			$from_date = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date = strtotime("01/01/$to_year");	
-			
-			$control = $this->so_control->get_single($control_id);
-			
+						
 			if(empty($location_code)){
 				$location_code = "1101";	
 			}
 			
 			$this->calendar_builder = new calendar_builder($from_date, $to_date);
-			
+
 			// Gets an array of controls that contains check_lists for the specified location
 			$agg_check_list_array = $this->so->get_agg_check_lists_for_location( $location_code, $from_date, $to_date );
 			$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array( $agg_check_list_array );
-		
+			
 			$repeat_type = 2;
-			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, $controls_calendar_array, 12, "view_months" );
+			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_check_list_array, $controls_calendar_array, 12, "view_months" );
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -166,7 +160,6 @@
 			);
 			
 			self::render_template_xsl('view_calendar_year', $data);
-			
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
