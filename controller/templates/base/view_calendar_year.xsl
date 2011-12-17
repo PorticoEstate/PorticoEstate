@@ -25,6 +25,7 @@
 					<div class="date">Slutt dato</div>
 					<div class="frequency">Frekvenstype</div>
 					<div class="frequency">Frekvensintervall</div>
+					<div class="months">
 					<xsl:for-each select="heading_array">
 						<div>
 							<a>
@@ -39,6 +40,7 @@
 							</a>				
 						</div>
 					</xsl:for-each>
+					</div>
 				</li>
 			
 			  	<xsl:for-each select="controls_calendar_array">
@@ -69,6 +71,7 @@
 						<div class="frequency">
 			      			<xsl:value-of select="control/repeat_interval"/>
 						</div>							
+						<div class="months">
 						<xsl:for-each select="calendar_array">
 				    		<xsl:choose>
 								<xsl:when test="status = 0">
@@ -120,6 +123,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:for-each>
+						</div>
 					</li>	
 				</xsl:for-each>	
 			</xsl:when>
