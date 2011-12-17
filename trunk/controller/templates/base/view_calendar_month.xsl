@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
 
 <div id="main_content">
 			
@@ -52,7 +53,6 @@
 		
 		<xsl:choose>
 			<xsl:when test="controls_calendar_array/child::node()">
-			
 			<ul style="clear:left;" class="calendar info">
 				<li class="heading">
 					<div class="id">ID</div>
@@ -114,15 +114,29 @@
 												<xsl:text>&amp;date=</xsl:text>
 												<xsl:value-of select="info/date"/>
 												<xsl:text>&amp;control_id=</xsl:text>
-												<xsl:value-of select="//control/id"/>
+												<xsl:value-of select="info/control_id"/>
 												<xsl:text>&amp;location_code=</xsl:text>
-												<xsl:value-of select="//location_array/location_code"/>
+												<xsl:value-of select="$location_code"/>
 											</xsl:attribute>
 											<img height="15" src="controller/images/status_icon_yellow.png" />
 										</a>
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 1">
+										<div>
+											<a class="view_check_list">
+											 	<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/id"/>
+												</xsl:attribute>
+												<span style="display:none"><xsl:value-of select="info/id"/></span>
+												<img height="15" src="controller/images/status_icon_light_green.png" />
+											</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 2">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
@@ -135,6 +149,11 @@
 												<span style="display:none"><xsl:value-of select="info/id"/></span>
 												<img height="15" src="controller/images/status_icon_red.png" />
 											</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 5">
+										<div>
+											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
 									<xsl:otherwise>
