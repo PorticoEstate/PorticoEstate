@@ -635,7 +635,7 @@
 			}
 		}
 
-		function add($ticket)
+		function add(&$ticket)
 		{
 			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
@@ -754,6 +754,7 @@
 
 			$receipt['message'][]=array('msg'=>lang('Ticket %1 has been saved',$id));
 			$receipt['id']	= $id;
+			$ticket['id'] = $id; //returned by reference
 			return $receipt;
 		}
 
@@ -870,10 +871,11 @@
 			return $receipt;
 		}
 
-		function update_ticket($ticket,$id = 0, $receipt = array())
+		function update_ticket(&$ticket,$id = 0, $receipt = array())
 		{
 			$this->fields_updated = array();
 			$id = (int) $id;
+			$ticket['id'] = $id;
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
