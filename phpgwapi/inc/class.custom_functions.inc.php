@@ -339,7 +339,7 @@
 			$location = $this->_db->db_addslashes($location);
 			$id = (int)$id;
 			
-			$sql = 'SELECT * FROM phpgw_cust_function '
+			$sql = 'SELECT phpgw_cust_function.* FROM phpgw_cust_function '
 				. " {$this->_join} phpgw_locations ON phpgw_cust_function.location_id = phpgw_locations.location_id"
 				. " {$this->_join} phpgw_applications ON phpgw_applications.app_id = phpgw_locations.app_id"
 				. " WHERE phpgw_applications.app_name = '{$appname}'"
