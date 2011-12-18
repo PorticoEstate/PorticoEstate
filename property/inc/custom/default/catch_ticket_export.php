@@ -10,7 +10,8 @@
 		protected $db;
 		protected $config = array();
 		protected $status_text = array();
-		protected $connection = false;		
+		protected $connection = false;
+		protected $custom_config;	
 
 		function __construct()
 		{
@@ -19,8 +20,80 @@
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$this->config = $custom_config->config_data;
 			$this->status_text = parent::get_status_text();
+			if($this->acl_location != '.ticket')
+			{
+				throw new Exception("'catch_ticket_export'  is intended for location = '.ticket'");
+			}
+
+			if(!isset($this->config['catch_export']) || !$this->config['catch_export'])
+			{
+				$this->custom_config = $custom_config;
+				$this->initiate_config();
+			}
 		}
 		
+		protected function initiate_config()
+		{
+			$receipt_section = $this->custom_config->add_section(array
+				(
+					'name' => 'catch_export',
+					'descr' => 'Catch export'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'host',
+					'descr'			=> 'Host'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'user',
+					'descr'			=> 'User'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'password',
+					'name'			=> 'password',
+					'descr'			=> 'Password'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'listbox',
+					'name'			=> 'export_method',
+					'descr'			=> 'Export method'
+				)
+			);
+				$receipt = $this->custom_config->edit_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'attrib_id'		=> $receipt['attrib_id'],
+					'input_type'	=> 'listbox',
+					'name'			=> 'export_method',
+					'descr'			=> 'Export method',
+					'new_choice' 	=> 'ftp'
+				)
+			);
+			$receipt = $this->custom_config->edit_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'attrib_id'		=> $receipt['attrib_id'],
+					'input_type'	=> 'listbox',
+					'name'			=> 'export_method',
+					'descr'			=> 'Export method',
+					'new_choice' 	=> 'ssh'
+				)
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')) );
+		}
 
 		function export_ticket($ticket)
 		{
@@ -100,7 +173,7 @@
 			$xml = $doc->saveXML();
 
 //			echo $xml;
-			_debug_array($this->config);
+//			_debug_array($this->config);
 		
 			$filename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$guid}.xml";
 
