@@ -49,6 +49,7 @@
 				'edit'		=> true,
 				'delete'	=> true,
 				'list_alarm'=> true,
+				'run'		=> true
 			);
 
 		function property_uialarm()
@@ -102,7 +103,7 @@
 			}
 			else if(isset($values['test_cron']) && $values['test_cron'] && isset($values['alarm']) && $values['alarm'])
 			{
-				$this->bo->test_cron();
+				$this->bo->test_cron($values['alarm']);
 			}
 
 			$datatable = array();
@@ -317,6 +318,30 @@
 			}
 
 			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'alarm_id'
+						),
+					)
+				);
+
+
+			$datatable['rowactions']['action'][] = array(
+				'my_name'		=> 'edit',
+				'text' 			=> lang('run'),
+				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				(
+					'menuaction'	=> 'property.uialarm.run',
+				)),
+				'parameters'		=> $parameters
+			);
+
 			$datatable['rowactions']['action'][] = array(
 				'my_name'		=> 'add',
 				'text' 			=> lang('add'),
@@ -791,7 +816,7 @@
 
 		function edit()
 		{
-			$method_id 	= phpgw::get_var('method_id', 'int', 'POST');
+			$method_id 	= phpgw::get_var('method_id', 'int');
 			$async_id	= urldecode(phpgw::get_var('async_id'));
 			$values		= phpgw::get_var('values');
 
@@ -801,7 +826,7 @@
 				$method_id = $async_id_elements[1];
 			}
 
-			$this->method_id = ($method_id?$method_id:$this->method_id);
+			$this->method_id = $method_id ? $method_id : $this->method_id;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('alarm'));
 
@@ -828,7 +853,7 @@
 
 				if(!$receipt['error'])
 				{
-					$this->method_id = ($values['method_id']?$values['method_id']:$this->method_id);
+					$this->method_id =  $values['method_id'] ? $values['method_id'] : $this->method_id;
 
 					$values['alarm_id']	= $alarm_id;
 
@@ -859,7 +884,8 @@
 			if ($async_id)
 			{
 				$alarm = $this->bo->read_alarm($alarm_type='fm_async',$async_id);
-				$this->method_id = ($alarm['event_id']?$alarm['event_id']:$this->method_id);
+
+				$this->method_id =  $alarm['event_id'] ? $alarm['event_id'] : $this->method_id;
 			}
 
 			$link_data = array
@@ -980,5 +1006,37 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-	}
 
+		function run()
+		{
+			$id	= phpgw::get_var('id');
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+
+			$link_data = array
+			(
+				'menuaction' => 'property.uialarm.index'
+			);
+
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			{
+				$this->bo->test_cron(array($id => $id));
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
+
+			$data = array
+				(
+					'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uialarm.run', 'id'=> $id)),
+					'lang_confirm_msg'		=> lang('do you really want to run this entry'),
+					'lang_yes'				=> lang('yes'),
+					'lang_yes_statustext'	=> lang('Run'),
+					'lang_no_statustext'	=> lang('Back to the list'),
+					'lang_no'				=> lang('no')
+				);
+
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::cron::run";
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+		}
+	}

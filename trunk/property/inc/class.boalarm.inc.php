@@ -349,11 +349,23 @@
 		}
 
 
-		function test_cron()
+		function test_cron($alarm)
 		{
-			$this->async->check_run('crontab');
-		}
 
+			$ids = array_values($alarm);
+			foreach ($ids as $id)
+			{
+				$event = $this->async->read($id);
+			}
+			
+			if(isset($event[$id]) && $event[$id] &&  $event[$id]['method'] && $event[$id]['data']['enabled'])
+			{
+				echo "execMethod({$event[$id]['method']},";
+				_debug_array($event[$id]['data']);
+				echo ');';
+				execMethod($event[$id]['method'],$event[$id]['data']);
+			}
+		}
 
 		function send_alarm($alarm)
 		{
