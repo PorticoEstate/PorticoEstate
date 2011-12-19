@@ -334,6 +334,9 @@
 						(
 							'activity' 	=> $activity,
 							'organizations' => $organizations,
+							'organization' => $organization,
+							'contact1' => $persons[0],
+							'contact2' => $persons[1],
 							'org_name' => $org_name,
 							'groups' => $groups,
 							'arenas' => $arenas,
