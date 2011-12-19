@@ -2867,7 +2867,7 @@
 				$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 				$subject = lang(Approval).": ".$ticket['order_id'];
-				$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id)).'">' . lang('Workorder %1 needs approval',$ticket['order_id']) .'</a>';
+				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.view', 'id'=> $id),false,true).'">' . lang('Workorder %1 needs approval',$ticket['order_id']) .'</a>';
 
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{

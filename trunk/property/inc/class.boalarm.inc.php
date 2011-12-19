@@ -400,7 +400,7 @@
 
 			$body = lang('Alarm').' #'.$alarm['event_id']."\n";
 			$body .= lang('Name').': '.$alarm['event_name']."\n";
-			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$info[0]}.edit", 'id'=> $info[1])).'">' . $alarm['event_name'] ."</a>\n";
+			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$info[0]}.edit", 'id'=> $info[1]),false,true).'">' . $alarm['event_name'] ."</a>\n";
 			if(!is_array($alarm['time']))
 			{
 				$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
