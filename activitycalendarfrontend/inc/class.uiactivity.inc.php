@@ -125,6 +125,13 @@
 				//$persons = $this->so_organization->get_contacts($o_id);				
 				//$organization = $this->so_organization->get_single($o_id);
 				
+				$get_org_from_local = false;
+				$new_org = phpgw::get_var('new_org');
+				if($new_org != null && $new_org == 'yes')
+				{
+					$get_org_from_local = true;
+				}
+				
 				if($o_id == "new_org")
 				{
 					$activity->set_new_org(true);
@@ -169,6 +176,7 @@
 					$person_ids = $this->so_organization->get_contacts_local($o_id);
 					$desc = phpgw::get_var('org_description');
 					$organization = $this->so_organization->get_organization_local($o_id);
+					$new_org = true;
 					//var_dump($organization);
 				}
 				else if(is_numeric($o_id) && $o_id > 0)
@@ -224,15 +232,30 @@
 					}
 					else if(isset($o_id) && is_numeric($o_id) && $o_id > 0)
 					{
-						$person_ids = $this->so_organization->get_contacts($o_id);
-						$person_arr = $this->so_contact->get_local_contact_persons($o_id);
-						foreach($person_arr as $p)
+						if($get_org_from_local)
 						{
-							//var_dump($p);
-							$persons[] = $p;
+							$person_arr = $this->so_contact->get_local_contact_persons($o_id);
+							foreach($person_arr as $p)
+							{
+								//var_dump($p);
+								$persons[] = $p;
+							}
+							$person_ids = $this->so_organization->get_contacts_local($o_id);
+							$desc = $this->so_organization->get_description_local($o_id);
+							$organization = $this->so_organization->get_organization_local($o_id);
 						}
-						$desc = $this->so_organization->get_description($o_id);
-						$organization = $this->so_organization->get_single($o_id);
+						else
+						{
+							$person_ids = $this->so_organization->get_contacts($o_id);
+							$person_arr = $this->so_contact->get_local_contact_persons($o_id);
+							foreach($person_arr as $p)
+							{
+								//var_dump($p);
+								$persons[] = $p;
+							}
+							$desc = $this->so_organization->get_description($o_id);
+							$organization = $this->so_organization->get_single($o_id);
+						}
 					}
 				}
 				
@@ -334,7 +357,11 @@
 						(
 							'activity' 	=> $activity,
 							'organizations' => $organizations,
+							'organization' => $organization,
+							'contact1' => $persons[0],
+							'contact2' => $persons[1],
 							'org_name' => $org_name,
+							'new_org' => $new_org,
 							'groups' => $groups,
 							'arenas' => $arenas,
 							'buildings' => $buildings,

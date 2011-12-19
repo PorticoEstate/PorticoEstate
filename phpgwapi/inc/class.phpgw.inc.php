@@ -174,15 +174,16 @@
 		 * will use PHP_SELF. Wrapper to session->link()
 		 *
 		 * @access public
-		 * @param string $string The url the link is for
-		 * @param string $extravars	Extra params to be passed to the url
-		 * @param string $redirect is the resultant link being used in a header('Location:' ... redirect?
+		 * @param string  $string The url the link is for
+		 * @param array   $extravars	Extra params to be passed to the url
+		 * @param boolean $redirect is the resultant link being used in a header('Location:' ... redirect?
+		 * @param boolean $external is the resultant link being used as external access (i.e url in emails..)
 		 * @return string The full url after processing
 		 * @see	session->link()
 		 */
-		public function link($url = '', $extravars = array(), $redirect = false)
+		public function link($url = '', $extravars = array(), $redirect = false, $external = false)
 		{
-			return $this->session->link($url, $extravars, $redirect);
+			return $this->session->link($url, $extravars, $redirect, $external);
 		}
 
 		/**

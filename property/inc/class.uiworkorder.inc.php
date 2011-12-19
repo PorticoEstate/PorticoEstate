@@ -1037,7 +1037,7 @@
 						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 						$subject = lang(Approval).": ". $id;
-						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
+						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $id),false,true).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
 
 						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 						{
@@ -1131,7 +1131,7 @@
 						$to = implode(';',$toarray);
 						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
+						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id),false,true).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
 						foreach($receipt['notice_owner'] as $notice)
 						{
 							$body .= $notice . "\n";

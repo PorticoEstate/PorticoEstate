@@ -29,12 +29,12 @@ class calendar_builder {
 				if( $period_type == "view_months" )
 				{
 					$calendar_array[ date("n", $date) ]["status"]  = 0;
-					$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date);
+					$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());
 				}
 				else if( $period_type == "view_days" )
 				{
 					$calendar_array[ date("j", $date) ]["status"]  = 0;
-					$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date);	
+					$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());	
 				}
 			}
 			
@@ -47,34 +47,47 @@ class calendar_builder {
 
 				if( $check_list->get_status() == 0 ){
 					$check_list_status_info->set_status(0);
+					$status = 0;
 				}
-				else if( $check_list->get_status() == 1 & $check_list->get_planned_date() == 0)
+				else if( $check_list->get_status() == 1)
 				{
 					$check_list_status_info->set_status(1);
+					$status = 1;
 				}
 				else if( $check_list->get_status() == 2 & $check_list->get_completed_date() < $check_list->get_deadline() )
 				{
 					$check_list_status_info->set_status(2);
+					$status = 2;
 				}
 				else if( $check_list->get_status() == 3 & $check_list->get_completed_date() > $check_list->get_deadline() )
 				{
 					$check_list_status_info->set_status(3);
+					$status = 3;
 				}
 				else if( $check_list->get_status() == 4 )
 				{
 					$check_list_status_info->set_status(4);
+					$status = 4;
+				}
+				else if( $check_list->get_status() == 5 )
+				{
+					$check_list_status_info->set_status(5);
+					$status = 5;
 				}
 				
 				$check_list_status_info->set_deadline( date("d/m-Y", $check_list->get_deadline()) );
 				
+				echo "  " .  date("d/m-Y", $check_list->get_deadline()) . " ";
+				echo $check_list_status_info->get_id();
+				
 				if($period_type == "view_months")
 				{
-					$calendar_array[ date("n", $check_list->get_deadline()) ]["status"] = 1;
+					$calendar_array[ date("n", $check_list->get_deadline()) ]["status"] = $status;
 					$calendar_array[ date("n", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();	
 				}
 				else if( $period_type == "view_days" )
 				{
-					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = 1;
+					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = $status;
 					$calendar_array[ date("j", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();
 				}
 			}

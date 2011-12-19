@@ -1190,7 +1190,7 @@
 						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
 						$subject = lang(Approval).": ". $id;
-						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang('project %1 needs approval',$id) .'</a>';
+						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id),false,true).'">' . lang('project %1 needs approval',$id) .'</a>';
 
 						$bcc = '';//$from_email;
 
@@ -1282,7 +1282,8 @@
 							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
 							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-							$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
+							$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id),false, true).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
+
 							foreach($receipt['notice_owner'] as $notice)
 							{
 								$body .= $notice . "\n";
