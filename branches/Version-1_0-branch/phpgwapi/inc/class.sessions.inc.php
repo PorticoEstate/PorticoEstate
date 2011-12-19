@@ -535,10 +535,11 @@
 		* @param string  $url       a url relative to the phpgroupware install root
 		* @param array   $extravars query string arguements
 		* @param boolean $redirect  is this for a redirect link ?
+		* @param boolean $external is the resultant link being used as external access (i.e url in emails..)
 		*
 		* @return string generated url
 		*/
-		public function link($url, $extravars = array(), $redirect=false)
+		public function link($url, $extravars = array(), $redirect=false, $external = false)
 		{
 			//W3C Compliant in markup	
 			$term = '&amp;'; 
@@ -579,6 +580,14 @@
 				else
 				{
 					$url = "{$GLOBALS['phpgw_info']['server']['webserver_url']}{$url}";
+				}
+			}
+
+			if($external)
+			{
+				if(substr($url, 0, 4) != 'http')
+				{
+					$url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}{$url}";
 				}
 			}
 
@@ -625,27 +634,30 @@
 				}
 			}
 
-			/* add session params if not using cookies */
-			if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				|| !$GLOBALS['phpgw_info']['server']['usecookies'])
+			if(!$external)
 			{
-				if ( is_array($extravars) )
+				/* add session params if not using cookies */
+				if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
+					|| !$GLOBALS['phpgw_info']['server']['usecookies'])
 				{
-					$extravars = array_merge($extravars, $this->_get_session_vars());
+					if ( is_array($extravars) )
+					{
+						$extravars = array_merge($extravars, $this->_get_session_vars());
+					}
+					else
+					{
+						$extravars = $this->_get_session_vars();
+					}
 				}
-				else
+
+				//used for repost prevention
+				$extravars['click_history'] = $this->generate_click_history();
+
+				/* enable easy use of xdebug */
+				if ( isset($_REQUEST['XDEBUG_PROFILE']) )
 				{
-					$extravars = $this->_get_session_vars();
+					$extravars['XDEBUG_PROFILE'] = 1;
 				}
-			}
-
-			//used for repost prevention
-			$extravars['click_history'] = $this->generate_click_history();
-
-			/* enable easy use of xdebug */
-			if ( isset($_REQUEST['XDEBUG_PROFILE']) )
-			{
-				$extravars['XDEBUG_PROFILE'] = 1;
 			}
 
 			if ( is_array($extravars) ) //we have something to append

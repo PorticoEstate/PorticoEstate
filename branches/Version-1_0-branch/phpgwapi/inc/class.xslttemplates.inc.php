@@ -397,7 +397,7 @@ XSLT;
 			{
 				$message ='Systemfeil - kontakt adminstrator';
 
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && $GLOBALS['phpgw_info']['user']['apps']['admin'])
+				if(!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) || !$GLOBALS['phpgw_info']['user']['apps']['admin'])
 				{
 					phpgwapi_cache::message_set($message, 'error');
 				}
@@ -408,15 +408,14 @@ XSLT;
 					echo '<div class="error">';
 					echo $message;
 					echo '</div>';
-				}
-/*
-				_debug_array(libxml_get_last_error());
-				echo "<h2>xml-data</h2>";
-				$this->list_lineno($this->xmldata, true);
+					_debug_array(libxml_get_last_error());
+					echo "<h2>xml-data</h2>";
+					$this->list_lineno($this->xmldata, true);
 
-				echo "<h2>xsl-data</h2>";
-				$this->list_lineno($this->xsldata);
-*/
+					echo "<h2>xsl-data</h2>";
+					$this->list_lineno($this->xsldata);
+				}
+
 				return '';
 			}
 			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);

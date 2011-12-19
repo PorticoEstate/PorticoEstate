@@ -357,6 +357,11 @@
 							'text'	=> lang('Ticket status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_status') )
 						),
+						'ticket_config'	=> array
+						(
+							'text'	=> lang('ticket config'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')) )
+						),
 						'tenant'	=> array
 						(
 							'text'	=> lang('Tenant'),

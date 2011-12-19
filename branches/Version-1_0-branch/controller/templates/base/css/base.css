@@ -990,3 +990,13 @@ label.comment{
 #days_view div{
 	font-weight:bold;
 }
+.calendar .months {
+    margin-left: 20px;
+    width: 440px;
+    padding:0;
+}
+.calendar .months a{
+    text-decoration: none;
+    color:#000;
+}
+

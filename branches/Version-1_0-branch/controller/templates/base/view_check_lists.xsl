@@ -12,11 +12,11 @@
 		<fieldset class="check_list_details">
 			<label>Tittel</label><xsl:value-of select="control_as_array/title"/><br/>
 			<label>Startdato</label>
-			<xsl:if test="control_as_array/start_date != ''">
+			<xsl:if test="control_as_array/start_date != 0">
 				<xsl:value-of select="php:function('date', $date_format, number(control_as_array/start_date))"/><br/>
 			</xsl:if>
 			<label>Sluttdato</label>
-			<xsl:if test="control_as_array/end_date != ''">
+			<xsl:if test="control_as_array/end_date != 0">
 				<xsl:value-of select="php:function('date', $date_format, number(control_as_array/end_date))"/><br/>
 			</xsl:if>
 			<label>Frekvenstype</label><xsl:value-of select="control_as_array/repeat_type"/><br/>
