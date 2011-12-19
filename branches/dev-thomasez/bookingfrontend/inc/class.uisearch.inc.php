@@ -31,8 +31,9 @@
 			return array( "one" => "1-10",
 				"two" => "10-25",
 				"three" => "25-50",
-				"Four" => "50-100",
-				"Five" => "100+");
+				"four" => "50-100",
+				"five" => "100-300",
+				"six" => "300+");
 		}	
 
 		protected function regions()
@@ -82,12 +83,7 @@
 			$resource['fylke'] = phpgw::get_var('fylker', 'GET', null);
 			$resource['campsite'] = phpgw::get_var('campsites', 'GET', null);
 			$resource['beds'] = phpgw::get_var('bedspaces', 'GET', null);
-			$resource['region']['all'] = phpgw::get_var('all', 'GET', null);
-			$resource['region']['east'] = phpgw::get_var('east', 'GET', null);
-			$resource['region']['south'] = phpgw::get_var('south', 'GET', null);
-			$resource['region']['west'] = phpgw::get_var('west', 'GET', null);
-			$resource['region']['middle'] = phpgw::get_var('middle', 'GET', null);
-			$resource['region']['north'] = phpgw::get_var('north', 'GET', null);
+			$resource['region'] = phpgw::get_var('regions', 'GET', null);
 	
 			$search = null;
 			

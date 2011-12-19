@@ -333,6 +333,18 @@ ol li {
 #field_type {
 	margin-left: 5px;
 }
+#field_campsites {
+	margin-left: 5px;
+}
+#field_bedspaces {
+	margin-left: 5px;
+}
+#field_regions {
+	margin-left: 5px;
+}
+#field_fylker {
+	margin-left: 5px;
+}
 #regions input {
 	margin: 0px 5px 0px 3px;
 }

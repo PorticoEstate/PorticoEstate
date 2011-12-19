@@ -31,26 +31,19 @@
         F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
 	  <div class="settings" id="regions">
-		Region: 
-			<xsl:for-each select="resource/regions/*">
-				<input type="checkbox" name="{local-name()}" id="{local-name()}" /> 
-				<xsl:value-of select="string(node())"/>
-			</xsl:for-each> 
-	  </div>
-	  <div>
-			<select name='res' id='field_type'>
-			<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
-				<xsl:for-each select="resource/types/*">
+			<select name='regions' id='field_regions'>
+			<option value=''><xsl:value-of select="php:function('lang', 'Select Area')" />...</option>
+				<xsl:for-each select="resource/regions/*">
 					<option value="{local-name()}">
-						<xsl:if test="../../res = local-name()">
+						<xsl:if test="../../region = local-name()">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
-						<xsl:value-of select="php:function('lang', string(node()))"/>
+						<xsl:value-of select="string(node())"/>
 					</option>
 				</xsl:for-each>
-
 			</select>
-			<select name='fylker' id='field_type'>
+			<input type='hidden' value='{resource/fylke}' id='field_fylke' />			
+			<select name='fylker' id='field_fylker'>
 			<option value=''><xsl:value-of select="php:function('lang', 'Select County')" />...</option>
 				<xsl:for-each select="resource/fylker/*">
 					<option value="{local-name()}">
@@ -63,13 +56,26 @@
 			</select>
 	 </div>
 	<div class="settings" id="extrafields">
+		<select name='res' id='field_type'>
+		<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
+			<xsl:for-each select="resource/types/*">
+				<option value="{local-name()}">
+					<xsl:if test="../../res = local-name()">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="php:function('lang', string(node()))"/>
+				</option>
+			</xsl:for-each>
+		</select>
+		<div id="field_campsites">
 		Minimum antall plasser: 
 		<input type="text" size="3" id="campsites" name="campsites">
 			<xsl:if test="resource/campsite">
 				<xsl:attribute name="value"><xsl:value-of select="resource/campsite"/></xsl:attribute>
 			</xsl:if>
 		</input>						
-		<select name='bedspaces' id='field_type'>
+		</div>
+		<select name='bedspaces' id='field_bedspaces'>
 			<option value=''><xsl:value-of select="php:function('lang', 'Select bedspaces')" />...</option>
 			<xsl:for-each select="resource/bedspaces/*">
 				<option value="{local-name()}">

@@ -344,6 +344,7 @@ Cost Type	bookingfrontend	no	Pris type
 Perhour	bookingfrontend	no	Pr time
 Perday	bookingfrontend	no	Pr dag
 Perweek	bookingfrontend	no	Pr uke
+Select Area	bookingfrontend	no	Velg Region
 Select County	bookingfrontend	no	Velg Fylke
 East	bookingfrontend	no	Østlandet
 South	bookingfrontend	no	Sørlandet

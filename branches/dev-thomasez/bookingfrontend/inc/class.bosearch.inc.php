@@ -52,17 +52,97 @@
 						
 				$filters = array();
 
-#				if($resource['campsite'] != '') {
-#					$filters['where'] = "(campsites > ".$resource['campsite'].")";
-#				}
-				if($resource['res'] != '') {
-					$filters['type'] = $resource['res'];
-				}
-				$filters['active'] = "1";
+				if (($resource['region'] == '' || $resource['region'] == 'all')  && $resource['res'] == '')
+				{
+					$filters['active'] = "1";
+	                $res_result = $this->soresource->read(array("query"=>$searchterm, "filters" => $filters));
+				} else {
 
-#				echo "<pre>";print_r($filters);exit;
 
-                $res_result = $this->soresource->read(array("query"=>$searchterm, "filters" => $filters));
+					if ($resource['region'] == 'east') {
+						$regions = "('akerhus','oslo','ostfold','vestfold','hedemark','oppland','buskerud','telemark')";
+					}
+					elseif ($resource['region'] == 'south') {
+						$regions = "('vestagder','austagder')";
+					}					
+					elseif ($resource['region'] == 'west') {
+						$regions = "('rogaland','hordaland','sognogfjordane','moreogromsdal')";
+					}					
+					elseif ($resource['region'] == 'middle') {
+						$regions = "('nordtrodelag','sortrondelag')";
+					}					
+					elseif ($resource['region'] == 'north') {
+						$regions = "('finnmark','nordland','troms')";
+					} else {
+						$regions = '';
+					}				
+					if( $resource['fylke'] != '') {
+						$fylke = $resource['fylke'];
+					} else {
+						$fylke = '';
+					}
+					if ($resource['res'] != ''){
+						$ressurs = $resource['res'];
+						if(in_array($ressurs,array('House','Boat','Location'))) {
+							if ($resource['beds']=='one') {
+								$sengeplasser = '(br.bedspaces >= 1 and br.bedspaces <= 10)';
+							} 
+							elseif ($resource['beds']=='two') {
+								$sengeplasser = 'br.bedspaces >= 10 AND br.bedspaces <= 25';
+							}
+							elseif ($resource['beds']=='three') {
+								$sengeplasser = 'br.bedspaces >= 25 AND br.bedspaces <= 50';
+							}
+							elseif ($resource['beds']=='four') {
+								$sengeplasser = 'br.bedspaces >= 50 AND br.bedspaces <= 100';
+							}
+							elseif ($resource['beds']=='five') {
+								$sengeplasser = 'br.bedspaces >= 100 AND br.bedspaces <= 300';
+							}
+							elseif ($resource['beds']=='six') {
+								$sengeplasser = 'br.bedspaces >= 300';
+							}
+							$teltplasser = '';
+						} elseif(in_array($ressurs,array('Campsite'))) {
+							if ($resource['campsite'] != '') {
+								$teltplasser = 'br.campsites > '.$resource['campsite'];
+								$sengeplasser = '';
+							} else {
+								$teltplasser = '';
+								$sengeplasser = '';
+							}
+						} else {
+							$teltplasser = '';
+							$sengeplasser = '';
+						}
+
+					} else {
+						$ressurs = '';
+						$teltplasser = '';
+						$sengeplasser = '';
+					}
+
+					$wclause = '';
+
+					if($regions != '') {
+						$wclause .= " AND bb.district IN ".$regions;			
+					} 					
+					if($fylke != '') {
+						$wclause .= " AND bb.district = '".$fylke."'";						
+					} 					
+					if($ressurs != '') {
+						$wclause .= " AND br.type = '".$ressurs."'";						
+					} 					
+					if($teltplasser != '') {
+						$wclause .= ' AND '.$teltplasser;						
+					} 					
+					if($sengeplasser != '') {
+						$wclause .= ' AND '.$sengeplasser;						
+					} 					
+
+					$res_result = $this->soresource->getresources($searchterm,$wclause);
+
+				}				
 
                 foreach($res_result['results'] as &$res)
                 {
