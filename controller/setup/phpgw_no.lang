@@ -302,3 +302,7 @@ Bim_id	controller	no	Utstyr ID
 Bim_name	controller	no	Utstyrsnavn
 Bim_type	controller	no	Utstyrstype
 GUID	controller	no	GUID
+View_procedure	controller	Prosedyre
+View_documents_for_procedure	controller	no	Tilknyttede dokumenter
+Document title	controller	no	Dokumentets tittel:
+Document name	controller	no	Filnavn:

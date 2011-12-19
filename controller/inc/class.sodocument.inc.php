@@ -133,7 +133,7 @@ class controller_sodocument extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_document.id as document_id, controller_document.title as document_title, description, name, contract_id, party_id, controller_document_types.title as type_title';
+			$cols = 'controller_document.id as document_id, controller_document.title as document_title, description, name, procedure_id, controller_document_types.title as type_title';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -160,7 +160,7 @@ class controller_sodocument extends controller_socommon
 			$document->set_description($this->unmarshal($this->db->f('description',true),'string'));
 			$document->set_name($this->unmarshal($this->db->f('name',true),'string'));
 			$document->set_type($this->unmarshal($this->db->f('type_title',true),'string'));
-			$document->set_contract_id($this->unmarshal($this->db->f('contract_id',true),'int'));
+			$document->set_procedure_id($this->unmarshal($this->db->f('procedure_id',true),'int'));
 		}
 		return $document;
 	}
@@ -176,7 +176,7 @@ class controller_sodocument extends controller_socommon
 		);
 		
 		$procedure_id = $this->marshal($document->get_procedure_id(),'int');
-		$contract_id = $contract_id > 0 ? $contract_id : 'NULL';
+		$procedure_id = $procedure_id > 0 ? $procedure_id : 'NULL';
 		
 		
 		$values = array(

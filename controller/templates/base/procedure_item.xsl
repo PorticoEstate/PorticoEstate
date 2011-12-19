@@ -1,15 +1,10 @@
 <!-- $Id$ -->
 <!-- item  -->
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template name="view_procedure" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_booking_i18n"/>
 <xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
-<div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
-		<xsl:value-of select="php:function('lang', 'Procedure')" />
-</h1>
-</div>
 
 <div class="yui-content">
 		<div id="details">
