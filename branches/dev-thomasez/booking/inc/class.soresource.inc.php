@@ -136,6 +136,8 @@ WHERE br.building_id = bb.id AND br.activity_id = ba.id AND br.active = 1 ".$wcl
 				'sort'			=> null,
 				'dir'			=> 'asc'
 			);
+
+
 		}
 		
 		public static function allowed_types()
