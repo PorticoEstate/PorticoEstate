@@ -332,6 +332,9 @@ function allOK()
 				<dt>
 					<label for="organization_id"><?php echo lang('organization') ?></label>
 				</dt>
+					<?php if($new_org){?>
+						<input type="hidden" name="new_org" id="new_org" value="yes" />
+					<?php }?>
 					<?php if($new_organization){?>
 					<input type="hidden" name="organization_id" id="organization_id" value="new_org" />
 						<dt><label for="orgname">Organisasjonsnavn</label></dt>
