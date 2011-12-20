@@ -42,6 +42,10 @@
 						$("#days_view").animate({
 		                    left: '+=110' 
 		                    }, 800);
+					}else if(-502 == leftNumVal){
+						$("#days_view").animate({
+		                    left: '+=502' 
+		                    }, 800);
 					}else if(-502 > leftNumVal){
 						$("#days_view").animate({
 		                    left: '+=502' 
@@ -106,7 +110,7 @@
 					<li>
 						<xsl:for-each select="calendar_array">
 					    		<xsl:choose>
-									<xsl:when test="status = 0">
+									<xsl:when test="status = 'control_registered'">
 										<div>
 										<a>
 											<xsl:attribute name="href">
@@ -122,8 +126,39 @@
 										</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 1">
+									<xsl:when test="status = 'control_planned'">
 										<div>
+										<a>
+											<xsl:attribute name="href">
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
+												<xsl:text>&amp;date=</xsl:text>
+												<xsl:value-of select="info/date"/>
+												<xsl:text>&amp;control_id=</xsl:text>
+												<xsl:value-of select="info/control_id"/>
+												<xsl:text>&amp;location_code=</xsl:text>
+												<xsl:value-of select="$location_code"/>
+											</xsl:attribute>
+											<img height="15" src="controller/images/status_icon_light_green.png" />
+										</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
+										<div>
+											<a class="view_check_list">
+											 	<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/id"/>
+												</xsl:attribute>
+												<span style="display:none"><xsl:value-of select="info/id"/></span>
+												<img height="15" src="controller/images/status_icon_dark_green.png" />
+											</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
+										<div style="position:relative;">
+					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
@@ -136,7 +171,7 @@
 											</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 2">
+									<xsl:when test="status = 'control_accomplished_with_errors'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
@@ -151,7 +186,12 @@
 											</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 5">
+									<xsl:when test="status = 'control_canceled'">
+										<div>
+											<img height="12" src="controller/images/status_icon_red_cross.png" />
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 'control_not_accomplished'">
 										<div>
 											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
