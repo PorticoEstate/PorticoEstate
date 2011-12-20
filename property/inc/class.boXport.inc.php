@@ -304,7 +304,11 @@
 		{
 			if($data['enabled']==1)
 			{
-				$this->export($data);
+				$receipt = $this->export($data);
+	//			if(isset($data['manual']))
+				{
+					_debug_array($receipt);
+				}
 			}
 		}
 

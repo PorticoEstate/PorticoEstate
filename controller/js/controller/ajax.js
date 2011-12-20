@@ -133,18 +133,20 @@ $(document).ready(function(){
 	$('a.view_check_list').bind('contextmenu', function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
-		var requestUrl = $(thisA).attr("href");
+		
+		var add_param = $(thisA).find("span").text();
+		
+		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_check_list_info" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
 			  url: requestUrl,
 			  dataType: 'json',
 	    	  success: function(data) {
-	    		  
 	    		  if(data){
 	    			  var obj = jQuery.parseJSON(data);
-		    		  
-		    		  // Show info box with info about check list
+
+	    			  // Show info box with info about check list
 		    		  var infoBox = $(divWrp).find("#info_box");
 		    		  $(infoBox).show();
 		    		  $(infoBox).html("");
@@ -182,20 +184,77 @@ $(document).ready(function(){
 		
 		return false;
 	});
-
-	$("a.view_check_list").click(function(){
-		var thisA = $(this);
-		
-		var check_list_id = $(thisA).find("span").text();
-		
-		location.href = "http://portico/pe/index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location&check_list_id=" + check_list_id;
-		
-		return false;
-	});
 	
 	$("a.view_check_list").mouseout(function(){
 		var infoBox = $(this).parent().find("#info_box");
 		
 		$(infoBox).hide();
 	});
+	
+	// file: edit_check_list.xsl
+	$(".frm_save_check_item").submit(function(e){
+		e.preventDefault();
+		var thisForm = $(this);
+		var liWrp = $(this).parent();
+		var liWrpClone = $(liWrp).clone();
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action"); 
+
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		
+		    		  if(obj.saveStatus == "saved" & obj.fixedStatus == "fixed"){
+		    			  $(liWrp).fadeOut('3000', function() {
+		    				   				  
+		    				  $("#check_list_fixed_list").append(liWrpClone);
+		    				   				  
+		    				  $(liWrp).addClass("hidden");
+		    			  });
+		    			  
+					  }
+		    		  else if(obj.saveStatus == "saved" & obj.fixedStatus == "not_fixed"){
+		    			  
+		    			  var submitBnt = $(thisForm).find("input[type='submit']");
+		    				$(submitBnt).val("Lagret");	
+		    				  
+		    				// Changes text on save button back to original
+		    				window.setTimeout(function() {
+		    				  $(submitBnt).val('Lagre sjekkpunkt');
+		    				  $(submitBnt).addClass("not_active");
+		    					 }, 1000);
+					  }
+				  }
+				}
+			});
+	});
+	
+	// file: edit_check_list.xsl
+	$(".frm_save_control_item").submit(function(e){
+		e.preventDefault();
+		var thisForm = $(this);
+		var liWrp = $(this).parent();
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		  
+		    		  if(obj.saveStatus == "saved"){
+		    			  $(liWrp).fadeOut('3000', function() {
+		    				  $(liWrp).addClass("hidden");
+		    			  });
+					  }
+				  }
+				}
+			});
+	});
+	
 });

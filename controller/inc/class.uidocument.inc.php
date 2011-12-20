@@ -43,7 +43,8 @@
 				'query'		=> true,
 				'add'		=> true,
 				'view'		=> true,
-				'delete'	=> true
+				'delete'	=> true,
+				'show'		=> true
 			);
 		
 		public function __construct()
@@ -158,16 +159,16 @@
 			{
 				//Load contract
 				$procedure = $this->so_procedure->get_single($procedure_id);
-				if(!$procedure->has_permission(PHPGW_ACL_EDIT))
+/*				if(!$procedure->has_permission(PHPGW_ACL_EDIT))
 				{
 					$data['error'] = lang('permission_denied_add_document');
 					$this->render('permission_denied.php', $data);
 					return;
-				}
+				}*/
 			}
 			
 			// If no contract or party is loaded
-			if(!isset($contract))
+			if(!isset($procedure))
 			{
 				$data['error'] = lang('error_no_procedure');
 				$this->render('permission_denied.php', $data);
@@ -182,7 +183,7 @@
 				$document->set_title(phpgw::get_var('document_title'));
 				$document->set_name($_FILES["file_path"]["name"]);
 				$document->set_type_id(phpgw::get_var('document_type'));
-				$document->set_contract_id($procedure_id);
+				$document->set_procedure_id($procedure_id);
 				
 				//Retrieve the document properties
 				$document_properties = $this->get_type_and_id($document);
@@ -202,7 +203,7 @@
 					{
 						if(isset($procedure))
 						{
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprocedure.edit', 'id' => $procedure->get_id(), 'tab' => 'documents'));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 'procedure_id' => $procedure->get_id(), 'tab' => 'documents'));
 						}
 					}
 					else
@@ -354,5 +355,77 @@
 				'document_type' => $document_type,
 				'id' => $id
 			);
+		}
+		
+		public function show()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			$procedure_id = (int)phpgw::get_var('procedure_id');
+			$document_type = phpgw::get_var('type');
+			if(isset($_POST['edit_procedure']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit', 'id' => $procedure_id));
+			}
+			else
+			{
+				if(isset($procedure_id) && $procedure_id > 0)
+				{
+					$procedure = $this->so_procedure->get_single($procedure_id);
+				}
+				else
+				{
+					$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+					return;
+				}
+
+				if($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+				
+				$documents = $this->so->get(null,null,null,null,null,null,array('procedure_id' => $procedure_id, 'type' => $document_type));
+				//$document_array = array();
+				//var_dump($documents);
+					
+				//$document_array[] = array('document' => $document->toArray());
+				$table_header[] = array('header' => lang('Document title'));
+				$table_header[] = array('header' => lang('Document name'));
+				
+				foreach($documents as $document)
+				{
+					$doc_array = $document->toArray();
+					$doc_array['link'] = self::link(array('menuaction' => 'controller.uidocument.view', 'id' => $doc_array['id']));
+					$table_values[] = array('document' => $doc_array);
+				}
+				//var_dump($table_values);
+
+				$procedure_array = $procedure->toArray();
+				
+				$tabs = array( array(
+							'label' => lang('Procedure'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure->get_id()))
+
+						), array(
+							'label' => lang('View_documents_for_procedure')
+						));
+
+				$data = array
+				(
+					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+					'view'					=> "view_documents_for_procedure",
+					'procedure_id'			=> !empty($procedure) ? $procedure->get_id() : 0,
+					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+					'procedure'				=> $procedure_array,
+					'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+					'values'				=> $table_values,
+					'table_header'			=> $table_header,
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
+
+				//self::render_template_xsl('procedure_item', $data);
+				self::render_template_xsl(array('procedure_tabs', 'common', 'procedure_documents'), $data);
+			}
 		}
 	}

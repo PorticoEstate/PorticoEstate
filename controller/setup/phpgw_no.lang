@@ -189,6 +189,8 @@ responsibility_id_not_numeric	controller	no	Ansvar må være et tall
 room	controller	no	Rom
 running	controller	no	Løpende
 save	controller	no	Lagre
+save_control_item	controller	no	Lagre kontrollpunkt
+save_check_item	controller	no	Lagre sjekkpunkt
 search_for	controller	no	Søk etter
 search_options	controller	no	Søkevalg
 search	controller	no	Søk
@@ -302,3 +304,7 @@ Bim_id	controller	no	Utstyr ID
 Bim_name	controller	no	Utstyrsnavn
 Bim_type	controller	no	Utstyrstype
 GUID	controller	no	GUID
+View_procedure	controller	Prosedyre
+View_documents_for_procedure	controller	no	Tilknyttede dokumenter
+Document title	controller	no	Dokumentets tittel:
+Document name	controller	no	Filnavn:
