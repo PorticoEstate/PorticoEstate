@@ -999,4 +999,16 @@ label.comment{
     text-decoration: none;
     color:#000;
 }
+.not_active{
+	opacity:0.5;
+}
+ul.check_items li.hidden{
+	display: none;	
+}
 
+.frm_save_check_item input[type='submit']{
+	width: 130px;	
+}
+ul.check_items{
+	width: 800px;
+}
