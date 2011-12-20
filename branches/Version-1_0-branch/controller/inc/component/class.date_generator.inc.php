@@ -29,10 +29,6 @@ class date_generator
 		 
 		$interval_date = $period_start_date;
 		
-		echo " Interval start date: " . date("d/m-Y", $interval_date); 
-		echo "   Period end date: " . date("d/m-Y", $this->period_end_date);
-		
-		
 		while($interval_date <= $this->period_end_date){
 			
 			$this->calendar_array[] = $interval_date; 
@@ -52,7 +48,6 @@ class date_generator
 				
 				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 				$interval_date = mktime(0,0,0, $month, $num_days_in_month, $year);
-				echo " Ny interval date: " . date("d/m-Y", $interval_date);
 			}
 			else if($this->repeat_type == 3)
 			{

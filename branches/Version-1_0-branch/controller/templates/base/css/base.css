@@ -949,25 +949,25 @@ textarea{
 	padding: 4px;	
 }
 .expand_menu div.focus{
-	background: url('../../../images/bg_expand_blue.png') no-repeat;
+	background: url('../../../images/bg_expand_active.png') no-repeat;
 	color: #FFF;
 }
 .expand_menu {
     margin: 15px 0 20px;
     overflow: hidden;
 }
-.expand_menu div{
-	background: url('../../../images/bg_expand_grey.png') no-repeat;
-	color: #000;	
-	padding: 7px 10px;
-	cursor: pointer;
+.expand_menu div {
+    background: url("../../../images/bg_expand_not_active.png") no-repeat scroll 0 0 transparent;
+    color: #000000;
+    cursor: pointer;
     float: left;
+    font-size: 12px;
     font-weight: normal;
-    height: 18px;
-    width: 56px;
-}
-.expand_menu div.collapse_all{
-	padding: 7px;
+    height: 22px;
+    margin-right: 10px;
+    padding-top: 5px;
+    text-align: center;
+    width: 66px;
 }
 
 label.comment{
@@ -999,4 +999,46 @@ label.comment{
     text-decoration: none;
     color:#000;
 }
+.not_active{
+	opacity:0.5;
+}
+ul.check_items li.hidden{
+	display: none;	
+}
 
+.frm_save_check_item input[type='submit']{
+	width: 130px;	
+}
+ul.check_items{
+	width: 800px;
+}
+.tab_menu div.active{
+	background: url('../../../images/bg_tab_menu_active.png') no-repeat;
+	color: #FFF;
+}
+.tab_menu {
+    margin: 15px 0 20px;
+    overflow: hidden;
+}
+.tab_menu div {
+    background: url("../../../images/bg_tab_menu_not_active.png") no-repeat scroll 0 0 transparent;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    height: 30px;
+    padding-top: 9px;
+    text-align: center;
+    width: 93px;
+    word-wrap: normal;
+}
+.tab_menu div.text {
+   background: none repeat scroll 0 0 transparent;
+    font-size: 11px;
+    line-height: 12px;
+    margin: 0;
+    padding: 3px 0 0 9px;
+    text-align: center;
+    width: 75px;
+}

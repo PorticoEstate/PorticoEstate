@@ -51,7 +51,7 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	public function get_single($check_list_id){
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -60,6 +60,7 @@ class controller_socheck_list extends controller_socommon
 			
 			if($counter == 0){
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
@@ -84,15 +85,18 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 		
-	public function get_single_with_check_items($check_list_id){
-		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+	public function get_single_with_check_items($check_list_id, $status){
+		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
 		$sql .= "FROM controller_check_list cl "; 
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id=coi.id ";
-		$sql .= "WHERE cl.id = $check_list_id;";
+		$sql .= "WHERE cl.id = $check_list_id";
+		
+		if($status == 'open')
+			$sql .= "AND ci.status = 0";
 				
 		$this->db->query($sql);
 		
@@ -104,6 +108,7 @@ class controller_socheck_list extends controller_socommon
 			if($counter == 0){
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
@@ -237,6 +242,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.id = ci.check_list_id ";
+		$sql .= "AND ci.status = 0 ";
 		$sql .= "AND deadline BETWEEN $from_date AND $to_date ";
 		$sql .= "GROUP BY c.id, title, start_date, end_date, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
 		$sql .= "ORDER BY c.id";
@@ -255,12 +261,12 @@ class controller_socheck_list extends controller_socommon
 				}
 				
 				$control_array = array(
-										"id" 			  => $this->unmarshal($this->db->f('c_id', true), 'int'),
-										"title" 		  => $this->unmarshal($this->db->f('title', true), 'string'),
-										"repeat_type" 	  => $this->unmarshal($this->db->f('repeat_type', true), 'int'),
-										"repeat_interval" => $this->unmarshal($this->db->f('repeat_interval', true), 'int'),
-										"start_date" => $this->unmarshal($this->db->f('start_date', true), 'int'),
-										"end_date" => $this->unmarshal($this->db->f('end_date', true), 'int')
+										"id" 			  	=> $this->unmarshal($this->db->f('c_id', true), 'int'),
+										"title" 		  	=> $this->unmarshal($this->db->f('title', true), 'string'),
+										"repeat_type" 	  	=> $this->unmarshal($this->db->f('repeat_type', true), 'int'),
+										"repeat_interval" 	=> $this->unmarshal($this->db->f('repeat_interval', true), 'int'),
+										"start_date" 		=> $this->unmarshal($this->db->f('start_date', true), 'int'),
+										"end_date" 			=> $this->unmarshal($this->db->f('end_date', true), 'int')
 									);
 			}
 
@@ -455,7 +461,6 @@ class controller_socheck_list extends controller_socommon
 				'planned_date',
 				'completed_date',
 				'location_code',
-				'equipment_id'
 		);
 		
 		$values = array(
@@ -466,7 +471,7 @@ class controller_socheck_list extends controller_socommon
 			$this->marshal($check_list->get_planned_date(), 'int'),
 			$this->marshal($check_list->get_completed_date(), 'int'),
 			$this->marshal($check_list->get_location_code(), 'int'),
-			$this->marshal($check_list->get_equipment_id(), 'int')
+//			$this->marshal($check_list->get_equipment_id(), 'int')
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_check_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);

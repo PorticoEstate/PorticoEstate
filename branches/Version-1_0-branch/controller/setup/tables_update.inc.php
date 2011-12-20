@@ -242,3 +242,43 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.12';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.12';
+	function controller_upgrade0_1_12()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_document_types', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_document', array(
+				'fd' => array(
+					'id'            => array('type' => 'auto', 'nullable' => false),
+					'name'          => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'procedure_id'   => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'title'         => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+					'description'   => array('type' => 'text', 'nullable' => true),
+					'type_id'       => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'controller_procedure'   => array('procedure_id' => 'id'),
+					'controller_document_types' => array('type_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.13';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

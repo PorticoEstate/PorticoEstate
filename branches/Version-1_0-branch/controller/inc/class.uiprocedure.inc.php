@@ -390,9 +390,19 @@
 						$table_values[] = array('row' => $rev);
 					}
 				}
+				
+				$tabs = array( array(
+							'label' => lang('Procedure')
+
+						), array(
+							'label' => lang('View_documents_for_procedure'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uidocument.show', 'procedure_id' => $procedure->get_id(), 'type' => 'procedure'))
+						));
 
 				$data = array
 				(
+					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+					'view'					=> "view_procedure",
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
@@ -409,7 +419,8 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
-				self::render_template_xsl('procedure_item', $data);
+				//self::render_template_xsl('procedure_item', $data);
+				self::render_template_xsl(array('procedure_tabs', 'common', 'procedure_item'), $data);
 			}
 		}
 

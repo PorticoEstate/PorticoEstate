@@ -99,7 +99,7 @@
 
 		public function get_single($check_item_id)
 		{
-			$sql = "SELECT ci.*, coi.id as coi_id, coi.* ";
+			$sql = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci, controller_control_item coi "; 
 			$sql .= "WHERE ci.id = $check_item_id ";
 			$sql .= "AND ci.control_item_id=coi.id";
@@ -107,11 +107,11 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()) {
-				$check_item = new controller_check_item($this->unmarshal($this->db->f('id', true), 'int'));
-				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id', true), 'int'));
 				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
 				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
 
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 				$control_item->set_title($this->db->f('title', true), 'string');
