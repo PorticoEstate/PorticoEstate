@@ -16,7 +16,7 @@
 			$type = phpgw::get_var('type', 'GET');
             $bui_result = $org_result = $res_result = array();
 
-            if ((!$type || $type == "building") && in_array($resource['res'],array('House','Boat','Location'))) {
+            if ((!$type || $type == "building") && in_array($resource['res'],array('House','Location','Campsite',''))) {
 		
 					
 					if ($resource['region'] == 'east') {
@@ -90,17 +90,12 @@
 					if($fylke != '') {
 						$wclause .= " AND district = '".$fylke."'";						
 					} 					
-#					if($ressurs != '') {
-#						$wclause .= " AND type = '".$ressurs."'";						
-#					} 					
 					if($teltplasser != '') {
 						$wclause .= ' AND '.$teltplasser;						
 					} 					
 					if($sengeplasser != '') {
 						$wclause .= ' AND '.$sengeplasser;						
 					} 					
-
-#				echo "<pre>";print_r($wclause);exit;
 
                 $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "filters" => array('where' => $wclause)));
 

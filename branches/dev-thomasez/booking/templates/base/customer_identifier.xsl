@@ -25,6 +25,11 @@
 			</select>
 			<input name="customer_ssn" type="text" id="field_customer_ssn" value="{$entity/customer_ssn}"/>
 			<input name="customer_organization_number" type="text" id="field_customer_organization_number" value="{$entity/customer_organization_number}"/>
+			<div id="field_customer_address">
+				Adresse:<input id="field_customer_street" name="customer_street" type="text"  value="{$entity/customer_street}"/>
+				Postnr:<input id="field_customer_zipcode" name="customer_zipcode" type="text"  value="{$entity/customer_zipcode}"/>
+				Poststed:<input id="field_customer_city" name="customer_city" type="text"  value="{$entity/customer_city}"/>
+			</div>
 		</dd>
 	</func:result>
 </func:function>

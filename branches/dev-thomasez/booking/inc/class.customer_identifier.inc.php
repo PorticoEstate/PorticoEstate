@@ -4,6 +4,7 @@
 	class booking_customer_identifier {
 		const TYPE_SSN = 'ssn';
 		const TYPE_ORGANIZATION_NUMBER = 'organization_number';
+		const TYPE_ADDRESS = 'address';
 
 		protected $field_prefix='customer_';
 		protected $identifier_type_field;
@@ -11,6 +12,7 @@
 		protected static $valid_types = array(
 			self::TYPE_SSN,
 			self::TYPE_ORGANIZATION_NUMBER,
+			self::TYPE_ADDRESS,
 		);
 		
 		function __construct() {
@@ -156,6 +158,10 @@
 						all_cust_fields[field_type].value = '6 siffer (DDMMÅÅ) eller 11 siffer';
 					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
 						all_cust_fields[field_type].value = '9 siffer';
+					} else if (all_cust_fields[field_type].name == 'customer_address') {
+						YAHOO.util.Dom.get('field_customer_street').value = 'Street';
+						YAHOO.util.Dom.get('field_customer_zipcode').value = 'Zipcode';
+						YAHOO.util.Dom.get('field_customer_city').value = 'City';
 					}
 					all_cust_fields[field_type].focus();
 					all_cust_fields[field_type].select();
