@@ -52,8 +52,10 @@
 			'view_check_list'					=>	true,
 			'edit_check_list'					=>	true,
 			'save_check_items'					=>	true,
+			'save_check_item'					=>	true,
 			'get_check_list_info'				=>	true,
-			'control_calendar_status_overview'	=>	true
+			'control_calendar_status_overview'	=>	true,
+			'add_check_item_to_list'			=>	true
 		);
 
 		public function __construct()
@@ -192,7 +194,7 @@
 		public function get_check_list_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id);
+			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id, "open");
 
 			return json_encode( $check_list );
 		}
@@ -295,6 +297,48 @@
 			}
 
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list', 'check_list_id'=>$check_list_id));
+		}
+		
+		public function save_check_item(){
+			$check_item_id = phpgw::get_var('check_item_id');
+			$comment = phpgw::get_var('comment');
+			$status = phpgw::get_var('status');
+						
+			$check_item = $this->so_check_item->get_single($check_item_id);
+			$check_item->set_status( $status );
+			$check_item->set_comment( $comment );
+			
+			$check_item_id = $this->so_check_item->store( $check_item );
+
+			if($status == 0)
+				$status_text = "not_fixed";
+			else
+				$status_text = "fixed";
+			
+			if($check_item_id > 0)
+				return json_encode( array( "saveStatus" => "saved", "fixedStatus" => $status_text ) );
+			else
+				return json_encode( array( "status" => "not_saved" ) );
+		}
+		
+		public function add_check_item_to_list(){
+			$control_item_id = phpgw::get_var('control_item_id');
+			$check_list_id = phpgw::get_var('check_list_id');
+			$comment = phpgw::get_var('comment');
+			$status = phpgw::get_var('status');
+						
+			$check_item_obj = new controller_check_item();
+			$check_item_obj->set_status($status);
+			$check_item_obj->set_comment($comment);
+			$check_item_obj->set_check_list_id($check_list_id);
+			$check_item_obj->set_control_item_id($control_item_id);
+		
+			$check_item_id = $this->so_check_item->store( $check_item_obj );
+
+			if($check_item_id > 0)
+				return json_encode( array( "saveStatus" => "saved" ) );
+			else
+				return json_encode( array( "status" => "not_saved" ) );
 		}
 
 		public function save_check_list(){

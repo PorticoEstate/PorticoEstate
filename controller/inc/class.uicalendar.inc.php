@@ -98,6 +98,8 @@
 			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
 							
+			print_r( $controls_calendar_array );
+			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			for($i=1;$i<=31;$i++){

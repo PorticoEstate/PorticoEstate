@@ -26,14 +26,17 @@ class calendar_builder {
 			
 			// Inserts dates on behalf of repeat type and repeat interval
 			foreach($dates_array as $date){
+				
+				$status = "control_registered";
+				
 				if( $period_type == "view_months" )
 				{
-					$calendar_array[ date("n", $date) ]["status"]  = 0;
+					$calendar_array[ date("n", $date) ]["status"]  = $status;
 					$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());
 				}
 				else if( $period_type == "view_days" )
 				{
-					$calendar_array[ date("j", $date) ]["status"]  = 0;
+					$calendar_array[ date("j", $date) ]["status"]  = $status;
 					$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());	
 				}
 			}
@@ -43,42 +46,34 @@ class calendar_builder {
 				
 				$check_list_status_info = new check_list_status_info();
 				$check_list_status_info->set_id( $check_list->get_id() );
-				$check_list_status_info->set_status_text( $check_list->get_status() );
-
-				if( $check_list->get_status() == 0 ){
-					$check_list_status_info->set_status(0);
-					$status = 0;
-				}
-				else if( $check_list->get_status() == 1)
+		
+				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+				
+				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 )
 				{
-					$check_list_status_info->set_status(1);
-					$status = 1;
+					$status = "control_planned";
 				}
-				else if( $check_list->get_status() == 2 & $check_list->get_completed_date() < $check_list->get_deadline() )
+				else if( $check_list->get_status() == 0 & $check_list->get_deadline() > $todays_date )
 				{
-					$check_list_status_info->set_status(2);
-					$status = 2;
+					$status = "control_not_accomplished";
 				}
-				else if( $check_list->get_status() == 3 & $check_list->get_completed_date() > $check_list->get_deadline() )
+				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() > $check_list->get_deadline() )
 				{
-					$check_list_status_info->set_status(3);
-					$status = 3;
+					$status = "control_accomplished_over_time_without_errors";
 				}
-				else if( $check_list->get_status() == 4 )
+				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() < $check_list->get_deadline() )
 				{
-					$check_list_status_info->set_status(4);
-					$status = 4;
+					$status = "control_accomplished_in_time_without_errors";
 				}
-				else if( $check_list->get_status() == 5 )
+				else if( $check_list->get_status() == 2  ){
+					$status = "control_accomplished_with_errors";
+				}
+				else if( $check_list->get_status() == 3 )
 				{
-					$check_list_status_info->set_status(5);
-					$status = 5;
+					$status = "control_canceled";
 				}
 				
 				$check_list_status_info->set_deadline( date("d/m-Y", $check_list->get_deadline()) );
-				
-				echo "  " .  date("d/m-Y", $check_list->get_deadline()) . " ";
-				echo $check_list_status_info->get_id();
 				
 				if($period_type == "view_months")
 				{

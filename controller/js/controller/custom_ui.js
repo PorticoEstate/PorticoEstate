@@ -118,15 +118,11 @@ $(document).ready(function() {
 			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
 		}
 	});
-});
-
-function slide_up(elem){
 	
-	
-}
-
-function slide_down(elem){
-	
-	
-}
+	$(".frm_save_check_item").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
 		
+		$(submitBnt).removeClass("not_active");
+	});
+});

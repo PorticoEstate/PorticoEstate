@@ -50,6 +50,7 @@
 		private $so_control_area;
 		private $so_control;
 		private $so_check_list;
+		private $so_control_item;
 	
 		var $public_functions = array(
 										'index' => true,
@@ -69,6 +70,7 @@
 			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control 			= CreateObject('controller.socontrol');
 			$this->so_check_list		= CreateObject('controller.socheck_list');
+			$this->so_control_item		= CreateObject('controller.socontrol_item');
 			
 			$this->type_id				= $this->bo->type_id;
 			
@@ -341,12 +343,13 @@
 			(
 				'location_array'	=> $location_array,
 				'control_array'		=> $control->toArray(),
-				'calendar_array'	=> $calendar_array,
+				'deadline'			=> $calendar_array[0],
 				'date_format' 		=> $date_format			
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
@@ -357,19 +360,39 @@
 		function edit_check_list_for_location(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
-			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id);
-		
+			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
+				
+			$control_item_list_all = $this->so_control_item->get_control_items_by_control_id($check_list_with_check_items["control_id"]);
+			
+			$control_item_ids = array();
+			foreach($check_list_with_check_items["check_item_array"] as $check_item){
+				$control_item_ids[] = $check_item["control_item_id"];
+			}
+			
+			$control_item_list_stripped = array();
+			
+			foreach($control_item_list_all as $control_item){
+				
+				if( !in_array($control_item->get_id(), $control_item_ids) ){
+					$control_item_list_stripped[] = $control_item->toArray(); 
+				}
+			} 
+			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
+			print_r($control_item_list_stripped);
+			
 			$data = array
 			(
-				'check_list' 		=> $check_list,
-				'date_format' 		=> $date_format
+				'check_list' 			=> $check_list_with_check_items,
+				'control_items_list' 	=> $control_item_list_stripped,
+				'date_format' 			=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
@@ -380,10 +403,22 @@
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$status = phpgw::get_var('status');
-			$planned_date = strtotime( phpgw::get_var('planned_date', 'string') );
+					
+			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = strtotime( phpgw::get_var('completed_date', 'string') );
 			$deadline_date = strtotime( phpgw::get_var('deadline_date', 'string') );
-				
+						
+			$pos_day = strpos($planned_date, "/"); 
+			$day =  substr($planned_date, 0, $pos_day);
+			
+			$pos_month = strpos($planned_date, "-");
+			$len_month = $pos_month - $pos_day -1;
+			$month = substr($planned_date, $pos_day+1, $len_month);
+			
+			$year = substr($planned_date, $pos_month + $len_month-1, strlen($planned_date)-1);
+			
+			$planned_date = mktime(0, 0, 0, $month, $day, $year);
+						
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
 			$check_list->set_control_id($control_id);
@@ -391,11 +426,11 @@
 			$check_list->set_deadline( $deadline_date );
 			$check_list->set_planned_date($planned_date);
 			$check_list->set_completed_date($completed_date);
-			$check_list->set_equipment_id($equipment_id);
-
-			$this->so_check_list->add($check_list);	
+					
 			
-			$this->redirect(array('menuaction' => 'controller.uilocation_check_list.view_calendar', 'year'=>2011, 'month'=>10));
+			$check_list_id = $this->so_check_list->add($check_list);	
+
+			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list_for_location', 'check_list_id'=>$check_list_id));
 		}
 		
 		public function query(){
