@@ -806,8 +806,8 @@
 			$this->so->delete($project_id);
 		}
 
-		function bulk_update_status($start_date, $end_date, $status, $execute, $type)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id)
 		{
-			return $this->so->bulk_update_status($start_date, $end_date, $status, $execute, $type);
+			return $this->so->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id);
 		}
 	}

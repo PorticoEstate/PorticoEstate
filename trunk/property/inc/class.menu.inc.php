@@ -453,7 +453,7 @@
 						),
 						'project_bulk_update_status'	=> array
 						(
-							'text'	=> lang('project status'),
+							'text'	=> lang('project bulk update status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status') )
 						),
 						'project_group'	=> array
