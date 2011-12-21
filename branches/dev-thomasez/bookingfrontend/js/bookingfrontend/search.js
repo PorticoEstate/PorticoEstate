@@ -203,18 +203,22 @@ YAHOO.booking.initializeDataTable = function()
 
 			if (this.id == 'field_type') {
 				if(['House'].indexOf(val) >= 0) {
+					ResetCampsites();
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'inline');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
 					ResetBeds();
 				} 
 				else if (['Location','Campsite','Boat'].indexOf(val) >= 0) 
 				{
+					ResetBeds();
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'inline');	
 					ResetCampsites();
 				}
 				else if (['Equipment',''].indexOf(val) >= 0)		
 				{
+					ResetBeds();
+					ResetCampsites();
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
 				}
@@ -255,7 +259,6 @@ YAHOO.booking.initializeDataTable = function()
 		if (oInput.value == 'Søk leirplass, hytte, utstyr eller aktivitet') {
 			oInput.value = '';		
 		}
-			
     });
 
 };

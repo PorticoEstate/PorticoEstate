@@ -84,8 +84,8 @@
 			$resource['region'] = phpgw::get_var('regions', 'GET', null);
 	
 			$search = null;
-			
-			if (strlen($searchterm) || $type || $resource['res'] || $resource['fylke'])
+
+			if (strlen($searchterm) || $type || $resource['res'] || $resource['fylke'] || $resource['region'])
 			{
 				$search = array(
 					'results'    => $this->bo->search($searchterm,$resource),
