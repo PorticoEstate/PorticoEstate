@@ -10,7 +10,7 @@
 		protected $identifier_type_field;
 		
 		protected static $valid_types = array(
-			self::TYPE_SSN,
+//			self::TYPE_SSN,
 			self::TYPE_ORGANIZATION_NUMBER,
 			self::TYPE_ADDRESS,
 		);
@@ -53,7 +53,6 @@
 		{	
 			$current_type = isset($_POST[$this->identifier_type_field]) && $this->is_valid_customer_identifier_type($_POST[$this->identifier_type_field]) ?
 									$_POST[$this->identifier_type_field] : null;
-									
 			if (!$current_type) { 
 				$data[$this->identifier_type_field] = null;
 				foreach ($this->get_valid_types() as $type) {
@@ -63,7 +62,11 @@
 			}
 			
 			$identifier_field = $this->field_prefix.$current_type;
-			$identifier_value = isset($_POST[$identifier_field]) ? trim($_POST[$identifier_field]) : null;
+			if ($identifier_field == 'customer_address') {
+				$identifier_value = 'set';
+			} else {
+				$identifier_value = isset($_POST[$identifier_field]) ? trim($_POST[$identifier_field]) : null;
+			}
 			
 			if (empty($identifier_value)) {
 				$data[$this->identifier_type_field] = null;
@@ -71,6 +74,11 @@
 			} else {
 				$data[$this->identifier_type_field] = $current_type;
 				$data[$identifier_field] = $identifier_value;
+				if ($current_type == 'address'){
+					$data['customer_street'] = $_POST['customer_street'];
+					$data['customer_zipcode'] = $_POST['customer_zipcode'];
+					$data['customer_city'] = $_POST['customer_city'];
+				}
 			}
 			
 			
@@ -87,7 +95,6 @@
 				}
 				
 				$identifier_field = trim($data[$this->identifier_type_field]);
-				
 				if (empty($identifier_field)) {
 					return array($this->field_prefix.$current_type => sprintf('Missing value for customer\'s %s', $data[$this->identifier_type_field]));
 				}
@@ -101,7 +108,6 @@
 					}
 				}
 			}
-			
 			return array();
 		}
 		

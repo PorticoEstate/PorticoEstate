@@ -314,7 +314,6 @@
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
 				$event['building_name'] = $_POST['building_name'];
-
 				if (!$_POST['application_id'])
 				{
                     $temp_errors = array();
@@ -375,7 +374,7 @@
 					}
 				} 
 
-				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
+				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn'] and !$event['customer_address']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
 				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'])

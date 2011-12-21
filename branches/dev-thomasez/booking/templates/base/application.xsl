@@ -212,6 +212,14 @@
 				<dt><label for="field_ssn_number"><xsl:value-of select="php:function('lang', 'Date of birth or SSN')" /></label></dt>
 				<dd><xsl:value-of select="application/customer_ssn"/></dd>
 			</xsl:if>
+			<xsl:if test="application/customer_identifier_type = 'address'">
+				<dt><label for="field_address"><xsl:value-of select="php:function('lang', 'Address')" /></label></dt>
+				<dd>
+					<xsl:value-of select="application/customer_street"/><br />
+					<xsl:value-of select="application/customer_zipcode"/><br />
+					<xsl:value-of select="application/customer_city"/><br />
+				</dd>
+			</xsl:if>
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>

@@ -15,7 +15,7 @@ ul#metanav {
 ul#metanav a, ul#sidebar a { color: #700; }
 div#content {
     margin: 0 2em;
-    min-height: 400px;
+    min-height: 500px;
 }
 #header-search  { 
     float: right;
