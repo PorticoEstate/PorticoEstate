@@ -1285,28 +1285,56 @@
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status, $execute, $type)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0)
 		{
 			$start_date = phpgwapi_datetime::date_to_timestamp($start_date);
 			$end_date = phpgwapi_datetime::date_to_timestamp($end_date);
 
-			$this->db->query("SELECT id FROM fm_project WHERE start_date > $start_date AND start_date < $end_date",__LINE__,__FILE__);
-			$projects = array();
-			while ($this->db->next_record())
+			$filter = '';
+			if($user_id)
 			{
-				$projects[] = array('project_id' => $this->db->f('id'));
-			}
-			
-			foreach($projects as &$project)
-			{
-				$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project['project_id']}",__LINE__,__FILE__);
-				while ($this->db->next_record())
-				{
-					$project['workorder'][] = $this->db->f('id');
-				}
+				$user_id = (int) $user_id;
+				$filter = "AND user_id = $user_id";
 			}
 
-			return $projects;
+			if($status_filter)
+			{
+				$user_id = (int) $user_id;
+				$filter .= "AND status = '{$status_filter}'";
+			}
+
+			switch($type)
+			{
+				case 'project':
+					$table = 'fm_project';
+					$status_table = 'fm_project_status';
+					$title_field = 'fm_project.name as title';
+					break;
+				case 'workorder':
+					$table = 'fm_workorder';
+					$status_table = 'fm_workorder_status';
+					$title_field = 'fm_workorder.title';
+					break;
+				default:
+					return array();
+			}
+
+			$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field} FROM {$table}"
+			. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id  WHERE start_date > {$start_date} AND start_date < {$end_date} {$filter}";
+//_debug_array($sql);			
+			$this->db->query($sql,__LINE__,__FILE__);
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'title'		=> $this->db->f('title',true),
+					'status'	=> $this->db->f('status',true)
+				);
+			}
+
+			return $values;
 
 
 			$this->db->transaction_begin();

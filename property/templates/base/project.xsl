@@ -1275,10 +1275,26 @@
 				</tr>
 				<tr>
 					<td>
+						<xsl:value-of select="php:function('lang', 'user')" />
+					</td>
+					<td>
+						<select name="user_id">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select user')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select')" />
+							</option>
+							<xsl:apply-templates select="user_list/options"/>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<xsl:value-of select="php:function('lang', 'type')" />
 					</td>
 					<td>
-						<select name="status" >
+						<select name="type" onChange="this.form.submit();">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select type')" />
 							</xsl:attribute>
@@ -1289,29 +1305,82 @@
 
 				<tr>
 					<td>
-						<xsl:value-of select="php:function('lang', 'status')" />
+						<xsl:value-of select="php:function('lang', 'status filter')" />
 					</td>
 					<td>
-						<select name="status" >
+						<select name="status_filter" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select status')" />
 							</xsl:attribute>
 							<option value="0">
 								<xsl:value-of select="php:function('lang', 'select status')" />
 							</option>
-							<xsl:apply-templates select="status_list/options"/>
+							<xsl:apply-templates select="status_list_filter/options"/>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'status new')" />
+					</td>
+					<td>
+						<select name="status_new" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</option>
+							<xsl:apply-templates select="status_list_new/options"/>
 						</select>
 					</td>
 				</tr>
 
+		<tr>
+			<td>
+				<div id="paging_0"> </div>
+				<div id="datatable-container_0"></div>
+			</td>
+		</tr>
+
 			</table>
-			<input type="text" id="execute" name="execute" value="{confirm}" />
-			<input type="submit" name="confirm">
+			<input type="submit" name="get_list">
 				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'update')" />
+					<xsl:value-of select="php:function('lang', 'get')" />
+				</xsl:attribute>
+			</input>
+			<input type="submit" name="execute">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'submit')" />
 				</xsl:attribute>
 			</input>
 		</form>
+
+					<!--  DATATABLE DEFINITIONS-->
+					<script type="text/javascript">
+						var property_js = <xsl:value-of select="property_js" />;
+					//	var base_java_url = <xsl:value-of select="base_java_url" />;
+						var datatable = new Array();
+						var myColumnDefs = new Array();
+
+						<xsl:for-each select="datatable">
+							datatable[<xsl:value-of select="name"/>] = [
+							{
+							values			:	<xsl:value-of select="values"/>,
+							total_records	: 	<xsl:value-of select="total_records"/>,
+							edit_action		:  	<xsl:value-of select="edit_action"/>,
+							is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+							footer			:	<xsl:value-of select="footer"/>
+							}
+							]
+						</xsl:for-each>
+
+						<xsl:for-each select="myColumnDefs">
+							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+						</xsl:for-each>
+					</script>
+
+
 	</xsl:template>
 
 
