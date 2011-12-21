@@ -1,3 +1,24 @@
+ResetFylker = function() {
+	fylker = YAHOO.util.Dom.get('field_fylker');
+	for ( i=0; i < fylker.length; i++) {
+		if('' == fylker.options[i].value) {
+			fylker.options[i].selected = true;
+		}
+	}
+}
+ResetBeds = function() {
+	beds = YAHOO.util.Dom.get('field_bedspaces');
+	for ( i=0; i < beds.length; i++) {
+		if(beds.options[i].value == '') {
+			beds.options[i].selected = true;
+		}
+	}
+}
+ResetCampsites = function() {
+	spaces = YAHOO.util.Dom.get('campsites');
+	spaces.value = '';
+}
+
 GenerateAll = function(fylker,fylke) {
 	var i;
 	for ( i = fylker.length - 1; i >= 0; i--) {
@@ -24,8 +45,8 @@ GenerateAll = function(fylker,fylke) {
 	fylker.options[18]=new Option("Troms", "troms", false, false);
 	fylker.options[19]=new Option("Nordland", "nordland", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -39,8 +60,8 @@ GenerateNorth = function(fylker,fylke) {
 	fylker.options[2]=new Option("Troms", "troms", false, false);
 	fylker.options[2]=new Option("Nordland", "nordland", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -53,8 +74,8 @@ GenerateMiddle = function(fylker,fylke) {
 	fylker.options[1]=new Option("Sør-Trøndelag", "sortrondelag", false, false);
 	fylker.options[2]=new Option("Nord-Trøndelag", "nordtrodelag", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -69,8 +90,8 @@ GenerateWest = function(fylker,fylke) {
 	fylker.options[3]=new Option("Hordaland", "hordaland", false, false);
 	fylker.options[4]=new Option("Rogaland", "rogaland", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -83,8 +104,8 @@ GenerateSouth = function(fylker,fylke) {
 	fylker.options[1]=new Option("Vest-Agder", "vestagder", false, false);
 	fylker.options[2]=new Option("Aust-Agder", "austagder", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -103,8 +124,8 @@ GenerateEast = function(fylker,fylke) {
 	fylker.options[7]=new Option("Buskerud", "buskerud", false, false);
 	fylker.options[8]=new Option("Telemark", "telemark", false, false);
 	for ( i=0; i < fylker.length; i++) {
-		if(fylke == fylker.options(i).value) {
-			fylker.options(i).selected = true;
+		if(fylke == fylker.options[i].value) {
+			fylker.options[i].selected = true;
 		}
 	}
 }
@@ -112,11 +133,11 @@ GenerateEast = function(fylker,fylke) {
 YAHOO.booking.initializeDataTable = function()
 {
 	var val = YAHOO.util.Dom.get('field_type').value;
-	if(['House','Boat'].indexOf(val) >= 0) {
+	if(['House'].indexOf(val) >= 0) {
 		YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'inline');	
 		YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
 	} 
-	else if (['Location','Campsite'].indexOf(val) >= 0) 
+	else if (['Location','Campsite','Boat'].indexOf(val) >= 0) 
 	{
 		YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 		YAHOO.util.Dom.setStyle('field_campsites', 'display', 'inline');	
@@ -181,14 +202,16 @@ YAHOO.booking.initializeDataTable = function()
 			var bedspaces = document.getElementById('field_bedspaces');
 
 			if (this.id == 'field_type') {
-				if(['House','Boat'].indexOf(val) >= 0) {
+				if(['House'].indexOf(val) >= 0) {
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'inline');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
+					ResetBeds();
 				} 
-				else if (['Location','Campsite'].indexOf(val) >= 0) 
+				else if (['Location','Campsite','Boat'].indexOf(val) >= 0) 
 				{
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'inline');	
+					ResetCampsites();
 				}
 				else if (['Equipment',''].indexOf(val) >= 0)		
 				{
@@ -203,6 +226,7 @@ YAHOO.booking.initializeDataTable = function()
 				else		
 				{
 					YAHOO.util.Dom.setStyle('field_fylker', 'display', 'none');	
+					ResetFylker();
 				}
 			}
 			var fylke = '';

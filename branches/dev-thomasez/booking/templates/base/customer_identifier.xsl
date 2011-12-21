@@ -23,7 +23,7 @@
 					</option>
 				</xsl:for-each>
 			</select>
-			<input name="customer_ssn" type="text" id="field_customer_ssn" value="{$entity/customer_ssn}"/>
+			<!--<input name="customer_ssn" type="text" id="field_customer_ssn" value="{$entity/customer_ssn}"/>-->
 			<input name="customer_organization_number" type="text" id="field_customer_organization_number" value="{$entity/customer_organization_number}"/>
 			<div id="field_customer_address">
 				Adresse:<input id="field_customer_street" name="customer_street" type="text"  value="{$entity/customer_street}"/>

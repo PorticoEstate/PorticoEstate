@@ -31,9 +31,7 @@
 			return array( "one" => "1-10",
 				"two" => "10-25",
 				"three" => "25-50",
-				"four" => "50-100",
-				"five" => "100-300",
-				"six" => "300+");
+				"four" => "50+");
 		}	
 
 		protected function regions()

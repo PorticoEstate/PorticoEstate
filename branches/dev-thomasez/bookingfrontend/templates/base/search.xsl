@@ -42,7 +42,7 @@
 					</option>
 				</xsl:for-each>
 			</select>
-			<input type='hidden' value='{resource/fylke}' id='field_fylke' />			
+			<input name="fylke" id='field_fylke' type='hidden' value='{resource/fylke}' />			
 			<select name='fylker' id='field_fylker'>
 			<option value=''><xsl:value-of select="php:function('lang', 'Select County')" />...</option>
 				<xsl:for-each select="resource/fylker/*">
