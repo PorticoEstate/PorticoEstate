@@ -1244,4 +1244,84 @@
 	</xsl:template>
 
 
+	<xsl:template match="bulk_update_status" xmlns:php="http://php.net/xsl">
+		<form method="post" action="{update_action}">
+			<table>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'start date')" />
+					</td>
+					<td>
+						<input type="text" id="values_start_date" name="start_date" size="10" value="{start_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_start_date_statustext"/>
+							</xsl:attribute>
+						</input>
+						<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'end date')" />
+					</td>
+					<td>
+						<input type="text" id="values_end_date" name="end_date" size="10" value="{end_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_end_date_statustext"/>
+							</xsl:attribute>
+						</input>
+						<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'type')" />
+					</td>
+					<td>
+						<select name="status" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select type')" />
+							</xsl:attribute>
+							<xsl:apply-templates select="type_list/options"/>
+						</select>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'status')" />
+					</td>
+					<td>
+						<select name="status" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</option>
+							<xsl:apply-templates select="status_list/options"/>
+						</select>
+					</td>
+				</tr>
+
+			</table>
+			<input type="text" id="execute" name="execute" value="{confirm}" />
+			<input type="submit" name="confirm">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'update')" />
+				</xsl:attribute>
+			</input>
+		</form>
+	</xsl:template>
+
+
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
 

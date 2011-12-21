@@ -451,6 +451,11 @@
 							'text'	=> lang('project status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'project_status') )
 						),
+						'project_bulk_update_status'	=> array
+						(
+							'text'	=> lang('project status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status') )
+						),
 						'project_group'	=> array
 						(
 							'text'	=> lang('project group'),

@@ -51,14 +51,14 @@
 
 		var $public_functions = array
 			(
-				'download'		=> true,
-				'index'			=> true,
-				'view'			=> true,
-				'edit'			=> true,
-				'delete'		=> true,
-				'date_search'	=> true,
-				'columns'		=> true,
-				'update_data'	=> true,
+				'download'				=> true,
+				'index'					=> true,
+				'view'					=> true,
+				'edit'					=> true,
+				'delete'				=> true,
+				'date_search'			=> true,
+				'columns'				=> true,
+				'bulk_update_status'	=> true
 			);
 
 		function property_uiproject()
@@ -1950,6 +1950,80 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
+
+
+		function bulk_update_status()
+		{
+			if(!$this->acl->check('.project', PHPGW_ACL_PRIVATE, 'property'))//manage
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_PRIVATE, 'acl_location'=>$this->acl_location));
+			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::admin::project_bulk_update_status';
+			$start_date 	= phpgw::get_var('start_date');
+			$end_date 		= phpgw::get_var('end_date');
+			$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
+			$execute		= phpgw::get_var('execute', 'bool', 'POST');
+			$status 		= phpgw::get_var('status');
+			$type 			= phpgw::get_var('type');
+
+			$link_data = array
+			(
+				'menuaction' => 'property.uiproject.index'
+			);
+
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_start_date');
+			$jscal->add_listener('values_end_date');
+
+
+			if(($execute || $confirm) && $type)
+			{
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status, $execute, $type);
+			}
+
+//			_debug_array($list);
+
+			$type_array = array
+			(
+				array
+				(
+					'id' => '0',
+					'name'	=> lang('select')
+				),
+				array
+				(
+					'id' => 'project',
+					'name'	=> lang('project')
+				),
+				array
+				(
+					'id' => 'workorder',
+					'name'	=> lang('workorder')
+				)
+			);
+
+			$data = array
+			(
+				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'update_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.bulk_update_status')),
+				'img_cal'			=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'confirm'			=> $confirm,
+				'status_list'		=> array('options' => $this->bo->select_status_list('select',$status)),
+				'type_list'			=> array('options' => $type_array),
+				'start_date'		=> $start_date,
+				'end_date'			=> $end_date,				
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+
+			$appname			= lang('project');
+			$function_msg		= lang('bulk update status');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
+		}
+
 
 		function view()
 		{

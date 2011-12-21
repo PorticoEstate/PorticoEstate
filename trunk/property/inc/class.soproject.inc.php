@@ -1266,21 +1266,53 @@
 				$this->db->query("UPDATE fm_request set project_id = NULL where id='{$request_id}'",__LINE__,__FILE__);
 			}
 
-			$this->db->query("DELETE FROM fm_project WHERE id='" . $project_id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_project WHERE id='{$project_id}'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_project_history  WHERE  history_record_id='" . $project_id   . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_projectbranch  WHERE  project_id='" . $project_id   . "'",__LINE__,__FILE__);
 //			$this->db->query("DELETE FROM fm_origin WHERE destination ='project' AND destination_id ='" . $project_id . "'",__LINE__,__FILE__);
 			$this->interlink->delete_at_origin('property', '.project.request', '.project', $project_id, $this->db);
 			$this->interlink->delete_at_target('property', '.project', $project_id, $this->db);
 
-			$this->db->query("DELETE FROM fm_workorder WHERE project_id='" . $project_id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_workorder WHERE project_id='{$project_id}'",__LINE__,__FILE__);
 
 			for ($i=0;$i<count($workorder_id);$i++)
 			{
-				$this->db->query("DELETE FROM fm_wo_hours WHERE workorder_id='" . $workorder_id[$i] . "'",__LINE__,__FILE__);
-				$this->db->query("DELETE FROM fm_workorder_history  WHERE  history_record_id='" . $workorder_id[$i]   . "'",__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_wo_hours WHERE workorder_id='{$workorder_id[$i]}'",__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_workorder_history  WHERE  history_record_id='{$workorder_id[$i]}'",__LINE__,__FILE__);
 			}
 
 			$this->db->transaction_commit();
 		}
+
+
+		function bulk_update_status($start_date, $end_date, $status, $execute, $type)
+		{
+			$start_date = phpgwapi_datetime::date_to_timestamp($start_date);
+			$end_date = phpgwapi_datetime::date_to_timestamp($end_date);
+
+			$this->db->query("SELECT id FROM fm_project WHERE start_date > $start_date AND start_date < $end_date",__LINE__,__FILE__);
+			$projects = array();
+			while ($this->db->next_record())
+			{
+				$projects[] = array('project_id' => $this->db->f('id'));
+			}
+			
+			foreach($projects as &$project)
+			{
+				$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project['project_id']}",__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$project['workorder'][] = $this->db->f('id');
+				}
+			}
+
+			return $projects;
+
+
+			$this->db->transaction_begin();
+
+
+			$this->db->transaction_commit();
+		}
+
 	}
