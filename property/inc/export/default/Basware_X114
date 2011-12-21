@@ -53,8 +53,76 @@
 			$this->config			= CreateObject('phpgwapi.config','property');
 			$this->config->read_repository();
 			$this->custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			
+			if(!isset($this->custom_config->config_data['export']))
+			{
+				$this->initiate_config();
+			}
+			
+			if (isset($this->custom_config->config_data['export']['cleanup_old']) && $this->custom_config->config_data['export']['cleanup_old'])
+			{
+				$this->cleanup_old();
+			}
+
+_debug_array($this->custom_config->config_data['export']);die();
+_debug_array($this->custom_config->config_data['export']['cleanup_old']);die();			
 		}
 
+		protected function initiate_config()
+		{
+			$receipt_section = $this->custom_config->add_section(array
+				(
+					'name' => 'export',
+					'descr' => 'Invoice export'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'text',
+					'name'			=> 'cleanup_old',
+					'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
+				)
+			);
+			$receipt = $this->custom_config->add_attrib(array
+				(
+					'section_id'	=> $receipt_section['section_id'],
+					'input_type'	=> 'date',
+					'name'			=> 'dato_aarsavslutning',
+					'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
+				)
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')) );
+		}
+
+
+		protected function cleanup_old()
+		{
+			$this->db->transaction_begin();
+			$date = date($this->db->datetime_format(),time());
+			$sql= "UPDATE fm_ecobilag SET saksigndato = '{$date}', saksbehandlerid = 'admin' WHERE external_ref IS NULL AND saksigndato IS NULL";			
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+			$sql= "UPDATE fm_ecobilag SET budsjettsigndato = '{$date}', budsjettansvarligid = 'admin' WHERE external_ref IS NULL AND budsjettsigndato IS NULL";
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+			$sql= "UPDATE fm_ecobilag SET utbetalingsigndato = '{$date}', utbetalingid = 'admin' WHERE external_ref IS NULL AND utbetalingsigndato IS NULL";
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->overfor('on');
+			$sql= "SELECT min(bilagsnr) as bilagsnr FROM fm_ecobilagoverf";
+			$this->db->next_record();
+			$bilagsnr = (int)$this->db->f('bilagsnr');
+			if($bilagsnr)
+			{
+				$correction = $bilagsnr -1;
+				$sql= "UPDATE fm_ecobilagoverf SET bilagsnr = bilagsnr - {$correction}";
+//_debug_array($sql);
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+			$this->db->transaction_commit();
+		}
+		
 		protected function select_vouchers_to_transfer()
 		{
 			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
@@ -472,8 +540,12 @@
 			return $receipt;
 		}
 				
-		protected function LagFilnavn ($external_ref)
+		protected function LagFilnavn ($external_ref = '')
 		{	
+			if(!$external_ref)
+			{
+				$external_ref = mt_rand();
+			}
 			$fil_katalog = $this->config->config_data['export_path'];
 			$continue = True;
 			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
@@ -494,9 +566,10 @@
 
 			$oRsBilag = $this->get_voucher($voucher_id);
 
+			$skip_basware = false;
 			if(!isset($oRsBilag[0]['external_ref'])  || !$oRsBilag[0]['external_ref'])
 			{
-				$oRsBilag[0]['external_ref'] = mt_rand();
+				$skip_basware = true;
 			}
 			
 			//Bestem filnavn
@@ -532,26 +605,24 @@
 			$this->db->transaction_begin();
 
 			$get_bilagsnr_ut = false;
-			if(!$bilagsnr_ut = $oRsBilag[0]['external_ref'])
+			foreach ($oRsBilag as $line)
 			{
-				foreach ($oRsBilag as $line)
+				if(abs($line['godkjentbelop']) > 0)
 				{
-					if(abs($line['godkjentbelop']) > 0)
-					{
-						$get_bilagsnr_ut = true;
-					}
-				}
-
-				if($get_bilagsnr_ut)
-				{
-					$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
-					$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
-					$this->db->next_record();
-					$bilagsnr_ut = $this->db->f('value');
-
-					$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+					$get_bilagsnr_ut = true;
 				}
 			}
+
+			if($get_bilagsnr_ut)
+			{
+				$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
+				$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
+				$this->db->next_record();
+				$bilagsnr_ut = $this->db->f('value');
+
+				$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+			}
+
 
 			$tranfser_bilag = array($bilagsnr_ut);
 
@@ -758,14 +829,11 @@
 				'INVOICES'					=> $invoices
 			);
 
-			$xmltool = CreateObject('phpgwapi.xmltool');	
+			$xmltool = CreateObject('phpgwapi.xmltool');
 
 			$buffer = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
 			$buffer = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
 			
-//			echo $buffer; 
-//-- fortsett her....									
-
 			//Slett bilaget i fm_ecobilag
 			if ($download=='on' && !$this->debug)
 			{
@@ -789,6 +857,12 @@
 				if(fclose($fp))
 				{
 					$file_written=true;
+					if($skip_basware)
+					{
+						$this->db->transaction_commit();				
+						$message = "Antall bilag/underbilag overført til historikk (ikke til Basware): {$antall}, fil: {$Filnavn}";
+						return $message;											
+					}
 				}
 			
 			// -- END
