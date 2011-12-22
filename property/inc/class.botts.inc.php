@@ -677,6 +677,104 @@
 			return $record_history;
 		}
 
+		/**
+		 * Simplified method for adding tickets from external apps
+		 *	$data = array
+		 *	(
+		 *		'origin' 			=> $location_id,
+		 *		'origin_id'			=> $location_item_id,
+		 *		'location_code' 	=> $location_code,
+		 * 		'cat_id'			=> $cat_id,
+		 *		'priority'			=> $priority, //optional (1-3)
+		 *		'title'				=> $title,
+		 *		'details'			=> $details,
+		 *		'file_input_name'	=> 'file' // default, optional
+		 *	);
+		 * 
+		 */
+		function add_ticket($data)
+		{
+			$boloc	= CreateObject('property.bolocation');
+			$location_details = $boloc->read_single($data['location_code'], array('noattrib' => true));
+
+			$location = array();
+			$_location_arr = explode('-', $data['location_code']);
+			$i = 1;
+			foreach($_location_arr as $_loc)
+			{
+				$location["loc{$i}"] = $_loc;
+				$i++;
+			}
+
+			$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $data['cat_id']));
+
+			if(!$assignedto)
+			{
+				$default_group = (int)$this->config->config_data['tts_default_group'];
+			}
+			else
+			{
+				$default_group = 0;
+			}
+
+			$default_priority = isset($this->config->config_data['prioritylevels']) && $this->config->config_data['prioritylevels'] ? $this->config->config_data['prioritylevels'] : 3;
+
+			$ticket = array
+			(
+				'origin'    => isset($data['origin']) ? $data['origin'] : null,
+				'origin_id' => isset($data['origin_id']) ? $data['origin_id'] : null,
+				'cat_id'    => $data['cat_id'],
+				'group_id'  => isset($data['group_id']) && $data['group_id'] ? $data['group_id']: $default_group,
+				'assignedto'=> $assignedto,
+				'priority'  => isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
+				'status'    => 'O', // O = Open
+				'subject'   => $data['title'],
+				'details'   => $data['details'],
+				'apply'     => true,
+				'contact_id'=> 0,
+				'location'  => $location,
+				'location_code' => $data['location_code'],
+				'street_name'   => $location_details['street_name'],
+				'street_number' => $location_details['street_number'],
+				'location_name' => $location_details['loc1_name'],
+			);
+
+			$result = $this->add($ticket);
+
+			// Files
+			$file_input_name = isset($data['file_input_name']) && $data['file_input_name'] ? $data['file_input_name'] : 'file';
+			
+			$file_name = @str_replace(' ','_',$_FILES[$file_input_name]['name']);
+			if($file_name && $result['id'])
+			{
+				$bofiles = CreateObject('property.bofiles');
+				$to_file = "{$bofiles->fakebase}/fmticket/{$result['id']}/{$file_name}";
+
+				if($bofiles->vfs->file_exists(array(
+					'string' => $to_file,
+					'relatives' => array(RELATIVE_NONE)
+				)))
+				{
+					$msglog['error'][] = array('msg'=>lang('This file already exists !'));
+				}
+				else
+				{
+					$bofiles->create_document_dir("fmticket/{$result['id']}");
+					$bofiles->vfs->override_acl = 1;
+
+					if(!$bofiles->vfs->cp(array (
+					'from'	=> $_FILES[$file_input_name]['tmp_name'],
+					'to'	=> $to_file,
+					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					{
+						$msglog['error'][] = array('msg' => lang('Failed to upload file!'));
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+			return (int)$result['id'];	
+		}
+
 		function add($ticket)
 		{
 			if((!isset($ticket['location_code']) || ! $ticket['location_code']) && isset($ticket['location']) && is_array($ticket['location']))
