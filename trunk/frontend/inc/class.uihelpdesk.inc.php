@@ -600,10 +600,10 @@
 
 						// Files
 						$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
-						if($values['file_name'] && $msglog['id'])
+						if($values['file_name'] && $result['id'])
 						{
 							$bofiles = CreateObject('property.bofiles');
-							$to_file = $bofiles->fakebase . '/fmticket/' . $msglog['id'] . '/' . $values['file_name'];
+							$to_file = $bofiles->fakebase . '/fmticket/' . $result['id'] . '/' . $values['file_name'];
 
 							if($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
