@@ -1948,7 +1948,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 
@@ -1959,7 +1958,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_PRIVATE, 'acl_location'=>$this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::admin::project_bulk_update_status';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project_bulk_update_status';
+
 			$start_date 	= phpgw::get_var('start_date');
 			$end_date 		= phpgw::get_var('end_date');
 			$get_list		= phpgw::get_var('get_list', 'bool', 'POST');
@@ -1968,6 +1968,16 @@
 			$status_new 	= phpgw::get_var('status_new');
 			$type 			= phpgw::get_var('type');
 			$user_id 		= phpgw::get_var('user_id', 'int');
+			$id_to_update	= phpgw::get_var('id_to_update');
+			
+			if($id_to_update)
+			{
+				$ids = array_values(explode(',',trim($id_to_update,',')));
+			}
+			else
+			{
+				$ids = array();
+			}
 
 			$link_data = array
 			(
@@ -1981,39 +1991,47 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids);
 			}
 
-/*
-					'id'		=> $this->db->f('id'),
-					'title'		=> $this->db->f('title',true),
-					'status'	=> $this->db->f('status',true)
-
-*/
-//			_debug_array($list);
-
-
+			$total_records	= count($list);
 			$datavalues[0] = array
-				(
-					'name'					=> "0",
-					'values' 				=> json_encode($list),
-					'total_records'			=> count($list),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$type}.edit"))),
-					'is_paginator'			=> 1,
-					'footer'				=> 0
-				);
+			(
+				'name'					=> "0",
+				'values' 				=> json_encode($list),
+				'total_records'			=> $total_records,
+				'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$type}.edit"))),
+				'permission'   			=> "''",
+				'is_paginator'			=> 0,
+				'footer'				=> 1
+			);
+
+			switch($type)
+			{
+				case 'project':
+					$_key = 'num_open';
+					$_label = lang('open');
+					break;
+				case 'workorder':
+					$_key = 'actual_cost';
+					$_label = lang('actual cost');
+					break;
+				default:
+					$_key = 'num_open';
+					$_label = lang('open');
+			}
 
 			$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true)
+														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => $_key,'label'=>$_label,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
-
 				);
-
-
 
 			$user_list	= $this->bocommon->get_user_list('select',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
@@ -2074,6 +2092,7 @@
 				'user_list'				=> array('options' => $user_list),
 				'start_date'			=> $start_date,
 				'end_date'				=> $end_date,
+				'total_records'			=> $total_records
 			);
 
 

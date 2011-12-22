@@ -1,4 +1,6 @@
 var  myPaginator_0, myDataTable_0
+var values_tophp = [];
+var tableYUI;
 
 /********************************************************************************/
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
@@ -16,9 +18,90 @@ var  myPaginator_0, myDataTable_0
 	}	
 	
 /********************************************************************************/	
-	this.myParticularRenderEvent = function()
+	this.myParticularRenderEvent = function(num)
 	{
+		if(num==0)
+		{
+			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableObject = document.body.getElementsByTagName('table');
+			for (x=0; x<tableObject.length; x++)
+			{
+				if (tableObject[x].parentNode.id == 'datatable-container_0')
+				{
+					tableYUI = tableObject[x];
+				}
+			}
+			tableYUI.setAttribute("id","tableYUI");
+			tableYUI.deleteTFoot();
+			addFooterDatatable();
+		}
+
 	}
+
+  	this.addFooterDatatable = function()
+  	{
+  		//Create ROW
+		newTR = document.createElement('tr');
+		//RowChecked
+		td_empty(td_count);
+		CreateRowChecked("mychecks");
+
+		//Add to Table
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+  	}
+
+
+	var myFormatterCheck = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center><input type='checkbox' class='mychecks'  value="+oRecord.getData('id')+" name='dummy'/></center>";
+	}
+
+
+	this.onActionsClick=function()
+	{
+		array_checks = YAHOO.util.Dom.getElementsByClassName('mychecks');
+
+		for(i=0;i<array_checks.length;i++)
+		{
+			if((array_checks[i].checked) )
+			{
+				values_tophp[i] = array_checks[i].value;
+			}
+		}
+		document.form.id_to_update.value = values_tophp;
+	}
+
+
+ 	check_all = function(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+		for(i=0;i<controls.length;i++)
+		{
+			if(!controls[i].disabled)
+			{
+				//for class=transfer_idClass, they have to be interchanged
+				if(myclass=="mychecks")
+				{
+					if(controls[i].checked)
+					{
+						controls[i].checked = false;
+					}
+					else
+					{
+						controls[i].checked = true;
+					}
+				}
+				//for the rest, always id checked
+				else
+				{
+					controls[i].checked = true;
+				}
+			}
+		}
+	}
+
 
 /********************************************************************************/
 

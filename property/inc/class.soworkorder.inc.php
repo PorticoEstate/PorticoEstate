@@ -1161,7 +1161,7 @@
 					unset($action_params);
 
 				}
-				if ($this->db->f('delivered') )
+				if ($this->db->f('delivered') || $this->db->f('closed'))
 				{
 					//close
 				}
