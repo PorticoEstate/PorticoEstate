@@ -1285,22 +1285,22 @@
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids)
 		{
-			$start_date = phpgwapi_datetime::date_to_timestamp($start_date);
-			$end_date = phpgwapi_datetime::date_to_timestamp($end_date);
+			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
+			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
 
 			$filter = '';
 			if($user_id)
 			{
 				$user_id = (int) $user_id;
-				$filter = "AND user_id = $user_id";
+				$filter = "AND fm_{$type}.user_id = $user_id";
 			}
 
 			if($status_filter)
 			{
 				$user_id = (int) $user_id;
-				$filter .= "AND status = '{$status_filter}'";
+				$filter .= "AND fm_{$type}.status = '{$status_filter}'";
 			}
 
 			switch($type)
@@ -1309,38 +1309,161 @@
 					$table = 'fm_project';
 					$status_table = 'fm_project_status';
 					$title_field = 'fm_project.name as title';
+					$this->_update_status_project($execute, $status_new, $ids);
+					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date, count(project_id) as num_open FROM {$table}"
+					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
+					. " {$this->left_join} fm_workorder ON {$table}.id = fm_workorder.project_id "
+					. " {$this->join} fm_workorder_status ON  fm_workorder.status = fm_workorder_status.id "
+					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) AND fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL"
+					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date"
+					. " ORDER BY {$table}.id DESC";
+
 					break;
 				case 'workorder':
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
+					$actual_cost = ',(act_mtrl_cost + act_vendor_cost) as actual_cost';
+					$this->_update_status_workorder($execute, $status_new, $ids);
+					$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
+					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id  WHERE (start_date > {$start_date} AND start_date < {$end_date} {$filter}) OR start_date is NULL"
+					. " ORDER BY {$table}.id DESC";
 					break;
 				default:
 					return array();
 			}
 
-			$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field} FROM {$table}"
-			. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id  WHERE start_date > {$start_date} AND start_date < {$end_date} {$filter}";
-//_debug_array($sql);			
 			$this->db->query($sql,__LINE__,__FILE__);
 			$values = array();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
 			while ($this->db->next_record())
 			{
 				$values[] = array
 				(
-					'id'		=> $this->db->f('id'),
-					'title'		=> $this->db->f('title',true),
-					'status'	=> $this->db->f('status',true)
+					'id'			=> $this->db->f('id'),
+					'title'			=> $this->db->f('title',true),
+					'status'		=> $this->db->f('status',true),
+					'actual_cost'	=> $this->db->f('actual_cost'),
+					'start_date'	=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),
+					'num_open'		=> (int)$this->db->f('num_open'),
 				);
 			}
 
 			return $values;
 
 
-			$this->db->transaction_begin();
+		}
 
+		protected function _update_status_project($execute, $status_new, $ids)
+		{
+			if(!$execute || !$status_new)
+			{
+				return;
+			}
+			$historylog	= CreateObject('property.historylog','project');
+
+
+			$this->db->transaction_begin();
+			foreach ($ids as $id)
+			{
+				$this->db->query("SELECT status, vendor_id FROM fm_project WHERE id = '{$id}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_status	= $this->db->f('status');
+
+				if ($old_status != $status_new)
+				{
+					$this->db->query("UPDATE fm_project SET status = '{$status_new}' WHERE id = '{$id}'",__LINE__,__FILE__);
+					$historylog->add('S', $id, $status_new, $old_status);
+				}
+
+				$action_params_approved = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project',
+						'id'				=> $id,
+						'responsible'		=> $this->account,
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+	
+				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$status_new}'");
+				$this->db->next_record();
+				if ($this->db->f('approved') || $this->db->f('closed'))
+				{
+					execMethod('property.sopending_action.close_pending_action', $action_params_approved);
+				}
+			}
+
+			$this->db->transaction_commit();
+
+		}
+
+		protected function _update_status_workorder($execute, $status_new, $ids)
+		{
+			if(!$execute || !$status_new)
+			{
+				return;
+			}
+			$historylog	= CreateObject('property.historylog','workorder');
+
+			$this->db->transaction_begin();
+			foreach ($ids as $id)
+			{
+				$this->db->query("SELECT status, vendor_id FROM fm_workorder WHERE id = '{$id}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_status	= $this->db->f('status');
+				$vendor_id	= $this->db->f('vendor_id');
+
+				if ($old_status != $status_new)
+				{
+					$this->db->query("UPDATE fm_workorder SET status = '{$status_new}' WHERE id = '{$id}'",__LINE__,__FILE__);
+					$historylog->add('S', $id, $status_new, $old_status);
+				}
+
+				$action_params_approved = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> $id,
+						'responsible'		=> $this->account,
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+
+				$action_params_progress = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> $id,
+						'responsible'		=> $vendor_id,
+						'responsible_type'  => 'vendor',
+						'action'			=> 'remind',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+
+				$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$status_new}'");
+				$this->db->next_record();
+				if ($this->db->f('approved') )
+				{
+					execMethod('property.sopending_action.close_pending_action', $action_params_approved);
+				}
+				if ($this->db->f('in_progress') )
+				{
+					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
+				}
+				if ($this->db->f('delivered') || $this->db->f('closed'))
+				{
+					execMethod('property.sopending_action.close_pending_action', $action_params_approved);
+					execMethod('property.sopending_action.close_pending_action', $action_params_progress);
+				}
+			}
 
 			$this->db->transaction_commit();
 		}
-
 	}

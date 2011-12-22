@@ -1245,8 +1245,9 @@
 
 
 	<xsl:template match="bulk_update_status" xmlns:php="http://php.net/xsl">
-		<form method="post" action="{update_action}">
-			<table>
+		<div align="left">
+			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<form name="form" method="post" action="{update_action}">
 				<tr>
 					<td>
 						<xsl:value-of select="php:function('lang', 'start date')" />
@@ -1335,52 +1336,57 @@
 						</select>
 					</td>
 				</tr>
-
-		<tr>
-			<td>
-				<div id="paging_0"> </div>
-				<div id="datatable-container_0"></div>
-			</td>
-		</tr>
-
-			</table>
-			<input type="submit" name="get_list">
-				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'get')" />
-				</xsl:attribute>
-			</input>
-			<input type="submit" name="execute">
-				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'submit')" />
-				</xsl:attribute>
-			</input>
-		</form>
-
-					<!--  DATATABLE DEFINITIONS-->
-					<script type="text/javascript">
-						var property_js = <xsl:value-of select="property_js" />;
-					//	var base_java_url = <xsl:value-of select="base_java_url" />;
-						var datatable = new Array();
-						var myColumnDefs = new Array();
-
-						<xsl:for-each select="datatable">
-							datatable[<xsl:value-of select="name"/>] = [
-							{
-							values			:	<xsl:value-of select="values"/>,
-							total_records	: 	<xsl:value-of select="total_records"/>,
-							edit_action		:  	<xsl:value-of select="edit_action"/>,
-							is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-							footer			:	<xsl:value-of select="footer"/>
-							}
-							]
-						</xsl:for-each>
-
-						<xsl:for-each select="myColumnDefs">
-							myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-						</xsl:for-each>
-					</script>
-
-
+				<tr>
+					<td>
+					</td>
+					<td>
+						<input type="submit" name="get_list">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'get list')" />
+							</xsl:attribute>
+						</input>
+						<input type="submit" name="execute" onClick="onActionsClick()">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'save')" />
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<xsl:value-of select='total_records' />
+					</td>
+					<td>
+						<div id="paging_0"> </div>
+						<div id="datatable-container_0"></div>
+						<input type="hidden" name="id_to_update" value=""></input>
+					</td>
+				</tr>
+			</form>
+		</table>
+	</div>
+	<!--  DATATABLE DEFINITIONS-->
+	<script type="text/javascript">
+		var property_js = <xsl:value-of select="property_js" />;
+	//	var base_java_url = <xsl:value-of select="base_java_url" />;
+		var datatable = new Array();
+		var myColumnDefs = new Array();
+		var td_count = 5;
+		<xsl:for-each select="datatable">
+			datatable[<xsl:value-of select="name"/>] = [
+			{
+				values			:	<xsl:value-of select="values"/>,
+				total_records	: 	<xsl:value-of select="total_records"/>,
+				edit_action		:  	<xsl:value-of select="edit_action"/>,
+				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+				footer			:	<xsl:value-of select="footer"/>
+			}
+			]
+		</xsl:for-each>
+		<xsl:for-each select="myColumnDefs">
+			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+		</xsl:for-each>
+	</script>
 	</xsl:template>
 
 
