@@ -4,52 +4,58 @@
 <xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
 
 <div id="main_content">
-			
-		<h1>Kalenderoversikt</h1>
-		<fieldset class="check_list_details">
-			<div><xsl:value-of select="location_array/loc1_name"/></div>
-			<div>Periode: <xsl:value-of select="period"/></div>
-		</fieldset>
+		
+		<h1>Kalenderoversikt for <xsl:value-of select="period"/></h1>
+		
+		<div style="float:left;">			
+			<fieldset class="location_details">
+				<h3 style="margin:0;font-size:19px;"><xsl:value-of select="location_array/loc1_name"/></h3>
+			</fieldset>
+		</div>
+		
+		<ul id="icon_color_map">
+			<li><img height="13" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
+			<li><img height="13" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
+			<li><img height="13" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
+			<li><img height="13" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
+			<li><img height="13" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+			<li><img height="11" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+		</ul>
 				
-		<h2 style="float:left;">Sjekklister</h2>
-		<div style="float:left;margin-top: 30px;margin-left: 636px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
-		<div style="float:left;margin-top: 30px;margin-left: 454px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
+		<div style="float: left;margin-bottom: 10px;margin-left: 735px;margin-top: 30px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
+		<div style="float:left;margin-top: 30px;margin-left: 374px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
 		
 		<script>
 			$(document).ready(function() {
-			  			
-	  			$(".move_cal_left").click(function(){
+				$(".move_cal_left").click(function(){
 	  			  	var leftStrVal = $("#days_view").css("left");
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
-	  				if(leftNumVal == -502){
+	  				if(leftNumVal == -417){
 						$("#days_view").animate({
-		                    left: '-=110' 
+		                    left: '-=93' 
 		                    }, 800);
-					}else if(leftNumVal > -502){
+					}else if(leftNumVal > -417){
 						$("#days_view").animate({
-		                    left: '-=502' 
+		                    left: '-=417' 
 		                    }, 800);
 					}
 	  			});
 	  			
 	  			$(".move_cal_right").click(function(){
-		
 					var leftStrVal = $("#days_view").css("left");
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
-	  				if(leftNumVal == -110){
-						$("#days_view").animate({
-		                    left: '+=110' 
-		                    }, 800);
-					}else if(-502 == leftNumVal){
-						$("#days_view").animate({
-		                    left: '+=502' 
-		                    }, 800);
-					}else if(-502 > leftNumVal){
-						$("#days_view").animate({
-		                    left: '+=502' 
-		                    }, 800);
+	  			  	if( leftNumVal != 0 ){
+		  				if(leftNumVal == -93){
+							$("#days_view").animate({
+			                    left: '+=93' 
+			                    }, 800);
+						}else if( leftNumVal >= -510 ){
+							$("#days_view").animate({
+			                    left: '+=417' 
+			                    }, 800);
+						}
 					}
 	  			});
 			});
@@ -57,7 +63,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="controls_calendar_array/child::node()">
-			<ul style="clear:left;" class="calendar info">
+			<ul style="clear:left;" class="calendar info month">
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
@@ -122,7 +128,7 @@
 												<xsl:text>&amp;location_code=</xsl:text>
 												<xsl:value-of select="$location_code"/>
 											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_yellow.png" />
+											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</a>
 										</div>
 									</xsl:when>
@@ -130,27 +136,22 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
-												<xsl:text>&amp;date=</xsl:text>
-												<xsl:value-of select="info/date"/>
-												<xsl:text>&amp;control_id=</xsl:text>
-												<xsl:value-of select="info/control_id"/>
-												<xsl:text>&amp;location_code=</xsl:text>
-												<xsl:value-of select="$location_code"/>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>&amp;check_list_id=</xsl:text>
+												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_light_green.png" />
+											<img height="15" src="controller/images/status_icon_yellow.png" />
 										</a>
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
 										<div>
-											<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/id"/>
-												</xsl:attribute>
+											<a>
+											<xsl:attribute name="href">
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>&amp;check_list_id=</xsl:text>
+												<xsl:value-of select="info/check_list_id"/>
+											</xsl:attribute>
 												<span style="display:none"><xsl:value-of select="info/id"/></span>
 												<img height="15" src="controller/images/status_icon_dark_green.png" />
 											</a>
@@ -159,13 +160,12 @@
 									<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
-											<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/id"/>
-												</xsl:attribute>
+											<a>
+											<xsl:attribute name="href">
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>&amp;check_list_id=</xsl:text>
+												<xsl:value-of select="info/check_list_id"/>
+											</xsl:attribute>
 												<span style="display:none"><xsl:value-of select="info/id"/></span>
 												<img height="15" src="controller/images/status_icon_light_green.png" />
 											</a>
@@ -176,13 +176,15 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/id"/>
+													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>
-												<span style="display:none"><xsl:value-of select="info/id"/></span>
-												<img height="15" src="controller/images/status_icon_red.png" />
+												<span style="display:none">
+													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+												</span>
+												<img height="15" src="controller/images/status_icon_red_empty.png" />
 											</a>
 										</div>
 									</xsl:when>
