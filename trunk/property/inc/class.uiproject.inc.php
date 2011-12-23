@@ -1646,6 +1646,7 @@
 				$content_invoice[] = array
 				(
 					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
 					'invoice_id'			=> $entry['invoice_id'],					
@@ -1680,6 +1681,7 @@
 					'name'		=> "2",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
+														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),

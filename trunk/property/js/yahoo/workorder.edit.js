@@ -4,14 +4,23 @@ var  myPaginator_2, myDataTable_2;
 
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 	{
+	  	var voucher_out_id = oRecord.getData('voucher_out_id');
+	  	if(voucher_out_id)
+	  	{
+	  		var voucher_id = voucher_out_id;
+	  	}
+	  	else
+	  	{
+	  		var voucher_id = Math.abs(oData);
+	  	}
 	  	if(oData > 0)
 	  	{
-	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&query="+oData+"&voucher_id="+oData+"&user_lid=all>" + oData + "</a>";
+	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&query="+oData+"&voucher_id="+oData+"&user_lid=all>" + voucher_id + "</a>";
 	  	}
 	  	else
 	  	{
 	  		oData = -1*oData;
-	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&voucher_id="+oData+"&user_lid=all&paid=true>" + oData + "</a>";	  	
+	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&voucher_id="+oData+"&user_lid=all&paid=true>" + voucher_id + "</a>";	  	
 	  	}
 	};
 
@@ -43,7 +52,7 @@ var  myPaginator_2, myDataTable_2;
 		newTR = document.createElement('tr');
 
 		td_sum('Sum');
-		td_empty(2);
+		td_empty(3);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_empty(4);

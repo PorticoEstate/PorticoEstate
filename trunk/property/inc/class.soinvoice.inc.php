@@ -185,7 +185,7 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
+			$sql = "SELECT bilagsnr, bilagsnr_ut, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,bilagsnr_ut,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 			$this->db->query($sql2,__LINE__,__FILE__);
@@ -212,8 +212,9 @@
 				$temp[] = array
 					(
 						'voucher_id'		=> $this->db->f('bilagsnr'),
+						'voucher_out_id'	=> $this->db->f('bilagsnr_ut'),
 						'invoice_count'		=> $this->db->f('invoice_count'),
-						'amount'		=> $this->db->f('belop')
+						'amount'			=> $this->db->f('belop')
 					);
 			}
 
@@ -280,6 +281,7 @@
 					$invoice[$i]['counter']					= $i;
 					$invoice[$i]['current_user']			= $GLOBALS['phpgw_info']['user']['account_lid'];
 					$invoice[$i]['voucher_id']				= $voucher_id;
+					$invoice[$i]['voucher_out_id']			= $invoice_temp['voucher_out_id'];
 					$invoice[$i]['invoice_count']			= $invoice_temp['invoice_count'];
 					$invoice[$i]['vendor_id']				= $this->db->f('spvend_code');
 					$invoice[$i]['vendor']					= $this->db->f('org_name');
@@ -406,6 +408,7 @@
 						'status'				=> $this->db->f('status'),
 						'closed'				=> $this->db->f('status') == $closed,
 						'voucher_id'			=> $this->db->f('bilagsnr'),
+						'voucher_out_id'		=> $this->db->f('bilagsnr_ut'),
 						'id'					=> $this->db->f('id'),
 						'invoice_id'			=> $this->db->f('fakturanr'),
 						'budget_account'		=> $this->db->f('spbudact_code'),

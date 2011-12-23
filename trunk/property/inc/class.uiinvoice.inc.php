@@ -1324,7 +1324,15 @@ JS;
 						//-- links a otros modulos
 						if($column['format']== "link")
 						{
-							$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";
+							if($column['name'] == 'voucher_id_lnk')
+							{
+								$_value = isset($content[$k]['voucher_out_id']) && $content[$k]['voucher_out_id'] ? $content[$k]['voucher_out_id'] : $column['value'];
+								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$_value."</a>";
+							}
+							else
+							{
+								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";							
+							}
 						}
 						else if($column['format']== "input")
 						{
@@ -1908,7 +1916,7 @@ JS;
 				}
 				if($i==1)
 				{
-					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_id']);
+					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 				}
 			}
 
