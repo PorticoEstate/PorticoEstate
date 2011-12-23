@@ -817,6 +817,15 @@ $solocation->update_location();
 			)
 		);
 
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'budget_responsible',
+				'descr'			=> 'default initials if responsible can not be found',
+			)
+		);
+
 		//export
 		$receipt_section_export = $custom_config->add_section(array
 			(

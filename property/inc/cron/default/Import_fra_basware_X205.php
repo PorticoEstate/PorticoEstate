@@ -525,7 +525,7 @@
 			//FIXME - this should be configurable
 			if(!$order_info['budget_responsible'])
 			{
-				$order_info['budget_responsible'] = 'karhal';
+				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
 
 			return $order_info;

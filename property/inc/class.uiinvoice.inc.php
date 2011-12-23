@@ -1634,7 +1634,7 @@ JS;
 				array(
 					'col_name'=>'Remark',			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>'external_ref'		,'label'=>lang('external_ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
+					'col_name'=>'external_ref'		,'label'=>lang('external ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
 				array(
 					'col_name'=>'counter',		'visible'=>false),
 				array(
