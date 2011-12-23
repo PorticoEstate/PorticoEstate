@@ -86,7 +86,7 @@ class controller_socheck_list extends controller_socommon
 	}
 		
 	public function get_single_with_check_items($check_list_id, $status){
-		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
@@ -113,6 +113,7 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));	
+				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));	
 			}
 						
 			if($this->db->f('ci_id', true) != ''){

@@ -96,11 +96,12 @@
 				
 			$repeat_type = 0;
 			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
+			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
-							
-			print_r( $controls_calendar_array );
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
 			
 			for($i=1;$i<=31;$i++){
 				$heading_array[$i] = "$i";	
@@ -112,7 +113,7 @@
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
-				'period' 			  	  => $month,
+				'period' 			  	  => $month_array[ $month - 1],
 				'year' 			  	  	  => $year
 			);
 			
@@ -146,11 +147,11 @@
 			$repeat_type = 2;
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_check_list_array, $controls_calendar_array, 12, "view_months" );
-			
+					
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-							
+			
 			$data = array
 			(
 				'location_array'		  => $location_array,

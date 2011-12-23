@@ -61,8 +61,7 @@
 			$this->like				= & $this->db->like;
 			$this->dateformat		= $this->db->date_format();
 			$this->datetimeformat	= $this->db->datetime_format();
-			$this->config	= CreateObject('phpgwapi.config','property');
-			$this->config->read();
+			$this->config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
 		function pre_run($data = array())
@@ -145,7 +144,7 @@
 		public function execute($cron='')
 		{
 			$this->get_files();
-			$dirname = $this->config->config_data['import_path'];
+			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
 			 || !is_dir($dirname) )
@@ -222,11 +221,11 @@
 
 		protected function get_files()
 		{
-			$server				= $this->config->config_data['invoice_ftp_host'];
-			$user				= $this->config->config_data['invoice_ftp_user'];
-			$password			= $this->config->config_data['invoice_ftp_password'];
-			$directory_remote	= rtrim($this->config->config_data['invoice_ftp_import_basedir'],'/');
-			$directory_local	= rtrim($this->config->config_data['import_path'],'/');
+			$server				= $this->config->config_data['common']['host'];
+			$user				= $this->config->config_data['common']['user'];
+			$password			= $this->config->config_data['common']['password'];
+			$directory_remote	= rtrim($this->config->config_data['common']['remote_basedir'],'/');
+			$directory_local	= rtrim($this->config->config_data['import']['local_path'],'/');
 			$port				= 22;
 
 			if (!function_exists("ssh2_connect"))
@@ -526,7 +525,7 @@
 			//FIXME - this should be configurable
 			if(!$order_info['budget_responsible'])
 			{
-				$order_info['budget_responsible'] = 'karhal';
+				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
 
 			return $order_info;

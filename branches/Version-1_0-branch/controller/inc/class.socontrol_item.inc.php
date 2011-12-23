@@ -312,8 +312,8 @@
 		{
 			$results = array();
 
-			$sql = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl, controller_control c ";
-			$sql .= "WHERE c.id=$control_id AND c.id=cl.control_id AND cl.control_item_id=ci.id";
+			$sql  = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl ";
+			$sql .= "WHERE cl.control_id=$control_id AND cl.control_item_id=ci.id";
 			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
@@ -326,7 +326,6 @@
 
 				$results[] = $control_item;
 			}
-
 			return $results;
 		}
 

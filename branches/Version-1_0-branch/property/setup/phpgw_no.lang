@@ -1151,6 +1151,7 @@ owner attributes	property	no	Eier attributter
 owner categories	property	no	Eier kategorier
 owner type	property	no	Eiertype
 paid	property	no	Betalt
+paid percent	property	no	Prosentvis betalt
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
 payment date	property	no	Forfallsdato
@@ -1617,7 +1618,7 @@ standard has not been edited	property	no	standard er ikke rettet
 standard id	property	no	standard ID
 standard prefix	property	no	prefiks fo standard
 start	property	no	start
-start date	property	no	start dato
+start date	property	no	Startdato
 started	property	no	startet
 start project	property	no	Start prosjekt
 start this entity	property	no	Start denne entiteten

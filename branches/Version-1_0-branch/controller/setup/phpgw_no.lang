@@ -56,6 +56,7 @@ year controller	no	År
 location_code	controller	no	Enhetsnummer
 included_units	controller	no	Kontrollens enheter
 floor	controller	no	Etasje
+register_error	controller	no	Registrer avvik
 section	controller	no	Seksjon
 room	controller	no	Rom
 save	controller	no	Lagre
@@ -306,5 +307,6 @@ Bim_type	controller	no	Utstyrstype
 GUID	controller	no	GUID
 View_procedure	controller	Prosedyre
 View_documents_for_procedure	controller	no	Tilknyttede dokumenter
-Document title	controller	no	Dokumentets tittel:
-Document name	controller	no	Filnavn:
+Document title	controller	no	Dokumentets tittel
+Document name	controller	no	Filnavn
+Document description	controller	no	Beskrivelse

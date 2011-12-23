@@ -125,4 +125,11 @@ $(document).ready(function() {
 		
 		$(submitBnt).removeClass("not_active");
 	});
+	
+	$(".frm_save_control_item").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		
+		$(submitBnt).removeClass("not_active");
+	});
 });

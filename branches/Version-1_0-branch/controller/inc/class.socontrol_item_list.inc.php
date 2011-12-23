@@ -82,20 +82,6 @@
 			}
 		}
 
-		/**
-		 * Update the database values for an existing activity object.
-		 *
-		 * @param $activity the activity to be updated
-		 * @return boolean true if successful, false otherwise
-		 */
-
-	/**
-		 * Update the database values for an existing activity object.
-		 *
-		 * @param $activity the activity to be updated
-		 * @return boolean true if successful, false otherwise
-		 */
-
 		function update($control_item_list)
 		{
 			$id = intval($control_item_list->get_id());
@@ -161,20 +147,7 @@
 			return isset($result);
 		}
 
-		/**
-		 * Get a list of procedure objects matching the specific filters
-		 * 
-		 * @param $start search result offset
-		 * @param $results number of results to return
-		 * @param $sort field to sort by
-		 * @param $query LIKE-based query string
-		 * @param $filters array of custom filters
-		 * @return list of rental_composite objects
-		 */
-		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
-		{
-
-		}
+		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array()){}
 
 		function get_id_field_name($extended_info = false)
 		{

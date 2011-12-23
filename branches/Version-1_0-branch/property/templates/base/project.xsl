@@ -1244,4 +1244,159 @@
 	</xsl:template>
 
 
+	<xsl:template match="bulk_update_status" xmlns:php="http://php.net/xsl">
+		<div align="left">
+			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<form name="form" method="post" action="{update_action}">
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'start date')" />
+					</td>
+					<td>
+						<input type="text" id="values_start_date" name="start_date" size="10" value="{start_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_start_date_statustext"/>
+							</xsl:attribute>
+						</input>
+						<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'end date')" />
+					</td>
+					<td>
+						<input type="text" id="values_end_date" name="end_date" size="10" value="{end_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_end_date_statustext"/>
+							</xsl:attribute>
+						</input>
+						<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'user')" />
+					</td>
+					<td>
+						<select name="user_id">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select user')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select')" />
+							</option>
+							<xsl:apply-templates select="user_list/options"/>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'type')" />
+					</td>
+					<td>
+						<select name="type" onChange="this.form.submit();">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select type')" />
+							</xsl:attribute>
+							<xsl:apply-templates select="type_list/options"/>
+						</select>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'status filter')" />
+					</td>
+					<td>
+						<select name="status_filter" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</option>
+							<xsl:apply-templates select="status_list_filter/options"/>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'status new')" />
+					</td>
+					<td>
+						<select name="status_new" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select status')" />
+							</option>
+							<xsl:apply-templates select="status_list_new/options"/>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					</td>
+					<td>
+						<input type="submit" name="get_list">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'get list')" />
+							</xsl:attribute>
+						</input>
+						<input type="submit" name="execute" onClick="onActionsClick()">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'save')" />
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<xsl:value-of select='total_records' />
+					</td>
+					<td>
+						<div id="paging_0"> </div>
+						<div id="datatable-container_0"></div>
+						<input type="hidden" name="id_to_update" value=""></input>
+					</td>
+				</tr>
+			</form>
+		</table>
+	</div>
+	<!--  DATATABLE DEFINITIONS-->
+	<script type="text/javascript">
+		var property_js = <xsl:value-of select="property_js" />;
+	//	var base_java_url = <xsl:value-of select="base_java_url" />;
+		var datatable = new Array();
+		var myColumnDefs = new Array();
+		var td_count = 5;
+		<xsl:for-each select="datatable">
+			datatable[<xsl:value-of select="name"/>] = [
+			{
+				values			:	<xsl:value-of select="values"/>,
+				total_records	: 	<xsl:value-of select="total_records"/>,
+				edit_action		:  	<xsl:value-of select="edit_action"/>,
+				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+				footer			:	<xsl:value-of select="footer"/>
+			}
+			]
+		</xsl:for-each>
+		<xsl:for-each select="myColumnDefs">
+			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+		</xsl:for-each>
+	</script>
+	</xsl:template>
+
+
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
 
