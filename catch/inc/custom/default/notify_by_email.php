@@ -5,21 +5,29 @@
 	{
 		$to_array = array();
 		$_to_array = explode(',', $config_data['notify_email']);
+
 		if (isset($config_data['notify_rule']) && $config_data['notify_rule'])
 		{
 			$notify_rule = explode(',', $config_data['notify_rule']);
 			foreach($notify_rule as $_rule )
 			{
 				$__rule = explode('=&gt;', $_rule);
+				$___rule = explode(';', trim($__rule[1]));
 				if($__rule)
 				{
 					$_condition = explode('=', $__rule[0]);
 					if($_condition)
 					{
 						$this->db->query("SELECT * FROM $target_table WHERE id = {$id} AND " . trim($_condition[0]) . "='" . trim($_condition[1]) . "'",__LINE__,__FILE__);
-						if($this->db->next_record() && isset($_to_array[($__rule[1]-1)]))
+						if($this->db->next_record())
 						{
-							$to_array[] =  $_to_array[($__rule[1]-1)];
+							foreach($___rule as $____rule)
+							{
+								if(isset( $_to_array[($____rule-1)]))
+								{
+									$to_array[] =  $_to_array[($____rule-1)];
+								}
+							}
 						}
 					}
 				}
@@ -29,7 +37,10 @@
 		{
 			$to_array = $_to_array;
 		}
-//_debug_array($to_array);
+
+		$to_array = array_unique($to_array);
+
+		//_debug_array($to_array);
 
 		$socommon		= CreateObject('property.socommon');
 		$prefs = $socommon->create_preferences('property',$user_id);
