@@ -50,22 +50,20 @@
 			$this->join				= & $this->db->join;
 
 			$this->soXport 			= CreateObject('property.soXport');	
-			$this->config			= CreateObject('phpgwapi.config','property');
-			$this->config->read_repository();
-			$this->custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			
-			if(!isset($this->custom_config->config_data['export']))
+			if(!isset($this->config->config_data['common']['method']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')) );
 			}
 			
-			if (isset($this->custom_config->config_data['export']['cleanup_old']) && $this->custom_config->config_data['export']['cleanup_old'])
+			if (isset($this->config->config_data['export']['cleanup_old']) && $this->config->config_data['export']['cleanup_old'])
 			{
 				$this->cleanup_old();
 			}
 
-_debug_array($this->custom_config->config_data['export']);die();
-_debug_array($this->custom_config->config_data['export']['cleanup_old']);die();			
+_debug_array($this->config->config_data['export']);die();
+_debug_array($this->config->config_data['export']['cleanup_old']);die();			
 		}
 
 		protected function cleanup_old()
@@ -97,7 +95,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 		
 		protected function select_vouchers_to_transfer()
 		{
-			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
+			if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval']== 1)
 			{
 				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL ORDER BY bilagsnr asc';
 			}
@@ -414,7 +412,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 
 			if($this->connection)
 			{
-				switch ($this->config->config_data['invoice_export_method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						ftp_quit($this->connection);
@@ -486,7 +484,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 			$antall = count($voucher);
 			if($antall > 0)
 			{		
-				$fil_katalog = $this->config->config_data['export_path'];			
+				$fil_katalog = $this->config->config_data['export']['path'];			
 			
 				if($rollback_voucher)
 				{
@@ -518,7 +516,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 			{
 				$external_ref = mt_rand();
 			}
-			$fil_katalog = $this->config->config_data['export_path'];
+			$fil_katalog = $this->config->config_data['export']['path'];
 			$continue = True;
 			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
 
@@ -643,9 +641,9 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 			{
 				$periode = $oRsBilag[0]['periode'];
 			}
-			else if (isset($this->custom_config->config_data['export']['dato_aarsavslutning']) && time() < $this->custom_config->config_data['export']['dato_aarsavslutning'])
+			else if (isset($this->config->config_data['export']['dato_aarsavslutning']) && time() < $this->config->config_data['export']['dato_aarsavslutning'])
 			{		
-				if(date('Y',time()) == date('Y', $this->custom_config->config_data['export']['dato_aarsavslutning']))
+				if(date('Y',time()) == date('Y', $this->config->config_data['export']['dato_aarsavslutning']))
 				{
 					$periode = date('Y',time()) - 1 . '12';
 				}
@@ -838,7 +836,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 				}
 			
 			// -- END
-				if( $file_written && ($this->config->config_data['invoice_export_method'] != 'ftp' && $this->config->config_data['invoice_export_method'] != 'ssh'))
+				if( $file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
@@ -933,14 +931,14 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 
 		protected function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
 		{			
-			if($this->config->config_data['invoice_export_method']=='ftp' || $this->config->config_data['invoice_export_method']=='ssh')
+			if($this->config->config_data['common']['method']=='ftp' || $this->config->config_data['common']['method']=='ssh')
 			{
 				if(!$connection = $this->connection)
 				{
 					$connection	= $this->phpftp_connect();
 				}
 				
-				$basedir = $this->config->config_data['invoice_ftp_basedir'];
+				$basedir = $this->config->config_data['common']['remote_basedir'];
 				if($basedir)
 				{
 					$remote_file = $basedir . '/' . basename($Filnavn);
@@ -950,7 +948,7 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 					$remote_file = basename($Filnavn);
 				}
 
-				switch ($this->config->config_data['invoice_export_method'])
+				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
 						$transfer_ok = ftp_put($connection,$remote_file, $Filnavn, FTP_BINARY);
@@ -989,12 +987,12 @@ _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();
 
 		protected function phpftp_connect() 
 		{
-			$server				= $this->config->config_data['invoice_ftp_host'];
-			$user				= $this->config->config_data['invoice_ftp_user'];
-			$password			= $this->config->config_data['invoice_ftp_password'];
+			$server				= $this->config->config_data['common']['host'];
+			$user				= $this->config->config_data['common']['user'];
+			$password			= $this->config->config_data['common']['password'];
 			$port				= 22;
 			
-			switch ($this->config->config_data['invoice_export_method'])
+			switch ($this->config->config_data['common']['method'])
 			{
 				case 'ftp';
 					if($connection = ftp_connect($server))

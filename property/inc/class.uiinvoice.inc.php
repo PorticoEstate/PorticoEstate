@@ -1642,9 +1642,10 @@ JS;
 				);
 
 
-			$config		= CreateObject('phpgwapi.config','property');
-			$config->read();
-			$baseurl_invoice = isset($config->config_data['baseurl_invoice']) && $config->config_data['baseurl_invoice'] ? $config->config_data['baseurl_invoice'] : '';
+	//		$config		= CreateObject('phpgwapi.config','property');
+	//		$config->read();
+			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
 			$lang_picture = lang('picture');
 
 			$j=0;
