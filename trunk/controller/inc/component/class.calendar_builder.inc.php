@@ -45,13 +45,14 @@ class calendar_builder {
 			foreach($control->get_check_lists_array() as $check_list){
 				
 				$check_list_status_info = new check_list_status_info();
-				$check_list_status_info->set_id( $check_list->get_id() );
+				$check_list_status_info->set_check_list_id( $check_list->get_id() );
 		
 				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 				
 				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 )
 				{
 					$status = "control_planned";
+					$check_list_status_info->set_info_text("Planlagt utført: " . $check_list->get_planned_date());
 				}
 				else if( $check_list->get_status() == 0 & $check_list->get_deadline() > $todays_date )
 				{
@@ -73,7 +74,7 @@ class calendar_builder {
 					$status = "control_canceled";
 				}
 				
-				$check_list_status_info->set_deadline( date("d/m-Y", $check_list->get_deadline()) );
+				$check_list_status_info->set_deadline_date( date("d/m-Y", $check_list->get_deadline()) );
 				
 				if($period_type == "view_months")
 				{
@@ -110,11 +111,12 @@ class calendar_builder {
 				$calendar_array[$i] = null;
 			}
 			
+			$status = "control_agg_accomplished_with_errors";
+			
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($check_list_array as $check_list){
-				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["status"] = 2;
+				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["status"] = $status;
 				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["info"] = $check_list['count']; 
-				
 			}
 			
 			$control_calendar_array[] = array("control" => $control_info, "calendar_array" => $calendar_array);
