@@ -1324,7 +1324,15 @@ JS;
 						//-- links a otros modulos
 						if($column['format']== "link")
 						{
-							$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";
+							if($column['name'] == 'voucher_id_lnk')
+							{
+								$_value = isset($content[$k]['voucher_out_id']) && $content[$k]['voucher_out_id'] ? $content[$k]['voucher_out_id'] : $column['value'];
+								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$_value."</a>";
+							}
+							else
+							{
+								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";							
+							}
 						}
 						else if($column['format']== "input")
 						{
@@ -1634,7 +1642,7 @@ JS;
 				array(
 					'col_name'=>'Remark',			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>'external_ref'		,'label'=>lang('external_ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
+					'col_name'=>'external_ref'		,'label'=>lang('external ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
 				array(
 					'col_name'=>'counter',		'visible'=>false),
 				array(
@@ -1642,9 +1650,10 @@ JS;
 				);
 
 
-			$config		= CreateObject('phpgwapi.config','property');
-			$config->read();
-			$baseurl_invoice = isset($config->config_data['baseurl_invoice']) && $config->config_data['baseurl_invoice'] ? $config->config_data['baseurl_invoice'] : '';
+	//		$config		= CreateObject('phpgwapi.config','property');
+	//		$config->read();
+			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
 			$lang_picture = lang('picture');
 
 			$j=0;
@@ -1907,7 +1916,7 @@ JS;
 				}
 				if($i==1)
 				{
-					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_id']);
+					$current_Consult[] = array(lang('Voucher Id'),$content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 				}
 			}
 

@@ -22,6 +22,7 @@
 		public $config_data = array();
 		protected $db;
 		protected $location_id = 0;
+		protected $global_lock = false;
 
 		public function __construct($location_id = 0)
 		{
@@ -142,10 +143,29 @@
 
 		function add_section(array $values)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
+
+			$sql = "SELECT id FROM phpgw_config2_section WHERE location_id = {$this->location_id} AND descr = '{$values['descr']}'";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			if ($this->db->next_record())
+			{
+				$receipt['section_id']=  $this->db->f('id');
+				$receipt['message'][]=array('msg'=>lang('config section has not been saved'));
+				return $receipt;
+			}
+
 			$values['section_id'] = $this->db->next_id('phpgw_config2_section');
 
 			$insert_values = array
@@ -163,14 +183,25 @@
 			$receipt['message'][]=array('msg'=>lang('config section has been saved'));
 			$receipt['section_id']= $values['section_id'];
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $receipt;
 		}
 
 		function edit_section(array $values)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$value_set['name']		= $this->db->db_addslashes($values['name']);
 			$value_set['descr']		= $this->db->db_addslashes($values['descr']);
@@ -179,7 +210,10 @@
 
 			$this->db->query("UPDATE phpgw_config2_section set $value_set WHERE id=" . $values['section_id'],__LINE__,__FILE__);
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['message'][]=array('msg'=>lang('config section has been edited'));
 
@@ -190,12 +224,25 @@
 		function delete_section(int $id)
 		{
 			$id = (int)$id;
-			$this->db->transaction_begin();
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$this->db->query("DELETE FROM phpgw_config2_value WHERE section_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_config2_choice WHERE section_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_config2_attrib WHERE section_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_config2_section WHERE id = {$id}",__LINE__,__FILE__);
-			$this->db->transaction_commit();
+
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 		}
 
 		function read_attrib(array $data)
@@ -321,10 +368,29 @@
 
 		function add_attrib(array $values)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
+
+			$sql = "SELECT id FROM phpgw_config2_attrib WHERE section_id = '{$values['section_id']}' AND name = '{$values['name']}'";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			if ($this->db->next_record())
+			{
+				$receipt['attrib_id']	= $this->db->f('id');
+				$receipt['error'][]=array('msg'=>lang('config attrib has been saved'));
+				return $receipt;
+			}
+
 			$values['attrib_id'] = $this->db->next_id('phpgw_config2_attrib',array('section_id'=>$values['section_id']));
 
 			$insert_values = array
@@ -340,17 +406,44 @@
 			$this->db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name,descr) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
+
+			$choice_map = array();
+			if(isset($values['choice']) && $values['choice'])
+			{
+				foreach ($values['choice'] as $choice)
+				{
+					$values['new_choice'] = $choice;
+					$this->edit_attrib($values);				
+				}
+			}
+
+			if(isset($values['value']) && $values['value'])
+			{
+				$this->add_value($values);
+			}
+
 			$receipt['message'][]=array('msg'=>lang('config attrib has been saved'));
 			$receipt['attrib_id']= $values['attrib_id'];
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $receipt;
 		}
 
 		function edit_attrib(array $values)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$value_set['name']	= $this->db->db_addslashes($values['name']);
 			$value_set['descr']	= $this->db->db_addslashes($values['descr']);
@@ -387,11 +480,15 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['message'][]=array('msg'=>lang('config attrib has been edited'));
 
 			$receipt['attrib_id']= $values['attrib_id'];
+			$receipt['choice_id'] = $choice_id;
 			return $receipt;
 		}
 
@@ -400,11 +497,22 @@
 			$section_id	= (int) $section_id;
 			$id			= (int) $id;
 
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$this->db->query("DELETE FROM phpgw_config2_value WHERE section_id ={$section_id} AND attrib_id={$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_config2_choice WHERE section_id ={$section_id} AND attrib_id={$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_config2_attrib WHERE section_id ={$section_id} AND id={$id}",__LINE__,__FILE__);
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 		}
 
 		function read_value(array $data)
@@ -490,7 +598,15 @@
 				$values['value'] = phpgwapi_datetime::date_to_timestamp($values['value']);
 			}
 
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$values['value'] = $this->db->db_addslashes($values['value']);
 			$id = $this->db->next_id('phpgw_config2_value',array('section_id'=>$values['section_id'],'attrib_id'=>$values['attrib_id']));
@@ -510,7 +626,10 @@
 			$receipt['message'][]=array('msg'=>lang('config value has been saved'));
 			$receipt['id']= $id;
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $receipt;
 		}
@@ -528,11 +647,23 @@
 			}
 			else
 			{
-				$this->db->transaction_begin();
+				if ( $this->db->get_transaction() )
+				{
+					$this->global_lock = true;
+				}
+				else
+				{
+					$this->db->transaction_begin();
+				}
+
 				$value_set['value']	= $this->db->db_addslashes($values['value']);
 				$value_set	= $this->db->validate_update($value_set);
 				$this->db->query("UPDATE phpgw_config2_value SET {$value_set} WHERE section_id =" . (int)$values['section_id'] . ' AND attrib_id=' . (int)$values['attrib_id'] . ' AND id=' . (int)$values['id'],__LINE__,__FILE__);
-				$this->db->transaction_commit();
+
+				if ( !$this->global_lock )
+				{
+					$this->db->transaction_commit();
+				}
 			}
 
 			$receipt['message'][]=array('msg'=>lang('config value has been edited'));
@@ -547,9 +678,20 @@
 			$attrib_id	= (int) $attrib_id;
 			$id			= (int) $id;
 
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$this->db->query("DELETE FROM phpgw_config2_value WHERE section_id ={$section_id} AND attrib_id={$attrib_id} AND id={$id}",__LINE__,__FILE__);
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 		}
 
 		function select_choice_list($section_id,$attrib_id)

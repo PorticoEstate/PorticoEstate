@@ -1,11 +1,25 @@
 var  myPaginator_0, myDataTable_0
-var d;
-var category_template = 0;
-var tableYUI;
 var values_tophp = [];
+var tableYUI;
+
 /********************************************************************************/
-this.myParticularRenderEvent = function(num)
-{
+	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
+	};
+
+
+
+
+/********************************************************************************/	
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+	}	
+	
+/********************************************************************************/	
+	this.myParticularRenderEvent = function(num)
+	{
 		if(num==0)
 		{
 			//tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
@@ -22,9 +36,7 @@ this.myParticularRenderEvent = function(num)
 			addFooterDatatable();
 		}
 
-}
-
-
+	}
 
   	this.addFooterDatatable = function()
   	{
@@ -43,7 +55,7 @@ this.myParticularRenderEvent = function(num)
 
 	var myFormatterCheck = function(elCell, oRecord, oColumn, oData)
 	{
-		elCell.innerHTML = "<center><input type='checkbox' class='mychecks'  value="+oRecord.getData('attrib_id')+" name='dummy'/></center>";
+		elCell.innerHTML = "<center><input type='checkbox' class='mychecks'  value="+oRecord.getData('id')+" name='dummy'/></center>";
 	}
 
 
@@ -58,35 +70,11 @@ this.myParticularRenderEvent = function(num)
 				values_tophp[i] = array_checks[i].value;
 			}
 		}
-		document.form.template_attrib.value = values_tophp;
+		document.form.id_to_update.value = values_tophp;
 	}
 
 
-/********************************************************************************/	
-var FormatterCenter = function(elCell, oRecord, oColumn, oData)
-{
-	elCell.innerHTML = "<center>"+oData+"</center>";
-}
-
- /********************************************************************************/
-
-	this.get_template_attributes=function()
-	{
-		if(document.getElementById('category_template').value)
-		{
-			base_java_url['category_template'] = document.getElementById('category_template').value;
-		}
-		
-		if(document.getElementById('category_template').value != category_template)
-		{
-			execute_async(myDataTable_0);
-			category_template = document.getElementById('category_template').value;
-		}
-	}
-
-
-
-  	check_all = function(myclass)
+ 	check_all = function(myclass)
   	{
 		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
 		for(i=0;i<controls.length;i++)
@@ -115,6 +103,7 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	}
 
 
+/********************************************************************************/
 
 YAHOO.util.Event.addListener(window, "load", function()
 {

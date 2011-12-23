@@ -735,6 +735,11 @@
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitemplate.index')),
 								'text'	=> lang('template'),
 								'image'		=> array('property', 'project_template')
+							),
+							'project_bulk_update_status'	=> array
+							(
+								'text'	=> lang('project bulk update status'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.bulk_update_status') )
 							)
 						)
 					);

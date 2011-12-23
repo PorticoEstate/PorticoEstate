@@ -15,7 +15,9 @@
 					<h3><xsl:value-of select="php:function('lang','upload')" /></h3>
 					<input type="file" id="file_path" name="file_path" />
 					<xsl:value-of select="php:function('lang','title')" />:
-					<input type="text" id="document_title" name="document_title" />
+					<input type="text" id="document_title" name="document_title" /><br/>
+					<xsl:value-of select="php:function('lang','description')" />:
+					<textarea id="document_description" name="document_description" rows="5" cols="60"></textarea>
 					<input type="submit" id="upload_button" value="{$lang_upload}" />
 				</fieldset>
 			</form>
@@ -49,6 +51,9 @@
 				</td>
 				<td align="left" style="padding-right: 10px;">
 					<xsl:value-of select="name"/>
+				</td>
+				<td align="left" style="padding-right: 10px;">
+					<xsl:value-of select="description" disable-output-escaping="yes"/>
 				</td>
 			</xsl:for-each>
 		</tr>

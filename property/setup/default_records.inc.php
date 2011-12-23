@@ -726,3 +726,143 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VA
 
 $solocation = createObject('property.solocation');
 $solocation->update_location();
+
+		$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+		// common
+		$receipt_section_common = $custom_config->add_section(array
+			(
+				'name' => 'common',
+				'descr' => 'common invoice config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'host',
+				'descr'			=> 'Host',
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'user',
+				'descr'			=> 'User',
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'password',
+				'descr'			=> 'Password',
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+				'choice'		=> array('local','ftp','ssh'),
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'remote_basedir',
+				'descr'			=> 'basedir on remote server',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'invoice_approval',
+				'descr'			=> 'Number of persons required to approve for payment',
+				'choice'		=> array(1,2),
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'baseurl_invoice',
+				'descr'			=> 'baseurl on remote server for image of invoice',
+			)
+		);
+
+		// import:
+		$receipt_section_import = $custom_config->add_section(array
+			(
+				'name' => 'import',
+				'descr' => 'import invoice config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'local_path',
+				'descr'			=> 'path on local sever to store imported files',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'budget_responsible',
+				'descr'			=> 'default initials if responsible can not be found',
+			)
+		);
+
+		//export
+		$receipt_section_export = $custom_config->add_section(array
+			(
+				'name' => 'export',
+				'descr' => 'Invoice export'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'cleanup_old',
+				'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'date',
+				'name'			=> 'dato_aarsavslutning',
+				'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'path',
+				'descr'			=> 'path on local sever to store exported files',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'pre_path',
+				'descr'			=> 'path on local sever to store exported files for pre approved vouchers',
+			)
+		);

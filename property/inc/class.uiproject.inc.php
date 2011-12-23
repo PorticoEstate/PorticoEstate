@@ -51,14 +51,14 @@
 
 		var $public_functions = array
 			(
-				'download'		=> true,
-				'index'			=> true,
-				'view'			=> true,
-				'edit'			=> true,
-				'delete'		=> true,
-				'date_search'	=> true,
-				'columns'		=> true,
-				'update_data'	=> true,
+				'download'				=> true,
+				'index'					=> true,
+				'view'					=> true,
+				'edit'					=> true,
+				'delete'				=> true,
+				'date_search'			=> true,
+				'columns'				=> true,
+				'bulk_update_status'	=> true
 			);
 
 		function property_uiproject()
@@ -1646,6 +1646,7 @@
 				$content_invoice[] = array
 				(
 					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
 					'invoice_id'			=> $entry['invoice_id'],					
@@ -1680,6 +1681,7 @@
 					'name'		=> "2",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
+														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
@@ -1890,8 +1892,8 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
-			$template_vars = array();
-			$template_vars['datatable'] = $datatable;
+//			$template_vars = array();
+//			$template_vars['datatable'] = $datatable;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
@@ -1948,8 +1950,182 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
+
+
+		function bulk_update_status()
+		{
+			if(!$this->acl->check('.project', PHPGW_ACL_PRIVATE, 'property'))//manage
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_PRIVATE, 'acl_location'=>$this->acl_location));
+			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project_bulk_update_status';
+
+			$start_date 	= phpgw::get_var('start_date');
+			$end_date 		= phpgw::get_var('end_date');
+			$get_list		= phpgw::get_var('get_list', 'bool', 'POST');
+			$execute		= phpgw::get_var('execute', 'bool', 'POST');
+			$status_filter 	= phpgw::get_var('status_filter');
+			$status_new 	= phpgw::get_var('status_new');
+			$type 			= phpgw::get_var('type');
+			$user_id 		= phpgw::get_var('user_id', 'int');
+			$id_to_update	= phpgw::get_var('id_to_update');
+			
+			if($id_to_update)
+			{
+				$ids = array_values(explode(',',trim($id_to_update,',')));
+			}
+			else
+			{
+				$ids = array();
+			}
+
+			$link_data = array
+			(
+				'menuaction' => 'property.uiproject.index'
+			);
+
+			$jscal = CreateObject('phpgwapi.jscalendar');
+			$jscal->add_listener('values_start_date');
+			$jscal->add_listener('values_end_date');
+
+
+			if(($execute || $get_list) && $type)
+			{
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids);
+			}
+
+			$total_records	= count($list);
+			$datavalues[0] = array
+			(
+				'name'					=> "0",
+				'values' 				=> json_encode($list),
+				'total_records'			=> $total_records,
+				'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.ui{$type}.edit"))),
+				'permission'   			=> "''",
+				'is_paginator'			=> 0,
+				'footer'				=> 1
+			);
+
+			switch($type)
+			{
+				case 'project':
+					$_key = 'num_open';
+					$_label = lang('open');
+					break;
+				case 'workorder':
+					$_key = 'actual_cost';
+					$_label = lang('actual cost');
+					break;
+				default:
+					$_key = 'num_open';
+					$_label = lang('open');
+			}
+
+			$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => $_key,'label'=>$_label,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
+														))
+				);
+
+			$user_list	= $this->bocommon->get_user_list('select',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+			foreach ($user_list as &$entry)
+			{
+				$entry['id'] = $entry['user_id'];
+			}
+			unset($entry);
+
+			switch($type)
+			{
+				case 'project':
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_filter));
+					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_new));
+					break;
+				case 'workorder':
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_filter));
+					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_new));
+					break;
+				default:
+					$status_list_filter = array();
+			}
+
+			$type_array = array
+			(
+				array
+				(
+					'id' => '0',
+					'name'	=> lang('select')
+				),
+				array
+				(
+					'id' => 'project',
+					'name'	=> lang('project')
+				),
+				array
+				(
+					'id' => 'workorder',
+					'name'	=> lang('workorder')
+				)
+			);
+
+			foreach ($type_array as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
+			}
+
+			$data = array
+			(
+				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'				=> $datavalues,
+				'myColumnDefs'			=> $myColumnDefs,
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'update_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.bulk_update_status')),
+				'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'status_list_filter'	=> array('options' => $status_list_filter),
+				'status_list_new'		=> array('options' => $status_list_new),
+				'type_list'				=> array('options' => $type_array),
+				'user_list'				=> array('options' => $user_list),
+				'start_date'			=> $start_date,
+				'end_date'				=> $end_date,
+				'total_records'			=> $total_records
+			);
+
+
+			$appname			= lang('project');
+			$function_msg		= lang('bulk update status');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.bulk_update_status', 'property' );
+
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
+		}
+
 
 		function view()
 		{

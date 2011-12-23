@@ -61,66 +61,6 @@
 				<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 			</td>
 		</tr>
-
-		<tr class="row_off">
-			<td>{lang_needed_for_invoice_approval}:</td>
-			<td>
-				<select name="newsettings[invoice_approval]">
-					<option value="" {selected_invoice_approval_}>2</option>
-					<option value="1" {selected_invoice_approval_1}>1</option>
-				</select>
-			</td>
-		</tr>
-
-		<tr class="row_on">
-			<td>{lang_Path_to_Invoice_import_files}:<br>
-				{lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
-			<td><input name="newsettings[import_path]" value="{value_import_path}"></td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_Path_to_Invoice_Export_files}: ({lang_mandatory})<br>
-				{lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
-			<td><input name="newsettings[export_path]" value="{value_export_path}"></td>
-		</tr>
-		<tr class="row_off">
-			<td>{lang_Path_to_Invoice_Export_preregistering}: ({lang_mandatory})<br>
-				{lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
-			<td><input name="newsettings[export_pre_path]" value="{value_export_pre_path}"></td>
-		</tr>
-		<tr class="row_off">
-			<td>{lang_baseurl_to_invoice_image}:</td>
-			<td><input name="newsettings[baseurl_invoice]" value="{value_baseurl_invoice}"></td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_invoice_export_method}:</td>
-			<td>
-				<select name="newsettings[invoice_export_method]">
-					<option value="local" {selected_invoice_export_method_local}>Local</option>
-					<option value="ftp" {selected_invoice_export_method_ftp}>Local and ftp</option>
-					<option value="ssh" {selected_invoice_export_method_ssh}>Local and ssh</option>
-				</select>
-			</td>
-		</tr>
-		<tr class="row_off">
-			<td>{lang_invoice_ftp_host}:</td>
-			<td><input name="newsettings[invoice_ftp_host]" value="{value_invoice_ftp_host}"></td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_invoice_ftp_host_user}:</td>
-			<td><input name="newsettings[invoice_ftp_user]" value="{value_invoice_ftp_user}"></td>
-		</tr>
-		<tr class="row_off">
-			<td>{lang_invoice_ftp_host_password}:</td>
-			<td><input type ="password" name="newsettings[invoice_ftp_password]" value="{value_invoice_ftp_password}"></td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_invoice_ftp_host_export_basedir_with_NO_trailing_slash}:</td>
-			<td><input name="newsettings[invoice_ftp_basedir]" value="{value_invoice_ftp_basedir}"></td>
-		</tr>
-		<tr class="row_on">
-			<td>{lang_invoice_ftp_host_import_basedir_with_NO_trailing_slash}:</td>
-			<td><input name="newsettings[invoice_ftp_import_basedir]" value="{value_invoice_ftp_import_basedir}"></td>
-		</tr>
 	</tr>
 	<tr class="row_off">
 		<td>{lang_dimb_responsible_1}:</td>

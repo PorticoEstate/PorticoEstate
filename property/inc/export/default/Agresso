@@ -43,12 +43,11 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
 			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-	//		$this->db 			= $GLOBALS['phpgw']->db;
+	//		$this->db 				= $GLOBALS['phpgw']->db;
 
-			$this->soXport = CreateObject('property.soXport');	
-			$this->config = CreateObject('phpgwapi.config','property');
-			$this->config->read_repository();
-			$this->bocommon			= CreateObject($this->currentapp.'.bocommon');
+			$this->soXport			= CreateObject('property.soXport');	
+			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->bocommon			= CreateObject('property.bocommon');
 			$this->db           	= $this->bocommon->new_db();			
 		}
 
@@ -438,7 +437,7 @@
 		
 			if($antall > 0)
 			{		
-				$fil_katalog = $this->config->config_data['export_path'];			
+				$fil_katalog = $this->config->config_data['export']['path'];			
 			
 				if(unlink ($fil_katalog. '/' . $Filnavn))
 				{
@@ -464,7 +463,7 @@
 		{	
 			if($pre_transfer)
 			{
-				$fil_katalog = $this->config->config_data['export_pre_path'];
+				$fil_katalog = $this->config->config_data['export']['pre_path'];
 			
 				// Slett gamle filer
 
@@ -497,7 +496,7 @@
 			}
 			else
 			{
-				$fil_katalog = $this->config->config_data['export_path'];
+				$fil_katalog = $this->config->config_data['export']['path'];
 				$continue = True;
 				$i = 1;
 				do
@@ -893,7 +892,7 @@
 					$file_written=True;
 				}
 
-				if($file_written && $this->config->config_data['invoice_export_method']!='ftp'):
+				if($file_written && $this->config->config_data['common']['method']!='ftp'):
 				{
 					$transfer_ok = True;
 				}
@@ -925,7 +924,7 @@
 					$file_written=True;
 				}
 				
-				if($file_written && $this->config->config_data['invoice_export_method']!='ftp'):
+				if($file_written && $this->config->config_data['common']['method']!='ftp'):
 				{
 					$transfer_ok = True;
 				}
@@ -960,11 +959,11 @@
 		function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
 		{			
 
-			if($this->config->config_data['invoice_export_method']=='ftp')
+			if($this->config->config_data['common']['method']=='ftp')
 			{
 				$ftp	= $this->phpftp_connect();	
 				
-				$basedir = $this->config->config_data['invoice_ftp_basedir'];
+				$basedir = $this->config->config_data['common']['remote_basedir'];
 				if($basedir)
 				{
 					$newfile = $basedir . '/' . basename($Filnavn);
@@ -1002,15 +1001,15 @@
 
 		function phpftp_connect() 
 		{
-			$host = $this->config->config_data['invoice_ftp_host'];
-			$user = $this->config->config_data['invoice_ftp_user'];
-			$pass = $this->config->config_data['invoice_ftp_password'];
+			$host				= $this->config->config_data['common']['host'];
+			$user				= $this->config->config_data['common']['user'];
+			$password			= $this->config->config_data['common']['password'];
 			
 //			echo "connecting to $host with $user and $pass\n <br>";
 			$ftp = ftp_connect($host);
 			if($ftp) 
 			{
-				if (ftp_login($ftp,$user,$pass)) 
+				if (ftp_login($ftp,$user,$password)) 
 				{
 					return $ftp;
 				}

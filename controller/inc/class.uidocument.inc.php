@@ -183,7 +183,11 @@
 				$document->set_title(phpgw::get_var('document_title'));
 				$document->set_name($_FILES["file_path"]["name"]);
 				$document->set_type_id(phpgw::get_var('document_type'));
+				$desc = phpgw::get_var('document_description','html');
+				var_dump($desc);
+				$document->set_description($desc);
 				$document->set_procedure_id($procedure_id);
+				//var_dump($document);
 				
 				//Retrieve the document properties
 				$document_properties = $this->get_type_and_id($document);
@@ -230,26 +234,26 @@
 		{
 			$document_id = intval(phpgw::get_var('id'));
 			$document = $this->so->get_single($document_id);
-			if($document->has_permission(PHPGW_ACL_READ))
-			{
+//			if($document->has_permission(PHPGW_ACL_READ))
+//			{
 				$document_properties = $this->get_type_and_id($document);
 				
 				header("Content-Disposition: attachment; filename={$document->get_name()}");
 				header("Content-Type: $file_type");
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 				
-				echo rental_sodocument::get_instance()->read_document_from_vfs
+				echo $this->so->read_document_from_vfs
 				(
 					$document_properties['document_type'],	
 					$document_properties['id'],
 					$document->get_name()
 				);
-			}
+/*			}
 			else
 			{
 				$this->redirect($document, $document_properties, lang('no_access'), '');
 			}
-			exit;
+			exit;*/
 		}
 		
 		/**
@@ -391,6 +395,7 @@
 				//$document_array[] = array('document' => $document->toArray());
 				$table_header[] = array('header' => lang('Document title'));
 				$table_header[] = array('header' => lang('Document name'));
+				$table_header[] = array('header' => lang('Document description'));
 				
 				foreach($documents as $document)
 				{
@@ -421,6 +426,8 @@
 					'values'				=> $table_values,
 					'table_header'			=> $table_header,
 				);
+				
+				$this->use_yui_editor(array('document_description'));
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
