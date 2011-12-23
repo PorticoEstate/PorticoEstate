@@ -58,7 +58,8 @@
 										'add_location_to_control' => true,
 										'add_check_list_for_location' => true,
 										'save_check_list_for_location' => true,
-										'edit_check_list_for_location' => true
+										'edit_check_list_for_location' => true,
+										'create_error_report_message' => true
 									);
 
 		function __construct()
@@ -312,7 +313,6 @@
 			$control_id = phpgw::get_var('control_id');
 			$date = phpgw::get_var('date');
 			
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			$control = $this->so_control->get_single($control_id);
 			
 			if($date == null || $date == ''){
@@ -338,7 +338,9 @@
 			{
 				$calendar_array[] = $date;
 			}			
-						
+
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
 			$data = array
 			(
 				'location_array'	=> $location_array,
@@ -359,8 +361,10 @@
 		
 		function edit_check_list_for_location(){
 			$check_list_id = phpgw::get_var('check_list_id');
-			
+						
 			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
+						
+			$location_code = $check_list_with_check_items["location_code"];  
 				
 			$control_item_list_all = $this->so_control_item->get_control_items_by_control_id($check_list_with_check_items["control_id"]);
 			
@@ -380,10 +384,11 @@
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			print_r($control_item_list_stripped);
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
+				'location_array'	=> $location_array,
 				'check_list' 			=> $check_list_with_check_items,
 				'control_items_list' 	=> $control_item_list_stripped,
 				'date_format' 			=> $date_format
@@ -405,32 +410,68 @@
 			$status = phpgw::get_var('status');
 					
 			$planned_date = phpgw::get_var('planned_date', 'string');
-			$completed_date = strtotime( phpgw::get_var('completed_date', 'string') );
-			$deadline_date = strtotime( phpgw::get_var('deadline_date', 'string') );
+			$completed_date = phpgw::get_var('completed_date', 'string');
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
 						
-			$pos_day = strpos($planned_date, "/"); 
-			$day =  substr($planned_date, 0, $pos_day);
+			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
+			$deadline_date_ts = $this->get_timestamp_from_date( $deadline_date );
 			
-			$pos_month = strpos($planned_date, "-");
-			$len_month = $pos_month - $pos_day -1;
-			$month = substr($planned_date, $pos_day+1, $len_month);
-			
-			$year = substr($planned_date, $pos_month + $len_month-1, strlen($planned_date)-1);
-			
-			$planned_date = mktime(0, 0, 0, $month, $day, $year);
-						
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
 			$check_list->set_control_id($control_id);
 			$check_list->set_status($status);
-			$check_list->set_deadline( $deadline_date );
-			$check_list->set_planned_date($planned_date);
+			$check_list->set_deadline( $deadline_date_ts );
+			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date);
-					
 			
-			$check_list_id = $this->so_check_list->add($check_list);	
-
+			$check_list_id = $this->so_check_list->add($check_list);
+			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list_for_location', 'check_list_id'=>$check_list_id));
+		}
+		
+		function create_error_report_message(){
+			$check_list_id = phpgw::get_var('check_list_id');
+						
+			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
+						
+			$control_id = $check_list_with_check_items["control_id"];
+			$control = $this->so_control->get_single( $control_id );
+			
+			$location_code = $check_list_with_check_items["location_code"];  
+				 
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+	
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'location_array'		=> $location_array,
+				'control_array'			=> $control->toArray(),
+				'check_list' 			=> $check_list_with_check_items,
+				'date_format' 			=> $date_format
+			);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+			
+			self::render_template_xsl('create_error_report_message', $data);
+		}
+		
+		function get_timestamp_from_date( $date_string ){
+			$pos_day = strpos($date_string, "/"); 
+			$day =  substr($date_string, 0, $pos_day);
+			
+			$pos_month = strpos($date_string, "-");
+			$len_month = $pos_month - $pos_day -1;
+			$month = substr($date_string, $pos_day+1, $len_month);
+			
+			$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
+			
+			return mktime(0, 0, 0, $month, $day, $year);
 		}
 		
 		public function query(){
