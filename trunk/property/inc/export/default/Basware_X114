@@ -56,7 +56,7 @@
 			
 			if(!isset($this->custom_config->config_data['export']))
 			{
-				$this->initiate_config();
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')) );
 			}
 			
 			if (isset($this->custom_config->config_data['export']['cleanup_old']) && $this->custom_config->config_data['export']['cleanup_old'])
@@ -67,34 +67,6 @@
 _debug_array($this->custom_config->config_data['export']);die();
 _debug_array($this->custom_config->config_data['export']['cleanup_old']);die();			
 		}
-
-		protected function initiate_config()
-		{
-			$receipt_section = $this->custom_config->add_section(array
-				(
-					'name' => 'export',
-					'descr' => 'Invoice export'
-				)
-			);
-			$receipt = $this->custom_config->add_attrib(array
-				(
-					'section_id'	=> $receipt_section['section_id'],
-					'input_type'	=> 'text',
-					'name'			=> 'cleanup_old',
-					'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
-				)
-			);
-			$receipt = $this->custom_config->add_attrib(array
-				(
-					'section_id'	=> $receipt_section['section_id'],
-					'input_type'	=> 'date',
-					'name'			=> 'dato_aarsavslutning',
-					'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
-				)
-			);
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'admin.uiconfig2.list_attrib', 'section_id' => $receipt_section['section_id'] , 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')) );
-		}
-
 
 		protected function cleanup_old()
 		{
