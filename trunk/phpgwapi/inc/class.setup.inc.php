@@ -553,10 +553,21 @@
 				$this->db->query('DELETE FROM phpgw_cust_choice WHERE location_id IN ('. implode (',',$locations) . ')');
 				$this->db->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN ('. implode (',',$locations). ')');
 				$this->db->query('DELETE FROM phpgw_acl  WHERE location_id IN ('. implode (',',$locations) . ')');
+
+				$this->db->query('SELECT id FROM phpgw_config2_section WHERE location_id IN ('. implode (',',$locations) . ')');
+				$sections = array();
+				while ($this->db->next_record())
+				{
+					$sections[] = $this->db->f('id');
+				}
+				$this->db->query('DELETE FROM phpgw_config2_value WHERE section_id IN ('. implode (',',$sections) . ')');
+				$this->db->query('DELETE FROM phpgw_config2_choice WHERE section_id IN ('. implode (',',$sections) . ')');
+				$this->db->query('DELETE FROM phpgw_config2_attrib WHERE section_id IN ('. implode (',',$sections) . ')');
+				$this->db->query('DELETE FROM phpgw_config2_section WHERE location_id IN ('. implode (',',$locations) . ')');
 			}
 
 			$this->db->query("DELETE FROM phpgw_locations WHERE app_id = {$app_id}");
-
+			$this->db->query("DELETE FROM phpgw_config WHERE config_app='{$appname}'",__LINE__,__FILE__);
 			//echo 'DELETING application: ' . $appname;
 			$this->db->query("DELETE FROM phpgw_applications WHERE app_name='{$appname}'",__LINE__,__FILE__);
 			$this->clear_session_cache();
