@@ -146,6 +146,17 @@
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
+
+			$sql = "SELECT id FROM phpgw_config2_section WHERE location_id = {$this->location_id} AND descr = '{$values['descr']}'";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			if ($this->db->next_record())
+			{
+				$receipt['section_id']=  $this->db->f('id');
+				$receipt['message'][]=array('msg'=>lang('config section has not been saved'));
+				return $receipt;
+			}
+
 			$values['section_id'] = $this->db->next_id('phpgw_config2_section');
 
 			$insert_values = array
@@ -325,6 +336,18 @@
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
+
+			$sql = "SELECT id FROM phpgw_config2_attrib WHERE section_id = '{$values['section_id']}' AND name = '{$values['name']}'";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			if ($this->db->next_record())
+			{
+				$receipt['attrib_id']	= $this->db->f('id');
+				$receipt['error'][]=array('msg'=>lang('config attrib has been saved'));
+				return $receipt;
+			}
+
 			$values['attrib_id'] = $this->db->next_id('phpgw_config2_attrib',array('section_id'=>$values['section_id']));
 
 			$insert_values = array
