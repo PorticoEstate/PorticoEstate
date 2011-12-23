@@ -30,19 +30,20 @@
 
 	class check_list_status_info
 	{		
-		private $id;
+		private $check_list_id;
 		private $status;
 		private $status_text;
-		private $deadline;
+		private $deadline_date;
+		private $info_text;
 
 		public function __construct(){}
 		
-		public function set_id($id)
+		public function set_check_list_id($check_list_id)
 		{
-			$this->id = $id;
+			$this->check_list_id = $check_list_id;
 		}
 		
-		public function get_id() { return $this->id; }
+		public function get_check_list_id() { return $this->check_list_id; }
 		
 		public function set_status($status)
 		{
@@ -58,21 +59,29 @@
 		
 		public function get_status_text() { return $this->status_text; }
 		
-		public function set_deadline($deadline)
+		public function set_deadline_date($deadline_date)
 		{
-			$this->deadline = $deadline;
+			$this->deadline_date = $deadline_date;
 		}
 		
-		public function get_deadline() { return $this->deadline; }
+		public function get_deadline_date() { return $this->deadline_date; }
+		
+		public function set_info_text($info_text)
+		{
+			$this->info_text = $info_text;
+		}
+		
+		public function get_info_text() { return $this->info_text; }
 		
 		
 		public function serialize()
 		{
 			return array(
-				'id' => $this->get_id(),
+				'check_list_id' => $this->get_check_list_id(),
 				'status' => $this->get_status(),
 				'status_text' => $this->get_status_text(),
-				'deadline' => $this->get_deadline()			
+				'deadline_date' => $this->get_deadline_date(),
+				'info_text' => $this->get_info_text()
 			);
 		}
 	}
