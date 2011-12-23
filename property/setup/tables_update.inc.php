@@ -5539,7 +5539,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.626 to 0.9.17.627
+	* Update property version from 0.9.17.627 to 0.9.17.628
 	* Alter primary key
 	*/
 	$test[] = '0.9.17.627';
@@ -5559,7 +5559,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.627 to 0.9.17.628
+	* Update property version from 0.9.17.628 to 0.9.17.629
 	* Add appname to responsibility_role in order to filter by defining app.
 	*/
 	$test[] = '0.9.17.628';
@@ -5574,6 +5574,212 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.629';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.629 to 0.9.17.630
+	* Add invoice config as separate section
+	*/
+	$test[] = '0.9.17.629';
+	function property_upgrade0_9_17_629()
+	{
+//		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+		// common
+		$receipt_section_common = $custom_config->add_section(array
+			(
+				'name' => 'common',
+				'descr' => 'common invoice config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'host',
+				'descr'			=> 'Host'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'user',
+				'descr'			=> 'User'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'password',
+				'descr'			=> 'Password'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+			)
+		);
+		$receipt = $custom_config->edit_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+				'new_choice' 	=> 'local'
+			)
+		);
+		$receipt = $custom_config->edit_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+				'new_choice' 	=> 'ftp'
+			)
+		);
+		$receipt = $custom_config->edit_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+				'new_choice' 	=> 'ssh'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'basedir',
+				'descr'			=> 'basedir on remote server'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'invoice_approval',
+				'descr'			=> 'Number of persons required to approve for payment',
+			)
+		);
+
+		$receipt = $custom_config->edit_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'invoice_approval',
+				'descr'			=> 'Number of persons required to approve for payment',
+				'new_choice' 	=> '1'
+			)
+		);
+		$receipt = $custom_config->edit_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'attrib_id'		=> $receipt['attrib_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'invoice_approval',
+				'descr'			=> 'Number of persons required to approve for payment',
+				'new_choice' 	=> '2'
+			)
+		);
+
+
+
+		// import:
+		$receipt_section_import = $custom_config->add_section(array
+			(
+				'name' => 'import',
+				'descr' => 'import invoice config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'path',
+				'descr'			=> 'path on local sever to store imported files'
+			)
+		);
+
+		//export
+		$receipt_section_export = $custom_config->add_section(array
+			(
+				'name' => 'export',
+				'descr' => 'Invoice export'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'cleanup_old',
+				'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'date',
+				'name'			=> 'dato_aarsavslutning',
+				'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'path',
+				'descr'			=> 'path on local sever to store exported files'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'pre_path',
+				'descr'			=> 'path on local sever to store exported files for pre approved vouchers'
+			)
+		);
+
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'cleanup_old',
+				'descr'			=> 'Overføre manuelt registrerte fakturaer rett til historikk'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'date',
+				'name'			=> 'dato_aarsavslutning',
+				'descr'			=> "Dato for årsavslutning: overført pr. desember foregående år"
+			)
+		);
+
+
+	//	if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.630';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
