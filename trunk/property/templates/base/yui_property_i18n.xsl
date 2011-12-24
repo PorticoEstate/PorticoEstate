@@ -4,11 +4,11 @@
 			<script type="text/javascript">
 				YAHOO.booking.i18n = {};
 				<xsl:for-each select="yui_property_i18n/*">
-					YAHOO.booking.i18n.<xsl:value-of select="local-name()"></xsl:value-of> = function(cfg)
+					YAHOO.booking.i18n.<xsl:value-of select="local-name()"/> = function(cfg)
 					{
 						cfg = cfg || {};
 						<xsl:for-each select="./*">
-							cfg["<xsl:value-of select="local-name()"></xsl:value-of>"] = <xsl:value-of disable-output-escaping="yes" select="."></xsl:value-of>;
+							cfg["<xsl:value-of select="local-name()"/>"] = <xsl:value-of disable-output-escaping="yes" select="."/>;
 						</xsl:for-each>
 					};
 				</xsl:for-each>

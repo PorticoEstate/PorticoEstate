@@ -1,36 +1,36 @@
 <!-- $Id$ -->
 
 	<xsl:template name="search_field">
-		<xsl:variable name="select_url"><xsl:value-of select="select_action"></xsl:value-of></xsl:variable>
-		<xsl:variable name="query"><xsl:value-of select="query"></xsl:value-of></xsl:variable>
-		<xsl:variable name="lang_search"><xsl:value-of select="lang_search"></xsl:value-of></xsl:variable>
+		<xsl:variable name="select_url"><xsl:value-of select="select_action"/></xsl:variable>
+		<xsl:variable name="query"><xsl:value-of select="query"/></xsl:variable>
+		<xsl:variable name="lang_search"><xsl:value-of select="lang_search"/></xsl:variable>
 		<table>
 			<tr>
 				<td class="small_text" valign="top" align="left">
-					<xsl:variable name="link_date_search"><xsl:value-of select="link_date_search"></xsl:value-of></xsl:variable>
-					<xsl:variable name="lang_date_search_help"><xsl:value-of select="lang_date_search_help"></xsl:value-of></xsl:variable>
-					<xsl:variable name="lang_date_search"><xsl:value-of select="lang_date_search"></xsl:value-of></xsl:variable>
+					<xsl:variable name="link_date_search"><xsl:value-of select="link_date_search"/></xsl:variable>
+					<xsl:variable name="lang_date_search_help"><xsl:value-of select="lang_date_search_help"/></xsl:variable>
+					<xsl:variable name="lang_date_search"><xsl:value-of select="lang_date_search"/></xsl:variable>
 					<a href="javascript:var w=window.open('{$link_date_search}','','left=50,top=100,width=300,height=300')" onMouseOver="overlib('{$lang_date_search_help}', CAPTION, '{$lang_date_search}')" onMouseOut="nd()">
-						<xsl:value-of select="lang_date_search"></xsl:value-of></a>					
+						<xsl:value-of select="lang_date_search"/></a>					
 
 					<table>
 						<xsl:choose>
 							<xsl:when test="start_date!=''">
 								<tr>
 									<td class="small_text" align="left">
-										<xsl:value-of select="start_date"></xsl:value-of>
+										<xsl:value-of select="start_date"/>
 									</td>
 								</tr>
 								<tr>
 									<td class="small_text" align="left">
-										<xsl:value-of select="end_date"></xsl:value-of>
+										<xsl:value-of select="end_date"/>
 									</td>
 								</tr>
 							</xsl:when>
 							<xsl:otherwise>
 								<tr>
 									<td class="small_text" align="left">
-										<xsl:value-of select="lang_none"></xsl:value-of>
+										<xsl:value-of select="lang_none"/>
 									</td>
 								</tr>
 							</xsl:otherwise>
@@ -40,12 +40,12 @@
 
 				<td valign="top" align="right">
 					<form method="post" name="search" action="{$select_url}">
-						<input type="hidden" name="start_date" value="{start_date}"></input>
-						<input type="hidden" name="end_date" value="{end_date}"></input>
+						<input type="hidden" name="start_date" value="{start_date}"/>
+						<input type="hidden" name="end_date" value="{end_date}"/>
 						<input type="text" name="query" value="{$query}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_searchfield_statustext"></xsl:value-of>
+								<xsl:value-of select="lang_searchfield_statustext"/>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
@@ -53,7 +53,7 @@
 						<input type="submit" name="submit" value="{$lang_search}" onMouseout="window.status='';return true;"> 
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_searchbutton_statustext"></xsl:value-of>
+								<xsl:value-of select="lang_searchbutton_statustext"/>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
