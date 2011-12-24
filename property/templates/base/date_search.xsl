@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 	<xsl:template name="app_data">
-		<xsl:apply-templates select="date_search"/>
+		<xsl:apply-templates select="date_search"></xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="date_search">
@@ -35,42 +35,42 @@
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<tr>
 					<td valign="top">
-						<xsl:value-of select="lang_start_date"/>
+						<xsl:value-of select="lang_start_date"></xsl:value-of>
 					</td>
 					<td>
-						<input type="text" id="start_date" name="start_date" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<input type="text" id="start_date" name="start_date" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_start_date_statustext"/>
+								<xsl:value-of select="lang_start_date_statustext"></xsl:value-of>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-						<img id="start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<img id="start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"></img>
 
 					</td>
 				</tr>
 				<tr>
 					<td valign="top">
-						<xsl:value-of select="lang_end_date"/>
+						<xsl:value-of select="lang_end_date"></xsl:value-of>
 					</td>
 					<td>
-						<input type="text" id="end_date" name="end_date" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;" >
+						<input type="text" id="end_date" name="end_date" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_end_date_statustext"/>
+								<xsl:value-of select="lang_end_date_statustext"></xsl:value-of>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
-						<img id="end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<img id="end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"></img>
 					</td>
 				</tr>
 				<tr>
 					<td class="small_text" valign="top">
-						<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
+						<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"></xsl:value-of></xsl:variable>
 						<input type="button" name="convert" value="{$lang_submit}" onClick="ExchangeDate(this.form);" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_submit_statustext"/>
+								<xsl:value-of select="lang_submit_statustext"></xsl:value-of>
 								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>

@@ -3,7 +3,7 @@
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="no_access">
-				<xsl:apply-templates select="no_access"/>
+				<xsl:apply-templates select="no_access"></xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -12,7 +12,7 @@
 
 		<xsl:choose>
 			<xsl:when test="menu !=''">
-				<xsl:apply-templates select="menu"/> 
+				<xsl:apply-templates select="menu"></xsl:apply-templates> 
 			</xsl:when>
 		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
@@ -20,7 +20,7 @@
 				<xsl:when test="msgbox_data != ''">
 					<tr>
 						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
+							<xsl:call-template name="msgbox"></xsl:call-template>
 						</td>
 					</tr>
 				</xsl:when>

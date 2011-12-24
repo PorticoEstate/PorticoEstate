@@ -1,12 +1,12 @@
 <!-- $Id$ -->
 
 	<xsl:template name="calendar_info">
-		<xsl:apply-templates select="cal_info"/>
+		<xsl:apply-templates select="cal_info"></xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="cal_info">
 		<!-- calendar stylesheet -->
-		<link rel="stylesheet" type="text/css" media="all" href="{stylesheet}" title="win2k-cold-1" />
+		<link rel="stylesheet" type="text/css" media="all" href="{stylesheet}" title="win2k-cold-1"></link>
 
 		<!-- main calendar program -->
 		<script type="text/javascript" src="{calendar_source}"></script>
