@@ -1,63 +1,63 @@
 <!-- $Id$ -->
 
 	<xsl:template name="location_form">
-		<xsl:apply-templates select="location_data"/>
+		<xsl:apply-templates select="location_data"></xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="location_data">
 		<script type="text/javascript">
 			self.name="first_Window";
-			<xsl:value-of select="lookup_functions"/>
+			<xsl:value-of select="lookup_functions"></xsl:value-of>
 		</script>
-		<xsl:for-each select="location" >
+		<xsl:for-each select="location">
 			<tr>
 				<td class="th_text" width="{with}" align="{align}" title="{statustext}">
 					<xsl:choose>
 						<xsl:when test="lookup_link=1">
-							<a href="javascript:{lookup_function_call}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"/></a>
+							<a href="javascript:{lookup_function_call}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="name"></xsl:value-of></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="name"/>					
+							<xsl:value-of select="name"></xsl:value-of>					
 						</xsl:otherwise>
 					</xsl:choose>
 				</td>
 				<td>
 					<xsl:choose>
 						<xsl:when test="readonly=1">
-							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}"  onClick="{lookup_function_call}" readonly="readonly">
+							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="statustext"/>
+									<xsl:value-of select="statustext"></xsl:value-of>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</xsl:when>
 						<xsl:otherwise>
-							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}"  onClick="{lookup_function_call}" >
+							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="statustext"/>
+									<xsl:value-of select="statustext"></xsl:value-of>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:for-each select="extra" >
+					<xsl:for-each select="extra">
 						<xsl:choose>
 							<xsl:when test="readonly=1">
-								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}"  onClick="{lookup_function_call}" readonly="readonly">
+								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="statustext"/>
+										<xsl:value-of select="statustext"></xsl:value-of>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
-								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}"  onClick="{lookup_function_call}" >
+								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="statustext"/>
+										<xsl:value-of select="statustext"></xsl:value-of>
 										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>

@@ -1,6 +1,7 @@
-<xsl:template match="fileuploader" xmlns:php="http://php.net/xsl">
+<!-- $Id$ -->
+<xsl:template xmlns:php="http://php.net/xsl" match="fileuploader">
 	<div class="header">
-		<h2><xsl:value-of select="php:function('lang', 'fileuploader')" /></h2>
+		<h2><xsl:value-of select="php:function('lang', 'fileuploader')"></xsl:value-of></h2>
 	</div>
 
 <!--
@@ -27,7 +28,7 @@
 				<div id="selectFilesLink" style="z-index:1">
 					<input id="selectLink" type="button" name="selectLink" title="">
 						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'Select Files')" />
+							<xsl:value-of select="php:function('lang', 'Select Files')"></xsl:value-of>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -35,7 +36,7 @@
 			<div id="uploadFilesLink">
 				<input id="uploadLink" type="button" name="uploadLink" title="" onClick="upload(); return false;">
 					<xsl:attribute name="value">
-						<xsl:value-of select="php:function('lang', 'Upload Files')" />
+						<xsl:value-of select="php:function('lang', 'Upload Files')"></xsl:value-of>
 					</xsl:attribute>
 				</input>
 			</div>
@@ -53,8 +54,7 @@
 -->
 		<div id="dataTableContainer"></div>
 		<script type="text/javascript">
-			<xsl:value-of select="js_code"/>
+			<xsl:value-of select="js_code"></xsl:value-of>
 		</script>
 	</xsl:template>
-
 

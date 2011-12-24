@@ -1,26 +1,26 @@
 <!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
 
 	<xsl:template name="event_view">
-		<xsl:apply-templates select="event_data"/>
+		<xsl:apply-templates select="event_data"></xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="event_data" xmlns:php="http://php.net/xsl">
+	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
 		<tr>
 			<td valign="top">
-				<xsl:value-of select="event_name"/>
+				<xsl:value-of select="event_name"></xsl:value-of>
 			</td>
 			<td>
 				<xsl:choose>
 					<xsl:when test="warning!=''">
-						<xsl:value-of select="warning"/>
+						<xsl:value-of select="warning"></xsl:value-of>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="event_descr"><xsl:value-of select="name"/><xsl:text>_descr</xsl:text></xsl:variable>
+						<xsl:variable name="event_descr"><xsl:value-of select="name"></xsl:value-of><xsl:text>_descr</xsl:text></xsl:variable>
 						<table>
 							<tr>
 								<td>
 									<input type="text" name="{name}" value="{value}" readonly="readonly" size="6"></input>
-									<input  size="30" type="text" name="{$event_descr}" value="{descr}"  readonly="readonly"> 
+									<input size="30" type="text" name="{$event_descr}" value="{descr}" readonly="readonly"> 
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">
@@ -35,30 +35,30 @@
 								<xsl:when test="next!=''">
 									<tr>
 										<td>
-											<xsl:value-of select="php:function('lang', 'responsible')" />
+											<xsl:value-of select="php:function('lang', 'responsible')"></xsl:value-of>
 											<xsl:text>: </xsl:text>
-											<xsl:value-of select="responsible"/>
+											<xsl:value-of select="responsible"></xsl:value-of>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<xsl:value-of select="lang_next_run"/>
+											<xsl:value-of select="lang_next_run"></xsl:value-of>
 											<xsl:text>: </xsl:text>
-											<xsl:value-of select="next"/>
+											<xsl:value-of select="next"></xsl:value-of>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<xsl:value-of select="lang_enabled"/>
+											<xsl:value-of select="lang_enabled"></xsl:value-of>
 											<xsl:text>: </xsl:text>
-											<xsl:value-of select="enabled"/>
+											<xsl:value-of select="enabled"></xsl:value-of>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<xsl:value-of select="php:function('lang', 'count')" />
+											<xsl:value-of select="php:function('lang', 'count')"></xsl:value-of>
 											<xsl:text>: </xsl:text>
-											<xsl:value-of select="count"/>
+											<xsl:value-of select="count"></xsl:value-of>
 										</td>
 									</tr>
 								</xsl:when>

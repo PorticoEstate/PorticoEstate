@@ -3,7 +3,7 @@
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="columns">
-				<xsl:apply-templates select="columns"/>
+				<xsl:apply-templates select="columns"></xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -16,25 +16,25 @@
 					<xsl:when test="msgbox_data != ''">
 						<tr>
 							<td align="left" colspan="3">
-								<xsl:call-template name="msgbox"/>
+								<xsl:call-template name="msgbox"></xsl:call-template>
 							</td>
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action"><xsl:value-of select="form_action"></xsl:value-of></xsl:variable>
 				<form method="post" name="form" action="{$form_action}">
 					<tr>
 						<td valign="top">
-							<b><xsl:value-of select="lang_columns"/></b>
+							<b><xsl:value-of select="lang_columns"></xsl:value-of></b>
 						</td>
 					</tr>
-					<xsl:apply-templates select="column_list"/>
+					<xsl:apply-templates select="column_list"></xsl:apply-templates>
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"></xsl:value-of></xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}">
 								<xsl:attribute name="title">
-									<xsl:value-of select="lang_save_statustext"/>
+									<xsl:value-of select="lang_save_statustext"></xsl:value-of>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -47,7 +47,7 @@
 	</xsl:template>
 
 	<xsl:template match="column_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id"><xsl:value-of select="id"></xsl:value-of></xsl:variable>
 		<tr>
 			<td>
 				<xsl:choose>
@@ -59,7 +59,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 
-				<xsl:value-of select="name"/>
+				<xsl:value-of select="name"></xsl:value-of>
 			</td>
 		</tr>
 	</xsl:template>
