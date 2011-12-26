@@ -1,11 +1,11 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="hour_data_view">
 		<xsl:apply-templates select="table_header_hour"/>
 		<xsl:apply-templates select="values_hour"/>
 		<xsl:apply-templates select="table_sum"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_hour">
 		<tr class="th">
 			<td class="th_text" width="5%" align="right">
@@ -38,6 +38,7 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_hour">
 		<xsl:choose>
 			<xsl:when test="new_grouping=1">
@@ -62,7 +63,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="right">
 				<xsl:value-of select="post"/>
 			</td>
@@ -89,7 +89,7 @@
 			<td align="right">
 				<xsl:choose>
 					<xsl:when test="deviation=''">
-						0.00
+						<xsl:text>0.00</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="deviation"/>
@@ -101,6 +101,8 @@
 			</td>
 		</tr>
 	</xsl:template>
+
+	<!-- New template-->
 	<xsl:template match="table_sum">
 		<tr>
 			<td>

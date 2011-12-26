@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="no_access">
@@ -8,11 +7,11 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="no_access">
-
 		<xsl:choose>
 			<xsl:when test="menu !=''">
-				<xsl:apply-templates select="menu"/> 
+				<xsl:apply-templates select="menu"/>
 			</xsl:when>
 		</xsl:choose>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">

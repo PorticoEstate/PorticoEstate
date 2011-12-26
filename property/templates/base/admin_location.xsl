@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">
@@ -22,8 +21,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	<xsl:template match="list">		
-		<xsl:apply-templates select="menu"/> 
+
+	<!-- New template-->
+	<xsl:template match="list">
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -42,8 +43,8 @@
 			<tr>
 				<td colspan="3" width="100%">
 					<xsl:call-template name="nextmatchs"/>
-					<!--	<xsl:with-param name="nextmatchs_params"/>
-					</xsl:call-template> -->
+					<!--<xsl:with-param name="nextmatchs_params"/>
+</xsl:call-template> -->
 				</td>
 			</tr>
 		</table>
@@ -54,9 +55,14 @@
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header">
-		<xsl:variable name="sort_id"><xsl:value-of select="sort_id"/></xsl:variable>
-		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<xsl:variable name="sort_id">
+			<xsl:value-of select="sort_id"/>
+		</xsl:variable>
+		<xsl:variable name="sort_name">
+			<xsl:value-of select="sort_name"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="right">
 				<a href="{$sort_id}"><xsl:value-of select="lang_id"/></a>
@@ -70,25 +76,24 @@
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_categories"/>
 			</td>
-			'			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_attribute_group"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_attribute"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_edit"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_delete"/>
-			</td>
+			<td class="th_text" width="5%" align="center"><xsl:value-of select="lang_attribute_group"/></td>
+			<td class="th_text" width="5%" align="center"><xsl:value-of select="lang_attribute"/></td>
+			<td class="th_text" width="5%" align="center"><xsl:value-of select="lang_edit"/></td>
+			<td class="th_text" width="5%" align="center"><xsl:value-of select="lang_delete"/></td>
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="values"> 
-		<xsl:variable name="lang_attribute_standardtext"><xsl:value-of select="lang_delete_standardtext"/></xsl:variable>
-		<xsl:variable name="lang_edit_standardtext"><xsl:value-of select="lang_edit_standardtext"/></xsl:variable>
-		<xsl:variable name="lang_delete_standardtext"><xsl:value-of select="lang_delete_standardtext"/></xsl:variable>
+	<!-- New template-->
+	<xsl:template match="values">
+		<xsl:variable name="lang_attribute_standardtext">
+			<xsl:value-of select="lang_delete_standardtext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_edit_standardtext">
+			<xsl:value-of select="lang_edit_standardtext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_standardtext">
+			<xsl:value-of select="lang_delete_standardtext"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -103,7 +108,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="right">
 				<xsl:value-of select="id"/>
 			</td>
@@ -114,31 +118,51 @@
 				<xsl:value-of select="first"/>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_categories"><xsl:value-of select="link_categories"/></xsl:variable>
-				<a href="{$link_categories}" onMouseover="window.status='{lang_category_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_categories"/></a>
+				<xsl:variable name="link_categories">
+					<xsl:value-of select="link_categories"/>
+				</xsl:variable>
+				<a href="{$link_categories}" onMouseover="window.status='{lang_category_text}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_categories"/>
+				</a>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_attribute_group"><xsl:value-of select="link_attribute_group"/></xsl:variable>
-				<a href="{$link_attribute_group}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_attribute_group"/></a>
+				<xsl:variable name="link_attribute_group">
+					<xsl:value-of select="link_attribute_group"/>
+				</xsl:variable>
+				<a href="{$link_attribute_group}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_attribute_group"/>
+				</a>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_attribute"><xsl:value-of select="link_attribute"/></xsl:variable>
-				<a href="{$link_attribute}" onMouseover="window.status='{$lang_attribute_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_attribute"/></a>
+				<xsl:variable name="link_attribute">
+					<xsl:value-of select="link_attribute"/>
+				</xsl:variable>
+				<a href="{$link_attribute}" onMouseover="window.status='{$lang_attribute_standardtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_attribute"/>
+				</a>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				<xsl:variable name="link_edit">
+					<xsl:value-of select="link_edit"/>
+				</xsl:variable>
+				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_edit"/>
+				</a>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
-				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				<xsl:variable name="link_delete">
+					<xsl:value-of select="link_delete"/>
+				</xsl:variable>
+				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_standardtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_delete"/>
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
 
-
-	<xsl:template match="list_config">		
-		<xsl:apply-templates select="menu"/> 
+	<!-- New template-->
+	<xsl:template match="list_config">
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="right">
@@ -157,15 +181,24 @@
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_list_config">
-		<xsl:variable name="sort_column_name"><xsl:value-of select="sort_column_name"/></xsl:variable>
-		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<xsl:variable name="sort_column_name">
+			<xsl:value-of select="sort_column_name"/>
+		</xsl:variable>
+		<xsl:variable name="sort_name">
+			<xsl:value-of select="sort_name"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="center">
-				<a href="{$sort_column_name}"><xsl:value-of select="lang_column_name"/></a>
+				<a href="{$sort_column_name}">
+					<xsl:value-of select="lang_column_name"/>
+				</a>
 			</td>
 			<td class="th_text" width="10%" align="center">
-				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+				<a href="{$sort_name}">
+					<xsl:value-of select="lang_name"/>
+				</a>
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_edit"/>
@@ -173,8 +206,11 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="values_list_config"> 
-		<xsl:variable name="lang_edit_standardtext"><xsl:value-of select="lang_edit_standardtext"/></xsl:variable>
+	<!-- New template-->
+	<xsl:template match="values_list_config">
+		<xsl:variable name="lang_edit_standardtext">
+			<xsl:value-of select="lang_edit_standardtext"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -189,7 +225,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="left">
 				<xsl:value-of select="column_name"/>
 			</td>
@@ -197,16 +232,19 @@
 				<xsl:value-of select="name"/>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				<xsl:variable name="link_edit">
+					<xsl:value-of select="link_edit"/>
+				</xsl:variable>
+				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_standardtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_edit"/>
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
 
-<!-- edit_config  -->
+	<!-- edit_config  -->
 	<xsl:template match="edit_config">
 		<div align="left">
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -217,9 +255,10 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" action="{$form_action}">
-
 					<xsl:for-each select="location_list">
 						<tr>
 							<td class="th_text" align="left">
@@ -228,40 +267,33 @@
 								<xsl:value-of select="name"/>
 							</td>
 							<td align="left">
-
 								<xsl:choose>
 									<xsl:when test="selected='selected'">
 										<input type="radio" name="values[{//column_name}]" value="{id}" checked="checked" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
+											<xsl:attribute name="title">
 												<xsl:value-of select="//lang_config_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 										</input>
 									</xsl:when>
 									<xsl:otherwise>
 										<input type="radio" name="values[{//column_name}]" value="{id}" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
+											<xsl:attribute name="title">
 												<xsl:value-of select="//lang_config_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 										</input>
 									</xsl:otherwise>
 								</xsl:choose>
-
 							</td>
 						</tr>
 					</xsl:for-each>
-
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_save_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -269,14 +301,16 @@
 				</form>
 				<tr>
 					<td>
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_standardtext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</form>
@@ -286,30 +320,35 @@
 		</div>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_add">
 		<tr>
 			<td height="50">
-				<xsl:variable name="add_action"><xsl:value-of select="add_action"/></xsl:variable>
-				<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+				<xsl:variable name="add_action">
+					<xsl:value-of select="add_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_add">
+					<xsl:value-of select="lang_add"/>
+				</xsl:variable>
 				<form method="post" action="{$add_action}">
 					<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_add_standardtext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</form>
 			</td>
 			<td height="50">
-				<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-				<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+				<xsl:variable name="done_action">
+					<xsl:value-of select="done_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_done">
+					<xsl:value-of select="lang_done"/>
+				</xsl:variable>
 				<form method="post" action="{$done_action}">
 					<input type="submit" name="add" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_add_standardtext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</form>
@@ -317,10 +356,9 @@
 		</tr>
 	</xsl:template>
 
-<!-- add / edit  -->
+	<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<div align="left">
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -331,7 +369,9 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" action="{$form_action}">
 					<tr>
 						<td valign="top">
@@ -350,7 +390,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 								</xsl:otherwise>
-							</xsl:choose>	
+							</xsl:choose>
 						</td>
 					</tr>
 					<tr>
@@ -378,9 +418,8 @@
 									<xsl:value-of select="lang_descr_standardtext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
-								<xsl:value-of select="value_descr"/>		
+								<xsl:value-of select="value_descr"/>
 							</textarea>
-
 						</td>
 					</tr>
 					<xsl:choose>
@@ -395,7 +434,7 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<xsl:value-of select="php:function('lang', 'list address')"/>							
+									<xsl:value-of select="php:function('lang', 'list address')"/>
 								</td>
 								<td>
 									<input type="checkbox" name="values[list_address]" value="1">
@@ -412,7 +451,7 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<xsl:value-of select="php:function('lang', 'list documents')"/>							
+									<xsl:value-of select="php:function('lang', 'list documents')"/>
 								</td>
 								<td>
 									<input type="checkbox" name="values[list_documents]" value="1">
@@ -428,10 +467,12 @@
 								</td>
 							</tr>
 						</xsl:when>
-					</xsl:choose>	
+					</xsl:choose>
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
@@ -444,8 +485,12 @@
 				</form>
 				<tr>
 					<td>
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
@@ -461,10 +506,9 @@
 		</div>
 	</xsl:template>
 
-<!-- list attribute -->
-
+	<!-- New template-->
+	<!-- list attribute -->
 	<xsl:template match="list_attribute">
-
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td align="left">
@@ -490,13 +534,23 @@
 			<xsl:apply-templates select="table_add"/>
 		</table>
 	</xsl:template>
+
+	<!-- New template-->
 	<xsl:template match="table_header_attrib">
-		<xsl:variable name="sort_sorting"><xsl:value-of select="sort_sorting"/></xsl:variable>
-		<xsl:variable name="sort_id"><xsl:value-of select="sort_id"/></xsl:variable>
-		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
+		<xsl:variable name="sort_sorting">
+			<xsl:value-of select="sort_sorting"/>
+		</xsl:variable>
+		<xsl:variable name="sort_id">
+			<xsl:value-of select="sort_id"/>
+		</xsl:variable>
+		<xsl:variable name="sort_name">
+			<xsl:value-of select="sort_name"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="left">
-				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+				<a href="{$sort_name}">
+					<xsl:value-of select="lang_name"/>
+				</a>
 			</td>
 			<td class="th_text" width="10%" align="left">
 				<xsl:value-of select="lang_descr"/>
@@ -505,7 +559,9 @@
 				<xsl:value-of select="lang_datatype"/>
 			</td>
 			<td class="th_text" width="5%" align="center">
-				<a href="{$sort_sorting}"><xsl:value-of select="lang_sorting"/></a>
+				<a href="{$sort_sorting}">
+					<xsl:value-of select="lang_sorting"/>
+				</a>
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_edit"/>
@@ -516,12 +572,23 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="values_attrib"> 
-		<xsl:variable name="lang_up_text"><xsl:value-of select="lang_up_text"/></xsl:variable>
-		<xsl:variable name="lang_down_text"><xsl:value-of select="lang_down_text"/></xsl:variable>
-		<xsl:variable name="lang_attribute_attribtext"><xsl:value-of select="lang_delete_attribtext"/></xsl:variable>
-		<xsl:variable name="lang_edit_attribtext"><xsl:value-of select="lang_edit_attribtext"/></xsl:variable>
-		<xsl:variable name="lang_delete_attribtext"><xsl:value-of select="lang_delete_attribtext"/></xsl:variable>
+	<!-- New template-->
+	<xsl:template match="values_attrib">
+		<xsl:variable name="lang_up_text">
+			<xsl:value-of select="lang_up_text"/>
+		</xsl:variable>
+		<xsl:variable name="lang_down_text">
+			<xsl:value-of select="lang_down_text"/>
+		</xsl:variable>
+		<xsl:variable name="lang_attribute_attribtext">
+			<xsl:value-of select="lang_delete_attribtext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_edit_attribtext">
+			<xsl:value-of select="lang_edit_attribtext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_attribtext">
+			<xsl:value-of select="lang_delete_attribtext"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -551,35 +618,46 @@
 						<td>
 							<xsl:value-of select="sorting"/>
 						</td>
-
 						<td align="left">
-							<xsl:variable name="link_up"><xsl:value-of select="link_up"/></xsl:variable>
-							<a href="{$link_up}" onMouseover="window.status='{$lang_up_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_up"/></a>
+							<xsl:variable name="link_up">
+								<xsl:value-of select="link_up"/>
+							</xsl:variable>
+							<a href="{$link_up}" onMouseover="window.status='{$lang_up_text}';return true;" onMouseout="window.status='';return true;">
+								<xsl:value-of select="text_up"/>
+							</a>
 							<xsl:text> | </xsl:text>
-							<xsl:variable name="link_down"><xsl:value-of select="link_down"/></xsl:variable>
-							<a href="{$link_down}" onMouseover="window.status='{$lang_down_text}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_down"/></a>
+							<xsl:variable name="link_down">
+								<xsl:value-of select="link_down"/>
+							</xsl:variable>
+							<a href="{$link_down}" onMouseover="window.status='{$lang_down_text}';return true;" onMouseout="window.status='';return true;">
+								<xsl:value-of select="text_down"/>
+							</a>
 						</td>
-
 					</tr>
 				</table>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_attribtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				<xsl:variable name="link_edit">
+					<xsl:value-of select="link_edit"/>
+				</xsl:variable>
+				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_attribtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_edit"/>
+				</a>
 			</td>
 			<td align="center">
-				<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
-				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_attribtext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				<xsl:variable name="link_delete">
+					<xsl:value-of select="link_delete"/>
+				</xsl:variable>
+				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_attribtext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_delete"/>
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
 
-
-<!-- add attribute / edit attribute -->
-
+	<!-- add attribute / edit attribute -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_attrib">
 		<div align="left">
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -590,8 +668,9 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" action="{$form_action}">
 					<tr>
 						<td valign="top">
@@ -610,7 +689,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 								</xsl:otherwise>
-							</xsl:choose>	
+							</xsl:choose>
 						</td>
 					</tr>
 					<tr>
@@ -646,21 +725,25 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_statustext_attribtext"/>
 								</xsl:attribute>
-								<xsl:value-of select="value_statustext"/>		
+								<xsl:value-of select="value_statustext"/>
 							</textarea>
-
 						</td>
 					</tr>
-
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_location_type"/>
 						</td>
 						<td valign="top">
-							<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>
-							<xsl:variable name="select_location_type"><xsl:value-of select="select_location_type"/></xsl:variable>
+							<xsl:variable name="lang_entity_statustext">
+								<xsl:value-of select="lang_entity_statustext"/>
+							</xsl:variable>
+							<xsl:variable name="select_location_type">
+								<xsl:value-of select="select_location_type"/>
+							</xsl:variable>
 							<select name="{$select_location_type}" class="forms" title="{$lang_entity_statustext}">
-								<option value=""><xsl:value-of select="lang_no_location_type"/></option>
+								<option value="">
+									<xsl:value-of select="lang_no_location_type"/>
+								</option>
 								<xsl:apply-templates select="entity_list"/>
 							</select>
 						</td>
@@ -674,7 +757,6 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select a group')"/>
 								</xsl:attribute>
-
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no group')"/>
 								</option>
@@ -682,7 +764,6 @@
 							</select>
 						</td>
 					</tr>
-
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'datatype')"/>
@@ -768,7 +849,6 @@
 							</input>
 						</td>
 					</tr>
-
 					<tr>
 						<td>
 							<xsl:value-of select="php:function('lang', 'show in list')"/>
@@ -803,7 +883,6 @@
 							</input>
 						</td>
 					</tr>
-
 					<xsl:choose>
 						<xsl:when test="multiple_choice != ''">
 							<tr>
@@ -818,28 +897,29 @@
 					</xsl:choose>
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_save_attribtext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
 					</tr>
-
 				</form>
 				<tr>
 					<td>
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_attribtext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</form>
@@ -849,62 +929,87 @@
 		</div>
 	</xsl:template>
 
-<!-- entity_list -->	
-
+	<!-- New template-->
+	<!-- entity_list -->
 	<xsl:template match="entity_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-<!-- attrib_group_list -->	
-
+	<!-- New template-->
+	<!-- attrib_group_list -->
 	<xsl:template match="attrib_group_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-<!-- datatype_list -->	
-
+	<!-- New template-->
+	<!-- datatype_list -->
 	<xsl:template match="datatype_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-<!-- nullable_list -->	
-
+	<!-- New template-->
+	<!-- nullable_list -->
 	<xsl:template match="nullable_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="choice">
 		<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<xsl:choose>
@@ -957,10 +1062,8 @@
 							</td>
 							<td align="center">
 								<input type="checkbox" name="values[delete_choice][]" value="{id}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+									<xsl:attribute name="title">
 										<xsl:value-of select="//lang_delete_choice_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</td>
@@ -974,10 +1077,8 @@
 				</td>
 				<td valign="top" colspan="2">
 					<input type="text" name="values[new_choice]" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_new_value_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -985,6 +1086,7 @@
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template name="list_info">
 		<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<tr class="th">
@@ -1018,19 +1120,15 @@
 						<xsl:choose>
 							<xsl:when test="selected='selected'">
 								<input type="checkbox" name="values[list_info][{id}]" value="{id}" checked="checked" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+									<xsl:attribute name="title">
 										<xsl:value-of select="//lang_list_type_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
 								<input type="checkbox" name="values[list_info][{id}]" value="{id}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+									<xsl:attribute name="title">
 										<xsl:value-of select="//lang_list_type_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</xsl:otherwise>

@@ -1,9 +1,9 @@
-<!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
-
+  <!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
 	<xsl:template name="event_view">
 		<xsl:apply-templates select="event_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
 		<tr>
 			<td valign="top">
@@ -15,12 +15,15 @@
 						<xsl:value-of select="warning"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="event_descr"><xsl:value-of select="name"/><xsl:text>_descr</xsl:text></xsl:variable>
+						<xsl:variable name="event_descr">
+							<xsl:value-of select="name"/>
+							<xsl:text>_descr</xsl:text>
+						</xsl:variable>
 						<table>
 							<tr>
 								<td>
 									<input type="text" name="{name}" value="{value}" readonly="readonly" size="6"/>
-									<input size="30" type="text" name="{$event_descr}" value="{descr}" readonly="readonly"> 
+									<input size="30" type="text" name="{$event_descr}" value="{descr}" readonly="readonly">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">

@@ -1,9 +1,9 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="project_group_view">
 		<xsl:apply-templates select="project_group_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" match="project_group_data">
 		<tr>
 			<td valign="top">

@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+  <!-- $Id$ -->
 	<xsl:template xmlns:php="http://php.net/xsl" name="yui_property_i18n">
 		<xsl:if test="yui_property_i18n">
 			<script type="text/javascript">

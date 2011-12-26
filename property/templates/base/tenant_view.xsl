@@ -1,9 +1,9 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="tenant_view">
 		<xsl:apply-templates select="tenant_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="tenant_data">
 		<tr>
 			<td valign="top">
