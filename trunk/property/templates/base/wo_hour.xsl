@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit_hour">
@@ -35,19 +34,22 @@
 		</xsl:choose>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="list_deviation">
 		<!-- DataTable 0 DESVIATION-->
 		<div id="datatable-container_0"/>
 		<div id="contextmenu_0"/>
-
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<!--  <xsl:apply-templates select="table_header_deviation"/><xsl:apply-templates select="values_deviation"/> -->
 			<!--  <tr><td></td><td class="small_text" align="right"><xsl:value-of select="sum_deviation"/></td></tr>  -->
 			<tr>
 				<td height="50" width="4%">
-					<xsl:variable name="add_action"><xsl:value-of select="add_action"/></xsl:variable>
-					<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+					<xsl:variable name="add_action">
+						<xsl:value-of select="add_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_add">
+						<xsl:value-of select="lang_add"/>
+					</xsl:variable>
 					<form method="post" action="{$add_action}">
 						<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -59,8 +61,12 @@
 					</form>
 				</td>
 				<td height="50" width="96%">
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<xsl:variable name="done_action">
+						<xsl:value-of select="done_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_done">
+						<xsl:value-of select="lang_done"/>
+					</xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -73,7 +79,6 @@
 				</td>
 			</tr>
 		</table>
-
 		<!--  DATATABLE DEFINITIONS-->
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js"/>;
@@ -83,13 +88,13 @@
 
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
-				{
-				values			:	<xsl:value-of select="values"/>,
-				total_records	: 	<xsl:value-of select="total_records"/>,
-				permission		:	<xsl:value-of select="permission"/>,
-				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-				footer			:	<xsl:value-of select="footer"/>
-				}
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						permission:<xsl:value-of select="permission"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
 				]
 			</xsl:for-each>
 
@@ -99,7 +104,7 @@
 		</script>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="table_header_deviation">
 		<tr class="th">
 			<td class="th_text" width="1%" align="right">
@@ -123,11 +128,20 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_deviation">
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/></xsl:variable>
-		<xsl:variable name="lang_delete_statustext"><xsl:value-of select="lang_delete_statustext"/></xsl:variable>
-		<xsl:variable name="link_delete"><xsl:value-of select="link_delete"/></xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="link_edit">
+			<xsl:value-of select="link_edit"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_statustext">
+			<xsl:value-of select="lang_delete_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="link_delete">
+			<xsl:value-of select="link_delete"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -155,18 +169,22 @@
 				<xsl:value-of select="entry_date"/>
 			</td>
 			<td class="small_text" align="center">
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_edit"/>
+				</a>
 			</td>
 			<td class="small_text" align="center">
-				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_delete"/>
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="add_template">
 		<div align="left">
-
-			<xsl:apply-templates select="menu"/> 
+			<xsl:apply-templates select="menu"/>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -179,8 +197,12 @@
 				</xsl:choose>
 			</table>
 			<table width="50%" cellpadding="2" cellspacing="2" align="center">
-				<xsl:variable name="add_action"><xsl:value-of select="add_action"/></xsl:variable>
-				<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+				<xsl:variable name="add_action">
+					<xsl:value-of select="add_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_add">
+					<xsl:value-of select="lang_add"/>
+				</xsl:variable>
 				<form method="post" action="{$add_action}">
 					<tr height="50">
 						<td>
@@ -222,7 +244,6 @@
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
-
 						</td>
 					</tr>
 				</form>
@@ -230,9 +251,12 @@
 					<td>
 					</td>
 					<td>
-
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" class="forms" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
@@ -247,9 +271,7 @@
 			</table>
 			<xsl:apply-templates select="workorder_data"/>
 			<hr noshade="noshade" width="100%" align="center" size="1"/>
-
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
-
 				<tr>
 					<td class="th_text" align="center">
 						<xsl:value-of select="lang_total_records"/>
@@ -264,9 +286,7 @@
 						<div id="datatable-container_0"/>
 					</td>
 				</tr>
-
 				<!-- <xsl:apply-templates select="table_header_hour"/><xsl:apply-templates select="values_hour"/>  -->
-
 			</table>
 		</div>
 		<!--  DATATABLE DEFINITIONS-->
@@ -278,26 +298,24 @@
 
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
-				{
-				values			:	<xsl:value-of select="values"/>,
-				total_records	: 	<xsl:value-of select="total_records"/>,
-				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-				footer			:	<xsl:value-of select="footer"/>
-				}
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
 				]
 			</xsl:for-each>
 
 			<xsl:for-each select="myColumnDefs">
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
-
 		</script>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="list_hour">
-
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -327,26 +345,37 @@
 		<xsl:apply-templates select="table_add"/>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="email_list">
-		<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
+		<xsl:variable name="email">
+			<xsl:value-of select="email"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected != 0">
-				<option value="{$email}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
+				<option value="{$email}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="email"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$email}"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
+				<option value="{$email}">
+					<xsl:value-of disable-output-escaping="yes" select="email"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" match="view">
-		<xsl:variable name="send_order_action"><xsl:value-of select="send_order_action"/></xsl:variable>
+		<xsl:variable name="send_order_action">
+			<xsl:value-of select="send_order_action"/>
+		</xsl:variable>
 		<table align="left" width="100%">
 			<form method="post" action="{$send_order_action}">
 				<xsl:choose>
 					<xsl:when test="no_email =''">
-						<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="left">
+						<tr>
+							<td>
+								<table width="100%" cellpadding="2" cellspacing="2" align="left">
 									<xsl:choose>
 										<xsl:when test="msgbox_data != ''">
 											<tr>
@@ -398,7 +427,6 @@
 											</tr>
 										</xsl:when>
 									</xsl:choose>
-
 									<xsl:choose>
 										<xsl:when test="email_list !=''">
 											<tr>
@@ -406,9 +434,13 @@
 													<xsl:value-of select="lang_mail"/>
 												</td>
 												<td align="left">
-													<xsl:variable name="lang_to_email_address_statustext"><xsl:value-of select="lang_to_email_address_statustext"/></xsl:variable>
+													<xsl:variable name="lang_to_email_address_statustext">
+														<xsl:value-of select="lang_to_email_address_statustext"/>
+													</xsl:variable>
 													<select name="to_email" class="forms" title="{$lang_to_email_address_statustext}">
-														<option value=""><xsl:value-of select="lang_select_email"/></option>
+														<option value="">
+															<xsl:value-of select="lang_select_email"/>
+														</option>
 														<xsl:apply-templates select="email_list"/>
 													</select>
 												</td>
@@ -441,78 +473,78 @@
 											</tr>
 										</xsl:otherwise>
 									</xsl:choose>
-											<tr>
-												<td class="th_text" align="left">
-													<xsl:value-of select="php:function('lang', 'request an email receipt')"/>
-												</td>
-												<td align="left">
-													<input type="checkbox" name="email_receipt" value="true">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'request a confirmation email when your email is opened by the recipient')"/>
-														</xsl:attribute>
-														<xsl:if test="requst_email_receipt != 0">
-															<xsl:attribute name="checked" value="checked"/>
-														</xsl:if>
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td class="th_text" align="left">
-													<xsl:value-of select="php:function('lang', 'send as pdf')"/>
-												</td>
-												<td align="left">
-													<input type="checkbox" name="send_as_pdf" value="true">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'Send pdf as attachment to email')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td class="th_text" align="left">
-													<xsl:value-of select="php:function('lang', 'notify client by sms')"/>
-												</td>
-												<td align="left">
-													<table>
-													<tr>
+									<tr>
+										<td class="th_text" align="left">
+											<xsl:value-of select="php:function('lang', 'request an email receipt')"/>
+										</td>
+										<td align="left">
+											<input type="checkbox" name="email_receipt" value="true">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'request a confirmation email when your email is opened by the recipient')"/>
+												</xsl:attribute>
+												<xsl:if test="requst_email_receipt != 0">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+									<tr>
+										<td class="th_text" align="left">
+											<xsl:value-of select="php:function('lang', 'send as pdf')"/>
+										</td>
+										<td align="left">
+											<input type="checkbox" name="send_as_pdf" value="true">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'Send pdf as attachment to email')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+									<tr>
+										<td class="th_text" align="left">
+											<xsl:value-of select="php:function('lang', 'notify client by sms')"/>
+										</td>
+										<td align="left">
+											<table>
+												<tr>
 													<td>
-													<input type="checkbox" name="notify_client_by_sms" value="true">
-														<xsl:attribute name="title">
-															<xsl:value-of select="value_sms_client_order_notice"/>
-														</xsl:attribute>
-													</input>
-													</td>
-													<td>
-													<input type="text" name="to_sms_phone" value="{value_sms_phone}">
-														<xsl:attribute name="title">
-															<xsl:value-of select="value_sms_client_order_notice"/>
-														</xsl:attribute>
-													</input>
-													</td>
-													</tr>
-													</table>
-												</td>
-											</tr>
-
-											<tr>
-												<td class="th_text" align="left">
-													<xsl:value-of select="php:function('lang', 'show calculated cost')"/>
-												</td>
-												<td align="left">
-													<input type="checkbox" name="show_cost" value="true">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'warning: show cost estimate')"/>
-														</xsl:attribute>
-														<xsl:if test="value_show_cost = '1'">
-															<xsl:attribute name="checked">
-																<xsl:text>checked</xsl:text>
+														<input type="checkbox" name="notify_client_by_sms" value="true">
+															<xsl:attribute name="title">
+																<xsl:value-of select="value_sms_client_order_notice"/>
 															</xsl:attribute>
-														</xsl:if>
-													</input>
-												</td>
-											</tr>
-
-						</table></td></tr>
+														</input>
+													</td>
+													<td>
+														<input type="text" name="to_sms_phone" value="{value_sms_phone}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="value_sms_client_order_notice"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td class="th_text" align="left">
+											<xsl:value-of select="php:function('lang', 'show calculated cost')"/>
+										</td>
+										<td align="left">
+											<input type="checkbox" name="show_cost" value="true">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'warning: show cost estimate')"/>
+												</xsl:attribute>
+												<xsl:if test="value_show_cost = '1'">
+													<xsl:attribute name="checked">
+														<xsl:text>checked</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</xsl:when>
 				</xsl:choose>
 				<tr>
@@ -520,9 +552,10 @@
 						<hr noshade="noshade" width="100%" align="center" size="1"/>
 						<xsl:apply-templates select="email_data"/>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
-					<td><hr noshade="noshade" width="100%" align="center" size="1"/>
+					<td>
+						<hr noshade="noshade" width="100%" align="center" size="1"/>
 					</td>
 				</tr>
 				<xsl:choose>
@@ -563,36 +596,31 @@
 											<div id="datatable-container_1"/>
 										</td>
 									</tr>
-									<!-- 
-						<xsl:apply-templates select="table_header_history"/>
-						<xsl:apply-templates select="workorder_history"/>
-						 -->
-					</xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>
+						</table>
+					</td>
+				</tr>
+				<xsl:choose>
+					<xsl:when test="table_send !=''">
+						<tr>
+							<td colspan="2">
+								<input type="submit" name="send_order" value="{table_send/lang_send_order}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="table_send/lang_send_order_statustext"/>
+									</xsl:attribute>
+								</input>
+								<input type="submit" name="done" value="{table_done/lang_done}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="table_done/lang_done_statustext"/>
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
+					</xsl:when>
 				</xsl:choose>
-			</table>
-		</td>
-	</tr>
-	<xsl:choose>
-		<xsl:when test="table_send !=''">
-			<tr>
-				<td colspan="2">
-					<input type="submit" name="send_order" value="{table_send/lang_send_order}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="table_send/lang_send_order_statustext"/>
-						</xsl:attribute>
-					</input>
-					<input type="submit" name="done" value="{table_done/lang_done}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="table_done/lang_done_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
-		</xsl:when>
-	</xsl:choose>
-</form>
-</table>
-
+			</form>
+		</table>
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js"/>;
 			var datatable = new Array();
@@ -600,12 +628,12 @@
 
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
-				{
-				values			:	<xsl:value-of select="values"/>,
-				total_records	: 	<xsl:value-of select="total_records"/>,
-				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-				footer			:	<xsl:value-of select="footer"/>
-				}
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
 				]
 			</xsl:for-each>
 
@@ -613,9 +641,9 @@
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
 		</script>
-
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_history">
 		<tr class="th">
 			<td class="th_text" width="20%" align="left">
@@ -633,6 +661,7 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="workorder_history">
 		<tr>
 			<xsl:attribute name="class">
@@ -663,12 +692,13 @@
 		</tr>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="email_data">
 		<font size="-1">
-			<table align="left"><tr><td width="100%">
+			<table align="left">
+				<tr>
+					<td width="100%">
 						<table width="100%" cellpadding="2" cellspacing="2" align="left">
-
 							<tr>
 								<td class="th_text" align="left">
 									<xsl:value-of select="lang_date"/>
@@ -680,18 +710,17 @@
 							<tr>
 								<td class="th_text" align="left">
 									<xsl:value-of select="lang_workorder"/>
-
 								</td>
 								<td align="left" colspan="2">
 									<xsl:value-of select="workorder_id"/>
 									<xsl:choose>
 										<xsl:when test="lang_reminder !=''">
 											<xsl:text> - </xsl:text>
-											<b><xsl:value-of select="lang_reminder"/></b>
+											<b>
+												<xsl:value-of select="lang_reminder"/>
+											</b>
 										</xsl:when>
 									</xsl:choose>
-
-
 								</td>
 							</tr>
 							<tr>
@@ -708,16 +737,14 @@
 								</td>
 								<td align="left" colspan="2">
 									<xsl:value-of select="from_name"/>
-									<br/>				
+									<br/>
 									<xsl:choose>
 										<xsl:when test="ressursnr !=''">
-												<xsl:text>RessursNr: </xsl:text>
-												<xsl:value-of select="ressursnr"/>
+											<xsl:text>RessursNr: </xsl:text>
+											<xsl:value-of select="ressursnr"/>
 											<br/>
 										</xsl:when>
 									</xsl:choose>
-
-
 									<xsl:value-of select="org_name"/>
 									<xsl:value-of select="lang_district"/>
 									<xsl:text> </xsl:text>
@@ -735,9 +762,8 @@
 								</xsl:when>
 							</xsl:choose>
 							<xsl:call-template name="location_view"/>
-							
 							<xsl:choose>
-								<xsl:when test="formatted_gab_id !=''">		
+								<xsl:when test="formatted_gab_id !=''">
 									<tr>
 										<td class="th_text" align="left">
 											Gnr/Bnr/Feste/Seksjon
@@ -760,7 +786,6 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
-
 							<tr>
 								<td class="th_text" align="left">
 									<xsl:value-of select="lang_title"/>
@@ -777,7 +802,7 @@
 									<table border="1" width="100%" bordercolor="#000000" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="100%">
-												<xsl:value-of select="descr"/> 
+												<xsl:value-of select="descr"/>
 											</td>
 										</tr>
 									</table>
@@ -849,7 +874,6 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
-
 							<xsl:choose>
 								<xsl:when test="key_responsible_list/selected">
 									<tr>
@@ -900,16 +924,19 @@
 									</xsl:for-each>
 								</tr>
 							</xsl:if>
-				</table></td></tr>
+						</table>
+					</td>
+				</tr>
 				<xsl:choose>
 					<xsl:when test="values_view_order!=''">
-						<tr><td colspand="3">
+						<tr>
+							<td colspand="3">
 								<table width="100%" cellpadding="2" cellspacing="2" align="center">
 									<xsl:choose>
 										<xsl:when test="use_yui_table='1'">
 											<td>
 												<div id="paging_0"> </div>
-												<div id="datatable-container_0"/> 
+												<div id="datatable-container_0"/>
 											</td>
 										</xsl:when>
 										<xsl:otherwise>
@@ -918,22 +945,23 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</table>
-						</td></tr>
+							</td>
+						</tr>
 					</xsl:when>
 				</xsl:choose>
-
 				<xsl:choose>
 					<xsl:when test="sms_data!=''">
 						<xsl:apply-templates select="sms_data"/>
 					</xsl:when>
 				</xsl:choose>
-
 				<xsl:choose>
 					<xsl:when test="order_footer_header!=''">
 						<tr>
 							<td>
 								<br/>
-								<h4><xsl:value-of select="order_footer_header"/></h4>
+								<h4>
+									<xsl:value-of select="order_footer_header"/>
+								</h4>
 							</td>
 						</tr>
 					</xsl:when>
@@ -951,10 +979,17 @@
 		</font>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_view_order">
-		<xsl:variable name="sort_activity_num"><xsl:value-of select="sort_activity_num"/></xsl:variable>
-		<xsl:variable name="sort_descr"><xsl:value-of select="sort_descr"/></xsl:variable>
-		<xsl:variable name="sort_quantity"><xsl:value-of select="sort_quantity"/></xsl:variable>
+		<xsl:variable name="sort_activity_num">
+			<xsl:value-of select="sort_activity_num"/>
+		</xsl:variable>
+		<xsl:variable name="sort_descr">
+			<xsl:value-of select="sort_descr"/>
+		</xsl:variable>
+		<xsl:variable name="sort_quantity">
+			<xsl:value-of select="sort_quantity"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="5%" align="right">
 				<xsl:value-of select="lang_post"/>
@@ -980,10 +1015,17 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_view_order">
-		<xsl:variable name="lang_view_statustext"><xsl:value-of select="lang_view_statustext"/></xsl:variable>
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_delete_statustext"><xsl:value-of select="lang_delete_statustext"/></xsl:variable>
+		<xsl:variable name="lang_view_statustext">
+			<xsl:value-of select="lang_view_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_statustext">
+			<xsl:value-of select="lang_delete_statustext"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="new_grouping=1">
 				<tr>
@@ -1007,7 +1049,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="right">
 				<xsl:value-of select="post"/>
 			</td>
@@ -1034,9 +1075,9 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="list_template">
-
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<xsl:apply-templates select="workorder_data"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
@@ -1064,16 +1105,24 @@
 		<xsl:apply-templates select="table_done"/>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="table_header_template">
-		<xsl:variable name="sort_name"><xsl:value-of select="sort_name"/></xsl:variable>
-		<xsl:variable name="sort_template_id"><xsl:value-of select="sort_template_id"/></xsl:variable>
+		<xsl:variable name="sort_name">
+			<xsl:value-of select="sort_name"/>
+		</xsl:variable>
+		<xsl:variable name="sort_template_id">
+			<xsl:value-of select="sort_template_id"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_template_id}"><xsl:value-of select="lang_template_id"/></a>
+				<a href="{$sort_template_id}">
+					<xsl:value-of select="lang_template_id"/>
+				</a>
 			</td>
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_name}"><xsl:value-of select="lang_name"/></a>
+				<a href="{$sort_name}">
+					<xsl:value-of select="lang_name"/>
+				</a>
 			</td>
 			<td class="th_text" width="30%" align="left">
 				<xsl:value-of select="lang_descr"/>
@@ -1093,9 +1142,14 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_template">
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_prizing_statustext"><xsl:value-of select="lang_prizing_statustext"/></xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_prizing_statustext">
+			<xsl:value-of select="lang_prizing_statustext"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -1110,7 +1164,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="right">
 				<xsl:value-of select="template_id"/>
 			</td>
@@ -1129,12 +1182,16 @@
 			<td align="right">
 				<xsl:value-of select="entry_date"/>
 			</td>
-			<xsl:variable name="form_action_select"><xsl:value-of select="form_action_select"/></xsl:variable>
+			<xsl:variable name="form_action_select">
+				<xsl:value-of select="form_action_select"/>
+			</xsl:variable>
 			<form method="post" action="{$form_action_select}">
 				<td valign="top">
 					<input type="hidden" name="template_id" value="{template_id}"/>
 					<input type="hidden" name="workorder_id" value="{workorder_id}"/>
-					<xsl:variable name="lang_select"><xsl:value-of select="lang_select"/></xsl:variable>
+					<xsl:variable name="lang_select">
+						<xsl:value-of select="lang_select"/>
+					</xsl:variable>
 					<input type="submit" name="select" value="{$lang_select}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
@@ -1147,10 +1204,9 @@
 		</tr>
 	</xsl:template>
 
-
-
+	<!-- New template-->
 	<xsl:template match="list_template_hour">
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -1163,9 +1219,14 @@
 			</xsl:choose>
 		</table>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-
-			<tr><td><xsl:apply-templates select="workorder_data"/></td></tr>
-			<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="center">
+			<tr>
+				<td>
+					<xsl:apply-templates select="workorder_data"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width="100%" cellpadding="2" cellspacing="2" align="center">
 						<tr>
 							<td align="right">
 								<xsl:call-template name="search_field"/>
@@ -1176,9 +1237,15 @@
 								<xsl:call-template name="nextmatchs"/>
 							</td>
 						</tr>
-			</table></td></tr>
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-			<tr><td><form method="post" name="form" action="{$form_action}">
+					</table>
+				</td>
+			</tr>
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+			<tr>
+				<td>
+					<form method="post" name="form" action="{$form_action}">
 						<table width="100%" cellpadding="2" cellspacing="2" align="center">
 							<xsl:apply-templates select="table_header_template_hour"/>
 							<xsl:choose>
@@ -1192,8 +1259,12 @@
 										<td/>
 										<td/>
 										<td align="center">
-											<xsl:variable name="img_check"><xsl:value-of select="img_check"/></xsl:variable>
-											<a href="javascript:check_all_checkbox('values[select]')"><img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/></a>
+											<xsl:variable name="img_check">
+												<xsl:value-of select="img_check"/>
+											</xsl:variable>
+											<a href="javascript:check_all_checkbox('values[select]')">
+												<img src="{$img_check}" border="0" height="16" width="21" alt="{lang_select_all}"/>
+											</a>
 										</td>
 									</tr>
 								</xsl:when>
@@ -1202,7 +1273,9 @@
 						<table align="left">
 							<tr height="50">
 								<td>
-									<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+									<xsl:variable name="lang_add">
+										<xsl:value-of select="lang_add"/>
+									</xsl:variable>
 									<input type="submit" name="values[add]" value="{$lang_add}" onMouseout="window.status='';return true;">
 										<xsl:attribute name="onMouseover">
 											<xsl:text>window.status='</xsl:text>
@@ -1213,8 +1286,12 @@
 								</td>
 							</tr>
 						</table>
-			</form></td></tr>
-			<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="left">
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width="100%" cellpadding="2" cellspacing="2" align="left">
 						<hr noshade="noshade" width="100%" align="center" size="1"/>
 						<tr>
 							<td class="th_text" colspan="3" align="right">
@@ -1228,17 +1305,30 @@
 						<xsl:apply-templates select="table_header_hour"/>
 						<xsl:apply-templates select="values_hour"/>
 						<xsl:apply-templates select="table_sum"/>
-			</table></td></tr>
-			<tr><td><xsl:apply-templates select="table_done"/></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:apply-templates select="table_done"/>
+				</td>
+			</tr>
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_template_hour">
-		<xsl:variable name="sort_billperae"><xsl:value-of select="sort_billperae"/></xsl:variable>
-		<xsl:variable name="sort_building_part"><xsl:value-of select="sort_building_part"/></xsl:variable>
+		<xsl:variable name="sort_billperae">
+			<xsl:value-of select="sort_billperae"/>
+		</xsl:variable>
+		<xsl:variable name="sort_building_part">
+			<xsl:value-of select="sort_building_part"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_building_part}"><xsl:value-of select="lang_building_part"/></a>
+				<a href="{$sort_building_part}">
+					<xsl:value-of select="lang_building_part"/>
+				</a>
 			</td>
 			<td class="th_text" width="10%" align="right">
 				<xsl:value-of select="lang_code"/>
@@ -1250,7 +1340,9 @@
 				<xsl:value-of select="lang_unit"/>
 			</td>
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_billperae}"><xsl:value-of select="lang_billperae"/></a>
+				<a href="{$sort_billperae}">
+					<xsl:value-of select="lang_billperae"/>
+				</a>
 			</td>
 			<td class="th_text" width="5%" align="center">
 				<xsl:value-of select="lang_quantity"/>
@@ -1267,9 +1359,14 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_template_hour">
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_prizing_statustext"><xsl:value-of select="lang_prizing_statustext"/></xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_prizing_statustext">
+			<xsl:value-of select="lang_prizing_statustext"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="new_grouping=1">
 				<tr>
@@ -1343,10 +1440,16 @@
 			</td>
 			<td>
 				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
-					<option value=""><xsl:value-of select="//lang_no_wo_hour_cat"/></option>
+					<option value="">
+						<xsl:value-of select="//lang_no_wo_hour_cat"/>
+					</option>
 					<xsl:for-each select="//wo_hour_cat_list">
-						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-						<option value="{$id}"><xsl:value-of select="name"/></option>
+						<xsl:variable name="id">
+							<xsl:value-of select="id"/>
+						</xsl:variable>
+						<option value="{$id}">
+							<xsl:value-of select="name"/>
+						</option>
 					</xsl:for-each>
 				</select>
 			</td>
@@ -1356,10 +1459,9 @@
 		</tr>
 	</xsl:template>
 
-
-
+	<!-- New template-->
 	<xsl:template match="prizebook">
-		<xsl:apply-templates select="menu"/> 
+		<xsl:apply-templates select="menu"/>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -1371,13 +1473,17 @@
 				</xsl:when>
 			</xsl:choose>
 		</table>
-
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-
-			<tr><td><xsl:apply-templates select="workorder_data"/></td></tr>
+			<tr>
+				<td>
+					<xsl:apply-templates select="workorder_data"/>
+				</td>
+			</tr>
 			<xsl:choose>
 				<xsl:when test="values_prizebook[activity_id]!=''">
-					<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<tr>
+						<td>
+							<table width="100%" cellpadding="2" cellspacing="2" align="center">
 								<tr>
 									<td align="right">
 										<xsl:call-template name="search_field"/>
@@ -1388,9 +1494,14 @@
 										<xsl:call-template name="nextmatchs"/>
 									</td>
 								</tr>
-					</table></td></tr>
-					<tr><td>
-							<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:variable name="form_action">
+								<xsl:value-of select="form_action"/>
+							</xsl:variable>
 							<form method="post" name="form" action="{$form_action}">
 								<table width="100%" cellpadding="2" cellspacing="2" align="center">
 									<xsl:apply-templates select="table_header_prizebook"/>
@@ -1399,7 +1510,9 @@
 								<table align="left">
 									<tr height="50">
 										<td>
-											<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
+											<xsl:variable name="lang_add">
+												<xsl:value-of select="lang_add"/>
+											</xsl:variable>
 											<input type="submit" name="values[add]" value="{$lang_add}" onMouseout="window.status='';return true;">
 												<xsl:attribute name="onMouseover">
 													<xsl:text>window.status='</xsl:text>
@@ -1410,12 +1523,19 @@
 										</td>
 									</tr>
 								</table>
-					</form></td></tr>
+							</form>
+						</td>
+					</tr>
 				</xsl:when>
 			</xsl:choose>
-
-			<tr><td><hr noshade="noshade" width="100%" align="center" size="1"/></td></tr>
-			<tr><td><table width="100%" cellpadding="2" cellspacing="2" align="left">
+			<tr>
+				<td>
+					<hr noshade="noshade" width="100%" align="center" size="1"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width="100%" cellpadding="2" cellspacing="2" align="left">
 						<tr>
 							<td class="th_text" colspan="3" align="right">
 								<xsl:value-of select="lang_total_records"/>
@@ -1428,16 +1548,25 @@
 						<xsl:apply-templates select="table_header_hour"/>
 						<xsl:apply-templates select="values_hour"/>
 						<xsl:apply-templates select="table_sum"/>
-			</table></td></tr>
-			<tr><td><xsl:apply-templates select="table_done"/></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:apply-templates select="table_done"/>
+				</td>
+			</tr>
 		</table>
-
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="workorder_data">
-		<xsl:variable name="link_workorder"><xsl:value-of select="link_workorder"/></xsl:variable>
-		<xsl:variable name="link_project"><xsl:value-of select="link_project"/></xsl:variable>
+		<xsl:variable name="link_workorder">
+			<xsl:value-of select="link_workorder"/>
+		</xsl:variable>
+		<xsl:variable name="link_project">
+			<xsl:value-of select="link_project"/>
+		</xsl:variable>
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td class="th_text" align="left">
@@ -1445,7 +1574,9 @@
 					<xsl:text> :</xsl:text>
 				</td>
 				<td class="th_text" align="left">
-					<a href="{$link_project}"><xsl:value-of select="project_id"/></a>
+					<a href="{$link_project}">
+						<xsl:value-of select="project_id"/>
+					</a>
 				</td>
 			</tr>
 			<tr>
@@ -1454,7 +1585,9 @@
 					<xsl:text> :</xsl:text>
 				</td>
 				<td class="th_text" align="left">
-					<a href="{$link_workorder}"><xsl:value-of select="workorder_id"/></a>
+					<a href="{$link_workorder}">
+						<xsl:value-of select="workorder_id"/>
+					</a>
 				</td>
 			</tr>
 			<tr>
@@ -1476,10 +1609,9 @@
 				</td>
 			</tr>
 		</table>
-
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="table_sum">
 		<tr>
 			<td>
@@ -1595,12 +1727,19 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_prizebook">
-		<xsl:variable name="sort_num"><xsl:value-of select="sort_num"/></xsl:variable>
-		<xsl:variable name="sort_total_cost"><xsl:value-of select="sort_total_cost"/></xsl:variable>
+		<xsl:variable name="sort_num">
+			<xsl:value-of select="sort_num"/>
+		</xsl:variable>
+		<xsl:variable name="sort_total_cost">
+			<xsl:value-of select="sort_total_cost"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_num}"><xsl:value-of select="lang_num"/></a>
+				<a href="{$sort_num}">
+					<xsl:value-of select="lang_num"/>
+				</a>
 			</td>
 			<td class="th_text" width="30%" align="left">
 				<xsl:value-of select="lang_descr"/>
@@ -1618,7 +1757,9 @@
 				<xsl:value-of select="lang_m_cost"/>
 			</td>
 			<td class="th_text" width="10%" align="right">
-				<a href="{$sort_total_cost}"><xsl:value-of select="lang_total_cost"/></a>
+				<a href="{$sort_total_cost}">
+					<xsl:value-of select="lang_total_cost"/>
+				</a>
 			</td>
 			<td class="th_text" width="5%" align="right">
 				<xsl:value-of select="lang_quantity"/>
@@ -1632,9 +1773,14 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_prizebook">
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_prizing_statustext"><xsl:value-of select="lang_prizing_statustext"/></xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_prizing_statustext">
+			<xsl:value-of select="lang_prizing_statustext"/>
+		</xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -1649,7 +1795,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="left">
 				<xsl:value-of select="num"/>
 				<input type="hidden" name="values[activity_id][{counter}]" value="{activity_id}"/>
@@ -1690,24 +1835,36 @@
 			</td>
 			<td>
 				<select name="values[wo_hour_cat][{counter}]" class="forms" title="{lang_wo_hour_cat_statustext}" style="cursor:help">
-					<option value=""><xsl:value-of select="//lang_no_wo_hour_cat"/></option>
+					<option value="">
+						<xsl:value-of select="//lang_no_wo_hour_cat"/>
+					</option>
 					<xsl:for-each select="//wo_hour_cat_list">
-						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-						<option value="{$id}"><xsl:value-of select="name"/></option>
+						<xsl:variable name="id">
+							<xsl:value-of select="id"/>
+						</xsl:variable>
+						<option value="{$id}">
+							<xsl:value-of select="name"/>
+						</option>
 					</xsl:for-each>
 				</select>
 			</td>
 			<td>
 				<input type="text" size="3" maxlength="3" name="values[cat_per_cent][{counter}]"/>
 			</td>
-
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_header_hour">
-		<xsl:variable name="sort_activity_num"><xsl:value-of select="sort_activity_num"/></xsl:variable>
-		<xsl:variable name="sort_descr"><xsl:value-of select="sort_descr"/></xsl:variable>
-		<xsl:variable name="sort_quantity"><xsl:value-of select="sort_quantity"/></xsl:variable>
+		<xsl:variable name="sort_activity_num">
+			<xsl:value-of select="sort_activity_num"/>
+		</xsl:variable>
+		<xsl:variable name="sort_descr">
+			<xsl:value-of select="sort_descr"/>
+		</xsl:variable>
+		<xsl:variable name="sort_quantity">
+			<xsl:value-of select="sort_quantity"/>
+		</xsl:variable>
 		<tr class="th">
 			<td class="th_text" width="5%" align="right">
 				<xsl:value-of select="lang_post"/>
@@ -1751,10 +1908,17 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values_hour">
-		<xsl:variable name="lang_view_statustext"><xsl:value-of select="lang_view_statustext"/></xsl:variable>
-		<xsl:variable name="lang_edit_statustext"><xsl:value-of select="lang_edit_statustext"/></xsl:variable>
-		<xsl:variable name="lang_delete_statustext"><xsl:value-of select="lang_delete_statustext"/></xsl:variable>
+		<xsl:variable name="lang_view_statustext">
+			<xsl:value-of select="lang_view_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_edit_statustext">
+			<xsl:value-of select="lang_edit_statustext"/>
+		</xsl:variable>
+		<xsl:variable name="lang_delete_statustext">
+			<xsl:value-of select="lang_delete_statustext"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="new_grouping=1">
 				<tr>
@@ -1778,7 +1942,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-
 			<td align="right">
 				<xsl:value-of select="post"/>
 			</td>
@@ -1804,7 +1967,9 @@
 			</td>
 			<td align="right">
 				<xsl:variable name="link_deviation"><xsl:value-of select="link_deviation"/>&amp;from=<xsl:value-of select="//function"/></xsl:variable>
-				<a href="{$link_deviation}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="deviation"/></a>
+				<a href="{$link_deviation}" onMouseover="window.status='';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="deviation"/>
+				</a>
 			</td>
 			<td align="right">
 				<xsl:value-of select="result"/>
@@ -1817,21 +1982,30 @@
 			</td>
 			<td align="center">
 				<xsl:variable name="link_edit"><xsl:value-of select="link_edit"/>&amp;from=<xsl:value-of select="//function"/>&amp;template_id=<xsl:value-of select="//template_id"/></xsl:variable>
-				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_edit"/></a>
+				<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_edit"/>
+				</a>
 			</td>
 			<td align="center">
 				<xsl:variable name="link_delete"><xsl:value-of select="//link_delete"/>&amp;hour_id=<xsl:value-of select="hour_id"/>&amp;template_id=<xsl:value-of select="//template_id"/></xsl:variable>
-				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_delete"/></a>
+				<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;">
+					<xsl:value-of select="text_delete"/>
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_add">
 		<table width="80%">
 			<tr>
 				<td align="left" height="50">
-					<xsl:variable name="add_prizebook_action"><xsl:value-of select="add_prizebook_action"/></xsl:variable>
-					<xsl:variable name="lang_add_prizebook"><xsl:value-of select="lang_add_prizebook"/></xsl:variable>
+					<xsl:variable name="add_prizebook_action">
+						<xsl:value-of select="add_prizebook_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_add_prizebook">
+						<xsl:value-of select="lang_add_prizebook"/>
+					</xsl:variable>
 					<form method="post" action="{$add_prizebook_action}">
 						<input type="submit" name="add_prizebook" value="{$lang_add_prizebook}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -1843,8 +2017,12 @@
 					</form>
 				</td>
 				<td align="left" height="50">
-					<xsl:variable name="add_template_action"><xsl:value-of select="add_template_action"/></xsl:variable>
-					<xsl:variable name="lang_add_template"><xsl:value-of select="lang_add_template"/></xsl:variable>
+					<xsl:variable name="add_template_action">
+						<xsl:value-of select="add_template_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_add_template">
+						<xsl:value-of select="lang_add_template"/>
+					</xsl:variable>
 					<form method="post" action="{$add_template_action}">
 						<input type="submit" name="add_template" value="{$lang_add_template}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -1856,8 +2034,12 @@
 					</form>
 				</td>
 				<td align="left" height="50">
-					<xsl:variable name="add_custom_action"><xsl:value-of select="add_custom_action"/></xsl:variable>
-					<xsl:variable name="lang_add_custom"><xsl:value-of select="lang_add_custom"/></xsl:variable>
+					<xsl:variable name="add_custom_action">
+						<xsl:value-of select="add_custom_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_add_custom">
+						<xsl:value-of select="lang_add_custom"/>
+					</xsl:variable>
 					<form method="post" action="{$add_custom_action}">
 						<input type="submit" name="add_custom" value="{$lang_add_custom}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -1869,8 +2051,12 @@
 					</form>
 				</td>
 				<td align="left" height="50">
-					<xsl:variable name="save_template_action"><xsl:value-of select="save_template_action"/></xsl:variable>
-					<xsl:variable name="lang_save_template"><xsl:value-of select="lang_save_template"/></xsl:variable>
+					<xsl:variable name="save_template_action">
+						<xsl:value-of select="save_template_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_save_template">
+						<xsl:value-of select="lang_save_template"/>
+					</xsl:variable>
 					<form method="post" action="{$save_template_action}">
 						<input type="submit" name="save_template" value="{$lang_save_template}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
@@ -1883,8 +2069,12 @@
 				</td>
 			</tr>
 			<tr>
-				<xsl:variable name="print_view_action"><xsl:value-of select="print_view_action"/></xsl:variable>
-				<xsl:variable name="lang_print_view"><xsl:value-of select="lang_print_view"/></xsl:variable>
+				<xsl:variable name="print_view_action">
+					<xsl:value-of select="print_view_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_print_view">
+					<xsl:value-of select="lang_print_view"/>
+				</xsl:variable>
 				<form method="post" action="{$print_view_action}">
 					<td align="left" height="50">
 						<input type="submit" name="print_view" value="{$lang_print_view}" onMouseout="window.status='';return true;">
@@ -1918,8 +2108,12 @@
 				</form>
 			</tr>
 			<tr>
-				<xsl:variable name="view_tender_action"><xsl:value-of select="view_tender_action"/></xsl:variable>
-				<xsl:variable name="lang_view_tender"><xsl:value-of select="lang_view_tender"/></xsl:variable>
+				<xsl:variable name="view_tender_action">
+					<xsl:value-of select="view_tender_action"/>
+				</xsl:variable>
+				<xsl:variable name="lang_view_tender">
+					<xsl:value-of select="lang_view_tender"/>
+				</xsl:variable>
 				<form method="post" action="{$view_tender_action}" target="_new">
 					<td align="left" height="50">
 						<input type="submit" name="view_tender" value="{$lang_view_tender}" onMouseout="window.status='';return true;">
@@ -1963,12 +2157,17 @@
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_done">
 		<table width="100%" align="left">
 			<tr>
 				<td height="50" align="left">
-					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+					<xsl:variable name="done_action">
+						<xsl:value-of select="done_action"/>
+					</xsl:variable>
+					<xsl:variable name="lang_done">
+						<xsl:value-of select="lang_done"/>
+					</xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
@@ -1981,11 +2180,14 @@
 		</table>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="table_send">
 		<table width="80%">
 			<tr>
 				<td align="left" height="50">
-					<xsl:variable name="lang_send_order"><xsl:value-of select="lang_send_order"/></xsl:variable>
+					<xsl:variable name="lang_send_order">
+						<xsl:value-of select="lang_send_order"/>
+					</xsl:variable>
 					<input type="submit" name="send_order" value="{$lang_send_order}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
@@ -1998,18 +2200,16 @@
 		</table>
 	</xsl:template>
 
-<!-- add / edit -->
-
+	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_hour">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function ns3420_lookup()
 			{
-			Window1=window.open('<xsl:value-of select="ns3420_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+				Window1=window.open('<xsl:value-of select="ns3420_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
 		<div align="left">
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -2020,9 +2220,10 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" name="form" action="{$form_action}">
-
 					<xsl:choose>
 						<xsl:when test="value_hour_id !=''">
 							<xsl:choose>
@@ -2043,7 +2244,6 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
-
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_hour_id"/>
@@ -2168,7 +2368,9 @@
 						<xsl:otherwise>
 							<tr>
 								<td valign="top">
-									<a href="javascript:ns3420_lookup()" onMouseover="window.status='{lang_ns3420_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_ns3420"/></a>
+									<a href="javascript:ns3420_lookup()" onMouseover="window.status='{lang_ns3420_statustext}';return true;" onMouseout="window.status='';return true;">
+										<xsl:value-of select="lang_ns3420"/>
+									</a>
 								</td>
 								<td valign="top">
 									<input type="text" name="ns3420_id" value="{value_ns3420_id}" onClick="ns3420_lookup();" readonly="readonly">
@@ -2192,7 +2394,6 @@
 										</xsl:attribute>
 										<xsl:value-of select="value_descr"/>
 									</textarea>
-
 								</td>
 							</tr>
 							<tr>
@@ -2205,7 +2406,6 @@
 							</tr>
 						</xsl:otherwise>
 					</xsl:choose>
-
 					<tr>
 						<td>
 							<xsl:value-of select="lang_unit"/>
@@ -2227,9 +2427,13 @@
 							<xsl:value-of select="lang_wo_hour_category"/>
 						</td>
 						<td>
-							<xsl:variable name="lang_wo_hour_cat_statustext"><xsl:value-of select="lang_to_email_address_statustext"/></xsl:variable>
+							<xsl:variable name="lang_wo_hour_cat_statustext">
+								<xsl:value-of select="lang_to_email_address_statustext"/>
+							</xsl:variable>
 							<select name="values[wo_hour_cat]" class="forms" onMouseover="window.status='{$lang_wo_hour_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
-								<option value=""><xsl:value-of select="lang_select_wo_hour_category"/></option>
+								<option value="">
+									<xsl:value-of select="lang_select_wo_hour_category"/>
+								</option>
 								<xsl:apply-templates select="wo_hour_cat_list"/>
 							</select>
 							<xsl:value-of select="lang_per_cent"/>
@@ -2260,27 +2464,16 @@
 						<td valign="top">
 							<xsl:value-of select="lang_billperae"/>
 						</td>
-						<td>
-							<input type="text" name="values[billperae]" value="{value_billperae}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_billperae_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+						<td><input type="text" name="values[billperae]" value="{value_billperae}" onMouseout="window.status='';return true;"><xsl:attribute name="onMouseover"><xsl:text>window.status='</xsl:text><xsl:value-of select="lang_billperae_statustext"/><xsl:text>'; return true;</xsl:text></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 						</td>
 					</tr>
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_total_cost"/>
 						</td>
-						<td>
-							<xsl:value-of select="value_total_cost"/>
-							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+						<td><xsl:value-of select="value_total_cost"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 						</td>
 					</tr>
-
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_remark"/>
@@ -2298,7 +2491,9 @@
 					</tr>
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
@@ -2311,8 +2506,12 @@
 				</form>
 				<tr>
 					<td>
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
@@ -2328,10 +2527,9 @@
 		</div>
 	</xsl:template>
 
-<!-- add_deviation / edit_deviation  -->
+	<!-- add_deviation / edit_deviation  -->
 	<xsl:template match="edit_deviation">
 		<div align="left">
-
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -2342,7 +2540,9 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" action="{$form_action}">
 					<tr>
 						<td class="th_text" align="left">
@@ -2410,13 +2610,13 @@
 								</xsl:attribute>
 								<xsl:value-of select="value_descr"/>
 							</textarea>
-
 						</td>
 					</tr>
-
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
@@ -2429,8 +2629,12 @@
 				</form>
 				<tr>
 					<td>
-						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="done_action">
+							<xsl:value-of select="done_action"/>
+						</xsl:variable>
+						<xsl:variable name="lang_done">
+							<xsl:value-of select="lang_done"/>
+						</xsl:variable>
 						<form method="post" action="{$done_action}">
 							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
@@ -2446,18 +2650,26 @@
 		</div>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="wo_hour_cat_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}" selected="selected">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+				<option value="{$id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="sms_data">
 		<tr>
 			<td>
@@ -2467,9 +2679,7 @@
 		</tr>
 		<tr>
 			<td class="th_text">
-
 				<xsl:value-of select="message"/>
-
 			</td>
 		</tr>
 		<tr>
@@ -2489,9 +2699,9 @@
 				<xsl:value-of select="example"/>
 			</td>
 		</tr>
-
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="options">
 		<option value="{id}">
 			<xsl:if test="selected != 0">

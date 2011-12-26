@@ -1,9 +1,9 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="alarm_view">
 		<xsl:apply-templates select="alarm_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template name="alarm_data">
 		<table width="80%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:apply-templates select="header"/>
@@ -11,7 +11,7 @@
 		</table>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="header">
 		<tr class="th">
 			<td class="th_text" width="20%" align="left">
@@ -29,6 +29,7 @@
 		</tr>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="values">
 		<tr>
 			<xsl:attribute name="class">
@@ -48,7 +49,9 @@
 				<xsl:value-of select="time"/>
 			</td>
 			<td align="left">
-				<pre><xsl:value-of select="text"/></pre>
+				<pre>
+					<xsl:value-of select="text"/>
+				</pre>
 			</td>
 			<td align="left">
 				<xsl:value-of select="user"/>

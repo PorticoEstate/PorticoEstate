@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="columns">
@@ -8,7 +7,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-
+	<!-- New template-->
 	<xsl:template match="columns">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -21,17 +20,23 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+				<xsl:variable name="form_action">
+					<xsl:value-of select="form_action"/>
+				</xsl:variable>
 				<form method="post" name="form" action="{$form_action}">
 					<tr>
 						<td valign="top">
-							<b><xsl:value-of select="lang_columns"/></b>
+							<b>
+								<xsl:value-of select="lang_columns"/>
+							</b>
 						</td>
 					</tr>
 					<xsl:apply-templates select="column_list"/>
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
 							<input type="submit" name="values[save]" value="{$lang_save}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_save_statustext"/>
@@ -39,15 +44,16 @@
 							</input>
 						</td>
 					</tr>
-
-
 				</form>
 			</table>
 		</div>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="column_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id">
+			<xsl:value-of select="id"/>
+		</xsl:variable>
 		<tr>
 			<td>
 				<xsl:choose>
@@ -58,7 +64,6 @@
 						<input id="column{$id}" name="values[columns][]" value="{$id}" type="checkbox"/>
 					</xsl:otherwise>
 				</xsl:choose>
-
 				<xsl:value-of select="name"/>
 			</td>
 		</tr>
