@@ -1960,7 +1960,7 @@
 
 		function bulk_update_status()
 		{
-			if(!$this->acl_edit))
+			if(!$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_EDIT, 'acl_location'=>$this->acl_location));
 			}
