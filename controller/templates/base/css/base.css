@@ -1112,3 +1112,10 @@ ul#icon_color_map span{
 	position:absolute;
     z-index: 1;
 }
+#error_report_message_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #ddd;
+    margin: 0;
+    padding: 15px;
+    width: 800px;	
+}
