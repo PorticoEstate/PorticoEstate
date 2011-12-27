@@ -703,7 +703,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'location_item_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_item_id' => array('type' => 'int','precision' => 8,'nullable' => False),//bigint
 				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'is_active' => array('type' => 'int', 'precision' => 2,'nullable' => true),
 				'notification_method' => array('type' => 'varchar', 'precision' => 20,'nullable' => true),
