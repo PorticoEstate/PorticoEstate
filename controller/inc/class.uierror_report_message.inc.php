@@ -116,8 +116,8 @@
 			
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
-				
-				$details .= $check_item->get_comment(); 
+				$details .= "Gjøremål: ";
+				$details .=  $check_item->get_comment() . "<br>";
 			}
 			
 			$ticket = array
@@ -133,9 +133,13 @@
 			);
 			
 			$botts = CreateObject('property.botts',true);
-			$ticket_id = $botts->add_ticket($ticket);
+			$message_ticket_id = $botts->add_ticket($ticket);
 
-			
+			foreach($check_item_ids as $check_item_id){
+				$check_item = $this->so_check_item->get_single($check_item_id);
+				$check_item->set_message_ticket_id( $message_ticket_id );
+				$this->so_check_item->update($check_item);
+			}			
 			
 			$data = array
 			(
