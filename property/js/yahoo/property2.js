@@ -35,7 +35,7 @@
 	{
 		if(!paginator.getPageRecords())
 		{
-			return;
+			return '0,00';
 		}
 		begin = end = 0;
 		end = datatable.getRecordSet().getLength();
