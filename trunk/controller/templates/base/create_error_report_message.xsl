@@ -10,7 +10,7 @@
 		<h2>Utført dato <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h2>
 				
 		<div id="error_report_message_details">
-			<h2 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h2>
+			
 
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
@@ -31,9 +31,10 @@
 				      </xsl:attribute>
 				    </input>
 				    
-					<label>Tittel på melding</label>
-					<input name="title" type="text" />
-								
+					<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
+					<input name="message_title" type="text" />
+			
+					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
 					<ul class="check_items expand_list">
 						<xsl:for-each select="check_list/check_item_array">
 							<li>
