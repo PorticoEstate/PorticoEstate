@@ -1958,12 +1958,11 @@
 			}
 		}
 
-
 		function bulk_update_status()
 		{
-			if(!$this->acl->check('.project', PHPGW_ACL_PRIVATE, 'property'))//manage
+			if(!$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_PRIVATE, 'acl_location'=>$this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>PHPGW_ACL_EDIT, 'acl_location'=>$this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project_bulk_update_status';
