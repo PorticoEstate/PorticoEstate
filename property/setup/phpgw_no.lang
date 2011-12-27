@@ -225,6 +225,7 @@ billable hours changed	property	no	Egne timer endret
 billable rate changed	property	no	Fakturerbar sats endret
 billable hours has been updated	property	no	Egne timer er oppdatert
 bill per unit	property	no	Pris pr enhet, ex mva
+bulk update status	property	no	Masseoppdatering av status
 branch	property	no	Fag
 b - responsible	property	no	Anviser
 bruks nr	property	no	bruks nr
@@ -819,6 +820,7 @@ generate order	property	no	Lag bestilling
 generate project	property	no	generer prosjekt
 generate request	property	no	Registrer behov
 generate new project	property	no	Registrer nytt prosjekt
+get list	property	no	Hent liste
 global	property	no	Global
 global categories	property	no	Globale kategorier
 global configuration	property	no	Global konfigurasjon
