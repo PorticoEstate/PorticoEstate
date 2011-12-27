@@ -59,14 +59,16 @@
 					'control_item_id',
 					'status',
 					'comment',
-					'check_list_id'
+					'check_list_id',
+					'message-ticket_id'
 			);
 
 			$values = array(
 				$this->marshal($check_item->get_control_item_id(), 'int'),
-				$this->marshal($check_item->get_status(), 'bool'),
+				$this->marshal($check_item->get_status(), 'int'),
 				$this->marshal($check_item->get_comment(), 'string'),
-				$this->marshal($check_item->get_check_list_id(), 'int')
+				$this->marshal($check_item->get_check_list_id(), 'int'),
+				$this->marshal($check_item->get_message_ticket_id(), 'int')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -80,9 +82,10 @@
 
 			$values = array(
 				'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-				'status = ' . $this->marshal($check_item->get_status(), 'bool'),
+				'status = ' . $this->marshal($check_item->get_status(), 'int'),
 				'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
-				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int')
+				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int'),
+				'message_ticket_id = ' . $this->marshal($check_item->get_message_ticket_id(), 'int')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

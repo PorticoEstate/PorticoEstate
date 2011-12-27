@@ -282,3 +282,17 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.13';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.13';
+	function controller_upgrade0_1_13()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item', 'message_ticket_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true,
+			'default' => 0
+		));
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.14';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
