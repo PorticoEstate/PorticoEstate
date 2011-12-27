@@ -1094,7 +1094,10 @@
 					}
 				}
 
- 				if(!isset($values['condition'][0]['condition_type']) || !$values['condition'][0]['degree'])
+				$_condition = array_keys($values['condition']);
+				$__condition = isset($_condition[0]) && $_condition[0] ? $_condition[0] : 0;
+				
+ 				if(!isset($values['condition'][$__condition]['condition_type']) || !isset($values['condition'][$__condition]['degree']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
 				}

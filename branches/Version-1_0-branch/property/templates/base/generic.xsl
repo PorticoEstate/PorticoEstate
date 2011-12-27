@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
 			<xsl:when test="edit">
@@ -8,25 +7,24 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- add / edit  -->
-	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
+	<!-- add / edit  -->
+	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
-
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
 			</xsl:when>
 		</xsl:choose>
-
 		<div class="yui-navset" id="general_edit_tabview">
-
-			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
 			<form method="post" action="{$form_action}">
-				<xsl:value-of disable-output-escaping="yes" select="tabs" />
-				<div class="yui-content">		
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div class="yui-content">
 					<div id="general">
 						<table cellpadding="2" cellspacing="2" width="79%" align="center">
 							<xsl:choose>
@@ -47,7 +45,7 @@
 														</xsl:attribute>
 													</input>
 												</xsl:otherwise>
-											</xsl:choose>	
+											</xsl:choose>
 										</td>
 									</tr>
 								</xsl:when>
@@ -63,7 +61,7 @@
 												</td>
 											</tr>
 										</xsl:when>
-									</xsl:choose>	
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
@@ -71,10 +69,11 @@
 									<input type="hidden" name="{id_name}" value="{value_id}">
 									</input>
 								</xsl:when>
-							</xsl:choose>	
-
-							<xsl:for-each select="fields" >
-								<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+							</xsl:choose>
+							<xsl:for-each select="fields">
+								<xsl:variable name="name">
+									<xsl:value-of select="name"/>
+								</xsl:variable>
 								<tr>
 									<td align="left" width="19%" valign="top" title="{descr}">
 										<xsl:value-of select="descr"/>
@@ -83,11 +82,11 @@
 										<xsl:choose>
 											<xsl:when test="type='text'">
 												<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]">
-													<xsl:value-of select="value"/>		
+													<xsl:value-of select="value"/>
 												</textarea>
 											</xsl:when>
 											<xsl:when test="type='varchar' or type='integer' or type='int'">
-												<input type="text" name="values[{name}]" value="{value}" size="{size}" >
+												<input type="text" name="values[{name}]" value="{value}" size="{size}">
 													<xsl:attribute name="title">
 														<xsl:value-of select="descr"/>
 													</xsl:attribute>
@@ -112,29 +111,29 @@
 												</xsl:choose>
 											</xsl:when>
 											<xsl:when test="type='select'">
-												<select name="values[{name}]" >
+												<select name="values[{name}]">
 													<option value="">
-														<xsl:value-of select="php:function('lang', 'select value')" />
+														<xsl:value-of select="php:function('lang', 'select value')"/>
 													</option>
-													<xsl:for-each select="valueset" >
+													<xsl:for-each select="valueset">
 														<option value="{id}">
 															<xsl:if test="selected != 0">
-																<xsl:attribute name="selected" value="selected" />
+																<xsl:attribute name="selected" value="selected"/>
 															</xsl:if>
 															<xsl:value-of select="name"/>
-														</option>						
+														</option>
 													</xsl:for-each>
 												</select>
 											</xsl:when>
 											<xsl:when test="type='multiple_select'">
 												<select name="values[{name}][]" multiple="multiple">
-													<xsl:for-each select="valueset" >
+													<xsl:for-each select="valueset">
 														<option value="{id}">
 															<xsl:if test="selected != 0">
-																<xsl:attribute name="selected" value="selected" />
+																<xsl:attribute name="selected" value="selected"/>
 															</xsl:if>
 															<xsl:value-of select="name"/>
-														</option>						
+														</option>
 													</xsl:for-each>
 												</select>
 											</xsl:when>
@@ -150,7 +149,10 @@
 												</input>
 												<xsl:choose>
 													<xsl:when test="value!=''">
-														<br/><a href="{value}" target="_blank"><xsl:value-of select="value"/></a>
+														<br/>
+														<a href="{value}" target="_blank">
+															<xsl:value-of select="value"/>
+														</a>
 													</xsl:when>
 												</xsl:choose>
 											</xsl:when>

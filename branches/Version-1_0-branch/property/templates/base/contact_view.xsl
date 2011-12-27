@@ -1,9 +1,9 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="contact_form">
 		<xsl:apply-templates select="contact_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="contact_data">
 		<tr>
 			<td valign="top">
@@ -29,7 +29,9 @@
 						<xsl:when test="value_contact_email!=''">
 							<tr>
 								<td>
-									<a href="mailto:{value_contact_email}"><xsl:value-of select="value_contact_email"/></a>
+									<a href="mailto:{value_contact_email}">
+										<xsl:value-of select="value_contact_email"/>
+									</a>
 								</td>
 							</tr>
 						</xsl:when>

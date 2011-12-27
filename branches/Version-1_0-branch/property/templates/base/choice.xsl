@@ -1,5 +1,4 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="choice">
 		<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<xsl:choose>
@@ -12,7 +11,7 @@
 							<xsl:value-of select="lang_delete_value"/>
 						</td>
 					</tr>
-					<xsl:for-each select="value_choice" >
+					<xsl:for-each select="value_choice">
 						<tr>
 							<xsl:attribute name="class">
 								<xsl:choose>
@@ -32,11 +31,9 @@
 								<xsl:text> </xsl:text>
 							</td>
 							<td align="center">
-								<input type="checkbox" name="values[delete_choice][]" value="{id}"  onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+								<input type="checkbox" name="values[delete_choice][]" value="{id}" onMouseout="window.status='';return true;">
+									<xsl:attribute name="title">
 										<xsl:value-of select="//lang_delete_choice_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</td>
@@ -50,10 +47,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[new_choice]" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_new_value_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</td>
