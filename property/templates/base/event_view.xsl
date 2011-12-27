@@ -1,10 +1,10 @@
-<!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
-
+  <!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
 	<xsl:template name="event_view">
 		<xsl:apply-templates select="event_data"/>
 	</xsl:template>
 
-	<xsl:template match="event_data" xmlns:php="http://php.net/xsl">
+	<!-- New template-->
+	<xsl:template xmlns:php="http://php.net/xsl" match="event_data">
 		<tr>
 			<td valign="top">
 				<xsl:value-of select="event_name"/>
@@ -15,12 +15,15 @@
 						<xsl:value-of select="warning"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="event_descr"><xsl:value-of select="name"/><xsl:text>_descr</xsl:text></xsl:variable>
+						<xsl:variable name="event_descr">
+							<xsl:value-of select="name"/>
+							<xsl:text>_descr</xsl:text>
+						</xsl:variable>
 						<table>
 							<tr>
 								<td>
-									<input type="text" name="{name}" value="{value}" readonly="readonly" size="6"></input>
-									<input  size="30" type="text" name="{$event_descr}" value="{descr}"  readonly="readonly"> 
+									<input type="text" name="{name}" value="{value}" readonly="readonly" size="6"/>
+									<input size="30" type="text" name="{$event_descr}" value="{descr}" readonly="readonly">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">
@@ -35,7 +38,7 @@
 								<xsl:when test="next!=''">
 									<tr>
 										<td>
-											<xsl:value-of select="php:function('lang', 'responsible')" />
+											<xsl:value-of select="php:function('lang', 'responsible')"/>
 											<xsl:text>: </xsl:text>
 											<xsl:value-of select="responsible"/>
 										</td>
@@ -56,7 +59,7 @@
 									</tr>
 									<tr>
 										<td>
-											<xsl:value-of select="php:function('lang', 'count')" />
+											<xsl:value-of select="php:function('lang', 'count')"/>
 											<xsl:text>: </xsl:text>
 											<xsl:value-of select="count"/>
 										</td>

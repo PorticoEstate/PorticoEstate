@@ -1,9 +1,9 @@
-<!-- $Id$ -->
-
+  <!-- $Id$ -->
 	<xsl:template name="ecodimb_view">
 		<xsl:apply-templates select="ecodimb_data"/>
 	</xsl:template>
 
+	<!-- New template-->
 	<xsl:template match="ecodimb_data">
 		<tr>
 			<td valign="top">

@@ -322,6 +322,19 @@
 						</input>
 					</form>
 				</td>
+				<xsl:choose>
+					<xsl:when test="done_action !=''">
+						<td>	
+							<form method="post" action="{done_action}">
+								<input type="submit" name="add" value="{lang_done}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_done_statustext"/>
+									</xsl:attribute>
+								</input>
+							</form>
+						</td>
+					</xsl:when>
+				</xsl:choose>
 			</tr>
 	</xsl:template>
 

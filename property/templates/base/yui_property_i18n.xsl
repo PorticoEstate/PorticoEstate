@@ -1,4 +1,5 @@
-	<xsl:template name="yui_property_i18n" xmlns:php="http://php.net/xsl">
+  <!-- $Id$ -->
+	<xsl:template xmlns:php="http://php.net/xsl" name="yui_property_i18n">
 		<xsl:if test="yui_property_i18n">
 			<script type="text/javascript">
 				YAHOO.booking.i18n = {};

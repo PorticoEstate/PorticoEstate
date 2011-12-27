@@ -926,275 +926,295 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('date_search' => $data));
 		}
 
-		function edit()
+		function edit($mode = 'edit')
 		{
 			$id = (int)phpgw::get_var('id', 'int');
 
-			if(!$this->acl_add && !$this->acl_edit)
+
+			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.view', 'id'=> $id));
 			}
 
-			$values						= phpgw::get_var('values');
-			$values_attribute			= phpgw::get_var('values_attribute');
-			$add_request				= phpgw::get_var('add_request');
-			$values['project_group']	= phpgw::get_var('project_group');
-			$values['ecodimb']			= phpgw::get_var('ecodimb');
-			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
-			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
-			$auto_create 				= false;
-
-			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-
-			$datatable = array();
-
-			/*$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.edit',"
-			."id:'{$id}'";*/
-
-			$config				= CreateObject('phpgwapi.config','property');
-			$bolocation			= CreateObject('property.bolocation');
-
-			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-
-			$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
-
-			if(isset($insert_record_entity) && is_array($insert_record_entity))
+			if($mode == 'view')
 			{
-				for ($j=0;$j<count($insert_record_entity);$j++)
+				if( !$this->acl_read)
 				{
-					$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					$this->bocommon->no_access();
+					return;
 				}
-			}
 
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
-
-			$bypass = phpgw::get_var('bypass', 'bool');
-
-			if($add_request)
-			{
-				$receipt = $this->bo->add_request($add_request,$id);
-			}
-
-			if($_POST && !$bypass && isset($insert_record) && is_array($insert_record))
-			{
-				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+				if(!$id)
+				{
+					phpgwapi_cache::message_set('ID is required for the function uiproject::view()', 'error'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.index'));
+				}
 			}
 			else
 			{
-				$location_code 		= phpgw::get_var('location_code');
-				$tenant_id 			= phpgw::get_var('tenant_id', 'int');
-				$values['descr']	= phpgw::get_var('descr');
-				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
-				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
-				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
-
-				$origin				= phpgw::get_var('origin');
-				$origin_id			= phpgw::get_var('origin_id', 'int');
-
-				//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
-				if($origin == '.ticket' && $origin_id && !$values['descr'])
+				if(!$this->acl_add && !$this->acl_edit)
 				{
-					$boticket= CreateObject('property.botts');
-					$ticket = $boticket->read_single($origin_id);
-					$values['descr'] = $ticket['details'];
-					$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-					$ticket_notes = $boticket->read_additional_notes($origin_id);
-					$i = count($ticket_notes)-1;
-					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
-					{
-						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
-					}
-					$values['contact_id'] = $ticket['contact_id'];
-					$tts_status_create_project 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
-					if($tts_status_create_project)
-					{
-						$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
-					}
-
-					if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'])
-						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
-					{
-						$auto_create = true;
-					}
+					$this->bocommon->no_access();
+					return;
 				}
-
-				if($p_entity_id && $p_cat_id)
-				{
-
-					if(!is_object($boadmin_entity))
-					{
-						$boadmin_entity	= CreateObject('property.boadmin_entity');
-					}
-
-					$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
-					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
-				}
-
-				if($location_code)
-				{
-					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
-				}
-
 			}
 
-			if(isset($values['origin']) && $values['origin'])
-			{
-				$origin		= $values['origin'];
-				$origin_id	= $values['origin_id'];
-			}
-
-			$interlink 	= CreateObject('property.interlink');
-
-			if(isset($origin) && $origin)
-			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location']= $origin;
-				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][]= array(
-					'id'	=> $origin_id,
-					'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
-				);
-			}
-
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
+			$bolocation			= CreateObject('property.bolocation');
 
-			$save='';
-			if (isset($values['save']))
+			if($mode == 'edit')
 			{
-				if($GLOBALS['phpgw']->session->is_repost())
+
+				$values						= phpgw::get_var('values');
+				$values_attribute			= phpgw::get_var('values_attribute');
+				$add_request				= phpgw::get_var('add_request');
+				$values['project_group']	= phpgw::get_var('project_group');
+				$values['ecodimb']			= phpgw::get_var('ecodimb');
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+				$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
+				$auto_create 				= false;
+
+				$datatable = array();
+
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
+
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
-					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
 				}
 
-				$save=true;
 
-				if(!isset($values['location']))
+
+				$bypass = phpgw::get_var('bypass', 'bool');
+
+				if($add_request)
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
-					$error_id=true;
+					$receipt = $this->bo->add_request($add_request,$id);
 				}
 
-				if(!isset($values['b_account_id']) || !$values['b_account_id'])
+				if($_POST && !$bypass && isset($insert_record) && is_array($insert_record))
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select an account group!'));
-					$error_id=true;
+					$values = $this->bocommon->collect_locationdata($values,$insert_record);
 				}
 				else
 				{
-					$sogeneric		= CreateObject('property.sogeneric');
-					$sogeneric->get_location_info('b_account_category',false);
-					$status_data	= $sogeneric->read_single(array('id' => (int)$values['b_account_id']),array());
+					$location_code 		= phpgw::get_var('location_code');
+					$tenant_id 			= phpgw::get_var('tenant_id', 'int');
+					$values['descr']	= phpgw::get_var('descr');
+					$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+					$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
+					$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+					$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+					$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
 
-					if(isset($status_data['project_group']) && $status_data['project_group'])//mandatory for this account group
+					$origin				= phpgw::get_var('origin');
+					$origin_id			= phpgw::get_var('origin_id', 'int');
+
+					//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
+					if($origin == '.ticket' && $origin_id && !$values['descr'])
 					{
-						if(!isset($values['project_group']) || !$values['project_group'])
+						$boticket= CreateObject('property.botts');
+						$ticket = $boticket->read_single($origin_id);
+						$values['descr'] = $ticket['details'];
+						$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+						$ticket_notes = $boticket->read_additional_notes($origin_id);
+						$i = count($ticket_notes)-1;
+						if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
 						{
-							$receipt['error'][]=array('msg'=>lang('Please select a project group!'));
-							$error_id=true;
+							$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 						}
-					}
-				}
-
-				if(!isset($values['end_date']) || !$values['end_date'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
-					$error_id=true;
-				}
-
-				if(!$values['name'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a project NAME !'));
-					$error_id=true;
-				}
-
-				if(!$values['cat_id'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a category !'));
-					$error_id=true;
-				}
-
-				if(!$values['coordinator'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a coordinator !'));
-					$error_id=true;
-				}
-
-				if(!$values['status'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
-					$error_id=true;
-				}
-
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
-				{
-					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
-					$error_id=true;
-				}
-
-				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit(ltrim($values['reserve'],'-')))
-				{
-					$receipt['error'][]=array('msg'=>lang('reserve') . ': ' . lang('Please enter an integer !'));
-					$error_id=true;
-				}
-
-				if(isset($values_attribute) && is_array($values_attribute))
-				{
-					foreach ($values_attribute as $attribute )
-					{
-						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						$values['contact_id'] = $ticket['contact_id'];
+						$tts_status_create_project 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_create_project'] : '';
+						if($tts_status_create_project)
 						{
-							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-					}
-				}
-
-
-				if($id)
-				{
-					$values['id'] = $id;
-					$action='edit';
-				}
-
-				if(!$receipt['error'])
-				{
-
-					if($values['copy_project'])
-					{
-						$action='add';
-					}
-
-					$receipt = $this->bo->save($values,$action,$values_attribute);
-
-					if (! $receipt['error'])
-					{
-						$id = $receipt['id'];
-					}
-
-					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
-						&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
-						//						&& $config->config_data['project_approval'] )
-					{
-						$historylog	= CreateObject('property.historylog','project');
-						if (!is_object($GLOBALS['phpgw']->send))
-						{
-							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+							$boticket->update_status(array('status' => $tts_status_create_project), $origin_id);
 						}
 
-						$action_params['responsible'] = $_account_id;
-						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'])
+							&& $GLOBALS['phpgw_info']['user']['preferences']['property']['auto_create_project_from_ticket'] == 'yes')
+						{
+							$auto_create = true;
+						}
+					}
 
-						$subject = lang(Approval).": ". $id;
-						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id),false,true).'">' . lang('project %1 needs approval',$id) .'</a>';
+					if($p_entity_id && $p_cat_id)
+					{
+						if(!is_object($boadmin_entity))
+						{
+							$boadmin_entity	= CreateObject('property.boadmin_entity');
+						}
 
-						$bcc = '';//$from_email;
+						$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
+						$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
+					}
 
-						$action_params = array
+					if($location_code)
+					{
+						$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
+					}
+
+				}
+
+				if(isset($values['origin']) && $values['origin'])
+				{
+					$origin		= $values['origin'];
+					$origin_id	= $values['origin_id'];
+				}
+
+				$interlink 	= CreateObject('property.interlink');
+
+				if(isset($origin) && $origin)
+				{
+					unset($values['origin']);
+					unset($values['origin_id']);
+					$values['origin'][0]['location']= $origin;
+					$values['origin'][0]['descr']= $interlink->get_location_name($origin);
+					$values['origin'][0]['data'][]= array(
+						'id'	=> $origin_id,
+						'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					);
+				}
+
+	
+				$save='';
+				if (isset($values['save']))
+				{
+					if($GLOBALS['phpgw']->session->is_repost())
+					{
+						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					}
+
+					$save=true;
+
+					if(!isset($values['location']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+						$error_id=true;
+					}
+
+					if(!isset($values['b_account_id']) || !$values['b_account_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select an account group!'));
+						$error_id=true;
+					}
+					else
+					{
+						$sogeneric		= CreateObject('property.sogeneric');
+						$sogeneric->get_location_info('b_account_category',false);
+						$status_data	= $sogeneric->read_single(array('id' => (int)$values['b_account_id']),array());
+
+						if(isset($status_data['project_group']) && $status_data['project_group'])//mandatory for this account group
+						{
+							if(!isset($values['project_group']) || !$values['project_group'])
+							{
+								$receipt['error'][]=array('msg'=>lang('Please select a project group!'));
+								$error_id=true;
+							}
+						}
+					}
+
+					if(!isset($values['end_date']) || !$values['end_date'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+						$error_id=true;
+					}
+
+					if(!$values['name'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter a project NAME !'));
+						$error_id=true;
+					}
+
+					if(!$values['cat_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+						$error_id=true;
+					}
+
+					if(!$values['coordinator'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a coordinator !'));
+						$error_id=true;
+					}
+
+					if(!$values['status'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a status !'));
+						$error_id=true;
+					}
+
+					if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
+					{
+						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+
+					if(isset($values['reserve']) && $values['reserve'] && !ctype_digit(ltrim($values['reserve'],'-')))
+					{
+						$receipt['error'][]=array('msg'=>lang('reserve') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+
+					if(isset($values_attribute) && is_array($values_attribute))
+					{
+						foreach ($values_attribute as $attribute )
+						{
+							if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+							{
+								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+							}
+						}
+					}
+
+					if($id)
+					{
+						$values['id'] = $id;
+						$action='edit';
+					}
+
+					if(!$receipt['error'])
+					{
+						if($values['copy_project'])
+						{
+							$action='add';
+						}
+
+						$receipt = $this->bo->save($values,$action,$values_attribute);
+
+						if (! $receipt['error'])
+						{
+							$id = $receipt['id'];
+						}
+
+						if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
+							&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
+	//						&& $config->config_data['project_approval'] )
+						{
+							$historylog	= CreateObject('property.historylog','project');
+							if (!is_object($GLOBALS['phpgw']->send))
+							{
+								$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+							}
+
+							$action_params['responsible'] = $_account_id;
+							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+							$subject = lang(Approval).": ". $id;
+							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id),false,true).'">' . lang('project %1 needs approval',$id) .'</a>';
+
+							$bcc = '';//$from_email;
+
+							$action_params = array
 							(
 								'appname'			=> 'property',
 								'location'			=> '.project',
@@ -1202,130 +1222,130 @@
 								'responsible'		=> '',
 								'responsible_type'  => 'user',
 								'action'			=> 'approval',
-
 								'remark'			=> '',
 								'deadline'			=> ''
 							);
 
-						if (isset($values['mail_address']) && is_array($values['mail_address']))
-						{
-							foreach ($values['mail_address'] as $_account_id => $_address)
+							if (isset($values['mail_address']) && is_array($values['mail_address']))
 							{
-								if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+								foreach ($values['mail_address'] as $_account_id => $_address)
 								{
-									$rcpt = $GLOBALS['phpgw']->send->msg('email',$_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
-									$action_params['responsible'] = $_account_id;
-									execMethod('property.sopending_action.set_pending_action', $action_params);
-									if(!$rcpt)
+									if(isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 									{
-										$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
-										$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-										$bypass_error=true;
-									}
-									else
-									{
-										$historylog->add('AP', $id, lang('%1 is notified',$_address));
-										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+										$rcpt = $GLOBALS['phpgw']->send->msg('email',$_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+										$action_params['responsible'] = $_account_id;
+										execMethod('property.sopending_action.set_pending_action', $action_params);
+										if(!$rcpt)
+										{
+											$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '" . $_address . "', subject='$subject' failed !!!");
+											$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+											$bypass_error=true;
+										}
+										else
+										{
+											$historylog->add('AP', $id, lang('%1 is notified',$_address));
+											$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
+										}
 									}
 								}
 							}
-						}
 
-						$toarray = array();
-						$toarray_sms = array();
-						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
-						{
-							if($this->account!=$values['coordinator']
-								&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-								//							 && $config->config_data['mailnotification']
-							)
+							$toarray = array();
+							$toarray_sms = array();
+							if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
 							{
-								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
-								$toarray[] = $prefs_coordinator['email'];
+								if($this->account!=$values['coordinator']
+									&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
+		//							 && $config->config_data['mailnotification']
+								)
+								{
+									$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
+									$toarray[] = $prefs_coordinator['email'];
+								}
 							}
-						}
 						
-						$notify_list = execMethod('property.notify.read', array
+							$notify_list = execMethod('property.notify.read', array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id
 								)
 							);
 						
-						$subject=lang('project %1 has been edited',$id);
-						$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
-						$sms	= CreateObject('sms.sms');
+							$subject=lang('project %1 has been edited',$id);
+							$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+							$sms	= CreateObject('sms.sms');
 
-						foreach($notify_list as $entry)
-						{
-							if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+							foreach($notify_list as $entry)
 							{
-								$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+								if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+								{
+									$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+								}
+								else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+								{
+									$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+									$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+								}
 							}
-							else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
-							{
-								$sms->websend2pv($this->account,$entry['sms'],$sms_text);
-								$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
-								$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
-							}
-						}
-						unset($entry);
+							unset($entry);
 
-						if($toarray_sms)
-						{
-							$historylog->add('MS',$id,implode(',',$toarray_sms));						
-						}
+							if($toarray_sms)
+							{
+								$historylog->add('MS',$id,implode(',',$toarray_sms));						
+							}
 						
-						if ($toarray)
-						{
-							$to = implode(';',$toarray);
-							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-
-							$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id),false, true).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
-
-							foreach($receipt['notice_owner'] as $notice)
+							if ($toarray)
 							{
-								$body .= $notice . "\n";
-							}
+								$to = implode(';',$toarray);
+								$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+								$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-							$body .= lang('Altered by') . ': ' . $from_name . "\n";
-							$body .= lang('remark') . ': ' . $values['remark'] . "\n";
+								$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id),false, true).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
 
-							$body = nl2br($body);
+								foreach($receipt['notice_owner'] as $notice)
+								{
+									$body .= $notice . "\n";
+								}
 
-							$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+								$body .= lang('Altered by') . ': ' . $from_name . "\n";
+								$body .= lang('remark') . ': ' . $values['remark'] . "\n";
 
-							if (!$returncode)	// not nice, but better than failing silently
-							{
-								$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
-								$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-								$bypass_error=true;
-							}
-							else
-							{
-								$historylog->add('ON', $id, lang('%1 is notified',$to));
-								$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
+								$body = nl2br($body);
+
+								$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+
+								if (!$returncode)	// not nice, but better than failing silently
+								{
+									$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
+									$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+									$bypass_error=true;
+								}
+								else
+								{
+									$historylog->add('ON', $id, lang('%1 is notified',$to));
+									$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
+								}
 							}
 						}
 					}
-				}
 
-				if($receipt['error'] && !isset($bypass_error))
-				{
-					if(isset($values['location']) && is_array($values['location']))
+					if($receipt['error'] && !isset($bypass_error))
 					{
-						$location_code=implode("-", $values['location']);
-						$values['extra']['view'] = true;
-						$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
-					}
+						if(isset($values['location']) && is_array($values['location']))
+						{
+							$location_code=implode("-", $values['location']);
+							$values['extra']['view'] = true;
+							$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
+						}
 
-					if(isset($values['extra']['p_num']))
-					{
-						$values['p'][$values['extra']['p_entity_id']]['p_num']=$values['extra']['p_num'];
-						$values['p'][$values['extra']['p_entity_id']]['p_entity_id']=$values['extra']['p_entity_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
-						$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
+						if(isset($values['extra']['p_num']))
+						{
+							$values['p'][$values['extra']['p_entity_id']]['p_num']=$values['extra']['p_num'];
+							$values['p'][$values['extra']['p_entity_id']]['p_entity_id']=$values['extra']['p_entity_id'];
+							$values['p'][$values['extra']['p_entity_id']]['p_cat_id']=$values['extra']['p_cat_id'];
+							$values['p'][$values['extra']['p_entity_id']]['p_cat_name']=phpgw::get_var('entity_cat_name_'.$values['extra']['p_entity_id'], 'string', 'POST');
+						}
 					}
 				}
 			}
@@ -1364,6 +1384,7 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
+/*
 			$table_header_history[] = array
 				(
 					'lang_date'		=> lang('Date'),
@@ -1382,9 +1403,10 @@
 					'lang_status'		=> lang('status')
 				);
 
+*/
 			if ($id)
 			{
-				$function_msg = lang('Edit Project');
+				$function_msg = lang("{$mode} project");
 			}
 			else
 			{
@@ -1418,7 +1440,7 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$lookup_type='form';
+			$lookup_type = $mode == 'edit' ? 'form' : 'view';
 
 			//_debug_array($values);
 			$location_data=$bolocation->initiate_ui_location(array
@@ -1443,15 +1465,16 @@
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name'],
 						'role'				=> 'group',
-				//		'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
+						'type'				=> $lookup_type
 					)
 				);
 
 				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
 					(
 						'ecodimb'			=> $values['ecodimb'],
-						'ecodimb_descr'		=> $values['ecodimb_descr'])
-					);
+						'ecodimb_descr'		=> $values['ecodimb_descr'],
+						'disabled'			=> $mode == 'view'
+					));
 			}
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array
@@ -1459,7 +1482,8 @@
 					'contact_id'		=> $values['contact_id'],
 					'contact_name'		=> $values['contact_name'],
 					'field'				=> 'contact',
-					'type'				=> 'form')
+					'type'				=> $lookup_type
+					)
 				);
 
 
@@ -1475,10 +1499,10 @@
 			}
 
 			$link_data = array
-				(
-					'menuaction'	=> 'property.uiproject.edit',
-					'id'		=> $id
-				);
+			(
+				'menuaction'	=> 'property.uiproject.edit',
+				'id'		=> $id
+			);
 
 			$link_request_data = array
 				(
@@ -1706,8 +1730,11 @@
 
 			$myColumnDefs[] = $notify_info['column_defs'];
 
-			$myButtons = array();
-			$myButtons[] = $notify_info['buttons'];
+			$myButtons	= array();
+			if($mode == 'edit')
+			{
+				$myButtons[]	= $notify_info['buttons'];
+			}
 
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
@@ -1718,6 +1745,7 @@
 
 			$data = array
 				(
+					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 					'suppresscoordination'				=> $suppresscoordination,
 					'custom_attributes'					=> array('attributes' => $values['attributes']),
@@ -1850,7 +1878,11 @@
 					'value_approval_mail_address'		=> $supervisor_email,
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'base_java_url'					=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+					'base_java_url'						=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
+					'lang_edit_statustext'				=> lang('Edit this entry '),
+					'lang_edit'							=> lang('Edit'),
+
 				);
 			//_debug_array($data);die;
 
@@ -1924,32 +1956,6 @@
 				$this->bo->delete($project_id);
 				return "project_id ".$project_id." ".lang("has been deleted");
 			}
-
-			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
-			$link_data = array
-				(
-					'menuaction' => 'property.uiproject.index',
-					'project_id'	=> $project_id
-				);
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
-
-			$data = array
-				(
-					'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'delete_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.delete', 'project_id'=> $project_id)),
-					'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
-					'lang_yes'		=> lang('yes'),
-					'lang_yes_statustext'	=> lang('Delete the entry'),
-					'lang_no_statustext'	=> lang('Back to the list'),
-					'lang_no'		=> lang('no')
-				);
-
-			$appname			= lang('project');
-			$function_msg			= lang('delete project');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
 
@@ -2126,201 +2132,14 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('bulk_update_status' => $data));
 		}
 
-
 		function view()
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$this->bocommon->no_access();
+				return;
 			}
-
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
-			$bolocation			= CreateObject('property.bolocation');
-
-			$id	= phpgw::get_var('id', 'int');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
-
-			$values	= $this->bo->read_single($id);
-
-			$record_history = $this->bo->read_record_history($id);
-
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$table_header_workorder_budget[] = array
-				(
-					'lang_workorder_id'	=> lang('Workorder'),
-					'lang_budget'		=> lang('Budget'),
-					'lang_calculation'	=> lang('Calculation'),
-					'lang_vendor'		=> lang('Vendor')
-				);
-
-			$function_msg = lang('View Project');
-
-			if ($values['cat_id'])
-			{
-				$this->cat_id = $values['cat_id'];
-			}
-
-			$location_data=$bolocation->initiate_ui_location(array(
-				'values'	=> $values['location_data'],
-				'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-				'no_link'	=> false, // disable lookup links for location type less than type_id
-				'tenant'	=> $values['location_data']['tenant_id'],
-				'lookup_type'	=> 'view',
-				'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
-				'entity_data'	=> isset($values['p'])?$values['p']:''
-			));
-
-			if($values['contact_phone'])
-			{
-				for ($i=0;$i<count($location_data['location']);$i++)
-				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
-					{
-						unset($location_data['location'][$i]['value']);
-					}
-				}
-			}
-
-			$values['sum'] = isset($values['budget'])?$values['budget']:0;
-
-			if(isset($values['reserve']) && $values['reserve']!=0)
-			{
-				$reserve_remainder=$values['reserve']-$values['deviation'];
-				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, ',', '');
-				$values['sum'] = $values['sum'] + $values['reserve'];
-			}
-
-			//_debug_array($values);
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
-			$categories = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id));
-
-			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
-				'project_group'			=> $values['project_group'],
-				'project_group_descr'	=> $values['project_group_descr'],
-				'type'					=> 'view'));
-
-			$config			= CreateObject('phpgwapi.config','property');
-			$config->read();
-
-			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
-			$data = array
-				(
-					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
-					'suppresscoordination'				=> $suppresscoordination,
-					'tabs'								=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
-
-					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-					'project_group_data'				=> $project_group_data,
-					'value_origin'						=> $values['origin'],
-					'custom_attributes'					=> array('attributes' => $values['attributes']),
-
-					'table_header_workorder_budget'		=> $table_header_workorder_budget,
-					'lang_no_workorders'				=> lang('No workorder budget'),
-					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
-					'record_history'					=> $record_history,
-					'table_header_history'				=> $table_header_history,
-					'lang_history'						=> lang('History'),
-					'lang_no_history'					=> lang('No history'),
-
-					'lang_start_date'					=> lang('Project start date'),
-					'value_start_date'					=> $values['start_date'],
-
-					'lang_end_date'						=> lang('Project end date'),
-					'value_end_date'					=> $values['end_date'],
-
-					'lang_charge_tenant'				=> lang('Charge tenant'),
-					'charge_tenant'						=> isset($values['charge_tenant'])?$values['charge_tenant']:'',
-
-					'lang_power_meter'					=> lang('Power meter'),
-					'value_power_meter'					=> $values['power_meter'],
-
-					'lang_budget'						=> lang('Budget'),
-					'value_budget'						=> $values['budget'],
-
-					'lang_reserve'						=> lang('reserve'),
-					'value_reserve'						=> $values['reserve'],
-
-					'value_sum'							=> (isset($values['sum'])?$values['sum']:''),
-
-					'lang_reserve_remainder'			=> lang('reserve remainder'),
-					'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
-					'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
-
-					'vendor_data'						=> isset($vendor_data)?$vendor_data:'',
-					'location_data'						=> $location_data,
-					'location_type'						=> 'view',
-					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
-					'lang_year'							=> lang('Year'),
-					'lang_category'						=> lang('category'),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
-					'lang_name'							=> lang('Name'),
-
-					'lang_project_id'					=> lang('Project ID'),
-					'value_project_id'					=> $values['project_id'],
-					'value_name'						=> $values['name'],
-
-					'lang_other_branch'					=> lang('Other branch'),
-					'value_other_branch'				=> $values['other_branch'],
-
-					'lang_descr'						=> lang('Description'),
-					'value_descr'						=> $values['descr'],
-					'lang_done_statustext'				=> lang('Back to the list'),
-					'select_name'						=> 'values[cat_id]',
-
-					'cat_list'							=> $categories['cat_list'],
-					'lang_workorder_id'					=> lang('Workorder ID'),
-					'sum_workorder_budget'				=> $values['sum_workorder_budget'],
-					'sum_workorder_calculation'			=> $values['sum_workorder_calculation'],
-					'workorder_budget'					=> $values['workorder_budget'],
-					'sum_workorder_actual_cost'			=> $values['sum_workorder_actual_cost'],
-					'lang_actual_cost'					=> lang('Actual cost'),
-					'lang_coordinator'					=> lang('Coordinator'),
-					'lang_sum'							=> lang('Sum'),
-					'select_user_name'					=> 'values[coordinator]',
-					'lang_no_user'						=> lang('Select coordinator'),
-					'user_list'							=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
-
-					'status_list'						=> $this->bo->select_status_list('select',$values['status']),
-					'lang_no_status'					=> lang('Select status'),
-					'lang_status'						=> lang('Status'),
-
-					'branch_list'						=> $this->bo->select_branch_p_list($values['project_id']),
-					'lang_branch'						=> lang('branch'),
-
-					'key_responsible_list'				=> $this->bo->select_branch_list($values['key_responsible']),
-					'lang_key_responsible'				=> lang('key responsible'),
-
-					'key_fetch_list'					=> $this->bo->select_key_location_list($values['key_fetch']),
-					'lang_key_fetch'					=> lang('key fetch location'),
-
-					'key_deliver_list'					=> $this->bo->select_key_location_list($values['key_deliver']),
-					'lang_key_deliver'					=> lang('key deliver location'),
-
-					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)),
-					'lang_edit_statustext'				=> lang('Edit this entry project'),
-					'lang_edit'							=> lang('Edit'),
-					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-
-					'lang_contact_phone'				=> lang('Contact phone'),
-					'contact_phone'						=> $values['contact_phone'],
-				);
-
-			$appname		= lang('project');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-
+			$this->edit('view');
 		}
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array())

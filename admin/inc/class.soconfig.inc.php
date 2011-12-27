@@ -274,7 +274,7 @@
 				$querymethod = " AND name $this->like '%$query%'";
 			}
 
-			$sql = "SELECT $attrib_table.id, $attrib_table.section_id, $value_table.id as value_id, $attrib_table.name, $attrib_table.input_type, $value_table.value"
+			$sql = "SELECT $attrib_table.id, $attrib_table.section_id, $value_table.id as value_id, $attrib_table.name, $attrib_table.descr, $attrib_table.input_type, $value_table.value"
 			. " FROM ($section_table {$this->join} $attrib_table ON  ($section_table.id = $attrib_table.section_id))"
 			. " {$this->left_join} $value_table ON ($attrib_table.section_id = $value_table.section_id AND $attrib_table.id = $value_table.attrib_id)"
 			. " WHERE location_id = {$this->location_id} AND $attrib_table.section_id = '$section_id' $querymethod";
@@ -312,7 +312,8 @@
 					'section_id'	=> $this->db->f('section_id'),
 					'value_id'		=> $this->db->f('value_id'),
 					'name'			=> $this->db->f('name', true),
-					'value'			=> $value
+					'value'			=> $value,
+					'descr'			=> $this->db->f('descr', true),
 				);
 			}
 			return $config_info;

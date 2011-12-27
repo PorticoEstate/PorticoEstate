@@ -376,7 +376,7 @@
 					'text_delete'				=> lang('delete'),
 					'text_value'				=> $entry['value']?$entry['value']:lang('no value'),
 					'lang_delete_config_text'	=> lang('delete the config'),
-					'lang_value_text'			=> lang('values for this config section'),
+					'lang_value_text'			=> $entry['descr']?$entry['descr']:lang('values for this config section'),
 				);
 			}
 
@@ -426,14 +426,17 @@
 				'lang_add'				=> lang('add'),
 				'lang_add_statustext'	=> lang('add a value'),
 				'add_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.uiconfig2.edit_attrib', 'section_id'=> $section_id, 'location_id' => $this->location_id)),
+				'lang_done'				=> lang('done'),
+				'lang_done_statustext'	=> lang('back to the list'),
+				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.uiconfig2.index', 'location_id' => $this->location_id)),
 			);
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
-				'lang_section'							=> lang('section'),
-				'value_section_name'					=> $section['name'],
+				'lang_section'						=> lang('section'),
+				'value_section_name'				=> $section['name'],
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'allow_allrows'						=> true,
 				'allrows'							=> $this->allrows,

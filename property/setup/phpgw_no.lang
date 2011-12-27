@@ -1896,6 +1896,7 @@ in progress date	property	no	Påbegynt dato
 delivered date	property	no	Utført dato
 closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
+negative value for budget	property	no	Negativ verdi for kostnadsestimat
 no symptoms	property	no	Ingen Symptomer
 minor symptoms	property	no	Svake Symptomer
 medium symptoms	property	no	Middels Symptomer
