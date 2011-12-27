@@ -3026,3 +3026,26 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+	$test[] = '0.9.17.537';
+	/**
+	* change datatype to bigint
+	*
+	* @return string the new version number
+	*/
+
+	function phpgwapi_upgrade0_9_17_537()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_notification','location_item_id',array(
+			'type' => 'int',
+			'precision' => '8',
+			'nullable' => False
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.538';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
