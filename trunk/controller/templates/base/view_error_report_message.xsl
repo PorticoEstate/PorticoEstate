@@ -32,32 +32,36 @@
 				    </input>
 				    
 					<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
-					<input name="message_title" type="text" />
-					
-					 <select>
-						<xsl:for-each select="categories/cat_list">
-							<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
-							<option value="{$cat_id}">
-								<xsl:value-of select="./name"/>
-							</option>			
-						</xsl:for-each>
-					</select>
-			
+					<xsl:value-of select="message_ticket/subject"/>
 			
 					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
 					<ul class="check_items expand_list">
 						<xsl:for-each select="check_list/check_item_array">
 							<li>
 								<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
-								<h4><input type="checkbox" name="check_item_ids[]" value="{$check_item_id}" /><span><xsl:value-of select="control_item/title"/></span></h4>						
+								<h4><xsl:value-of select="control_item/title"/></h4>						
 							</li>
 						</xsl:for-each>
 					</ul>
 					
-					  <div class="form-buttons">
-						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input type="submit" name="save_control" value="{$lang_save}" title="{$lang_save}" />
-					  </div>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+							<xsl:text>&amp;check_list_id=</xsl:text>
+							<xsl:value-of select="check_list/id"/>
+						</xsl:attribute>
+				      Registrer ny melding
+				    </a>
+				    
+				    <a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+							<xsl:text>&amp;check_list_id=</xsl:text>
+							<xsl:value-of select="check_list/id"/>
+						</xsl:attribute>
+				      Endre sjekkliste
+				    </a>
+					
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>
