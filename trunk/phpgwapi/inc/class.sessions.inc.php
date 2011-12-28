@@ -1459,17 +1459,21 @@
 			$block_time = time() - $GLOBALS['phpgw_info']['server']['block_time'] * 60;
 			$ip			= $this->_db->db_addslashes($ip);
 
-			$sql = 'SELECT COUNT(*) AS cnt FROM phpgw_access_log'
+			if ( isset($GLOBALS['phpgw_info']['server']['sessions_checkip']) && $GLOBALS['phpgw_info']['server']['sessions_checkip'] )
+			{
+				$sql = 'SELECT COUNT(*) AS cnt FROM phpgw_access_log'
 							. " WHERE account_id = 0 AND ip = '{$ip}' AND li > {$block_time}";
 
-			$this->_db->query($sql, __LINE__, __FILE__);
-			$this->_db->next_record();
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
 
-			$false_ip = $this->_db->f('cnt');
-			if ( $false_ip > $GLOBALS['phpgw_info']['server']['num_unsuccessful_ip'] )
-			{
-				$blocked = true;
+				$false_ip = $this->_db->f('cnt');
+				if ( $false_ip > $GLOBALS['phpgw_info']['server']['num_unsuccessful_ip'] )
+				{
+					$blocked = true;
+				}
 			}
+
 			$login	= $this->_db->db_addslashes($login);
 			$sql	= 'SELECT COUNT(*) AS cnt FROM phpgw_access_log'
 					. " WHERE account_id = 0 AND (loginid='{$login}' OR loginid LIKE '$login#%')"
