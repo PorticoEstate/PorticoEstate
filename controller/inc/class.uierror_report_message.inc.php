@@ -79,8 +79,16 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
+			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+							
+			$this->cat_id = 89;
+			$this->cats->supress_info	= true;			
+			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+
+			
 			$data = array
 			(
+				'categories'			=> $categories,
 				'location_array'		=> $location_array,
 				'control_array'			=> $control->toArray(),
 				'check_list' 			=> $check_list_with_check_items,
@@ -116,8 +124,8 @@
 			
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
-				
-				$details .= $check_item->get_comment(); 
+				$details .= "Gjøremål: ";
+				$details .=  $check_item->get_comment() . "<br>";
 			}
 			
 			$ticket = array
@@ -133,12 +141,19 @@
 			);
 			
 			$botts = CreateObject('property.botts',true);
-			$ticket_id = $botts->add_ticket($ticket);
+			$message_ticket_id = $botts->add_ticket($ticket);
 
+			foreach($check_item_ids as $check_item_id){
+				$check_item = $this->so_check_item->get_single($check_item_id);
+				$check_item->set_message_ticket_id( $message_ticket_id );
+				$this->so_check_item->update($check_item);
+			}			
 			
+			$message_ticket = $botts->read_single($message_ticket_id);
 			
 			$data = array
 			(
+				'message_ticket'		=> $message_ticket,
 				'location_array'		=> $location_array,
 				'control_array'			=> $control->toArray(),
 				'check_list' 			=> $check_list_with_check_items,
@@ -152,7 +167,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('create_error_report_message', $data);
+			self::render_template_xsl('view_error_report_message', $data);
 		}
 		
 		public function query(){}

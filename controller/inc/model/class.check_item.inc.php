@@ -39,6 +39,9 @@
 		protected $status;
 		protected $comment;
 		protected $check_list_id;
+		protected $message_ticket_id;
+		
+		// Objects
 		protected $control_item;
 		
 		/**
@@ -86,6 +89,16 @@
 		}
 		
 		public function get_check_list_id() { return $this->check_list_id; }
+		
+		public function set_message_ticket_id($message_ticket_id)
+		{
+			$this->message_ticket_id = $message_ticket_id;
+		}
+		
+		public function get_message_ticket_id() { return $this->message_ticket_id; }
+		
+		
+		// =================  Getters and setters for objects =================
 		
 		public function set_control_item($control_item)
 		{

@@ -56,8 +56,9 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'status' => array('type' => 'bool','nullable' => true,'default' => 'false'),
-				'comment' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'comment' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'message_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
