@@ -42,6 +42,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 		}
 
@@ -758,14 +759,15 @@
 			$start_periode = date('Ym',mktime(2,0,0,1,1,$year));
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
 
-			$sql = "SELECT fm_b_account.{$b_account_field} as $b_account_field, district_id, sum(godkjentbelop) as actual_cost,dimb FROM fm_ecobilagoverf"
-				. " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
-				. " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb FROM fm_ecobilagoverf"
+				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
+				. " {$this->join} fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " {$this->join} fm_workorder ON fm_ecobilagoverf.pmwrkord_code = fm_workorder.id"
+				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " WHERE periode >= $start_periode AND periode <= $end_periode {$filtermethod}"
 				. " GROUP BY fm_b_account.{$b_account_field}, district_id,dimb";
 
-			//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
