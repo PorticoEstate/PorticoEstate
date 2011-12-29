@@ -54,6 +54,14 @@
 				//locate (asign ID) to datatable
 				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 				tableYUI.setAttribute("id","tableYUI");
+
+				//year
+				index = locate_in_array_options(0,"value",path_values.year);
+				if(index)
+				{
+					oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+				}
+
 				//Focus
 				oMenuButton_0.focus();			
 			}
