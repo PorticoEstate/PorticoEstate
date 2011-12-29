@@ -911,6 +911,7 @@
 					'artid'					=> $this->db->f('artid'),
 					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
 					'spvend_code'			=> $this->db->f('spvend_code'),
+					'loc1'					=> $this->db->f('loc1'),
 					'dima'					=> $this->db->f('dima'),
 					'dimb'					=> $this->db->f('dimb'),
 					'mvakode'				=> $this->db->f('mvakode'),
