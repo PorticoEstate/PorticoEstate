@@ -224,7 +224,7 @@
 			$server				= $this->config->config_data['common']['host'];
 			$user				= $this->config->config_data['common']['user'];
 			$password			= $this->config->config_data['common']['password'];
-			$directory_remote	= rtrim($this->config->config_data['common']['remote_basedir'],'/');
+			$directory_remote	= rtrim($this->config->config_data['import']['remote_basedir'],'/');
 			$directory_local	= rtrim($this->config->config_data['import']['local_path'],'/');
 			$port				= 22;
 

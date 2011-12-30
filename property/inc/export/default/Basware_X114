@@ -581,7 +581,7 @@
 				$this->db->transaction_begin();
 			}
 
-
+			$bilagsnr_ut = '';
 			$get_bilagsnr_ut = false;
 			foreach ($oRsBilag as $line)
 			{
@@ -600,7 +600,6 @@
 
 				$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
 			}
-
 
 			$tranfser_bilag = array($bilagsnr_ut);
 
@@ -735,6 +734,7 @@
 				$oRsOverfBilag['filnavn']	= $Filnavn? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 				$oRsOverfBilag['ordrebelop']= $line[$BelopFelt];
 				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
+				$oRsOverfBilag['bilagsnr_ut'] = $bilagsnr_ut;
 
 				//Kopier verdier  til fm_ecobilagoverf
 				if ($download=='on' && !$this->debug)
@@ -953,7 +953,7 @@
 					$connection	= $this->phpftp_connect();
 				}
 
-				$basedir = $this->config->config_data['common']['remote_basedir'];
+				$basedir = $this->config->config_data['export']['remote_basedir'];
 				if($basedir)
 				{
 					$remote_file = $basedir . '/' . basename($Filnavn);

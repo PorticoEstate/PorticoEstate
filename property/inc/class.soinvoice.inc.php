@@ -169,7 +169,7 @@
 			$no_q = false;
 			if ($voucher_id)
 			{
-				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id;
+				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";
 				$no_q = true;
 			}
 
