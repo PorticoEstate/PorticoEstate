@@ -774,15 +774,6 @@ $solocation->update_location();
 		$receipt = $custom_config->add_attrib(array
 			(
 				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'remote_basedir',
-				'descr'			=> 'basedir on remote server',
-			)
-		);
-
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
 				'attrib_id'		=> $receipt['attrib_id'],
 				'input_type'	=> 'listbox',
 				'name'			=> 'invoice_approval',
@@ -826,6 +817,15 @@ $solocation->update_location();
 			)
 		);
 
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'remote_basedir',
+				'descr'			=> 'basedir on remote server',
+			)
+		);
+
 		//export
 		$receipt_section_export = $custom_config->add_section(array
 			(
@@ -866,3 +866,13 @@ $solocation->update_location();
 				'descr'			=> 'path on local sever to store exported files for pre approved vouchers',
 			)
 		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'remote_basedir',
+				'descr'			=> 'basedir on remote server to receive files',
+			)
+		);
+
