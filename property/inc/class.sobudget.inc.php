@@ -34,6 +34,7 @@
 
 	class property_sobudget
 	{
+		var $sum_actual_cost = 0;
 		function __construct()
 		{
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
@@ -770,13 +771,18 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$sum_actual_cost = 0;
 			while ($this->db->next_record())
 			{
-				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('dimb')] += round($this->db->f('actual_cost'));
+				$_actual_cost = round($this->db->f('actual_cost'));
+				$sum_actual_cost += $_actual_cost;
+				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
+		
+			$this->sum_actual_cost = $sum_actual_cost;
 			//_debug_array($actual_cost);die();
 			$result = array();
 

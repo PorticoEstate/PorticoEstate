@@ -5640,16 +5640,6 @@
 		$receipt = $custom_config->add_attrib(array
 			(
 				'section_id'	=> $receipt_section_common['section_id'],
-				'input_type'	=> 'text',
-				'name'			=> 'remote_basedir',
-				'descr'			=> 'basedir on remote server',
-				'value'			=> $config->config_data['invoice_ftp_basedir'],
-			)
-		);
-
-		$receipt = $custom_config->add_attrib(array
-			(
-				'section_id'	=> $receipt_section_common['section_id'],
 				'attrib_id'		=> $receipt['attrib_id'],
 				'input_type'	=> 'listbox',
 				'name'			=> 'invoice_approval',
@@ -5697,6 +5687,15 @@
 			)
 		);
 
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_import['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'remote_basedir',
+				'descr'			=> 'basedir on remote server to fetch files from',
+			)
+		);
+
 		//export
 		$receipt_section_export = $custom_config->add_section(array
 			(
@@ -5739,6 +5738,16 @@
 				'value'			=> $config->config_data['export_pre_path'],				
 			)
 		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_export['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'remote_basedir',
+				'descr'			=> 'basedir on remote server to receive files',
+			)
+		);
+
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

@@ -777,6 +777,11 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.export')),
 							'text'	=>	lang('Export invoice')
 						);
+					$children['rollback'] = array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
+							'text'	=>	lang('Roll back')
+						);
 				}
 
 				if ( $acl->check('.invoice', PHPGW_ACL_ADD, 'property') )
