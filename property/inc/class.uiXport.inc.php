@@ -591,6 +591,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>16, 'acl_location'=> $this->acl_location));
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::rollback';
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
 				'search_field'));
 
