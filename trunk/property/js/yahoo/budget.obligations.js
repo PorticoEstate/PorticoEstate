@@ -133,21 +133,26 @@
 
 	  	this.addFooterDatatable = function()
 	  	{
-  		
 			//Create ROW
 			newTR = document.createElement('tr');
+
+			tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});			
+			tmp_sum_obligation = YAHOO.util.Number.format(values_ds.sum_obligation, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+			tmp_sum_actual = YAHOO.util.Number.format(values_ds.sum_actual, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+			tmp_sum_diff = YAHOO.util.Number.format(values_ds.sum_diff, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+			tmp_sum_hits = YAHOO.util.Number.format(values_ds.sum_hits, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			
 			td_empty(5);
-			td_sum(getSumPerPage("hits_ex",0));
+			td_sum(tmp_sum_hits);
 			td_empty(1);
-			td_sum(getSumPerPage("budget_cost_ex",0));
+			td_sum(tmp_sum_budget);
 			td_empty(1);
-			td_sum(getSumPerPage("obligation_ex",0));
+			td_sum(tmp_sum_obligation);
 			td_empty(2);
-			td_sum(getSumPerPage("actual_cost_ex",0));
+			td_sum(tmp_sum_actual);
 			td_empty(2);			
-			td_sum(getSumPerPage("diff_ex",0));
-			
+			td_sum(tmp_sum_diff);
+
 			//Add to Table
 			myfoot = tableYUI.createTFoot();
 			myfoot.setAttribute("id","myfoot");

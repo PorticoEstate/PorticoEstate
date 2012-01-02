@@ -34,7 +34,11 @@
 
 	class property_sobudget
 	{
-		var $sum_actual_cost = 0;
+		var	$sum_budget_cost		= 0;
+		var	$sum_obligation_cost	= 0;
+		var	$sum_actual_cost		= 0;
+		var $sum_hits				= 0;
+
 		function __construct()
 		{
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
@@ -527,7 +531,7 @@
 			$start_date = mktime(1, 1, 1, 1, 1, $year);
 			$end_date = mktime  (23, 59, 59, 12, 31, $year);
 //			$filtermethod .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
-			$filtermethod .= " AND fm_workorder_status.closed IS NULL AND fm_workorder.start_date <= $end_date";
+			$filtermethod .= " AND fm_workorder_status.closed IS NULL AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
 
 			$where = 'AND';
 
@@ -582,12 +586,18 @@
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
+			$sum_obligation_cost = 0;
 			$obligations = array();
-
+			$sum_hits = 0;
 			while ($this->db->next_record())
 			{
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = round($this->db->f('combined_cost'));
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = $this->db->f('hits');
+				$_combined_cost = round($this->db->f('combined_cost'));
+				$sum_obligation_cost += $_combined_cost;
+				$_hits = $this->db->f('hits');
+				$sum_hits += $_hits;
+
+				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_combined_cost;
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -641,8 +651,13 @@
 
 			while ($this->db->next_record())
 			{
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += round($this->db->f('budget'));
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $this->db->f('hits');
+				$_budget = round($this->db->f('budget'));
+				$sum_obligation_cost += $_budget;
+				$_hits = $this->db->f('hits');
+				$sum_hits += $_hits;
+
+				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -660,10 +675,14 @@
 			$sql = str_replace('budget', 'actual_cost', $sql);
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
+			$sum_actual_cost = 0;
 			$actual_cost = array();
 			while ($this->db->next_record())
 			{
-				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = round($this->db->f('actual_cost'));
+				$_actual_cost = round($this->db->f('actual_cost'));
+				$sum_actual_cost += round($this->db->f('actual_cost'));
+
+				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -719,10 +738,13 @@
 			//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$sum_budget_cost = 0;
 			$budget_cost = array();
 			while ($this->db->next_record())
 			{
-				$budget_cost[$this->db->f('b_account_field')][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = round($this->db->f('budget_cost'));
+				$_budget_cost = round($this->db->f('budget_cost'));
+				$sum_budget_cost += $_budget_cost;
+				$budget_cost[$this->db->f('b_account_field')][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget_cost;
 				$accout_info[$this->db->f('b_account_field')] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -771,7 +793,6 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$sum_actual_cost = 0;
 			while ($this->db->next_record())
 			{
 				$_actual_cost = round($this->db->f('actual_cost'));
@@ -782,7 +803,11 @@
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
 		
-			$this->sum_actual_cost = $sum_actual_cost;
+			$this->sum_budget_cost		= $sum_budget_cost;
+			$this->sum_obligation_cost	= $sum_obligation_cost;
+			$this->sum_actual_cost		= $sum_actual_cost;
+			$this->sum_hits 			= $sum_hits;
+
 			//_debug_array($actual_cost);die();
 			$result = array();
 
