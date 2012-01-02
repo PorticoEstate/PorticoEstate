@@ -60,7 +60,7 @@
 				'comment' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'message_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'measurement' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'measurement' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

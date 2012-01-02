@@ -1056,7 +1056,7 @@ ul.check_items h5{
     display: none;
     margin: 0 318px 0 0;
     padding: 15px;
-    width: 625px;
+    width: 628px;
 }
 .tab_item h2{
 	margin:0 0 10px;
@@ -1135,13 +1135,13 @@ ul#icon_color_map span{
 }
 #error_message_menu a {
     text-align: center;
-    width: 140px;
+    width: 130px;
     margin: 2px 0;   
 }
 
 #view_errors {
-	float:right;
-    margin: 20px 0;   
+	float:left;
+    margin: 20px 0 0 20px;   
 }
 #register_errors {
 	display:none;
