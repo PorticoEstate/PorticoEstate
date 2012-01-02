@@ -296,3 +296,25 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.14';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	$test[] = '0.1.14';
+	function controller_upgrade0_1_14()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item', 'measurement',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true,
+			'default' => 0
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_item', 'type',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => true,
+			'default' => 0
+		));
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.15';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
+	

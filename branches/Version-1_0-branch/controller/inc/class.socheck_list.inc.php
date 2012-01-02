@@ -51,7 +51,7 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	public function get_single($check_list_id){
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -63,7 +63,10 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
+				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
+				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));	
 			}
 			
 			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
@@ -72,32 +75,39 @@ class controller_socheck_list extends controller_socommon
 			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
-			$check_items_array[] = $check_item->toArray();
+			$check_items_array[] = $check_item;
 			
 			$counter++;
 		}
 		
 		if($check_list != null){
 			$check_list->set_check_item_array($check_items_array);
-			return $check_list->toArray();
+			return $check_list;
 		}else {
 			return null;
 		}
 	}
 		
-	public function get_single_with_check_items($check_list_id, $status){
+	public function get_single_with_check_items($check_list_id, $status, $type){
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
 		$sql .= "FROM controller_check_list cl "; 
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
-		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id=coi.id ";
-		$sql .= "WHERE cl.id = $check_list_id";
+		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
+		$sql .= "WHERE cl.id = $check_list_id ";
 		
 		if($status == 'open')
-			$sql .= "AND ci.status = 0";
+			$sql .= "AND ci.status = 0 ";
+		else if($status == 'handled')
+			$sql .= "AND ci.status = 1 ";
+			
+		if($type != null)
+			$sql .= "AND coi.type = '$type'";
 				
+		
+			
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -480,7 +490,25 @@ class controller_socheck_list extends controller_socommon
 		return isset($result) ? $this->db->get_last_insert_id('controller_check_list', 'id') : 0;
 	}
 	
-	function update($object){}
+	function update($check_list)
+	{
+		$id = intval($check_list->get_id());
+			
+		$values = array(
+			'control_id = ' . $this->marshal($check_list->get_control_id(), 'int'),
+			'status = ' . $this->marshal($check_list->get_status(), 'int'),
+			'comment = ' . $this->marshal($check_list->get_comment(), 'string'),
+			'deadline = ' . $this->marshal($check_list->get_deadline(), 'int'),
+			'planned_date = ' . $this->marshal($check_list->get_planned_date(), 'int'),
+			'completed_date = ' . $this->marshal($check_list->get_completed_date(), 'int'),
+			'location_code = ' . $this->marshal($check_list->get_location_code(), 'int'),
+			'component_id = ' . $this->marshal($check_list->get_component_id(), 'int'),
+		);
+
+		$result = $this->db->query('UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+
+		return isset($result);
+	}
 	
 	function get_id_field_name($extended_info = false)
 	{

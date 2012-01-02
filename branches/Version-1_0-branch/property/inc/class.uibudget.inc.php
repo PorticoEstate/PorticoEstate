@@ -46,13 +46,13 @@
 			(
 				'index'			=> true,
 				'basis'			=> true,
-				'obligations'		=> true,
+				'obligations'	=> true,
 				'view'			=> true,
 				'edit'			=> true,
-				'edit_basis'		=> true,
-				'download'			=> true,
+				'edit_basis'	=> true,
+				'download'		=> true,
 				'delete'		=> true,
-				'delete_basis'		=> true
+				'delete_basis'	=> true
 			);
 		function property_uibudget()
 		{
@@ -1321,7 +1321,12 @@
 					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
+					'records'			=> array(),
+					'sum_budget'		=> $this->bo->sum_budget_cost,
+					'sum_obligation'	=> $this->bo->sum_obligation_cost,
+					'sum_actual'		=> $this->bo->sum_actual_cost,
+					'sum_diff'			=> $this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost,
+					'sum_hits'			=> $this->bo->sum_hits
 				);
 
 			// values for datatable

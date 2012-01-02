@@ -64,7 +64,7 @@
 		*/
 		function link_id()
 		{
-			if(!$this->adodb->isConnected())
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -220,7 +220,7 @@
 		*/
 		public function query($sql, $line = '', $file = '',$exec = false, $fetch_single = false)
 		{
-			if ( !$this->adodb->isConnected() )
+			if ( !$this->adodb || $this->adodb->IsConnected() )
 			{
 				$this->connect();
 			}
@@ -272,7 +272,7 @@
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			
-			if ( !$this->adodb->isConnected() )
+			if ( !$this->adodb || $this->adodb->IsConnected() )
 			{
 				$this->connect();
 			}
@@ -355,7 +355,7 @@
 		*/
 		public function transaction_begin()
 		{
-			if(!$this->adodb)
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -605,7 +605,7 @@
 				//echo "depi: metadata";
 			}
 			
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -626,7 +626,7 @@
 		*/  
 		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -647,7 +647,7 @@
 
 		public function metaindexes($table, $primary = false)
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -677,7 +677,7 @@
 		*/
 		public function table_names()
 		{
-			if(!$this->adodb->IsConnected())
+			if(!$this->adodb || $this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -701,7 +701,7 @@
 		public function create_database($adminname = '', $adminpasswd = '')
 		{
 			//THIS IS CALLED BY SETUP DON'T KILL IT!
-			if ( $this->adodb->IsConnected() )
+			if ( $this->adodb && $this->adodb->IsConnected() )
 			{
 				$this->adodb->Disconnect(); //close the dead connection to be safe
 			}
@@ -709,7 +709,7 @@
 			$this->adodb = newADOConnection($GLOBALS['phpgw_info']['server']['db_type']);
 			$this->adodb->NConnect($this->Host, $adminname, $adminpasswd);
 			
-			if ( !$this->adodb->IsConnected() )
+			if ( !$this->adodb || $this->adodb->IsConnected() )
 			{
 				echo 'Connection FAILED<br />';
 				return False;
