@@ -361,37 +361,47 @@
 		
 		function edit_check_list_for_location(){
 			$check_list_id = phpgw::get_var('check_list_id');
+
+			// Fetches check list with check items
+			$open_check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, 'open');
+
+			// Fetches check list with check items
+			$handled_check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, 'handled');
 						
-			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
-						
-			$location_code = $check_list_with_check_items["location_code"];  
+			$location_code = $open_check_list_with_check_items["location_code"];
 				
-			$control_item_list_all = $this->so_control_item->get_control_items_by_control_id($check_list_with_check_items["control_id"]);
+			// Fetches all control items for check list
+			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control_id($open_check_list_with_check_items["control_id"]);
 			
+			// Puts ids for control items that is registered as check item in an array   
 			$control_item_ids = array();
-			foreach($check_list_with_check_items["check_item_array"] as $check_item){
+			foreach($open_check_list_with_check_items["check_item_array"] as $check_item){
 				$control_item_ids[] = $check_item["control_item_id"];
 			}
 			
-			$control_item_list_stripped = array();
-			
-			foreach($control_item_list_all as $control_item){
-				
+			// Puts control items not registered as check item in an array
+			$control_items_not_registered = array();
+			foreach($control_items_for_check_list as $control_item){
 				if( !in_array($control_item->get_id(), $control_item_ids) ){
-					$control_item_list_stripped[] = $control_item->toArray(); 
+					$control_items_not_registered[] = $control_item->toArray();
 				}
-			} 
+			}
 			
+			// Fetches check items that registeres measurement
+			$measurement_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, null, 'control_item_type_2');
+						
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
-				'location_array'	=> $location_array,
-				'check_list' 			=> $check_list_with_check_items,
-				'control_items_list' 	=> $control_item_list_stripped,
-				'date_format' 			=> $date_format
+				'open_check_list_with_check_items' 		=> $open_check_list_with_check_items,
+				'handled_check_list_with_check_items' 	=> $handled_check_list_with_check_items,
+				'control_items_not_registered' 			=> $control_items_not_registered,
+				'measurement_check_items' 				=> $measurement_check_items,
+				'location_array'						=> $location_array,
+				'date_format' 							=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');

@@ -40,7 +40,8 @@
 		protected $comment;
 		protected $check_list_id;
 		protected $message_ticket_id;
-		
+		protected $measurement;
+				
 		// Objects
 		protected $control_item;
 		
@@ -96,6 +97,13 @@
 		}
 		
 		public function get_message_ticket_id() { return $this->message_ticket_id; }
+		
+		public function set_measurement($measurement)
+		{
+			$this->measurement = $measurement;
+		}
+		
+		public function get_measurement() { return $this->measurement; }
 		
 		
 		// =================  Getters and setters for objects =================

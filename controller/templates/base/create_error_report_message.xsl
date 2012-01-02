@@ -71,12 +71,12 @@
 					
 					  <div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input type="submit" name="save_control" value="{$lang_save}" title="{$lang_save}" />
+						<input class="btn" type="submit" name="save_control" value="{$lang_save}" title="{$lang_save}" />
 					  </div>
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>
-					Ingen sjekkpunkter
+					Ingen registrerte avvik
 				</xsl:otherwise>
 			</xsl:choose>
 		</fieldset>
