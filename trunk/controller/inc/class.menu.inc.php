@@ -163,7 +163,36 @@
 				);
 			}
 
-			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
+			{
+				$menus['preferences'] = array
+				(
+					// in case of userprefs - need a hook for 'settings'
+/*
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'controller', 'type'=> 'user') )
+					),
+*/
+					array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'controller') )
+					)
+				);
+/*
+				$menus['toolbar'][] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'controller')),
+					'image'	=> array('hrm', 'preferences')
+				);
+*/
+			}
+
+			//Nothing...
+			//$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 
