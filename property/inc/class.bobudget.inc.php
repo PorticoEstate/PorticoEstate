@@ -46,6 +46,11 @@
 		var $revision;
 		var $allrows;
 		var $details;
+		var	$sum_budget_cost		= 0;
+		var	$sum_obligation_cost	= 0;
+		var	$sum_actual_cost		= 0;
+		var $sum_hits				= 0;
+		var	$total_records			= 0;
 
 		var $public_functions = array
 			(
@@ -177,7 +182,12 @@
 				'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
 				'details' => $this->details,'dimb_id' => $this->dimb_id));
 
-			$this->total_records = $this->so->total_records;
+			$this->total_records		= $this->so->total_records;
+			$this->sum_budget_cost		= $this->so->sum_budget_cost;
+			$this->sum_obligation_cost	= $this->so->sum_obligation_cost;
+			$this->sum_actual_cost		= $this->so->sum_actual_cost;
+			$this->sum_hits				= $this->so->sum_hits;
+
 			return $obligations;
 		}
 

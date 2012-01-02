@@ -43,6 +43,8 @@
 		protected $completed_date;
 		protected $location_code;
 		protected $component_id;
+		
+		// Objects
 		protected $check_item_array = array();
 		protected $control;
 		
