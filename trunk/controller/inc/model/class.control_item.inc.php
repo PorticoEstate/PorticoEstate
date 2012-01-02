@@ -40,6 +40,7 @@
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
+		protected $type;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -100,6 +101,13 @@
 		}
 		
 		public function get_control_group_name() { return $this->control_group_name; }
+		
+		public function set_type($type)
+		{
+			$this->type = $type;
+		}
+		
+		public function get_type() { return $this->type; }
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object

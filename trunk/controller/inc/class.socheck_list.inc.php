@@ -88,7 +88,7 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 		
-	public function get_single_with_check_items($check_list_id, $status){
+	public function get_single_with_check_items($check_list_id, $status, $type){
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
@@ -96,11 +96,18 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "FROM controller_check_list cl "; 
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
-		$sql .= "WHERE cl.id = $check_list_id";
+		$sql .= "WHERE cl.id = $check_list_id ";
 		
 		if($status == 'open')
-			$sql .= "AND ci.status = 0";
+			$sql .= "AND ci.status = 0 ";
+		else if($status == 'handled')
+			$sql .= "AND ci.status = 1 ";
+			
+		if($type != null)
+			$sql .= "AND coi.type = '$type'";
 				
+		
+			
 		$this->db->query($sql);
 		
 		$counter = 0;
