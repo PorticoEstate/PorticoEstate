@@ -17,6 +17,7 @@ DATATABLE_MSG_ERROR	controller	no	Datafeil
 DATATABLE_MSG_LOADING	controller	no	Laster data
 Sort_check_list	controller	no	Sorter sjekkliste
 Show_check_lists	controller	no	Vis sjekklister
+save_check_list	controller	no	Lagre sjekkliste
 title	controller	no	kontroll
 close	controller	no	Lukk
 clear	controller	no	Nullstill

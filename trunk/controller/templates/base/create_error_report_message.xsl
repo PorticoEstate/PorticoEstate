@@ -4,12 +4,22 @@
 
 <div id="main_content">
 	
-		<h1>Send avviksmelding på bygg: <xsl:value-of select="location_array/loc1_name"/></h1>
+		<h1>Send avviksmelding</h1>
 		
-		<h2>Kontroll <xsl:value-of select="control_array/title"/></h2>
-		<h2>Utført dato <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h2>
-				
 		<div id="error_report_message_details">
+			<h3>Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
+			<h3>Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
+			<xsl:choose>
+				<xsl:when test="check_list/completed_date != 0">
+					<h3>Kontroll ble utført dato: <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
+				</xsl:when>
+				<xsl:otherwise>
+					<h3>Kontroll ble utført dato:  Ikke registrert utført</h3>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+				
+		<fieldset id="error_report_message_details">
 			
 
 			<xsl:choose>
@@ -31,25 +41,30 @@
 				      </xsl:attribute>
 				    </input>
 				    
-					<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
-					<input name="message_title" type="text" />
+				    <div>
+						<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
+						<input name="message_title" type="text" />
+					</div>
 					
-					 <select>
-						<xsl:for-each select="categories/cat_list">
-							<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
-							<option value="{$cat_id}">
-								<xsl:value-of select="./name"/>
-							</option>			
-						</xsl:for-each>
-					</select>
-			
+					<div>
+						<label style="font-size: 15px;font-weight: bold;">Kategori</label>
+						 <select name="message_cat_id">
+						 	<option value="0">Velg kategori</option>
+							<xsl:for-each select="categories/cat_list">
+								<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
+								<option value="{$cat_id}">
+									<xsl:value-of select="./name"/>
+								</option>			
+							</xsl:for-each>
+						</select>
+					</div>
 			
 					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
-					<ul class="check_items expand_list">
+					<ul class="check_items">
 						<xsl:for-each select="check_list/check_item_array">
 							<li>
 								<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
-								<h4><input type="checkbox" name="check_item_ids[]" value="{$check_item_id}" /><span><xsl:value-of select="control_item/title"/></span></h4>						
+								<h5><input type="checkbox" name="check_item_ids[]" value="{$check_item_id}" /><span><xsl:value-of select="control_item/title"/></span></h5>						
 							</li>
 						</xsl:for-each>
 					</ul>
@@ -64,7 +79,7 @@
 					Ingen sjekkpunkter
 				</xsl:otherwise>
 			</xsl:choose>
-		</div>
+		</fieldset>
 		
 		
 			

@@ -692,7 +692,7 @@ ul.row li{
 }
 #main_content fieldset.check_list_details {
     background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #A3A3A3;
     padding: 15px;
 }
 #main_content fieldset.check_item_details{
@@ -775,8 +775,8 @@ fieldset.check_list_details label{
     margin: 5px 0;
     clear:left;
 }
-h2.check_item_details{
-	margin-bottom:5px;	
+h3.check_item_details{
+	margin-bottom:0;	
 }
 .check_item textarea{
 	width:400px;
@@ -969,7 +969,7 @@ textarea{
     font-weight: normal;
     height: 22px;
     margin-right: 10px;
-    padding-top: 5px;
+    padding-top: 4px;
     text-align: center;
     width: 66px;
 }
@@ -1013,57 +1013,50 @@ ul.check_items li.hidden{
 .frm_save_check_item input[type='submit']{
 	width: 130px;	
 }
-ul.check_items{
-	width: 800px;
+ul.check_items {
+    width: 625px;
+}
+
+ul.check_items h5{
+	margin:10px;
+	font-size: 12px;
 }
 .tab_menu div.active{
-	background: url('../../../images/bg_tab_menu_active.png') no-repeat;
+	background: #2647A0;
+	border: none;
 }
 .tab_menu div.active a{
 	color: #FFF;
 }
 .tab_menu {
     height: 29px;
-    margin: 15px 0 0;
     overflow: hidden;
 }
 .tab_menu div {
-    background: url("../../../images/bg_tab_menu_not_active.png") no-repeat scroll 0 0 transparent;
-    color: #000000;
-    cursor: pointer;
+    background: none repeat scroll 0 0 #FAFAFA;
+    border: 1px solid #A3A3A3;
     float: left;
     font-size: 12px;
     font-weight: normal;
+    margin-right: 3px;
+}
+.tab_menu div a {
+    color: #000000;
+    cursor: pointer;
+    display: block;
     height: 30px;
     padding-top: 9px;
     text-align: center;
-    width: 93px;
-    word-wrap: normal;
-}
-.tab_menu div.ext {
-    padding-top: 0px;
-}
-.tab_menu div a{
-    text-decoration:none;
-    color:#333;
-}
-.tab_menu div.ext a{
-	display:block;
-    font-size: 11px;
-    line-height: 12px;
-    margin: 0;
-    padding: 3px 0 0 9px;
-    text-align: center;
-    width: 75px;
-    text-decoration:none;
+    text-decoration: none;
+    width: 130px;
 }
 .tab_item {
-	display:none;
-	background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #ddd;
-    margin: 0;
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #A3A3A3;
+    display: none;
+    margin: 0 318px 0 0;
     padding: 15px;
-    width: 800px;	
+    width: 625px;
 }
 .tab_item h2{
 	margin:0 0 10px;
@@ -1112,10 +1105,46 @@ ul#icon_color_map span{
 	position:absolute;
     z-index: 1;
 }
-#error_report_message_details{
-	background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #ddd;
-    margin: 0;
+#main_content #error_report_message_details {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DDDDDD;
+    margin: 20px 0;
     padding: 15px;
-    width: 800px;	
+    width: 800px;
+}
+#error_report_message_details label{
+	display: inline-block;
+	width: 130px;	
+}
+.btn{
+	background: none repeat scroll 0 0 #2647A0;
+    color: #FFFFFF;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #173073;
+    cursor: pointer;
+}
+#frm_update_check_list input[type="submit"]{
+	width: 140px;	
+}
+#error_message_menu {
+    float: left;
+    margin-top: 50px;
+}
+#error_message_menu a {
+    text-align: center;
+    width: 140px;
+    margin: 2px 0;   
+}
+
+#view_errors {
+	float:right;
+    margin: 20px 0;   
+}
+#register_errors {
+	display:none;
+    float: right;
+    margin-top: 20px;   
 }
