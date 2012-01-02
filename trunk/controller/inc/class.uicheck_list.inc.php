@@ -55,7 +55,8 @@
 			'save_check_item'					=>	true,
 			'get_check_list_info'				=>	true,
 			'control_calendar_status_overview'	=>	true,
-			'add_check_item_to_list'			=>	true
+			'add_check_item_to_list'			=>	true,
+			'update_check_list'					=>	true
 		);
 
 		public function __construct()
@@ -195,7 +196,7 @@
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id, "open");
-
+			
 			return json_encode( $check_list );
 		}
 
@@ -213,6 +214,32 @@
 			);
 
 			self::render_template_xsl('edit_check_list', $data);
+		}
+		
+		public function update_check_list(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			$status = phpgw::get_var('status');
+			$comment = phpgw::get_var('comment');
+			$deadline_date = phpgw::get_var('deadline_date');
+			$completed_date = phpgw::get_var('completed_date');
+			$planned_date = phpgw::get_var('planned_date');
+			
+			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
+			$completed_date_ts = $this->get_timestamp_from_date( $completed_date );
+			
+			// Fetches check_list from DB
+			$update_check_list = $this->so_check_list->get_single($check_list_id);
+			$update_check_list->set_status( $status );
+			$update_check_list->set_comment( $comment );
+			$update_check_list->set_completed_date( $completed_date_ts );
+			$update_check_list->set_planned_date( $planned_date_ts );
+
+			$check_list_id = $this->so_check_list->update( $update_check_list );
+			
+			if($check_list_id > 0)
+				return json_encode( array( "saveStatus" => "updated" ) );
+			else
+				return json_encode( array( "saveStatus" => "not_updated" ) );
 		}
 
 		public function control_calendar_status_overview()
@@ -338,7 +365,7 @@
 			if($check_item_id > 0)
 				return json_encode( array( "saveStatus" => "saved" ) );
 			else
-				return json_encode( array( "status" => "not_saved" ) );
+				return json_encode( array( "saveStatus" => "not_saved" ) );
 		}
 
 		public function save_check_list(){
@@ -486,5 +513,18 @@
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicheck_list.view_check_lists_for_control");
 
 			return $this->yui_results($results);
+		}
+		
+		function get_timestamp_from_date( $date_string ){
+			$pos_day = strpos($date_string, "/"); 
+			$day =  substr($date_string, 0, $pos_day);
+			
+			$pos_month = strpos($date_string, "-");
+			$len_month = $pos_month - $pos_day -1;
+			$month = substr($date_string, $pos_day+1, $len_month);
+			
+			$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
+			
+			return mktime(0, 0, 0, $month, $day, $year);
 		}
 	}
