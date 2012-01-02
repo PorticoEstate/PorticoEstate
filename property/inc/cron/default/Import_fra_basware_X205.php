@@ -44,7 +44,7 @@
 		var $soXport;
 		var $invoice;
 		var $bestiller = 85; //cat_id for rolle
-		var $attestant = 83; //cat_id for rolle
+		var $attestant = 150; //cat_id for rolle
 		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
@@ -515,7 +515,6 @@
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
 			$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
-
 			$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 
 			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
