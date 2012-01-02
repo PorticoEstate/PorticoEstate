@@ -36,15 +36,26 @@
 				
 				$(wrpDiv).addClass("active");
 				
-				$(hideId).fadeOut('1000', function(){
-					$(showId).fadeIn('1000');
+				$(hideId).fadeOut('100', function(){
+					$(showId).fadeIn('100');
 				});			
-			 				
-			 				
-			
+
 				return false;
 			});
 						
+			$("#reg_errors").click(function(){
+				var thisA = $(this);
+				var showId = $(thisA).attr("href");
+				var hideId = "#view_errors";
+									
+				$(hideId).fadeOut('1000', function(){
+					$(showId).fadeIn('1000');
+				});	
+				$(thisA).fadeOut('1000');
+
+				return false;
+			});
+			
 		});
 	</script>
 		
@@ -52,37 +63,39 @@
 		
 		<fieldset class="check_list_details">
 		
+		<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
+				
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
-			<input type="hidden" name="check_list_id" value="{$check_list_id}" />	
+			<input type="hidden" name="check_list_id" value="{$check_list_id}" />
 				
 			<div>
 				<label>ID</label>
 				<input>
 			     <xsl:attribute name="name">check_list_id</xsl:attribute>
-			      <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
+			     <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
 			    </input>
 		    </div>
 			<div>
 				<label>Status</label>
-					<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
-					<select name="status">
-						<xsl:choose>
-							<xsl:when test="check_list/status = 0">
-								<option value="0" SELECTED="SELECTED">Ikke utført</option>
-								<option value="1" >Utført</option>
-							</xsl:when>
-							<xsl:when test="check_list/status = 1">
-								<option value="0">Ikke utført</option>
-								<option value="1" SELECTED="SELECTED">Utført</option>
-							</xsl:when>
-						</xsl:choose>
-					</select>
+				<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
+				<select name="status">
+					<xsl:choose>
+						<xsl:when test="check_list/status = 0">
+							<option value="0" SELECTED="SELECTED">Ikke utført</option>
+							<option value="1" >Utført</option>
+						</xsl:when>
+						<xsl:when test="check_list/status = 1">
+							<option value="0">Ikke utført</option>
+							<option value="1" SELECTED="SELECTED">Utført</option>
+						</xsl:when>
+					</xsl:choose>
+				</select>
 			</div>
 			<div>
 				<label>Skal utføres innen</label>
 				<input>
-			      <xsl:attribute name="id">deadline</xsl:attribute>
-			      <xsl:attribute name="name">deadline</xsl:attribute>
+			      <xsl:attribute name="id">deadline_date</xsl:attribute>
+			      <xsl:attribute name="name">deadline_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
 			      <xsl:if test="check_list/deadline != 0">
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
@@ -114,28 +127,48 @@
 			<div>
 				<label class="comment">Kommentar</label>
 				<textarea>
-				  <xsl:attribute name="name">check_list_comment</xsl:attribute>
+				  <xsl:attribute name="name">comment</xsl:attribute>
 				  <xsl:value-of select="check_list/comment"/>
 				</textarea>
 			</div>
+			
+			<div class="form-buttons">
+				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
+				<input class="btn not_active" type="submit" name="save_control" value="{$lang_save}" title="{$lang_save}" />
+			</div>
+			</form>
 		</fieldset>
 		
-		<a>
-			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-			</xsl:attribute>
-			Send avviksmelding
-		</a>
-		
-		<div class="tab_menu">
-			<div class="active ext"><a href="#control_items_list">Registrer avvik</a></div>
-			<div><a href="#check_list_not_fixed_list">Vis åpne avvik</a></div>
-			<div><a href="#check_list_fixed_list">Vis håndterte avvik</a></div>
+		<div id="error_message_menu">
+			<div>
+				<a class="btn">
+					<xsl:attribute name="id">
+						<xsl:text>reg_errors</xsl:text>
+					</xsl:attribute>					
+					<xsl:attribute name="href">
+						<xsl:text>#register_errors</xsl:text>
+					</xsl:attribute>
+					Registrer avvik
+				</a>
+			</div>
+			<div>
+				<a class="btn">
+					<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+						<xsl:text>&amp;check_list_id=</xsl:text>
+						<xsl:value-of select="check_list/id"/>
+					</xsl:attribute>
+					Send avviksmelding
+				</a>
+			</div>
 		</div>
 		
-		<div id="control_items_list" class="tab_item active">
+		<div id="register_errors">
+			<div class="tab_menu">
+				<div class="active"><a>Registrer avvik</a></div>
+			</div>
+			
+			<div class="tab_item active">
 			<h2 class="check_item_details">Velg sjekkpunkter som skal registreres som avvik</h2>
 
 			<xsl:choose>
@@ -144,7 +177,7 @@
 					<ul id="control_items_list" class="check_items expand_list">
 						<xsl:for-each select="control_items_list">
 							<li>
-			    				<h4><img src="controller/images/arrow_right.png" width="14"/><xsl:number/>. <span><xsl:value-of select="title"/></span></h4>						
+			    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>						
 								<form class="frm_save_control_item" action="index.php?menuaction=controller.uicheck_list.add_check_item_to_list" method="post">
 									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
@@ -203,11 +236,17 @@
 					</xsl:otherwise>
 			</xsl:choose>
 		</div>
+		</div>
 		
+		<div id="view_errors">
 		
-		<div id="check_list_not_fixed_list" class="tab_item">
-			<h2 class="check_item_details">Åpne avvik</h2>
+		<div class="tab_menu">
+			<div class="active"><a href="#check_list_not_fixed_list">Vis åpne avvik</a></div>
+			<div><a href="#check_list_fixed_list">Vis håndterte avvik</a></div>
+			<div><a href="#view_measurements">Vis målinger</a></div>
+		</div>	
 		
+		<div id="check_list_not_fixed_list" class="tab_item active">
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
 					
@@ -217,7 +256,7 @@
 						<xsl:for-each select="check_list/check_item_array">
 								<li>
 								<xsl:if test="status = 0">
-									<h4><img src="controller/images/arrow_right.png" width="14"/><xsl:number />. <span><xsl:value-of select="control_item/title"/></span></h4>						
+									<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_item/title"/></span></h4>						
 									<form class="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
 										<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
 										<input type="hidden" name="check_item_id" value="{$check_item_id}" /> 
@@ -269,8 +308,6 @@
 		</div>
 		
 		<div id="check_list_fixed_list" class="tab_item"> 
-			<h2 class="check_item_details">Avvik som er håndterte</h2>
-		
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
 					
@@ -280,7 +317,7 @@
 						<xsl:for-each select="check_list/check_item_array">
 								<xsl:if test="status = 1">
 								<li>
-				    				<h4><img src="controller/images/arrow_right.png" width="14"/><xsl:number/>. <span><xsl:value-of select="control_item/title"/></span></h4>						
+				    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_item/title"/></span></h4>						
 									<form class="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
 										<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
 										<input type="hidden" name="check_item_id" value="{$check_item_id}" /> 
@@ -329,6 +366,7 @@
 						Ingen sjekkpunkter
 					</xsl:otherwise>
 			</xsl:choose>
-		</div>	
+		</div>
+		</div>
 </div>
 </xsl:template>
