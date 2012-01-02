@@ -80,12 +80,10 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
-							
-			$this->cat_id = 89;
-			$this->cats->supress_info	= true;			
+			$catsObj->supress_info = true;
+			
 			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
-			
 			$data = array
 			(
 				'categories'			=> $categories,
@@ -110,6 +108,7 @@
 			$check_item_ids = phpgw::get_var('check_item_ids');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
+			$message_cat_id = phpgw::get_var('message_cat_id');
 			
 			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
 						
@@ -130,13 +129,13 @@
 			
 			$ticket = array
 			(
-				'origin' 		=> $location_id,
-				'origin_id'		=> $location_item_id,
-				'location_code' => $location_code,
-				'cat_id'		=> $cat_id,
-				'priority'		=> $priority, //valgfri (1-3)
-				'title'			=> $message_title,
-				'details'		=> $details,
+				'origin' 			=> $location_id,
+				'origin_id'			=> $location_item_id,
+				'location_code' 	=> $location_code,
+				'cat_id'			=> $message_cat_id,
+				'priority'			=> $priority, //valgfri (1-3)
+				'title'				=> $message_title,
+				'details'			=> $details,
 				'file_input_name'	=> 'file' // default, men valgfri
 			);
 			
@@ -151,9 +150,15 @@
 			
 			$message_ticket = $botts->read_single($message_ticket_id);
 			
+			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$catsObj->supress_info = true;
+			
+			$category = $catsObj->return_single($message_ticket["cat_id"]);
+			
 			$data = array
 			(
 				'message_ticket'		=> $message_ticket,
+				'category'				=> $category[0]['name'],
 				'location_array'		=> $location_array,
 				'control_array'			=> $control->toArray(),
 				'check_list' 			=> $check_list_with_check_items,
