@@ -2704,11 +2704,11 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_street varchar(50) DEFAULT NULL");
-		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_zipcode varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_zip_code varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_district varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN customer_city varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_street varchar(50) DEFAULT NULL");
-		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_zipcode varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_zip_code varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_district varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_city varchar(50) DEFAULT NULL");
 

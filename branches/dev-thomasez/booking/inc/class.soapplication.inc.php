@@ -23,7 +23,7 @@
 					'activity_id'	=> array('type' => 'int', 'required' => true),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'customer_street' 		=> array('type' => 'string', 'required' => false),
-					'customer_zipcode' 		=> array('type' => 'string', 'required' => false),
+					'customer_zip_code' 		=> array('type' => 'string', 'required' => false),
 					'customer_district' 		=> array('type' => 'string', 'required' => false),
 					'customer_city' 		=> array('type' => 'string', 'required' => false),
 					'customer_identifier_type' 		=> array('type' => 'string', 'required' => true),
