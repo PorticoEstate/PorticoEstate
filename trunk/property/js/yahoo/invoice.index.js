@@ -23,11 +23,13 @@
 		{order:0, name:'query',	id:'txt_query'}
 	]
 
+	// define Link Buttons
+	var linktoolTips = [
+    ]
+
 	var toolTips = [
 		{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
-	//	{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
 		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'payment_date'},
-		//{name:'period', title:'Period', description:'click this button to edit the period',ColumnDescription:''},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
 
@@ -409,6 +411,22 @@
 		}
 	}
 
+
+	this.showlightbox = function(sUrl)
+	{
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "460";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+
 //----------------------------------------------------------
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
@@ -428,9 +446,3 @@
 	    loader.insert();
 
 	});
-
-
-
-
-
-

@@ -1522,7 +1522,7 @@
 	</xsl:template>
 
 	<!-- New template-->
-	<xsl:template match="approved_list">
+	<xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
 		<tr>
 			<td align="left" style="white-space: nowrap;">
 				<xsl:value-of select="role"/>
@@ -1532,7 +1532,108 @@
 					<xsl:value-of select="initials"/>
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="date"/>
+				</xsl:if>		
+			</td>
+			<td align="left" style="white-space: nowrap;">
+				<xsl:if test="date = ''">
+				<select name="values[forward][{role_sign}]">
+					<xsl:attribute name="title">
+						<xsl:value-of select="role"/>
+					</xsl:attribute>
+					<xsl:apply-templates select="user_list/options_user"/>
+				</select>
 				</xsl:if>
 			</td>
 		</tr>
 	</xsl:template>
+
+
+	<!-- forward voucher  -->
+	<xsl:template xmlns:php="http://php.net/xsl" match="forward">
+		<xsl:choose>
+			<xsl:when test="normalize-space(redirect) != ''">
+				<script>
+					window.parent.location = '<xsl:value-of select="redirect"/>';
+					window.close();
+				</script>
+			</xsl:when>
+		</xsl:choose>
+		<form name="form" method="post" action="{form_action}">
+			<table cellpadding="0" cellspacing="0" width="100%">
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<tr>
+							<td align="left" colspan="2">
+								<xsl:call-template name="msgbox"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+
+				<xsl:apply-templates select="approved_list"/>
+				<tr>
+					<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+					<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+						<xsl:value-of select="php:function('lang', 'approve')"/>
+					</td>
+					<td class="th_text" valign="top" align="left">
+						<select name="values[approve]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'grant')"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="approve_list"/>
+						</select>
+					</td>
+				</tr>
+
+<!--
+				<tr>
+					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+					</td>
+					<td align="left">
+						<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_process_log"/>
+						</textarea>
+					</td>
+				</tr>
+-->
+				<tr height="50">
+					<td>
+						<xsl:variable name="lang_send">
+							<xsl:value-of select="php:function('lang', 'save')"/>
+						</xsl:variable>
+						<input type="submit" name="values[save]" value="{$lang_send}" title="{$lang_send}">
+						</input>
+					</td>
+				</tr>
+				<tr>
+					<td class="th_text" align="left" valign="top" >
+						<xsl:value-of select="php:function('lang', 'order id')"/>
+					</td>
+					<td align="left" class="th_text" valign="top">
+						<xsl:value-of  disable-output-escaping="yes"  select="orders"/>
+					</td>
+				</tr>			</table>
+		</form>
+	</xsl:template>
+
+	<!-- New template-->
+	<xsl:template match="options_user">
+		<option value="{lid}">
+			<xsl:if test="selected = 'selected'">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="lastname"/>
+			<xsl:text>, </xsl:text>
+			<xsl:value-of disable-output-escaping="yes" select="firstname"/>
+		</option>
+	</xsl:template>
+
