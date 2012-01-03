@@ -29,7 +29,8 @@
 		
 		public $public_functions = array
 		(
-			'index'	=> true
+			'index'	=> true,
+			'import_organizations' => true
 		);
 
 		public function __construct()
@@ -171,7 +172,7 @@
 			
 			// Import arenas if not done before and put them on the users session
 			if (!phpgwapi_cache::session_get('activitycalendar', 'arenas')) {
-				phpgwapi_cache::session_set('activitycalendar', 'arenas', $this->import_arenas()); 
+				phpgwapi_cache::session_set('activitycalendar', 'arenas', $this->import_organizations()); 
                 $this->log_messages(1);
 				return '1';
 				$this->clean_up();
@@ -481,14 +482,14 @@
 				else	//add org unit without org no
 				{
 					$org_info = array();
-					//if($activity_group && !$activity_group == '')
-					//{
-					//	$org_info['name'] = $activity_group;
-					//}
-					//else
-					//{
+					if($activity_group && !$activity_group == '')
+					{
+						$org_info['name'] = $activity_group;
+					}
+					else
+					{
 						$org_info['name'] = $org_name_tmp;
-					//}
+					}
 					 
 					//$org_info['orgnr'] = $this->decode($data[2]);
 					$org_info['homepage'] = $this->decode($data[16]);
@@ -634,6 +635,149 @@
 					$this->messages[] = "Import of arenas failed. (" . (time() - $start_time) . " seconds)";
 				}
 				else if(!$activityOK)
+				{
+					$this->messages[] = "Import of activities failed. (" . (time() - $start_time) . " seconds)";
+				}
+				else
+				{
+					$this->messages[] = "Import of activities/arenas failed. (" . (time() - $start_time) . " seconds)";
+				}
+				$db_activity->transaction_abort();
+				return false;
+			}
+		}
+		
+		protected function import_organizations()
+		{
+			$soactivity = activitycalendar_soactivity::get_instance();
+			
+			$datalines = $this->csvdata;
+		
+			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
+			
+			$db_activity = $soactivity->get_db();
+			$db_activity->transaction_begin();
+			
+			foreach ($datalines as $data) {
+				$activityOK = true;
+				unset($activity_persons);
+				unset($activity_description);
+				unset($org_info);
+				unset($contact_person);
+				unset($contact1);
+				unset($contact2);
+				unset($contact3);
+				unset($contact4);
+				unset($new_org_id);
+				
+				$activity_id = $this->decode($data[0]);
+				$org_name_tmp = $this->decode($data[1]);
+				if(strlen($org_name_tmp) > 50)
+				{
+					$org_name_tmp = substr($org_name_tmp,0,49);
+				}
+				$org_email = $this->decode($data[5]);
+				if(strlen($org_email) > 50)
+				{
+					$org_email = substr($org_email,0,49);
+				}
+				$org_phone = $this->decode($data[4]);
+				if(strlen($org_phone) > 50)
+				{
+					$org_phone = substr($org_phone,0,49);
+				}
+				$contact_mail_2 = $this->decode($data[11]);
+				if(strlen($contact_mail_2) > 50)
+				{
+					$contact_mail_2 = substr($contact_mail_2,0,49);
+				}
+				
+				$contact1_name = $this->decode($data[3]);
+				if(strlen($contact1_name) > 50)
+				{
+					$contact1_name = substr($contact1_name,0,49);
+				}
+				$contact1_phone = $this->decode($data[4]);
+				if(strlen($contact1_phone) > 50)
+				{
+					$contact1_phone = substr($contact1_phone,0,49);
+				}
+				$contact2_name = $this->decode($data[7]);
+				if(strlen($contact2_name) > 50)
+				{
+					$contact2_name = substr($contact2_name,0,49);
+				}
+				$contact2_phone = $this->decode($data[10]);
+				if(strlen($contact2_phone) > 50)
+				{
+					$contact2_phone = substr($contact2_phone,0,49);
+				}
+				
+				$activity = $soactivity->get_single($activity_id);
+				
+				
+				$org_info = array();
+				$org_info['name'] = $org_name_tmp;
+				 
+				$org_info['homepage'] = $this->decode($data[6]);
+				$org_info['phone'] = $org_phone;
+				$org_info['email'] = $org_email;
+				$org_info['description'] = $this->decode($data[2]);
+				$org_info['street'] = $this->decode($data[8]);
+				$org_info['zip'] = $this->decode($data[9]);
+				$org_info['activity_id'] = "";
+				$org_info['district'] = $this->decode($data[12]); 
+				$new_org_id = $soactivity->add_organization($org_info);
+					
+				$contact1 = array();
+				$contact1['name'] = $contact1_name;
+				$contact1['phone'] = $contact1_phone;
+				$contact1['mail'] = $org_email;
+				$contact1['org_id'] = $new_org_id;
+				$soactivity->add_contact_person_org($contact1);
+				
+				$contact2 = array();
+				$contact2['name'] = $contact2_name;
+				$contact2['phone'] = $contact2_phone;
+				$contact2['mail'] = $contact_mail_2;
+				$contact2['org_id'] = $new_org_id;
+				$soactivity->add_contact_person_org($contact2);
+				
+				$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($new_org_id);
+				
+				$activity_contact_person_2_address = $this->decode($data[8]);
+				$activity_contact_person_2_zip = $this->decode($data[9]);
+				
+				if($activity){
+					$activity->set_organization_id($new_org_id);
+					//$activity->set_description($activity_description);
+					$activity->set_contact_person_2_address($activity_contact_person_2_address);
+					$activity->set_contact_person_2_zip($activity_contact_person_2_zip);
+					if($activity_persons)
+					{
+						//set contact persons
+						$activity->set_contact_persons($activity_persons);
+					}
+
+					if ($soactivity->store($activity)) {
+						$this->messages[] = "Successfully updated activity: Title ({$activity->get_title()})";
+					} else {
+						$this->errors[] = "Error updating activity: Title ({$activity->get_title()})";
+						$activityOK = false;
+					}
+				}
+			}
+			
+			if($activityOK)
+			{
+				$this->messages[] = "Imported activities. (" . (time() - $start_time) . " seconds)";
+				$db_activity->transaction_commit();
+				return true;
+			}
+			else
+			{
+				if(!$activityOK)
 				{
 					$this->messages[] = "Import of activities failed. (" . (time() - $start_time) . " seconds)";
 				}
