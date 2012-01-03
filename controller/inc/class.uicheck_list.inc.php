@@ -353,13 +353,19 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$comment = phpgw::get_var('comment');
 			$status = phpgw::get_var('status');
-						
+			$type = phpgw::get_var('type');
+
 			$check_item_obj = new controller_check_item();
 			$check_item_obj->set_status($status);
 			$check_item_obj->set_comment($comment);
 			$check_item_obj->set_check_list_id($check_list_id);
 			$check_item_obj->set_control_item_id($control_item_id);
-		
+
+			if($type == 'control_item_type_2'){
+				$measurement = phpgw::get_var('measurement');
+				$check_item_obj->set_measurement($measurement);
+			}
+			
 			$check_item_id = $this->so_check_item->store( $check_item_obj );
 
 			if($check_item_id > 0)

@@ -68,7 +68,7 @@
 		function create_error_report_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
-			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
+			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, null, 'control_item_type_1');
 						
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
@@ -110,21 +110,22 @@
 			$message_title = phpgw::get_var('message_title');
 			$message_cat_id = phpgw::get_var('message_cat_id');
 			
-			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
+			$check_list = $this->so_check_list->get_single($check_list_id);
 						
-			$control_id = $check_list_with_check_items["control_id"];
+			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list_with_check_items["location_code"];  
+			$location_code = $check_list->get_location_code();
 				 
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
+
+			// Generates message details from comment field in check item 
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
-				$details .= "Gjøremål: ";
-				$details .=  $check_item->get_comment() . "<br>";
+				$message_details .= "Gjøremål: ";
+				$message_details .=  $check_item->get_comment() . "<br>";
 			}
 			
 			$ticket = array
@@ -135,18 +136,21 @@
 				'cat_id'			=> $message_cat_id,
 				'priority'			=> $priority, //valgfri (1-3)
 				'title'				=> $message_title,
-				'details'			=> $details,
+				'details'			=> $message_details,
 				'file_input_name'	=> 'file' // default, men valgfri
 			);
 			
 			$botts = CreateObject('property.botts',true);
 			$message_ticket_id = $botts->add_ticket($ticket);
 
+			// Registers message and updates check items with message ticket id
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
 				$check_item->set_message_ticket_id( $message_ticket_id );
 				$this->so_check_item->update($check_item);
 			}			
+			
+			$registered_message_check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id); 
 			
 			$message_ticket = $botts->read_single($message_ticket_id);
 			
@@ -157,12 +161,13 @@
 			
 			$data = array
 			(
-				'message_ticket'		=> $message_ticket,
-				'category'				=> $category[0]['name'],
-				'location_array'		=> $location_array,
-				'control_array'			=> $control->toArray(),
-				'check_list' 			=> $check_list_with_check_items,
-				'date_format' 			=> $date_format
+				'message_ticket'					=> $message_ticket,
+				'category'							=> $category[0]['name'],
+				'location_array'					=> $location_array,
+				'control_array'						=> $control->toArray(),
+				'check_list'						=> $check_list->toArray(),
+				'registered_message_check_items'	=> $registered_message_check_items,
+				'date_format' 						=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');

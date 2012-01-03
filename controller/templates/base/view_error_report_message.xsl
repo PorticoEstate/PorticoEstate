@@ -4,9 +4,11 @@
 
 <div id="main_content">
 	
-		<h1>Send avviksmelding</h1>
+		<h1>Avviksmelding registrert</h1>
 		
-		<h3>Følgende meldingsdata ble sendt</h3>
+		<div class="tab_menu">
+			<a class="active" href="#">Meldingen gjaldt</a>
+		</div>	
 		<div id="error_report_message_details">
 			<h3>Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
 			<h3>Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
@@ -19,53 +21,31 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-			
+		
+		<div class="tab_menu">
+			<a class="active" href="#">Detaljer for melding</a>
+		</div>
 		<div id="error_report_message_details">
-			<xsl:choose>
-				<xsl:when test="check_list/check_item_array/child::node()">
-					
-				<form class="frm_save_error_report_message" action="index.php?menuaction=controller.uierror_report_message.save_error_report_message" method="post">
-					<input>
-				      <xsl:attribute name="name">check_list_id</xsl:attribute>
-				      <xsl:attribute name="type">hidden</xsl:attribute>
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="check_list/id"/>
-				      </xsl:attribute>
-				    </input>
-				    <input>
-				      <xsl:attribute name="name">location_code</xsl:attribute>
-				      <xsl:attribute name="type">hidden</xsl:attribute>
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="location_array/location_code"/>
-				      </xsl:attribute>
-				    </input>
+			<div>	    
+				<label>Tittel på melding</label>
+				<xsl:value-of select="message_ticket/subject"/>
+			</div>
 			
-					<div>	    
-						<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
-						<xsl:value-of select="message_ticket/subject"/>
-					</div>
-					
-					<div>
-						<label style="font-size: 15px;font-weight: bold;">Kategori</label>
-						<span><xsl:value-of select="category"/></span> 
-					</div>
-			
-			
-					<h3 class="check_item_details">Avviksmeldingen omfattet følgende sjekkpunkter</h3>					
-					<ul class="check_items">
-						<xsl:for-each select="check_list/check_item_array">
-							<li>
-								<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
-								<h5><xsl:value-of select="control_item/title"/></h5>						
-							</li>
-						</xsl:for-each>
-					</ul>
-				</form>			
-				</xsl:when>
-				<xsl:otherwise>
-					Ingen sjekkpunkter
-				</xsl:otherwise>
-			</xsl:choose>
+			<div>
+				<label>Kategori</label>
+				<span><xsl:value-of select="category"/></span> 
+			</div>
+	
+	
+			<h3 class="check_item_details">Avviksmeldingen omfattet følgende punkter</h3>					
+			<ul class="check_items">
+				<xsl:for-each select="registered_message_check_items">
+					<li>
+						<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
+						<h5><xsl:value-of select="control_item/title"/></h5>						
+					</li>
+				</xsl:for-each>
+			</ul>
 		</div>
 		
 		<a class="btn">

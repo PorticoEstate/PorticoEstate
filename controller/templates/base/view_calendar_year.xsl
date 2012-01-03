@@ -14,14 +14,13 @@
 			</fieldset>
 		</div>
 		
-		<ul id="icon_color_map">
-			<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll satt opp</span></li>
-			<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll har planlagt dato</span></li>
-			<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil</span></li>
-			<li><img height="15" src="controller/images/status_icon_light_blue.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-			<li><img height="15" src="controller/images/status_icon_dark_blue.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-			<li><img height="15" src="controller/images/status_icon_red.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
-			<li><img height="12" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+	<ul id="icon_color_map">
+			<li><img height="13" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
+			<li><img height="13" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
+			<li><img height="13" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
+			<li><img height="13" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
+			<li><img height="13" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+			<li><img height="11" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 		</ul>
 		
 		<ul class="calendar">
@@ -96,7 +95,7 @@
 												<xsl:text>&amp;location_code=</xsl:text>
 												<xsl:value-of select="$location_code"/>
 											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_yellow.png" />
+											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</a>
 										</div>
 									</xsl:when>
@@ -108,7 +107,7 @@
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_light_green.png" />
+											<img height="15" src="controller/images/status_icon_yellow.png" />
 										</a>
 										</div>
 									</xsl:when>
