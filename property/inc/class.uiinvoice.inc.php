@@ -60,7 +60,8 @@
 				'download_sub'	=> true,
 				'receipt'		=> true,
 				'edit'			=> true,
-				'reporting'		=> true
+				'reporting'		=> true,
+				'forward'		=> true
 			);
 
 		function property_uiinvoice()
@@ -1154,6 +1155,19 @@ JS;
 								'source'	=> 'voucher_id_num'
 							),
 						)
+					);
+
+
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'			=> 'forward',
+						'text' 			=> lang('forward'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uiinvoice.forward',
+							'target'			=> '_lightbox'
+						)),
+						'parameters'	=> $parameters
 					);
 
 				if($this->acl_delete)
@@ -3679,5 +3693,167 @@ JS;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice_reporting','attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('reporting' => $data));
 
+		}
+		/**
+		 * forward voucher to other persons
+		 *
+		 */
+
+		public function forward()
+		{
+			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
+
+			$user_lid	= phpgw::get_var('user_lid', 'string', 'GET', 'all');
+			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
+			$redirect	= false;
+
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
+			$roles 	= $this->bo->check_role();
+
+			$approve = array();
+			foreach ($roles as $role => $role_value)
+			{
+				if ($role_value && isset($role_check[$role]))
+				{
+					$approve[] = array
+					(
+						'id'		=> $role,
+						'name'		=> $role_check[$role],
+						'selected'	=> 0
+					);
+				}	
+			}
+
+			$values	= phpgw::get_var('values');
+
+			$receipt = array();
+			if (isset($values['save']))
+			{
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$receipt['error'][]=array('msg'=>lang('repost'));
+				}
+
+				if(!$approve)
+				{
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));					
+				}
+
+				if (!$receipt['error'])
+				{
+					$redirect = true;
+					$values['voucher_id'] = $voucher_id;
+					$line = $this->bo->forward($values);
+				}
+			}
+
+			$voucher = $this->bo->read_single_voucher($voucher_id);
+			$orders = array();
+			foreach ($voucher as $line)
+			{
+				$orders[] = $line['order_id'];
+			}
+
+			$approved_list = array();
+ 
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_janitor'],
+				'role_sign'	=> 'oppsynsmannid',
+				'initials'	=> $line['janitor'] ? $line['janitor'] : '',
+				'date'		=> $line['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['oppsynsigndato'] ) ) :'',
+				'user_list'	=> !$line['oppsynsigndato'] ? array('options_user' => $this->bocommon->get_user_list_right(32,isset($line['janitor'])?$line['janitor']:'','.invoice')) : ''
+			);
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_supervisor'],
+				'role_sign'	=> 'saksbehandlerid',
+				'initials'	=> $line['supervisor'] ? $line['supervisor'] : '',
+				'date'		=> $line['saksigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['saksigndato'] ) ) :'',
+				'user_list'	=> !$line['saksigndato'] ? array('options_user' => $this->bocommon->get_user_list_right(64,isset($line['supervisor'])?$line['supervisor']:'','.invoice')) : ''
+			);
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_budget_responsible'],
+				'role_sign'	=> 'budsjettansvarligid',
+				'initials'	=> $line['budget_responsible'] ? $line['budget_responsible'] : '',
+				'date'		=> $line['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['budsjettsigndato'] ) ) :'',
+				'user_list'	=> !$line['budsjettsigndato'] ? array('options_user' => $this->bocommon->get_user_list_right(128,isset($line['budget_responsible'])?$line['budget_responsible']:'','.invoice')) : ''
+			);
+
+			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
+
+			foreach($approve as &$_approve)
+			{
+				if($_approve['id'] == 'is_janitor' && $my_initials == $line['janitor'] && $line['oppsynsigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_janitor';
+				}
+				else if($_approve['id'] == 'is_supervisor' && $my_initials == $line['supervisor'] && $line['saksigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_supervisor';
+				}
+				else if($_approve['id'] == 'is_budget_responsible' && $my_initials == $line['budget_responsible'] && $line['budsjettsigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_budget_responsible';
+				}
+			}
+
+			unset($_approve);
+
+			$approve_list = array();
+			foreach($approve as $_approve)
+			{
+				if($_approve['id'] == 'is_janitor')
+				{
+					if(($my_initials == $line['janitor'] && $line['oppsynsigndato']) || !$line['oppsynsigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+				if($_approve['id'] == 'is_supervisor')
+				{
+					if(($my_initials == $line['supervisor'] && $line['saksigndato']) || !$line['saksigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+				if($_approve['id'] == 'is_budget_responsible')
+				{
+					if(($my_initials == $line['budget_responsible'] && $line['budsjettsigndato']) || !$line['budsjettsigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+			}
+
+			$data = array
+			(
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'user_lid' => $user_lid)) : null,
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
+					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.forward', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
+					'approve_list'			=> $approve_list,
+					'approved_list'			=> $approved_list,
+					'sign_orig'				=> $sign_orig,
+					'my_initials'			=> $my_initials,
+					'project_group_data'	=> $project_group_data,
+					'orders'				=> implode('</br>', $orders),
+					'value_amount'			=> $line['amount'],
+					'value_currency'		=> $line['currency'],
+					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
 		}
 	}

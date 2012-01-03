@@ -33,21 +33,8 @@
 		var tableYUI;
 
 
-	this.showlightbox = function(sUrl)//(parameters, oRecord)
+	this.showlightbox = function(sUrl)
 	{
-
-//alert(sUrl);
-/*
-		var oArgs = {menuaction:'property.uiinvoice.edit'};
-		var sUrl = phpGWLink('index.php', oArgs);
-
-		for(f=0; f<parameters.parameter.length; f++)
-		{
-			param_name = parameters.parameter[f].name;
-			param_source = parameters.parameter[f].source;
-			sUrl = sUrl + "&"+param_name+"=" + oRecord.getData(param_source);
-		}
-*/
 		var onDialogShow = function(e, args, o)
 		{
 			var frame = document.createElement('iframe');
