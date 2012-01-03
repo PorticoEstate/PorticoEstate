@@ -4,24 +4,28 @@
 
 <div id="main_content">
 	
-		<h1>Send avviksmelding</h1>
+		<h1>Registrer avviksmelding</h1>
 		
+		<div class="tab_menu">
+			<a class="active" href="#">Meldingen gjelder</a>
+		</div>	
 		<div id="error_report_message_details">
-			<h3>Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
-			<h3>Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
+			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
 			<xsl:choose>
 				<xsl:when test="check_list/completed_date != 0">
-					<h3>Kontroll ble utført dato: <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
+					<h3>Kontroll ble utført dato:<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
 				</xsl:when>
 				<xsl:otherwise>
-					<h3>Kontroll ble utført dato:  Ikke registrert utført</h3>
+					<h3>Kontroll ble utført dato: Ikke registrert utført</h3>
 				</xsl:otherwise>
 			</xsl:choose>
+			<h3 class="last">Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
 		</div>
-				
+		
+		<div class="tab_menu">
+			<a class="active" href="#">Detaljer for meldingen</a>
+		</div>
 		<fieldset id="error_report_message_details">
-			
-
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
 					
@@ -42,12 +46,12 @@
 				    </input>
 				    
 				    <div>
-						<label style="font-size: 15px;font-weight: bold;">Tittel på melding</label>
+						<label>Tittel på melding</label>
 						<input name="message_title" type="text" />
 					</div>
 					
 					<div>
-						<label style="font-size: 15px;font-weight: bold;">Kategori</label>
+						<label>Kategori</label>
 						 <select name="message_cat_id">
 						 	<option value="0">Velg kategori</option>
 							<xsl:for-each select="categories/cat_list">
@@ -81,7 +85,14 @@
 			</xsl:choose>
 		</fieldset>
 		
-		
+		<a class="btn">
+	    	<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+			</xsl:attribute>
+	      Vis sjekkliste
+	    </a>
 			
 </div>
 </xsl:template>

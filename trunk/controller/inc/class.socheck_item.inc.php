@@ -60,7 +60,8 @@
 					'status',
 					'comment',
 					'check_list_id',
-					'message-ticket_id'
+					'message_ticket_id',
+					'measurement'
 			);
 
 			$values = array(
@@ -68,7 +69,8 @@
 				$this->marshal($check_item->get_status(), 'int'),
 				$this->marshal($check_item->get_comment(), 'string'),
 				$this->marshal($check_item->get_check_list_id(), 'int'),
-				$this->marshal($check_item->get_message_ticket_id(), 'int')
+				$this->marshal($check_item->get_message_ticket_id(), 'int'),
+				$this->marshal($check_item->get_measurement(), 'int')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -82,10 +84,11 @@
 
 			$values = array(
 				'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-				'status = ' . $this->marshal($check_item->get_status(), 'int'),
+				'status = ' . $check_item->get_status(),
 				'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
 				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int'),
-				'message_ticket_id = ' . $this->marshal($check_item->get_message_ticket_id(), 'int')
+				'message_ticket_id = ' . $this->marshal($check_item->get_message_ticket_id(), 'int'),
+				'measurement = ' . $this->marshal($check_item->get_measurement(), 'int')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -131,6 +134,82 @@
 			{
 				return null;
 			}
+		}
+		
+		public function get_check_items($check_list_id, $status, $type){
+			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.message_ticket_id, ci.measurement, check_list_id, "; 
+			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
+			$sql .= "FROM controller_check_item ci "; 
+			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
+			$sql .= "WHERE ci.check_list_id = $check_list_id ";
+			
+			if($status == 'open')
+				$sql .= "AND ci.status = 0 ";
+			else if($status == 'handled')
+				$sql .= "AND ci.status = 1 ";
+				
+			if($type != null)
+				$sql .= "AND coi.type = '$type'";
+								
+			$this->db->query($sql);
+			
+			while ($this->db->next_record()) {
+				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+				$check_item->set_message_ticket_id($this->unmarshal($this->db->f('message_ticket_id', true), 'int'));
+				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+				
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
+				$control_item->set_title($this->db->f('title', true), 'string');
+				$control_item->set_required($this->db->f('required', true), 'string');
+				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
+				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
+				$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
+				$control_item->set_type($this->db->f('type', true), 'string');
+				
+				$check_item->set_control_item($control_item->toArray());
+				
+				$check_items_array[] = $check_item->toArray();
+			}
+			
+			return $check_items_array;
+		}
+		
+		public function get_check_items_by_message($message_ticket_id){
+			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.message_ticket_id, ci.measurement, check_list_id, "; 
+			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
+			$sql .= "FROM controller_check_item ci "; 
+			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
+			$sql .= "WHERE ci.message_ticket_id = $message_ticket_id ";
+								
+			$this->db->query($sql);
+			
+			while ($this->db->next_record()) {
+				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+				$check_item->set_message_ticket_id($this->unmarshal($this->db->f('message_ticket_id', true), 'int'));
+				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+				
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
+				$control_item->set_title($this->db->f('title', true), 'string');
+				$control_item->set_required($this->db->f('required', true), 'string');
+				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
+				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
+				$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
+				$control_item->set_type($this->db->f('type', true), 'string');
+				
+				$check_item->set_control_item($control_item->toArray());
+				
+				$check_items_array[] = $check_item->toArray();
+			}
+			
+			return $check_items_array;
 		}
 
 		function get_id_field_name(){}
