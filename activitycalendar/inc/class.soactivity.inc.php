@@ -152,6 +152,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity_state = $this->marshal($filters['activity_state'],'int');
 			$filter_clauses[] = "activity.state = {$activity_state}";
 		}
+		if(isset($filters['activity_org']) && $filters['activity_org'] != '0'){
+			$activity_org = $this->marshal($filters['activity_org'],'int');
+			$filter_clauses[] = "activity.organization_id = {$activity_org}";
+		}
 		if(isset($filters['activity_category']) && $filters['activity_category'] != 'all'){
 			$activity_category = $this->marshal($filters['activity_category'],'int');
 			$filter_clauses[] = "activity.category = {$activity_category}";
