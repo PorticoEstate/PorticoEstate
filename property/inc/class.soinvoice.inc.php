@@ -1499,4 +1499,57 @@
 
 			return $values;
 		}
+
+		/*
+		*  Forward vouchers to other responsible
+		*/
+		public function forward($data)
+		{
+			if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
+			{
+				$value_set = array();
+				
+				foreach ($data['forward'] as $role => $user_lid)
+				{
+					$value_set[$role] =  $user_lid;
+				}
+
+				if( $data['approve'] != $data['sign_orig'] )
+				{
+					switch ( $data['sign_orig'] )
+					{
+						case 'is_janitor':
+								$value_set['oppsynsigndato'] = null;
+							break;
+						case 'is_supervisor':
+							$value_set['saksigndato'] = null;
+							break;
+						case 'is_budget_responsible':
+							$value_set['budsjettsigndato'] = null;
+							break;
+					}
+ 
+					switch ( $data['approve'] )
+					{
+						case 'is_janitor':
+							$value_set['oppsynsigndato'] = date( $this->db->datetime_format() );
+								$value_set['oppsynsmannid'] = $data['my_initials'];
+							break;
+						case 'is_supervisor':
+							$value_set['saksigndato'] = date( $this->db->datetime_format() );
+							$value_set['saksbehandlerid'] = $data['my_initials'];
+							break;
+						case 'is_budget_responsible':
+							$value_set['budsjettsigndato'] = date( $this->db->datetime_format() );
+							$value_set['budsjettansvarligid'] = $data['my_initials'];
+							break;
+					}
+				}
+
+				$value_set	= $this->db->validate_update($value_set);
+				return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+			}
+
+			return false;
+		}
 	}

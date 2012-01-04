@@ -657,4 +657,9 @@
 				$this->bocommon->download($values,$names,$descr);
 			}
 		}
+
+		public function forward($data)
+		{
+			return $this->so->forward($data);		
+		}
 	}

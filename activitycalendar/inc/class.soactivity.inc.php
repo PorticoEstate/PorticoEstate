@@ -436,7 +436,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function select_district_list()
 	{
-		$this->db->query("SELECT id, descr FROM fm_district where id >'0' ORDER BY id ", __LINE__, __FILE__);
+		$this->db->query("SELECT id, descr FROM fm_district where id >'0' AND NOT descr LIKE '%vrige%' ORDER BY id ", __LINE__, __FILE__);
 
 		$i = 0;
 		while ($this->db->next_record())
