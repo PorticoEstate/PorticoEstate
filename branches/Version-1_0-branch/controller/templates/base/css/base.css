@@ -819,7 +819,7 @@ ul.calendar {
 }
 ul.calendar li div {
     float: left;
-    width: 24px;
+    width: 30px;
     padding: 3px;
     text-align: center;
 }
@@ -836,6 +836,9 @@ ul.calendar.info {
     overflow-x: hidden;
     height: 800px;
     margin-left: 40px;
+}
+ul.calendar.days li div {
+    width: 24px;
 }
 ul.calendar.days {
    	position: absolute;
@@ -1011,7 +1014,7 @@ ul.check_items li.hidden{
 }
 
 .frm_save_check_item input[type='submit']{
-	width: 130px;	
+	width: 185px;
 }
 ul.check_items {
     width: 625px;
@@ -1019,31 +1022,33 @@ ul.check_items {
 
 ul.check_items h5{
 	margin:10px;
-	font-size: 12px;
+	font-size: 13px;
 }
 .tab_menu {
-    height: 29px;
     overflow: hidden;
 }
 .tab_menu a {
-	background: none repeat scroll 0 0 #FAFAFA;
+    background: none repeat scroll 0 0 #FAFAFA;
+    border-left: 1px solid #A3A3A3;
+    border-right: 1px solid #A3A3A3;
+    border-top: 1px solid #A3A3A3;
     color: #000000;
     cursor: pointer;
     display: block;
-    height: 30px;
-    width: 130px;
-    padding-top: 9px;
-    text-align: center;
-    text-decoration: none;
-    border: 1px solid #A3A3A3;
     float: left;
     font-size: 12px;
     font-weight: normal;
     margin-right: 3px;
+    padding: 7px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 150px;
 }
 .tab_menu a.active {
 	background: #2647A0;
-	border: none;
+	border-left: 1px solid #173073;
+	border-right: 1px solid #173073;
+	border-top: 1px solid #173073;
 	color: #FFF;
 }
 .tab_item {
@@ -1104,13 +1109,26 @@ ul#icon_color_map span{
 #main_content #error_report_message_details {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
-    margin: 20px 0;
+    margin-bottom: 20px;
     padding: 15px;
     width: 800px;
 }
 #error_report_message_details label{
 	display: inline-block;
-	width: 130px;	
+	width: 130px;
+	font-weight: normal;
+	font-size: 15px;	
+}
+#error_report_message_details h3 {
+    font-size: 15px;
+    font-weight: normal;
+    margin: 10px 0;
+}
+#error_report_message_details h3.first {
+    margin-top:0;
+}
+#error_report_message_details h3.last {
+    margin-bottom:0;
 }
 .btn{
 	background: none repeat scroll 0 0 #2647A0;
@@ -1144,4 +1162,8 @@ ul#icon_color_map span{
 	display:none;
     float: right;
     margin-top: 20px;   
+}
+
+a#view_errors_measurements{
+	display:none;
 }

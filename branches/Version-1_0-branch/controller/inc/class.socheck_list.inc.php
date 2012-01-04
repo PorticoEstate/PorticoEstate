@@ -51,7 +51,13 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	public function get_single($check_list_id){
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
+		$sql .= "completed_date, location_code, ci.id as ci_id, ci.status as ci_status, control_item_id, "; 
+		$sql .= "ci.comment as ci_comment, check_list_id "; 
+		$sql .= "FROM controller_check_list cl ";
+		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
+		$sql .= "WHERE cl.id = $check_list_id";
+				
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -90,9 +96,9 @@ class controller_socheck_list extends controller_socommon
 		
 	public function get_single_with_check_items($check_list_id, $status, $type){
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, location_code, ";
-		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
+		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, ci.measurement, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
-		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
+		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id, coi.type "; 
 		$sql .= "FROM controller_check_list cl "; 
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
@@ -105,9 +111,7 @@ class controller_socheck_list extends controller_socommon
 			
 		if($type != null)
 			$sql .= "AND coi.type = '$type'";
-				
-		
-			
+							
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -132,6 +136,8 @@ class controller_socheck_list extends controller_socommon
 				$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
 				$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+				$check_item->set_message_ticket_id($this->unmarshal($this->db->f('message_ticket_id', true), 'int'));
+				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 				$control_item->set_title($this->db->f('coi_title', true), 'string');
@@ -139,6 +145,7 @@ class controller_socheck_list extends controller_socommon
 				$control_item->set_what_to_do($this->db->f('coi_what_to_do', true), 'string');
 				$control_item->set_how_to_do($this->db->f('coi_how_to_do', true), 'string');
 				$control_item->set_control_group_id($this->db->f('coi_control_group_id', true), 'string');
+				$control_item->set_type($this->db->f('type', true), 'string');
 				
 				$check_item->set_control_item($control_item->toArray());
 				

@@ -72,10 +72,10 @@
 				
 		public function set_status($status)
 		{
-			$this->status = $status;
+			$this->status = (int)$status;
 		}
 		
-		public function get_status() { return $this->status; }
+		public function get_status() { return (int)$this->status; }
 		
 		public function set_comment($comment)
 		{

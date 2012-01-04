@@ -803,6 +803,7 @@ fm_vendor	property	no	Leverandør
 force year for period	property	no	Overstyr år for periode
 format type	property	no	Format type
 formats	property	no	Formater
+forward	property	no	Videresend
 fraction	property	no	Fraksjon
 from	property	no	Fra
 from date	property	no	Fra dato
