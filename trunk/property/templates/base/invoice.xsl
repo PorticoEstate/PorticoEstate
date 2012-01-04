@@ -1540,6 +1540,9 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="role"/>
 					</xsl:attribute>
+					<option value="">
+						<xsl:value-of select="php:function('lang', 'select')"/>
+					</option>
 					<xsl:apply-templates select="user_list/options_user"/>
 				</select>
 				</xsl:if>
