@@ -83,9 +83,10 @@ contact_info_helptext	activitycalendarfrontend	no	Hentes fra booking/organisasjo
 store_org_group	activitycalendarfrontend	no	Lagre organisasjon/gruppe
 save_activity	activitycalendarfrontend	no	Send
 org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon"<br/>Klikk deretter på "Neste" for å registrere aktivitet.
+activity_org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten som skal endres er tilknyttet i nedtrekksmenyen, du kan søke ved å skrive inn navnet.
 next	activitycalendarfrontend	no	Neste
 new_activity	activitycalendarfrontend	no	Ny aktivitet
-update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er sendt for aktiviteten "%1"
+update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er sendt for aktiviteten "%1" tilknyttet organisasjon "%2"
 edit_activity	activitycalendarfrontend	no	Endre aktivitet
 activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker å endre fra listen under.
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske

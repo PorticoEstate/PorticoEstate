@@ -1,32 +1,110 @@
-<!-- $Id$ -->
-<xsl:template name="control" xmlns:php="http://php.net/xsl">
-
-<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-<xsl:variable name="control_area_id"><xsl:value-of select="control/control_area_id"/></xsl:variable>
-<xsl:variable name="control_procedure_id"><xsl:value-of select="control/procedure_id"/></xsl:variable>
+<!-- $Id: edit_check_list.xsl 8478 2012-01-03 12:36:37Z vator $ -->
+<xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<script>
+<div id="main_content">
+		
+	<script>
 		$(function() {
-			$( "#start_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'd/m-yy' 
+			
+			$("#view_control_details").click(function(){
+				var requestUrl = $(this).attr("href");
+							
+				$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+				  	$("#tab_content").html(data);
+				  }
+				});
+			
+				return false;
 			});
-			$( "#end_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'd/m-yy' 
-			});	
+			
+			$("#view_control_items").click(function(){
+				var requestUrl = $(this).attr("href");
+							
+				$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+				  	$("#tab_content").html(data);
+				  }
+				});
+			
+				return false;
+			});
+			
+			$("#view_procedures").click(function(){
+				var requestUrl = $(this).attr("href");
+							
+				$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+				  	$("#tab_content").html(data);
+				  }
+				});
+			
+				return false;
+			});
+			
 		});
 	</script>
-
-<div class="yui-content">
-	<div id="control_details">
-		<form action="index.php?menuaction=controller.uicontrol.save_control_details" method="post">
-			<input type="hidden" name="control_id" value="{$control_id}" />	
+		
+	<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 	
-			<dl class="proplist-col">
+	<div id="edit_check_list_menu" class="hor_menu">
+		<a id="view_check_list">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+			</xsl:attribute>
+			Vis info om sjekkliste
+		</a>
+		
+		<a id="view_control_details" class="active">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_info</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+			</xsl:attribute>
+			Vis info om kontroll
+		</a>
+	</div>
+				
+	<div class="tab_menu">
+		<a id="view_control_details" class="active">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
+			Kontrolldetaljer
+		</a>
+		<a id="view_control_items">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
+			Kontrollpunkter
+		</a>
+		<a id="view_procedures">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
+			Prosedyrer
+		</a>
+	</div>
+		
+	<div id="tab_content" class="content_wrp">
+	
+	<fieldset>
+		<dl class="proplist-col">
 				<dt>
 					<label>Kontrollområde</label>
 				</dt>
@@ -183,30 +261,8 @@
 				</xsl:choose>
 				</dd>
 			</dl>
-			
-			<div class="form-buttons">
-				<xsl:choose>
-					<xsl:when test="editable">
-						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input type="submit" name="save_control" value="{$lang_save}" title = "{$lang_save}" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-						<input type="submit" name="edit_control" value="{$lang_edit}" title = "{$lang_edit}" />
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-		</form>					
+	</fieldset>
+
 	</div>
 </div>
 </xsl:template>
-
-<xsl:template match="options">
-	<option value="{id}">
-		<xsl:if test="selected != 0">
-			<xsl:attribute name="selected" value="selected" />
-		</xsl:if>
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	</option>
-</xsl:template>
-

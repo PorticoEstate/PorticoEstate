@@ -1027,7 +1027,7 @@ ul.check_items h5{
 .tab_menu {
     overflow: hidden;
 }
-.tab_menu a {
+.tab_menu a, .hor_menu a {
     background: none repeat scroll 0 0 #FAFAFA;
     border-left: 1px solid #A3A3A3;
     border-right: 1px solid #A3A3A3;
@@ -1044,12 +1044,18 @@ ul.check_items h5{
     text-decoration: none;
     width: 150px;
 }
-.tab_menu a.active {
+.hor_menu a {
+	border-bottom: 1px solid #A3A3A3;
+}
+.tab_menu a.active, .hor_menu a.active {
 	background: #2647A0;
 	border-left: 1px solid #173073;
 	border-right: 1px solid #173073;
 	border-top: 1px solid #173073;
 	color: #FFF;
+}
+.hor_menu a.active {
+	border-bottom: 1px solid #173073;
 }
 .tab_item {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -1149,14 +1155,14 @@ ul#icon_color_map span{
 }
 #error_message_menu a {
     text-align: center;
-    width: 130px;
+    width: 140px;
     margin: 2px 0;  
     display:block;
 }
 
 #view_errors {
 	float:left;
-    margin: 20px 0 0 20px;   
+    margin: 20px 0 0 10px;   
 }
 #register_errors {
 	display:none;
@@ -1166,4 +1172,20 @@ ul#icon_color_map span{
 
 a#view_errors_measurements{
 	display:none;
+}
+#edit_check_list_menu a{
+		float:left;
+		width: 150px;
+		text-align:center;
+}
+#edit_check_list_menu{
+		height:30px;
+		margin:0 0 20px 0;
+}
+.content_wrp {
+ 	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DDDDDD;
+    margin-bottom: 20px;
+    padding: 15px;
+    width: 800px;
 }

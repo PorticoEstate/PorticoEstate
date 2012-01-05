@@ -2,7 +2,7 @@
 <script type="text/javascript">
 function isOK()
 {
-	if(document.getElementById('activity_id').value == null || document.getElementById('activity_id').value == '')
+	if(document.getElementById('activity_id').value == null || document.getElementById('activity_id').value == '' || document.getElementById('activity_id').value == 0)
 	{
 		alert("Du må velge en aktivitet som skal endres!");
 		return false;
@@ -12,27 +12,64 @@ function isOK()
 		return true;
 	}
 }
+function get_activities()
+{
+	var org_id = document.getElementById('organization_id').value;
+	var div_select = document.getElementById('activity_select');
+
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_activities&amp;phpgw_return_as=json&amp;orgid=" + org_id;
+
+var divcontent_start = "<select name=\"activity_id\" id=\"activity_id\">";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_select.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+
+YAHOO.util.Event.onDOMReady(function()
+{
+	get_activities();
+});
 </script>
 <div class="yui-content" style="width: 100%;">
 	<h1><?php echo lang('edit_activity');?></h1>
 	<form action="#" method="post">
 		<dl class="proplist-col" style="width: 200%">
 			<dt>
-				<?php echo lang('activity_edit_helptext');?><br/><br/>
+				<?php echo lang('activity_org_helptext_step1')?><br/><br/>
 			</dt>
 			<dd>
 			<?php if($message){?>
 			<?php echo $message;?>
 			<?php }else{?>
-				<select name="activity_id" id="activity_id">
-					<option value="">Ingen aktivitet valgt</option>
+				<select name="organization_id" id="organization_id" onchange="javascript: get_activities();">
+					<option value="">Ingen organisasjon valgt</option>
 					<?php
-					foreach($activities as $activity)
+					foreach($organizations as $organization)
 					{
-						echo "<option value=\"{$activity->get_id()}\">".$activity->get_title()."</option>";
+						echo "<option value=\"{$organization->get_id()}\">".$organization->get_name()."</option>";
 					}
 					?>
 				</select>
+				<br/><br/>
+			</dd>
+			<dt>
+				<?php echo lang('activity_edit_helptext');?><br/><br/>
+			</dt>
+			<dd>
+				<div id="activity_select">
+					<select name="activity_id" id="activity_id">
+						<option value="0">Ingen aktivitet valgt</option>
+					</select>
+				</div>
 				<br/><br/>
 			<?php }?>
 			</dd>

@@ -296,7 +296,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl(array('control_tabs', 'control'), $data);
+			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
 			
 			$this->use_yui_editor(array('description'));
 		}
@@ -332,7 +332,7 @@
 			$control = $this->so->get_single($control_id);	
 									
 			// Fetches saved control groups from db
-			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control_id($control_id);
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 			$saved_control_group_ids = array();
 			
 			foreach($saved_control_groups as $control_group){
@@ -383,7 +383,7 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::render_template_xsl(array('control_tabs', 'control_groups'), $data);
+			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
 		
 		public function save_control_groups(){
@@ -485,7 +485,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'choose_control_items'), $data); 
+			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
 		}
 		
 		// Saves chosen control items through receiving a comma separated list of control tags (1:2, control_group_id:control_item_id) 
@@ -543,7 +543,7 @@
 			
 			$control_group_ids = array();
 			
-			//Putting control_group_ids in array control_group_ids
+			// Putting control_group_ids in array control_group_ids
 			foreach ($control_tag_ids as $control_tag)
 			{	
 				// Fetching group id from tag	
@@ -602,8 +602,9 @@
 			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl(array('control_tabs', 'sort_check_list'), $data);
+			self::render_template_xsl(array('control/control_tabs', 'control_item/sort_check_list'), $data);
 		}
+		
 		
 		public function generate_check_lists_for_control(){
 			$control_id = phpgw::get_var('control_id');
@@ -686,7 +687,7 @@
 				'date_format' 		=> $date_format
 			);
 			
-			self::render_template_xsl(array('control_tabs', 'tab_view_check_lists'), $data);
+			self::render_template_xsl(array('control/control_tabs', 'tab_view_check_lists'), $data);
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 		}
 			

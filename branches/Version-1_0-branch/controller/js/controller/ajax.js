@@ -223,7 +223,7 @@ $(document).ready(function(){
 		    				  
 		    				// Changes text on save button back to original
 		    				window.setTimeout(function() {
-		    				  $(submitBnt).val('Lagre sjekkpunkt');
+		    				  $(submitBnt).val('Oppdater håndtert avvik');
 		    				  $(submitBnt).addClass("not_active");
 		    					 }, 1000);
 					  }
@@ -289,6 +289,14 @@ $(document).ready(function(){
 	
 	// file: edit_check_list.xsl
 	$("#frm_update_check_list").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+
+	// file: add_check_list_for_location.xsl
+	$("#frm_add_check_list").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");

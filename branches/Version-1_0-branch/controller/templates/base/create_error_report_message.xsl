@@ -75,7 +75,7 @@
 					
 					  <div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input class="btn" type="submit" name="save_control" value="{$lang_save}" title="{$lang_save}" />
+						<input class="btn" type="submit" name="save_control" value="Registrer avviksmelding" title="{$lang_save}" />
 					  </div>
 				</form>			
 				</xsl:when>

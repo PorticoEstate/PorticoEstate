@@ -73,10 +73,23 @@
 		
 		<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 		
-		<div class="tab_menu"><a class="active">Detaljer</a></div>
-		<fieldset class="check_list_details">
+		<div id="edit_check_list_menu" class="hor_menu">
+			<a class="active" id="view_check_list" href="#view_check_list">Vis info om sjekkliste</a>
+			<a id="view_control_details">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_info</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Vis info om kontroll
+			</a>
+		</div>
 		
-		<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
+		
+		<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
+		
+		<fieldset class="check_list_details">
+			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
 				
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input type="hidden" name="check_list_id" value="{$check_list_id}" />
@@ -160,7 +173,7 @@
 				<xsl:attribute name="href">
 					<xsl:text>#register_errors</xsl:text>
 				</xsl:attribute>
-				Registrer avvik/måling
+				Registrer sak/måling
 			</a>
 			<a class="btn">
 				<xsl:attribute name="id">
@@ -177,12 +190,12 @@
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>
-				Send avviksmelding
+				Registrer avviksmelding
 			</a>
 		</div>
 		
 		<div id="register_errors">
-			<div class="tab_menu"><a class="active">Registrer avvik/måling</a></div>
+			<div class="tab_menu"><a class="active">Registrer sak/måling</a></div>
 					
 			<div class="tab_item active">
 			
@@ -262,8 +275,8 @@
 		<div id="view_errors">
 		
 		<div class="tab_menu">
-			<a class="active" href="#view_open_errors">Vis åpne avvik</a>
-			<a href="#view_handled_errors">Vis håndterte avvik</a>
+			<a class="active" href="#view_open_errors">Vis åpne saker</a>
+			<a href="#view_handled_errors">Vis lukkede saker</a>
 			<a href="#view_measurements">Vis målinger</a>
 		</div>	
 		
@@ -340,12 +353,12 @@
 										       <select name="status">
 										       		<xsl:choose>
 										       			<xsl:when test="status = 0">
-										       				<option value="0" SELECTED="SELECTED">Feil på sjekkpunkt</option>
-										       				<option value="1">Feil fikset</option>
+										       				<option value="0" SELECTED="SELECTED">Avvik er åpent</option>
+										       				<option value="1">Avvik er håndtert</option>
 										       			</xsl:when>
 										       			<xsl:when test="status = 1">
-										       				<option value="0">Feil på sjekkpunkt</option>
-										       				<option value="1" SELECTED="SELECTED">Feil fikset</option>
+										       				<option value="0">Avvik er åpent</option>
+										       				<option value="1" SELECTED="SELECTED">Avvik er lukket</option>
 										       			</xsl:when>
 										       		</xsl:choose>
 											   </select>

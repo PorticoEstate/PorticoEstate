@@ -78,6 +78,7 @@
 			$district_id	= phpgw::get_var('district_id', 'int');
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$status_id		= phpgw::get_var('status_id');
+			$degree_id		= phpgw::get_var('degree_id', 'int');
 			$allrows		= phpgw::get_var('allrows', 'bool');
 			$this->p_num	= phpgw::get_var('p_num');
 
@@ -121,6 +122,10 @@
 			if(isset($_POST['status_id']) || isset($_GET['status_id']))
 			{
 				$this->status_id = $status_id;
+			}
+			if(isset($_POST['degree_id']) || isset($_GET['degree_id']))
+			{
+				$this->degree_id = $degree_id;
 			}
 			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
 			{
@@ -168,6 +173,7 @@
 			$this->cat_id			= $data['cat_id'];
 			$this->property_cat_id 	= $data['property_cat_id'];
 			$this->status_id		= $data['status_id'];
+			$this->degree_id		= $data['degree_id'];
 			$this->building_part	= $data['building_part'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
@@ -410,7 +416,8 @@
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
-				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part));
+				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
+				'degree_id' => $this->degree_id));
 
 			$this->total_records	= $this->so->total_records;
 			$this->sum_budget		= $this->so->sum_budget;
@@ -678,5 +685,10 @@
 		function delete($request_id)
 		{
 			$this->so->delete($request_id);
+		}
+
+		public function get_user_list()
+		{
+			return $this->so->get_user_list();
 		}
 	}
