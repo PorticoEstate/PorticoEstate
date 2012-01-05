@@ -173,7 +173,7 @@
 				<xsl:attribute name="href">
 					<xsl:text>#register_errors</xsl:text>
 				</xsl:attribute>
-				Registrer avvik/måling
+				Registrer sak/måling
 			</a>
 			<a class="btn">
 				<xsl:attribute name="id">
