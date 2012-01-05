@@ -267,16 +267,28 @@
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			$control_items_array = $this->so_control_item->get_control_items_by_control_id($control_id, "array");
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			
+			$saved_groups_with_items_array = array();
+			
+			//Populating array with saved control items for each group
+			foreach ($control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group->get_id());
+				
+				$control_item = $this->so_control_item->get_single($control_item_id);
+				
+				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+			}
 			
 			$data = array
 			(
-				'control_items_array'	=> $control_items_array
+				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
 			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control_item/sort_control_items'));
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control_item/view_control_items'));
            
             $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
             
@@ -320,9 +332,9 @@
 		public function view_control_items_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
+			
 			$control = $this->so_control->get_single($control_id);
-
-			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control_id( $control_id );
+			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control( $control_id );
 
 			$saved_groups_with_items_array = array();
 

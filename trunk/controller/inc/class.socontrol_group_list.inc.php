@@ -166,7 +166,7 @@
 			return isset($result);
 		}
 
-		function get_control_groups_by_control_id($control_id)
+		function get_control_groups_by_control($control_id, $returnType = "object")
 		{
 			$this->db->query("SELECT cg.*, cgl.order_nr FROM controller_control_group_list cgl, controller_control_group cg WHERE cgl.control_id=$control_id AND cgl.control_group_id=cg.id ORDER BY cgl.order_nr", __LINE__, __FILE__);
 
@@ -180,7 +180,10 @@
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
 
-				$control_group_list[] = $control_group;
+				if($returnType == "array")
+					$control_group_list[] = $control_group->toArray();
+				else	
+					$control_group_list[] = $control_group;
 			}
 
 			return $control_group_list;

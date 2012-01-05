@@ -31,6 +31,7 @@
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.soprocedure');
 	phpgw::import_class('controller.socontrol_area');
+	phpgw::import_class('controller.socontrol');
 
 	include_class('controller', 'procedure', 'inc/model/');
 
@@ -38,15 +39,18 @@
 	{
 		private $so;
 		private $so_control_area;
+		private $so_control;
+		private $so_control_group_list;
 
 		public $public_functions = array
 		(
-			'index'				=>	true,
-			'query'				=>	true,
-			'edit'				=>	true,
-			'view'				=>	true,
-			'add'				=>	true,
-			'get_procedures'	=>	true
+			'index'							=>	true,
+			'query'							=>	true,
+			'edit'							=>	true,
+			'view'							=>	true,
+			'add'							=>	true,
+			'get_procedures'				=>	true,
+			'view_procedures_for_control'	=>	true
 		);
 
 		public function __construct()
@@ -55,6 +59,9 @@
 
 			$this->so = CreateObject('controller.soprocedure');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
+			$this->so_control = CreateObject('controller.socontrol');
+			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
+			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			//$this->bo = CreateObject('property.boevent',true);
 		}
@@ -433,6 +440,53 @@
 			}
 		}
 
+		public function view_procedures_for_control(){
+				$control_id = phpgw::get_var('control_id');
+				
+				$control = $this->so_control->get_single($control_id);
+				
+				$control_procedure = $this->so->get_single( $control->get_procedure_id() );
+				
+				$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			
+				$group_procedures_array = array();
+				
+				foreach ($control_groups as $control_group)
+				{	
+					$group_procedure = $this->so->get_single( $control_group->get_procedure_id() );
+					$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+				}
+				
+				$data = array
+				(
+					'control_procedure'			=> $control_procedure->toArray(),
+					'group_procedures_array'	=> $group_procedures_array
+				);
+				
+				$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+				
+	            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/procedure/view_procedures_for_control'));
+	           
+	            $xslttemplate->set_var('phpgw',array('view_procedures_for_control' => $data));
+	            
+	            $xslttemplate->xsl_parse();
+		        $xslttemplate->xml_parse();
+		
+		        $xml = new DOMDocument;
+		        $xml->loadXML($xslttemplate->xmldata);
+	
+		        $xsl = new DOMDocument;
+		        $xsl->loadXML($xslttemplate->xsldata);
+	
+		        // Configure the transformer
+		        $proc = new XSLTProcessor;
+		        $proc->importStyleSheet($xsl); // attach the xsl rules
+		
+		        $html = $proc->transformToXML($xml);
+	
+		       	echo $html;
+		}
+		
 		public function query()
 		{
 			$params = array(
