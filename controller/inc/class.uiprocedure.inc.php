@@ -290,9 +290,18 @@
 				}
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
+				
+				$tabs = array( array(
+					'label' => lang('Procedure')
+
+				), array(
+					'label' => lang('View_documents_for_procedure')
+				));
 
 				$data = array
 				(
+					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+					'view'					=> "view_procedure",
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
 					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
@@ -308,7 +317,7 @@
 
 				$this->use_yui_editor(array('responsibility','description'));
 
-				self::render_template_xsl('procedure_item', $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
 			}
 		}
 
@@ -420,7 +429,7 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
 				//self::render_template_xsl('procedure_item', $data);
-				self::render_template_xsl(array('procedure_tabs', 'common', 'procedure_item'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
 			}
 		}
 
