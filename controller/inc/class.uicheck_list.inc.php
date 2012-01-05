@@ -56,7 +56,8 @@
 			'get_check_list_info'				=>	true,
 			'control_calendar_status_overview'	=>	true,
 			'add_check_item_to_list'			=>	true,
-			'update_check_list'					=>	true
+			'update_check_list'					=>	true,
+			'view_control_items'				=>	true
 		);
 
 		public function __construct()
@@ -261,6 +262,20 @@
 			self::render_template_xsl('control_calendar_status_overview', $data);
 		}
 
+		public function view_control_items(){
+			$control_id = phpgw::get_var('control_id');
+			
+			$control = $this->so_control->get_single($control_id);
+			
+			$control_items_array = $this->so_control_item->get_control_items_by_control_id($control_id);
+			
+			$data = array
+			(
+				'control_items_array'	=> $control_items_array
+			);
+			
+			self::render_template_xsl('view_control_items', $data);
+		}
 
 		public function view_check_lists_for_control()
 		{

@@ -128,16 +128,18 @@
 				$message_details .=  $check_item->get_comment() . "<br>";
 			}
 			
+			$location_id	= $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
+			
 			$ticket = array
 			(
 				'origin' 			=> $location_id,
-				'origin_id'			=> $location_item_id,
+				'origin_id'			=> $check_list_id, 
 				'location_code' 	=> $location_code,
 				'cat_id'			=> $message_cat_id,
 				'priority'			=> $priority, //valgfri (1-3)
 				'title'				=> $message_title,
 				'details'			=> $message_details,
-				'file_input_name'	=> 'file' // default, men valgfri
+				'file_input_name'	=> 'file' // navn på felt som inneholder fil
 			);
 			
 			$botts = CreateObject('property.botts',true);

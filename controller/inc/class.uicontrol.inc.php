@@ -543,7 +543,7 @@
 			
 			$control_group_ids = array();
 			
-			//Putting control_group_ids in array control_group_ids
+			// Putting control_group_ids in array control_group_ids
 			foreach ($control_tag_ids as $control_tag)
 			{	
 				// Fetching group id from tag	
@@ -604,6 +604,7 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control_tabs', 'sort_check_list'), $data);
 		}
+		
 		
 		public function generate_check_lists_for_control(){
 			$control_id = phpgw::get_var('control_id');
