@@ -338,7 +338,7 @@
 				$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
 				$GLOBALS['phpgw']->richtext->generate_script();
 
-				self::render_template_xsl('control_item', $data);
+				self::render_template_xsl('control_item/control_item', $data);
 			}
 		}
 
@@ -458,7 +458,7 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control item');
 
-				self::render_template_xsl('control_item', $data);
+				self::render_template_xsl('control_item/control_item', $data);
 			}
 		}
 

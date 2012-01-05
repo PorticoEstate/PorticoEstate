@@ -274,7 +274,7 @@
 				'control_items_array'	=> $control_items_array
 			);
 			
-			self::render_template_xsl('view_control_items', $data);
+			self::render_template_xsl('control_item/view_control_items', $data);
 		}
 
 		public function view_check_lists_for_control()
