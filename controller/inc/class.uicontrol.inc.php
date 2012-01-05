@@ -332,7 +332,7 @@
 			$control = $this->so->get_single($control_id);	
 									
 			// Fetches saved control groups from db
-			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control_id($control_id);
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 			$saved_control_group_ids = array();
 			
 			foreach($saved_control_groups as $control_group){

@@ -227,7 +227,7 @@
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
 						
-			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control_id( $control_id );
+			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control( $control_id );
 
 			$saved_groups_with_items_array = array();
 			

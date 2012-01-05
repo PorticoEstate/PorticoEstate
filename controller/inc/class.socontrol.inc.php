@@ -349,7 +349,6 @@
 			$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
