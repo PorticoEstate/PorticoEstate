@@ -308,7 +308,7 @@
 			return $results;
 		}
 
-		function get_control_items_by_control_id($control_id)
+		function get_control_items_by_control_id($control_id, $returnType = "object")
 		{
 			$results = array();
 
@@ -325,8 +325,10 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				$results[] = $control_item;
+				if($returnType == "array")
+					$results[] = $control_item->toArray();
 			}
+			
 			return $results;
 		}
 
