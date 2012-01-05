@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- $Id: control_group.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <!-- item  -->
 <xsl:template name="control_group" xmlns:php="http://php.net/xsl">
 <!-- <xsl:template match="data" xmlns:php="http://php.net/xsl">  -->

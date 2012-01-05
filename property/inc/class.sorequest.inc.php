@@ -202,7 +202,7 @@
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
 			$property_cat_id= isset($data['property_cat_id'])?$data['property_cat_id']:0;
-			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
+			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'';
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
 			$project_id		= isset($data['project_id'])?$data['project_id']:'';
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
@@ -212,6 +212,7 @@
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
 			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
+			$degree_id		= $data['degree_id'];
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -242,12 +243,13 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= false;
 
-			$cols.= ",max(fm_request_condition.degree) as condition_degree";
-			$cols_return[] 				= 'condition_degree';
+			$cols.= ",$entity_table.building_part";
+			$cols_return[] 				= 'building_part';
+			$cols_group[] 				= 'building_part';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'condition_degree';
-			$uicols['descr'][]			= lang('condition degree');
-			$uicols['statustext'][]		= lang('condition degree');
+			$uicols['name'][]			= 'building_part';
+			$uicols['descr'][]			= lang('building part');
+			$uicols['statustext'][]		= lang('building part');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
@@ -285,7 +287,7 @@
 			$cols_group[] 				= "title";
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'title';
-			$uicols['descr'][]			= lang('title');
+			$uicols['descr'][]			= lang('request description');
 			$uicols['statustext'][]		= lang('Request title');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
@@ -312,20 +314,19 @@
 				$uicols['sortable'][]		= false;
 			}
 
-
-			$cols.= ",$entity_table.building_part";
-			$cols_return[] 				= 'building_part';
-			$cols_group[] 				= 'building_part';
+			$cols.= ",max(fm_request_condition.degree) as condition_degree";
+			$cols_return[] 				= 'condition_degree';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'building_part';
-			$uicols['descr'][]			= lang('building part');
-			$uicols['statustext'][]		= lang('building part');
+			$uicols['name'][]			= 'condition_degree';
+			$uicols['descr'][]			= lang('condition degree');
+			$uicols['statustext'][]		= lang('condition degree');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
 			$uicols['formatter'][]		= '';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
+
 
 			$cols.= ",$entity_table.budget as budget";
 			$cols_return[] 				= 'budget';
@@ -356,20 +357,6 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
-			$cols.= ",$entity_table.coordinator";
-			$cols_return[] 				= 'coordinator';
-			$cols_group[]				= 'coordinator';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'coordinator';
-			$uicols['descr'][]			= lang('Coordinator');
-			$uicols['statustext'][]		= lang('Project coordinator');
-			$uicols['exchange'][]		= '';
-			$uicols['align'][]			= '';
-			$uicols['datatype'][]		= '';
-			$uicols['formatter'][]		= '';
-			$uicols['classname'][]		= '';
-			$uicols['sortable'][]		= false;
-
 
 			$cols.= ",$entity_table.score";
 			$cols_return[] 				= 'score';
@@ -385,16 +372,17 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
-
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
+			$_attrib = array();
 			while ($this->db->next_record())
 			{
-				$cols .= ",{$entity_table}." . $this->db->f('column_name');
+				$_column_name = $this->db->f('column_name');
+				$cols .= ",{$entity_table}.{$_column_name}";
 
-				$cols_return[] 				= $this->db->f('column_name');
-				$cols_group[]				= $this->db->f('column_name');
+				$cols_return[] 				= $_column_name;
+				$cols_group[]				= $_column_name;
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= $this->db->f('column_name');
+				$uicols['name'][]			= $_column_name;
 				$uicols['descr'][]			= $this->db->f('input_text',true);
 				$uicols['statustext'][]		= $this->db->f('statustext',true);
 				$uicols['exchange'][]		= '';
@@ -403,7 +391,24 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= false;
+
+				$_attrib[$_column_name] = $this->db->f('id');
 			}
+
+			$cols.= ",$entity_table.coordinator";
+			$cols_return[] 				= 'coordinator';
+			$cols_group[]				= 'coordinator';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'coordinator';
+			$uicols['descr'][]			= lang('Coordinator');
+			$uicols['statustext'][]		= lang('Project coordinator');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= false;
+
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
@@ -417,7 +422,6 @@
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 				'query'=>$query,'force_location'=>true, 'location_level' => $_location_level));
-			unset($_location_level);
 
 			$cols_group[] = "{$entity_table}.id";
 			$cols_group[] = 'fm_request_status.descr';
@@ -456,15 +460,36 @@
 				$where = 'AND';
 			}
 
-			if ($status_id)
+			if ($status_id && $status_id != 'all')
 			{
-				$filtermethod .= " $where fm_request.status='{$status_id}'";
+
+				if($status_id == 'open')
+				{
+					$_status_filter = array();
+					$this->db->query("SELECT * FROM fm_request_status WHERE delivered IS NULL AND closed IS NULL");
+					while($this->db->next_record())
+					{
+						$_status_filter[] = $this->db->f('id');
+					}
+					$filtermethod .= " $where fm_request.status IN ('" . implode("','", $_status_filter) . "')"; 
+				}
+				else
+				{
+					$filtermethod .= " $where fm_request.status='$status_id' ";
+				}
+				$where= 'AND';
+			}
+
+			if ($degree_id)
+			{
+				$degree_id = (int)$degree_id -1;
+				$filtermethod .= " $where fm_request_condition.degree = {$degree_id}";
 				$where = 'AND';
 			}
 
 			if ($building_part)
 			{
-				$filtermethod .= " $where fm_request.building_part='{$building_part}'";
+				$filtermethod .= " $where fm_request.building_part {$this->like} '{$building_part}%'";
 				$where = 'AND';
 			}
 
@@ -506,7 +531,12 @@
 				else
 				{
 					$query = $this->db->db_addslashes($query);
-					$querymethod = " $where (fm_request.title $this->like '%$query%' or fm_request.address $this->like '%$query%' or fm_request.location_code $this->like '%$query%')";
+					$querymethod = " $where (fm_request.title {$this->like} '%$query%' OR fm_request.address {$this->like} '%$query%' OR fm_request.location_code {$this->like} '%$query%'";
+					for ($i=1;$i<=($_location_level);$i++)
+					{
+						$querymethod .= " OR fm_location{$i}.loc{$i}_name {$this->like} '%$query%'";
+					}
+					$querymethod .= ')';
 				}
 			}
 
@@ -566,28 +596,30 @@
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 			}
-
+			$_datatype = array();
+			foreach($this->uicols['name'] as $key => $_name)
+			{
+				$_datatype[$_name] =  $this->uicols['datatype'][$key];
+			}
+			$dataset = array();
 			$j=0;
-			$request_list = array();
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<count($cols_return);$i++)
+				foreach($cols_return as $key => $field)
 				{
-					$request_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i], true);
+					$dataset[$j][$field] = array
+						(
+							'value'		=> $this->db->f($field),
+							'datatype'	=> $_datatype[$field],
+							'attrib_id'	=> $_attrib[$field]
+						);
 				}
-
-				$location_code=	$this->db->f('location_code');
-				$location = explode('-',$location_code);
-				for ($m=0;$m<count($location);$m++)
-				{
-					$request_list[$j]['loc' . ($m+1)] = $location[$m];
-					$request_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$j++;
+				$j++;				
 			}
-			//_debug_array($request_list);
-			return $request_list;
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
 		}
 
 		function read_single($request_id, $values = array())
@@ -1102,5 +1134,36 @@
 		//	$this->db->query("DELETE FROM fm_origin WHERE destination = 'request' AND destination_id='" . $request_id . "'",__LINE__,__FILE__);
 			$this->interlink->delete_at_target('property', '.project.request', $request_id, $this->db);
 			$this->db->transaction_commit();
+		}
+
+		public function get_user_list()
+		{
+			$values = array();
+			$users = $GLOBALS['phpgw']->accounts->get_list('accounts', $start=-1, $sort='ASC', $order='account_lastname', $query,$offset=-1);
+			$sql = 'SELECT DISTINCT coordinator FROM fm_request';
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$account_lastname = array();
+			while($this->db->next_record())
+			{
+				$user_id	= $this->db->f('coordinator');
+				if(isset($users[$user_id]))
+				{
+					$name	= $users[$user_id]->__toString();
+					$values[] = array
+					(
+						'user_id' 	=> $user_id,
+						'name'		=> $name
+					);
+					$account_lastname[]  = $name;
+				}
+			}
+
+			if($values)
+			{
+				array_multisort($account_lastname, SORT_ASC, $values);
+			}
+
+			return $values;
 		}
 	}

@@ -434,7 +434,7 @@ JS;
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " location_id = {$location_id}";
 			$contacts = CreateObject('phpgwapi.contacts');
-			//_debug_array($values);
+//			_debug_array($values);die();
 			$location = array();
 			$ret = array();
 			$j=0;
@@ -447,7 +447,7 @@ JS;
 						$location = explode('-',$data['value']);
 					}
 
-					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'])
+					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'] && $data['attrib_id'])
 					{
 						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .$data['attrib_id']. "  AND id=" . $data['value'];
 						$this->_db->query($sql);

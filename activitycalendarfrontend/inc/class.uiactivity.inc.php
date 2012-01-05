@@ -27,7 +27,8 @@
 			'index'			=>	true,
 			'get_organization_groups'	=>	true,
 			'get_address_search'	=> true,
-			'edit_organization_values' => true
+			'edit_organization_values' => true,
+			'get_organization_activities' => true
 		);
 		
 		public function __construct()
@@ -427,12 +428,14 @@
 			{
 				$activity_id = phpgw::get_var('activity_id');
 				$activity = $this->so_activity->get_single($activity_id);
+				$org = $this->so_organization->get_single($activity->get_organization_id());
+				
 				
 				//store update-request
 				$activity->set_state(2);
 				if($this->so_activity->store($activity))
 				{
-					$message = lang('update_request_sent', $activity->get_title());
+					$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,
@@ -448,9 +451,11 @@
 				{
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
+					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, null);
 					return $this->render('activity_edit_step_1.php', array
 						(
-							'activities' => $activities
+							'activities' => $activities,
+							'organizations' => $organizations
 						)	
 					);
 				}
@@ -762,5 +767,31 @@
 					);
 				}
 			}
+		}
+		
+		public function get_organization_activities()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			
+			$org_id = phpgw::get_var('orgid');
+			$returnHTML = "<option value='0'>Ingen aktivitet valgt</option>";
+			if($org_id)
+			{
+				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3, 'activity_org' => $org_id));
+				foreach ($activities as $act) {
+					if(isset($act))
+					{
+						//$res_g = $group->serialize();
+						$activity_html[] = "<option value='" . $act->get_id() . "'>" . $act->get_title() . "</option>";
+					}
+				}
+			    $html = implode(' ' , $activity_html);
+			    $returnHTML = $returnHTML . ' ' . $html;
+			}
+			
+			
+			return $returnHTML;
 		}
 	}

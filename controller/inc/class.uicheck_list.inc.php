@@ -56,7 +56,9 @@
 			'get_check_list_info'				=>	true,
 			'control_calendar_status_overview'	=>	true,
 			'add_check_item_to_list'			=>	true,
-			'update_check_list'					=>	true
+			'update_check_list'					=>	true,
+			'view_control_items'				=>	true,
+			'view_control_details'				=>	true
 		);
 
 		public function __construct()
@@ -261,6 +263,87 @@
 			self::render_template_xsl('control_calendar_status_overview', $data);
 		}
 
+		public function view_control_items(){
+			$control_id = phpgw::get_var('control_id');
+			
+			$control = $this->so_control->get_single($control_id);
+			
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			
+			$saved_groups_with_items_array = array();
+			
+			//Populating array with saved control items for each group
+			foreach ($control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group->get_id());
+				
+				$control_item = $this->so_control_item->get_single($control_item_id);
+				
+				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+			}
+			
+			$data = array
+			(
+				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control_item/view_control_items'));
+           
+            $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
+		
+		public function view_control_details(){
+			$control_id = phpgw::get_var('control_id');
+			
+			$control = $this->so_control->get_single($control_id);
+			
+			$data = array
+			(
+				'control'	=> $control->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control/view_control_details'));
+           
+            $xslttemplate->set_var('phpgw',array('view_control_details' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
 
 		public function view_check_lists_for_control()
 		{
@@ -284,9 +367,9 @@
 		public function view_control_items_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
+			
 			$control = $this->so_control->get_single($control_id);
-
-			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control_id( $control_id );
+			$control_groups_array = $this->so_control_group_list->get_control_groups_by_control( $control_id );
 
 			$saved_groups_with_items_array = array();
 

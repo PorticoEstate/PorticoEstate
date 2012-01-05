@@ -1329,7 +1329,7 @@ request id	property	no	Anmodnings ID
 request start date	property	no	anmodning startdato
 request status	property	no	Behov::status
 request title	property	no	Tiltak tittel
-request description	property	no	Tilstand beskrivelse
+request description	property	no	Tilstandbeskrivelse
 requirement	property	no	Behov/pålegg
 resend workorder	property	no	Send ordre på nytt
 reserve	property	no	reserve

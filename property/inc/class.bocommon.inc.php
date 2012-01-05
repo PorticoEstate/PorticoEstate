@@ -1164,11 +1164,11 @@
 				}
 				$cols.= ",fm_location1.loc1_name";
 				$this->join = $this->socommon->join;
-				$joinmethod .= " $this->join  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
+				$joinmethod .= " {$this->join}  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
-				$joinmethod .= " $this->join  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
 				$paranthesis .='(';
-				$joinmethod .= " $this->join  fm_owner ON (fm_location1.owner_id = fm_owner.id))";
+				$joinmethod .= " {$this->join}  fm_owner ON (fm_location1.owner_id = fm_owner.id))";
 				$paranthesis .='(';
 			}
 			else
@@ -1177,10 +1177,26 @@
 				$no_address	= true;
 			}
 			$this->type_id	= $type_id;
-
-
+			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
+				if($_level > 1)
+				{
+					$joinmethod .= " {$this->join} fm_location{$_level}";
+					$paranthesis .='(';
+					$on = 'ON';
+					for ($k=($_level-1); $k>0; $k--)
+					{
+						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+						$on = 'AND';
+						if($k==1)
+						{
+							$joinmethod .= ")";
+						}
+					}
+				}
+				$_level ++;
+
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
 				$uicols['descr'][]			= $location_types[$i]['name'];
@@ -1192,7 +1208,7 @@
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= $i === 0;
 			}
-
+//_debug_array($joinmethod);die();
 			unset($soadmin_location);
 
 			for ($i=0; $i< $this->type_id; $i++)
@@ -1202,6 +1218,7 @@
 
 			$GLOBALS['phpgw']->config->read();
 			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
 			for ($i=1;$i<($type_id+1);$i++)
 			{
 				$cols_return[] 				= "loc{$i}_name";

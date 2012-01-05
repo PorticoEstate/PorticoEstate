@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- $Id: control_groups.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <xsl:template name="control_groups" xmlns:php="http://php.net/xsl">
 
 <div class="yui-content tab_content">
