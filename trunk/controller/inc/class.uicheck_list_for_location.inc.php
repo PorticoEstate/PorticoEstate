@@ -533,7 +533,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
-			self::render_template_xsl('view_control_info', $data);
+			self::render_template_xsl('check_list/view_control_info', $data);
 		}
 		
 		function get_timestamp_from_date( $date_string ){

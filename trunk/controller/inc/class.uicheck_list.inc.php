@@ -57,7 +57,8 @@
 			'control_calendar_status_overview'	=>	true,
 			'add_check_item_to_list'			=>	true,
 			'update_check_list'					=>	true,
-			'view_control_items'				=>	true
+			'view_control_items'				=>	true,
+			'view_control_details'				=>	true
 		);
 
 		public function __construct()
@@ -291,6 +292,40 @@
             $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control_item/view_control_items'));
            
             $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
+		
+		public function view_control_details(){
+			$control_id = phpgw::get_var('control_id');
+			
+			$control = $this->so_control->get_single($control_id);
+			
+			$data = array
+			(
+				'control'	=> $control->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control/view_control_details'));
+           
+            $xslttemplate->set_var('phpgw',array('view_control_details' => $data));
             
             $xslttemplate->xsl_parse();
 	        $xslttemplate->xml_parse();
