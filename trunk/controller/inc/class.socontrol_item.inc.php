@@ -266,7 +266,7 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function get_control_items(int $control_group_id)
+		function get_control_items($control_group_id)
 		{
 			$results = array();
 

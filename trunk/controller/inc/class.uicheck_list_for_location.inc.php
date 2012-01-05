@@ -52,15 +52,17 @@
 		private $so_check_list;
 		private $so_control_item;
 		private $so_check_item;
+		private $so_procedure;
 	
 		var $public_functions = array(
 										'index' => true,
-										'view_locations_for_control' => true,
-										'add_location_to_control' => true,
-										'add_check_list_for_location' => true,
-										'save_check_list_for_location' => true,
-										'edit_check_list_for_location' => true,
-										'create_error_report_message' => true
+										'view_locations_for_control' 	=> true,
+										'add_location_to_control' 		=> true,
+										'add_check_list_for_location' 	=> true,
+										'save_check_list_for_location' 	=> true,
+										'edit_check_list_for_location' 	=> true,
+										'create_error_report_message' 	=> true,
+										'view_control_info' 			=> true
 									);
 
 		function __construct()
@@ -74,6 +76,7 @@
 			$this->so_check_list		= CreateObject('controller.socheck_list');
 			$this->so_control_item		= CreateObject('controller.socontrol_item');
 			$this->so_check_item		= CreateObject('controller.socheck_item');
+			$this->so_procedure			= CreateObject('controller.soprocedure');
 			
 			$this->type_id				= $this->bo->type_id;
 			
@@ -365,7 +368,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
-			print_r($check_list);
+			
 			// Fetches with check items
 			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
 
@@ -484,6 +487,53 @@
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl('create_error_report_message', $data);
+		}
+		
+		public function view_control_info(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			$control = $this->so_control->get_single($check_list->get_control_id());
+			
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+			
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+
+			// Fetches prosedures that are related to first control area in list
+			$control_area_id = $control_areas_array2[1]['id'];
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$role_array = $this->so_control->get_roles();
+			
+			$location_code = $check_list->get_location_code();  
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'location_array'		=> $location_array,
+				'control'				=> $control->toArray(),
+				'check_list'			=> $check_list->toArray(),
+				'date_format' 			=> $date_format,
+				'control_areas_array2'	=> array('options' => $control_areas_array2),
+				'procedures_array'		=> $procedures_array,
+				'role_array'			=> $role_array
+			);
+
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			
+			self::render_template_xsl('view_control_info', $data);
 		}
 		
 		function get_timestamp_from_date( $date_string ){

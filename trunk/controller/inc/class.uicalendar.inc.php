@@ -107,6 +107,8 @@
 				$heading_array[$i] = "$i";	
 			}
 							
+			//print_r( $controls_calendar_array );
+			
 			$data = array
 			(		
 				'location_array'		  => $location_array,
