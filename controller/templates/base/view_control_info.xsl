@@ -49,7 +49,7 @@
 				  type: 'POST',
 				  url: requestUrl,
 				  success: function(data) {
-					  $("#tab_content").replaceWith(data);
+				  	$("#tab_content").html(data);
 				  }
 				});
 			
@@ -89,7 +89,6 @@
 					<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
 					<xsl:text>&amp;control_id=</xsl:text>
 					<xsl:value-of select="control/id"/>
-									
 				</xsl:attribute>
 			Kontrollpunkter
 		</a>
