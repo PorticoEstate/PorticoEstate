@@ -1177,32 +1177,25 @@
 				$no_address	= true;
 			}
 			$this->type_id	= $type_id;
-
 			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
 				if($_level > 1)
 				{
-					for ($j = 2; $j < ($_level +1); $j++)
+					$joinmethod .= " {$this->join} fm_location{$_level}";
+					$paranthesis .='(';
+					$on = 'ON';
+					for ($k=($_level-1); $k>0; $k--)
 					{
-						$joinmethod .= " {$this->join} fm_location{$j}";
-
-						$paranthesis .='(';
-
-						$on = 'ON';
-						for ($k=($j-1); $k>0; $k--)
+						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+						$on = 'AND';
+						if($k==1)
 						{
-							$joinmethod .= " $on (fm_location{$j}.loc{$k} = fm_location" . ($j-1) . ".loc{$k})";
-							$on = 'AND';
-							if($k==1)
-							{
-								$joinmethod .= ")";
-							}
+							$joinmethod .= ")";
 						}
 					}
 				}
 				$_level ++;
-
 
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];

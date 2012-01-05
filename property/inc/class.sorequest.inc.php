@@ -372,16 +372,17 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
-
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
+			$_attrib = array();
 			while ($this->db->next_record())
 			{
-				$cols .= ",{$entity_table}." . $this->db->f('column_name');
+				$_column_name = $this->db->f('column_name');
+				$cols .= ",{$entity_table}.{$_column_name}";
 
-				$cols_return[] 				= $this->db->f('column_name');
-				$cols_group[]				= $this->db->f('column_name');
+				$cols_return[] 				= $_column_name;
+				$cols_group[]				= $_column_name;
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= $this->db->f('column_name');
+				$uicols['name'][]			= $_column_name;
 				$uicols['descr'][]			= $this->db->f('input_text',true);
 				$uicols['statustext'][]		= $this->db->f('statustext',true);
 				$uicols['exchange'][]		= '';
@@ -390,6 +391,8 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= false;
+
+				$_attrib[$_column_name] = $this->db->f('id');
 			}
 
 			$cols.= ",$entity_table.coordinator";
@@ -593,28 +596,30 @@
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 			}
-
+			$_datatype = array();
+			foreach($this->uicols['name'] as $key => $_name)
+			{
+				$_datatype[$_name] =  $this->uicols['datatype'][$key];
+			}
+			$dataset = array();
 			$j=0;
-			$request_list = array();
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<count($cols_return);$i++)
+				foreach($cols_return as $key => $field)
 				{
-					$request_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i], true);
+					$dataset[$j][$field] = array
+						(
+							'value'		=> $this->db->f($field),
+							'datatype'	=> $_datatype[$field],
+							'attrib_id'	=> $_attrib[$field]
+						);
 				}
-
-				$location_code=	$this->db->f('location_code');
-				$location = explode('-',$location_code);
-				for ($m=0;$m<count($location);$m++)
-				{
-					$request_list[$j]['loc' . ($m+1)] = $location[$m];
-					$request_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$j++;
+				$j++;				
 			}
-			//_debug_array($request_list);
-			return $request_list;
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
 		}
 
 		function read_single($request_id, $values = array())
