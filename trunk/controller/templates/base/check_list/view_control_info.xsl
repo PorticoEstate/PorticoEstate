@@ -6,42 +6,21 @@
 		
 	<script>
 		$(function() {
-			$( "#planned_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy' 
-			});
-			$( "#completed_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy' 
-			});
-			$( "#deadline_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy' 
-			});
 			
-			$(".tab_menu a").click(function(){
-				var thisTabA = $(this);
-				var thisTabMenu = $(this).parent(".tab_menu");
-								
-				var showId = $(thisTabA).attr("href");
-				var hideId = $(thisTabMenu).find("a.active").attr("href");
+			$("#view_control_details").click(function(){
+				var requestUrl = $(this).attr("href");
 							
-				$(thisTabMenu).find("a").removeClass("active");
-				$(thisTabA).addClass('active');
-												
-				$(hideId).hide();
-				$(hideId).removeClass("active")
-				$(showId).fadeIn('10', function(){
-					$(showId).addClass('active');
-					
+				$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+				  	$("#tab_content").html(data);
+				  }
 				});
 			
 				return false;
 			});
-									
+			
 			$("#view_control_items").click(function(){
 				var requestUrl = $(this).attr("href");
 							
@@ -96,7 +75,14 @@
 	</div>
 				
 	<div class="tab_menu">
-		<a class="active">Kontrolldetaljer</a>
+		<a id="view_control_details" class="active">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
+			Kontrolldetaljer
+		</a>
 		<a id="view_control_items">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
