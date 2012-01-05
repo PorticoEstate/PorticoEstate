@@ -56,6 +56,20 @@
 				return false;
 			});
 			
+			$("#view_procedures").click(function(){
+				var requestUrl = $(this).attr("href");
+							
+				$.ajax({
+				  type: 'POST',
+				  url: requestUrl,
+				  success: function(data) {
+				  	$("#tab_content").html(data);
+				  }
+				});
+			
+				return false;
+			});
+			
 		});
 	</script>
 		
@@ -80,19 +94,25 @@
 			Vis info om kontroll
 		</a>
 	</div>
-		
-		
+				
 	<div class="tab_menu">
 		<a class="active">Kontrolldetaljer</a>
 		<a id="view_control_items">
 			<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
-					<xsl:text>&amp;control_id=</xsl:text>
-					<xsl:value-of select="control/id"/>
-				</xsl:attribute>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
 			Kontrollpunkter
 		</a>
-		<a id="view_procedure" href="#view_procedure">Prosedyre</a>
+		<a id="view_procedures">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+			</xsl:attribute>
+			Prosedyrer
+		</a>
 	</div>
 		
 	<div id="tab_content" class="content_wrp">
