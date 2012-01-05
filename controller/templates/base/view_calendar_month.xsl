@@ -67,8 +67,8 @@
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
-					<div class="date">Start dato</div>
-					<div class="date">Slutt dato</div>
+					<div class="date">Startdato</div>
+					<div class="date">Sluttdato</div>
 					<div class="frequency">Frekvenstype</div>
 					<div class="frequency">Frekvensintervall</div>
 				</li>

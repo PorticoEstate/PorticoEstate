@@ -23,6 +23,7 @@
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 	
+	<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
 	<fieldset class="check_list_details">
 		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list_for_location.save_check_list_for_location" method="post">
 					
@@ -79,9 +80,9 @@
 			    </div>
 				<div><label>Utstyr</label><input name="equipment_id" /></div>
 			</fieldset>
-			<div>
-				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-				<input type="submit" name="save" value="{$lang_save}" title = "{$lang_save}" />
+			<div class="form-buttons">
+				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
+				<input style="width: 170px;" class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
 			</div>
 		</form>
 	</fieldset>
