@@ -43,6 +43,7 @@
 		private $so_control_item;
 		private $so_check_list;
 		private $so_check_item;
+		private $so_procedure;
 
 		public $public_functions = array
 		(
@@ -72,6 +73,7 @@
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
+			$this->so_procedure = CreateObject('controller.soprocedure');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::check_list";
 		}
@@ -316,10 +318,33 @@
 			
 			$control = $this->so_control->get_single($control_id);
 			
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
+			$control_area_id = $control_areas_array2[1]['id'];
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$role_array = $this->so_control->get_roles();
+			
 			$data = array
 			(
-				'control'	=> $control->toArray()
+				'control'	=> $control->toArray(),
+				'procedures_array'			=> $procedures_array,
+				'role_array'				=> $role_array
 			);
+					
 			
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
 			

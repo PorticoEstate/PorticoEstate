@@ -2,7 +2,8 @@
 
 <xsl:template match="view_control_details">
 
-	<dl class="proplist-col">
+	<fieldset>
+		<dl class="proplist-col">
 		<dt>
 			<label>Kontrollområde</label>
 		</dt>
@@ -143,4 +144,6 @@
 		</xsl:choose>
 		</dd>
 	</dl>
+	</fieldset>
+	
 </xsl:template>
