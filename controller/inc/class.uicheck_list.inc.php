@@ -59,7 +59,8 @@
 			'add_check_item_to_list'			=>	true,
 			'update_check_list'					=>	true,
 			'view_control_items'				=>	true,
-			'view_control_details'				=>	true
+			'view_control_details'				=>	true,
+			'print_check_list'					=>	true
 		);
 
 		public function __construct()
@@ -266,18 +267,18 @@
 		}
 
 		public function view_control_items(){
-			$control_id = phpgw::get_var('control_id');
-			
-			$control = $this->so_control->get_single($control_id);
-			
-			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single($check_list_id);
+						
+			$control = $this->so_control->get_single($check_list->get_control_id());
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
 			
 			$saved_groups_with_items_array = array();
 			
 			//Populating array with saved control items for each group
 			foreach ($control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group->get_id());
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control->get_id(), $control_group->get_id());
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
@@ -286,13 +287,14 @@
 			
 			$data = array
 			(
-				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
+				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
+				'check_list'					=> $check_list->toArray()
 			);
 			
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
 			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control_item/view_control_items'));
-           
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_control_items'));
+                       
             $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
             
             $xslttemplate->xsl_parse();
@@ -369,7 +371,56 @@
 
 	       	echo $html;
 		}
+		
+		public function print_check_list(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			$control = $this->so_control->get_single($check_list->get_control_id());
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+			
+			$saved_groups_with_items_array = array();
+			
+			//Populating array with saved control items for each group
+			foreach ($control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control->get_id(), $control_group->get_id());
+				
+				$control_item = $this->so_control_item->get_single($control_item_id);
+				
+				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+			}
+			
+			$data = array
+			(
+				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
+				'check_list'					=> $check_list->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/print_check_list'));
+                       
+            $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
 
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+	
+	        $html = $proc->transformToXML($xml);
+			
+	        echo $html; 
+		}
+				
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('id');

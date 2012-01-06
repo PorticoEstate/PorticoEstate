@@ -26,19 +26,7 @@
 						</xsl:variable>
 														
 			 			<li class="list_item">
-			 				<span class="drag">
-			 					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
-			 				</span>
-			 				<a class="delete">
-								<xsl:attribute name="href">
-									<xsl:text>index.php?menuaction=controller.uicontrol_item.delete_item_list</xsl:text>
-									<xsl:text>&amp;control_id=</xsl:text>
-									<xsl:value-of select="//control_id"/>
-									<xsl:text>&amp;control_item_id=</xsl:text>
-									<xsl:value-of select="id"/>
-								</xsl:attribute>
-								<span>x</span>
-							</a>
+			 				<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
 			 			</li>
 					</xsl:for-each>
 				</ul>
@@ -46,13 +34,41 @@
 		</li>
 	</xsl:for-each>
 </ul>
-<a style="margin-top:20px;" id="print_control_items" class="btn" target="_blank">
-	<xsl:attribute name="href">
-		<xsl:text>index.php?menuaction=controller.uicheck_list.print_check_list</xsl:text>
-		<xsl:text>&amp;check_list_id=</xsl:text>
-		<xsl:value-of select="check_list/id"/>
-	</xsl:attribute>
-	Skriv ut
-</a>
+
+<style>
+.btn{
+	background: none repeat scroll 0 0 #2647A0;
+    color: #FFFFFF;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #173073;
+    cursor: pointer;
+}
+
+ul{
+	list-style: none outside none;
+}
+
+li{
+	list-style: none outside none;
+}
+
+ul.groups li {
+    padding: 3px 0;
+}
+
+ul.groups li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+
+ul.groups h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+</style>
+<a style="margin:20px 0 0 40px;" href="#print" class="btn" onClick="window.print()">Skriv ut</a>
 
 </xsl:template>

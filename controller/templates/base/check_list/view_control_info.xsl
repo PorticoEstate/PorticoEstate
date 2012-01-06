@@ -101,8 +101,8 @@
 		<a id="view_control_items">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
-				<xsl:text>&amp;control_id=</xsl:text>
-				<xsl:value-of select="control/id"/>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
 			Kontrollpunkter
 		</a>
