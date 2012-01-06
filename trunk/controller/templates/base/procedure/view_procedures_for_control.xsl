@@ -4,6 +4,14 @@
 	<h3 style="margin:5px 0;">Prosedyre for kontroll</h3>
 	
 	<span>Tittel: </span><xsl:value-of select="control_procedure/title"/>
+	<a style="display:block;margin-top:5px;" id="print_control_items" target="_blank">
+		<xsl:attribute name="href">
+			<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
+			<xsl:text>&amp;procedure_id=</xsl:text>
+			<xsl:value-of select="control_procedure/id"/>
+		</xsl:attribute>
+		Skriv ut
+	</a>
 	
 	<h3 style="margin:15px 0 3px 0;">Prosedyrer for grupper</h3>
 	
@@ -13,7 +21,14 @@
 				<h4 style="margin:2px 0;"><xsl:value-of select="procedure/title"/></h4>
 				<div style="margin-left:10px;">
 					<span>Gruppe: </span><xsl:value-of select="control_group/group_name"/>
-					<span style="margin-left:10px;">Skriv ut</span>
+					<a style="display:block;margin-top:5px;" id="print_control_items" target="_blank">
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
+							<xsl:text>&amp;procedure_id=</xsl:text>
+							<xsl:value-of select="procedure/id"/>
+						</xsl:attribute>
+						Skriv ut
+					</a>
 				</div>	
 			</li>
 		</xsl:for-each>
