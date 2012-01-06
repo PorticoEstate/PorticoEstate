@@ -38,7 +38,6 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<select id="control_area" name="control_area">
-								<option value="0">Ingen valgt</option>
 								<xsl:apply-templates select="control_area/options"/>
 							</select>
 						</xsl:when>
