@@ -850,6 +850,44 @@ Returns mixed
 							</select>
 						</td>
 					</tr>
+					<xsl:choose>
+						<xsl:when test="check_paid = 1">
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'paid')"/>
+								</td>
+								<td>
+									<input type="checkbox" name="paid" value="True">
+										<xsl:if test="paid = 1">
+											<xsl:attribute name="checked" value="checked"/>
+										</xsl:if>
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'workorder')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="check_closed_orders = 1">
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'closed')"/>
+								</td>
+								<td>
+									<input type="checkbox" name="closed_orders" value="True">
+										<xsl:if test="closed_orders = 1">
+											<xsl:attribute name="checked" value="checked"/>
+										</xsl:if>
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'projekt')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
 					<tr>
 						<td>
 						</td>
