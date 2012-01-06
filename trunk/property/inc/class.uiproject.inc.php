@@ -1976,6 +1976,9 @@
 			$type 			= phpgw::get_var('type');
 			$user_id 		= phpgw::get_var('user_id', 'int');
 			$id_to_update	= phpgw::get_var('id_to_update');
+			$paid			= phpgw::get_var('paid', 'bool', 'POST');
+			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
+
 			
 			if($id_to_update)
 			{
@@ -1998,7 +2001,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
 			}
 
 			$total_records	= count($list);
@@ -2070,13 +2073,13 @@
 				),
 				array
 				(
-					'id' => 'project',
-					'name'	=> lang('project')
+					'id' => 'workorder',
+					'name'	=> lang('workorder')
 				),
 				array
 				(
-					'id' => 'workorder',
-					'name'	=> lang('workorder')
+					'id' => 'project',
+					'name'	=> lang('project')
 				)
 			);
 
@@ -2099,7 +2102,11 @@
 				'user_list'				=> array('options' => $user_list),
 				'start_date'			=> $start_date,
 				'end_date'				=> $end_date,
-				'total_records'			=> $total_records
+				'total_records'			=> $total_records,
+				'paid'					=> $paid,
+				'closed_orders'			=> $closed_orders,
+				'check_paid'			=> $type == 'workorder' ? 1 : 0,
+				'check_closed_orders'	=> $type == 'project' ? 1 : 0
 			);
 
 

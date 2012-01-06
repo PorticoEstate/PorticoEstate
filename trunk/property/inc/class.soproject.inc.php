@@ -1285,7 +1285,7 @@
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false)
 		{
 			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
 			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
@@ -1306,20 +1306,29 @@
 			switch($type)
 			{
 				case 'project':
+					if($closed_orders)
+					{
+						$filter .=  " AND fm_open_workorder.project_id IS NULL";
+					}
+
 					$table = 'fm_project';
 					$status_table = 'fm_project_status';
 					$title_field = 'fm_project.name as title';
 					$this->_update_status_project($execute, $status_new, $ids);
 					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
-					. " {$this->left_join} fm_workorder ON {$table}.id = fm_workorder.project_id "
-					. " {$this->join} fm_workorder_status ON  fm_workorder.status = fm_workorder_status.id "
-					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) AND fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL"
+					. " {$this->left_join} fm_open_workorder ON {$table}.id = fm_open_workorder.project_id "
+					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter})"
 					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date"
 					. " ORDER BY {$table}.id DESC";
 
 					break;
 				case 'workorder':
+					if($paid)
+					{
+						$filter .= " AND (act_mtrl_cost > 0 OR act_vendor_cost > 0)";
+					}
+					
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
