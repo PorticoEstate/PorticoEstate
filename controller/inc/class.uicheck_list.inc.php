@@ -60,7 +60,12 @@
 			'update_check_list'					=>	true,
 			'view_control_items'				=>	true,
 			'view_control_details'				=>	true,
-			'print_check_list'					=>	true
+			'print_check_list'					=>	true,
+			'register_errors'					=>	true,
+			'view_open_errors'					=>	true,
+			'view_closed_errors'				=>	true,
+			'view_measurements'					=>	true
+		
 		);
 
 		public function __construct()
@@ -419,6 +424,198 @@
 	        $html = $proc->transformToXML($xml);
 			
 	        echo $html; 
+		}
+		
+		
+		function register_errors(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			// Fetches with check items
+			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
+
+			// Fetches check list with check items
+			$handled_check_items = $this->so_check_item->get_check_items($check_list_id, 'handled', 'control_item_type_1');
+						
+			$location_code = $check_list->get_location_code();
+				
+			// Fetches all control items for check list
+			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control_id($check_list->get_control_id());
+			
+			// Fetches check items that registeres measurement
+			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
+						
+			// Puts ids for control items that is registered as open check item in an array   
+			$control_item_ids = array();
+			foreach($open_check_items as $check_item){
+				$control_item_ids[] = $check_item["control_item_id"];
+			}
+			
+			// Puts ids for control items that is registered as handled check item in an array   
+			foreach($handled_check_items as $check_item){
+				$control_item_ids[] = $check_item["control_item_id"];
+			}
+			
+			// Puts ids for control items that is registered check item measurements in an array   
+			foreach($measurement_check_items as $check_item){
+				$control_item_ids[] = $check_item["control_item_id"];
+			}
+			
+			// Puts control items not registered as check item in an array
+			$control_items_not_registered = array();
+			foreach($control_items_for_check_list as $control_item){
+				if( !in_array($control_item->get_id(), $control_item_ids) ){
+					$control_items_not_registered[] = $control_item->toArray();
+				}
+			}
+
+			$data = array
+			(
+				'control_items_not_registered' 	=> $control_items_not_registered,
+				'check_list' 	=> $check_list->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/register_errors'));
+           
+            $xslttemplate->set_var('phpgw',array('register_errors' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+	        
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$proc->registerPHPFunctions();
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
+		
+		function view_open_errors(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			// Fetches with check items
+			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
+
+			$data = array
+			(
+				'open_check_items' 				=> $open_check_items,
+				'check_list' 	=> $check_list->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_open_errors'));
+           
+            $xslttemplate->set_var('phpgw',array('view_open_errors' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+	        
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$proc->registerPHPFunctions();
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
+		
+		function view_closed_errors(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			// Fetches check list with check items
+			$handled_check_items = $this->so_check_item->get_check_items($check_list_id, 'handled', 'control_item_type_1');
+							
+			$data = array
+			(
+				'handled_check_items'	=> $handled_check_items,
+				'check_list' 	=> $check_list->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_closed_errors'));
+           
+            $xslttemplate->set_var('phpgw',array('view_closed_errors' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+	        
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$proc->registerPHPFunctions();
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
+		}
+		
+		function view_measurements(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+						
+			// Fetches check items that registeres measurement
+			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
+						
+			$data = array
+			(
+				'measurement_check_items' 		=> $measurement_check_items,
+				'check_list' 	=> $check_list->toArray()
+			);
+			
+			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
+			
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_measurements'));
+           
+            $xslttemplate->set_var('phpgw',array('view_measurements' => $data));
+            
+            $xslttemplate->xsl_parse();
+	        $xslttemplate->xml_parse();
+	
+	        $xml = new DOMDocument;
+	        $xml->loadXML($xslttemplate->xmldata);
+
+	        $xsl = new DOMDocument;
+	        $xsl->loadXML($xslttemplate->xsldata);
+	        
+	        // Configure the transformer
+	        $proc = new XSLTProcessor;
+	        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$proc->registerPHPFunctions();
+	
+	        $html = $proc->transformToXML($xml);
+
+	       	echo $html;
 		}
 				
 		public function view_check_lists_for_control()
