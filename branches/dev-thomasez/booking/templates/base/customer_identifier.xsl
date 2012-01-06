@@ -6,7 +6,6 @@
 		<dt>
 			<xsl:if test="not(normalize-space($label))"><xsl:attribute name="style">visibility:hidden</xsl:attribute></xsl:if>
 			<xsl:value-of select="php:function('lang', $label)" />
-			
 		</dt>
 		
 		<dd>

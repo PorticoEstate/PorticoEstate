@@ -29,7 +29,7 @@
 				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
                 if(intval($from_entity['customer_internal']) == 1)
                 {
-                    if (strlen($from_entity['customer_number']) == 5)    			
+                    if ((strlen($from_entity['customer_number']) == 4) || (strlen($from_entity['customer_number']) == 6))    			
                     {
                     	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_number'];
                     }
@@ -163,7 +163,7 @@
 					if (all_cust_fields[field_type].name == 'customer_ssn') {
 						all_cust_fields[field_type].value = '6 siffer (DDMMÅÅ) eller 11 siffer';
 					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
-						all_cust_fields[field_type].value = '9 siffer';
+						all_cust_fields[field_type].value = '4 eller 6 siffer';
 					} else if (all_cust_fields[field_type].name == 'customer_address') {
 						YAHOO.util.Dom.get('field_customer_street').value = 'Street';
 						YAHOO.util.Dom.get('field_customer_zipcode').value = 'Zipcode';
