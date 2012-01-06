@@ -42,10 +42,6 @@
 			 			</li>
 					</xsl:for-each>
 				</ul>
-				<div>
-					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_order')" /></xsl:variable>
-					<input type="submit" id="save_order" name="save_order" value="{$lang_save}" title = "{$lang_save}" style="opacity: 0.5;" disabled="disabled"/>
-				</div>
 			</form>
 		</li>
 	</xsl:for-each>

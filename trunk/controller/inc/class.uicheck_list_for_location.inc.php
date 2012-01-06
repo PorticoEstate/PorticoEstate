@@ -429,7 +429,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('edit_check_list', $data);
+			self::render_template_xsl('check_list/edit_check_list', $data);
 		}
 		
 		function save_check_list_for_location(){
