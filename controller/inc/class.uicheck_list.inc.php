@@ -344,11 +344,10 @@
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array
 			);
-					
 			
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
 			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/control/view_control_details'));
+            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_control_details'));
            
             $xslttemplate->set_var('phpgw',array('view_control_details' => $data));
             
@@ -360,10 +359,11 @@
 
 	        $xsl = new DOMDocument;
 	        $xsl->loadXML($xslttemplate->xsldata);
-
+	        
 	        // Configure the transformer
 	        $proc = new XSLTProcessor;
 	        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$proc->registerPHPFunctions();
 	
 	        $html = $proc->transformToXML($xml);
 
