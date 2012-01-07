@@ -140,17 +140,6 @@
 				<input style="width: 170px;" class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
 			</div>
 			</form>
-		</fieldset>
-		
-		<a style="display:none;" id="view_open_errors">
-			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
-			</xsl:attribute>
-		</a>
-	
-		<div id="load_view_content"></div>		
+		</fieldset>		
 </div>
 </xsl:template>
