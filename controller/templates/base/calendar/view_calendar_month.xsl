@@ -12,12 +12,12 @@
 		
 				
 		<ul id="icon_color_map">
-			<li><img height="13" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
-			<li><img height="13" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-			<li><img height="13" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-			<li><img height="13" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-			<li><img height="13" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
-			<li><img height="11" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+			<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
+			<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
+			<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
+			<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
+			<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+			<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 		</ul>
 				
 		<div style="float: left;margin-bottom: 10px;margin-left: 735px;margin-top: 30px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
@@ -188,12 +188,12 @@
 									</xsl:when>
 									<xsl:when test="status = 'control_canceled'">
 										<div>
-											<img height="12" src="controller/images/status_icon_red_cross.png" />
+											<img height="15" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_not_accomplished'">
 										<div>
-											<img height="12" src="controller/images/status_icon_red_cross.png" />
+											<img height="15" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
 									<xsl:otherwise>
