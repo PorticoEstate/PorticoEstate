@@ -49,7 +49,7 @@ $(document).ready(function(){
 	});
 	
 	// Delete a control item list
-	$(".delete").click(function(){
+	$(".delete").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).parent();
 		

@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 	/* =============================================================================== */
 	
-	$(".expand_list h4").click(function(){
+	$(".expand_list h4").live("click", function(){
 		if( $(this).parent().parent().hasClass('active')){
 			$(this).parent().find("ul").slideUp("slow");
 			$(this).find("img").attr("src", "controller/images/arrow_right.png");
@@ -18,7 +18,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$(".expand_all").click(function(){
+	$(".expand_all").live("click", function(){
 		$(this).addClass("focus");
 		$(".collapse_all").removeClass("focus");
 			
@@ -27,7 +27,7 @@ $(document).ready(function() {
 		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_down.png");
 	});
 	
-	$(".collapse_all").click(function(){
+	$(".collapse_all").live("click", function(){
 		$(this).addClass("focus");
 		$(".expand_all").removeClass("focus");
 		
@@ -38,7 +38,7 @@ $(document).ready(function() {
 	
 	/* =============================================================================== */
 	
-	$("ul.check_items.expand_list h4").click(function(){
+	$("ul.check_items.expand_list h4").live("click", function(){
 		if( $(this).parent().hasClass('expanded')){
 			$(this).parent().find(".check_item").slideUp("slow");
 			$(this).find("img").attr("src", "controller/images/arrow_right.png");
@@ -50,7 +50,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$(".expand_all").click(function(){
+	$(".expand_all").live("click", function(){
 		$(this).addClass("focus");
 		$(".collapse_all").removeClass("focus");
 			
@@ -59,7 +59,7 @@ $(document).ready(function() {
 		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_down.png");
 	});
 	
-	$(".collapse_all").click(function(){
+	$(".collapse_all").live("click", function(){
 		$(this).addClass("focus");
 		$(".expand_all").removeClass("focus");
 		

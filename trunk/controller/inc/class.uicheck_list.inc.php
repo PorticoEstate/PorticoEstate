@@ -511,8 +511,8 @@
 
 			$data = array
 			(
-				'open_check_items' 				=> $open_check_items,
-				'check_list' 	=> $check_list->toArray()
+				'open_check_items'	=> $open_check_items,
+				'check_list' 		=> $check_list->toArray()
 			);
 			
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');

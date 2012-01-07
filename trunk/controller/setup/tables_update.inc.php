@@ -318,3 +318,46 @@
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 	
+	$test[] = '0.1.15';
+	function controller_upgrade0_1_15()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_check_item', array(), 'message_ticket_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_check_item', array(), 'measurement');
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_check_item_case', array(
+				'fd' => array(
+					'id'            	=> array('type' => 'auto', 'nullable' => false),
+					'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'message_ticket_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+					'measurement' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.16';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
+	
+	$test[] = '0.1.16';
+	function controller_upgrade0_1_16()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','message_ticket_id',array(
+			'type' => 'int', 
+			'precision' => '8',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','measurement',array(
+			'type' => 'varchar', 
+			'precision' => '50',
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.17';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

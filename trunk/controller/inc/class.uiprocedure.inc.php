@@ -505,6 +505,10 @@
 				'group_procedures_array'	=> $group_procedures_array
 			);
 			
+			
+			self::render_template_xsl('procedure/view_procedures_for_control', array('view_procedures_for_control' => $data));
+			
+			/*
 			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
 			
             $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/procedure/view_procedures_for_control'));
@@ -527,6 +531,7 @@
 	        $html = $proc->transformToXML($xml);
 
 	       	echo $html;
+	       	*/
 		}
 		
 		public function print_procedure(){
