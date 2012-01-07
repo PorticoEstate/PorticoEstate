@@ -27,7 +27,13 @@ class calendar_builder {
 			// Inserts dates on behalf of repeat type and repeat interval
 			foreach($dates_array as $date){
 				
-				$status = "control_registered";
+				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+				
+				if($date < $todays_date){
+					$status = "control_canceled";
+				}else{
+					$status = "control_registered";
+				}
 				
 				if( $period_type == "view_months" )
 				{
