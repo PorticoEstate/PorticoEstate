@@ -1085,13 +1085,12 @@ fieldset.location_details div{
 	margin:10px 0;
 }
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
     float: right;
     margin-left: 500px;
     margin-right: 10px;
     padding: 5px;
-    margin-top: 40px;
+    margin-top: 55px;
 }
 ul#icon_color_map li {
     font-size: 12px;
