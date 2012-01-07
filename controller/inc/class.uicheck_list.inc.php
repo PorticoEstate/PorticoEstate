@@ -296,28 +296,7 @@
 				'check_list'					=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_control_items'));
-                       
-            $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/view_control_items', array('view_control_items' => $data));
 		}
 		
 		public function view_control_details(){
@@ -352,29 +331,7 @@
 				'role_array'				=> $role_array
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_control_details'));
-           
-            $xslttemplate->set_var('phpgw',array('view_control_details' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-	        
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-			$proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/view_control_details', array('view_control_details' => $data));
 		}
 		
 		public function print_check_list(){
@@ -402,30 +359,8 @@
 				'check_list'					=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/print_check_list'));
-                       
-            $xslttemplate->set_var('phpgw',array('view_control_items' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-	
-	        $html = $proc->transformToXML($xml);
-			
-	        echo $html; 
+			self::render_template_xsl('check_list/print_check_list', array('view_control_items' => $data));
 		}
-		
 		
 		function register_errors(){
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -476,29 +411,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/register_errors'));
-           
-            $xslttemplate->set_var('phpgw',array('register_errors' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-	        
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-			$proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/register_errors', array('register_errors' => $data));
 		}
 		
 		function view_open_errors(){
@@ -515,29 +428,7 @@
 				'check_list' 		=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_open_errors'));
-           
-            $xslttemplate->set_var('phpgw',array('view_open_errors' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-	        
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-			$proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/view_open_errors', array('view_open_errors' => $data));
 		}
 		
 		function view_closed_errors(){
@@ -554,29 +445,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_closed_errors'));
-           
-            $xslttemplate->set_var('phpgw',array('view_closed_errors' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-	        
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-			$proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/view_closed_errors', array('view_closed_errors' => $data));
 		}
 		
 		function view_measurements(){
@@ -593,29 +462,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/check_list/view_measurements'));
-           
-            $xslttemplate->set_var('phpgw',array('view_measurements' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-	        
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-			$proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('check_list/view_measurements', array('view_measurements' => $data));
 		}
 				
 		public function view_check_lists_for_control()

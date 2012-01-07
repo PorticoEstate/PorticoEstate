@@ -1091,6 +1091,7 @@ ul#icon_color_map {
     margin-left: 500px;
     margin-right: 10px;
     padding: 5px;
+    margin-top: 40px;
 }
 ul#icon_color_map li {
     font-size: 12px;
@@ -1167,11 +1168,12 @@ ul#icon_color_map span{
     float: right;
     margin-top: 20px;   
 }
-
-#edit_check_list_menu a{
-		float:left;
-		width: 150px;
-		text-align:center;
+#edit_check_list_menu a {
+    float: left;
+    height: 20px;
+    padding-top: 10px;
+    text-align: center;
+    width: 185px;
 }
 #edit_check_list_menu{
 		height:30px;

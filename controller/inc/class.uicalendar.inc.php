@@ -122,7 +122,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl('view_calendar_month', $data);
+			self::render_template_xsl('calendar/view_calendar_month', $data);
 		}
 		
 		public function view_calendar_for_year()
@@ -164,7 +164,7 @@
 				'year' 			  	  	  => $year
 			);
 			
-			self::render_template_xsl('view_calendar_year', $data);
+			self::render_template_xsl('calendar/view_calendar_year', $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');

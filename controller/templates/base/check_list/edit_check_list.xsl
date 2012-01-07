@@ -5,12 +5,6 @@
 <div id="main_content">
 		
 	<script>
-	
-		$(document).ready(function() {
-				var requestUrl = $("#view_open_errors").attr("href");
-			 	load_tab(requestUrl);
-			});
-			
 		$(function() {
 			$( "#planned_date" ).datepicker({ 
 				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
@@ -28,51 +22,29 @@
 				dateFormat: 'dd/mm-yy' 
 			});
 			
-			$("#register_errors").live("click", function(){
-				var requestUrl = $(this).attr("href");
-				load_tab(requestUrl);
-			
-				return false;
-			});
-						
-			$("#view_open_errors").live("click", function(){
-				var requestUrl = $(this).attr("href");
-				load_tab(requestUrl);
-			
-				return false;
-			});
-			
-			$("#view_closed_errors").live("click", function(){
-				var requestUrl = $(this).attr("href");
-				load_tab(requestUrl);
-			
-				return false;
-			});
-			
-			$("#view_measurements").live("click", function(){
-				var requestUrl = $(this).attr("href");
-				load_tab(requestUrl);
-			
-				return false;
-			});
 		});
-
-		function load_tab(requestUrl){
-			$.ajax({
-				  type: 'POST',
-				  url: requestUrl,
-				  success: function(data) {
-				  	$("#load_view_content").html(data);
-				  }
-			});
-		}
 	</script>
 		
 		<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 		
 		<div id="edit_check_list_menu" class="hor_menu">
-			<a class="active" id="view_check_list" href="#view_check_list">Vis info om sjekkliste</a>
-			<a id="view_control_details">
+			<a class="active">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Vis detaljer for sjekkliste
+			</a>
+			<a>
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_errors_for_check_list</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Vis avvik/saker for sjekkliste
+			</a>			
+			<a>
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_info</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
@@ -80,8 +52,16 @@
 				</xsl:attribute>
 				Vis info om kontroll
 			</a>
+			
+			<a style="background:#DD624B;border-bottom: 1px solid #CB563F;border-top: 1px solid #EE836F;box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;color: #FFFFFF;height: 18px;margin-left: 40px;margin-top: 1px;">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Registrer avvik/sak
+			</a>
 		</div>
-		
 		
 		<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
 		
