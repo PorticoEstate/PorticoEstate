@@ -30,7 +30,7 @@ class calendar_builder {
 				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 				
 				if($date < $todays_date){
-					$status = "control_canceled";
+					$status = "control_not_accomplished";
 				}else{
 					$status = "control_registered";
 				}
