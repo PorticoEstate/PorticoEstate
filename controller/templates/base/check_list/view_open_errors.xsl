@@ -29,6 +29,7 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis åpne saker
 		</a>
@@ -45,12 +46,13 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_measurements</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis målinger
 		</a>
 	</div>	
 	
-	<div id="view_open_errors" class="tab_item active">
+	<div class="tab_item active">
 		<xsl:choose>
 			<xsl:when test="open_check_items/child::node()">
 				
@@ -61,7 +63,7 @@
 							<li>
 							<xsl:if test="status = 0">
 								<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_item/title"/></span></h4>						
-								<form class="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
+								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
 									<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="check_item_id" value="{$check_item_id}" /> 
 									<div class="check_item">

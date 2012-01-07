@@ -28,26 +28,6 @@
 				dateFormat: 'dd/mm-yy' 
 			});
 			
-			$(".tab_menu a").click(function(){
-				var thisTabA = $(this);
-				var thisTabMenu = $(this).parent(".tab_menu");
-								
-				var showId = $(thisTabA).attr("href");
-				var hideId = $(thisTabMenu).find("a.active").attr("href");
-							
-				$(thisTabMenu).find("a").removeClass("active");
-				$(thisTabA).addClass('active');
-												
-				$(hideId).hide();
-				$(hideId).removeClass("active")
-				$(showId).fadeIn('10', function(){
-					$(showId).addClass('active');
-					
-				});
-			
-				return false;
-			});
-			
 			$("#register_errors").live("click", function(){
 				var requestUrl = $(this).attr("href");
 				load_tab(requestUrl);
@@ -187,6 +167,7 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 		</a>
 	

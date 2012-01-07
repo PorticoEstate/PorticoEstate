@@ -9,6 +9,7 @@
 			<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 			<xsl:text>&amp;procedure_id=</xsl:text>
 			<xsl:value-of select="control_procedure/id"/>
+			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 		</xsl:attribute>
 		Skriv ut
 	</a>
@@ -26,6 +27,7 @@
 							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 							<xsl:text>&amp;procedure_id=</xsl:text>
 							<xsl:value-of select="procedure/id"/>
+							<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 						</xsl:attribute>
 						Skriv ut
 					</a>

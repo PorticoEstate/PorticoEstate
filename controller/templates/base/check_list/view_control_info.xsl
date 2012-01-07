@@ -111,6 +111,7 @@
 				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Prosedyrer
 		</a>

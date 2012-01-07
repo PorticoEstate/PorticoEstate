@@ -58,9 +58,7 @@
 				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'status' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'comment' => array('type' => 'varchar','precision' => '255','nullable' => False),
-				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'message_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'measurement' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
+				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -189,4 +187,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'controller_check_item_case', array(
+				'fd' => array(
+					'id'            	=> array('type' => 'auto', 'nullable' => false),
+					'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'message_ticket_id' => array('type' => 'int', 'precision' => '12', 'nullable' => true),
+					'measurement' 		=> array('type' => 'int', 'precision' => '12', 'nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		)
 	);

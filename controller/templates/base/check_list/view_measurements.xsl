@@ -29,6 +29,7 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis åpne saker
 		</a>
@@ -45,12 +46,13 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_measurements</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis målinger
 		</a>
 	</div>	
 	
-	<div id="view_measurements" class="tab_item">
+	<div class="tab_item">
 		<xsl:choose>
 			<xsl:when test="measurement_check_items/child::node()">
 				
