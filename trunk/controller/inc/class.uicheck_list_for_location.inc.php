@@ -62,7 +62,8 @@
 										'save_check_list_for_location' 	=> true,
 										'edit_check_list_for_location' 	=> true,
 										'create_error_report_message' 	=> true,
-										'view_control_info' 			=> true
+										'view_control_info' 			=> true,
+										'view_errors_for_check_list'	=> true
 									);
 
 		function __construct()
@@ -370,6 +371,7 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$location_code = $check_list->get_location_code();
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -388,6 +390,33 @@
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl('check_list/edit_check_list', $data);
+		}
+		
+		function view_errors_for_check_list(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$location_code = $check_list->get_location_code();
+	
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'check_list' 					=> $check_list->toArray(),
+				'location_array'				=> $location_array,
+				'date_format' 					=> $date_format
+			);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+			
+			self::render_template_xsl('check_list/view_errors_for_check_list', $data);
 		}
 		
 		function save_check_list_for_location(){

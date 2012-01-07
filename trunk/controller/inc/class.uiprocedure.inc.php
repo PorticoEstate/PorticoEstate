@@ -505,33 +505,7 @@
 				'group_procedures_array'	=> $group_procedures_array
 			);
 			
-			
 			self::render_template_xsl('procedure/view_procedures_for_control', array('view_procedures_for_control' => $data));
-			
-			/*
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/procedure/view_procedures_for_control'));
-           
-            $xslttemplate->set_var('phpgw',array('view_procedures_for_control' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
-	       	*/
 		}
 		
 		public function print_procedure(){
@@ -544,29 +518,7 @@
 				'procedure'			=> $procedure->toArray()
 			);
 			
-			$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-			
-            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/procedure/print_procedure'));
-           
-            $xslttemplate->set_var('phpgw',array('print_procedure' => $data));
-            
-            $xslttemplate->xsl_parse();
-	        $xslttemplate->xml_parse();
-	
-	        $xml = new DOMDocument;
-	        $xml->loadXML($xslttemplate->xmldata);
-
-	        $xsl = new DOMDocument;
-	        $xsl->loadXML($xslttemplate->xsldata);
-
-	        // Configure the transformer
-	        $proc = new XSLTProcessor;
-	        $proc->importStyleSheet($xsl); // attach the xsl rules
-	        $proc->registerPHPFunctions();
-	
-	        $html = $proc->transformToXML($xml);
-
-	       	echo $html;
+			self::render_template_xsl('procedure/print_procedure', array('print_procedure' => $data));
 		}
 		
 		public function query()
