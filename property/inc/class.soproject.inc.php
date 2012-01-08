@@ -1308,7 +1308,7 @@
 				case 'project':
 					if($closed_orders)
 					{
-						$filter .=  " AND fm_open_workorder.project_id IS NULL";
+						$filter .=  " AND fm_open_workorder_view.project_id IS NULL";
 					}
 
 					$table = 'fm_project';
@@ -1317,7 +1317,7 @@
 					$this->_update_status_project($execute, $status_new, $ids);
 					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
-					. " {$this->left_join} fm_open_workorder ON {$table}.id = fm_open_workorder.project_id "
+					. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter})"
 					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date"
 					. " ORDER BY {$table}.id DESC";
