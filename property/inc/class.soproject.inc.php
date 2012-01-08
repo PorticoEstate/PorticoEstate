@@ -1335,7 +1335,7 @@
 					$actual_cost = ',(act_mtrl_cost + act_vendor_cost) as actual_cost';
 					$this->_update_status_workorder($execute, $status_new, $ids);
 					$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
-					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id  WHERE (start_date > {$start_date} AND start_date < {$end_date} {$filter}) OR start_date is NULL"
+					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id  WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR start_date is NULL"
 					. " ORDER BY {$table}.id DESC";
 					break;
 				default:
@@ -1351,7 +1351,7 @@
 				$values[] = array
 				(
 					'id'			=> $this->db->f('id'),
-					'title'			=> $this->db->f('title',true),
+					'title'			=> htmlspecialchars_decode($this->db->f('title',true)),
 					'status'		=> $this->db->f('status',true),
 					'actual_cost'	=> $this->db->f('actual_cost'),
 					'start_date'	=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),
