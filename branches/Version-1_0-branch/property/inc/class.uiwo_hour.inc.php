@@ -1460,6 +1460,7 @@
 
 				// Configure the transformer
 				$proc = new XSLTProcessor;
+				$proc->registerPHPFunctions(); // enable php functions
 				$proc->importStyleSheet($xsl); // attach the xsl rules
 
 				$header =  <<<HTML

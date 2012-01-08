@@ -1176,11 +1176,17 @@
 				$type_id	= 0;//count($location_types);
 				$no_address	= true;
 			}
+
+			$GLOBALS['phpgw']->config->read();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
+
 			$this->type_id	= $type_id;
 			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
-				if($_level > 1)
+		//		if($_level > 1) // very expensive 
+				if($_level == 2 && in_array(2, $list_location_level))
 				{
 					$joinmethod .= " {$this->join} fm_location{$_level}";
 					$paranthesis .='(';
@@ -1215,9 +1221,6 @@
 			{
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
-
-			$GLOBALS['phpgw']->config->read();
-			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
 
 			for ($i=1;$i<($type_id+1);$i++)
 			{

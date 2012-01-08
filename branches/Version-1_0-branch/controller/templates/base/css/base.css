@@ -1060,7 +1060,6 @@ ul.check_items h5{
 .tab_item {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #A3A3A3;
-    display: none;
     margin: 0 318px 0 0;
     padding: 15px;
     width: 628px;
@@ -1086,12 +1085,12 @@ fieldset.location_details div{
 	margin:10px 0;
 }
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
     float: right;
     margin-left: 500px;
     margin-right: 10px;
     padding: 5px;
+    margin-top: 55px;
 }
 ul#icon_color_map li {
     font-size: 12px;
@@ -1164,19 +1163,16 @@ ul#icon_color_map span{
 	float:left;
     margin: 20px 0 0 10px;   
 }
-#register_errors {
-	display:none;
+#register_errors_content {
     float: right;
     margin-top: 20px;   
 }
-
-a#view_errors_measurements{
-	display:none;
-}
-#edit_check_list_menu a{
-		float:left;
-		width: 150px;
-		text-align:center;
+#edit_check_list_menu a {
+    float: left;
+    height: 20px;
+    padding-top: 10px;
+    text-align: center;
+    width: 185px;
 }
 #edit_check_list_menu{
 		height:30px;

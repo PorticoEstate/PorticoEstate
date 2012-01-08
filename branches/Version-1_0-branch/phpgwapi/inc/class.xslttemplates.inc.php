@@ -365,7 +365,9 @@ XSLT;
 		{
 			$output_header = !(isset($GLOBALS['phpgw_info']['flags']['noframework']) && $GLOBALS['phpgw_info']['flags']['noframework']);
 			
-			if ( $this->output != 'wml' )
+			$stripped_htm	= phpgw::get_var('phpgw_return_as') == 'stripped_html';
+			
+			if ( $this->output != 'wml' && !$stripped_htm)
 			{
 				$GLOBALS['phpgw']->common->phpgw_header($output_header);
 			}

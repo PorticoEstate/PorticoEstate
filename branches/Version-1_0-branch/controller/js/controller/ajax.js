@@ -191,8 +191,7 @@ $(document).ready(function(){
 		$(infoBox).hide();
 	});
 	
-	// file: edit_check_list.xsl
-	$(".frm_save_check_item").submit(function(e){
+	$("#frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
 		var liWrp = $(this).parent();
@@ -232,8 +231,7 @@ $(document).ready(function(){
 			});
 	});
 	
-	// file: edit_check_list.xsl
-	$(".frm_save_control_item").submit(function(e){
+	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
 		var liWrp = $(this).parent();
@@ -257,8 +255,7 @@ $(document).ready(function(){
 			});
 	});
 	
-	// file: edit_check_list.xsl
-	$("#frm_update_check_list").submit(function(e){
+	$("#frm_update_check_list").live("click", function(e){
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -287,16 +284,19 @@ $(document).ready(function(){
 		});
 	});
 	
-	// file: edit_check_list.xsl
-	$("#frm_update_check_list").click(function(e){
+	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
 	
-
-	// file: add_check_list_for_location.xsl
-	$("#frm_add_check_list").click(function(e){
+	$("#frm_add_check_list").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+	$("#frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
