@@ -42,16 +42,17 @@
 			 			</li>
 					</xsl:for-each>
 				</ul>
-				<div>
-					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_order')" /></xsl:variable>
-					<input type="submit" id="save_order" name="save_order" value="{$lang_save}" title = "{$lang_save}" style="opacity: 0.5;" disabled="disabled"/>
-				</div>
 			</form>
 		</li>
 	</xsl:for-each>
 </ul>
-
-
-
+<a style="margin-top:20px;" id="print_control_items" class="btn" target="_blank">
+	<xsl:attribute name="href">
+		<xsl:text>index.php?menuaction=controller.uicheck_list.print_check_list</xsl:text>
+		<xsl:text>&amp;check_list_id=</xsl:text>
+		<xsl:value-of select="check_list/id"/>
+	</xsl:attribute>
+	Skriv ut
+</a>
 
 </xsl:template>

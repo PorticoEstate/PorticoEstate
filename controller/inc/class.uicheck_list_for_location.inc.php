@@ -62,7 +62,8 @@
 										'save_check_list_for_location' 	=> true,
 										'edit_check_list_for_location' 	=> true,
 										'create_error_report_message' 	=> true,
-										'view_control_info' 			=> true
+										'view_control_info' 			=> true,
+										'view_errors_for_check_list'	=> true
 									);
 
 		function __construct()
@@ -369,55 +370,14 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			// Fetches with check items
-			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
-
-			// Fetches check list with check items
-			$handled_check_items = $this->so_check_item->get_check_items($check_list_id, 'handled', 'control_item_type_1');
-						
-			$location_code = $check_list->get_location_code();
-				
-			// Fetches all control items for check list
-			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control_id($check_list->get_control_id());
-			
-			// Fetches check items that registeres measurement
-			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
-						
-			// Puts ids for control items that is registered as open check item in an array   
-			$control_item_ids = array();
-			foreach($open_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts ids for control items that is registered as handled check item in an array   
-			foreach($handled_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts ids for control items that is registered check item measurements in an array   
-			foreach($measurement_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts control items not registered as check item in an array
-			$control_items_not_registered = array();
-			foreach($control_items_for_check_list as $control_item){
-				if( !in_array($control_item->get_id(), $control_item_ids) ){
-					$control_items_not_registered[] = $control_item->toArray();
-				}
-			}
-
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$location_code = $check_list->get_location_code();
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
 				'check_list' 					=> $check_list->toArray(),
-				'open_check_items' 				=> $open_check_items,
-				'handled_check_items' 			=> $handled_check_items,
-				'measurement_check_items' 		=> $measurement_check_items,
-				'control_items_not_registered' 	=> $control_items_not_registered,
 				'location_array'				=> $location_array,
 				'date_format' 					=> $date_format
 			);
@@ -429,7 +389,34 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('edit_check_list', $data);
+			self::render_template_xsl('check_list/edit_check_list', $data);
+		}
+		
+		function view_errors_for_check_list(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so_check_list->get_single($check_list_id);
+			
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$location_code = $check_list->get_location_code();
+	
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'check_list' 					=> $check_list->toArray(),
+				'location_array'				=> $location_array,
+				'date_format' 					=> $date_format
+			);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+			
+			self::render_template_xsl('check_list/view_errors_for_check_list', $data);
 		}
 		
 		function save_check_list_for_location(){

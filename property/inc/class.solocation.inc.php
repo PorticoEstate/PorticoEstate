@@ -1769,4 +1769,29 @@
 			$this->db->next_record();
 			return $this->db->f('id');
 		}
+
+		function get_children($location_code)
+		{
+			$level = count(explode('-', $location_code));
+			$child_level = $level + 1;
+			$location_types	= $this->soadmin_location->select_location_type();
+
+			$values = array();
+			
+			if( $level >= count($location_types))
+			{
+				return $values;
+			}
+			
+			$this->db->query("SELECT loc{$child_level} AS id, loc{$child_level}_name AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%'",__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=>  $this->db->f('id'),
+					'name'	=>  $this->db->f('name')
+				);
+			}
+			return $values;
+		}
 	}

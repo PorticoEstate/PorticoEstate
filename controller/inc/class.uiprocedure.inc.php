@@ -39,6 +39,7 @@
 	{
 		private $so;
 		private $so_control_area;
+		private $_category_acl;
 		private $so_control;
 		private $so_control_group_list;
 
@@ -50,7 +51,8 @@
 			'view'							=>	true,
 			'add'							=>	true,
 			'get_procedures'				=>	true,
-			'view_procedures_for_control'	=>	true
+			'view_procedures_for_control'	=>	true,
+			'print_procedure'	=>	true
 		);
 
 		public function __construct()
@@ -63,6 +65,10 @@
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
+			
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
 			//$this->bo = CreateObject('property.boevent',true);
 		}
 
@@ -75,6 +81,23 @@
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+			
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
 
 			$data = array(
 				'form' => array(
@@ -83,7 +106,7 @@
 							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area').':',
-								'list' => $this->so_control_area->get_control_area_select_array(),
+								'list' => $control_areas_array2,
 							),
 							array('type' => 'text', 
 								'text' => lang('search'),
@@ -274,7 +297,24 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				$control_area_array = $this->so_control_area->get_control_area_array();
+				
+				// Sigurd: START as categories
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+	
+				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $procedure->get_control_area_id(),'globals' => true,'use_acl' => $this->_category_acl));
+				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+				$control_areas_array2 = array();
+				foreach($control_areas['cat_list'] as $cat_list)
+				{
+					$control_areas_array2[] = array
+					(
+						'id' 	=> $cat_list['cat_id'],
+						'name'	=> $cat_list['name'],
+					);		
+				}
+				// END as categories
+/*				$control_area_array = $this->so_control_area->get_control_area_array();
 				foreach ($control_area_array as $control_area)
 				{
 					if($procedure->get_control_area_id() && $control_area->get_id() == $procedure->get_control_area_id())
@@ -295,6 +335,7 @@
 						);
 					}
 				}
+*/
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
 				
@@ -316,7 +357,8 @@
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
-					'control_area'				=> array('options' => $control_area_options),
+					//'control_area'				=> array('options' => $control_area_options),
+					'control_area'		=> array('options' => $control_areas_array2),
 				);
 
 
@@ -441,50 +483,42 @@
 		}
 
 		public function view_procedures_for_control(){
-				$control_id = phpgw::get_var('control_id');
-				
-				$control = $this->so_control->get_single($control_id);
-				
-				$control_procedure = $this->so->get_single( $control->get_procedure_id() );
-				
-				$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			$control_id = phpgw::get_var('control_id');
 			
-				$group_procedures_array = array();
-				
-				foreach ($control_groups as $control_group)
-				{	
-					$group_procedure = $this->so->get_single( $control_group->get_procedure_id() );
-					$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
-				}
-				
-				$data = array
-				(
-					'control_procedure'			=> $control_procedure->toArray(),
-					'group_procedures_array'	=> $group_procedures_array
-				);
-				
-				$xslttemplate = CreateObject('phpgwapi.xslttemplates');
-				
-	            $xslttemplate->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/procedure/view_procedures_for_control'));
-	           
-	            $xslttemplate->set_var('phpgw',array('view_procedures_for_control' => $data));
-	            
-	            $xslttemplate->xsl_parse();
-		        $xslttemplate->xml_parse();
+			$control = $this->so_control->get_single($control_id);
+			
+			$control_procedure = $this->so->get_single( $control->get_procedure_id() );
+			
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 		
-		        $xml = new DOMDocument;
-		        $xml->loadXML($xslttemplate->xmldata);
-	
-		        $xsl = new DOMDocument;
-		        $xsl->loadXML($xslttemplate->xsldata);
-	
-		        // Configure the transformer
-		        $proc = new XSLTProcessor;
-		        $proc->importStyleSheet($xsl); // attach the xsl rules
+			$group_procedures_array = array();
+			
+			foreach ($control_groups as $control_group)
+			{	
+				$group_procedure = $this->so->get_single( $control_group->get_procedure_id() );
+				$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+			}
+			
+			$data = array
+			(
+				'control_procedure'			=> $control_procedure->toArray(),
+				'group_procedures_array'	=> $group_procedures_array
+			);
+			
+			self::render_template_xsl('procedure/view_procedures_for_control', array('view_procedures_for_control' => $data));
+		}
 		
-		        $html = $proc->transformToXML($xml);
-	
-		       	echo $html;
+		public function print_procedure(){
+			$procedure_id = phpgw::get_var('procedure_id');
+			
+			$procedure = $this->so->get_single($procedure_id);
+			
+			$data = array
+			(
+				'procedure'			=> $procedure->toArray()
+			);
+			
+			self::render_template_xsl('procedure/print_procedure', array('print_procedure' => $data));
 		}
 		
 		public function query()

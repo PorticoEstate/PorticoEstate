@@ -876,3 +876,8 @@ $solocation->update_location();
 			)
 		);
 
+		$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS' 
+			. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
+			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
