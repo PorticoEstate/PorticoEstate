@@ -34,13 +34,6 @@
 	{
 		public static $so;
 
-                    'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
-                    'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => false),
-                    'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-                    'modified_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-              ),
-		
-		
 		protected $id;
 		protected $check_item_id;
 		protected $status;
@@ -49,7 +42,8 @@
 		protected $descr;
 		protected $user_id;
 		protected $entry_date;
-		protected $entry_date;
+		protected $modified_date;
+		protected $modified_by;
 						
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -69,12 +63,12 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_control_item_id($control_item_id)
+		public function set_check_item_id($check_item_id)
 		{
-			$this->control_item_id = $control_item_id;
+			$this->check_item_id = $check_item_id;
 		}
 		
-		public function get_control_item_id() { return $this->control_item_id; }
+		public function get_check_item_id() { return $this->check_item_id; }
 				
 		public function set_status($status)
 		{
@@ -83,56 +77,52 @@
 		
 		public function get_status() { return (int)$this->status; }
 		
-		public function set_comment($comment)
+		public function get_location_id() { return (int)$this->location_id; }
+		
+		public function set_location_id($location_id)
 		{
-			$this->comment = $comment;
+			$this->location_id = $location_id;
 		}
 		
-		public function get_comment() { return $this->comment; }
+		public function get_location_item_id() { return (int)$this->location_item_id; }
 		
-		public function set_check_list_id($check_list_id)
+		public function set_location_item_id($location_item_id)
 		{
-			$this->check_list_id = $check_list_id;
+			$this->location_item_id = $location_item_id;
+		}
+
+		public function get_descr() { return (int)$this->descr; }
+		
+		public function set_descr($descr)
+		{
+			$this->descr = $descr;
 		}
 		
-		public function get_check_list_id() { return $this->check_list_id; }
+		public function get_user_id() { return (int)$this->user_id; }
 		
-		public function set_message_ticket_id($message_ticket_id)
+		public function set_user_id($user_id)
 		{
-			$this->message_ticket_id = $message_ticket_id;
+			$this->user_id = $user_id;
 		}
 		
-		public function get_message_ticket_id() { return $this->message_ticket_id; }
+		public function get_entry_date() { return (int)$this->entry_date; }
 		
-		public function set_measurement($measurement)
+		public function set_entry_date($entry_date)
 		{
-			$this->measurement = $measurement;
+			$this->entry_date = $entry_date;
 		}
 		
-		public function get_measurement() { return $this->measurement; }
+		public function get_modified_date() { return (int)$this->modified_date; }
 		
-		
-		// =================  Getters and setters for objects =================
-		
-		public function set_control_item($control_item)
+		public function set_modified_date($modified_date)
 		{
-			$this->control_item = $control_item;
+			$this->modified_date = $modified_date;
 		}
 		
-		public function get_control_item() { return $this->control_item; }
-			
-			
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
+		public function get_modified_by() { return (int)$this->modified_by; }
+		
+		public function set_modified_by($modified_by)
 		{
-/*			if (self::$so == null) {
-				self::$so = CreateObject('controller.socontrol_item');
-			}
-			
-			return self::$so;*/
+			$this->modified_by = $modified_by;
 		}
 	}
