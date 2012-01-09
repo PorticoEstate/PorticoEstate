@@ -28,10 +28,10 @@
 			<div class="tab_item active">
 			
 			<xsl:choose>
-				<xsl:when test="control_items_not_registered/child::node()">
+				<xsl:when test="control_items_for_check_list/child::node()">
 				
 					<ul id="control_items_list" class="check_items expand_list">
-						<xsl:for-each select="control_items_not_registered">
+						<xsl:for-each select="control_items_for_check_list">
 							<li>
 			    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>						
 								<form class="frm_save_control_item" action="index.php?menuaction=controller.uicheck_list.add_check_item_to_list" method="post">

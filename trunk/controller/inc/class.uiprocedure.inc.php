@@ -505,7 +505,7 @@
 				'group_procedures_array'	=> $group_procedures_array
 			);
 			
-			self::render_template_xsl('procedure/view_procedures_for_control', array('view_procedures_for_control' => $data));
+			self::render_template_xsl('procedure/view_procedures_for_control', $data);
 		}
 		
 		public function print_procedure(){
@@ -518,7 +518,7 @@
 				'procedure'			=> $procedure->toArray()
 			);
 			
-			self::render_template_xsl('procedure/print_procedure', array('print_procedure' => $data));
+			self::render_template_xsl('procedure/print_procedure', $data);
 		}
 		
 		public function query()
