@@ -9,7 +9,7 @@
 		<div class="tab_menu">
 			<a class="active" href="#">Meldingen gjaldt</a>
 		</div>	
-		<div id="error_report_message_details">
+		<div id="case_details">
 			<h3>Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
 			<h3>Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
 			<xsl:choose>
@@ -25,7 +25,7 @@
 		<div class="tab_menu">
 			<a class="active" href="#">Detaljer for melding</a>
 		</div>
-		<div id="error_report_message_details">
+		<div id="case_details">
 			<div>	    
 				<label>Tittel på melding</label>
 				<xsl:value-of select="message_ticket/subject"/>
@@ -50,7 +50,7 @@
 		
 		<a class="btn">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicase.create_case</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>

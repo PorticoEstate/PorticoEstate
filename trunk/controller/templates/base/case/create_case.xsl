@@ -9,7 +9,7 @@
 		<div class="tab_menu">
 			<a class="active" href="#">Meldingen gjelder</a>
 		</div>	
-		<div id="error_report_message_details">
+		<div id="case_details">
 			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
 			<xsl:choose>
 				<xsl:when test="check_list/completed_date != 0">
@@ -25,11 +25,11 @@
 		<div class="tab_menu">
 			<a class="active" href="#">Detaljer for meldingen</a>
 		</div>
-		<fieldset id="error_report_message_details">
+		<fieldset id="case_details">
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
 					
-				<form class="frm_save_error_report_message" action="index.php?menuaction=controller.uierror_report_message.save_error_report_message" method="post">
+				<form class="frm_save_case" action="index.php?menuaction=controller.uicase.save_case" method="post">
 					<input>
 				      <xsl:attribute name="name">check_list_id</xsl:attribute>
 				      <xsl:attribute name="type">hidden</xsl:attribute>
