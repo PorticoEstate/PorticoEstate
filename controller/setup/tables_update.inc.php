@@ -397,3 +397,22 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.18';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.18';
+	function controller_upgrade0_1_18()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','entry_date',array(
+			'type' => 'int', 
+			'precision' => 8,
+			'nullable' => false
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','modified_date',array(
+			'type' => 'int', 
+			'precision' => 8,
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.19';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

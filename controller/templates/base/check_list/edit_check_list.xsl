@@ -63,8 +63,7 @@
 			</a>
 		</div>
 		
-		<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
-		
+		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
 				
