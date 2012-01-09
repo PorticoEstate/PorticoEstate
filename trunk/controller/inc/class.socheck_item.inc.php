@@ -137,7 +137,7 @@
 		}
 		
 		public function get_check_items($check_list_id, $status, $type){
-			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.message_ticket_id, ci.measurement, check_list_id, "; 
+			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, "; 
 			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
 			$sql .= "FROM controller_check_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
@@ -159,7 +159,6 @@
 				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
 				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-				$check_item->set_message_ticket_id($this->unmarshal($this->db->f('message_ticket_id', true), 'int'));
 				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
