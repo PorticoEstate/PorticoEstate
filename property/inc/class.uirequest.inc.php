@@ -279,7 +279,7 @@
 				}
 				array_unshift ($values_combo_box[4],array ('id'=>'','name'=> lang('condition degree')));
 
-				$values_combo_box[5]  = $this->bo->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+				$values_combo_box[5]  = $this->bo->get_user_list();
 				array_unshift ($values_combo_box[5],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
 				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
