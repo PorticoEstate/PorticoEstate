@@ -5,10 +5,8 @@
 <div id="main_content">
 	
 		<h1>Registrer avviksmelding</h1>
-		
-		<div class="tab_menu">
-			<a class="active" href="#">Meldingen gjelder</a>
-		</div>	
+			
+		<h3 class="box_header">Meldingen gjelder</h3>
 		<div id="case_details">
 			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
 			<xsl:choose>
@@ -19,12 +17,27 @@
 					<h3>Kontroll ble utført dato: Ikke registrert utført</h3>
 				</xsl:otherwise>
 			</xsl:choose>
-			<h3 class="last">Bygg: <xsl:value-of select="location_array/loc1_name"/></h3>
+			<xsl:choose>
+				<xsl:when test="buildings_array/child::node()">
+					<select id="building_id" name="building_id">
+							<option value="0">
+								Velg bygning
+							</option>
+							<xsl:for-each select="buildings_array">
+								<option value="{id}">
+									<xsl:value-of disable-output-escaping="yes" select="name"/>
+								</option>
+							</xsl:for-each>
+						</select>
+				</xsl:when>
+				<xsl:otherwise>
+					<h3 class="last">Bygg: <xsl:value-of select="building_array/loc1_name"/></h3>	
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</div>
 		
-		<div class="tab_menu">
-			<a class="active" href="#">Detaljer for meldingen</a>
-		</div>
+		<h3 class="box_header">Detaljer for meldingen</h3>
 		<fieldset id="case_details">
 			<xsl:choose>
 				<xsl:when test="check_list/check_item_array/child::node()">
@@ -75,7 +88,7 @@
 					
 					  <div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input class="btn" type="submit" name="save_control" value="Registrer avviksmelding" title="{$lang_save}" />
+						<input class="btn focus" type="submit" name="save_control" value="Registrer avviksmelding" title="{$lang_save}" />
 					  </div>
 				</form>			
 				</xsl:when>

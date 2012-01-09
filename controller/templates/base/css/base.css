@@ -1111,28 +1111,28 @@ ul#icon_color_map span{
 	position:absolute;
     z-index: 1;
 }
-#main_content #error_report_message_details {
+#main_content #case_details {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
     margin-bottom: 20px;
     padding: 15px;
     width: 800px;
 }
-#error_report_message_details label{
+#case_details label{
 	display: inline-block;
 	width: 130px;
 	font-weight: normal;
 	font-size: 15px;	
 }
-#error_report_message_details h3 {
+#case_details h3 {
     font-size: 15px;
     font-weight: normal;
     margin: 10px 0;
 }
-#error_report_message_details h3.first {
+#case_details h3.first {
     margin-top:0;
 }
-#error_report_message_details h3.last {
+#case_details h3.last {
     margin-bottom:0;
 }
 .btn{
@@ -1146,10 +1146,12 @@ ul#icon_color_map span{
     cursor: pointer;
 }
 
-.focus{
+.btn.focus{
 	background: none repeat scroll 0 0 #DD624B;
     border-bottom: 1px solid #CB563F;
     border-top: 1px solid #EE836F;
+    border-left:0;
+    border-right:0;
     box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;
     color: #FFFFFF;
     margin-top: 1px;	
@@ -1195,4 +1197,18 @@ ul#icon_color_map span{
     margin-bottom: 20px;
     padding: 15px;
     width: 800px;
+}
+
+.box_header {
+    background: none repeat scroll 0 0 #2647A0;
+    border-left: 1px solid #173073;
+    border-right: 1px solid #173073;
+    border-top: 1px solid #173073;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: normal;
+    margin: 0;
+    padding: 3px 0 3px 15px;
+    text-align: left;
+    width: 815px;
 }

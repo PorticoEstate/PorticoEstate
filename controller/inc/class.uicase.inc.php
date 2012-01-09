@@ -35,7 +35,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 		
-	class controller_uierror_report_message extends controller_uicommon
+	class controller_uicase extends controller_uicommon
 	{
 		private $so_control_area;
 		private $so_control;
@@ -73,8 +73,13 @@
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list_with_check_items["location_code"];  
-				 
+			$location_code = $check_list_with_check_items["location_code"];
+
+			$level = count(explode('-',location_code));
+			
+			if($level == 1)
+				$buildings_array = execMethod('property.solocation.get_children',$location_code);
+			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
@@ -87,12 +92,18 @@
 			$data = array
 			(
 				'categories'			=> $categories,
-				'location_array'		=> $location_array,
 				'control_array'			=> $control->toArray(),
 				'check_list' 			=> $check_list_with_check_items,
+				'buildings_array' 		=> $buildings_array,
 				'date_format' 			=> $date_format
 			);
 			
+			if(count( $buildings_array ) > 0){
+				$data['buildings_array']  = $buildings_array;
+			}else{
+				$data['building_array'] = $building_array;
+			}
+						
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
@@ -100,7 +111,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('create_case', $data);
+			self::render_template_xsl('case/create_case', $data);
 		}
 		
 		function save_case(){
@@ -152,7 +163,7 @@
 				$this->so_check_item->update($check_item);
 			}			
 			
-			$registered_message_check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id); 
+			$registered_message_check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id);
 			
 			$message_ticket = $botts->read_single($message_ticket_id);
 			
@@ -179,7 +190,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('view_case', $data);
+			self::render_template_xsl('case/view_case', $data);
 		}
 		
 		public function query(){}
