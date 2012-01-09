@@ -6,11 +6,13 @@
 		
 	<script>
 	
+		// ======================  LASTER FANEN view_open_errors NÅR SIDEN LASTES FØRSTE GANG  ===================
 		$(document).ready(function() {
-				var requestUrl = $("#view_open_errors").attr("href");
-			 	load_tab(requestUrl);
-			});
+			var requestUrl = $("#view_open_errors").attr("href");
+		 	load_tab(requestUrl);
+		});
 			
+		// ======================  FUNKSJONALITET FOR LASTING AV TABS ===================
 		$(function() {
 					
 			$("#register_errors").live("click", function(){

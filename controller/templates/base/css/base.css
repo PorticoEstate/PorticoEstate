@@ -1145,6 +1145,17 @@ ul#icon_color_map span{
     border: 1px solid #173073;
     cursor: pointer;
 }
+
+.focus{
+	background: none repeat scroll 0 0 #DD624B;
+    border-bottom: 1px solid #CB563F;
+    border-top: 1px solid #EE836F;
+    box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;
+    color: #FFFFFF;
+    margin-top: 1px;	
+}
+
+
 #frm_update_check_list input[type="submit"]{
 	width: 140px;	
 }

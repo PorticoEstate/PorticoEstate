@@ -389,10 +389,9 @@
 		);
 		
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item', 'measurement',array(
-			'type' => 'int',
-			'precision' => 8,
-			'nullable' => true,
-			'default' => 0
+			'type' => 'varchar',
+			'precision' => 50,
+			'nullable' => true
 		));
 
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.18';

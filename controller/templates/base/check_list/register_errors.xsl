@@ -1,6 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="register_errors" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <div id="error_message_menu">
 	<a class="btn" id="view_open_errors">					
@@ -8,6 +8,7 @@
 			<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
+			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 		</xsl:attribute>
 		Vis avvik/måling
 	</a>
