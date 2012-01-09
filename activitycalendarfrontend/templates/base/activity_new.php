@@ -279,13 +279,13 @@ function allOK()
 					<?php
 					$current_arena_id = $activity->get_arena();
 					?>
-					<select name="arena_id" id="arena_id" onchange="javascript: run_checks();">
+					<select name="arena_id" id="arena_id" style="width: 400px;" onchange="javascript: run_checks();">
 						<option value="0">Ingen arena valgt</option>
 						<option value="new_arena">Ny arena</option>
 						<?php
 						foreach($arenas as $arena)
 						{
-							echo "<option ".($current_arena_id == $arena->get_id() ? 'selected="selected"' : "")." value=\"{$arena->get_id()}\">".$arena->get_arena_name()."</option>";
+							echo "<option ".($current_arena_id == $arena->get_id() ? 'selected="selected"' : "")." value=\"{$arena->get_id()}\" title=\"{$arena->get_arena_name()}\">".$arena->get_arena_name()."</option>";
 						}
 						?>
 					</select>
