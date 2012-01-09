@@ -188,15 +188,21 @@
 			'uc' => array()
 		),
 		'controller_check_item_case', array(
-				'fd' => array(
-					'id'            	=> array('type' => 'auto', 'nullable' => false),
-					'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'message_ticket_id' => array('type' => 'int', 'precision' => '12', 'nullable' => true),
-					'measurement' 		=> array('type' => 'int', 'precision' => '12', 'nullable' => true)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
+			'fd' => array(
+				'id'            	=> array('type' => 'auto', 'nullable' => false),
+				'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'status' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
+                    'location_item_id' => array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
+                    'descr' => array('type' => 'text','nullable' => true),
+                    'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
+                    'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+                    'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+                    'modified_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+              ),
+                'pk' => array('id'),
+                'fk' => array('controller_check_item' => array('check_item_id' => 'id')),
+                'ix' => array(),
+                'uc' => array()
 		)
 	);
