@@ -338,7 +338,7 @@ function allOK()
 					<?php if($new_organization){?>
 					<input type="hidden" name="organization_id" id="organization_id" value="new_org" />
 						<dt><label for="orgname">Organisasjonsnavn</label></dt>
-						<dd><input type="text" name="orgname"/></dd>
+						<dd><input type="text" name="orgname" size="100"/></dd>
 						<dt><label for="orgno">Organisasjonsnummer</label></dt>
 						<dd><input type="text" name="orgno"/></dd>
 						<dt><label for="district">Bydel</label></dt>
@@ -353,7 +353,7 @@ function allOK()
 						}?>
 						</select></dd>
 						<dt><label for="homepage">Hjemmeside</label></dt>
-						<dd><input type="text" name="homepage"/></dd>
+						<dd><input type="text" name="homepage" size="100"/></dd>
 						<dt><label for="email">E-post</label></dt>
 						<dd><input type="text" name="email"/></dd>
 						<dt><label for="phone">Telefon</label></dt>
@@ -364,20 +364,20 @@ function allOK()
 						<label for="number">Nummer</label>
 						<input type="text" name="number"/><br/>
 						<label for="postaddress">Postnummer og Sted</label>
-						<input type="text" name="postaddress"/></dd>
+						<input type="text" name="postaddress" size="100"/></dd>
 						<dt><label for="org_description">Beskrivelse</label></dt>
 						<dd><textarea rows="10" cols="100" name="org_description"></textarea></dd>
 					<hr/>
 					<b>Kontaktperson 1</b><br/>
 					<dt><label for="contact1_name">Navn</label>
-					<input type="text" name="org_contact1_name"/><br/>
+					<input type="text" name="org_contact1_name" size="100"/><br/>
 					<dt><label for="contact1_phone">Telefon</label>
 					<input type="text" name="org_contact1_phone"/><br/>
 					<dt><label for="contact1_mail">E-post</label>
 					<input type="text" name="org_contact1_mail"/><br/>
 					<b>Kontaktperson 2</b><br/>
 					<dt><label for="contact2_name">Navn</label>
-					<input type="text" name="org_contact2_name"/><br/>
+					<input type="text" name="org_contact2_name" size="100"/><br/>
 					<dt><label for="contact2_phone">Telefon</label>
 					<input type="text" name="org_contact2_phone"/><br/>
 					<dt><label for="contact2_mail">E-post</label>
@@ -388,7 +388,7 @@ function allOK()
 					<label for="contact2_number">Nummer</label>
 					<input type="text" name="org_contact2_number"/><br/>
 					<dt><label for="contact2_postaddress">Postnummer og Sted</label>
-					<input type="text" name="org_contact2_postaddress"/>
+					<input type="text" name="org_contact2_postaddress" size="100"/>
 					<hr/>
 					<?php }else{?>
 						<input type="hidden" name="organization_id" id="organization_id" value="<?php echo $organization->get_id()?>" />
@@ -439,7 +439,7 @@ function allOK()
 				</dd>
 				<span id="new_group_fields" style="display: none;">
 					<dt><label for="groupname">Navn</label></dt>
-					<dd><input type="text" name="groupname"/><br/></dd>
+					<dd><input type="text" name="groupname" size="100"/><br/></dd>
 					<dt><label for="group_description">Beskrivelse av aktiviteten</label></dt>
 					<dd><textarea rows="10" cols="100" name="group_description"></textarea></dd>
 					<hr/>
