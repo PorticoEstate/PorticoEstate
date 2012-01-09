@@ -33,6 +33,7 @@
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'check_list', 'inc/model/');
+	include_class('controller', 'check_item_case', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 		
 	class controller_uicase extends controller_uicommon
@@ -156,10 +157,29 @@
 			$botts = CreateObject('property.botts',true);
 			$message_ticket_id = $botts->add_ticket($ticket);
 
+			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			
+			
 			// Registers message and updates check items with message ticket id
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
-				$check_item->set_message_ticket_id( $message_ticket_id );
+				$user_id = 
+				
+				
+				$case = CreateObject('controller.check_item_case');
+				$case->set_check_item_id($check_item_id);
+				$case->set_status(0);
+				$case->set_location_id($location_id);
+				$case->set_location_item_id($message_ticket_id);
+				$case->set_user_id($user_id);
+				$case->set_entry_date($todays_date);
+				$case->set_modified_date($todays_date);
+				$case->set_modified_by($modified_by);
+
+				
+				
+				
+				
 				$this->so_check_item->update($check_item);
 			}			
 			

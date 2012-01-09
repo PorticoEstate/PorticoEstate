@@ -37,14 +37,14 @@
 		protected $id;
 		protected $check_item_id;
 		protected $status;
-		protected $location_id;
-		protected $location_item_id;
+		protected $location_id; 		// FOREKOMST I MELDINGSREGISTERET
+		protected $location_item_id; 	// MELDINGS ID
 		protected $descr;
 		protected $user_id;
 		protected $entry_date;
 		protected $modified_date;
 		protected $modified_by;
-						
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
