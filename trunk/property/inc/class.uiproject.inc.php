@@ -1974,11 +1974,18 @@
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
 			$type 			= phpgw::get_var('type');
-			$user_id 		= phpgw::get_var('user_id', 'int');
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
-
+			
+			if(isset($_POST['user_id']))
+			{
+				$user_id 	= phpgw::get_var('user_id', 'int');
+			}
+			else
+			{
+				$user_id 	= $this->account;
+			}
 			
 			if($id_to_update)
 			{
@@ -2043,7 +2050,7 @@
 														))
 				);
 
-			$user_list	= $this->bocommon->get_user_list('select',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+			$user_list	= $this->bocommon->get_user_list('select', $user_id, $extra=false, $default = $user_id, $start=-1, $sort='ASC', $order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
 			{
 				$entry['id'] = $entry['user_id'];
