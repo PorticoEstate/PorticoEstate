@@ -262,7 +262,7 @@
 				$default_value = array ('id'=>'','name'=>lang('no hour category'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+				$values_combo_box[4]  = $this->bo->get_user_list();
 				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);

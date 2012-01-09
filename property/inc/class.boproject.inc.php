@@ -810,4 +810,9 @@
 		{
 			return $this->so->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
 		}
+
+		public function get_user_list()
+		{
+			return $this->so->get_user_list();
+		}
 	}

@@ -1201,4 +1201,35 @@
 			$this->db->transaction_commit();
 
 		}
+
+		public function get_user_list()
+		{
+			$values = array();
+			$users = $GLOBALS['phpgw']->accounts->get_list('accounts', $start=-1, $sort='ASC', $order='account_lastname', $query,$offset=-1);
+			$sql = 'SELECT DISTINCT user_id AS user_id FROM fm_workorder';
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$account_lastname = array();
+			while($this->db->next_record())
+			{
+				$user_id	= $this->db->f('user_id');
+				if(isset($users[$user_id]))
+				{
+					$name	= $users[$user_id]->__toString();
+					$values[] = array
+					(
+						'id' 	=> $user_id,
+						'name'	=> $name
+					);
+					$account_lastname[]  = $name;
+				}
+			}
+
+			if($values)
+			{
+				array_multisort($account_lastname, SORT_ASC, $values);
+			}
+
+			return $values;
+		}
 	}
