@@ -774,4 +774,8 @@
 			$this->so->delete($workorder_id);
 		}
 
+		public function get_user_list()
+		{
+			return $this->so->get_user_list();
+		}
 	}
