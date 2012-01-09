@@ -44,8 +44,8 @@
 		private $so_check_item;
 	
 		var $public_functions = array(
-										'create_error_report_message' => true,
-										'save_error_report_message' => true
+										'create_case' => true,
+										'save_case' => true
 									);
 
 		function __construct()
@@ -65,7 +65,7 @@
 			self::set_active_menu('controller::control::location_for_check_list');
 		}	
 		
-		function create_error_report_message(){
+		function create_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
 			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, null, 'control_item_type_1');
@@ -100,10 +100,10 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('create_error_report_message', $data);
+			self::render_template_xsl('create_case', $data);
 		}
 		
-		function save_error_report_message(){
+		function save_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_item_ids = phpgw::get_var('check_item_ids');
 			$location_code = phpgw::get_var('location_code');
@@ -179,7 +179,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('view_error_report_message', $data);
+			self::render_template_xsl('view_case', $data);
 		}
 		
 		public function query(){}

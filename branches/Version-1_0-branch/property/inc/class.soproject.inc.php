@@ -1376,6 +1376,11 @@
 			$this->db->transaction_begin();
 			foreach ($ids as $id)
 			{
+				if(!$id)
+				{
+					continue;
+				}
+
 				$this->db->query("SELECT status FROM fm_project WHERE id = '{$id}'",__LINE__,__FILE__);
 				$this->db->next_record();
 				$old_status	= $this->db->f('status');
@@ -1422,6 +1427,11 @@
 			$this->db->transaction_begin();
 			foreach ($ids as $id)
 			{
+				if(!$id)
+				{
+					continue;
+				}
+
 				$this->db->query("SELECT status, vendor_id FROM fm_workorder WHERE id = '{$id}'",__LINE__,__FILE__);
 				$this->db->next_record();
 				$old_status	= $this->db->f('status');
