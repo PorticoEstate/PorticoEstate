@@ -1376,7 +1376,7 @@
 			$this->db->transaction_begin();
 			foreach ($ids as $id)
 			{
-				$this->db->query("SELECT status, vendor_id FROM fm_project WHERE id = '{$id}'",__LINE__,__FILE__);
+				$this->db->query("SELECT status FROM fm_project WHERE id = '{$id}'",__LINE__,__FILE__);
 				$this->db->next_record();
 				$old_status	= $this->db->f('status');
 
@@ -1384,6 +1384,7 @@
 				{
 					$this->db->query("UPDATE fm_project SET status = '{$status_new}' WHERE id = '{$id}'",__LINE__,__FILE__);
 					$historylog->add('S', $id, $status_new, $old_status);
+					$historylog->add('RM', $id,'Status endret via masseoppdatering');
 				}
 
 				$action_params_approved = array
@@ -1430,6 +1431,7 @@
 				{
 					$this->db->query("UPDATE fm_workorder SET status = '{$status_new}' WHERE id = '{$id}'",__LINE__,__FILE__);
 					$historylog->add('S', $id, $status_new, $old_status);
+					$historylog->add('RM', $id,'Status endret via masseoppdatering');
 				}
 
 				$action_params_approved = array
