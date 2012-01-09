@@ -31,6 +31,7 @@
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'procedure', 'inc/model/');
+	include_class('controller', 'document', 'inc/model/');
 
 	class controller_soprocedure extends controller_socommon
 	{
@@ -140,27 +141,46 @@
 		function get_single($id)
 		{
 			$id = (int)$id;
+			
+			$counter = 0;
+			$documents = null;
+			
 
 			$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
-			$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE p.id = " . $id;
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			$this->db->next_record();
-
-			$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
-			$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
-			$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
-			$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
-			$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
-			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
-			$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
-			$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
-			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
-			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-			$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
-			$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
-
+			$joins .= " {$this->left_join} controller_document ON (p.id = controller_document.procedure_id)";
+			$sql = "SELECT p.*, controller_control_area.title AS control_area_name, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
+			//var_dump($sql);
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record()) {
+				if($counter == 0){
+					$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+					$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+					$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
+					$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
+					$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+					$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
+					$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
+					$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+					$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+					$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
+					$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
+				}
+				
+				if($this->db->f('document_id', true) != ''){
+					$document = new controller_document($this->unmarshal($this->db->f('document_id', true), 'int'));
+					$document->set_procedure_id($procedure->get_id());
+					$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
+					$document->set_description($this->unmarshal($this->db->f('document_description', true), 'string'));
+					
+					$procedure->add_document($document);
+				}
+				
+				$counter++;
+			}
+//var_dump($procedure);
 			return $procedure;
 		}
 
