@@ -296,7 +296,7 @@
 				'check_list'					=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_control_items', array('view_control_items' => $data));
+			self::render_template_xsl('check_list/view_control_items', $data);
 		}
 		
 		public function view_control_details(){
@@ -331,7 +331,7 @@
 				'role_array'				=> $role_array
 			);
 			
-			self::render_template_xsl('check_list/view_control_details', array('view_control_details' => $data));
+			self::render_template_xsl('check_list/view_control_details', $data);
 		}
 		
 		public function print_check_list(){
@@ -359,7 +359,7 @@
 				'check_list'					=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/print_check_list', array('view_control_items' => $data));
+			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
 		function register_errors(){
@@ -411,7 +411,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/register_errors', array('register_errors' => $data));
+			self::render_template_xsl('check_list/register_errors', $data);
 		}
 		
 		function view_open_errors(){
@@ -428,7 +428,7 @@
 				'check_list' 		=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_open_errors', array('view_open_errors' => $data));
+			self::render_template_xsl('check_list/view_open_errors', $data);
 		}
 		
 		function view_closed_errors(){
@@ -445,7 +445,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_closed_errors', array('view_closed_errors' => $data));
+			self::render_template_xsl('check_list/view_closed_errors', $data);
 		}
 		
 		function view_measurements(){
@@ -462,7 +462,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_measurements', array('view_measurements' => $data));
+			self::render_template_xsl('check_list/view_measurements', $data);
 		}
 				
 		public function view_check_lists_for_control()
