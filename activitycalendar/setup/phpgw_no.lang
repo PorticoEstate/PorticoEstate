@@ -46,7 +46,10 @@ building name	activitycalendar	no	Bygg/anlegg
 building schedule	activitycalendar	no	Kalender
 buildings	activitycalendar	no	Bygg/anlegg
 bygning	activitycalendar	no	Bygg/anlegg
+calendar_months	activitycalendar	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
+calendar_weekdays	activitycalendar	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 cancel	activitycalendar	no	Avbryt
+clear	activitycalendar	no	Nullstill
 cancelled	activitycalendar	no	Avbestilt
 case officer	activitycalendar	no	Saksbehandler
 category	activitycalendar	no	Kategori
@@ -183,6 +186,7 @@ season	activitycalendar	no	Sesong
 season name	activitycalendar	no	Sesong
 seasons	activitycalendar	no	Sesonger
 secondary admin	activitycalendar	no	Kontaktperson 2
+select_date	activitycalendar	no	Velg dato
 select a building first	activitycalendar	no	Velg bygg/anlegg først
 select a grooup	activitycalendar	no	Velg en Gruppe
 select category...	activitycalendar	no	Velg en kategori...

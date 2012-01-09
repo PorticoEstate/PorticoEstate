@@ -175,6 +175,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$filter_clauses[] = "activity.office = '{$activity_district}'";
 			}
 		}
+		if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
+		{
+			$ts_query = strtotime($filters['updated_date_hidden']); // target timestamp specified by user
+			$filter_clauses[] = "activity.last_change_date < {$ts_query}";
+		}
 		
 		if(count($filter_clauses))
 		{
