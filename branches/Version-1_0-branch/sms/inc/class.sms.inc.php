@@ -707,7 +707,7 @@
 			{
 				$url['port'] = 80;
 			}
-			$connection = fsockopen($url['host'],$url['port'],&$error_number,&$error_description,60);
+			$connection = fsockopen($url['host'],$url['port'],$error_number,$error_description,60);
 			if($connection)
 			{
 				socket_set_blocking($connection, false);

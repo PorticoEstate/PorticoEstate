@@ -361,3 +361,40 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.17';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.17'; 
+	function controller_upgrade0_1_17()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropTable('controller_check_item_case');
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_check_item_case', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'check_item_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'status' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
+					'location_item_id' => array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
+					'descr' => array('type' => 'text','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+	              ),
+	                'pk' => array('id'),
+	                'fk' => array('controller_check_item' => array('check_item_id' => 'id')),
+	                'ix' => array(),
+	                'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item', 'measurement',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true,
+			'default' => 0
+		));
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.18';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
