@@ -371,7 +371,7 @@
 				
 			// Fetches all control items for check list
 			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control($check_list->get_control_id(), "array");
-
+		
 			$data = array
 			(
 				'control_items_for_check_list' 	=> $control_items_for_check_list,
@@ -386,16 +386,15 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			// Fetches with check items
-			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
-
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'open', 'array');
+			
 			$data = array
 			(
-				'open_check_items'	=> $open_check_items,
-				'check_list' 		=> $check_list->toArray()
+				'open_check_items_and_cases'	=> $open_check_items_and_cases,
+				'check_list' 					=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_open_cases', $data);
+			self::render_template_xsl('check_list/view_open_cases', $data);			
 		}
 		
 		function view_closed_cases(){
@@ -403,13 +402,12 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			// Fetches check list with check items
-			$handled_check_items = $this->so_check_item->get_check_items($check_list_id, 'handled', 'control_item_type_1');
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', 'array');
 							
 			$data = array
 			(
-				'handled_check_items'	=> $handled_check_items,
-				'check_list' 	=> $check_list->toArray()
+				'closed_check_items_and_cases'	=> $closed_check_items_and_cases,
+				'check_list' 					=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl('check_list/view_closed_cases', $data);

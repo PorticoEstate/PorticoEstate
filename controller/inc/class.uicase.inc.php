@@ -44,10 +44,10 @@
 		private $so_control;
 		
 		var $public_functions = array(
-									'register_case' => true,
-									'create_case_message' => true,
-									'view_case_message' => true,
-									'save_case_message' => true
+									'register_case' 		=> true,
+									'create_case_message' 	=> true,
+									'view_case_message' 	=> true,
+									'register_case_message' => true
 								);
 
 		function __construct()
@@ -90,13 +90,14 @@
 		
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, "array");
 
-			$control_id = $check_list_with_check_items["control_id"];
+			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list_with_check_items["location_code"];
+			$location_code = $check_list->get_location_code();
 
 			$level = count(explode('-',location_code));
 			
@@ -105,7 +106,7 @@
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$building = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
@@ -115,9 +116,11 @@
 			$data = array
 			(
 				'categories'			=> $categories,
-				'control_array'			=> $control->toArray(),
+				'check_list'			=> $check_list->toArray(),
+				'control'				=> $control->toArray(),
 				'check_items_and_cases'	=> $check_items_and_cases,
-				'buildings_array' 		=> $buildings_array,
+				'buildings_array'		=> $buildings_array,
+				'building'				=> $building,
 				'date_format' 			=> $date_format
 			);
 			
@@ -134,15 +137,15 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('case/create_case', $data);
+			self::render_template_xsl('case/create_case_message', $data);
 		}
 		
-		function save_case_message(){
+		function register_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
 			$message_cat_id = phpgw::get_var('message_cat_id');
-			$check_item_ids = phpgw::get_var('check_item_ids');
+			$case_ids = phpgw::get_var('case_ids');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -158,10 +161,10 @@
 			$message_details = "Kontroll: " .  $control->get_title() . "\n\n";
 			
 			// Generates message details from comment field in check item 
-			foreach($check_item_ids as $check_item_id){
-				$check_item = $this->so_check_item->get_single($check_item_id);
+			foreach($case_ids as $case_id){
+				$case = $this->so->get_single($case_id);
 				$message_details .= "Gjøremål: ";
-				$message_details .=  $check_item->get_comment() . "<br>";
+				$message_details .=  $case->get_descr() . "<br>";
 			}
 			
 			$location_id	= $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
@@ -187,23 +190,13 @@
 			$status = 0;
 			
 			// Registers message and updates check items with message ticket id
-			foreach($check_item_ids as $check_item_id){
-				$check_item = $this->so_check_item->get_single($check_item_id);
-				
-				$case = new controller_check_item_case();
-				$case->set_check_item_id($check_item_id);
-				$case->set_status($status);
-				$case->set_location_id($location_id);
+			foreach($case_ids as $case_id){
+				$case = $this->so->get_single($case_id);
 				$case->set_location_item_id($message_ticket_id);
-				$case->set_user_id($user_id);
-				$case->set_entry_date($todays_date);
-				$case->set_modified_date($todays_date);
-				$case->set_modified_by($user_id);
-				
 				$this->so->store($case);
 			}			
 			
-			$this->redirect(array('menuaction' => 'controller.uicase.view_case', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
+			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
 		}
 		
 		function view_case_message(){
@@ -221,8 +214,8 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-			$registered_message_check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id);
-			
+			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases_by_message($message_ticket_id, "array");
+						
 			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
 			
@@ -238,7 +231,7 @@
 				'location_array'					=> $location_array,
 				'control_array'						=> $control->toArray(),
 				'check_list'						=> $check_list->toArray(),
-				'registered_message_check_items'	=> $registered_message_check_items,
+				'check_items_and_cases'				=> $check_items_and_cases,
 				'date_format' 						=> $date_format
 			);
 			
@@ -249,7 +242,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('case/view_case', $data);
+			self::render_template_xsl('case/view_case_message', $data);
 		}
 		
 		public function query(){}
