@@ -44,7 +44,7 @@
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+										<li><xsl:value-of select="descr"/></li>
 									</xsl:for-each>
 								</ul>
 					 		</li>

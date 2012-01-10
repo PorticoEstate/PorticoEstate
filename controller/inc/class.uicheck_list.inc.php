@@ -386,7 +386,7 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'open', 'array');
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'open', null, 'return_array');
 			
 			$data = array
 			(
@@ -394,7 +394,7 @@
 				'check_list' 					=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_open_cases', $data);			
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			
 		}
 		
 		function view_closed_cases(){
@@ -402,7 +402,7 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', 'array');
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', 'return_array');
 							
 			$data = array
 			(
@@ -410,7 +410,7 @@
 				'check_list' 					=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_closed_cases', $data);
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
 		}
 		
 		function view_measurements(){
@@ -427,7 +427,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_measurements', $data);
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_measurements'), $data );
 		}
 				
 		public function view_check_lists_for_control()
