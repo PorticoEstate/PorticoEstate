@@ -91,8 +91,8 @@
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
-			$check_items_and_cases = $this->so_check_list->get_check_items_by_check_list($check_list_id);
-						
+			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, "array");
+
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
 			
@@ -116,7 +116,7 @@
 			(
 				'categories'			=> $categories,
 				'control_array'			=> $control->toArray(),
-				'check_list' 			=> $check_list_with_check_items,
+				'check_items_and_cases'	=> $check_items_and_cases,
 				'buildings_array' 		=> $buildings_array,
 				'date_format' 			=> $date_format
 			);
