@@ -8,7 +8,7 @@
 			
 		<h3 class="box_header">Meldingen gjelder</h3>
 		<div id="case_details">
-			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control_array/title"/></h3>
+			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control/title"/></h3>
 			<xsl:choose>
 				<xsl:when test="check_list/completed_date != 0">
 					<h3>Kontroll ble utført dato:<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
@@ -31,18 +31,17 @@
 						</select>
 				</xsl:when>
 				<xsl:otherwise>
-					<h3 class="last">Bygg: <xsl:value-of select="building_array/loc1_name"/></h3>	
+					<h3 class="last">Bygg: <xsl:value-of select="building/loc1_name"/></h3>	
 				</xsl:otherwise>
 			</xsl:choose>
-			
 		</div>
 		
 		<h3 class="box_header">Detaljer for meldingen</h3>
 		<fieldset id="case_details">
 			<xsl:choose>
-				<xsl:when test="check_list/check_item_array/child::node()">
+				<xsl:when test="check_items_and_cases/child::node()">
 					
-				<form class="frm_save_case" action="index.php?menuaction=controller.uicase.save_case" method="post">
+				<form class="frm_save_case" action="index.php?menuaction=controller.uicase.register_case_message" method="post">
 					<input>
 				      <xsl:attribute name="name">check_list_id</xsl:attribute>
 				      <xsl:attribute name="type">hidden</xsl:attribute>
@@ -70,18 +69,27 @@
 			
 					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
 					<ul class="check_items">
-						<xsl:for-each select="check_list/check_item_array">
-							<li>
-								<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
-								<h5><input type="checkbox" name="check_item_ids[]" value="{$check_item_id}" /><span><xsl:value-of select="control_item/title"/></span></h5>						
-							</li>
+						<xsl:for-each select="check_items_and_cases">
+							<xsl:choose>
+							 	<xsl:when test="cases_array/child::node()">
+							 		<li class="check_item_cases">
+								 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+								 		<ul>		
+											<xsl:for-each select="cases_array">
+												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
+												<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+											</xsl:for-each>
+										</ul>
+							 		</li>
+							 	</xsl:when>
+						 	</xsl:choose>
 						</xsl:for-each>
 					</ul>
 					
-					  <div class="form-buttons">
+					<div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 						<input class="btn focus" type="submit" name="save_control" value="Registrer avviksmelding" title="{$lang_save}" />
-					  </div>
+					</div>
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>

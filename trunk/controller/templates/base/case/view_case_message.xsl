@@ -34,20 +34,29 @@
 			</div>
 	
 	
-			<h3 class="check_item_details">Avviksmeldingen omfattet følgende punkter</h3>					
+			<h3 class="check_item_details">Avviksmeldingen omfattet følgende saker</h3>					
 			<ul class="check_items">
-				<xsl:for-each select="registered_message_check_items">
-					<li>
-						<xsl:variable name="check_item_id"><xsl:value-of select="id" /></xsl:variable>
-						<h5><xsl:value-of select="control_item/title"/></h5>						
-					</li>
+				<xsl:for-each select="check_items_and_cases">
+					<xsl:choose>
+					 	<xsl:when test="cases_array/child::node()">
+					 		<li class="check_item_cases">
+						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+						 		<ul>		
+									<xsl:for-each select="cases_array">
+										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
+										<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+									</xsl:for-each>
+								</ul>
+					 		</li>
+					 	</xsl:when>
+				 	</xsl:choose>
 				</xsl:for-each>
 			</ul>
 		</div>
 		
 		<a class="btn">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicase.create_case</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>

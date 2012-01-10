@@ -1045,7 +1045,8 @@ ul.check_items h5{
     width: 150px;
 }
 .hor_menu a {
-	border-bottom: 1px solid #A3A3A3;
+	border:1px solid #d0d9f1;
+	background: #ecf1ff;
 }
 .tab_menu a.active, .hor_menu a.active {
 	background: #2647A0;
@@ -1198,7 +1199,6 @@ ul#icon_color_map span{
     padding: 15px;
     width: 800px;
 }
-
 .box_header {
     background: none repeat scroll 0 0 #2647A0;
     border-left: 1px solid #173073;
@@ -1211,4 +1211,13 @@ ul#icon_color_map span{
     padding: 3px 0 3px 15px;
     text-align: left;
     width: 815px;
+}
+li.check_item_cases h4{
+	margin:5px 0;		
+}
+li.check_item_cases ul{
+	margin:10px;		
+}
+li.check_item_cases ul li{
+	margin:5px 0;		
 }

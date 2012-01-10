@@ -54,56 +54,36 @@
 		</a>
 	</div>	
 	
-	<div class="tab_item"> 
+	<div class="tab_item active">
 		<xsl:choose>
-			<xsl:when test="handled_check_items/child::node()">
+			<xsl:when test="closed_check_items_and_cases/child::node()">
 				
 			<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-				
-				<ul id="check_list_fixed_list" class="check_items expand_list">
-					<xsl:for-each select="handled_check_items">
-							<xsl:if test="status = 1">
-							<li>
-			    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_item/title"/></span></h4>						
-								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
-									<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
-									<input type="hidden" name="check_item_id" value="{$check_item_id}" /> 
-									<div class="check_item">
-									  <div>
-									       <label>Status</label>
-									       <select name="status">
-									       		<xsl:choose>
-									       			<xsl:when test="status = 0">
-									       				<option value="0" SELECTED="SELECTED">Avvik er åpent</option>
-									       				<option value="1">Avvik er håndtert</option>
-									       			</xsl:when>
-									       			<xsl:when test="status = 1">
-									       				<option value="0">Avvik er åpent</option>
-									       				<option value="1" SELECTED="SELECTED">Avvik er lukket</option>
-									       			</xsl:when>
-									       		</xsl:choose>
-										   </select>
-								       </div>
-								       <div>
-								         <label class="comment">Kommentar</label>
-								         <textarea name="comment">
-											<xsl:value-of select="comment"/>
-										 </textarea>
-								       </div>
-								       <div class="form-buttons">
-											<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_item')" /></xsl:variable>
-											<input type="submit" name="save_control" value="Oppdater håndtert avvik" class="not_active" title="{$lang_save}" />
-										</div>
-									</div>
-								</form>
-						    </li>
-					 	</xsl:if>
-					</xsl:for-each>
-				</ul>			
-				</xsl:when>
-				<xsl:otherwise>
-					Ingen registrerte håndterte avvik
-				</xsl:otherwise>
+		
+			<ul class="check_items">
+				<xsl:for-each select="closed_check_items_and_cases">
+					<xsl:choose>
+					 	<xsl:when test="cases_array/child::node()">
+					 		<li class="check_item_cases">
+						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+						 		<ul>		
+									<xsl:for-each select="cases_array">
+										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
+										<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/>
+											<div><xsl:value-of select="location_item_id"/></div>
+										</li>
+									</xsl:for-each>
+								</ul>
+					 		</li>
+					 	</xsl:when>
+				 	</xsl:choose>
+				</xsl:for-each>
+			</ul>
+					
+			</xsl:when>
+			<xsl:otherwise>
+				Ingen lukkede saker
+			</xsl:otherwise>
 		</xsl:choose>
 	</div>
 </div>
