@@ -1218,6 +1218,7 @@ li.check_item_cases h4{
 li.check_item_cases ul{
 	margin:10px;		
 }
-li.check_item_cases ul li{
-	margin:5px 0;		
+li.check_item_cases ul li {
+    list-style: disc outside none;
+    margin: 5px 0 0 20px;
 }

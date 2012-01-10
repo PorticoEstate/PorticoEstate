@@ -63,6 +63,7 @@
 		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
+			$case_descr = phpgw::get_var('case_descr');
 						
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -79,20 +80,27 @@
 			$case = new controller_check_item_case();
 			$case->set_check_item_id( $check_item->get_id() );
 			$case->set_status($status);
+			$case->set_descr($case_descr);
 			$case->set_location_id($location_id);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date);
 			$case->set_modified_date($todays_date);
 			$case->set_modified_by($user_id);
 				
-			return $this->so->store($case);
+			$case_id = $this->so->store($case);
+			
+			if($case_id > 0)
+				return json_encode( array( "saveStatus" => "saved" ) );
+			else
+				return json_encode( array( "saveStatus" => "not_saved" ) );	
+			
 		}
 		
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
-			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, "array");
+			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, "open", "no_message_registered", "return_array");
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
@@ -159,6 +167,7 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
 			$message_details = "Kontroll: " .  $control->get_title() . "\n\n";
+			//$message_details = "Kontrollområde: " .  $control->get_title() . "\n\n";
 			
 			// Generates message details from comment field in check item 
 			foreach($case_ids as $case_id){

@@ -14,7 +14,7 @@
 			
 		// ======================  FUNKSJONALITET FOR LASTING AV TABS ===================
 		$(function() {
-					
+	
 			$("#register_case").live("click", function(){
 				var requestUrl = $(this).attr("href");
 				load_tab(requestUrl);

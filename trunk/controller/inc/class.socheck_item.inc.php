@@ -213,7 +213,7 @@
 			return $check_items_array;
 		}
 		
-		public function get_check_items_and_cases($check_list_id, $status = "open", $returnType = "object"){
+		public function get_check_items_and_cases($check_list_id, $status = "open", $messageStatus = null, $returnType = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, cic.id as cic_id, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci "; 
@@ -225,6 +225,11 @@
 				$sql .= "AND cic.status = 0 ";
 			else if($status == 'closed')
 				$sql .= "AND cic.status = 1 ";
+				
+			if($messageStatus != null & $messageStatus == 'no_message_registered')
+				$sql .= "AND cic.location_item_id IS NULL ";
+			else if($messageStatus != null &  $messageStatus == 'message_registered')
+				$sql .= "AND cic.location_item_id > 0 ";
 											
 			$this->db->query($sql);
 			
@@ -237,7 +242,7 @@
 					if($check_item_id != 0){
 						$check_item->set_cases_array($cases_array);
 						
-						if($returnType == "array")
+						if($returnType == "return_array")
 							$check_items_array[] = $check_item->toArray();
 						else
 							$check_items_array[] = $check_item;
@@ -275,7 +280,7 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
 				
 				
-					if($returnType == "array")
+					if($returnType == "return_array")
 						$cases_array[] = $case->toArray();
 					else
 						$cases_array[] = $case;
@@ -287,7 +292,7 @@
 			if($check_item != null){
 				$check_item->set_cases_array($cases_array);
 				
-				if($returnType == "array")
+				if($returnType == "return_array")
 					$check_items_array[] = $check_item->toArray();
 				else
 					$check_items_array[] = $check_item;

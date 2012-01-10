@@ -298,13 +298,30 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.saveStatus == "updated"){
+	    			  if(obj.saveStatus == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
+		    			  
+		    			  $(thisForm).find(':input').each(function() {
+		    			        switch(this.type) {
+		    			            case 'password':
+		    			            case 'select-multiple':
+		    			            case 'select-one':
+		    			            case 'text':
+		    			                $(this).val('');
+		    			                break;
+		    			            case 'textarea':
+		    			                $(this).val('');
+		    			                break;
+		    			            case 'checkbox':
+		    			            case 'radio':
+		    			                this.checked = false;
+		    			        }
+		    			    });
 		    				  
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
-							$(submitBnt).val('Lagre sjekkpunkt');
+							$(submitBnt).val('Registrer sak');
 							$(submitBnt).addClass("not_active");
 		    			  }, 1000);
 					  }

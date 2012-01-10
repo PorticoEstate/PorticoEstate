@@ -3,9 +3,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <div id="error_message_menu">
-	<a class="btn" id="view_open_errors">					
+	<a class="btn" id="view_open_cases">					
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_cases</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
@@ -50,8 +50,8 @@
 									    
 										<div class="check_item">
 									       <div>
-										         <label class="comment">Kommentar</label>
-										         <textarea name="comment">
+										         <label class="comment">Beskrivelse av sak</label>
+										         <textarea name="case_descr">
 													<xsl:value-of select="comment"/>
 												 </textarea>
 										   </div>
@@ -75,14 +75,14 @@
 											    </input>
 									       </div>
 									       <div>
-										         <label class="comment">Kommentar</label>
-										         <textarea name="comment">
+										         <label class="comment">Beskrivelse av sak</label>
+										         <textarea name="case_descr">
 													<xsl:value-of select="comment"/>
 												 </textarea>
 										   </div>
 									       <div class="form-buttons">
 												<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												<input type="submit" name="save_control" value="Registrer avvik" class="not_active" title="{$lang_save}" />
+												<input type="submit" name="save_control" value="Registrer sak" class="not_active" title="{$lang_save}" />
 											</div>
 										</div>
 									</xsl:when>

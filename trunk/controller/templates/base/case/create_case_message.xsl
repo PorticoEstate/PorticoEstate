@@ -66,6 +66,11 @@
 							</xsl:for-each>
 						</select>
 					</div>
+					
+					<div>
+						<label>Last opp filvedlegg til meldingen:</label>
+						<input type="file" id="file" name="file" />
+					</div>
 			
 					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
 					<ul class="check_items">
@@ -77,7 +82,7 @@
 								 		<ul>		
 											<xsl:for-each select="cases_array">
 												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-												<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+												<li style="list-style:none;"><input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
 											</xsl:for-each>
 										</ul>
 							 		</li>
