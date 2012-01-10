@@ -284,6 +284,35 @@ $(document).ready(function(){
 		});
 	});
 	
+	$("#frm_register_case").live("submit", function(e){
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		
+	    			  if(obj.saveStatus == "updated"){
+		    			  var submitBnt = $(thisForm).find("input[type='submit']");
+		    			  $(submitBnt).val("Lagret");	
+		    				  
+		    			  // Changes text on save button back to original
+		    			  window.setTimeout(function() {
+							$(submitBnt).val('Lagre sjekkpunkt');
+							$(submitBnt).addClass("not_active");
+		    			  }, 1000);
+					  }
+				  }
+				}
+		});
+	});
+	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -297,6 +326,12 @@ $(document).ready(function(){
 	});
 	
 	$("#frm_save_check_item").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+	$("#frm_register_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");

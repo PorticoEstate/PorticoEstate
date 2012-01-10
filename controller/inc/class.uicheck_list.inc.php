@@ -61,9 +61,9 @@
 			'view_control_items'				=>	true,
 			'view_control_details'				=>	true,
 			'print_check_list'					=>	true,
-			'register_errors'					=>	true,
-			'view_open_errors'					=>	true,
-			'view_closed_errors'				=>	true,
+			'register_case'						=>	true,
+			'view_open_cases'					=>	true,
+			'view_closed_cases'					=>	true,
 			'view_measurements'					=>	true
 		
 		);
@@ -362,7 +362,7 @@
 			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
-		function register_errors(){
+		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -378,10 +378,10 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/register_errors', $data);
+			self::render_template_xsl('check_list/register_case', $data);
 		}
 		
-		function view_open_errors(){
+		function view_open_cases(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -395,10 +395,10 @@
 				'check_list' 		=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_open_errors', $data);
+			self::render_template_xsl('check_list/view_open_cases', $data);
 		}
 		
-		function view_closed_errors(){
+		function view_closed_cases(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -412,7 +412,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_closed_errors', $data);
+			self::render_template_xsl('check_list/view_closed_cases', $data);
 		}
 		
 		function view_measurements(){
