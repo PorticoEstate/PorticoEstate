@@ -44,6 +44,7 @@
 				
 		// Objects
 		protected $control_item;
+		protected $cases_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -114,6 +115,13 @@
 		}
 		
 		public function get_control_item() { return $this->control_item; }
+		
+		public function set_cases_array($cases_array)
+		{
+			$this->cases_array = $cases_array;
+		}
+		
+		public function get_cases_array() { return $this->cases_array; }
 			
 			
 		/**
