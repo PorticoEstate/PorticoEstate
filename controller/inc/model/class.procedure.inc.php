@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -29,6 +29,7 @@
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
+	include_class('controller', 'document', 'inc/model/');
 	
 	class controller_procedure extends controller_model
 	{
@@ -48,6 +49,7 @@
 		protected $revision_date;
 		protected $control_area_id;
 		protected $control_area_name;
+		protected $documents;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a procedure is created from outside
@@ -58,6 +60,7 @@
 		public function __construct(int $id = null)
 		{
 			$this->id = (int)$id;
+			$this->documents = array();
 		}
 		
 		public function set_id($id)
@@ -190,5 +193,30 @@
 					'revision_date' => ($this->get_revision_date())?date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()):'',
 					'control_area'	=> $this->get_control_area_name()
 			);
+		}
+		
+		/**
+		 * Get a list of the documents associated with this procedure.
+		 * 
+		 * @return array with controller_document objects, empty array if none, never null.
+		 */
+		public function get_documents()
+		{
+			return $this->documents;
+		}
+		
+		/**
+		 * Add a document to this procedure. This method does not check if
+		 * object is already added and does not do any db handling.
+		 * 
+		 * @param $new_document
+		 */
+		public function add_document(controller_document $new_document)
+		{
+			$new_document_id = $new_document->get_id();
+			if(!in_array($new_document_id,$this->documents))
+			{
+				$this->documents[$new_document_id] = $new_document;
+			}
 		}
 	}

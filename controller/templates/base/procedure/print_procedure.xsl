@@ -1,7 +1,7 @@
 <!-- $Id: procedure_item.xsl 8503 2012-01-06 08:13:27Z erikhl $ -->
 <!-- item  -->
 
-<xsl:template match="print_procedure" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
 
 <div style="margin:40px 0 0 40px;">

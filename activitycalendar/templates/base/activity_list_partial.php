@@ -114,7 +114,7 @@
 		'index.php?menuaction=activitycalendar.uiactivities.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_toggle_activity_category', '<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_toggle_activity_category', '<?php echo $list_id ?>_ctrl_search_query', 'date_updated'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -133,6 +133,7 @@
         var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
         var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
         var category = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_category').value;
+        var updatedDate = document.getElementById('date_change').value;
         <?php
         /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
          * even though the search only affects one of the data tables.
@@ -146,18 +147,20 @@
             '&amp;activity_district='+office+
             '&amp;activity_state='+state+
             '&amp;activity_category='+category+
+            '&amp;activity_updated='+updatedDate+
         	'&amp;export=true';
     }
 
     function activity_email(ptype) {
 
-    	var confirm_res = confirm("Du er i ferd med å sende e-post til flere mottakere.\n\nVil du gjøre dette?");
+    	var confirm_res = confirm("Du er i ferd med å sende e-post til utvalget under.\n\nVil du gjøre dette?");
         if(confirm_res==true)
         {	
 	        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 	        var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
 	        var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
 	        var category = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_category').value;
+	        var updatedDate = document.getElementById('date_change').value;
 	        <?php
 	        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
 	         * even though the search only affects one of the data tables.
@@ -171,6 +174,7 @@
 	            '&amp;activity_district='+office+
 	            '&amp;activity_state='+state+
 	            '&amp;activity_category='+category+
+	            '&amp;activity_updated='+updatedDate+
 	        	'&amp;email=true';
         }
     }
@@ -228,6 +232,8 @@
 			}
 			?>
 		</select>
+		<label class="toolbar_element_label" for="date_change" id="label_date_change"><?php echo lang('date') ?></label>
+		<?php echo $GLOBALS['phpgw']->yuical->add_listener('date_change'); ?>
 	</fieldset>
 	
 	

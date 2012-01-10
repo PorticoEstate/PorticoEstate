@@ -1,6 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="view_control_items">
+<xsl:template match="data">
 
 <ul class="groups">
 	<xsl:for-each select="saved_groups_with_items_array">

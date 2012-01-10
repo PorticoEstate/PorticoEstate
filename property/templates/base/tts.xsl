@@ -1402,6 +1402,41 @@
 							</xsl:choose>
 						</table>
 					</div>
+					<div id="notify">
+						<table cellpadding="2" cellspacing="2" width="80%" align="center">
+							<xsl:variable name="lang_contact_statustext">
+								<xsl:value-of select="php:function('lang', 'click this link to select')"/>
+							</xsl:variable>
+							<tr>
+								<td valign="top">
+									<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
+										<xsl:value-of select="php:function('lang', 'contact')"/>
+									</a>
+								</td>
+								<td>
+									<table>
+										<tr>
+											<td>
+												<input type="hidden" id="notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
+												</input>
+												<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly" title="{$lang_contact_statustext}"/>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" class="th_text">
+									<xsl:value-of select="php:function('lang', 'notify')"/>
+								</td>
+								<td>
+									<div id="paging_4"> </div>
+									<div id="datatable-container_4"/>
+									<div id="datatable-buttons_4"/>
+								</td>
+							</tr>
+						</table>
+					</div>
 					<div id="history">
 						<div id="paging_1"/>
 						<div id="datatable-container_1"/>
@@ -1533,6 +1568,7 @@
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js"/>;
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
+			var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
 			var myButtons = new Array();
@@ -1544,6 +1580,7 @@
 						values:<xsl:value-of select="values"/>,
 						total_records: <xsl:value-of select="total_records"/>,
 						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
 						<!--permission:<xsl:value-of select="permission"/>, -->
 						footer:<xsl:value-of select="footer"/>
 					}

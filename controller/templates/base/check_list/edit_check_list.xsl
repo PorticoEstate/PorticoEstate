@@ -53,7 +53,7 @@
 				Vis info om kontroll
 			</a>
 			
-			<a style="background:#DD624B;border-bottom: 1px solid #CB563F;border-top: 1px solid #EE836F;box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;color: #FFFFFF;height: 18px;margin-left: 40px;margin-top: 1px;">
+			<a style="background:#DD624B;border-bottom: 1px solid #CB563F;border-top: 1px solid #EE836F;box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;color: #FFFFFF;height: 18px;margin-left: 75px;margin-top: 1px;">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
@@ -63,8 +63,7 @@
 			</a>
 		</div>
 		
-		<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
-		
+		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
 				

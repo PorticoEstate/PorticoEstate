@@ -1043,6 +1043,36 @@
 				}
 			}
 
+
+			$notify_list = execMethod('property.notify.read', array
+				(
+					'location_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location),
+					'location_item_id'	=> $id
+				)
+			);
+
+			$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+			$sms	= CreateObject('sms.sms');
+
+			foreach($notify_list as $entry)
+			{
+				if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+				{
+					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+				}
+				else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+				{
+					$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+					$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+					$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+				}
+			}
+			unset($entry);
+			if($toarray_sms)
+			{
+				$this->historylog->add('MS',$id,"{$subject}::" . implode(',',$toarray_sms));						
+			}
+
 			if($toarray)
 			{
 				$to = implode(';',$toarray);
