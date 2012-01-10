@@ -308,7 +308,7 @@
 			return $results;
 		}
 
-		function get_control_items_by_control_id($control_id, $returnType = "object")
+		function get_control_items_by_control($control_id, $returnType = "object")
 		{
 			$results = array();
 
@@ -327,12 +327,14 @@
 
 				if($returnType == "array")
 					$results[] = $control_item->toArray();
+				else
+					$results[] = $control_item;
 			}
 			
 			return $results;
 		}
 
-		function get_control_items_by_control_id_and_group($control_id, $control_group_id)
+		function get_control_items_by_control_and_group($control_id, $control_group_id)
 		{
 			$results = array();
 

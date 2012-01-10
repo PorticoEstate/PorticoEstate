@@ -1775,7 +1775,7 @@
 					'lang_upload_file'						=> lang('Upload file'),
 					'lang_file_statustext'					=> lang('Select file to upload'),
 					'value_billable_hours'					=> $values['billable_hours'],
-					'base_java_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
+					'base_java_notify_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
 					'lang_edit_statustext'					=> lang('Edit this entry '),
 					'lang_edit'								=> lang('Edit'),

@@ -334,12 +334,12 @@ function allOK()
 					if ($editable)
 					{
 						?>
-						<select name="arena_id" id="arena_id" onchange="javascript: check_external();">
+						<select name="arena_id" id="arena_id" style="width: 300px;" onchange="javascript: check_external();">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
 							{
-								echo "<option ".($current_arena_id == $arena->get_id() ? 'selected="selected"' : "")." value=\"{$arena->get_id()}\">".$arena->get_arena_name()."</option>";
+								echo "<option ".($current_arena_id == $arena->get_id() ? 'selected="selected"' : "")." value=\"{$arena->get_id()}\" title=\"{$arena->get_arena_name()}\">".$arena->get_arena_name()."</option>";
 							}
 							?>
 						</select>

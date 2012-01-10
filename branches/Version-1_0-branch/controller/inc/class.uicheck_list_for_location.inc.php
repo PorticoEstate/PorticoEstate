@@ -61,7 +61,7 @@
 										'add_check_list_for_location' 	=> true,
 										'save_check_list_for_location' 	=> true,
 										'edit_check_list_for_location' 	=> true,
-										'create_error_report_message' 	=> true,
+										'create_case_message' 			=> true,
 										'view_control_info' 			=> true,
 										'view_errors_for_check_list'	=> true
 									);
@@ -444,7 +444,7 @@
 			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list_for_location', 'check_list_id'=>$check_list_id));
 		}
 		
-		function create_error_report_message(){
+		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
 			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id);
@@ -473,7 +473,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('create_error_report_message', $data);
+			self::render_template_xsl('create_case_messsage', $data);
 		}
 		
 		public function view_control_info(){

@@ -434,7 +434,7 @@ Returns mixed
 						<!--  DATATABLE DEFINITIONS-->
 						<script type="text/javascript">
 							var property_js = <xsl:value-of select="property_js"/>;
-							var base_java_url = <xsl:value-of select="base_java_url"/>;
+							var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 							var datatable = new Array();
 							var myColumnDefs = new Array();
 							var myButtons = new Array();
@@ -476,7 +476,7 @@ Returns mixed
 											<td>
 												<input type="hidden" id="notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
 												</input>
-												<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly" title="{$lang_contact_statustext}"/>
+												<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly" title="{$lang_contact_statustext}"/>
 											</td>
 										</tr>
 									</table>

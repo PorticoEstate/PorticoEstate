@@ -1,6 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="register_errors" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <div id="error_message_menu">
 	<a class="btn" id="view_open_errors">					
@@ -8,12 +8,13 @@
 			<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
+			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 		</xsl:attribute>
 		Vis avvik/måling
 	</a>
 	<a class="btn">
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 		</xsl:attribute>
@@ -27,13 +28,13 @@
 			<div class="tab_item active">
 			
 			<xsl:choose>
-				<xsl:when test="control_items_not_registered/child::node()">
+				<xsl:when test="control_items_for_check_list/child::node()">
 				
 					<ul id="control_items_list" class="check_items expand_list">
-						<xsl:for-each select="control_items_not_registered">
+						<xsl:for-each select="control_items_for_check_list">
 							<li>
 			    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>						
-								<form class="frm_save_control_item" action="index.php?menuaction=controller.uicheck_list.add_check_item_to_list" method="post">
+								<form id="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
 									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 									<input name="check_list_id" type="hidden">

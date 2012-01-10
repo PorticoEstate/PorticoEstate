@@ -61,9 +61,9 @@
 			'view_control_items'				=>	true,
 			'view_control_details'				=>	true,
 			'print_check_list'					=>	true,
-			'register_errors'					=>	true,
-			'view_open_errors'					=>	true,
-			'view_closed_errors'				=>	true,
+			'register_case'						=>	true,
+			'view_open_cases'					=>	true,
+			'view_closed_cases'					=>	true,
 			'view_measurements'					=>	true
 		
 		);
@@ -283,7 +283,7 @@
 			//Populating array with saved control items for each group
 			foreach ($control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control->get_id(), $control_group->get_id());
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
@@ -346,7 +346,7 @@
 			//Populating array with saved control items for each group
 			foreach ($control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control->get_id(), $control_group->get_id());
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
@@ -362,59 +362,26 @@
 			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
-		function register_errors(){
+		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
-			
-			// Fetches with check items
-			$open_check_items = $this->so_check_item->get_check_items($check_list_id, 'open', 'control_item_type_1');
-
-			// Fetches check list with check items
-			$handled_check_items = $this->so_check_item->get_check_items($check_list_id, 'handled', 'control_item_type_1');
-						
+							
 			$location_code = $check_list->get_location_code();
 				
 			// Fetches all control items for check list
-			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control_id($check_list->get_control_id());
-			
-			// Fetches check items that registeres measurement
-			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
-						
-			// Puts ids for control items that is registered as open check item in an array   
-			$control_item_ids = array();
-			foreach($open_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts ids for control items that is registered as handled check item in an array   
-			foreach($handled_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts ids for control items that is registered check item measurements in an array   
-			foreach($measurement_check_items as $check_item){
-				$control_item_ids[] = $check_item["control_item_id"];
-			}
-			
-			// Puts control items not registered as check item in an array
-			$control_items_not_registered = array();
-			foreach($control_items_for_check_list as $control_item){
-				if( !in_array($control_item->get_id(), $control_item_ids) ){
-					$control_items_not_registered[] = $control_item->toArray();
-				}
-			}
+			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control($check_list->get_control_id(), "array");
 
 			$data = array
 			(
-				'control_items_not_registered' 	=> $control_items_not_registered,
+				'control_items_for_check_list' 	=> $control_items_for_check_list,
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/register_errors', $data);
+			self::render_template_xsl('check_list/register_case', $data);
 		}
 		
-		function view_open_errors(){
+		function view_open_cases(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -428,10 +395,10 @@
 				'check_list' 		=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_open_errors', $data);
+			self::render_template_xsl('check_list/view_open_cases', $data);
 		}
 		
-		function view_closed_errors(){
+		function view_closed_cases(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -445,7 +412,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/view_closed_errors', $data);
+			self::render_template_xsl('check_list/view_closed_cases', $data);
 		}
 		
 		function view_measurements(){
@@ -496,7 +463,7 @@
 			foreach ($control_groups_array as $control_group)
 			{
 				$control_group_id = $control_group->get_id();
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group_id);
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control_id, $control_group_id);
 
 				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
@@ -599,7 +566,7 @@
 
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 
-			$control_items_list = $this->so_control_item->get_control_items_by_control_id($control_id);
+			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
 
 			foreach($control_items_list as $control_item){
 
@@ -642,7 +609,7 @@
 
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 
-			$control_items_list = $this->so_control_item->get_control_items_by_control_id($control_id);
+			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
 
 			foreach($control_items_list as $control_item){
 

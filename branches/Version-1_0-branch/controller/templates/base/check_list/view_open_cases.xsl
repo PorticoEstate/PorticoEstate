@@ -1,19 +1,20 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="view_open_errors" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <div id="error_message_menu">
-	<a class="btn" id="register_errors">					
+	<a class="btn" id="register_case">					
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uicheck_list.register_errors</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
+			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 		</xsl:attribute>
 		Registrer sak/måling
 	</a>
 	<a class="btn">
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 		</xsl:attribute>
@@ -24,20 +25,21 @@
 <div id="view_errors">
 	
 	<div class="tab_menu">
-		<a class="active" id="view_open_errors">					
+		<a class="active" id="view_open_cases">					
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis åpne saker
 		</a>
-		<a id="view_closed_errors">					
+		<a id="view_closed_cases">					
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_closed_errors</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_closed_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
+				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Vis lukkede saker
 		</a>

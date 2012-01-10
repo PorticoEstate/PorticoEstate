@@ -1,11 +1,11 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="view_closed_errors">
+<xsl:template match="data">
 
 <div id="error_message_menu">
 	<a class="btn" id="register_errors">					
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uicheck_list.register_errors</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
@@ -14,7 +14,7 @@
 	</a>
 	<a class="btn">
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 		</xsl:attribute>
@@ -27,7 +27,7 @@
 	<div class="tab_menu">
 		<a id="view_open_errors">					
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_errors</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
@@ -36,7 +36,7 @@
 		</a>
 		<a class="active" id="view_closed_errors">					
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_closed_errors</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_closed_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>

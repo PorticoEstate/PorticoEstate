@@ -2988,6 +2988,7 @@
 					'values' 				=> json_encode($additional_notes),
 					'total_records'			=> count($additional_notes),
 					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
 					'footer'				=> 0
 				);					
 			$myColumnDefs[0] = array
@@ -3001,6 +3002,7 @@
 					'values' 				=> json_encode($record_history),
 					'total_records'			=> count($record_history),
 					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
 					'footer'				=> 0
 				);					
 			$myColumnDefs[1] = array
@@ -3039,6 +3041,7 @@
 					'total_records'			=> count($content_files),
 					'permission'   			=> "''",
 					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
 					'footer'				=> 0
 				);
 
@@ -3077,8 +3080,24 @@
 					'total_records'			=> count($content_email),
 					'permission'   			=> "''",
 					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
 					'footer'				=> 0
 				);
+
+
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$notify_info = execMethod('property.notify.get_yui_table_def',array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id,
+									'count'				=> count($myColumnDefs)
+								)
+							);
+			
+			$datavalues[] 	= $notify_info['datavalues'];
+			$myColumnDefs[]	= $notify_info['column_defs'];
+			$myButtons		= array();
+			$myButtons[]	= $notify_info['buttons'];
 
 			$_filter_buildingpart = array();
 			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
@@ -3117,10 +3136,11 @@
 					'tabs'							=> self::_generate_tabs(true),
 					'td_count'						=> '""',
 					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
+					'base_java_notify_url'			=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,
-
+					'myButtons'						=> $myButtons,
 					'value_origin'					=> $ticket['origin'],
 					'value_target'					=> $ticket['target'],
 					'value_finnish_date'			=> $ticket['finnish_date'],
@@ -3486,9 +3506,10 @@
 
 
 			$tabs = array
-				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general')
-				);
+			(
+				'general'		=> array('label' => lang('general'), 'link' => '#general'),
+				'notify'		=> array('label' => lang('notify'), 'link' => '#notify')
+			);
 
 			if($history)
 			{

@@ -420,7 +420,7 @@
 			$control_group_ids = phpgw::get_var('control_group_ids');
 		
 			// Fetches saved control items from db
-			$saved_control_items = $this->so_control_item->get_control_items_by_control_id($control_id);
+			$saved_control_items = $this->so_control_item->get_control_items_by_control($control_id);
 			$saved_control_item_ids = array();
 			
 			foreach($saved_control_items as $control_item){
@@ -558,7 +558,7 @@
 			//Populating array with saved control items for each group
 			foreach ($control_group_ids as $control_group_id)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group_id);
+				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control_id, $control_group_id);
 				
 				$control_group = $this->so_control_group->get_single($control_group_id);
 				
@@ -628,7 +628,7 @@
 			
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 			
-			$control_items_list = $this->so_control_item->get_control_items_by_control_id($control_id);
+			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
 			
 			foreach($control_items_list as $control_item){
 				

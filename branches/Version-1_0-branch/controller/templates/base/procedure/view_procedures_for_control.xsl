@@ -1,6 +1,6 @@
 <!-- $Id: procedure_item.xsl 8485 2012-01-05 08:21:03Z erikhl $ -->
 
-<xsl:template match="view_procedures_for_control">
+<xsl:template match="data">
 	<h3 style="margin:5px 0;">Prosedyre for kontroll</h3>
 	
 	<span>Tittel: </span><xsl:value-of select="control_procedure/title"/>
