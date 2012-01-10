@@ -527,8 +527,12 @@
   	}
 /********************************************************************************/
 
-	this.execute_async = function(datatable)
+	this.execute_async = function(datatable, incoming_url)
 	{
+		if(incoming_url !='undfined')
+		{
+			base_java_url = incoming_url;
+		}
 		try	{
 	 			ds = phpGWLink('index.php',base_java_url,true);
 	 			//ds = url;
