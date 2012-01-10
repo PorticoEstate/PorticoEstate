@@ -186,6 +186,8 @@
 
 			$lang_view = lang('view');
 			$code = <<<JS
+	var  myPaginator_{$count}, myDataTable_{$count};
+	var Button_{$count}_0, Button_{$count}_1, Button_{$count}_2;
 	var notify_table_count = {$count};
 	var notify_lang_view = "{$lang_view}";
 	var notify_lang_alert = "Posten må lagres før kontakter kan tilordnes";
@@ -194,13 +196,13 @@
 	{
 		if(document.getElementById('notify_contact').value)
 		{
-			base_java_url['contact_id'] = document.getElementById('notify_contact').value;
+			base_java_notify_url['contact_id'] = document.getElementById('notify_contact').value;
 		}
 
 		if(document.getElementById('notify_contact').value != notify_contact)
 		{
-			base_java_url['action'] = 'refresh_notify_contact';
-			execute_async(myDataTable_{$count});
+			base_java_notify_url['action'] = 'refresh_notify_contact';
+			execute_async(myDataTable_{$count}, base_java_notify_url);
 			notify_contact = document.getElementById('notify_contact').value;
 		}
 	}
@@ -229,8 +231,8 @@
 
 			formObject = document.body.getElementsByTagName('form');
 			YAHOO.util.Connect.setForm(formObject[0]);//First form
-			base_java_url['action'] = 'refresh_notify_contact';
-			execute_async(myDataTable_{$count});
+			base_java_notify_url['action'] = 'refresh_notify_contact';
+			execute_async(myDataTable_{$count},base_java_notify_url);
 		}
 	}
 JS;

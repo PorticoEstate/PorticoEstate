@@ -1,8 +1,6 @@
 var d;
 var notify_contact = 0;
 
-var Button_0_0, Button_0_1, Button_0_2;
-
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
 	{
@@ -75,7 +73,7 @@ var Button_0_0, Button_0_1, Button_0_2;
 
 	this.notify_contact_lookup = function()
 	{
-		if(!base_java_url['location_item_id'])
+		if(!base_java_notify_url['location_item_id'])
 		{
 			alert(notify_lang_alert); // notify_lang_alert is defined in php-class property_notify::get_yui_table_def()
 			return;
@@ -90,7 +88,7 @@ var Button_0_0, Button_0_1, Button_0_2;
 	{
 	}
 */
-	this.onDOMAttrModified = function(e)
+	this.onDOMAttrModified_notify = function(e)
 	{
 		var attr = e.attrName || e.propertyName
 		var target = e.target || e.srcElement;
@@ -107,11 +105,11 @@ var Button_0_0, Button_0_1, Button_0_2;
 		{
 			if (d.attachEvent)
 			{
-				d.attachEvent('onpropertychange', onDOMAttrModified, false);
+				d.attachEvent('onpropertychange', onDOMAttrModified_notify, false);
 			}
 			else
 			{
-				d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+				d.addEventListener('DOMAttrModified', onDOMAttrModified_notify, false);
 			}
 		}
 	});
