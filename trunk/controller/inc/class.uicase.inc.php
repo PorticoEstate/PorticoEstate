@@ -30,46 +30,68 @@
 	
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('controller.socontrol_area');
+	phpgw::import_class('controller.socase');
+	phpgw::import_class('controller.socheck_list');
+	phpgw::import_class('controller.socheck_item');
+	phpgw::import_class('controller.socontrol');
 	
-	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item_case', 'inc/model/');
-	include_class('controller', 'date_generator', 'inc/component/');
-		
+			
 	class controller_uicase extends controller_uicommon
 	{
-		private $so_control_area;
-		private $so_control;
+		private $so;
 		private $so_check_list;
-		private $so_control_item;
-		private $so_check_item;
-	
+		private $so_control;
+		
 		var $public_functions = array(
-										'create_case' => true,
-										'save_case' => true
-									);
+									'register_case' => true,
+									'create_case_message' => true,
+									'view_case_message' => true,
+									'save_case_message' => true
+								);
 
 		function __construct()
 		{
 			parent::__construct();
-
-			$this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
-			$this->so_control 			= CreateObject('controller.socontrol');
-			$this->so_check_list		= CreateObject('controller.socheck_list');
-			$this->so_control_item		= CreateObject('controller.socontrol_item');
-			$this->so_check_item		= CreateObject('controller.socheck_item');
 			
-			$this->type_id				= $this->bo->type_id;
-			
-			self::set_active_menu('controller::control::location_for_check_list');
+			$this->so = CreateObject('controller.socase');
+			$this->so_check_list = CreateObject('controller.socheck_list');
+			$this->so_control = CreateObject('controller.socontrol');
+			$this->so_check_item = CreateObject('controller.socheck_item');
 		}	
 		
-		function create_case(){
+		function register_case(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			$control_item_id = phpgw::get_var('control_item_id');
+						
+			$check_list = $this->so_check_list->get_single($check_list_id);
+						
+			$control_id = $check_list->get_control_id();
+			$control = $this->so_control->get_single( $control_id );
+			
+			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
+			
+			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			$status = 0;
+			
+			$case = new controller_check_item_case();
+			$case->set_check_item_id( $check_item->get_id() );
+			$case->set_status($status);
+			$case->set_location_id($location_id);
+			$case->set_user_id($user_id);
+			$case->set_entry_date($todays_date);
+			$case->set_modified_date($todays_date);
+			$case->set_modified_by($user_id);
+				
+			return $this->so->store($case);
+		}
+		
+		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
-			$check_list_with_check_items = $this->so_check_list->get_single_with_check_items($check_list_id, null, 'control_item_type_1');
+			$check_items_and_cases = $this->so_check_list->get_check_items_by_check_list($check_list_id);
 						
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
@@ -115,12 +137,12 @@
 			self::render_template_xsl('case/create_case', $data);
 		}
 		
-		function save_case(){
+		function save_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_item_ids = phpgw::get_var('check_item_ids');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
 			$message_cat_id = phpgw::get_var('message_cat_id');
+			$check_item_ids = phpgw::get_var('check_item_ids');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -133,6 +155,8 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
+			$message_details = "Kontroll: " .  $control->get_title() . "\n\n";
+			
 			// Generates message details from comment field in check item 
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
@@ -158,33 +182,48 @@
 			$message_ticket_id = $botts->add_ticket($ticket);
 
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
-			
+
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			$status = 0;
 			
 			// Registers message and updates check items with message ticket id
 			foreach($check_item_ids as $check_item_id){
 				$check_item = $this->so_check_item->get_single($check_item_id);
-				$user_id = 
 				
-				
-				$case = CreateObject('controller.check_item_case');
+				$case = new controller_check_item_case();
 				$case->set_check_item_id($check_item_id);
-				$case->set_status(0);
+				$case->set_status($status);
 				$case->set_location_id($location_id);
 				$case->set_location_item_id($message_ticket_id);
 				$case->set_user_id($user_id);
 				$case->set_entry_date($todays_date);
 				$case->set_modified_date($todays_date);
-				$case->set_modified_by($modified_by);
-
+				$case->set_modified_by($user_id);
 				
-				
-				
-				
-				$this->so_check_item->update($check_item);
+				$this->so->store($case);
 			}			
 			
+			$this->redirect(array('menuaction' => 'controller.uicase.view_case', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
+		}
+		
+		function view_case_message(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			$message_ticket_id = phpgw::get_var('message_ticket_id');
+				
+			$check_list = $this->so_check_list->get_single($check_list_id);
+						
+			$control_id = $check_list->get_control_id();
+			$control = $this->so_control->get_single( $control_id );
+			
+			$location_code = $check_list->get_location_code();
+				 
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+	
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+
 			$registered_message_check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id);
 			
+			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
 			
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');

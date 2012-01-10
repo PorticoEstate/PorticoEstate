@@ -14,7 +14,7 @@
 	</a>
 	<a class="btn">
 		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uierror_report_message.create_error_report_message</xsl:text>
+			<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
 			<xsl:value-of select="check_list/id"/>
 		</xsl:attribute>
@@ -34,7 +34,7 @@
 						<xsl:for-each select="control_items_for_check_list">
 							<li>
 			    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>						
-								<form class="frm_save_control_item" action="index.php?menuaction=controller.uicheck_list.add_check_item_to_list" method="post">
+								<form id="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
 									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 									<input name="check_list_id" type="hidden">

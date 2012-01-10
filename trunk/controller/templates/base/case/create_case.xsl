@@ -50,14 +50,6 @@
 				      	<xsl:value-of select="check_list/id"/>
 				      </xsl:attribute>
 				    </input>
-				    <input>
-				      <xsl:attribute name="name">location_code</xsl:attribute>
-				      <xsl:attribute name="type">hidden</xsl:attribute>
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="location_array/location_code"/>
-				      </xsl:attribute>
-				    </input>
-				    
 				    <div>
 						<label>Tittel på melding</label>
 						<input name="message_title" type="text" />
