@@ -91,7 +91,7 @@
 			$this->location_item_id = $location_item_id;
 		}
 
-		public function get_descr() { return (int)$this->descr; }
+		public function get_descr() { return $this->descr; }
 		
 		public function set_descr($descr)
 		{

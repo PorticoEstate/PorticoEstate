@@ -53,6 +53,34 @@
 
 		function populate(int $object_id, &$object){}
 
+		public function get_single($case_id)
+		{
+			$sql = "SELECT * FROM controller_check_item_case "; 
+			$sql .= "WHERE id = $case_id";
+			
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+			if($this->db->next_record()) {
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
+					
+				return $case;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		
 		function add(&$case)
 		{
 			$cols = array(
@@ -72,7 +100,7 @@
 				$case->get_status(),
 				$this->marshal($case->get_location_id(), 'int'),
 				$this->marshal($case->get_location_item_id(), 'int'),
-				$this->marshal($case->get_descr(), 'int'),
+				$this->marshal($case->get_descr(), 'string'),
 				$this->marshal($case->get_user_id(), 'int'),
 				$this->marshal($case->get_entry_date(), 'int'),
 				$this->marshal($case->get_modified_date(), 'int'),
