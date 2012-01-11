@@ -30,6 +30,8 @@
 			<xsl:choose>
 				<xsl:when test="control_items_for_check_list/child::node()">
 				
+					<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
+				
 					<ul id="control_items_list" class="check_items expand_list">
 						<xsl:for-each select="control_items_for_check_list">
 							<li>

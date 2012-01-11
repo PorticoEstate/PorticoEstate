@@ -51,6 +51,7 @@
 		<xsl:text>index.php?menuaction=controller.uicheck_list.print_check_list</xsl:text>
 		<xsl:text>&amp;check_list_id=</xsl:text>
 		<xsl:value-of select="check_list/id"/>
+		<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 	</xsl:attribute>
 	Skriv ut
 </a>

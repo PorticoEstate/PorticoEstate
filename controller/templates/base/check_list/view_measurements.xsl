@@ -64,7 +64,7 @@
 								       </div>
 								       <div class="form-buttons">
 											<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_item')" /></xsl:variable>
-											<input type="submit" name="save_control" value="Oppdatert registert måling" class="not_active" title="{$lang_save}" />
+											<input type="submit" name="save_control" value="Oppdater registert måling" class="not_active" title="{$lang_save}" />
 										</div>
 									</div>
 								</form>
