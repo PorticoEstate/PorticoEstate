@@ -604,7 +604,7 @@
 				}
 			}
 
-			$tranfser_bilag = array($bilagsnr_ut);
+			$tranfser_bilag = $bilagsnr_ut ? array($bilagsnr_ut) : array($voucher_id);
 
 			$localtime = phpgwapi_datetime::user_localtime();
 
@@ -949,6 +949,7 @@
 
 		protected function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
 		{
+			$transfer_ok = false;
 			if($this->config->config_data['common']['method']=='ftp' || $this->config->config_data['common']['method']=='ssh')
 			{
 				if(!$connection = $this->connection)
@@ -981,18 +982,18 @@
 					default:
 						$transfer_ok = false;
 				}
-				if ($send_ok)
+				if ($transfer_ok)
 				{
 				 	for ($i=0;$i<count($tranfser_bilag);$i++)
 					{
-						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice pre_transferred %1',basename($Filnavn)));
+						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice transferred %1 to Basware',basename($Filnavn)));
 					}
 				}
 				else
 				{
 				 	for ($i=0;$i<count($tranfser_bilag);$i++)
 					{
-						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to pre_transfere %1 to agresso',basename($Filnavn)));
+						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to transfere %1 to Basware',basename($Filnavn)));
 					}
 				}
 				if(!$transfer_ok)

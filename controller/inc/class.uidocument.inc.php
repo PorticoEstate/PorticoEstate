@@ -432,7 +432,7 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
 				//self::render_template_xsl('procedure_item', $data);
-				self::render_template_xsl(array('procedure_tabs', 'common', 'procedure_documents'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_documents'), $data);
 			}
 		}
 	}
