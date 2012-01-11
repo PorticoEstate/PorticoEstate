@@ -581,24 +581,27 @@
 				$this->db->transaction_begin();
 			}
 
-			$bilagsnr_ut = '';
-			$get_bilagsnr_ut = false;
-			foreach ($oRsBilag as $line)
+			$bilagsnr_ut = $oRsBilag[0]['bilagsnr_ut'];
+			if(!$bilagsnr_ut)
 			{
-				if(abs($line['godkjentbelop']) > 0)
+				$get_bilagsnr_ut = false;
+				foreach ($oRsBilag as $line)
 				{
-					$get_bilagsnr_ut = true;
+					if(abs($line['godkjentbelop']) > 0)
+					{
+						$get_bilagsnr_ut = true;
+					}
 				}
-			}
 
-			if($get_bilagsnr_ut)
-			{
-				$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
-				$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
-				$this->db->next_record();
-				$bilagsnr_ut = $this->db->f('value');
-
-				$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+				if($get_bilagsnr_ut)
+				{
+					$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
+					$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
+					$this->db->next_record();
+					$bilagsnr_ut = $this->db->f('value');
+	
+					$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+				}
 			}
 
 			$tranfser_bilag = array($bilagsnr_ut);
