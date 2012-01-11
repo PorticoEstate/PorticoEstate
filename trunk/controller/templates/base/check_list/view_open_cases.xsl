@@ -32,8 +32,6 @@
 		<xsl:choose>
 			<xsl:when test="open_check_items_and_cases/child::node()">
 				
-			<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-		
 			<ul class="check_items">
 				<xsl:for-each select="open_check_items_and_cases">
 					<xsl:choose>
@@ -47,7 +45,7 @@
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
-													<a>
+													<a target="_blank">
 														<xsl:attribute name="href">
 															<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
 															<xsl:text>&amp;id=</xsl:text>
