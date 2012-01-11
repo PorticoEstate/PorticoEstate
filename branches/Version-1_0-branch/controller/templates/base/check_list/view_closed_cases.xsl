@@ -32,8 +32,6 @@
 		<xsl:choose>
 			<xsl:when test="closed_check_items_and_cases/child::node()">
 				
-			<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-		
 			<ul class="check_items">
 				<xsl:for-each select="closed_check_items_and_cases">
 					<xsl:choose>
@@ -43,8 +41,24 @@
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><xsl:number/>.  <input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/>
-											<div><xsl:value-of select="location_item_id"/></div>
+										<li><xsl:value-of select="descr"/>
+											<xsl:choose>
+												<xsl:when test="location_item_id > 0">
+													<div style="float:right;">
+													<a target="_blank">
+														<xsl:attribute name="href">
+															<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
+															<xsl:text>&amp;id=</xsl:text>
+															<xsl:value-of select="location_item_id"/>
+														</xsl:attribute>
+														Vis melding
+													</a>
+													</div>
+												</xsl:when>
+												<xsl:otherwise>
+													<div style="float:right;"><span style="color:red">Ingen melding registrert!</span></div>
+												</xsl:otherwise>
+											</xsl:choose>
 										</li>
 									</xsl:for-each>
 								</ul>

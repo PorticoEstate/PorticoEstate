@@ -487,7 +487,7 @@
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			$control_procedure = $this->so->get_single( $control->get_procedure_id() );
+			$control_procedure = $this->so->get_single_with_documents( $control->get_procedure_id(), "return_array" );
 			
 			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 		
@@ -501,7 +501,7 @@
 			
 			$data = array
 			(
-				'control_procedure'			=> $control_procedure->toArray(),
+				'control_procedure'			=> $control_procedure,
 				'group_procedures_array'	=> $group_procedures_array
 			);
 			

@@ -402,7 +402,7 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', 'return_array');
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', null, 'return_array');
 							
 			$data = array
 			(

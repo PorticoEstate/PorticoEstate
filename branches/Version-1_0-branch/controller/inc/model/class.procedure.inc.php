@@ -204,6 +204,11 @@
 		{
 			return $this->documents;
 		}
+
+		public function set_documents($documents)
+		{
+			$this->documents = $documents;
+		}
 		
 		/**
 		 * Add a document to this procedure. This method does not check if
