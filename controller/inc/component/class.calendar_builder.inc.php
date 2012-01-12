@@ -55,10 +55,14 @@ class calendar_builder {
 		
 				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 				
-				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 )
+				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() > $todays_date)
 				{
 					$status = "control_planned";
 					$check_list_status_info->set_info_text("Planlagt utført: " . $check_list->get_planned_date());
+				}
+				else if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() < $todays_date)
+				{
+					$status = "control_not_accomplished_with_info";
 				}
 				else if( $check_list->get_status() == 0 & $check_list->get_deadline() > $todays_date )
 				{

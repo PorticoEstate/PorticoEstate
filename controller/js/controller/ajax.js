@@ -194,8 +194,6 @@ $(document).ready(function(){
 	$("#frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
-		var liWrp = $(this).parent();
-		var liWrpClone = $(liWrp).clone();
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action"); 
 
@@ -206,25 +204,15 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-		    		  if(obj.saveStatus == "saved" & obj.fixedStatus == "fixed"){
-		    			  $(liWrp).fadeOut('3000', function() {
-		    				   				  
-		    				  $("#check_list_fixed_list").append(liWrpClone);
-		    				   				  
-		    				  $(liWrp).addClass("hidden");
-		    			  });
-		    			  
-					  }
-		    		  else if(obj.saveStatus == "saved" & obj.fixedStatus == "not_fixed"){
-		    			  
+		    		  if(obj.saveStatus == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    				$(submitBnt).val("Lagret");	
+		    			  $(submitBnt).val("Lagret");	
 		    				  
 		    				// Changes text on save button back to original
 		    				window.setTimeout(function() {
-		    				  $(submitBnt).val('Oppdater håndtert avvik');
+		    				  $(submitBnt).val('Oppdater måling');
 		    				  $(submitBnt).addClass("not_active");
-		    					 }, 1000);
+		    					 }, 1000);	   				  
 					  }
 				  }
 				}
@@ -255,7 +243,7 @@ $(document).ready(function(){
 			});
 	});
 	
-	$("#frm_update_check_list").live("click", function(e){
+	$("#frm_update_check_list").live("submit", function(e){
 		e.preventDefault();
 
 		var thisForm = $(this);

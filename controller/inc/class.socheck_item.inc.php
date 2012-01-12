@@ -70,7 +70,6 @@
 				$this->marshal($check_item->get_status(), 'int'),
 				$this->marshal($check_item->get_comment(), 'string'),
 				$this->marshal($check_item->get_check_list_id(), 'int'),
-				$this->marshal($check_item->get_message_ticket_id(), 'int'),
 				$this->marshal($check_item->get_measurement(), 'int')
 			);
 
@@ -85,11 +84,10 @@
 
 			$values = array(
 				'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-				'status = ' . $check_item->get_status(),
+				'status = ' . $this->marshal($check_item->get_status(), 'int'),
 				'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
 				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int'),
-				'message_ticket_id = ' . $this->marshal($check_item->get_message_ticket_id(), 'int'),
-				'measurement = ' . $this->marshal($check_item->get_measurement(), 'int')
+				'measurement = ' . $this->marshal($check_item->get_measurement(), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -137,6 +135,80 @@
 			}
 		}
 		
+		public function get_single_with_cases($check_item_id, $returnType = "return_object"){
+			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, check_list_id, ";
+			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
+			$sql .= "coi.id as coi_id, coi.* ";
+			$sql .= "FROM controller_check_item ci "; 
+			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
+			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
+			$sql .= "WHERE ci.id = $check_item_id ";
+											
+			$this->db->query($sql);
+			
+			$counter = 0;
+			$check_item = null;
+			while ($this->db->next_record()) {
+				
+				if( $counter == 0 ){
+									
+					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+					$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+					
+					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
+					$control_item->set_title($this->db->f('title', true), 'string');
+					$control_item->set_required($this->db->f('required', true), 'string');
+					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
+					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
+					$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
+					$control_item->set_type($this->db->f('type', true), 'string');
+				
+					if($returnType == "return_array")
+						$check_item->set_control_item($control_item->toArray());
+					else
+						$check_item->set_control_item($control_item);
+						
+					$cases_array = array();
+				}
+				
+				if($this->db->f('cic_id', true) != ''){
+					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id', true), 'int'));
+					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+					$case->set_status($this->unmarshal($this->db->f('cic_status', true), 'int'));
+					$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+					$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+					$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+					$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
+					$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
+					$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
+					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
+				
+				
+					if($returnType == "return_array")
+						$cases_array[] = $case->toArray();
+					else
+						$cases_array[] = $case;
+				}
+				
+				$check_item_id =  $check_item->get_id();
+				$counter++;
+			}
+			
+			if($check_item != null){
+				$check_item->set_cases_array($cases_array);
+				
+				if($returnType == "return_array")
+					return $check_item->toArray();
+				else
+					return $check_item;
+			}else{
+				return null;
+			}
+		}
 		
 		public function get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id)
 		{
@@ -213,7 +285,7 @@
 			return $check_items_array;
 		}
 		
-		public function get_check_items_and_cases($check_list_id, $status = "open", $messageStatus = null, $returnType = "return_object"){
+		public function get_check_items_with_cases($check_list_id, $status = "open", $messageStatus = null, $returnType = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, cic.id as cic_id, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci "; 
@@ -303,8 +375,9 @@
 			}
 		}
 		
-		public function get_check_items_and_cases_by_message($message_ticket_id, $returnType = "object"){
-			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, cic.id as cic_id, cic.*, ";
+		public function get_check_items_with_cases_by_message($message_ticket_id, $returnType = "return_object"){
+			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, "; 
+			$sql .= "check_list_id, cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
@@ -322,7 +395,7 @@
 					if($check_item_id != 0){
 						$check_item->set_cases_array($cases_array);
 						
-						if($returnType == "array")
+						if($returnType == "return_array")
 							$check_items_array[] = $check_item->toArray();
 						else
 							$check_items_array[] = $check_item;
@@ -330,7 +403,7 @@
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-					$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+					$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
 					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
@@ -343,13 +416,17 @@
 					$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
-					$check_item->set_control_item($control_item->toArray());
+					if($returnType == "return_array")
+						$check_item->set_control_item($control_item->toArray());
+					else
+						$check_item->set_control_item($control_item);
 									
 					$cases_array = array();
 				}
 				
 				if($this->db->f('cic_id', true) != ''){
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id', true), 'int'));
+					$case->set_status($this->unmarshal($this->db->f('cic_status', true), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
 					$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 					$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
@@ -360,7 +437,7 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
 				
 				
-					if($returnType == "array")
+					if($returnType == "return_array")
 						$cases_array[] = $case->toArray();
 					else
 						$cases_array[] = $case;
@@ -372,7 +449,7 @@
 			if($check_item != null){
 				$check_item->set_cases_array($cases_array);
 				
-				if($returnType == "array")
+				if($returnType == "return_array")
 					$check_items_array[] = $check_item->toArray();
 				else
 					$check_items_array[] = $check_item;
@@ -383,35 +460,26 @@
 			}
 		}
 		
-		public function get_check_items_by_message($message_ticket_id){
-			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, "; 
-			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
+		public function get_check_items_by_message($message_ticket_id, $returnType = "return_array" ){
+			$sql  = "SELECT ci.* "; 
 			$sql .= "FROM controller_check_item ci "; 
-			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 			$sql .= "WHERE cic.location_item_id = $message_ticket_id ";
 								
 			$this->db->query($sql);
 			
 			while ($this->db->next_record()) {
-				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+				$check_item = new controller_check_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
 				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
 				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
-				$control_item->set_title($this->db->f('title', true), 'string');
-				$control_item->set_required($this->db->f('required', true), 'string');
-				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
-				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
-				$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
-				$control_item->set_type($this->db->f('type', true), 'string');
-				
-				$check_item->set_control_item($control_item->toArray());
-				
-				$check_items_array[] = $check_item->toArray();
+				if($returnType == "return_array")
+					$check_items_array[] = $check_item->toArray();
+				else
+					$check_items_array[] = $check_item;
 			}
 			
 			return $check_items_array;

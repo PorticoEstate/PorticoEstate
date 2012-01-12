@@ -47,7 +47,8 @@
 									'register_case' 		=> true,
 									'create_case_message' 	=> true,
 									'view_case_message' 	=> true,
-									'register_case_message' => true
+									'register_case_message' => true,
+									'updateStatusForCases' => true
 								);
 
 		function __construct()
@@ -100,7 +101,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
-			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, "open", "no_message_registered", "return_array");
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "open", "no_message_registered", "return_array");
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
@@ -166,14 +167,27 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-			$message_details = "Kontroll: " .  $control->get_title() . "\n\n";
-			//$message_details = "Kontrollområde: " .  $control->get_title() . "\n\n";
+			$message_details = "Kontroll: " .  $control->get_title() . "\n";
+			
+			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			//liste alle
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $_category_acl));
+
+			$control_area_id = $control->get_control_area_id();
+			$control_area = $cats->return_single($control_area_id);
+			$control_area_name = $control_area[0]['name'];
+			
+			$message_details .= "Kontrollområde: " .  $control_area_name . "\n\n";
 			
 			// Generates message details from comment field in check item 
+			$counter = 1;
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
-				$message_details .= "Gjøremål: ";
+				$message_details .= "Gjøremål $counter: ";
 				$message_details .=  $case->get_descr() . "<br>";
+				$counter++;
 			}
 			
 			$location_id	= $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
@@ -196,8 +210,7 @@
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
-			$status = 0;
-			
+						
 			// Registers message and updates check items with message ticket id
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
@@ -223,7 +236,7 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-			$check_items_and_cases = $this->so_check_item->get_check_items_and_cases_by_message($message_ticket_id, "array");
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id, "return_array");
 						
 			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
@@ -252,6 +265,55 @@
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl('case/view_case_message', $data);
+		}
+		
+		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
+			
+			$cases_array = $this->so->get_cases_by_message( $location_item_id );
+			
+			foreach($cases_array as $case){
+				$case->set_status( $updateStatus );
+				$this->so->update( $case );	
+			}
+			
+			$check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id, "return_object");
+			
+			if($updateStatus == 0){
+
+				foreach($check_items as $check_item){
+					$check_item->set_status(0);
+					$this->so_check_item->update($check_item);
+				}
+			}
+			else if($updateStatus == 1){
+				
+				foreach($check_items as $check_item){
+					$check_item = $this->so_check_item->get_single_with_cases($check_item->get_id());
+					
+					if($check_item->get_status() == 0){
+						
+						$cases_array = $check_item->get_cases_array();	
+						
+						if(count($cases_array) == 0){ 
+							$check_item->set_status(1);
+							$this->so_check_item->update($check_item);
+						}
+						else{
+						 	$all_cases_status = 1;
+						 	
+							foreach($cases_array as $case){
+								if($case->get_status() == 0)
+									$all_cases_status = 0;		
+							}
+							
+							if($all_cases_status == 1){
+								$check_item->set_status(1);
+								$this->so_check_item->update($check_item);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		public function query(){}

@@ -83,7 +83,7 @@
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>
-				Vis avvik/saker for sjekkliste
+				Vis saker
 			</a>			
 			<a class="active">
 				<xsl:attribute name="href">

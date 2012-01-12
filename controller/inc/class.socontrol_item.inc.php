@@ -134,7 +134,8 @@
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
-
+			$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+			
 			return $control_item;
 		}
 

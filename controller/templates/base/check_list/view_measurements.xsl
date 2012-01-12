@@ -3,7 +3,7 @@
 <xsl:template match="data">
 
 <div id="error_message_menu">
-	<a class="btn" id="register_errors">					
+	<a class="btn" id="register_case">					
 		<xsl:attribute name="href">
 			<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
@@ -37,25 +37,40 @@
 				<ul id="check_list_not_fixed_list" class="check_items expand_list">
 					<xsl:for-each select="measurement_check_items">
 							<li>
-							<xsl:if test="status = 0">
 								<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_item/title"/></span></h4>						
-								<form class="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
+								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
 									<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="check_item_id" value="{$check_item_id}" />
 									<input type="hidden" name="type" value="measurement" />
 									 
 									<div class="check_item">
+									   <div>
+										<label>Status</label>
+										<select name="status">
+											<xsl:choose>
+												<xsl:when test="status = 0">
+													<option value="0" SELECTED="SELECTED">Ikke utført</option>
+													<option value="1" >Utført</option>
+												</xsl:when>
+												<xsl:when test="status = 1">
+													<option value="0">Ikke utført</option>
+													<option value="1" SELECTED="SELECTED">Utført</option>
+												</xsl:when>
+											</xsl:choose>
+										</select>
+									  </div>
 									  <div>
 									       <label>Målingsverdi</label>
 									       <input>
 										      <xsl:attribute name="name">measurement</xsl:attribute>
 										      <xsl:attribute name="type">text</xsl:attribute>
 										      <xsl:attribute name="value">
-										      	<xsl:value-of select="measurement"/>
+										        <xsl:if test="measurement > 0">
+										        	<xsl:value-of select="measurement"/>
+										        </xsl:if>
 										      </xsl:attribute>
 										    </input>
 								       </div>
-								       
 								       <div>
 								         <label class="comment">Kommentar</label>
 								         <textarea name="comment">
@@ -64,12 +79,11 @@
 								       </div>
 								       <div class="form-buttons">
 											<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_item')" /></xsl:variable>
-											<input type="submit" name="save_control" value="Oppdater registert måling" class="not_active" title="{$lang_save}" />
+											<input type="submit" name="save_control" value="Oppdater måling" class="not_active" title="{$lang_save}" />
 										</div>
 									</div>
 								</form>
-							</xsl:if>
-					    </li>
+						</li>
 					</xsl:for-each>
 				</ul>			
 				</xsl:when>
