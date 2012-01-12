@@ -1014,7 +1014,7 @@ ul.check_items li.hidden{
 }
 
 .frm_save_check_item input[type='submit']{
-	width: 185px;
+	width: 165px;
 }
 ul.check_items {
     width: 625px;

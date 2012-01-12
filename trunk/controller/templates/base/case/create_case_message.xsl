@@ -5,7 +5,18 @@
 <div id="main_content">
 	
 		<h1>Registrer avviksmelding</h1>
-			
+	
+		<div id="edit_check_list_menu" class="hor_menu">
+			<a class="btn active">
+		    	<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+		      Tilbake til sjekkliste
+		    </a>
+		</div>
+	
 		<h3 class="box_header">Meldingen gjelder</h3>
 		<div id="case_details">
 			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control/title"/></h3>
@@ -102,15 +113,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</fieldset>
-		
-		<a class="btn">
-	    	<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-			</xsl:attribute>
-	      Vis sjekkliste
-	    </a>
 			
 </div>
 </xsl:template>

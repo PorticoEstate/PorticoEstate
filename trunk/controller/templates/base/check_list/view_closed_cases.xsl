@@ -3,7 +3,7 @@
 <xsl:template match="data">
 
 <div id="error_message_menu">
-	<a class="btn" id="register_errors">					
+	<a class="btn" id="register_case">					
 		<xsl:attribute name="href">
 			<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 			<xsl:text>&amp;check_list_id=</xsl:text>
