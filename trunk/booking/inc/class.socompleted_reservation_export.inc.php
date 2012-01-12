@@ -638,8 +638,6 @@
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
 			$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
 			
-//			echo "<pre>";print_r($reservations);exit;	
-			
 			foreach($reservations as &$reservation) {
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
@@ -648,8 +646,8 @@
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
 				
-				$reservation = array_map('utf8_decode', $reservation);
-				
+	//			$reservation = array_map('utf8_decode', $reservation);
+
 				//header level
 				$header = $this->get_agresso_row_template();
 				$header['accept_flag'] = '1';
@@ -688,8 +686,8 @@
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				
 				//Topptekst til faktura, knyttet mot fagavdeling
-				$header['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
-				
+				$header['long_info1'] = str_pad(substr(iconv("utf-8","windows-1252",$account_codes['invoice_instruction']), 0, 120), 120, ' ');
+
 				//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
 				$header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
 				
@@ -714,7 +712,7 @@
 				/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på 
 				 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
 				 */
-				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
+				$item['art_descr'] = str_pad(substr(iconv("utf-8","windows-1252",$reservation['article_description']), 0, 35), 35, ' '); //35 chars long
 				
 				//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
 				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
@@ -770,7 +768,7 @@
 				$text['batch_id'] = $header['batch_id'];
 				$text['client'] = $header['client'];
 				$text['line_no'] = $item['line_no']; 
-				$text['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
+				$text['short_info'] = str_pad(substr(iconv("utf-8","windows-1252",$reservation['description']), 0, 60), 60, ' ');
 				$text['trans_type'] = $header['trans_type'];
 				$text['voucher_type'] = $header['voucher_type'];
 				
@@ -781,6 +779,7 @@
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $header));
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+
 			}
 			
 			if (count($export_info) == 0) {
