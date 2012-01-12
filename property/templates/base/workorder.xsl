@@ -559,7 +559,6 @@
 									<xsl:variable name="lang_add_invoice_statustext">
 										<xsl:value-of select="php:function('lang', 'add invoice')"/>
 									</xsl:variable>
-								<!--	
 									<tr>
 										<td valign="top">
 											<a href="javascript:showlightbox_manual_invoide({value_workorder_id})" title="{$lang_add_invoice_statustext}">
@@ -574,7 +573,7 @@
 												<div class="bd" style="text-align:center;"> </div>
 											</div>
 										</td>
-									</tr>-->
+									</tr>
 								</xsl:when>
 							</xsl:choose>
 							<tr>
@@ -878,7 +877,7 @@
 							<xsl:value-of select="php:function('lang', 'Auto TAX')"/>
 						</td>
 						<td>
-							<input type="checkbox" name="auto_tax" value="True" checked="checked" >
+							<input type="checkbox" name="values[auto_tax]" value="True" checked="checked" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Set tax')"/>
 								</xsl:attribute>
@@ -897,7 +896,7 @@
 							<xsl:value-of select="php:function('lang', 'janitor')"/>
 						</td>
 						<td valign="top">
-							<select name="janitor" class="forms">
+							<select name="values[oppsynsmannid]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no janitor')"/>
 								</option>
@@ -910,7 +909,7 @@
 							<xsl:value-of select="php:function('lang', 'supervisor')"/>
 						</td>
 						<td valign="top">
-							<select name="supervisor" class="forms">
+							<select name="values[saksbehandlerid]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no supervisor')"/>
 								</option>
@@ -923,7 +922,7 @@
 							<xsl:value-of select="php:function('lang', 'B - responsible')"/>
 						</td>
 						<td valign="top">
-							<select name="budget_responsible" class="forms">
+							<select name="values[budsjettansvarligid]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'Select B-Responsible')"/>
 								</option>
@@ -936,7 +935,7 @@
 							<xsl:value-of select="php:function('lang', 'order id')"/>
 						</td>
 						<td>
-							<input type="text" name="order_id" value="{value_order_id}" >
+							<input type="text" name="values[order_id]" value="{value_order_id}" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Order # that initiated the invoice')"/>
 								</xsl:attribute>
@@ -948,7 +947,7 @@
 							<xsl:value-of select="php:function('lang', 'art')"/>
 						</td>
 						<td valign="top">
-							<select name="art" class="forms" >
+							<select name="values[artid]" class="forms" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'You have to select type of invoice')"/>
 								</xsl:attribute>
@@ -964,7 +963,7 @@
 							<xsl:value-of select="php:function('lang', 'Type invoice II')"/>
 						</td>
 						<td valign="top">
-							<select name="type" class="forms">
+							<select name="values[typeid]" class="forms">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Select the type  invoice. To do not use type -  select NO TYPE')"/>
 								</xsl:attribute>
@@ -977,10 +976,22 @@
 					</tr>
 					<tr>
 						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'voucher id')"/>
+						</td>
+						<td>
+							<input type="text" name="values[voucher_id]" value="{value_voucher_id}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'voucher id')"/>
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'Invoice Number')"/>
 						</td>
 						<td>
-							<input type="text" name="invoice_num" value="{value_invoice_num}">
+							<input type="text" name="values[invoice_id]" value="{value_invoice_id}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter Invoice Number')"/>
 								</xsl:attribute>
@@ -992,7 +1003,7 @@
 							<xsl:value-of select="php:function('lang', 'KID nr')"/>
 						</td>
 						<td>
-							<input type="text" name="kid_nr" value="{value_kid_nr}" >
+							<input type="text" name="values[kidnr]" value="{value_kid_nr}" >
 								<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Enter Kid nr')"/>
 								</xsl:attribute>
@@ -1004,7 +1015,7 @@
 							<xsl:value-of select="php:function('lang', 'amount')"/>
 						</td>
 						<td>
-							<input type="text" name="amount" value="{value_amount}">
+							<input type="text" name="values[amount]" value="{value_amount}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'amount of the invoice')"/>
 								</xsl:attribute>
@@ -1016,7 +1027,7 @@
 							<xsl:value-of select="php:function('lang', 'invoice date')"/>
 						</td>
 						<td>
-							<input type="text" id="invoice_date" name="invoice_date" size="10" value="{value_invoice_date}" readonly="readonly" >
+							<input type="text" id="invoice_date" name="values[invoice_date]" size="10" value="{value_invoice_date}" readonly="readonly" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the invoice date')"/>
 								</xsl:attribute>
@@ -1029,7 +1040,7 @@
 							<xsl:value-of select="php:function('lang', 'payment date')"/>
 						</td>
 						<td>
-							<input type="text" id="payment_date" name="payment_date" size="10" value="{value_payment_date}" readonly="readonly">
+							<input type="text" id="payment_date" name="values[payment_date]" size="10" value="{value_payment_date}" readonly="readonly">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'payment date')"/>
 								</xsl:attribute>
@@ -1039,10 +1050,23 @@
 					</tr>
 					<tr>
 						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'paid')"/>
+						</td>
+						<td>
+							<input type="text" id="paid_date" name="values[paid_date]" size="10" value="{value_paid_date}" readonly="readonly">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'paid')"/>
+								</xsl:attribute>
+							</input>
+							<img id="paid_date-trigger" src="{img_cal}" alt="{$lang_datetitle}" title="{$lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'remark')"/>
 						</td>
 						<td>
-							<textarea cols="60" rows="10" name="merknad">
+							<textarea cols="60" rows="10" name="values[merknad]">
 								<xsl:value-of select="value_merknad"/>
 							</textarea>
 						</td>

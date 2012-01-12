@@ -1930,72 +1930,31 @@
 
 			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string' , 'SERVER'));
 			parse_str($referer['query']); // produce $menuaction
-			if(phpgw::get_var('cancel', 'bool') || $menuaction != 'property.uiworkorder.edit')
+			if(phpgw::get_var('cancel', 'bool'))
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 				$redirect = true;
 			}
 //_debug_array( $menuaction);die();
-			if(!$GLOBALS['phpgw']->session->appsession('session_data','add_values') && phpgw::get_var('add', 'bool'))
+			if($add_invoice = phpgw::get_var('add', 'bool'))
 			{
-				$values['art']					= phpgw::get_var('art', 'int');
-				$values['type']					= phpgw::get_var('type');
-				$values['dim_b']				= phpgw::get_var('dim_b', 'int');
-				$values['invoice_num']			= phpgw::get_var('invoice_num');
-				$values['kid_nr']				= phpgw::get_var('kid_nr');
-				$values['vendor_id']			= phpgw::get_var('vendor_id', 'int');
-				$values['vendor_name']			= phpgw::get_var('vendor_name');
-				$values['janitor']				= phpgw::get_var('janitor');
-				$values['supervisor']			= phpgw::get_var('supervisor');
-				$values['budget_responsible']	= phpgw::get_var('budget_responsible');
-				$values['invoice_date'] 		= urldecode(phpgw::get_var('invoice_date'));
-				$values['num_days']				= phpgw::get_var('num_days', 'int');
-				$values['payment_date'] 		= urldecode(phpgw::get_var('payment_date'));
-				$values['sday'] 				= phpgw::get_var('sday', 'int');
-				$values['smonth'] 				= phpgw::get_var('smonth', 'int');
-				$values['syear']				= phpgw::get_var('syear', 'int');
-				$values['eday'] 				= phpgw::get_var('eday', 'int');
-				$values['emonth'] 				= phpgw::get_var('emonth', 'int');
-				$values['eyear']				= phpgw::get_var('eyear', 'int');
-				$values['auto_tax'] 			= phpgw::get_var('auto_tax', 'bool');
-				$values['merknad']				= phpgw::get_var('merknad');
-				$values['b_account_id']			= phpgw::get_var('b_account_id', 'int');
-				$values['b_account_name']		= phpgw::get_var('b_account_name');
-				$values['amount']				= phpgw::get_var('amount'); // float - has to accept string until client side validation is in place.
+				$values = phpgw::get_var('values');
 
 				if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
 				{
 					$values['amount'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$values['amount']);
 				}
-
 				$values['amount'] 		= str_replace(array(' ',','),array('','.'),$values['amount']);
-
-				$values['order_id']		= phpgw::get_var('order_id');
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
-
-				$GLOBALS['phpgw']->session->appsession('session_data','add_values',$values);
-			}
-			else
-			{
-				$values	= $GLOBALS['phpgw']->session->appsession('session_data','add_values');
-				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
-			}
-
-			$location_code 		= phpgw::get_var('location_code');
-			$add_invoice 		= phpgw::get_var('add', 'bool');
-
-			$workorder		= $this->bo->read_single($order_id);
-//_debug_array($workorder); die();
-			if($location_code)
-			{
-				$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
+				$values['b_account_id'] = phpgw::get_var('b_account_id');
+				$values['project_group'] = phpgw::get_var('project_group');
+				$values['dimb'] = phpgw::get_var('ecodimb');
+				$values['vendor_id'] = phpgw::get_var('vendor_id');
 			}
 
 			if($add_invoice && is_array($values))
 			{
-				$redirect = true;
 				$order = false;
 				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
@@ -2030,7 +1989,7 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
 
-				if (!$values['invoice_num'])
+				if (!$values['invoice_id'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - enter a invoice num!'));
 				}
@@ -2051,43 +2010,20 @@
 				//_debug_array($values);
 				if (!is_array($receipt['error']))
 				{
-					if($values['invoice_date'])
-					{
-						$sdateparts = phpgwapi_datetime::date_array($values['invoice_date']);
-						$values['sday'] = $sdateparts['day'];
-						$values['smonth'] = $sdateparts['month'];
-						$values['syear'] = $sdateparts['year'];
-						unset($sdateparts);
-
-						$edateparts = phpgwapi_datetime::date_array($values['payment_date']);
-						$values['eday'] = $edateparts['day'];
-						$values['emonth'] = $edateparts['month'];
-						$values['eyear'] = $edateparts['year'];
-						unset($edateparts);
-					}
-
 					$values['regtid'] 		= date($this->bocommon->datetimeformat);
 
-
 					$_receipt = array();//local errors
-					$receipt = $this->bo->add_invoice($values,$debug);
+					$receipt = execMethod('property.boinvoice.add_invoice',$values);
 
 					if(!$receipt['message'] && $values['order_id'] && !$receipt[0]['spvend_code'])
 					{
 						$_receipt['error'][] = array('msg'=>lang('vendor is not defined in order %1', $values['order_id']));
-
-						$debug = false;// try again..
-						if($receipt[0]['location_code'])
-						{
-							//					$values['location_data'] = $bolocation->read_single($receipt['location_code'],array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
-						}
 					}
 
 					if(!$_receipt['error']) // all ok
 					{
 						unset($values);
-						$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiinvoice.add'));
+						$redirect = true;
 					}
 				}
 				else
@@ -2095,19 +2031,39 @@
 					if($values['location'])
 					{
 						$location_code=implode("-", $values['location']);
-						$values['location_data'] = $bolocation->read_single($location_code,isset($values['extra'])?$values['extra']:'');
+						$_location = $bolocation->read_single($location_code,isset($values['extra'])?$values['extra']:'');
+						unset($_location['attributes']);
+						$values['location_data'] = $_location;
 					}
-					$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 				}
 			}
 
-			$project	= execMethod('property.boproject.read_single_mini',$workorder['project_id']);
-//_debug_array($project);
-			$_location_data = $bolocation->read_single($workorder['location_code']);
-//_debug_array($workorder);die();			
+			if($workorder = $this->bo->read_single($values['order_id'] ? $values['order_id'] : $order_id))
+			{
+				$project	= execMethod('property.boproject.read_single_mini',$workorder['project_id']);
+			}
+
+			if(isset($values['location_data']) && $values['location_data'])
+			{
+				$_location_data = $values['location_data'];
+			}
+			else if (isset($workorder['location_data']) && $workorder['location_data'])
+			{
+				$_location_data = $workorder['location_data'];
+			}
+			else if (isset($project['location_data']) && $project['location_data'])
+			{
+				$_location_data = $project['location_data'];
+			}
+			else
+			{
+				$_location_data = array();
+			}
+//_debug_array($project);die();
+
 			$location_data=$bolocation->initiate_ui_location(array
 				(
-					'values'	=> isset($values['location_data'])?$values['location_data']: $workorder['location_data'] ? $workorder['location_data'] : $project['location_data'] ,
+					'values'	=> $_location_data,
 					'type_id'	=> 2, // calculated from location_types
 					'no_link'	=> false, // disable lookup links for location type less than type_id
 					'tenant'	=> false,
@@ -2143,9 +2099,9 @@
 
 
 			$link_data = array
-				(
-					'menuaction'	=> 'property.uiworkorder.add_invoice'
-				);
+			(
+				'menuaction'	=> 'property.uiworkorder.add_invoice'
+			);
 
 			if($_receipt)
 			{
@@ -2156,7 +2112,9 @@
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('invoice_date');
 			$jscal->add_listener('payment_date');
+			$jscal->add_listener('paid_date');
 
+			$order_id = isset($values['order_id']) && $values['order_id'] ? $values['order_id'] : $order_id;
 			$account_lid = $GLOBALS['phpgw']->accounts->get($this->account)->lid;
 			$data = array
 			(
@@ -2167,19 +2125,16 @@
 				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiinvoice.add')),
 				'value_invoice_date'				=> isset($values['invoice_date'])?$values['invoice_date']:'',
 				'value_payment_date'				=> isset($values['payment_date'])?$values['payment_date']:'',
-				'value_belop'						=> isset($values['belop'])?$values['belop']:'',
+				'value_payment_date'				=> isset($values['paid_date'])?$values['paid_date']:'',
 				'vendor_data'						=> $vendor_data,
 				'ecodimb_data'						=> $ecodimb_data,
 				'project_group_data'				=> $project_group_data,
-				'value_vendor_id'					=> isset($values['vendor_id'])?$values['vendor_id']:'',
-				'value_vendor_name'					=> isset($values['vendor_name'])?$values['vendor_name']:'',
 				'value_kid_nr'						=> isset($values['kid_nr'])?$values['kid_nr']:'',
-				'value_dim_b'						=> isset($values['dim_b'])?$values['dim_b']:'',
-				'value_invoice_num'					=> isset($values['invoice_num'])?$values['invoice_num']:'',
+				'value_invoice_id'					=> isset($values['invoice_id'])?$values['invoice_id']:'',
 				'value_merknad'						=> isset($values['merknad'])?$values['merknad']:'',
 				'value_num_days'					=> isset($values['num_days'])?$values['num_days']:'',
 				'value_amount'						=> isset($values['amount'])?$values['amount']:'',
-				'value_order_id'					=> phpgw::get_var('order_id'),
+				'value_order_id'					=> $order_id,
 				'art_list'							=> array('options' => execMethod('property.boinvoice.get_lisfm_ecoart', isset($values['art'])?$values['art']:'')),
 				'type_list'							=> array('options' => execMethod('property.boinvoice.get_type_list', isset($values['type'])?$values['type']:'')),
 				'janitor_list'						=> array('options_lid' => $this->bocommon->get_user_list_right(32,isset($values['janitor'])?$values['janitor']:$account_lid,'.invoice')),

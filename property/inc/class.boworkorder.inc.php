@@ -481,6 +481,11 @@
 
 		function read_single($workorder_id)
 		{
+			if(!$workorder_id)
+			{
+				return array();
+			}
+
 			$contacts	= CreateObject('property.sogeneric');
 			$contacts->get_location_info('vendor',false);
 			$workorder						= $this->so->read_single($workorder_id);
