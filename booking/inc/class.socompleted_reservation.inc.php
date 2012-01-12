@@ -150,9 +150,6 @@
 				'season_id'				=> isset($reservation['season_id']) ? $reservation['season_id'] : null,
 			);
 			
-			//echo "$type\n";
-			//print_r($reservation);
-			
 			$method = "initialize_completed_{$type}";
 			$this->$method($reservation, $entity);
 			$this->set_description($type, $reservation, $entity);
@@ -265,12 +262,22 @@
             if (intval($organization['customer_internal']) == 1) {
                 if (strlen($organization['customer_number']) == 5) {
                     $entity['customer_organization_number'] = $organization['customer_number'];
+	                $entity['customer_identifier_type'] = 'organization_number';
+                } elseif ($organization['customer_identifier_type'] == 'ssn') {
+                    $entity['customer_ssn'] = $organization['customer_ssn'];
+ 	                $entity['customer_identifier_type'] = 'ssn';
+                } elseif ($organization['customer_identifier_type'] == 'organization_number') {
+                    $entity['customer_organization_number'] = $organization['customer_organization_number'];
+	                $entity['customer_identifier_type'] = 'organization_number';
                 } else {
                     $entity['customer_organization_number'] = '';
+ 	                $entity['customer_identifier_type'] = '';
                 }
             } else {
                 $entity['customer_organization_number'] = $organization['organization_number'];
-            }
+                $entity['customer_identifier_type'] = 'organization_number';
+			}
+			
 		}
 		
 		protected function initialize_completed_booking(&$booking, &$entity) {
@@ -311,8 +318,25 @@
 		}
 		
 		protected function initialize_completed_event(&$event, &$entity) {
-			$this->set_customer_type($entity, $event);
-			$this->copy_customer_identifier($event, $entity);
+
+			if($event['customer_organization_id'] > 0) {
+				static $soorg;
+				static $cache = array();
+
+				!$soorg AND $soorg = CreateObject('booking.soorganization');
+				if (isset($cache[$event['customer_organization_id']])) {
+					$org = $cache[$event['customer_organization_id']];
+				} else {
+					$org = $soorg->read_single($event['customer_organization_id']);
+					$cache[$event['customer_organization_id']] = $org;
+				}
+				$this->set_organization($entity, $org);				
+				$this->set_customer_type($entity, $org);
+				$this->copy_customer_identifier($event, $entity);
+			} else {
+				$this->set_customer_type($entity, $event);
+				$this->copy_customer_identifier($event, $entity);
+			}
 		}
 		
 		public function update_exported_state_of(&$reservations, $with_export_id) {
