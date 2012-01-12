@@ -115,16 +115,8 @@
 							'label' => lang('Created')
 						),
 						array(
-							'key' => 'modified',
-							'label' => lang('Last modified')
-						),
-						array(
 							'key' => 'what',
 							'label' => lang('What')
-						),
-						array(
-							'key' => 'activity_name',
-							'label' => lang('Activity')
 						),
 						array(
 							'key' => 'contact_name',
@@ -155,34 +147,33 @@
 			while ($record = array_shift($this->db->resultSet)) {
 				$current_user_building_data[] = $record['object_id'];
 			}
+
 			$filters['building_id'] = $current_user_building_data;
 
 			if(isset($_SESSION['showall']))
 			{
 				unset($filters['building_id']);
-        		unset($filters['building_name']);
-        		unset($filters['type']);
-        		unset($filters['status']);
 			} else {
+				$filters['building_id'] = $current_user_building_data;
+			}
 
-                $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
-                if ($testdata != 0) {
-                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
-                } else {
-                    unset($filters['building_name']);                
-                }
-                $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
-                if ($testdata2 != '') {
-                    $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
-                } else {
-                    unset($filters['type']);
-                }
-                $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
-                if ($testdata2 != '') {
-                    $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
-                } else {
-                    unset($filters['status']);
-                }
+            $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+            if ($testdata != 0) {
+	            $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
+            } else {
+	            unset($filters['building_name']);                
+            }
+            $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
+            if ($testdata2 != '') {
+	            $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
+            } else {
+	            unset($filters['type']);
+            }
+            $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
+            if ($testdata2 != '') {
+	            $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
+            } else {
+	            unset($filters['status']);
             }
             
 			$params = array(
