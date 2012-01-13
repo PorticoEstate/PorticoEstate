@@ -225,32 +225,21 @@
 
 		function tax_code_list($selected='')
 		{
-			$tax_codes=$this->so->tax_code_list();
-
-			while (is_array($tax_codes) && list(,$code) = each($tax_codes))
+			if(!$selected && $selected !== '0' )
 			{
-				$sel_code = '';
-				if ($code['id']==$selected)
-				{
-					$sel_code = 'selected';
-				}
-
-				$tax_code_list[] = array
-					(
-						'id'			=> $code['id'],
-						'selected'		=> $sel_code
-					);
+				$selected = '#';
 			}
-
-			for ($i=0;$i<count($tax_code_list);$i++)
+			else
 			{
-				if ($tax_code_list[$i]['selected'] != 'selected')
-				{
-					unset($tax_code_list[$i]['selected']);
-				}
+				$selected = (int)$selected;
 			}
-
-			return $tax_code_list;
+			$tax_codes = $this->so->tax_code_list();
+			
+			foreach ($tax_codes as &$tax_code)
+			{
+				$tax_code['selected'] = (int)$tax_code['id'] === $selected ? 1 : 0;
+			}
+			return $tax_codes;
 		}
 
 		function update_period($voucher_id='',$period='')
@@ -366,59 +355,42 @@
 
 		public function add_invoice($values)
 		{
+			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
 			if($values['loc1']=$values['location']['loc1'])
 			{
 				$values['dima']=implode('',$values['location']);
+				$values['location_code']	= explode('-', $values['location']);
 			}
-
 			$values['spbudact_code']	= $values['b_account_id'];
-			$values['fakturanr']		= $values['invoice_num'];
+			$values['fakturanr']		= $values['invoice_id'];
 			$values['spvend_code']		= $values['vendor_id'];
 			$values['belop'] 			= $values['amount'];
 			$values['godkjentbelop']	= $values['amount'];
 
 			$_dateformat = $this->bocommon->dateformat;
 			
-			
-			$values['fakturadato'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['invoice_date']));
-			$values['forfallsdato'] = date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['payment_date']));
-			$values['overftid'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['paid_date']));
-			$values['periode']		= date('Ym',phpgwapi_datetime::date_to_timestamp($values['paid_date']));
+			$values['fakturadato'] 		= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['invoice_date']));
+			$values['forfallsdato'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['payment_date']));
+			$values['periode']			= date('Ym',phpgwapi_datetime::date_to_timestamp($values['paid_date']));
 
 			$values['kildeid'] 			= 1;
-			//_debug_array($values);die();
+			$values['pmwrkord_code']	= $values['order_id'];
+			
+			$values['bilagsnr']			= execMethod('property.socommon.increment_id','Bilagsnummer');
+			$values['bilagsnr_ut']		= $values['voucher_out_id'];
+			$values['kostra_id'] 		= $soXport->get_kostra_id($values['loc1']);
+			$values['mvakode'] 			= (int)$values['tax_code'];
+			$values['project_id']		= $values['project_group'];			
+
+			$values['oppsynsmannid']		= $values['janitor'];
+			$values['saksbehandlerid']		= $values['supervisor'];
+			$values['budsjettansvarligid']	= $values['budget_responsible'];
+
 			if($values['order_id'] && $order_type = $soXport->check_order($values['order_id']))
 			{
 				if($order_type=='workorder')
 				{
-					$soworkorder	= CreateObject('property.soworkorder');
-					$soproject		= CreateObject('property.soproject');
-					$workorder		= $soworkorder->read_single($values['order_id']);
-					$project		= $soproject->read_single($workorder['project_id']);
-
-					$values['spvend_code']		= $workorder['vendor_id'];
-					$values['spbudact_code']	= $workorder['b_account_id'];
-					$values['location_code']	= $project['location_code'];
-					$values['dima']				= str_replace('-','',$project['location_code']);
-					$values['vendor_name']		= $this->get_vendor_name($workorder['vendor_id']);
-					$values['pmwrkord_code']	= $values['order_id'];
-					$values['project_id']		= $workorder['project_id'];
-					if(!$values['dimb'])
-					{
-						$values['dimb']			= $workorder['ecodimb'];
-					}
-
-					$values = $this->set_responsible($values,$workorder['user_id'],$workorder['b_account_id']);
-
-					if($values['auto_tax'])
-					{
-						$values['mvakode'] = $soXport->auto_tax($values['dima']);
-						$values['mvakode'] = $soXport->tax_b_account_override($values['mvakode'],$values['spbudact_code']);
-						$values['mvakode'] = $soXport->tax_vendor_override($values['mvakode'],$values['spvend_code']);
-						$values['kostra_id'] = $soXport->get_kostra_id($values['dima']);
-					}
-
 					$buffer[0]=$values;
 				}
 
@@ -426,14 +398,7 @@
 				{
 					$sos_agreement = CreateObject('property.sos_agreement');
 					$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$values['order_id']));
-
-					$values['spvend_code']		= $s_agreement['vendor_id'];
-					$values['spbudact_code']	= $s_agreement['b_account_id'];
-					$values['vendor_name']		= $this->get_vendor_name($s_agreement['vendor_id']);
-					$values['pmwrkord_code']	= intval($values['order_id']);
 					$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
-
-
 					$s_agreement_detail = $sos_agreement->read(array('allrows'=>true,'s_agreement_id'=>$values['order_id'],'detail'=>true));
 
 					$sum_agreement=0;
@@ -442,57 +407,47 @@
 						$sum_agreement = $sum_agreement + $s_agreement_detail[$i]['cost'];
 					}
 
-
 					for ($i=0;$i<count($s_agreement_detail);$i++)
 					{
-						$buffer[$i]=$values;
-
-						$buffer[$i]['location_code']	=$s_agreement_detail[$i]['location_code'];
-						$buffer[$i]['dima']				=str_replace('-','',$s_agreement_detail[$i]['location_code']);
-
-
-						$buffer[$i]['belop']	=	round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'],2);
-						$buffer[$i]['godkjentbelop'] =$buffer[$i]['belop'];
-
-						if($values['auto_tax'])
-						{
-							$buffer[$i]['mvakode'] = $soXport->auto_tax($buffer[$i]['dima']);
-							$buffer[$i]['mvakode'] = $soXport->tax_b_account_override($buffer[$i]['mvakode'],$buffer[$i]['spbudact_code']);
-							$buffer[$i]['mvakode'] = $soXport->tax_vendor_override($buffer[$i]['mvakode'],$buffer[$i]['spvend_code']);
-							$buffer[$i]['kostra_id'] = $soXport->get_kostra_id($buffer[$i]['dima']);
-						}
+						$buffer[$i]						= $values;
+						$buffer[$i]['location_code']	= $s_agreement_detail[$i]['location_code'];
+						$buffer[$i]['dima']				= str_replace('-','',$s_agreement_detail[$i]['location_code']);
+						$buffer[$i]['belop']			= round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'],2);
+						$buffer[$i]['godkjentbelop']	= $buffer[$i]['belop'];
 					}
 				}
-			}
-			else
-			{
-				if($values['auto_tax'])
+
+				if($soXport->add($buffer)>0)
 				{
-					$values['mvakode'] = $soXport->auto_tax($values['loc1']);
-					$values['mvakode'] = $soXport->tax_b_account_override($values['mvakode'],$values['spbudact_code']);
-					$values['mvakode'] = $soXport->tax_vendor_override($values['mvakode'],$values['spvend_code']);
-					$values['kostra_id'] = $soXport->get_kostra_id($values['loc1']);
+					$ok = false;
+					$voucher = $soXport->get_voucher($values['bilagsnr']);
+					foreach ($voucher as &$line)
+					{
+						$line['overftid'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['paid_date']));	
+						$line['ordrebelop']	= $line['godkjentbelop'];	
+						$line['filnavn']	= 'dummy';		
+						$line['oppsynsigndato'] = date( $_dateformat );
+						$line['saksigndato'] = date( $_dateformat );
+						$line['budsjettsigndato'] = date( $_dateformat );
+						$line['utbetalingsigndato'] = date( $_dateformat );
+						$line['utbetalingid'] = $GLOBALS['phpgw']->accounts->get($this->account_id)->lid;
+						$ok = $soXport->add_OverfBilag($line);
+					}
+
+					if($ok)
+					{
+						$soXport->delete_voucher_from_fm_ecobilag($values['bilagsnr']);
+					}
+
+					$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
+					$receipt['voucher_id'] = $soXport->voucher_id;
 				}
-
-				$buffer[0]=$values;
-			}
-
-			if($debug)
-			{
-				return $buffer;
-			}
-
-			if($soXport->add($buffer)>0)
-			{
-				$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
-				$receipt['voucher_id'] = $soXport->voucher_id;
-			}
-			else
-			{
-				$receipt['error'][] = array('msg'=>lang('Invoice is NOT added!'));
+				else
+				{
+					$receipt['error'][] = array('msg'=>lang('Invoice is NOT added!'));
+				}
 			}
 			return $receipt;
-
 		}
 
 		function add($values,$debug='')
@@ -592,7 +547,6 @@
 						$buffer[$i]['location_code']	=$s_agreement_detail[$i]['location_code'];
 						$buffer[$i]['dima']				=str_replace('-','',$s_agreement_detail[$i]['location_code']);
 
-
 						$buffer[$i]['belop']	=	round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'],2);
 						$buffer[$i]['godkjentbelop'] =$buffer[$i]['belop'];
 
@@ -666,7 +620,7 @@
 			}
 		}
 
-		function set_responsible($values,$user_id='',$b_account_id='')
+		function set_responsible($values, $user_id=0, $b_account_id='')
 		{
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -677,15 +631,17 @@
 			if (!$values['budget_responsible'])
 			{
 				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_responsible);
-				$budget_responsible_contact_id		= $responsible->get_responsible($criteria_budget_responsible);
-				$budget_responsible_user_id			= $responsible->get_contact_user_id($budget_responsible_contact_id);
-				$values['budget_responsible']		= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
-				$values['budsjettansvarligid']		= $values['budget_responsible'];
+				if($budget_responsible_contact_id = $responsible->get_responsible($criteria_budget_responsible))
+				{
+					$budget_responsible_user_id			= $responsible->get_contact_user_id($budget_responsible_contact_id);
+					$values['budget_responsible']		= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+					$values['budsjettansvarligid']		= $values['budget_responsible'];
+				}
 			}
 
 			if (!$values['budget_responsible'])
 			{
-				$values['budget_responsible'] = $this->soXport->get_responsible($b_account_id);
+				$values['budget_responsible'] = execMethod('property.soXport.get_responsible',$b_account_id);
 				$values['budsjettansvarligid'] = $values['budget_responsible'];
 			}
 
@@ -693,10 +649,12 @@
 			if(!$values['supervisor'])
 			{
 				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_supervisor);
-				$supervisor_contact_id				= $responsible->get_responsible($criteria_supervisor);
-				$supervisor_user_id					= $responsible->get_contact_user_id($supervisor_contact_id);
-				$values['supervisor']				= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
-				$values['saksbehandlerid']			= $values['supervisor'];
+				if($supervisor_contact_id = $responsible->get_responsible($criteria_supervisor))
+				{
+					$supervisor_user_id					= $responsible->get_contact_user_id($supervisor_contact_id);
+					$values['supervisor']				= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+					$values['saksbehandlerid']			= $values['supervisor'];
+				}
 			}
 
 			$values['janitor']				= $GLOBALS['phpgw']->accounts->get($user_id)->lid;

@@ -53,13 +53,13 @@
 		}
 
 
-		function auto_tax($dima='')
+		function auto_tax($loc1='')
 		{
-			if(!$dima)
+			if(!$loc1)
 			{
 				return;
 			}
-			$sql = "select mva as tax_code from fm_location1 where loc1='" . substr($dima,0,4) . "'";
+			$sql = "SELECT mva as tax_code FROM fm_location1 WHERE loc1='{$loc1}'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -72,7 +72,7 @@
 			{
 				return $mvakode;
 			}
-			$sql = "select mva as tax_code from fm_b_account where id='$b_account_id'";
+			$sql = "SELECT mva as tax_code FROM fm_b_account where id='$b_account_id'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -108,13 +108,13 @@
 
 		}
 
-		function get_kostra_id($dima='')
+		function get_kostra_id($loc1='')
 		{
-			if(!$dima)
+			if(!$loc1)
 			{
 				return;
 			}
-			$sql = "select kostra_id from fm_location1 where loc1='" . substr($dima,0,4) . "'";
+			$sql = "SELECT kostra_id FROM fm_location1 WHERE loc1='{$loc1}'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -324,7 +324,7 @@
 				$data['utbetalingid'],
 				$data['utbetalingsigndato'],
 				$data['filnavn'],
-				date($this->db->datetime_format()),
+				isset($data['overftid']) && $data['overftid'] ? $data['overftid'] : date($this->db->datetime_format()),
 				$data['item_type'],
 				$data['item_id'],
 				$data['external_ref'],
@@ -345,9 +345,66 @@
 				. $this->db->money_format($data['godkjentbelop']) . ","
 				. $this->db->money_format($data['ordrebelop']) . ")";
 
-			$this->db->query($sql,__LINE__,__FILE__);
-			//echo 'sql ' . $sql.'<br>';
+			return $this->db->query($sql,__LINE__,__FILE__);
 		}
+
+
+    	function get_voucher($bilagsnr)
+    	{
+  	  		$sql= "SELECT fm_ecobilag.* FROM fm_ecobilag WHERE bilagsnr = {$bilagsnr}";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$voucher = array();
+			while ($this->db->next_record())
+			{
+				$voucher[] = array
+				(
+					'id'					=> $this->db->f('id'),
+					'bilagsnr'				=> $bilagsnr,
+					'bilagsnr_ut'			=> $this->db->f('bilagsnr_ut'),
+					'kidnr'					=> $this->db->f('kidnr'),
+					'typeid'				=> $this->db->f('typeid'),
+					'kildeid'				=> $this->db->f('kildeid'),
+					'project_id'			=> $this->db->f('project_id'),
+					'pmwrkord_code'			=> $this->db->f('pmwrkord_code'),
+					'belop'					=> $this->db->f('belop'),
+					'fakturadato'			=> $this->db->f('fakturadato'),
+					'periode'				=> $this->db->f('periode'),
+					'periodization'			=> $this->db->f('periodization'),
+					'periodization_start'	=> $this->db->f('periodization_start'),
+					'forfallsdato'			=> $this->db->f('forfallsdato'),
+					'fakturanr'				=> $this->db->f('fakturanr'),
+					'spbudact_code'			=> $this->db->f('spbudact_code'),
+					'regtid'				=> $this->db->f('regtid'),
+					'artid'					=> $this->db->f('artid'),
+					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
+					'spvend_code'			=> $this->db->f('spvend_code'),
+					'loc1'					=> $this->db->f('loc1'),
+					'dima'					=> $this->db->f('dima'),
+					'dimb'					=> $this->db->f('dimb'),
+					'mvakode'				=> $this->db->f('mvakode'),
+					'dimd'					=> $this->db->f('dimd'),
+					'oppsynsmannid'			=> $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'		=> $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'	=> $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
+					'saksigndato'			=> $this->db->f('saksigndato'),
+					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
+					'merknad'				=> $this->db->f('merknad',true),
+					'splitt'				=> $this->db->f('splitt'),
+					'utbetalingid'			=> $this->db->f('utbetalingid'),
+					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
+					'external_ref'			=> $this->db->f('external_ref'),
+					'kostra_id'				=> $this->db->f('kostra_id'),
+					'currency'				=> $this->db->f('currency'),
+					'process_log'			=> $this->db->f('process_log',true),
+					'process_code'			=> $this->db->f('process_code'),
+				);
+			}
+
+			return $voucher;
+    	}
+
 
 		function delete_from_fm_ecobilag($id)
 		{
@@ -546,6 +603,13 @@
 		function delete_invoice($bilagsnr)
 		{
 			$sql="delete from fm_ecobilagoverf where bilagsnr='$bilagsnr'";
+			$this->db->query($sql,__LINE__,__FILE__);
+		}
+
+		function delete_voucher_from_fm_ecobilag($bilagsnr)
+		{
+			$bilagsnr = (int) $bilagsnr;
+			$sql="DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 

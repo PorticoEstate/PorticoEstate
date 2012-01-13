@@ -306,9 +306,14 @@
 			return $entity;
 		}
 
+
 		function increment_id($name)
 		{
-			$now = time();
+			if(!$name)
+			{
+				throw new Exception("property_socommon::increment_id() - Missing name");
+			}
+
 			if($name == 'order') // FIXME: temporary hack
 			{
 				$name = 'workorder';
@@ -317,14 +322,23 @@
 			{
 				$name = 'workorder';
 			}
-			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC" );
+
+			$this->db->query("SELECT name FROM fm_idgenerator WHERE name='{$name}'");
+			$this->db->next_record();
+			if(!$this->db->f('name'))
+			{
+				throw new Exception("property_socommon::increment_id() - not a valid name: '{$name}'");			
+			}
+
+			$now = time();
+			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
 			$next_id = $this->db->f('value') +1;
 			$start_date = (int)$this->db->f('start_date');
-
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 			return $next_id;
 		}
+
 
 		function new_db($db ='' )
 		{
@@ -399,4 +413,5 @@
 			}
 			return $access_location;
 		}
+
 	}
