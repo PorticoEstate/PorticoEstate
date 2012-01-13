@@ -1110,7 +1110,8 @@
 				'process_log' => array('type' => 'text','nullable' => True),
 				'process_code' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'periodization' => array('type' => 'int','precision' => '4','nullable' => True),
-				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True)
+				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True),
+				'manual_record' => array('type' => 'int','precision' => '2','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

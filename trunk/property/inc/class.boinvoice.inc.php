@@ -353,7 +353,7 @@
 			}
 		}
 
-		public function add_invoice($values)
+		public function add_manual_invoice($values)
 		{
 			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
@@ -417,28 +417,8 @@
 					}
 				}
 
-				if($soXport->add($buffer)>0)
+				if($soXport->add_manual_invoice($buffer))
 				{
-					$ok = false;
-					$voucher = $soXport->get_voucher($values['bilagsnr']);
-					foreach ($voucher as &$line)
-					{
-						$line['overftid'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['paid_date']));	
-						$line['ordrebelop']	= $line['godkjentbelop'];	
-						$line['filnavn']	= 'dummy';		
-						$line['oppsynsigndato'] = date( $_dateformat );
-						$line['saksigndato'] = date( $_dateformat );
-						$line['budsjettsigndato'] = date( $_dateformat );
-						$line['utbetalingsigndato'] = date( $_dateformat );
-						$line['utbetalingid'] = $GLOBALS['phpgw']->accounts->get($this->account_id)->lid;
-						$ok = $soXport->add_OverfBilag($line);
-					}
-
-					if($ok)
-					{
-						$soXport->delete_voucher_from_fm_ecobilag($values['bilagsnr']);
-					}
-
 					$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
 					$receipt['voucher_id'] = $soXport->voucher_id;
 				}

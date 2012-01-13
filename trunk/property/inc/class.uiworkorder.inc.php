@@ -2012,7 +2012,7 @@
 					$values['regtid'] 		= date($this->bocommon->datetimeformat);
 
 					$_receipt = array();//local errors
-					$receipt = execMethod('property.boinvoice.add_invoice',$values);
+					$receipt = $boinvoice->add_manual_invoice($values);
 
 					if(!$receipt['message'] && $values['order_id'] && !$receipt[0]['spvend_code'])
 					{
