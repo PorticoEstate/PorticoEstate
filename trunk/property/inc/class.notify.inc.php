@@ -130,7 +130,7 @@
 		{
 			if(!isset($data['count']))
 			{
-				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");			
+				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");
 			}	
 
 			$content = array();

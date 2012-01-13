@@ -1927,6 +1927,7 @@
 			$receipt = array();
 
 			$bolocation	= CreateObject('property.bolocation');
+			$boinvoice	= CreateObject('property.boinvoice');
 
 			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string' , 'SERVER'));
 			parse_str($referer['query']); // produce $menuaction
@@ -1953,38 +1954,44 @@
 				$values['vendor_id'] = phpgw::get_var('vendor_id');
 			}
 
+
 			if($add_invoice && is_array($values))
 			{
-				$order = false;
 				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter an integer for order!'));
 					unset($values['order_id']);
 				}
-				else if($values['order_id'])
+
+				if(!execMethod('property.soXport.check_order',$values['order_id']))
 				{
-					$order=true;
+					$receipt['error'][]=array('msg'=>lang('Not a valid order!'));					
 				}
 
 				if (!$values['amount'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - enter an amount!'));
 				}
-				if (!$values['art'])
+				if (!$values['artid'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select type invoice!'));
 				}
-				if (!$values['vendor_id'] && !$order)
+
+				if (!$values['vendor_id'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select Vendor!'));
 				}
+				else if (!$boinvoice->check_vendor($values['vendor_id']))
+				{
+					$receipt['error'][] = array('msg'=>lang('That Vendor ID is not valid !'). ' : ' . $values['vendor_id']);
+				}
 
-				if (!$values['type'])
+				if (!$values['typeid'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select type order!'));
 				}
 
-				if (!$values['budget_responsible'] && (!isset($order) || !$order))
+				if (!$values['budget_responsible'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
@@ -1992,14 +1999,6 @@
 				if (!$values['invoice_id'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - enter a invoice num!'));
-				}
-
-				if(!$order && $values['vendor_id'])
-				{
-					if (!$this->bo->check_vendor($values['vendor_id']))
-					{
-						$receipt['error'][] = array('msg'=>lang('That Vendor ID is not valid !'). ' : ' . $values['vendor_id']);
-					}
 				}
 
 				if (!$values['payment_date'] && !$values['num_days'])
@@ -2022,7 +2021,6 @@
 
 					if(!$_receipt['error']) // all ok
 					{
-						unset($values);
 						$redirect = true;
 					}
 				}
@@ -2041,6 +2039,18 @@
 			if($workorder = $this->bo->read_single($values['order_id'] ? $values['order_id'] : $order_id))
 			{
 				$project	= execMethod('property.boproject.read_single_mini',$workorder['project_id']);
+
+				if(!$add_invoice && !$redirect)
+				{
+					$_criteria = array
+					(
+						'dimb' => $workorder['ecodimb']
+					);
+					$_responsible					= $boinvoice->set_responsible($_criteria,$workorder['user_id'],$values['b_account_id']);
+					$values['janitor']				= $_responsible['janitor'];
+					$values['supervisor']			= $_responsible['supervisor'];
+					$values['budget_responsible']	= $_responsible['budget_responsible'];
+				}
 			}
 
 			if(isset($values['location_data']) && $values['location_data'])
@@ -2115,6 +2125,7 @@
 			$jscal->add_listener('paid_date');
 
 			$order_id = isset($values['order_id']) && $values['order_id'] ? $values['order_id'] : $order_id;
+
 			$account_lid = $GLOBALS['phpgw']->accounts->get($this->account)->lid;
 			$data = array
 			(
@@ -2125,21 +2136,23 @@
 				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiinvoice.add')),
 				'value_invoice_date'				=> isset($values['invoice_date'])?$values['invoice_date']:'',
 				'value_payment_date'				=> isset($values['payment_date'])?$values['payment_date']:'',
-				'value_payment_date'				=> isset($values['paid_date'])?$values['paid_date']:'',
+				'value_paid_date'					=> isset($values['paid_date'])?$values['paid_date']:'',
 				'vendor_data'						=> $vendor_data,
 				'ecodimb_data'						=> $ecodimb_data,
 				'project_group_data'				=> $project_group_data,
-				'value_kid_nr'						=> isset($values['kid_nr'])?$values['kid_nr']:'',
+				'value_kidnr'						=> isset($values['kidnr'])?$values['kidnr']:'',
 				'value_invoice_id'					=> isset($values['invoice_id'])?$values['invoice_id']:'',
+				'value_voucher_out_id'				=> isset($values['voucher_out_id'])?$values['voucher_out_id']:'',
 				'value_merknad'						=> isset($values['merknad'])?$values['merknad']:'',
 				'value_num_days'					=> isset($values['num_days'])?$values['num_days']:'',
 				'value_amount'						=> isset($values['amount'])?$values['amount']:'',
 				'value_order_id'					=> $order_id,
-				'art_list'							=> array('options' => execMethod('property.boinvoice.get_lisfm_ecoart', isset($values['art'])?$values['art']:'')),
-				'type_list'							=> array('options' => execMethod('property.boinvoice.get_type_list', isset($values['type'])?$values['type']:'')),
-				'janitor_list'						=> array('options_lid' => $this->bocommon->get_user_list_right(32,isset($values['janitor'])?$values['janitor']:$account_lid,'.invoice')),
-				'supervisor_list'					=> array('options_lid' => $this->bocommon->get_user_list_right(64,isset($values['supervisor'])?$values['supervisor']:$account_lid,'.invoice')),
-				'budget_responsible_list'			=> array('options_lid' => $this->bocommon->get_user_list_right(128,isset($values['budget_responsible'])?$values['budget_responsible']:$account_lid,'.invoice')),
+				'art_list'							=> array('options' => $boinvoice->get_lisfm_ecoart( isset($values['artid'])?$values['artid']:'')),
+				'type_list'							=> array('options' => $boinvoice->get_type_list( isset($values['typeid'])?$values['typeid']:'')),
+				'tax_code_list'						=> array('options' => $boinvoice->tax_code_list( isset($values['tax_code'])?$values['tax_code']:'')),
+				'janitor_list'						=> array('options_lid' => $this->bocommon->get_user_list_right(32,isset($values['janitor']) && $values['janitor'] ? $values['janitor']:$account_lid,'.invoice')),
+				'supervisor_list'					=> array('options_lid' => $this->bocommon->get_user_list_right(64,isset($values['supervisor']) && $values['supervisor'] ? $values['supervisor']:$account_lid,'.invoice')),
+				'budget_responsible_list'			=> array('options_lid' => $this->bocommon->get_user_list_right(128,isset($values['budget_responsible']) && $values['budget_responsible'] ? $values['budget_responsible']:$account_lid,'.invoice')),
 				'location_data'						=> $location_data,
 				'b_account_data'					=> $b_account_data,
 				'redirect'							=> isset($redirect) && $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit', 'id' => $order_id , 'tab' => 'budget')) : null,
@@ -2149,11 +2162,12 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_invoice' => $data));
 
+/*
 			phpgwapi_yui::load_widget('container');
 			phpgwapi_yui::load_widget('button');
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
-
+*/
 /*
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');

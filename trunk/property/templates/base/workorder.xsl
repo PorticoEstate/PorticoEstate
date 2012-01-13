@@ -872,6 +872,7 @@
 					<xsl:value-of select="form_action"/>
 				</xsl:variable>
 				<form method="post" id="add_invoice" name="form" action="{$form_action}">
+<!--
 					<tr>
 						<td>
 							<xsl:value-of select="php:function('lang', 'Auto TAX')"/>
@@ -884,6 +885,7 @@
 							</input>
 						</td>
 					</tr>
+-->
 					<xsl:call-template name="location_form"/>
 					<xsl:call-template name="b_account_form"/>
 					<xsl:call-template name="project_group_form"/>
@@ -896,7 +898,7 @@
 							<xsl:value-of select="php:function('lang', 'janitor')"/>
 						</td>
 						<td valign="top">
-							<select name="values[oppsynsmannid]" class="forms">
+							<select name="values[janitor]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no janitor')"/>
 								</option>
@@ -909,7 +911,7 @@
 							<xsl:value-of select="php:function('lang', 'supervisor')"/>
 						</td>
 						<td valign="top">
-							<select name="values[saksbehandlerid]" class="forms">
+							<select name="values[supervisor]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'no supervisor')"/>
 								</option>
@@ -922,7 +924,7 @@
 							<xsl:value-of select="php:function('lang', 'B - responsible')"/>
 						</td>
 						<td valign="top">
-							<select name="values[budsjettansvarligid]" class="forms">
+							<select name="values[budget_responsible]" class="forms">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'Select B-Responsible')"/>
 								</option>
@@ -944,6 +946,22 @@
 					</tr>
 					<tr>
 						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'tax code')"/>
+						</td>
+						<td valign="top">
+							<select name="values[tax_code]" class="forms" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'tax code')"/>
+								</xsl:attribute>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="tax_code_list/options"/>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'art')"/>
 						</td>
 						<td valign="top">
@@ -954,7 +972,7 @@
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'Select Invoice Type')"/>
 								</option>
-								<xsl:apply-templates select="art_list"/>
+								<xsl:apply-templates select="art_list/options"/>
 							</select>
 						</td>
 					</tr>
@@ -979,7 +997,7 @@
 							<xsl:value-of select="php:function('lang', 'voucher id')"/>
 						</td>
 						<td>
-							<input type="text" name="values[voucher_id]" value="{value_voucher_id}">
+							<input type="text" name="values[voucher_out_id]" value="{value_voucher_out_id}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'voucher id')"/>
 								</xsl:attribute>
@@ -1003,7 +1021,7 @@
 							<xsl:value-of select="php:function('lang', 'KID nr')"/>
 						</td>
 						<td>
-							<input type="text" name="values[kidnr]" value="{value_kid_nr}" >
+							<input type="text" name="values[kidnr]" value="{value_kidnr}" >
 								<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Enter Kid nr')"/>
 								</xsl:attribute>

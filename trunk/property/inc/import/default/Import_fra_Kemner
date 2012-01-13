@@ -207,10 +207,10 @@
 						$buffer = $this->import_new_attrib($buffer,dimb,$this->dimb,$invoice_common);
 						$bilagsnr++;
 
-			                        //Finn dima fra Boei
-			                        $gabinfo = $this->soXport->gabnr_to_objekt($Gnr,$Bnr,$sekjonnr);
-						$buffer = $this->import_new_attrib($buffer,dima,$gabinfo['dima'],$invoice_common);
-						$buffer = $this->import_new_attrib($buffer,loc1,$gabinfo['loc1'],$invoice_common);
+			            //Finn dima fra Boei
+			            $gabinfo = $this->soXport->gabnr_to_objekt($Gnr,$Bnr,$sekjonnr);
+						$buffer = $this->import_new_attrib($buffer,'dima',$gabinfo['dima'],$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,'loc1',$gabinfo['loc1'],$invoice_common);
 						//finn boei gateadresse for kongroll
 						$boei_gateadresse=$this->soXport->dima_to_address($dima);
 						$buffer = $this->import_new_attrib($buffer,boei_gateadresse,$boei_gateadresse,$invoice_common);
@@ -350,7 +350,7 @@
 				}
 
 
-				if($name=='dima' && $invoice_common['auto_tax']):
+				if($name=='loc1' && $invoice_common['auto_tax']):
 				{
 					$mvakode=$this->soXport->auto_tax($value);
 					
@@ -363,7 +363,7 @@
 						$buffer[$this->id]['mvakode'] = $this->mvakode;
 					}
 				}
-				elseif($name=='dima' && !$invoice_common['auto_tax']):
+				elseif($name=='loc1' && !$invoice_common['auto_tax']):
 				{
 					$buffer[$this->id]['mvakode'] = $this->mvakode;
 				}
@@ -389,7 +389,7 @@
 				{
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
-					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['dima']);
+					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 				}
 			}
 			return $buffer;

@@ -405,9 +405,9 @@
 
 					$buffer[$i]['mvakode'] = $this->mvakode;
 
-					if($buffer[$i]['dima'] && $this->auto_tax)
+					if($buffer[$i]['loc1'] && $this->auto_tax)
 					{
-						$mvakode = $this->soXport->auto_tax($buffer[$i]['dima']);
+						$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
 					
 						if($mvakode)
 						{
