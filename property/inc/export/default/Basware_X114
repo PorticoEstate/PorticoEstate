@@ -226,7 +226,7 @@
 			if($rollback_voucher)
 			{
 				$rollback_voucher = (int)$rollback_voucher;
-				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher}";
+				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher} AND manual_record IS NULL";
 			}
 			else
 			{
@@ -349,44 +349,6 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
-		protected function correct_actual_cost($order_id, $Belop, $actual_cost_field, $operator)
-		{
-			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-
-			$table = '';
-			$update_paid = '';
-			switch($this->db->f('type'))
-			{
-				case 'workorder':
-					$table = 'fm_workorder';
-					if($operator == "-")
-					{
-						$update_paid = ", paid = 1";
-					}
-					else
-					{
-						$update_paid = ", paid = 2";
-					}
-					break;
-				case 's_agreement':
-					$table = 'fm_s_agreement';
-					$actual_cost_field = 'actual_cost';
-					break;
-			}
-
-			$Belop = $Belop/100;
-			if(!$table)
-			{
-				throw new Exception('ERROR: the order id seems to not correspond with any order type');
-			}
-
-			$sql="UPDATE $table SET $actual_cost_field=$actual_cost_field $operator $Belop $update_paid WHERE id='$order_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
 		public function overfor($download,$force_period_year='')
 		{
 //			$download = 'on';
@@ -471,7 +433,7 @@
 
 					$operator='-';
 
-					$this->correct_actual_cost($line['pmwrkord_code'],$Belop,$actual_cost_field,$operator);
+					$this->soXport->correct_actual_cost($line['pmwrkord_code'],$Belop,$actual_cost_field,$operator);
 				}
 
 				//Slett fra avviks tabell
@@ -531,7 +493,7 @@
 
 		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
-			$oRsBilag = $this->get_voucher($voucher_id);
+			$oRsBilag =  $this->soXport->get_voucher($voucher_id);
 
 			$skip_basware = false;
 			if(!isset($oRsBilag[0]['external_ref'])  || !$oRsBilag[0]['external_ref'])
@@ -728,7 +690,7 @@
 
 						if(!$this->debug)
 						{
-							$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field,$operator);
+							$this->soXport->correct_actual_cost($line['order_id'],$amount, $actual_cost_field,$operator);
 						}
 					}
 				}
@@ -884,61 +846,6 @@
 			return $message;
 		}
 
-    	protected function get_voucher($bilagsnr)
-    	{
-  	  		$sql= "SELECT fm_ecobilag.* FROM fm_ecobilag WHERE bilagsnr = {$bilagsnr}";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$voucher = array();
-			while ($this->db->next_record())
-			{
-				$voucher[] = array
-				(
-					'id'					=> $this->db->f('id'),
-					'bilagsnr'				=> $bilagsnr,
-					'bilagsnr_ut'			=> $this->db->f('bilagsnr_ut'),
-					'kidnr'					=> $this->db->f('kidnr'),
-					'typeid'				=> $this->db->f('typeid'),
-					'kildeid'				=> $this->db->f('kildeid'),
-					'project_id'			=> $this->db->f('project_id'),
-					'order_id'				=> $this->db->f('pmwrkord_code'),
-					'belop'					=> $this->db->f('belop'),
-					'fakturadato'			=> $this->db->f('fakturadato'),
-					'periode'				=> $this->db->f('periode'),
-					'periodization'			=> $this->db->f('periodization'),
-					'periodization_start'	=> $this->db->f('periodization_start'),
-					'forfallsdato'			=> $this->db->f('forfallsdato'),
-					'fakturanr'				=> $this->db->f('fakturanr'),
-					'spbudact_code'			=> $this->db->f('spbudact_code'),
-					'regtid'				=> $this->db->f('regtid'),
-					'artid'					=> $this->db->f('artid'),
-					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
-					'spvend_code'			=> $this->db->f('spvend_code'),
-					'loc1'					=> $this->db->f('loc1'),
-					'dima'					=> $this->db->f('dima'),
-					'dimb'					=> $this->db->f('dimb'),
-					'mvakode'				=> $this->db->f('mvakode'),
-					'dimd'					=> $this->db->f('dimd'),
-					'oppsynsmannid'			=> $this->db->f('oppsynsmannid'),
-					'saksbehandlerid'		=> $this->db->f('saksbehandlerid'),
-					'budsjettansvarligid'	=> $this->db->f('budsjettansvarligid'),
-					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
-					'saksigndato'			=> $this->db->f('saksigndato'),
-					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
-					'merknad'				=> $this->db->f('merknad',true),
-					'splitt'				=> $this->db->f('splitt'),
-					'utbetalingid'			=> $this->db->f('utbetalingid'),
-					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
-					'external_ref'			=> $this->db->f('external_ref'),
-					'kostra_id'				=> $this->db->f('kostra_id'),
-					'currency'				=> $this->db->f('currency'),
-					'process_log'			=> $this->db->f('process_log',true),
-					'process_code'			=> $this->db->f('process_code'),
-				);
-			}
-
-			return $voucher;
-    	}
 
 		protected function _delete_from_fm_ecobilag($bilagsnr)
 		{

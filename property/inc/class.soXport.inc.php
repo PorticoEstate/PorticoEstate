@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -39,6 +41,7 @@
 		var $total_records = 0;
 		var $bilagsnr;
 		var $voucher_id;
+		protected $global_lock = false;
 
 		function __construct()
 		{
@@ -72,7 +75,7 @@
 			{
 				return $mvakode;
 			}
-			$sql = "SELECT mva as tax_code FROM fm_b_account where id='$b_account_id'";
+			$sql = "SELECT mva as tax_code FROM fm_b_account WHERE id='$b_account_id'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -93,7 +96,7 @@
 			{
 				return $mvakode;
 			}
-			$sql = "select mva as tax_code from fm_vendor where id='$vendor_id'";
+			$sql = "SELECT mva as tax_code FROM fm_vendor WHERE id='$vendor_id'";
 			$this->db->query($sql);
 			$this->db->next_record();
 
@@ -123,9 +126,9 @@
 
 		function anleggsnr_to_objekt($anleggsnr,$meter_table)
 		{
-			$this->db->query("select $meter_table.ext_meter_id,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
-				. " from $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
-				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id where $meter_table.ext_system_id='$anleggsnr'");
+			$this->db->query("SELECT $meter_table.ext_meter_id,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
+				. " FROM $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
+				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id WHERE $meter_table.ext_system_id='$anleggsnr'");
 
 			$this->db->next_record();
 
@@ -173,7 +176,7 @@
 			$loc1=substr($dima,0,4);
 			$loc2=substr($dima,4,2);
 			$loc3=substr($dima,6,2);
-			$sql = "select loc3_name from fm_location3 where loc1 = '$loc1' and loc2= '$loc2' and loc3 = '$loc3' ";
+			$sql = "SELECT loc3_name FROM fm_location3 WHERE loc1 = '$loc1' and loc2= '$loc2' and loc3 = '$loc3' ";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			$GLOBALS['phpgw']->db->next_record();
 			$address=$GLOBALS['phpgw']->db->f('loc3_name');
@@ -183,7 +186,7 @@
 
 		function check_order($id)
 		{
-			$this->db->query("SELECT id,type FROM fm_orders where id='{$id}'");
+			$this->db->query("SELECT id,type FROM fm_orders WHERE id='{$id}'");
 			$this->db->next_record();
 			return $this->db->f('type');
 		}
@@ -201,14 +204,21 @@
 		function check_spbudact_code($id)
 		{
 
-			$this->db->query("select count(*) as cnt from fm_b_account where id='$id'");
+			$this->db->query("SELECT count(*) as cnt FROM fm_b_account WHERE id='$id'");
 			$this->db->next_record();
 			return $this->db->f('cnt');
 		}
 
 		function add($buffer)
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$num=0;
 			foreach ($buffer as $fields)
@@ -281,7 +291,10 @@
 			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer' AND start_date = {$start_date}");
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $num;
 		}
@@ -330,7 +343,8 @@
 				$data['external_ref'],
 				$data['currency'],
 				$this->db->db_addslashes($data['process_log']),
-				$data['process_code']
+				$data['process_code'],
+				$data['manual_record']
 			);
 
 			$values	= $this->db->validate_insert($values);
@@ -339,8 +353,8 @@
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " currency,process_log,process_code,belop,godkjentbelop,ordrebelop)"
-				. "values ($values, "
+				. " currency,process_log,process_code,manual_record,belop,godkjentbelop,ordrebelop)"
+				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
 				. $this->db->money_format($data['ordrebelop']) . ")";
@@ -367,6 +381,7 @@
 					'kildeid'				=> $this->db->f('kildeid'),
 					'project_id'			=> $this->db->f('project_id'),
 					'pmwrkord_code'			=> $this->db->f('pmwrkord_code'),
+					'order_id'				=> $this->db->f('pmwrkord_code'),
 					'belop'					=> $this->db->f('belop'),
 					'fakturadato'			=> $this->db->f('fakturadato'),
 					'periode'				=> $this->db->f('periode'),
@@ -408,7 +423,7 @@
 
 		function delete_from_fm_ecobilag($id)
 		{
-			$sql="delete from fm_ecobilag where id=$id";
+			$sql="DELETE FROM fm_ecobilag WHERE id=$id";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
@@ -417,11 +432,11 @@
 		{
 			if($pre_transfer)
 			{
-				$sql= "SELECT sum(belop) as belop, bilagsnr from fm_ecobilag WHERE periode='$periode' AND utbetalingsigndato IS NULL GROUP BY bilagsnr ";
+				$sql= "SELECT sum(belop) as belop, bilagsnr FROM fm_ecobilag WHERE periode='$periode' AND utbetalingsigndato IS NULL GROUP BY bilagsnr ";
 			}
 			else
 			{
-				$sql="select sum(belop) as belop, bilagsnr from fm_ecobilag where periode='$periode'  AND budsjettsigndato is not NULL  AND ( saksigndato is not NULL  OR oppsynsigndato is not NULL  ) AND utbetalingsigndato is not NULL group by bilagsnr";
+				$sql="SELECT sum(belop) as belop, bilagsnr FROM fm_ecobilag WHERE periode='$periode'  AND budsjettsigndato is not NULL  AND ( saksigndato is not NULL  OR oppsynsigndato is not NULL  ) AND utbetalingsigndato is not NULL group by bilagsnr";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -442,7 +457,7 @@
 				{
 					$bilagsnr = $hoved_bilag_temp[$i]['bilagsnr'];
 
-					$sql= "select fm_ecobilag.*,fm_ecouser.initials as saksbehandler from fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid where bilagsnr=$bilagsnr ";
+					$sql= "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr='{$bilagsnr}'";
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					$this->db->next_record();
@@ -589,20 +604,20 @@
 			$belop=$oRsBilag['belop'];
 			$godkjentbelop=$oRsBilag['godkjentbelop'];
 
-			$sql="INSERT INTO fm_ecoavvik (bilagsnr,fakturadato,forfallsdato,oppsynsmannid,oppsynsigndato,saksbehandlerid,saksigndato,budsjettansvarligid,budsjettsigndato,artid,spvend_code,belop,godkjentbelop)  values "
+			$sql="INSERT INTO fm_ecoavvik (bilagsnr,fakturadato,forfallsdato,oppsynsmannid,oppsynsigndato,saksbehandlerid,saksigndato,budsjettansvarligid,budsjettsigndato,artid,spvend_code,belop,godkjentbelop)  VALUES "
 				. "($bilagsnr','$fakturadato','$forfallsdato','$oppsynsmannid','$oppsynsigndato','$saksbehandlerid','$saksigndato','$budsjettansvarligid','$budsjettsigndato','$artid','$spvend_code','$belop','$godkjentbelop')";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
 		function delete_avvik($bilagsnr)
 		{
-			$sql="delete from fm_ecoavvik where bilagsnr='$bilagsnr'";
+			$sql="DELETE FROM fm_ecoavvik WHERE bilagsnr='$bilagsnr'";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
 		function delete_invoice($bilagsnr)
 		{
-			$sql="delete from fm_ecobilagoverf where bilagsnr='$bilagsnr'";
+			$sql="DELETE FROM fm_ecobilagoverf WHERE bilagsnr='$bilagsnr'";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
@@ -617,7 +632,7 @@
 		function log_transaction($batchid,$bilagid,$message='')
 		{
 			$tid=date($this->datetimeformat);
-			$sql= "insert into fm_ecologg (batchid,ecobilagid,melding,tid) values ('$batchid','$bilagid' ,'$message','$tid')";
+			$sql= "INSERT INTO fm_ecologg (batchid,ecobilagid,melding,tid) VALUES ('$batchid','$bilagid' ,'$message','$tid')";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
@@ -645,9 +660,95 @@
 
 		function get_responsible($b_abbount_id)
 		{
-			$this->db->query("select account_lid from fm_b_account $this->join phpgw_accounts on fm_b_account.responsible = phpgw_accounts.account_id where fm_b_account.id = '$b_abbount_id'");
+			$this->db->query("SELECT account_lid FROM fm_b_account $this->join phpgw_accounts on fm_b_account.responsible = phpgw_accounts.account_id WHERE fm_b_account.id = '$b_abbount_id'");
 			$this->db->next_record();
 			$responsible = $this->db->f('account_lid');
 			return $responsible;
 		}
+
+		function add_manual_invoice($values)
+		{
+			$this->add($values);
+			$_dateformat = $this->db->date_format();
+			$this->db->transaction_begin();
+			$voucher = $this->get_voucher($values[0]['bilagsnr']);
+			foreach ($voucher as &$line)
+			{
+				$line['overftid']				= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values[0]['paid_date']));	
+				$line['ordrebelop']				= $line['godkjentbelop'];	
+				$line['filnavn']				= 'dummy';		
+				$line['oppsynsigndato']			= date( $_dateformat );
+				$line['saksigndato']			= date( $_dateformat );
+				$line['budsjettsigndato']		= date( $_dateformat );
+				$line['utbetalingsigndato']		= date( $_dateformat );
+				$line['utbetalingid']			= $GLOBALS['phpgw']->accounts->get($this->account_id)->lid;
+				$line['manual_record']			= 1;
+
+				$this->add_OverfBilag($line);
+
+				$amount =  $line['godkjentbelop'] * 100; 
+
+				if($line['order_id'])
+				{
+					//Oppdater beløp på bestilling
+					if ($line['dimd'] % 2 == 0)
+					{
+						$actual_cost_field='act_mtrl_cost';
+					}
+					else
+					{
+						$actual_cost_field='act_vendor_cost';
+					}
+					$operator = '+';
+					if(!$this->debug)
+					{
+						$this->correct_actual_cost($line['order_id'],$amount, $actual_cost_field, $operator);
+					}
+				}
+			}
+
+			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
+			return $this->db->transaction_commit();
+		}
+
+
+   	   	// Oppdater beløp på arbeidsordre
+   	   	// operator="-" ved tilbakerulling
+		public function correct_actual_cost($order_id, $amount, $actual_cost_field, $operator)
+		{
+			$sql = "SELECT type FROM fm_orders WHERE id='{$order_id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$table = '';
+			$update_paid = '';
+			switch($this->db->f('type'))
+			{
+				case 'workorder':
+					$table = 'fm_workorder';
+					if($operator == "-")
+					{
+						$update_paid = ", paid = 1";
+					}
+					else
+					{
+						$update_paid = ", paid = 2";
+					}
+					break;
+				case 's_agreement':
+					$table = 'fm_s_agreement';
+					$actual_cost_field = 'actual_cost';
+					break;
+			}
+
+			$amount = $amount/100;
+			if(!$table)
+			{
+				throw new Exception('ERROR: the order id seems to not correspond with any order type');
+			}
+
+			$sql="UPDATE {$table} SET {$actual_cost_field}={$actual_cost_field} {$operator} {$amount} {$update_paid} WHERE id='{$order_id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+		}
+
 	}
