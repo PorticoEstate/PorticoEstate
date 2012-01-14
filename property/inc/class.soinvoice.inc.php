@@ -1463,7 +1463,8 @@
 			}
 			
 			$filter = 'WHERE periode IN(' . implode(',', $data) . ')';
-			
+//			$filter .= ' AND manual_record IS NULL';
+
 			$sql = "SELECT * FROM fm_ecobilagoverf {$filter} ORDER BY periode DESC, id ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 			
