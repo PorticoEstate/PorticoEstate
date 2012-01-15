@@ -1222,3 +1222,12 @@ li.check_item_cases ul li {
     list-style: disc outside none;
     margin: 5px 0 0 20px;
 }
+a.view_check_list{
+ 	color: #FFFFFF;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    height: 13px;
+    text-decoration: none;
+    width: 24px;	
+}

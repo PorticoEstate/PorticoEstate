@@ -64,8 +64,8 @@
 			'register_case'						=>	true,
 			'view_open_cases'					=>	true,
 			'view_closed_cases'					=>	true,
-			'view_measurements'					=>	true
-		
+			'view_measurements'					=>	true,
+			'get_cases_for_check_list'			=>	true
 		);
 
 		public function __construct()
@@ -208,6 +208,15 @@
 			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id, "open");
 			
 			return json_encode( $check_list );
+		}
+		
+		public function get_cases_for_check_list()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+
+			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "open", null, "return_array");
+			
+			return json_encode( $check_items_with_cases );
 		}
 
 		public function edit_check_list()

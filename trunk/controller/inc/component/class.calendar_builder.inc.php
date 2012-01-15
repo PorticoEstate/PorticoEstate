@@ -20,10 +20,10 @@ class calendar_builder {
 			for($i=1;$i<=$num;$i++){
 				$calendar_array[$i] = null;
 			}
-						
+
 			$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
 			$dates_array = $date_generator->get_dates();
-			
+		
 			// Inserts dates on behalf of repeat type and repeat interval
 			foreach($dates_array as $date){
 				
@@ -78,6 +78,7 @@ class calendar_builder {
 				}
 				else if( $check_list->get_status() == 2  ){
 					$status = "control_accomplished_with_errors";
+					$check_list_status_info->set_num_open_cases($check_list->get_num_open_cases());
 				}
 				else if( $check_list->get_status() == 3 )
 				{
