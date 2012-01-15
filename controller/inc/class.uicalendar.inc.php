@@ -93,12 +93,15 @@
 			}
 			
 			$this->calendar_builder = new calendar_builder($from_date, $to_date);
-				
+			
 			$repeat_type = 0;
-			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
 			
+			$controls_for_location_array = $this->so_control->get_controls_by_location( $location_code );
+			
+			$check_list_array = $this->so->get_check_lists_for_location_2( $location_code, $from_date, $to_date, $repeat_type);
+
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
-			
+
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
