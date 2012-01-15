@@ -355,6 +355,9 @@
 
 		public function add_manual_invoice($values)
 		{
+			$receipt = array();
+			$config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
 			$buffer = array();
 			$soXport    = CreateObject('property.soXport');
 			if($values['loc1']=$values['location']['loc1'])
@@ -376,9 +379,32 @@
 
 			$values['kildeid'] 			= 1;
 			$values['pmwrkord_code']	= $values['order_id'];
-			
-			$values['bilagsnr']			= execMethod('property.socommon.increment_id','Bilagsnummer');
-			$values['bilagsnr_ut']		= $values['voucher_out_id'];
+
+			if(isset($config->config_data['common']['manual_voucher_id']) && $config->config_data['common']['manual_voucher_id'])
+			{
+				if( $soXport->check_voucher_id($values['voucher_out_id']))
+				{
+					$receipt['error'][] = array('msg'=>lang('voucher id already taken'));
+				}
+				$values['bilagsnr']		= $values['voucher_out_id'];
+				$values['bilagsnr_ut']	= '';
+			}
+			else
+			{
+				$values['bilagsnr']			= execMethod('property.socommon.increment_id','Bilagsnummer');
+				$values['bilagsnr_ut']		= $values['voucher_out_id'];			
+			}
+
+			if( $soXport->check_invoice_id($values['vendor_id'], $values['invoice_id']))
+			{
+				$receipt['error'][] = array('msg'=>lang('invoice id already taken for this vendor'));
+			}
+
+			if(isset($receipt['error']))
+			{
+				return $receipt;
+			}
+
 			$values['kostra_id'] 		= $soXport->get_kostra_id($values['loc1']);
 			$values['mvakode'] 			= (int)$values['tax_code'];
 			$values['project_id']		= $values['project_group'];			

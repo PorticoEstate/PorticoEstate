@@ -2014,12 +2014,7 @@
 					$_receipt = array();//local errors
 					$receipt = $boinvoice->add_manual_invoice($values);
 
-					if(!$receipt['message'] && $values['order_id'] && !$receipt[0]['spvend_code'])
-					{
-						$_receipt['error'][] = array('msg'=>lang('vendor is not defined in order %1', $values['order_id']));
-					}
-
-					if(!$_receipt['error']) // all ok
+					if(!$receipt['error']) // all ok
 					{
 						$redirect = true;
 					}
