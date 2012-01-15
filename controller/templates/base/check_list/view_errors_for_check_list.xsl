@@ -89,7 +89,15 @@
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>
-				Registrer avvik/sak
+				Registrer sak
+			</a>
+			<a style="background:#DD624B;border-bottom: 1px solid #CB563F;border-top: 1px solid #EE836F;box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;color: #FFFFFF;height: 18px;margin-left: 75px;margin-top: 1px;">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Registrer avviksmelding
 			</a>
 		</div>
 		

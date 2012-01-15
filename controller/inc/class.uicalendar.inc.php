@@ -96,11 +96,13 @@
 			
 			$repeat_type = 0;
 			
-			$controls_for_location_array = $this->so_control->get_controls_by_location( $location_code );
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type);
 			
-			$check_list_array = $this->so->get_check_lists_for_location_2( $location_code, $from_date, $to_date, $repeat_type);
-
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
+			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date, $to_date, $repeat_type);
+			
+			$controls_with_check_list = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
+			
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_with_check_list, null, 31, "view_days" );
 
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -124,6 +126,20 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
 			self::render_template_xsl('calendar/view_calendar_month', $data);
+		}
+		
+		public function populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array){
+			$controls_with_check_list = array();
+			
+			foreach($controls_for_location_array as $control){
+				foreach($control_id_with_check_list_array as $control_id){
+					if($control->get_id() == $control_id->get_id())
+						$control->set_check_lists_array($control_id->get_check_lists_array());						
+				}	
+				$controls_with_check_list[] = $control;
+			}
+			
+			return $controls_with_check_list;
 		}
 		
 		public function view_calendar_for_year()

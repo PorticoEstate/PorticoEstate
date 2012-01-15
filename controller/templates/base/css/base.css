@@ -1158,6 +1158,21 @@ ul#icon_color_map span{
     margin-top: 1px;	
 }
 
+#edit_check_list_menu div{
+	float:left;
+	margin-left: 75px;
+}
+
+#edit_check_list_menu a.focus {
+    float: none;
+    font-size: 12px;
+    margin-top: 3px;
+    padding: 2px 0;
+}
+
+#edit_check_list_menu a.focus.first{
+    margin-top: 0;
+}
 
 #frm_update_check_list input[type="submit"]{
 	width: 140px;	
@@ -1183,14 +1198,13 @@ ul#icon_color_map span{
 }
 #edit_check_list_menu a {
     float: left;
-    height: 20px;
-    padding-top: 10px;
+    padding: 14px 0;
     text-align: center;
     width: 185px;
 }
-#edit_check_list_menu{
-		height:30px;
-		margin:0 0 20px 0;
+#edit_check_list_menu {
+    margin: 0 0 20px;
+    overflow: hidden;
 }
 .content_wrp {
  	background: none repeat scroll 0 0 #EDF5FF;

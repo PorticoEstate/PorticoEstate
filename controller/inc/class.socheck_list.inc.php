@@ -321,7 +321,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND c.repeat_type = $repeat_type ";
 		$sql .= "AND deadline BETWEEN $from_date AND $to_date ";
 		$sql .= "ORDER BY c.id;";
-		echo $sql; 
+
 		$this->db->query($sql);
 		
 		$control_id = 0;
@@ -346,6 +346,59 @@ class controller_socheck_list extends controller_socommon
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 								
+				$check_lists_array = array();
+			}
+
+			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+			$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
+			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+			$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
+			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));	
+			$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id', true), 'int'));
+			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'int'));
+			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));
+			
+			$check_lists_array[] = $check_list;
+
+			$control_id =  $control->get_id();
+		}
+		
+		if($control != null){
+			$control->set_check_lists_array($check_lists_array);
+			$controls_array[] = $control;
+		}	
+		
+		return $controls_array;
+	}
+	
+	function get_check_lists_for_location_2( $location_code, $from_date, $to_date, $repeat_type ){
+		$sql = 	"SELECT c.id as c_id, ";
+		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases "; 
+		$sql .= "FROM controller_control c ";
+		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
+		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "AND c.repeat_type = $repeat_type ";
+		$sql .= "AND deadline BETWEEN $from_date AND $to_date ";
+		$sql .= "ORDER BY c.id;";
+
+		$this->db->query($sql);
+		
+		$control_id = 0;
+		$control = null;
+		$controls_array = array();
+		while ($this->db->next_record()) {
+			
+			if( $this->db->f('c_id', true) != $control_id ){
+				
+				if($control_id != 0){
+					$control->set_check_lists_array($check_lists_array);
+					$controls_array[] = $control;
+				}
+			
+				$control = new controller_control($this->unmarshal($this->db->f('c_id', true), 'int'));
+												
 				$check_lists_array = array();
 			}
 

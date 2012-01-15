@@ -112,11 +112,17 @@
 			//return isset($result);
 		}
 
-		public function get_controls_by_location($location_code)
+		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
 		{
 			$controls_array = array();
 			
-			$sql = "SELECT * FROM controller_control_location_list WHERE location_code = $location_code";
+			$sql  = "SELECT distinct c.* FROM controller_control_location_list cll "; 
+			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
+			$sql .= "WHERE cll.location_code = $location_code ";
+			$sql .= "AND c.repeat_type = $repeat_type ";
+			$sql .= "AND c.start_date >= $from_date ";
+			$sql .= "AND (c.end_date < $to_date OR c.end_date IS NULL)";
+			
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
@@ -126,19 +132,20 @@
 				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
-				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
 				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
-
-				$controls_array[] = $control->toArray();
+				
+				if($return_type == "return_object")
+					$controls_array[] = $control;
+				else
+					$controls_array[] = $control->toArray();
 			}
 
 			if( count( $controls_array ) > 0 ){
