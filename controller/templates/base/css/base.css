@@ -1165,9 +1165,9 @@ ul#icon_color_map span{
 
 #edit_check_list_menu a.focus {
     float: none;
-    font-size: 12px;
+    font-size: 11px;
     margin-top: 3px;
-    padding: 2px 0;
+    padding: 3px 0;
 }
 
 #edit_check_list_menu a.focus.first{
