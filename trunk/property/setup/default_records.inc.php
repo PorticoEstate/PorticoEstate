@@ -308,12 +308,13 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ns3420 (id, tekst1, enhet,
 # Data-ark for tabell fm_idgenerator
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Bilagsnummer', '2003100000', 'Bilagsnummer')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Ecobatchid', '1', 'Ecobatchid')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('project', '1000', 'project')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Statuslog', '1', 'Statuslog')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('workorder', '1000', 'workorder')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('request', '1000', 'request')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Bilagsnummer', '2003100000', 'Bilagsnummer')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('bilagsnr_ut', 0, 'Bilagsnummer utgående')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Ecobatchid', '1', 'Ecobatchid')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('project', '1000', 'project')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('Statuslog', '1', 'Statuslog')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('workorder', '1000', 'workorder')",__LINE__,__FILE__);
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator (name, value, descr) VALUES ('request', '1000', 'request')",__LINE__,__FILE__);
 
 #
 # Dumping data for table fm_location_config
