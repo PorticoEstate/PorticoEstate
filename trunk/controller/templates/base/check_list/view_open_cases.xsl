@@ -2,26 +2,6 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div id="error_message_menu">
-	<a class="btn" id="register_case">					
-		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
-			<xsl:text>&amp;check_list_id=</xsl:text>
-			<xsl:value-of select="check_list/id"/>
-			<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
-		</xsl:attribute>
-		Registrer sak/måling
-	</a>
-	<a class="btn">
-		<xsl:attribute name="href">
-			<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
-			<xsl:text>&amp;check_list_id=</xsl:text>
-			<xsl:value-of select="check_list/id"/>
-		</xsl:attribute>
-		Registrer avviksmelding
-	</a>
-</div>
-	
 <div id="view_errors">
 	
 	<xsl:call-template name="cases_tab_menu">

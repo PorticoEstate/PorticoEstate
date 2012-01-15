@@ -9,7 +9,7 @@
 				<xsl:attribute name="class">active</xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
@@ -20,7 +20,7 @@
 				<xsl:attribute name="class">active</xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_errors_for_check_list</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_cases_for_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
