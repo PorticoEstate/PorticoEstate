@@ -3747,17 +3747,32 @@ JS;
 
 				if (!$receipt['error'])
 				{
-					$redirect = true;
 					$values['voucher_id'] = $voucher_id;
-					$line = $this->bo->forward($values);
+					$receipt = $this->bo->forward($values);
+					if(!$receipt['error'])
+					{
+						execMethod('property.soworkorder.close_orders',phpgw::get_var('orders'));
+						$redirect = true;
+					}
 				}
 			}
 
 			$voucher = $this->bo->read_single_voucher($voucher_id);
 			$orders = array();
+			$_orders = array();
 			foreach ($voucher as $line)
 			{
-				$orders[] = $line['order_id'];
+				if($line['order_id'])
+				{
+					$_orders[] = $line['order_id'];
+				}
+			}
+			
+			$_orders = array_unique($_orders);
+
+			foreach ($_orders as $_order)
+			{
+					$orders[] = array('id' => $_order);
 			}
 
 			$approved_list = array();
@@ -3847,7 +3862,7 @@ JS;
 					'sign_orig'				=> $sign_orig,
 					'my_initials'			=> $my_initials,
 					'project_group_data'	=> $project_group_data,
-					'orders'				=> implode('</br>', $orders),
+					'orders'				=> $orders,
 					'value_amount'			=> $line['amount'],
 					'value_currency'		=> $line['currency'],
 					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']

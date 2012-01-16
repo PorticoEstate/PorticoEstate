@@ -718,14 +718,14 @@
 				foreach ($update_paid_percent as $workorder_id => $paid_percent)
 				{
 					$paid_percent = (int) $paid_percent;
-					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
+					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= '$workorder_id'");				
 
-					$this->db->query("SELECT type FROM fm_orders WHERE id={$workorder_id}",__LINE__,__FILE__);
+					$this->db->query("SELECT type FROM fm_orders WHERE id='{$workorder_id}'",__LINE__,__FILE__);
 					$this->db->next_record();
 					switch ( $this->db->f('type') )
 					{
 					case 'workorder':
-						$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}",__LINE__,__FILE__);
+						$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$workorder_id}'",__LINE__,__FILE__);
 						$this->db->next_record();
 						$project_id = $this->db->f('project_id');
 						$workorder->update_planned_cost($project_id);
@@ -879,12 +879,14 @@
 		function check_count($voucher_id)
 		{
 
-			$this->db->query("select count(dima) as dima_count , count(spbudact_code) as spbudact_code_count from fm_ecobilag where bilagsnr ='$voucher_id'");
+			$this->db->query("SELECT count(id) as invoice_count, count(dima) as dima_count, count(spbudact_code) as spbudact_code_count FROM fm_ecobilag WHERE bilagsnr ='$voucher_id'");
 			$this->db->next_record();
 
-			$check_count=array(
+			$check_count = array
+			(
 				'dima_count' 				=> $this->db->f('dima_count'),
-				'spbudact_code_count' 		=> $this->db->f('spbudact_code_count')
+				'spbudact_code_count' 		=> $this->db->f('spbudact_code_count'),
+				'invoice_count'				=> $this->db->f('invoice_count'),
 			);
 
 			$this->db->query("select count(kostra_id) as kostra_count  from fm_ecobilag where bilagsnr ='$voucher_id' and kostra_id > 0");
@@ -1508,8 +1510,43 @@
 		*/
 		public function forward($data)
 		{
+			$receipt = array();
+			$local_error= false;
 			if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
 			{
+				//start check
+				$check_count = $this->check_count($data['voucher_id']);
+
+				if (!($check_count['dima_count'] == $check_count['invoice_count']))
+				{
+					$receipt['error'][] = array('msg'=>lang('Dima is missing from sub invoice in:'). " ".$data['voucher_id']);
+					$local_error= true;
+				}
+
+				if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
+				{
+					$receipt['error'][] = array('msg'=>lang('Budget code is missing from sub invoice in :'). " ".$data['voucher_id']);
+					$local_error= true;
+				}
+
+				if (!($check_count['kostra_count'] == $check_count['invoice_count']))
+				{
+					$receipt['error'][] = array('msg'=>'Tjenestekode mangler for undebilag: ' . " ".$data['voucher_id']);
+					$local_error= true;
+				}
+
+				if ($this->check_claim($data['voucher_id']))
+				{
+					$receipt['error'][] = array('msg'=>lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']));
+					$local_error= true;
+				}
+
+				if($local_error)
+				{
+					return $receipt;
+				}
+				// end check
+
 				$value_set = array();
 				
 				foreach ($data['forward'] as $role => $user_lid)
