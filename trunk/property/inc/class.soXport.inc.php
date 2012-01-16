@@ -209,7 +209,7 @@
 			return $this->db->f('cnt');
 		}
 
-		function add($buffer)
+		function add($buffer, $skip_update_voucher_id = false)
 		{
 			if ( $this->db->get_transaction() )
 			{
@@ -282,14 +282,17 @@
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					$num++;
+
+					if(!$skip_update_voucher_id)
+					{
+						$now = time();
+						$this->db->query("SELECT start_date FROM fm_idgenerator WHERE name='Bilagsnummer' AND start_date < {$now} ORDER BY start_date DESC");
+						$this->db->next_record();
+						$start_date = (int)$this->db->f('start_date');
+						$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer' AND start_date = {$start_date}");
+					}
 				}
 			}
-
-			$now = time();
-			$this->db->query("SELECT start_date FROM fm_idgenerator WHERE name='Bilagsnummer' AND start_date < {$now} ORDER BY start_date DESC");
-			$this->db->next_record();
-			$start_date = (int)$this->db->f('start_date');
-			$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer' AND start_date = {$start_date}");
 
 			if ( !$this->global_lock )
 			{
@@ -666,11 +669,13 @@
 			return $responsible;
 		}
 
-		function add_manual_invoice($values)
+		function add_manual_invoice($values, $skip_update_voucher_id = false)
 		{
-			$this->add($values);
 			$_dateformat = $this->db->date_format();
 			$this->db->transaction_begin();
+
+			$this->add($values, $skip_update_voucher_id);
+
 			$voucher = $this->get_voucher($values[0]['bilagsnr']);
 			foreach ($voucher as &$line)
 			{
