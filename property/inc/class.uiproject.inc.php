@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -58,7 +58,8 @@
 				'delete'				=> true,
 				'date_search'			=> true,
 				'columns'				=> true,
-				'bulk_update_status'	=> true
+				'bulk_update_status'	=> true,
+				'project_group'			=> true,
 			);
 
 		function property_uiproject()
@@ -2153,6 +2154,172 @@
 				return;
 			}
 			$this->edit('view');
+		}
+
+		function project_group()
+		{
+			$id	= phpgw::get_var('id');
+
+			$project	= $this->bo->read_single($project_id);
+
+			$project_group_data=$this->bocommon->initiate_project_group_lookup(array(
+				'project_group'			=> $values['project_group'],
+				'project_group_descr'	=> $values['project_group_descr']));
+
+			//---datatable settings---------------------------------------------------	
+
+			$datavalues[0] = array
+				(
+					'name'					=> "0",
+					'values' 				=> json_encode($values['workorder_budget']),
+					'total_records'			=> count($values['workorder_budget']),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+
+			$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+			$datavalues[1] = array
+				(
+					'name'					=> "1",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+
+			$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
+														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+	
+			$invoices = array();
+			if ($id)
+			{
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub', array('project_id' => $id));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub', array('project_id' => $id, 'paid' => true));
+				$invoices = array_merge($active_invoices,$historical_invoices);
+			}
+
+			$content_invoice = array();
+			foreach($invoices as $entry)
+			{
+				$content_invoice[] = array
+				(
+					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id'		=> $entry['voucher_out_id'],
+					'workorder_id'			=> $entry['workorder_id'],
+					'status'				=> $entry['status'],
+					'invoice_id'			=> $entry['invoice_id'],					
+					'budget_account'		=> $entry['budget_account'],
+					'dima'					=> $entry['dima'],
+					'dimb'					=> $entry['dimb'],
+					'dimd'					=> $entry['dimd'],
+					'amount'				=> $entry['amount'],
+					'approved_amount'		=> $entry['approved_amount'],
+					'vendor'				=> $entry['vendor'],
+					'paid_percent'			=> $entry['paid_percent'],
+					'project_group'			=> $entry['project_id'],
+					'currency'				=> $entry['currency'],
+					'budget_responsible'	=> $entry['budget_responsible'],
+					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+				);	
+			}
+
+			$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_invoice),
+					'total_records'			=> count($content_invoice),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+
+			$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
+														array('key' => 'voucher_out_id','hidden'=>true),
+														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
+														))
+
+				);
+
+			//----------------------------------------------datatable settings--------
+
+			$data = array
+			(
+				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
+				'b_account_data'					=> $b_account_data,
+				'ecodimb_data'						=> $ecodimb_data,
+				'contact_data'						=> $contact_data,
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+				'myButtons'							=> $myButtons,
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'					=> lang('Select date'),
+				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
+				'lang_start_date'					=> lang('Project start date'),
+				'value_start_date'					=> $values['start_date'],
+				'lang_end_date_statustext'			=> lang('Select the estimated end date for the Project'),
+				'lang_end_date'						=> lang('Project end date'),
+				'value_end_date'					=> isset($values['end_date']) ? $values['end_date'] : '' ,
+				'value_budget'						=> isset($values['budget'])?$values['budget']:'',
+				'value_reserve'						=> isset($values['reserve'])?$values['reserve']:'',
+				'value_sum'							=> isset($values['sum'])?$values['sum']:'',
+				'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
+				'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
+				'value_planned_cost'				=> $values['planned_cost'],
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
+				'project_group_data'				=> $project_group_data,
+				'value_name'						=> isset($values['name'])?$values['name']:'',
+				'value_other_branch'				=> isset($values['other_branch'])?$values['other_branch']:'',
+				'value_descr'						=> isset($values['descr'])?$values['descr']:'',
+				'value_remark'						=> isset($values['remark'])?$values['remark']:'',
+				'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
+				'value_remainder'					=> $value_remainder,
+				'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
+				'status_list'						=> $this->bo->select_status_list('select',$values['status']),
+				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
+			);
 		}
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array())
