@@ -35,6 +35,7 @@
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_list_status_info', 'inc/helper/');
 	include_class('controller', 'calendar_builder', 'inc/component/');
+	include_class('controller', 'location_finder', 'inc/helper/');
 		
 	class controller_uicalendar extends controller_uicommon
 	{
@@ -104,17 +105,9 @@
 				'allrows' => false
 			);
 		
-			$test = new test();
-			$locations = $test->get_responsibilities($criteria);
-		
-		
-		
-			
-			
-			
-			
-			
-			
+			$location_finder = new location_finder();
+			$locations = $location_finder->get_responsibilities( $criteria );
+					
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type);
 		
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date, $to_date, $repeat_type);
