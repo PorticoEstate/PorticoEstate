@@ -1236,4 +1236,40 @@
 
 			return $values;
 		}
+
+		public function close_orders($orders)
+		{
+			$config		= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$closed = isset($config->config_data['workorder_closed_status']) && $config->config_data['workorder_closed_status'] ? $config->config_data['workorder_closed_status'] : 'closed';
+			$this->db->transaction_begin();
+
+			if ($orders && is_array($orders))
+			{
+				$historylog_workorder	= CreateObject('property.historylog','workorder');
+
+				foreach ($orders as $id)
+				{
+					$this->db->query("SELECT type FROM fm_orders WHERE id='{$id}'",__LINE__,__FILE__);
+					$this->db->next_record();
+					switch ( $this->db->f('type') )
+					{
+						case 'workorder':
+							$historylog_workorder->add($entry,$id,$closed);
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET status='{$closed}' WHERE id = '{$id}'");
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");				
+							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $closed));
+							$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$id}'",__LINE__,__FILE__);
+							$this->db->next_record();
+							$project_id = $this->db->f('project_id');
+							$this->update_planned_cost($project_id);
+							break;
+					}
+				}
+			}
+
+			$GLOBALS['phpgw']->db->transaction_commit();
+
+			return $receipt;
+		}
 	}
