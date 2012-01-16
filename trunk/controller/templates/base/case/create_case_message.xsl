@@ -6,16 +6,7 @@
 	
 		<h1>Registrer avviksmelding</h1>
 	
-		<div id="edit_check_list_menu" class="hor_menu">
-			<a class="btn active">
-		    	<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-		      Tilbake til sjekkliste
-		    </a>
-		</div>
+		<xsl:call-template name="check_list_tab_menu" />
 	
 		<h3 class="box_header">Meldingen gjelder</h3>
 		<div id="case_details">

@@ -146,7 +146,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('case/create_case_message', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/create_case_message'), $data);
 		}
 		
 		function register_case_message(){
@@ -264,7 +264,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('case/view_case_message', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/view_case_message'), $data);
 		}
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){

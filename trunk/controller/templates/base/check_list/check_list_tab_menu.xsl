@@ -40,7 +40,7 @@
 		<div>
 			<a class="btn focus first">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>
@@ -48,7 +48,7 @@
 			</a>
 			<a class="btn focus">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>

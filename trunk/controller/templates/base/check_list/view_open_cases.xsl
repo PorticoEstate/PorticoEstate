@@ -2,7 +2,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div id="view_errors">
+<div id="view_cases">
 	
 	<xsl:call-template name="cases_tab_menu">
 	 	<xsl:with-param name="active_tab">view_open_cases</xsl:with-param>
@@ -47,7 +47,16 @@
 				 	</xsl:choose>
 				</xsl:for-each>
 			</ul>
-					
+			
+			<a style="font-size: 11px;margin-top: 20px;padding: 3px 20px;" class="btn focus">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="check_list/id"/>
+				</xsl:attribute>
+				Registrer melding
+			</a>
+			
 			</xsl:when>
 			<xsl:otherwise>
 				Ingen registrerte åpne avvik

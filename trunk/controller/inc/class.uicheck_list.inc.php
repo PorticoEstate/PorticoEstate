@@ -387,7 +387,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/register_case', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
 		}
 		
 		function view_open_cases(){
