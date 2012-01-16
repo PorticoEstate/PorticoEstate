@@ -6,25 +6,7 @@
 	
 		<h1>Avviksmelding registrert</h1>
 		
-		<div id="edit_check_list_menu" class="hor_menu">
-			<a class="btn active">
-		    	<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-		      Tilbake til sjekkliste
-		    </a>
-			<a class="btn active">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-		      Registrer ny melding
-		    </a>
-		</div>
-		
+		<xsl:call-template name="check_list_tab_menu" />
 		
 		<h3 class="box_header" href="#">Meldingen gjaldt</h3>
 		<div id="case_details">
@@ -72,5 +54,13 @@
 				</xsl:for-each>
 			</ul>
 		</div>
+		<a class="btn focus">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+			</xsl:attribute>
+	      Registrer ny melding
+	   	</a>
 </div>
 </xsl:template>
