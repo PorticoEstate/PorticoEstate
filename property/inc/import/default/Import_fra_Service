@@ -185,15 +185,15 @@
 					}
 				}
 
-				if($name=='mvakode' && $invoice_common['auto_tax'])
-				{
-					$value = $this->soXport->auto_tax($buffer[$this->id]['dima']);
-				}
-
 				if($name=='dima')
 				{
 					$value = $this->check_dima($value);
 					$buffer[$this->id]['loc1'] = $loc1=substr($value,0,4);
+				}
+
+				if($name=='mvakode' && $invoice_common['auto_tax'])
+				{
+					$value = $this->soXport->auto_tax($buffer[$this->id]['loc1']);
 				}
 
 				$buffer[$this->id][$name] = $value;
@@ -219,7 +219,7 @@
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
 				}
-				$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['dima']);
+				$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 			}
 			return $buffer;
 		}
@@ -279,4 +279,3 @@
 			return $receipt;
 		}
 	}
-?>

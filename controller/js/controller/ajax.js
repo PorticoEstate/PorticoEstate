@@ -136,7 +136,7 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_check_list_info" + add_param;
+		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
@@ -151,32 +151,22 @@ $(document).ready(function(){
 		    		  $(infoBox).show();
 		    		  $(infoBox).html("");
 		    		  
-		    		  if(obj.deadline == 0 ){
-		    			  var deadline_string = "Ikke satt";
-		    		  }else{
-		    			  var date  = new Date(obj.deadline * 1000);
-		    			  var deadline_string = date.getDate() + "/" + (parseInt(date.getMonth()) + 1) + "-" + date.getFullYear();
-		    		  }
+		    		  $(infoBox).html("<h5>Åpne saker</h5>");
 		    		  
-		    		  var months = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'];
-
-		    		  
-		    		  $(infoBox).html("<h5>Sjekkliste for " + months[date.getMonth()]);
-		    		  
-		    		  var htmlList = "<ul>" +
-		    		  				 "<li><label>Frist</label><span> " + deadline_string + "</span></li>" +
-		    		  				 "<li><label>Status</label><span> " + obj.status + "</span></li>" +
-		    				  	 	 "<li><label>Kommentar</label><span>" + obj.comment + "</span></li>" +
-		    				  	 	 "<li><label>Sjekkpunkter</label><li>";
-		    		  
-		    		  $.each(obj.check_item_array, function(i) {
-		    			  htmlList +=	"<ul><li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj.check_item_array[i].control_item.title + "</span></li>" + 
-		    					  		"<li><label>Status</label><span>" + obj.check_item_array[i].status + "</span></li>" + 
-		    			  				"<li><label>Kommentar</label><span>" + obj.check_item_array[i].comment + "</span></li></ul>";
+		    		  var htmlList = "<ul>";
+		    		
+		    		  $.each(obj, function(i) {
+		    			  htmlList += "<li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj[i].control_item.title + "</span>";
+		    			  htmlList += "<ul>";
+		    			  
+		    			  $(obj[i].cases_array).each(function(j) {
+		    				  htmlList += "<li>" + "Sak " + (parseInt(j) + 1) + ":  " + obj[i].cases_array[j].descr + "</li>";
+		    			  });
+		    			  htmlList += "</li></ul>";
 		    			});
 		    		  
-		    		  htmlList += "</li></ul>"; 
-		    		  
+		    		  htmlList += "</ul>"; 
+		    		
 		    		  $(infoBox).append( htmlList );  
 	    		  }
 	    	  }
@@ -194,8 +184,6 @@ $(document).ready(function(){
 	$("#frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
-		var liWrp = $(this).parent();
-		var liWrpClone = $(liWrp).clone();
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action"); 
 
@@ -206,25 +194,15 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-		    		  if(obj.saveStatus == "saved" & obj.fixedStatus == "fixed"){
-		    			  $(liWrp).fadeOut('3000', function() {
-		    				   				  
-		    				  $("#check_list_fixed_list").append(liWrpClone);
-		    				   				  
-		    				  $(liWrp).addClass("hidden");
-		    			  });
-		    			  
-					  }
-		    		  else if(obj.saveStatus == "saved" & obj.fixedStatus == "not_fixed"){
-		    			  
+		    		  if(obj.saveStatus == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    				$(submitBnt).val("Lagret");	
+		    			  $(submitBnt).val("Lagret");	
 		    				  
 		    				// Changes text on save button back to original
 		    				window.setTimeout(function() {
-		    				  $(submitBnt).val('Oppdater håndtert avvik');
+		    				  $(submitBnt).val('Oppdater måling');
 		    				  $(submitBnt).addClass("not_active");
-		    					 }, 1000);
+		    					 }, 1000);	   				  
 					  }
 				  }
 				}
@@ -255,7 +233,7 @@ $(document).ready(function(){
 			});
 	});
 	
-	$("#frm_update_check_list").live("click", function(e){
+	$("#frm_update_check_list").live("submit", function(e){
 		e.preventDefault();
 
 		var thisForm = $(this);

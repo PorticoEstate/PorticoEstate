@@ -967,18 +967,20 @@
 		}
 
 
-		function tax_code_list($selected='')
+		function tax_code_list()
 		{
-			$this->db->query("SELECT * FROM fm_ecomva order by id asc ");
-			$tax_code_list = array();
+			$this->db->query("SELECT * FROM fm_ecomva ORDER BY id ASC ");
+			$values = array();
 			while ($this->db->next_record())
 			{
-				$tax_code_list[] = Array(
-					'id'        => $this->db->f('id'),
+				$id = $this->db->f('id');
+				$values[] = array
+				(
+					'id'	=> $id,
+					'name'	=> $id,
 				);
 			}
-
-			return $tax_code_list;
+			return $values;
 		}
 
 
@@ -1461,7 +1463,8 @@
 			}
 			
 			$filter = 'WHERE periode IN(' . implode(',', $data) . ')';
-			
+//			$filter .= ' AND manual_record IS NULL';
+
 			$sql = "SELECT * FROM fm_ecobilagoverf {$filter} ORDER BY periode DESC, id ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 			

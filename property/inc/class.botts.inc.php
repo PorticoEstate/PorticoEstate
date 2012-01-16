@@ -943,9 +943,6 @@
 			{
 				$body .= lang('Group').': '. $group_name ."\n";
 			}
-			$body .= lang('Opened By').': '. $ticket['user_name'] ."\n\n";
-			$body .= lang('First Note Added').":\n";
-			$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
 
 			/**************************************************************\
 			 * Display additional notes                                     *
@@ -954,7 +951,7 @@
 			{
 				$i=1;
 
-				$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
+				$history_array = $this->historylog->return_array(array(),array('C'),'history_id','DESC',$id);
 
 				foreach($history_array as $value)
 				{
@@ -963,7 +960,7 @@
 					$body .=lang('Note').': '. nl2br(stripslashes($value['new_value']))."\n\n";
 					$i++;
 				}
-				$subject.= "-" .$i;
+				$subject .= "::{$i}";
 			}
 			/**************************************************************\
 			 * Display record history                                       *
@@ -974,6 +971,10 @@
 				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
 			}
 
+
+			$body .= lang('Opened By').': '. $ticket['user_name'] ."\n\n";
+			$body .= lang('First Note Added').":\n";
+			$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
 
 			if($get_message)
 			{

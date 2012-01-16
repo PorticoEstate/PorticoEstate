@@ -629,6 +629,10 @@
 			//	$this->update_actual_cost_global();
 			//	$this->update_planned_cost_global();
 
+			if(!$workorder_id)
+			{
+				return array();
+			}
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_workorder.user_id as user_id FROM fm_workorder"
 	//			. " $this->join fm_project on fm_workorder.project_id=fm_project.id"
 				. " $this->left_join fm_chapter on "

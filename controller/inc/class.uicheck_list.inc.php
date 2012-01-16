@@ -64,8 +64,8 @@
 			'register_case'						=>	true,
 			'view_open_cases'					=>	true,
 			'view_closed_cases'					=>	true,
-			'view_measurements'					=>	true
-		
+			'view_measurements'					=>	true,
+			'get_cases_for_check_list'			=>	true
 		);
 
 		public function __construct()
@@ -208,6 +208,15 @@
 			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id, "open");
 			
 			return json_encode( $check_list );
+		}
+		
+		public function get_cases_for_check_list()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+
+			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "open", null, "return_array");
+			
+			return json_encode( $check_items_with_cases );
 		}
 
 		public function edit_check_list()
@@ -378,7 +387,7 @@
 				'check_list' 	=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl('check_list/register_case', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
 		}
 		
 		function view_open_cases(){
@@ -386,7 +395,7 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'open', null, 'return_array');
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, 'open', null, 'return_array');
 			
 			$data = array
 			(
@@ -402,7 +411,7 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_and_cases($check_list_id, 'closed', null, 'return_array');
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, 'closed', null, 'return_array');
 							
 			$data = array
 			(
@@ -498,20 +507,25 @@
 			$check_item_id = phpgw::get_var('check_item_id');
 			$comment = phpgw::get_var('comment');
 			$status = phpgw::get_var('status');
-						
+									
 			$check_item = $this->so_check_item->get_single($check_item_id);
+			$control_item_id = $check_item->get_control_item_id();
+			
+			$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
+			
+			if($control_item->get_type() == 'control_item_type_2')
+			{
+				$measurement = phpgw::get_var('measurement');
+				$check_item->set_measurement( $measurement );	
+			}
+			
 			$check_item->set_status( $status );
 			$check_item->set_comment( $comment );
 			
 			$check_item_id = $this->so_check_item->store( $check_item );
 
-			if($status == 0)
-				$status_text = "not_fixed";
-			else
-				$status_text = "fixed";
-			
 			if($check_item_id > 0)
-				return json_encode( array( "saveStatus" => "saved", "fixedStatus" => $status_text ) );
+				return json_encode( array( "saveStatus" => "saved" ) );
 			else
 				return json_encode( array( "status" => "not_saved" ) );
 		}

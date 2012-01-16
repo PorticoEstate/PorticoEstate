@@ -5779,6 +5779,23 @@
 	}
 
 	/**
+	* Update property version from 0.9.17.631 to 0.9.17.632
+	* allow manual records of invoice
+	*/
+	$test[] = '0.9.17.631';
+	function property_upgrade0_9_17_631()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','manual_record',array('type' => 'int','precision' => 2,'nullable' => True));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.632';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 

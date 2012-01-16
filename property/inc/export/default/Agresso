@@ -298,26 +298,6 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
-		function correct_actual_cost($pmwrkord_code,$Belop,$actual_cost_field,$operator)
-		{
-			$Belop=$Belop/100;
-			
-			if($operator == "-")
-			{
-				$update_paid = ", paid = 1";
-			}
-			else
-			{
-				$update_paid = ", paid = 2";
-			}
-
-			$sql="UPDATE fm_workorder SET $actual_cost_field=$actual_cost_field $operator $Belop $update_paid WHERE id='$pmwrkord_code'";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-
 		function overfor($download,$pre_transfer='',$force_period_year='')
 		{
 
@@ -423,7 +403,7 @@
 		
 					$operator='-';
 
-					$this->correct_actual_cost($BilagOverf[$i]['pmwrkord_code'],$Belop,$actual_cost_field,$operator);
+					$this->soXport->correct_actual_cost($BilagOverf[$i]['pmwrkord_code'],$Belop,$actual_cost_field,$operator);
 				}
 		
 				//Slett fra avviks tabell
@@ -733,7 +713,7 @@
 							
 							if(!$this->debug)
 							{
-								$this->correct_actual_cost($oRsUnderbilag[$i]['pmwrkord_code'],$Belop_,$actual_cost_field,$operator);
+								$this->soXport->correct_actual_cost($oRsUnderbilag[$i]['pmwrkord_code'],$Belop_,$actual_cost_field,$operator);
 							}
 						}
 					}

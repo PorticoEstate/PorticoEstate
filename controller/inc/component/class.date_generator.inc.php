@@ -25,8 +25,9 @@ class date_generator
 	function generate_calendar(){
 	
 		$control_start_date = $this->find_control_start_date();
+		
 		$period_start_date = $this->find_start_date_for_period( $control_start_date );
-		 
+	
 		$interval_date = $period_start_date;
 		
 		while($interval_date <= $this->period_end_date){
@@ -59,7 +60,10 @@ class date_generator
    	
    	public function find_control_start_date(){
    	
-		if( $this->repeat_type == 1 || $this->repeat_type == 0 ){
+   		if( $this->repeat_type == 0 ){
+			$search_date = $this->start_date;
+		}
+		else if( $this->repeat_type == 1 ){
 			$search_date = $this->start_date;
 	
 			while(date("l", $search_date) != "Sunday")

@@ -134,7 +134,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -146,7 +146,7 @@
 										<div>
 											<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -160,7 +160,7 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -170,11 +170,28 @@
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_accomplished_with_errors'">
+										<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+											<div id="info_box" style="position:absolute;display:none;"></div>
+					    					<a class="view_check_list">
+											 	<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+												<span style="display:none">
+													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+												</span>
+												<xsl:value-of select="info/num_open_cases"/>
+											</a>
+										</div>
+									</xsl:when>
+									<!-- xsl:when test="status = 'control_accomplished_with_errors'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
 													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>
@@ -186,12 +203,27 @@
 											</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'control_canceled'">
+									 -->
+									<xsl:when test="status = 'control_not_accomplished_with_info'">
+										<div style="position:relative;">
+					    					<div id="info_box" style="position:absolute;display:none;"></div>
+											<a>
+											<xsl:attribute name="href">
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+												<xsl:text>&amp;check_list_id=</xsl:text>
+												<xsl:value-of select="info/check_list_id"/>
+											</xsl:attribute>
+												<span style="display:none"><xsl:value-of select="info/id"/></span>
+												<img height="15" src="controller/images/status_icon_red_cross.png" />
+											</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 'control_not_accomplished'">
 										<div>
 											<img height="15" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'control_not_accomplished'">
+									<xsl:when test="status = 'control_canceled'">
 										<div>
 											<img height="15" src="controller/images/status_icon_red_cross.png" />
 										</div>

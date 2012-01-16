@@ -31,9 +31,13 @@
                     {
                     	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_number'];
                     }
+                    elseif (strlen($from_entity['customer_organization_number']) == 5) 
+					{
+                    	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_organization_number'];
+					} 			
                     else
                     {
-                       	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = '';
+                       	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = lang('None');
                     }
                 } 
                 else 

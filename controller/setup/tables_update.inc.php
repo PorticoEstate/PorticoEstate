@@ -416,3 +416,16 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.19';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.19';
+	function controller_upgrade0_1_19()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','num_open_cases',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.20';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

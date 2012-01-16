@@ -27,42 +27,10 @@
 		
 		<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 		
-		<div id="edit_check_list_menu" class="hor_menu">
-			<a class="active">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-				Vis detaljer for sjekkliste
-			</a>
-			<a>
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_errors_for_check_list</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-				Vis avvik/saker for sjekkliste
-			</a>			
-			<a>
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_info</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-				Vis info om kontroll
-			</a>
-			
-			<a style="background:#DD624B;border-bottom: 1px solid #CB563F;border-top: 1px solid #EE836F;box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;color: #FFFFFF;height: 18px;margin-left: 75px;margin-top: 1px;">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
-					<xsl:text>&amp;check_list_id=</xsl:text>
-					<xsl:value-of select="check_list/id"/>
-				</xsl:attribute>
-				Registrer avvik/sak
-			</a>
-		</div>
-		
+		<xsl:call-template name="check_list_tab_menu">
+	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
+		</xsl:call-template>
+	
 		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">

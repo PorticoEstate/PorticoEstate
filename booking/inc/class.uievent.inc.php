@@ -534,7 +534,8 @@
 
 				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data']  && !$errors['contact_name'] && !$errors['cost'])
 				{ 
-					if (phpgw::get_var('mail', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
+
+					if ((phpgw::get_var('mail', 'POST') || phpgw::get_var('sendtorbuilding', 'POST')) && phpgw::get_var('active', 'POST'))
 					{
 						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 						{
@@ -626,15 +627,17 @@
 							$this->send_mailnotification($event['contact_email'], lang('Event changed'), phpgw::get_var('mail', 'POST'));
 						}
 					} elseif (!phpgw::get_var('active', 'POST')) {
+						
 								if ($event['customer_organization_name']) {
 									$comment_text_log = $event['customer_organization_name'];
 								} else {
 									$comment_text_log = $event['contact_name'];
 								}
-								$comment_text_log = $comment_text_log.' sitt arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_']))." har blitt kansellert.\n For mer opplysinger slå opp i AktivBy.";
-//								$comment_text_log = phpgw::get_var('mail', 'POST');
+								$comment_text_log = $comment_text_log.' sitt arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_']))." har blitt kansellert.\n For mer opplysinger slå opp i AktivBy.\n\n";
+								$comment_text_log .= phpgw::get_var('mail', 'POST');
 								$sendt = 0;
 								$mail_sendt_to = '';
+
 								if($building_info['email']) {
 									$sendt++;
 									$mail_sendt_to = $mail_sendt_to.' '.$building_info['email'];

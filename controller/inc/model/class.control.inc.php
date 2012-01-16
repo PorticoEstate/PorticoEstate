@@ -54,6 +54,7 @@
 		protected $control_area_id;
 		protected $control_area_name;
 
+		// Objects
 		protected $check_lists_array = array();
 		
 		

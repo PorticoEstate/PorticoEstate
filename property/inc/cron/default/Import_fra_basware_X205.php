@@ -48,10 +48,12 @@
 		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
+		var $skip_import = false;
+
 
 		function __construct()
 		{
-			$this->soXport			= CreateObject('property.soXport');	
+			$this->soXport			= CreateObject('property.soXport');
 			$this->invoice			= CreateObject('property.soinvoice');
 			$this->responsible		= CreateObject('property.soresponsible');
 			$this->bocommon			= CreateObject('property.bocommon');
@@ -83,7 +85,7 @@
 			}
 			else
 			{
-				$this->debug	= phpgw::get_var('debug', 'bool');			
+				$this->debug	= phpgw::get_var('debug', 'bool');
 			}
 
 			if ($confirm)
@@ -193,7 +195,7 @@
 			}
 			else
 			{
-				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");			
+				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
 
 			if(!$cron)
@@ -334,30 +336,22 @@
 				foreach ($var_result['INVOICES'] as $dummy => $entry)
 				{
 					$_data = $entry['INVOICE'][0]['INVOICEHEADER'][0];
-				
+
 //_debug_array($_data);
 //die();
 
 					$_data['KEY']; // => 1400050146
-//					$_data['SCANNINGNO']; // => 11E28NJINL3VR6
-//					$_data['AMOUNT']; // => 312500
 					$_data['ARRIVAL']; // => 2009.05.28
 					$_data['CLIENT.CODE']; // => 14
-//					$_data['CURRENCY.CURRENCYID']; // => NOK
 					$_data['EXCHANGERATE']; // => 1
-//					$_data['INVOICEDATE']; // => 2009.05.28
 					$_data['LOCALAMOUNT']; // => 312500
 					$_data['LOCALVATAMOUNT']; // => 62500
-//					$_data['MATURITY']; // => 2009.06.30
 					$_data['PAYAMOUNT']; // => 0
 					$_data['POSTATUSUPDATED']; // => 0
-//					$_data['PURCHASEORDERNO']; // => 1409220008
 					$_data['PURCHASEORDERSTATUS.CODE']; // => WaitForMatch
 					$_data['SUPPLIER.BANKGIRO']; // => 70580621110
-//					$_data['SUPPLIER.CODE']; // => 100644
-//					$_data['SUPPLIERREF']; // => 7869
 					$_data['VATAMOUNT']; // => 62500
-					
+
 					$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
 					$order_id 		= $_data['PURCHASEORDERNO'];
@@ -373,16 +367,16 @@
 					}
 					else
 					{
-						$buffer[$i]['artid'] = 1;					
+						$buffer[$i]['artid'] = 1;
 					}
 
 					$kidnr 	= $_data['KIDNO'];
 
 					if($order_id)
 					{
-						$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);	
+						$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);
 					}
-					
+
 					$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
 					$buffer[$i]['pmwrkord_code']	= $order_id;
 					$buffer[$i]['fakturanr']		= $fakturanr;
@@ -392,7 +386,7 @@
 					$buffer[$i]['belop']			= $belop;
 					$buffer[$i]['currency']			= $_data['CURRENCY.CURRENCYID'];
 					$buffer[$i]['godkjentbelop']	= $belop;
-					
+
 					$buffer[$i]['kidnr']			= $kidnr;
 					$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
 					$buffer[$i]['referanse']		= "ordre: {$order_id}";
@@ -405,10 +399,10 @@
 
 					$buffer[$i]['mvakode'] = $this->mvakode;
 
-					if($buffer[$i]['dima'] && $this->auto_tax)
+					if($buffer[$i]['loc1'] && $this->auto_tax)
 					{
-						$mvakode = $this->soXport->auto_tax($buffer[$i]['dima']);
-					
+						$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
+
 						if($mvakode)
 						{
 							$buffer[$i]['mvakode'] = $mvakode;
@@ -425,6 +419,7 @@
 					if(!$this->db->next_record())
 					{
 						$this->receipt['error'][] = array('msg' => "Ikke gyldig leverandør id: {$_data['SUPPLIER.CODE']}");
+						$this->skip_import = true;
 					}
 
 					$vendor_id = $_data['SUPPLIER.CODE'];
@@ -436,9 +431,9 @@
 					}
 
 					$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
-					
+
 					$merknad = '';
-					
+
 					$buffer[$i]['merknad'] = $merknad;
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
@@ -470,26 +465,52 @@
 //_debug_array($buffer);
 //_debug_array($this->receipt);
 
-			if(!isset($this->receipt['error']) || !$this->receipt['error'])
+			if(!$this->skip_import)
 			{
 				if(!$bilagsnr)
 				{
 					$bilagsnr = $this->invoice->next_bilagsnr();
-					
+
 					foreach($buffer as &$entry)
 					{
 						$entry['bilagsnr'] = $bilagsnr;
 					}
 				}
 
+				if($order_info['toarray'])
+				{
+					$to = implode(';',$order_info['toarray']);
+
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					{
+						$subject = 'Ny faktura venter på behandling';
+						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'voucher_id' => $bilagsnr, 'query' => $bilagsnr, 'user_lid' =>'all'),false,true).'">Link til fakturabehandling</a>';
+
+						try
+						{
+							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
+						}
+						catch (phpmailerException $e)
+						{
+							$receipt['error'][] = array('msg' => $e->getMessage());
+						}
+					}
+					else
+					{
+						$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+					}
+				}
+
 				return $this->import_end_file($buffer);
 			}
+			$this->skip_import = false;
 			return false;
 		}
 
 		function get_order_info($order_id = '')
 		{
 			$order_info = array();
+			$toarray = array();
 			$order_id = (int) $order_id;
 			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = $order_id";
@@ -501,35 +522,63 @@
 				$order_info['dima'] = implode('', $parts);
 				$order_info['loc1'] = $parts[0];
 			}
-			
+
 			$order_info['vendor_id'] 			= $this->db->f('vendor_id');
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
-			
+
 //			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
 //			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
 //			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
 
+			$prefs = $this->bocommon->create_preferences('property', $janitor_user_id);
+			if($prefs['email'])
+			{
+				$toarray[] = $prefs['email'];
+			}
+
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
-			$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
-			$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+			if($supervisor_contact_id)
+			{
+				$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
+				$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+
+				$prefs = $this->bocommon->create_preferences('property', $supervisor_user_id);
+				if($prefs['email'])
+				{
+					$toarray[] = $prefs['email'];
+				}
+			}
 
 			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
 			$budget_responsible_contact_id		= $this->responsible->get_responsible($criteria_budget_responsible);
-			$budget_responsible_user_id			= $this->responsible->get_contact_user_id($budget_responsible_contact_id);
-			$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
-			//FIXME - this should be configurable
+			if($budget_responsible_contact_id)
+			{
+				$budget_responsible_user_id			= $this->responsible->get_contact_user_id($budget_responsible_contact_id);
+				$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			}
+
 			if(!$order_info['budget_responsible'])
 			{
 				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
 
+			$budget_responsible_user_id = $GLOBALS['phpgw']->accounts->name2id($order_info['budget_responsible']);
+			if($budget_responsible_user_id)
+			{
+				$prefs = $this->bocommon->create_preferences('property', $budget_responsible_user_id);
+				if($prefs['email'])
+				{
+					$toarray[] = $prefs['email'];
+				}
+			}
+
+			$order_info['toarray'] = $toarray;
 			return $order_info;
 		}
-
 
 		function import_end_file($buffer)
 		{

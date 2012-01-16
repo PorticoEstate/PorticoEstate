@@ -256,7 +256,7 @@
 					$omraade=$maalerinfo['district'];
 					if($invoice_common['auto_tax'])
 					{
-						$mvakode=$this->soXport->auto_tax($dima);
+						$mvakode=$this->soXport->auto_tax($loc1);
 						
 						if($mvakode)
 						{
@@ -307,7 +307,7 @@
 				{
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
 					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
-					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['dima']);
+					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 				}
 			}
 			return $buffer;
