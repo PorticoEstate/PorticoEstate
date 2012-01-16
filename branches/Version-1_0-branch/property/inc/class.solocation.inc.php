@@ -538,6 +538,18 @@
 					$paranthesis .='(';
 					$joinmethod .= " {$this->join} fm_responsibility_role ON ( fm_responsibility.id = fm_responsibility_role.responsibility_id))";
 					$paranthesis .='(';
+
+					$cols.= ',fm_responsibility_role.id as role_id';
+					$cols_return[] 	= 'role_id';
+					$uicols['input_type'][]		= 'hidden';
+					$uicols['name'][]			= 'role_id';
+					$uicols['descr'][]			= 'dummy';
+					$uicols['statustext'][]		= 'dummy';
+					$uicols['exchange'][]		= false;
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
+
 				}
 
 				$from = " FROM {$paranthesis} fm_location{$type_id} ";
@@ -730,7 +742,14 @@
 				$time = time() +1;
 				$filtermethod .= " {$where} active_from < {$time} AND (active_to > {$time} OR active_to = 0)"
 					." AND expired_on IS NULL AND fm_responsibility_role.id ={$role_id} AND contact_id = {$filter_role_on_contact}";
-				$where= 'AND';			
+				$where= 'AND';
+			}
+			else if ($filter_role_on_contact)
+			{
+				$time = time() +1;
+				$filtermethod .= " {$where} active_from < {$time} AND (active_to > {$time} OR active_to = 0)"
+					." AND expired_on IS NULL AND contact_id = {$filter_role_on_contact}";
+				$where= 'AND';	
 			}
 
 			$_querymethod = array();

@@ -60,10 +60,10 @@
 										'add_location_to_control' 		=> true,
 										'add_check_list_for_location' 	=> true,
 										'save_check_list_for_location' 	=> true,
-										'edit_check_list_for_location' 	=> true,
+										'edit_check_list' 				=> true,
 										'create_case_message' 			=> true,
 										'view_control_info' 			=> true,
-										'view_errors_for_check_list'	=> true
+										'view_cases_for_check_list'	=> true
 									);
 
 		function __construct()
@@ -365,7 +365,7 @@
 			self::render_template_xsl(array('add_check_list_for_location'), $data);
 		}
 		
-		function edit_check_list_for_location(){
+		function edit_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -389,10 +389,10 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('check_list/edit_check_list', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
 		
-		function view_errors_for_check_list(){
+		function view_cases_for_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -416,7 +416,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('check_list/view_errors_for_check_list', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
 		function save_check_list_for_location(){
@@ -441,7 +441,7 @@
 			
 			$check_list_id = $this->so_check_list->add($check_list);
 			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list_for_location', 'check_list_id'=>$check_list_id));
+			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id'=>$check_list_id));
 		}
 		
 		function create_case_message(){
@@ -520,7 +520,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
-			self::render_template_xsl('check_list/view_control_info', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
 		function get_timestamp_from_date( $date_string ){

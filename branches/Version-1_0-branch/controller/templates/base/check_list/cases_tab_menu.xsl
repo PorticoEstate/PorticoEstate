@@ -13,7 +13,7 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
-			Vis åpne saker
+			Åpne saker
 		</a>
 		<a id="view_closed_cases">
 			<xsl:if test="$active_tab = 'view_closed_cases'">
@@ -25,7 +25,7 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
-			Vis lukkede saker
+			Lukkede saker
 		</a>
 		<a id="view_measurements">
 			<xsl:if test="$active_tab = 'view_measurements'">
@@ -37,7 +37,7 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
-			Vis målinger
+			Målinger
 		</a>
 	</div>
 </xsl:template>

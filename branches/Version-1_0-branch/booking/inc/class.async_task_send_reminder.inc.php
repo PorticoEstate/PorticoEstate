@@ -118,8 +118,9 @@
 			{
 				$body .= "Hvem: %WHO%\n";
 			}
-			$body .= "\nVennlist oppgi korrekt deltakertall\n";
-			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor\n\n%URL%";
+			$body .= "\nBergen kommune fører statistikk på bruk av lokaler og ber derfor om at dere \n";
+			$body .= "\netter arrangementet melder inn korrekt deltakertall til oss.\n";
+			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor.\n\n%URL%";
 
 			$body = str_replace('%URL%', $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
 			$body = str_replace('%WHO%', $who, $body);

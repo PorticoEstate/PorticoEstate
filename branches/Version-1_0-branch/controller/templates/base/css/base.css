@@ -1014,7 +1014,7 @@ ul.check_items li.hidden{
 }
 
 .frm_save_check_item input[type='submit']{
-	width: 185px;
+	width: 165px;
 }
 ul.check_items {
     width: 625px;
@@ -1063,7 +1063,7 @@ ul.check_items h5{
     border: 1px solid #A3A3A3;
     margin: 0 318px 0 0;
     padding: 15px;
-    width: 628px;
+    width: 800px;
 }
 .tab_item h2{
 	margin:0 0 10px;
@@ -1158,6 +1158,21 @@ ul#icon_color_map span{
     margin-top: 1px;	
 }
 
+#edit_check_list_menu div{
+	float:left;
+	margin-left: 75px;
+}
+
+#edit_check_list_menu a.focus {
+    float: none;
+    font-size: 11px;
+    margin-top: 3px;
+    padding: 3px 0;
+}
+
+#edit_check_list_menu a.focus.first{
+    margin-top: 0;
+}
 
 #frm_update_check_list input[type="submit"]{
 	width: 140px;	
@@ -1173,9 +1188,9 @@ ul#icon_color_map span{
     display:block;
 }
 
-#view_errors {
-	float:left;
-    margin: 20px 0 0 10px;   
+#view_cases {
+    float: left;
+    margin: 20px 0 0 0;
 }
 #register_errors_content {
     float: right;
@@ -1183,14 +1198,13 @@ ul#icon_color_map span{
 }
 #edit_check_list_menu a {
     float: left;
-    height: 20px;
-    padding-top: 10px;
+    padding: 14px 0;
     text-align: center;
     width: 185px;
 }
-#edit_check_list_menu{
-		height:30px;
-		margin:0 0 20px 0;
+#edit_check_list_menu {
+    margin: 0 0 20px;
+    overflow: hidden;
 }
 .content_wrp {
  	background: none repeat scroll 0 0 #EDF5FF;
@@ -1221,4 +1235,13 @@ li.check_item_cases ul{
 li.check_item_cases ul li {
     list-style: disc outside none;
     margin: 5px 0 0 20px;
+}
+a.view_check_list{
+ 	color: #FFFFFF;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    height: 13px;
+    text-decoration: none;
+    width: 24px;	
 }

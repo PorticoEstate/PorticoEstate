@@ -1,6 +1,7 @@
 var  myPaginator_0, myDataTable_0
 var  myPaginator_1, myDataTable_1;
 var  myPaginator_2, myDataTable_2;
+var lightbox;
 
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 	{
@@ -30,6 +31,53 @@ var  myPaginator_2, myDataTable_2;
 	{
 		this.addFooterDatatable(myPaginator_2,myDataTable_2);
 	}
+
+	this.showlightbox_manual_invoide = function(workorder_id)
+	{
+		var oArgs = {menuaction:'property.uiworkorder.add_invoice', order_id:workorder_id};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "460";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+	YAHOO.util.Event.addListener(window, "load", function()
+	{
+	    YAHOO.util.Dom.removeClass("dialog1", "yui-pe-content");
+
+		lightbox = new YAHOO.widget.Dialog("manual_invoice_lightbox",  
+			{ width : "700px", 
+				context:["ctx","tl","bl", ["beforeShow", "windowResize"]],
+				visible : false
+		//		constraintoviewport : true, 
+		//		buttons : [ { text:"Submit", handler:handleSubmit, isDefault:true }, 
+		//					{ text:"Cancel", handler:handleCancel } ] 
+			} ); 
+
+/*
+		lightbox = new YAHOO.widget.Dialog("manual_invoice_lightbox",
+		{
+			width : "600px",
+			fixedcenter : true,
+			visible : false,
+			modal : false,
+			draggable: true
+			//constraintoviewport : true
+		});
+*/
+		lightbox.render();
+
+		YAHOO.util.Dom.setStyle('manual_invoice_lightbox', 'display', 'block');
+	});
+
 
 /********************************************************************************/
   	this.addFooterDatatable = function(paginator,datatable)
@@ -85,3 +133,4 @@ YAHOO.util.Event.addListener(window, "load", function()
 	loader.require("anyone");
     loader.insert();
 });
+

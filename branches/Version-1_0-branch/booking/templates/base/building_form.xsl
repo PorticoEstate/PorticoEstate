@@ -8,9 +8,7 @@
 			</li>
 			<xsl:if test="not(new_form)">
 				<li>
-					<a href="{building/building_link}">
 						<xsl:value-of select="building/name"/>
-					</a>
 				</li>
 			</xsl:if>
 		</ul>

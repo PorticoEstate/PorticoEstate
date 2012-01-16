@@ -709,7 +709,7 @@ enter the floor	property	no	angi etasje
 enter the floor id	property	no	angi etasje ID
 enter the general address	property	no	angi generell adresse
 enter the input text for records	property	no	Angi ledetekst for datafelt
-enter the invoice date	property	no	angi faktura dato
+enter the invoice date	property	no	angi fakturadato
 enter the meter id	property	no	angi måler ID
 enter the method id	property	no	Angi metode ID
 enter the name for the column	property	no	Angi navn for kolonne i database
@@ -894,10 +894,11 @@ investment id:	property	no	investering ID:
 investment value	property	no	Avskrivning
 invoice	property	no	Faktura
 invoice address	property	no	Fakturaadresse
-invoice date	property	no	Faktura dato
+invoice date	property	no	Fakturadato
 invoice id	property	no	Faktura ID
+invoice id already taken for this vendor	property	no	Fakturanummeret er allerede registrert for denne leverandøren 
 invoice is not added!	property	no	Fakturaen er IKKE lagt til!
-invoice number	property	no	Faktura nr
+invoice number	property	no	FakturaNr
 invoice tranferred	property	no	bilag er overført
 is id	property	no	Er ID
 is registered	property	no	er registert
@@ -1842,8 +1843,9 @@ view this entity	property	no	Vis denne entiteten
 view ticket detail	property	no	vis meldingsdetalj
 view workorder	property	no	Vis bestilling
 voucher	property	no	Bilag
-voucher date	property	no	Bilags dato
-voucher id	property	no	Bilags nr
+voucher date	property	no	BilagsDato
+voucher id	property	no	BilagsNr
+voucher id already taken	property	no	BilagsNr er allerede brukt
 voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert

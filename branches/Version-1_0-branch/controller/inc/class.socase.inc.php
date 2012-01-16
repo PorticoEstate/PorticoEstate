@@ -64,6 +64,7 @@
 			if($this->db->next_record()) {
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
 				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
@@ -78,6 +79,33 @@
 			{
 				return null;
 			}
+		}
+		
+		public function get_cases_by_message($message_ticket_id, $return_type = "return_object")
+		{
+			$sql = "SELECT * FROM controller_check_item_case "; 
+			$sql .= "WHERE location_item_id = $message_ticket_id";
+
+			$this->db->query($sql);
+
+			while ($this->db->next_record()) {
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
+
+				if($return_type == "return_object")
+					$cases_array[] = $case;
+				else
+					$cases_array[] = $case->toArray();
+			}
+
+			return $cases_array;
 		}
 		
 		
@@ -97,7 +125,7 @@
 
 			$values = array(
 				$this->marshal($case->get_check_item_id(), 'int'),
-				$case->get_status(),
+				$this->marshal($case->get_status(), 'int'),
 				$this->marshal($case->get_location_id(), 'int'),
 				$this->marshal($case->get_location_item_id(), 'int'),
 				$this->marshal($case->get_descr(), 'string'),
@@ -118,6 +146,7 @@
 
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
+				'status = ' . $case->get_status(),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),

@@ -35,7 +35,8 @@
 		private $status_text;
 		private $deadline_date;
 		private $info_text;
-
+		private $num_open_cases;
+	
 		public function __construct(){}
 		
 		public function set_check_list_id($check_list_id)
@@ -73,6 +74,13 @@
 		
 		public function get_info_text() { return $this->info_text; }
 		
+		public function set_num_open_cases($num_open_cases)
+		{
+			$this->num_open_cases = $num_open_cases;
+		}
+		
+		public function get_num_open_cases() { return $this->num_open_cases; }
+		
 		
 		public function serialize()
 		{
@@ -81,7 +89,8 @@
 				'status' => $this->get_status(),
 				'status_text' => $this->get_status_text(),
 				'deadline_date' => $this->get_deadline_date(),
-				'info_text' => $this->get_info_text()
+				'info_text' => $this->get_info_text(),
+				'num_open_cases' => $this->get_num_open_cases()
 			);
 		}
 	}

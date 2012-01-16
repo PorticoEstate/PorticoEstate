@@ -5,7 +5,9 @@
 <div id="main_content">
 	
 		<h1>Registrer avviksmelding</h1>
-			
+	
+		<xsl:call-template name="check_list_tab_menu" />
+	
 		<h3 class="box_header">Meldingen gjelder</h3>
 		<div id="case_details">
 			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control/title"/></h3>
@@ -93,7 +95,7 @@
 					
 					<div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input class="btn focus" type="submit" name="save_control" value="Registrer avviksmelding" title="{$lang_save}" />
+						<input class="btn focus" type="submit" name="save_control" value="Registrer melding" title="{$lang_save}" />
 					</div>
 				</form>			
 				</xsl:when>
@@ -102,15 +104,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</fieldset>
-		
-		<a class="btn">
-	    	<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-			</xsl:attribute>
-	      Vis sjekkliste
-	    </a>
 			
 </div>
 </xsl:template>

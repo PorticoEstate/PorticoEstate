@@ -44,6 +44,9 @@
 		protected $location_code;
 		protected $component_id;
 		
+		// Aggregate field. Field not in a table
+		protected $num_open_cases;
+		
 		// Objects
 		protected $check_item_array = array();
 		protected $control;
@@ -128,6 +131,13 @@
 		}
 		
 		public function get_component_id() { return $this->component_id; }
+
+		public function get_num_open_cases() { return $this->num_open_cases; }
+		
+		public function set_num_open_cases($num_open_cases)
+		{
+			$this->num_open_cases = $num_open_cases;
+		}
 		
 		public function set_control($control)
 		{
