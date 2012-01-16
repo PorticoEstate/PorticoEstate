@@ -651,7 +651,6 @@
 				$values['budsjettansvarligid'] = $values['budget_responsible'];
 			}
 
-
 			if(!$values['supervisor'])
 			{
 				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_supervisor);

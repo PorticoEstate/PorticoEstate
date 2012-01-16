@@ -660,7 +660,7 @@
 
 		function get_responsible($b_abbount_id)
 		{
-			$this->db->query("SELECT account_lid FROM fm_b_account $this->join phpgw_accounts on fm_b_account.responsible = phpgw_accounts.account_id WHERE fm_b_account.id = '$b_abbount_id'");
+			$this->db->query("SELECT account_lid FROM fm_b_account {$this->join} phpgw_accounts on fm_b_account.responsible = phpgw_accounts.account_id WHERE fm_b_account.id = '{$b_abbount_id}'",__LINE__,__FILE__);
 			$this->db->next_record();
 			$responsible = $this->db->f('account_lid');
 			return $responsible;
