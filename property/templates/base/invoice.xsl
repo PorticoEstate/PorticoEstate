@@ -1566,7 +1566,7 @@
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
 						<tr>
-							<td align="left" colspan="2">
+							<td align="left" colspan="3">
 								<xsl:call-template name="msgbox"/>
 							</td>
 						</tr>
@@ -1621,10 +1621,23 @@
 					<td class="th_text" align="left" valign="top" >
 						<xsl:value-of select="php:function('lang', 'order id')"/>
 					</td>
-					<td align="left" class="th_text" valign="top">
-						<xsl:value-of  disable-output-escaping="yes"  select="orders"/>
+					<td align="left" class="th_text" valign="top" colspan = '2'>
+						<xsl:value-of select="php:function('lang', 'close')"/>
+						<table>
+							<xsl:for-each select="orders">
+								<tr>
+									<td class="th_text" align="left" valign="top" >
+										<xsl:value-of select="id"/>
+									</td>
+									<td align="left" class="th_text" valign="top">
+										<input type="checkbox" name="orders[]" value="{id}" checked="checked"/>
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
 					</td>
-				</tr>			</table>
+				</tr>
+			</table>
 		</form>
 	</xsl:template>
 
