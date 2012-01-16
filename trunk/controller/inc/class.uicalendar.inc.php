@@ -95,9 +95,28 @@
 			$this->calendar_builder = new calendar_builder($from_date, $to_date);
 			
 			$repeat_type = 0;
+
+			$criteria = array
+			(
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'type_id' => 2,
+				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+				'allrows' => false
+			);
+		
+			$test = new test();
+			$locations = $test->get_responsibilities($criteria);
+		
+		
+		
+			
+			
+			
+			
+			
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type);
-			
+		
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date, $to_date, $repeat_type);
 			
 			$controls_with_check_list = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
