@@ -2041,7 +2041,7 @@
 					(
 						'dimb' => $workorder['ecodimb']
 					);
-					$_responsible					= $boinvoice->set_responsible($_criteria,$workorder['user_id'],$values['b_account_id']);
+					$_responsible					= $boinvoice->set_responsible($_criteria,$workorder['user_id'],$workorder['b_account_id']?$workorder['b_account_id']:$values['b_account_id']);
 					$values['janitor']				= $_responsible['janitor'];
 					$values['supervisor']			= $_responsible['supervisor'];
 					$values['budget_responsible']	= $_responsible['budget_responsible'];

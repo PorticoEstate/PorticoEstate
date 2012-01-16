@@ -120,8 +120,8 @@
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
 			$sql .= "WHERE cll.location_code = $location_code ";
 			$sql .= "AND c.repeat_type = $repeat_type ";
-			$sql .= "AND c.start_date >= $from_date ";
-			$sql .= "AND (c.end_date < $to_date OR c.end_date IS NULL)";
+			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
+			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
 			
 			$this->db->query($sql);
 

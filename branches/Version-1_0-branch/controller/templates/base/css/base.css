@@ -1245,3 +1245,7 @@ a.view_check_list{
     text-decoration: none;
     width: 24px;	
 }
+.cal_info_msg{
+	font-size: 16px;
+    padding: 40px 20px;	
+}
