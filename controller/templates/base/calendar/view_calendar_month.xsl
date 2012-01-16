@@ -59,8 +59,6 @@
 			});
 		</script>
 		
-		<xsl:choose>
-			<xsl:when test="controls_calendar_array/child::node()">
 			<ul style="clear:left;" class="calendar info month">
 				<li class="heading">
 					<div class="id">ID</div>
@@ -70,7 +68,8 @@
 					<div class="frequency">Frekvenstype</div>
 					<div class="frequency">Frekvensintervall</div>
 				</li>
-			
+				<xsl:choose>	
+					<xsl:when test="controls_calendar_array/child::node()">
 			  	<xsl:for-each select="controls_calendar_array">
 					<li>
 			    		<div class="id">
@@ -100,6 +99,11 @@
 						</div>							
 					</li>
 				</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="cal_info_msg">Ingen sjekklister for bygg i angitt periode</div>
+					</xsl:otherwise>
+				</xsl:choose>
 			</ul>
 			
 			<div id="days_wrp">
@@ -108,8 +112,9 @@
 						<xsl:for-each select="heading_array">
 							<div><xsl:value-of select="."/></div>
 						</xsl:for-each>
-					</li>				
-							
+					</li>
+					<xsl:choose>	
+					<xsl:when test="controls_calendar_array/child::node()">
 					<xsl:for-each select="controls_calendar_array">
 					<li>
 						<xsl:for-each select="calendar_array">
@@ -186,24 +191,6 @@
 											</a>
 										</div>
 									</xsl:when>
-									<!-- xsl:when test="status = 'control_accomplished_with_errors'">
-										<div style="position:relative;">
-					    					<div id="info_box" style="position:absolute;display:none;"></div>
-											<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/check_list_id"/>
-												</xsl:attribute>
-												<span style="display:none">
-													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-												</span>
-												<img height="15" src="controller/images/status_icon_red_empty.png" />
-											</a>
-										</div>
-									</xsl:when>
-									 -->
 									<xsl:when test="status = 'control_not_accomplished_with_info'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
@@ -234,13 +221,14 @@
 								</xsl:choose>
 							</xsl:for-each>
 						</li>
+						
 					</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<div>Ingen sjekklister for bygg i angitt periode</div>
+					</xsl:otherwise>
+				</xsl:choose>
 				</ul>
 			</div>
-		</xsl:when>
-		<xsl:otherwise>
-			<div>Ingen sjekklister for bygg i angitt periode</div>
-		</xsl:otherwise>
-	</xsl:choose>
 </div>
 </xsl:template>
