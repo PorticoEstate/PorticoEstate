@@ -386,13 +386,15 @@
 				{
 					$receipt['error'][] = array('msg'=>lang('voucher id already taken'));
 				}
+				$skip_update_voucher_id = true;
 				$values['bilagsnr']		= $values['voucher_out_id'];
 				$values['bilagsnr_ut']	= '';
 			}
 			else
 			{
-				$values['bilagsnr']			= execMethod('property.socommon.increment_id','Bilagsnummer');
-				$values['bilagsnr_ut']		= $values['voucher_out_id'];			
+				$skip_update_voucher_id = false;
+				$values['bilagsnr']		= execMethod('property.socommon.increment_id','Bilagsnummer');
+				$values['bilagsnr_ut']	= $values['voucher_out_id'];			
 			}
 
 			if( $soXport->check_invoice_id($values['vendor_id'], $values['invoice_id']))
@@ -423,27 +425,30 @@
 				if($order_type=='s_agreement')
 				{
 					$sos_agreement = CreateObject('property.sos_agreement');
-					$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$values['order_id']));
-					$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
+					$s_agreement = $sos_agreement->read_single($values['order_id']);
+			//		$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
 					$s_agreement_detail = $sos_agreement->read(array('allrows'=>true,'s_agreement_id'=>$values['order_id'],'detail'=>true));
 
 					$sum_agreement=0;
 					for ($i=0;$i<count($s_agreement_detail);$i++)
 					{
+						$s_agreement_detail[$i]['cost'] = abs($s_agreement_detail[$i]['cost']) > 0 ? $s_agreement_detail[$i]['cost'] : 1;
 						$sum_agreement = $sum_agreement + $s_agreement_detail[$i]['cost'];
 					}
 
 					for ($i=0;$i<count($s_agreement_detail);$i++)
 					{
+						$_location = explode('-', $s_agreement_detail[$i]['location_code']);
 						$buffer[$i]						= $values;
 						$buffer[$i]['location_code']	= $s_agreement_detail[$i]['location_code'];
+						$buffer[$i]['loc1']				= $_location[0];
 						$buffer[$i]['dima']				= str_replace('-','',$s_agreement_detail[$i]['location_code']);
 						$buffer[$i]['belop']			= round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'],2);
 						$buffer[$i]['godkjentbelop']	= $buffer[$i]['belop'];
 					}
 				}
 
-				if($soXport->add_manual_invoice($buffer))
+				if($soXport->add_manual_invoice($buffer,$skip_update_voucher_id))
 				{
 					$receipt['message'][] = array('msg'=>lang('Invoice %1 is added',$soXport->voucher_id));
 					$receipt['voucher_id'] = $soXport->voucher_id;
