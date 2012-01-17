@@ -539,6 +539,62 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][7]);
 				}
+
+
+				$custom	= createObject('phpgwapi.custom_fields');
+				$attrib_data = $custom->find('property', $this->acl_location, 0, '','','',true, true);
+
+				if($attrib_data)
+				{
+					$i = 16;
+					foreach ( $attrib_data as $attrib )
+					{
+
+
+						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+						{
+
+							$_values = array();
+							$_values[] = array('id' => '', 'name' => lang('select') . ' ' . $attrib['input_text']);
+							foreach($attrib['choice'] as $choice)
+							{
+								$_values[]  = array
+								(
+									'id' 	=> $choice['id'],
+									'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+								);
+							}
+
+
+							$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
+								'id' => "sel_{$attrib['column_name']}",
+								'name' => $attrib['column_name'],
+								'value'	=> $attrib['input_text'],
+								'type' => 'select',
+								'style' => 'filter',
+								'values' => $_values,
+								'onchange'=> "onChangeSelect(\"{$attrib['column_name']}\");",
+								'tab_index' => $i
+							);
+
+							$i++;
+/*
+							$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
+								'id' => 'sel_order_dim1', // testing traditional listbox for long list
+								'name' => 'order_dim1',
+								'value'	=> lang('order_dim1'),
+								'type' => 'select',
+								'style' => 'filter',
+								'values' => $this->bo->get_order_dim1($this->order_dim1),
+								'onchange'=> 'onChangeSelect("order_dim1");',
+								'tab_index' => 17
+							);
+*/
+						}
+					}
+				}
 				$dry_run = true;
 			}
 
