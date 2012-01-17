@@ -43,6 +43,7 @@
 		var $cat_id;
 		public $sum_budget = 0;
 		public $sum_consume = 0;
+		public $acl_location = '.project.request';
 
 		var $public_functions = array
 			(
@@ -62,7 +63,7 @@
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
-
+//			$this->acl_location			= '.project.request';
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -412,12 +413,37 @@
 
 		function read($data)
 		{
+			$custom	= createObject('phpgwapi.custom_fields');
+			$attrib_data = $custom->find('property', $this->acl_location, 0, '','','',true, true);
+
+			$attrib_filter = array();
+			if($attrib_data)
+			{
+				foreach ( $attrib_data as $attrib )
+				{
+					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
+					{
+						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						{
+							$attrib_filter[] = "fm_request.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+						}
+					}
+					else if($attrib['datatype'] == 'CH')
+					{
+						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						{
+							$attrib_filter[] = "fm_request.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+						}
+					}
+				}
+			}
+
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
-				'degree_id' => $this->degree_id));
+				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter));
 
 			$this->total_records	= $this->so->total_records;
 			$this->sum_budget		= $this->so->sum_budget;
