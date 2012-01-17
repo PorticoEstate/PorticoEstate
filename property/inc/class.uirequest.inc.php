@@ -72,7 +72,7 @@
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->config->read();
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= '.project.request';
+			$this->acl_location			= $this->bo->acl_location;
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
