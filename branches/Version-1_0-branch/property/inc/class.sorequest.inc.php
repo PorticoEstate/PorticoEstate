@@ -213,6 +213,7 @@
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
 			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
 			$degree_id		= $data['degree_id'];
+			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -506,6 +507,12 @@
 			{
 				$filtermethod .= " $where fm_request.coordinator='$filter' ";
 				$where = 'AND';
+			}
+
+			if ($attrib_filter)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
+				$where= 'AND';			
 			}
 
 			if ($project_id && !$status_id)// lookup requests not already allocated to projects
