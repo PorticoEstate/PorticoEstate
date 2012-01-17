@@ -33,6 +33,7 @@
 
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
+	include_class('controller', 'status_checker', 'inc/helper/');
 
 	class controller_uicheck_list extends controller_uicommon
 	{
@@ -86,15 +87,6 @@
 
 		public function index()
 		{
-/*			$check_list_array = $this->so->get_check_list();
-
-			$data = array
-			(
-				'check_list_array'	=> $check_list_array
-			);
-
-			self::render_template_xsl('control_check_lists', $data);
-			*/
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -379,15 +371,29 @@
 			$location_code = $check_list->get_location_code();
 				
 			// Fetches all control items for check list
-			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control($check_list->get_control_id(), "array");
-		
+			$control_items_for_check_list = array();
+			
+			$open_type_1_check_items = $this->so_check_item->get_check_items($check_list_id, null, "control_item_type_1", "return_object");			
+			
+			foreach($open_type_1_check_items as $check_item){
+				$control_items_for_check_list[] = $check_item->get_control_item()->toArray();
+			}
+
+			$open_type_2_check_items = $this->so_check_item->get_check_items($check_list_id, "open", "control_item_type_2", "return_object");
+			foreach($open_type_2_check_items as $check_item){
+				$control_items_for_check_list[] = $check_item->get_control_item()->toArray();
+			}
+			
 			$data = array
 			(
 				'control_items_for_check_list' 	=> $control_items_for_check_list,
-				'check_list' 	=> $check_list->toArray()
+				'check_list' 					=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
 		function view_open_cases(){
@@ -428,12 +434,12 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			// Fetches check items that registeres measurement
-			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
-						
+			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2', "return_array");
+			
 			$data = array
 			(
-				'measurement_check_items' 		=> $measurement_check_items,
-				'check_list' 	=> $check_list->toArray()
+				'measurement_check_items'	=> $measurement_check_items,
+				'check_list' 				=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_measurements'), $data );
@@ -524,8 +530,12 @@
 			
 			$check_item_id = $this->so_check_item->store( $check_item );
 
-			if($check_item_id > 0)
+			if($check_item_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_item->get_check_list_id() );
+				
 				return json_encode( array( "saveStatus" => "saved" ) );
+			}
 			else
 				return json_encode( array( "status" => "not_saved" ) );
 		}

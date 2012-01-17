@@ -30,7 +30,7 @@ class date_generator
 	
 		$interval_date = $period_start_date;
 		
-		while($interval_date <= $this->period_end_date){
+		while($interval_date < $this->period_end_date){
 			
 			$this->calendar_array[] = $interval_date; 
 						
