@@ -74,6 +74,17 @@
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
 			
+			if($check_item == null){
+				$new_check_item = new controller_check_item();
+				$new_check_item->set_check_list_id( $check_list_id );
+				$new_check_item->set_control_item_id( $control_item_id );
+				$new_check_item->set_status( 0 );
+				$new_check_item->set_comment( "" );
+				
+				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
+				$check_item = $this->so_check_item->get_single($saved_check_item_id);
+			}
+			
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
@@ -83,7 +94,6 @@
 			$case->set_check_item_id( $check_item->get_id() );
 			$case->set_status($case_status);
 			$case->set_descr($case_descr);
-			$case->set_location_id($location_id);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date);
 			$case->set_modified_date($todays_date);

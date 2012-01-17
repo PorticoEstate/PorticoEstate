@@ -17,7 +17,7 @@ class calendar_builder {
 		foreach($control_array as $control){
 
 			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
-			
+		print_r($calendar_array);	
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
 				

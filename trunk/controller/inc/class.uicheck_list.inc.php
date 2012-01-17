@@ -368,20 +368,24 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 							
-			$location_code = $check_list->get_location_code();
-				
 			// Fetches all control items for check list
 			$control_items_for_check_list = array();
 			
-			$open_type_1_check_items = $this->so_check_item->get_check_items($check_list_id, null, "control_item_type_1", "return_object");			
+			$control_items = $this->so_control_item->get_control_items_by_control($check_list->get_control_id());
+			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
 			
-			foreach($open_type_1_check_items as $check_item){
-				$control_items_for_check_list[] = $check_item->get_control_item()->toArray();
+			$remove_control_item_ids_array = array();
+			
+			foreach($check_items as $check_item){
+				if($check_item->get_control_item()->get_type() == "control_item_type_2" & $check_item->get_status() == 1){
+					$remove_control_item_ids_array[] = $check_item->get_control_item_id();
+				}
 			}
-
-			$open_type_2_check_items = $this->so_check_item->get_check_items($check_list_id, "open", "control_item_type_2", "return_object");
-			foreach($open_type_2_check_items as $check_item){
-				$control_items_for_check_list[] = $check_item->get_control_item()->toArray();
+			
+			foreach($control_items as $control_item){
+				if( !in_array($control_item->get_id(), $remove_control_item_ids_array) ){
+					$control_items_for_check_list[] = $control_item->toArray(); 
+				}
 			}
 			
 			$data = array

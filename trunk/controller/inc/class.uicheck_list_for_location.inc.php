@@ -59,12 +59,12 @@
 										'index' => true,
 										'view_locations_for_control' 	=> true,
 										'add_location_to_control' 		=> true,
-										'add_check_list_for_location' 	=> true,
-										'save_check_list_for_location' 	=> true,
+										'add_check_list' 				=> true,
+										'save_check_list' 				=> true,
 										'edit_check_list' 				=> true,
 										'create_case_message' 			=> true,
 										'view_control_info' 			=> true,
-										'view_cases_for_check_list'	=> true
+										'view_cases_for_check_list'		=> true
 									);
 
 		function __construct()
@@ -315,7 +315,7 @@
 			self::render_template_xsl(array('control_location_tabs', 'common', 'add_location_to_control'), $data);		
 		}
 		
-		function add_check_list_for_location(){
+		function add_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$date = phpgw::get_var('date');
@@ -363,7 +363,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl('check_list/add_check_list_for_location', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/add_check_list'), $data);
 		}
 		
 		function edit_check_list(){
@@ -420,7 +420,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-		function save_check_list_for_location(){
+		function save_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$status = phpgw::get_var('status');

@@ -22,8 +22,12 @@
 <div id="main_content">
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
+
+	<xsl:call-template name="check_list_tab_menu">
+		<xsl:with-param name="active_tab">view_details</xsl:with-param>
+	</xsl:call-template>
 	
-	<div class="tab_menu"><a class="active">Sjekklistedetaljer</a></div>
+	<h3 class="box_header">Sjekklistedetaljer</h3>
 	<fieldset class="check_list_details">
 		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list_for_location.save_check_list_for_location" method="post">
 					

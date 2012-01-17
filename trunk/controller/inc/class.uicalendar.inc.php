@@ -179,14 +179,14 @@
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'type_id' => 2,
+				'type_id' => 1,
 				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
 				'allrows' => false
 			);
 		
 			$location_finder = new location_finder();
 			$locations = $location_finder->get_responsibilities( $criteria );
-print_r($locations);
+
 			$repeat_type = null;
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
@@ -196,14 +196,14 @@ print_r($locations);
 			foreach($controls_for_location_array as $control){
 				
 				if($control->get_repeat_type() == 0){
-
-					$twelve_month_array = array();
 					
-					$cal_to_year = $year;
+					$twelve_month_array = array();
+								
+					$trail_year = $year;
 					
 					for($from_month=1;$from_month<=12;$from_month++){
-
-						$from_date_ts = strtotime("$from_month/01/$cal_to_year");
+				
+						$trail_from_date_ts = strtotime("$from_month/01/$trail_year");
 						
 						if(($from_month + 1) > 12)
 						{
@@ -215,17 +215,23 @@ print_r($locations);
 							$to_month = $from_month + 1;
 						}
 						
-						$to_date_ts = strtotime("$to_month/01/$cal_to_year");
+						$trail_to_date_ts = strtotime("$to_month/01/$trail_year");
 						
 						$num_open_cases_for_control_array = array();
-						$num_open_cases_for_control_array = $this->so->get_num_open_cases_for_control( $control->get_id(), $location_code, $from_date_ts, $to_date_ts );	
-
-						$twelve_month_array[$from_month-1] = $num_open_cases_for_control_array;
+						$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $trail_from_date_ts, $trail_to_date_ts );	
+				
+						$status = "control_agg_accomplished_with_errors";
+							
+						$twelve_month_array[$from_month-1]["status"] = $status;
+						$twelve_month_array[$from_month-1]["info"] = $num_open_cases_for_control_array["count"];
+						
 					}
 				
-					$days_controls_calendar_array = $this->calendar_builder->build_agg_calendar_array( $agg_check_list_array );
+					$days_controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $twelve_month_array);
 				}
+					
 			}
+			
 
 			$repeat_type = 2;
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
@@ -233,7 +239,7 @@ print_r($locations);
 			$month_controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_check_list_array, 12, "view_months" );
 					
 			$controls_calendar_array = array_merge($days_controls_calendar_array, $month_controls_calendar_array);
-			
+			print_r($controls_calendar_array);
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");

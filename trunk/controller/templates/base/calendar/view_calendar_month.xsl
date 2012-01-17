@@ -123,7 +123,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list</xsl:text>
 												<xsl:text>&amp;date=</xsl:text>
 												<xsl:value-of select="info/date"/>
 												<xsl:text>&amp;control_id=</xsl:text>
@@ -207,7 +207,18 @@
 									</xsl:when>
 									<xsl:when test="status = 'control_not_accomplished'">
 										<div>
-											<img height="15" src="controller/images/status_icon_red_cross.png" />
+											<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list</xsl:text>
+													<xsl:text>&amp;date=</xsl:text>
+													<xsl:value-of select="info/date"/>
+													<xsl:text>&amp;control_id=</xsl:text>
+													<xsl:value-of select="info/control_id"/>
+													<xsl:text>&amp;location_code=</xsl:text>
+													<xsl:value-of select="$location_code"/>
+												</xsl:attribute>
+												<img height="15" src="controller/images/status_icon_red_cross.png" />
+											</a>
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_canceled'">
