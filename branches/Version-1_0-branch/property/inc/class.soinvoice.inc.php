@@ -662,8 +662,8 @@
 
 				if (! $local_error)
 				{
-					$id			= $values['id'][$n];
-					$tax_code	= $values['tax_code'][$n];
+					$id			= (int)$values['id'][$n];
+					$tax_code	= (int)$values['tax_code'][$n];
 					$dimb		= isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int)$values['dimb'][$n] : 'NULL';
 					$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
 					$workorder_id=$values['workorder_id'][$n];
@@ -682,7 +682,7 @@
 						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
 					}
 
-					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
 				}
