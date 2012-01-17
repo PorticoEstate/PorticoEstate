@@ -140,7 +140,7 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
 													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>

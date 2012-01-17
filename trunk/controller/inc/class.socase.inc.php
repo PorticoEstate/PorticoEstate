@@ -125,7 +125,7 @@
 
 			$values = array(
 				$this->marshal($case->get_check_item_id(), 'int'),
-				$this->marshal($case->get_status(), 'int'),
+				$case->get_status(),
 				$this->marshal($case->get_location_id(), 'int'),
 				$this->marshal($case->get_location_item_id(), 'int'),
 				$this->marshal($case->get_descr(), 'string'),
@@ -143,10 +143,10 @@
 		function update($case)
 		{
 			$id = $case->get_id();
-
+			
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
-				'status = ' . $case->get_status(),
+				'status = ' . $this->marshal($case->get_status(), 'int'),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),

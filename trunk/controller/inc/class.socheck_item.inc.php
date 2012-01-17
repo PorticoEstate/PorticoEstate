@@ -135,7 +135,7 @@
 			}
 		}
 		
-		public function get_single_with_cases($check_item_id, $returnType = "return_object"){
+		public function get_single_with_cases($check_item_id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, check_list_id, ";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
@@ -167,7 +167,7 @@
 					$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
-					if($returnType == "return_array")
+					if($return_type == "return_array")
 						$check_item->set_control_item($control_item->toArray());
 					else
 						$check_item->set_control_item($control_item);
@@ -188,7 +188,7 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
 				
 				
-					if($returnType == "return_array")
+					if($return_type == "return_array")
 						$cases_array[] = $case->toArray();
 					else
 						$cases_array[] = $case;
@@ -201,7 +201,7 @@
 			if($check_item != null){
 				$check_item->set_cases_array($cases_array);
 				
-				if($returnType == "return_array")
+				if($return_type == "return_array")
 					return $check_item->toArray();
 				else
 					return $check_item;
@@ -244,7 +244,7 @@
 			}
 		}
 		
-		public function get_check_items($check_list_id, $status, $type){
+		public function get_check_items($check_list_id, $status, $type, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, "; 
 			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
 			$sql .= "FROM controller_check_item ci "; 
@@ -277,16 +277,22 @@
 				$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
 				$control_item->set_type($this->db->f('type', true), 'string');
 				
-				$check_item->set_control_item($control_item->toArray());
-				
-				$check_items_array[] = $check_item->toArray();
+				if($return_type == "return_array"){
+					$check_item->set_control_item($control_item->toArray());
+					$check_items_array[] = $check_item->toArray();
+				}
+				else{
+					$check_item->set_control_item($control_item);
+					$check_items_array[] = $check_item;
+				}
 			}
 			
 			return $check_items_array;
 		}
 		
-		public function get_check_items_with_cases($check_list_id, $status = "open", $messageStatus = null, $returnType = "return_object"){
-			$sql  = "SELECT ci.id as ci_id, ci.status, control_item_id, ci.comment, ci.measurement, check_list_id, cic.id as cic_id, cic.*, ";
+		public function get_check_items_with_cases($check_list_id, $status = "open", $messageStatus = null, $return_type = "return_object"){
+			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, check_list_id, ";
+			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
@@ -314,7 +320,7 @@
 					if($check_item_id != 0){
 						$check_item->set_cases_array($cases_array);
 						
-						if($returnType == "return_array")
+						if($return_type == "return_array")
 							$check_items_array[] = $check_item->toArray();
 						else
 							$check_items_array[] = $check_item;
@@ -322,7 +328,7 @@
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-					$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+					$check_item->set_status($this->db->f('ci_status', true), 'int');
 					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
@@ -335,14 +341,18 @@
 					$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
-					$check_item->set_control_item($control_item->toArray());
-									
+					if($return_type == "return_array")
+						$check_item->set_control_item($control_item->toArray());
+					else
+						$check_item->set_control_item($control_item);
+							
 					$cases_array = array();
 				}
 				
 				if($this->db->f('cic_id', true) != ''){
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id', true), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+					$case->set_status($this->unmarshal($this->db->f('cic_status', true), 'int'));
 					$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 					$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
 					$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
@@ -352,19 +362,19 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
 				
 				
-					if($returnType == "return_array")
+					if($return_type == "return_array")
 						$cases_array[] = $case->toArray();
 					else
 						$cases_array[] = $case;
 				}
 				
-				$check_item_id =  $check_item->get_id();
+				$check_item_id = $check_item->get_id();
 			}
 			
 			if($check_item != null){
 				$check_item->set_cases_array($cases_array);
 				
-				if($returnType == "return_array")
+				if($return_type == "return_array")
 					$check_items_array[] = $check_item->toArray();
 				else
 					$check_items_array[] = $check_item;
@@ -375,7 +385,7 @@
 			}
 		}
 		
-		public function get_check_items_with_cases_by_message($message_ticket_id, $returnType = "return_object"){
+		public function get_check_items_with_cases_by_message($message_ticket_id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, "; 
 			$sql .= "check_list_id, cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
@@ -395,7 +405,7 @@
 					if($check_item_id != 0){
 						$check_item->set_cases_array($cases_array);
 						
-						if($returnType == "return_array")
+						if($return_type == "return_array")
 							$check_items_array[] = $check_item->toArray();
 						else
 							$check_items_array[] = $check_item;
@@ -416,7 +426,7 @@
 					$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
-					if($returnType == "return_array")
+					if($return_type == "return_array")
 						$check_item->set_control_item($control_item->toArray());
 					else
 						$check_item->set_control_item($control_item);
@@ -437,7 +447,7 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
 				
 				
-					if($returnType == "return_array")
+					if($return_type == "return_array")
 						$cases_array[] = $case->toArray();
 					else
 						$cases_array[] = $case;
@@ -449,7 +459,7 @@
 			if($check_item != null){
 				$check_item->set_cases_array($cases_array);
 				
-				if($returnType == "return_array")
+				if($return_type == "return_array")
 					$check_items_array[] = $check_item->toArray();
 				else
 					$check_items_array[] = $check_item;
@@ -460,7 +470,7 @@
 			}
 		}
 		
-		public function get_check_items_by_message($message_ticket_id, $returnType = "return_array" ){
+		public function get_check_items_by_message($message_ticket_id, $return_type = "return_array" ){
 			$sql  = "SELECT ci.* "; 
 			$sql .= "FROM controller_check_item ci "; 
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
@@ -476,7 +486,7 @@
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
-				if($returnType == "return_array")
+				if($return_type == "return_array")
 					$check_items_array[] = $check_item->toArray();
 				else
 					$check_items_array[] = $check_item;

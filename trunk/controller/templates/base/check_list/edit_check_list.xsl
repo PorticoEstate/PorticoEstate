@@ -62,6 +62,10 @@
 				</select>
 			</div>
 			<div>
+				<label>Antall åpne avvik</label>
+			     <xsl:value-of select="check_list/num_open_cases"/>
+		    </div>
+			<div>
 				<label>Skal utføres innen</label>
 				<input>
 			      <xsl:attribute name="id">deadline_date</xsl:attribute>

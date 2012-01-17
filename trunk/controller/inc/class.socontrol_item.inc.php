@@ -309,12 +309,14 @@
 			return $results;
 		}
 
-		function get_control_items_by_control($control_id, $returnType = "object")
+		function get_control_items_by_control($control_id, $returnType = "return_object")
 		{
 			$results = array();
 
-			$sql  = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl ";
-			$sql .= "WHERE cl.control_id=$control_id AND cl.control_item_id=ci.id";
+			$sql  = "SELECT ci.* ";
+			$sql .= "FROM controller_control_item ci, controller_control_item_list cl ";
+			$sql .= "WHERE cl.control_id=$control_id AND cl.control_item_id = ci.id ";
+									
 			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
@@ -326,7 +328,7 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				if($returnType == "array")
+				if($returnType == "return_array")
 					$results[] = $control_item->toArray();
 				else
 					$results[] = $control_item;

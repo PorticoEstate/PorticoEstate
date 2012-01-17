@@ -20,38 +20,40 @@
 				<ul id="control_items_list" class="check_items expand_list">
 					<xsl:for-each select="control_items_for_check_list">
 						<li>
-		    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>						
-							<form id="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
-								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-								<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-								<input name="check_list_id" type="hidden">
-							      <xsl:attribute name="value">
-							      	<xsl:value-of select="//check_list/id"/>
-							      </xsl:attribute>
-							    </input>
-							    <input name="status" type="hidden" value="0" />
-							      
+		    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>	
 							<xsl:choose>
 								<xsl:when test="type = 'control_item_type_1'">
-									<input name="type" type="hidden" value="control_item_type_1" />
-								    
-									<div class="check_item">
-								       <div>
-									         <label class="comment">Beskrivelse av sak</label>
-									         <textarea name="case_descr">
-												<xsl:value-of select="comment"/>
-											 </textarea>
-									   </div>
-								       <div class="form-buttons">
-											<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-											<input type="submit" name="save_control" value="{$lang_save}" class="not_active" title="{$lang_save}" />
+									<form id="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+										<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+									    <input name="status" type="hidden" value="0" />
+										<input name="type" type="hidden" value="control_item_type_1" />
+										    
+										<div class="check_item">
+									       <div>
+										         <label class="comment">Beskrivelse av sak</label>
+										         <textarea name="case_descr">
+													<xsl:value-of select="comment"/>
+												 </textarea>
+										   </div>
+									       <div class="form-buttons">
+												<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
+												<input type="submit" name="save_control" value="{$lang_save}" class="not_active" title="{$lang_save}" />
+											</div>
 										</div>
-									</div>
+									</form>
 								</xsl:when>
 								<xsl:when test="type = 'control_item_type_2'">
+								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item&amp;phpgw_return_as=json" method="post">
+									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+									<input name="status" type="hidden" value="1" />
 									<input name="type" type="hidden" value="control_item_type_2" />
+									<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+							    	
 									<div class="check_item">
-								         <div>
+								       <div>
 								         <label class="comment">Registrer målingsverdi</label>
 								           <input>
 										      <xsl:attribute name="name">measurement</xsl:attribute>
@@ -72,10 +74,9 @@
 											<input type="submit" name="save_control" value="Registrer sak" class="not_active" title="{$lang_save}" />
 										</div>
 									</div>
+									</form>
 								</xsl:when>
 							</xsl:choose>														
-								
-							</form>
 					    </li>
 					</xsl:for-each>
 				</ul>			

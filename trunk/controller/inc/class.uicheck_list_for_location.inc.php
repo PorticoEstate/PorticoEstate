@@ -34,6 +34,7 @@
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
+	include_class('controller', 'status_checker', 'inc/helper/');
 		
 	class controller_uicheck_list_for_location extends controller_uicommon
 	{
@@ -362,7 +363,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl(array('add_check_list_for_location'), $data);
+			self::render_template_xsl('check_list/add_check_list_for_location', $data);
 		}
 		
 		function edit_check_list(){
@@ -374,7 +375,7 @@
 			$location_code = $check_list->get_location_code();
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
+						
 			$data = array
 			(
 				'check_list' 					=> $check_list->toArray(),
