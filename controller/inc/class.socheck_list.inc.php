@@ -68,7 +68,7 @@ class controller_socheck_list extends controller_socommon
 			if($counter == 0){
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
@@ -80,7 +80,7 @@ class controller_socheck_list extends controller_socommon
 			
 			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'int'));
 			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
@@ -227,7 +227,7 @@ class controller_socheck_list extends controller_socommon
 				}
 				
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
-				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
@@ -241,7 +241,7 @@ class controller_socheck_list extends controller_socommon
 			
 			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'int'));
 			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
@@ -538,7 +538,6 @@ class controller_socheck_list extends controller_socommon
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
 			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
@@ -583,10 +582,10 @@ class controller_socheck_list extends controller_socommon
 	function update($check_list)
 	{
 		$id = intval($check_list->get_id());
-			
+
 		$values = array(
 			'control_id = ' . $this->marshal($check_list->get_control_id(), 'int'),
-			'status = ' . $this->marshal($check_list->get_status(), 'int'),
+			'status = ' . $check_list->get_status(),
 			'comment = ' . $this->marshal($check_list->get_comment(), 'string'),
 			'deadline = ' . $this->marshal($check_list->get_deadline(), 'int'),
 			'planned_date = ' . $this->marshal($check_list->get_planned_date(), 'int'),

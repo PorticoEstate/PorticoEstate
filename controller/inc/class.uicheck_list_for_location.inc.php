@@ -424,13 +424,19 @@
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$status = phpgw::get_var('status');
-					
+
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
-			$deadline_date = phpgw::get_var('deadline_date', 'string');
-						
-			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
-			$deadline_date_ts = $this->get_timestamp_from_date( $deadline_date );
+							
+			if($planned_date != '')
+				$planned_date_ts = $this->get_timestamp_from_date( $planned_date );
+
+			if($deadline_date != '')
+				$deadline_date_ts = $this->get_timestamp_from_date( $deadline_date );
+			
+			if($completed_date != '')
+				$completed_date_ts = $this->get_timestamp_from_date( $completed_date );
 			
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
@@ -438,9 +444,9 @@
 			$check_list->set_status($status);
 			$check_list->set_deadline( $deadline_date_ts );
 			$check_list->set_planned_date($planned_date_ts);
-			$check_list->set_completed_date($completed_date);
+			$check_list->set_completed_date($completed_date_ts);
 			
-			$check_list_id = $this->so_check_list->add($check_list);
+			$check_list_id = $this->so_check_list->store($check_list);
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id'=>$check_list_id));
 		}

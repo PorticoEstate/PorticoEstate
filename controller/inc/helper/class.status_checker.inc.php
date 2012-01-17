@@ -16,7 +16,7 @@
 	public function update_check_list_status( $check_list_id )
 	{
 		$check_list = $this->so_check_list->get_single( $check_list_id );
-
+	
 		$status = null;
 		$control_item_type = null;
 		$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $status, $control_item_type, "return_object");
@@ -37,6 +37,7 @@
 		}
 		
 		$check_list->set_num_open_cases($num_open_cases);
+		
 		$this->so_check_list->store($check_list);
 	}
 }
