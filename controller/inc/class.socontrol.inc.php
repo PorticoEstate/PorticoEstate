@@ -108,7 +108,7 @@
 			}
 
 			// Kommenterte denne ut midlertidig. 
-			//Trenger id-en som ble lagret når controllen blir lagret. 
+			//Trenger id-en når controllen blir lagret. 
 			//return isset($result);
 		}
 

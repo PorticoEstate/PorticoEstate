@@ -84,7 +84,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list</xsl:text>
 												<xsl:text>&amp;date=</xsl:text>
 												<xsl:value-of select="info/date"/>
 												<xsl:text>&amp;control_id=</xsl:text>

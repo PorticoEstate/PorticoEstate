@@ -61,7 +61,6 @@
 					'status',
 					'comment',
 					'check_list_id',
-					'message_ticket_id',
 					'measurement'
 			);
 
@@ -258,7 +257,7 @@
 				
 			if($type != null)
 				$sql .= "AND coi.type = '$type'";
-								
+				
 			$this->db->query($sql);
 			
 			while ($this->db->next_record()) {

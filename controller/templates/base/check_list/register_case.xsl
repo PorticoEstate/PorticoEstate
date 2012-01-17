@@ -38,8 +38,7 @@
 												 </textarea>
 										   </div>
 									       <div class="form-buttons">
-												<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												<input type="submit" name="save_control" value="{$lang_save}" class="not_active" title="{$lang_save}" />
+												<input type="submit" name="save_control" value="Registrer sak" class="not_active"  />
 											</div>
 										</div>
 									</form>
@@ -71,7 +70,7 @@
 									   </div>
 								       <div class="form-buttons">
 											<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-											<input type="submit" name="save_control" value="Registrer sak" class="not_active" title="{$lang_save}" />
+											<input type="submit" name="save_control" value="Registrer måling" class="not_active" title="{$lang_save}" />
 										</div>
 									</div>
 									</form>
