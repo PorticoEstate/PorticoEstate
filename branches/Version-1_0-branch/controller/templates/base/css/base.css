@@ -1087,11 +1087,8 @@ fieldset.location_details div{
 }
 ul#icon_color_map {
     border: 1px solid #DDDDDD;
-    float: right;
-    margin-left: 500px;
-    margin-right: 10px;
     padding: 5px;
-    margin-top: 55px;
+    margin-top: 40px;
 }
 ul#icon_color_map li {
     font-size: 12px;
@@ -1233,8 +1230,7 @@ li.check_item_cases ul{
 	margin:10px;		
 }
 li.check_item_cases ul li {
-    list-style: disc outside none;
-    margin: 5px 0 0 20px;
+    margin: 5px 0 0 0;
 }
 a.view_check_list{
  	color: #FFFFFF;
@@ -1251,4 +1247,16 @@ a.view_check_list{
 .cal_info_msg{
 	font-size: 16px;
     padding: 40px 20px;	
+}
+.quick_menu {
+    font-size: 12px;
+    margin-left: 10px;
+    padding: 2px;
+    text-decoration: underline;
+}
+.quick_menu a{
+	margin: 0 5px;	
+}
+#cal_wrp{
+	clear:both;
 }

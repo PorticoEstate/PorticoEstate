@@ -144,7 +144,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'location_code' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+					'location_code' => array('type' => 'varchar', 'precision' => '30', 'nullable' => false)
 				),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -189,7 +189,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_check_item_case', array(
+		'controller_check_item_case' => array(
 			'fd' => array(
 				'id'            	=> array('type' => 'auto', 'nullable' => false),
 				'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
