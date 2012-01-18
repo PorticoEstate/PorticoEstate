@@ -622,7 +622,7 @@
 				else
 				{
 					$periode = date('Ym',time());
-				}
+				}	
 			}
 			else
 			{
@@ -695,11 +695,12 @@
 					}
 				}
 
-				$oRsOverfBilag				= $line;
-				$oRsOverfBilag['filnavn']	= $Filnavn? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
-				$oRsOverfBilag['ordrebelop']= $line[$BelopFelt];
-				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
-				$oRsOverfBilag['bilagsnr_ut'] = $bilagsnr_ut;
+				$oRsOverfBilag					= $line;
+				$oRsOverfBilag['filnavn']		= $Filnavn? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+				$oRsOverfBilag['ordrebelop']	= $line[$BelopFelt];
+				$oRsOverfBilag['pmwrkord_code']	= $line['order_id'];
+				$oRsOverfBilag['bilagsnr_ut']	= $bilagsnr_ut;
+				$oRsOverfBilag['periode']		= $periode;
 
 				//Kopier verdier  til fm_ecobilagoverf
 				if ($download=='on' && !$this->debug)
