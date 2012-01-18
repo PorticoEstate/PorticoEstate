@@ -36,6 +36,7 @@
 	phpgw::import_class('controller.socontrol');
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
+	include_class('controller', 'status_checker', 'inc/helper/');
 			
 	class controller_uicase extends controller_uicommon
 	{
@@ -65,7 +66,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
-						
+											
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
@@ -73,16 +74,26 @@
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
 			
+			if($check_item == null){
+				$new_check_item = new controller_check_item();
+				$new_check_item->set_check_list_id( $check_list_id );
+				$new_check_item->set_control_item_id( $control_item_id );
+				$new_check_item->set_status( 0 );
+				$new_check_item->set_comment( "" );
+				
+				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
+				$check_item = $this->so_check_item->get_single($saved_check_item_id);
+			}
+			
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
-			$status = 0;
+			$case_status = 0;
 			
 			$case = new controller_check_item_case();
 			$case->set_check_item_id( $check_item->get_id() );
-			$case->set_status($status);
+			$case->set_status($case_status);
 			$case->set_descr($case_descr);
-			$case->set_location_id($location_id);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date);
 			$case->set_modified_date($todays_date);
@@ -90,8 +101,12 @@
 				
 			$case_id = $this->so->store($case);
 			
-			if($case_id > 0)
+			if($case_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );
+						
 				return json_encode( array( "saveStatus" => "saved" ) );
+			}
 			else
 				return json_encode( array( "saveStatus" => "not_saved" ) );	
 			

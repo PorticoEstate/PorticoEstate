@@ -43,6 +43,7 @@
 		{
 			$data['filter_role_on_contact'] = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
 			$locations = $this->so->read($data);
+			
 			$total_records = $this->so->total_records;
 			
 			return $locations;

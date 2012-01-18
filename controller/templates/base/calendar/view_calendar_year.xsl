@@ -11,13 +11,13 @@
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
 		
-	<ul id="icon_color_map">
-			<li><img height="13" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
-			<li><img height="13" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-			<li><img height="13" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-			<li><img height="13" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-			<li><img height="13" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
-			<li><img height="11" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+		<ul id="icon_color_map">
+			<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
+			<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
+			<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
+			<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
+			<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+			<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 		</ul>
 		
 		<ul class="calendar">
@@ -84,7 +84,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list</xsl:text>
 												<xsl:text>&amp;date=</xsl:text>
 												<xsl:value-of select="info/date"/>
 												<xsl:text>&amp;control_id=</xsl:text>
@@ -140,7 +140,7 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
 													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>
@@ -153,17 +153,22 @@
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_agg_accomplished_with_errors'">
-										<div style="background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-					    					<a style="color:#fff;font-weight:bold;text-decoration: none;font-size:10px;" class="view_check_list">
+										<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+											<div id="info_box" style="position:absolute;display:none;"></div>
+					    					<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/id"/>
+													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>
-												<span><xsl:value-of select="info"/></span>
+												<span style="display:none">
+													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+												</span>
+												<xsl:value-of select="info"/>
 											</a>
 										</div>
+									
 									</xsl:when>
 									<xsl:when test="status = 'control_canceled'">
 										<div>

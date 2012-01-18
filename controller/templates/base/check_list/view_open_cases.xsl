@@ -36,7 +36,7 @@
 													</div>
 												</xsl:when>
 												<xsl:otherwise>
-													<div style="float:right;"><span style="color:red">Ingen melding registrert!</span></div>
+													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
 												</xsl:otherwise>
 											</xsl:choose>
 										</li>

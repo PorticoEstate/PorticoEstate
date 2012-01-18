@@ -147,25 +147,10 @@
 			return isset($result);
 		}
 
-		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array()){}
+		function get_id_field_name($extended_info = false){}
 
-		function get_id_field_name($extended_info = false)
-		{
-		}
+		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
 
-		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
-		{
-
-		}
-
-		function get_control_items($control_group_id)
-		{
-
-		}
-
-		function populate(int $control_item_id, &$control_item)
-		{
-
-		}
+		function populate(int $control_item_id, &$control_item){}
 
 	}

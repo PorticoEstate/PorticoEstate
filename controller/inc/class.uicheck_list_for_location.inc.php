@@ -34,6 +34,8 @@
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
+	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'date_helper', 'inc/helper/');
 		
 	class controller_uicheck_list_for_location extends controller_uicommon
 	{
@@ -58,12 +60,12 @@
 										'index' => true,
 										'view_locations_for_control' 	=> true,
 										'add_location_to_control' 		=> true,
-										'add_check_list_for_location' 	=> true,
-										'save_check_list_for_location' 	=> true,
+										'add_check_list' 				=> true,
+										'save_check_list' 				=> true,
 										'edit_check_list' 				=> true,
 										'create_case_message' 			=> true,
 										'view_control_info' 			=> true,
-										'view_cases_for_check_list'	=> true
+										'view_cases_for_check_list'		=> true
 									);
 
 		function __construct()
@@ -314,7 +316,7 @@
 			self::render_template_xsl(array('control_location_tabs', 'common', 'add_location_to_control'), $data);		
 		}
 		
-		function add_check_list_for_location(){
+		function add_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$date = phpgw::get_var('date');
@@ -362,7 +364,7 @@
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl(array('add_check_list_for_location'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/add_check_list'), $data);
 		}
 		
 		function edit_check_list(){
@@ -374,7 +376,7 @@
 			$location_code = $check_list->get_location_code();
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
+						
 			$data = array
 			(
 				'check_list' 					=> $check_list->toArray(),
@@ -419,17 +421,23 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-		function save_check_list_for_location(){
+		function save_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$status = phpgw::get_var('status');
-					
+
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
-			$deadline_date = phpgw::get_var('deadline_date', 'string');
-						
-			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
-			$deadline_date_ts = $this->get_timestamp_from_date( $deadline_date );
+							
+			if($planned_date != '')
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date );
+
+			if($deadline_date != '')
+				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date );
+			
+			if($completed_date != '')
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date );
 			
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
@@ -437,9 +445,9 @@
 			$check_list->set_status($status);
 			$check_list->set_deadline( $deadline_date_ts );
 			$check_list->set_planned_date($planned_date_ts);
-			$check_list->set_completed_date($completed_date);
+			$check_list->set_completed_date($completed_date_ts);
 			
-			$check_list_id = $this->so_check_list->add($check_list);
+			$check_list_id = $this->so_check_list->store($check_list);
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id'=>$check_list_id));
 		}
@@ -521,19 +529,6 @@
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
-		}
-		
-		function get_timestamp_from_date( $date_string ){
-			$pos_day = strpos($date_string, "/"); 
-			$day =  substr($date_string, 0, $pos_day);
-			
-			$pos_month = strpos($date_string, "-");
-			$len_month = $pos_month - $pos_day -1;
-			$month = substr($date_string, $pos_day+1, $len_month);
-			
-			$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
-			
-			return mktime(0, 0, 0, $month, $day, $year);
 		}
 		
 		public function query(){

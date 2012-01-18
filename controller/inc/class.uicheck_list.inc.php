@@ -33,6 +33,8 @@
 
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
+	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'date_helper', 'inc/helper/');
 
 	class controller_uicheck_list extends controller_uicommon
 	{
@@ -86,15 +88,6 @@
 
 		public function index()
 		{
-/*			$check_list_array = $this->so->get_check_list();
-
-			$data = array
-			(
-				'check_list_array'	=> $check_list_array
-			);
-
-			self::render_template_xsl('control_check_lists', $data);
-			*/
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -243,8 +236,8 @@
 			$completed_date = phpgw::get_var('completed_date');
 			$planned_date = phpgw::get_var('planned_date');
 			
-			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
-			$completed_date_ts = $this->get_timestamp_from_date( $completed_date );
+			$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date ); 
+			$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date );
 			
 			// Fetches check_list from DB
 			$update_check_list = $this->so_check_list->get_single($check_list_id);
@@ -376,18 +369,36 @@
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 							
-			$location_code = $check_list->get_location_code();
-				
 			// Fetches all control items for check list
-			$control_items_for_check_list = $this->so_control_item->get_control_items_by_control($check_list->get_control_id(), "array");
-		
+			$control_items_for_check_list = array();
+			
+			$control_items = $this->so_control_item->get_control_items_by_control($check_list->get_control_id());
+			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
+			
+			$remove_control_item_ids_array = array();
+			
+			foreach($check_items as $check_item){
+				if($check_item->get_control_item()->get_type() == "control_item_type_2" & $check_item->get_status() == 1){
+					$remove_control_item_ids_array[] = $check_item->get_control_item_id();
+				}
+			}
+			
+			foreach($control_items as $control_item){
+				if( !in_array($control_item->get_id(), $remove_control_item_ids_array) ){
+					$control_items_for_check_list[] = $control_item->toArray(); 
+				}
+			}
+			
 			$data = array
 			(
 				'control_items_for_check_list' 	=> $control_items_for_check_list,
-				'check_list' 	=> $check_list->toArray()
+				'check_list' 					=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
 		function view_open_cases(){
@@ -428,12 +439,12 @@
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			// Fetches check items that registeres measurement
-			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2');
-						
+			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2', "return_array");
+			
 			$data = array
 			(
-				'measurement_check_items' 		=> $measurement_check_items,
-				'check_list' 	=> $check_list->toArray()
+				'measurement_check_items'	=> $measurement_check_items,
+				'check_list' 				=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_measurements'), $data );
@@ -524,8 +535,12 @@
 			
 			$check_item_id = $this->so_check_item->store( $check_item );
 
-			if($check_item_id > 0)
+			if($check_item_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_item->get_check_list_id() );
+				
 				return json_encode( array( "saveStatus" => "saved" ) );
+			}
 			else
 				return json_encode( array( "status" => "not_saved" ) );
 		}
@@ -701,18 +716,5 @@
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicheck_list.view_check_lists_for_control");
 
 			return $this->yui_results($results);
-		}
-		
-		function get_timestamp_from_date( $date_string ){
-			$pos_day = strpos($date_string, "/"); 
-			$day =  substr($date_string, 0, $pos_day);
-			
-			$pos_month = strpos($date_string, "-");
-			$len_month = $pos_month - $pos_day -1;
-			$month = substr($date_string, $pos_day+1, $len_month);
-			
-			$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
-			
-			return mktime(0, 0, 0, $month, $day, $year);
 		}
 	}
