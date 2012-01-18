@@ -27,7 +27,8 @@
 				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 			</ul>
 		</div>
-				
+		
+		<div id="cal_wrp">		
 		<div style="float: left;margin-bottom: 10px;margin-left: 735px;margin-top: 30px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
 		<div style="float:left;margin-top: 30px;margin-left: 374px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
 		
@@ -249,5 +250,6 @@
 				</xsl:choose>
 				</ul>
 			</div>
+		</div>
 </div>
 </xsl:template>

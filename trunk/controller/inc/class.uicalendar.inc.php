@@ -107,7 +107,7 @@
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'type_id' => 2,
+				'type_id' => 1,
 				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
 				'allrows' => false
 			);
