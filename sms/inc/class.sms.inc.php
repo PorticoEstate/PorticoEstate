@@ -469,21 +469,21 @@
 
 			while ($this->db->next_record())
 			{
-				$gpid = "";
-				$gp_code = "";
-				$uid = $this->db->f('uid');
-				$smslog_id = $this->db->f('smslog_id');
-				$p_datetime = $this->db->f('p_datetime');
-				$p_update = $this->db->f('p_update');
-				$gpid = $this->db->f('p_gpid');
-			//	$gp_code = gpid2gpcode($gpid);
+				$gpid			= "";
+				$gp_code		= "";
+				$uid			= $this->db->f('uid');
+				$smslog_id		= $this->db->f('smslog_id');
+				$p_datetime		= $this->db->f('p_datetime');
+				$p_update		= $this->db->f('p_update');
+				$gpid			= $this->db->f('p_gpid');
+			//	$gp_code		= gpid2gpcode($gpid);
+				$external_id	= $this->db->f('external_id');
 				if($gpid)
 				{
 					$gp_code = $GLOBALS['phpgw']->accounts->name2id($gpid);
 				}
-				$this->gw_set_delivery_status($gp_code,$uid,$smslog_id,$p_datetime,$p_update);
+				$this->gw_set_delivery_status($gp_code,$uid,$smslog_id,$p_datetime,$p_update,$external_id);
 			}
-		//	$this->gw_set_delivery_status($gp_code,$uid,$smslog_id,$p_datetime,$p_update);
 		}
 
 /*		function execgwcustomcmd()
@@ -499,11 +499,12 @@
 			@include $this->apps_path[inc]."/admin/commoncustomcmd.php";
 		}
 
-*/		function setsmsdeliverystatus($smslog_id,$uid,$p_status)
+*/		function setsmsdeliverystatus($smslog_id,$uid,$p_status,$external_id = 0)
 		{
+			$external_id = (int) $external_id;
 			$datetime_now = $this->datetime_now();
 			$ok = false;
-			$db_query = "UPDATE phpgw_sms_tblsmsoutgoing SET p_update='$datetime_now',p_status='$p_status' WHERE smslog_id='$smslog_id' AND uid='$uid'";
+			$db_query = "UPDATE phpgw_sms_tblsmsoutgoing SET p_update='{$datetime_now}',p_status='{$p_status}', external_id = {$external_id} WHERE smslog_id='$smslog_id' AND uid='$uid'";
 			$this->db->transaction_begin();
 			$this->db->query($db_query,__LINE__,__FILE__);
 

@@ -425,3 +425,90 @@
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
+
+	/**
+	* Update sms version from 0.9.17.510 to 0.9.17.511
+	* new to new config section
+	*/
+
+	$test[] = '0.9.17.510';
+	function sms_upgrade0_9_17_510()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('sms', 'run'));
+
+		// common
+		$receipt_section_bergen = $custom_config->add_section(array
+			(
+				'name' => 'bergen_kommune',
+				'descr' => 'bergen kommune SMS config-section'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'service_url',
+				'descr'			=> 'service_url'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'login',
+				'descr'			=> 'login'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'password',
+				'descr'			=> 'password'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'wsdl',
+				'descr'			=> 'wsdl'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'proxy_host',
+				'descr'			=> 'proxy_host'
+			)
+		);
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'proxy_port',
+				'descr'			=> 'proxy_port'
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_tblsmsoutgoing','external_id',
+			array
+			(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.511';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+
