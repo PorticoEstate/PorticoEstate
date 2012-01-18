@@ -21,24 +21,25 @@
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><xsl:value-of select="descr"/>
+										<li><xsl:number />. <xsl:value-of select="descr"/>
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
-													<a target="_blank">
-														<xsl:attribute name="href">
-															<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
-															<xsl:text>&amp;id=</xsl:text>
-															<xsl:value-of select="location_item_id"/>
-														</xsl:attribute>
-														Vis melding
-													</a>
+														<a target="_blank">
+															<xsl:attribute name="href">
+																<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
+																<xsl:text>&amp;id=</xsl:text>
+																<xsl:value-of select="location_item_id"/>
+															</xsl:attribute>
+															Vis melding
+														</a>
 													</div>
 												</xsl:when>
 												<xsl:otherwise>
 													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
 												</xsl:otherwise>
 											</xsl:choose>
+											<div class="quick_menu"><a href="">endre</a><a href="">slette</a></div>
 										</li>
 									</xsl:for-each>
 								</ul>
