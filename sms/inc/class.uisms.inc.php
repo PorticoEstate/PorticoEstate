@@ -877,7 +877,7 @@
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'menu'							=> execMethod('sms.menu.links'),
+				'menu'			=> execMethod('sms.menu.links'),
 			);
 
 			$appname	= lang('config');

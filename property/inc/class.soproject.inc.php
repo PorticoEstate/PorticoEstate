@@ -240,8 +240,8 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= '';
 
-				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
-				$cols_return[] = 'combined_cost';
+//				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
+//				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'combined_cost';
 				$uicols['descr'][]			= lang('Sum workorder');
@@ -253,8 +253,8 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= '';
 
-				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
-				$cols_return[] = 'actual_cost';
+//				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
+//				$cols_return[] = 'actual_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'actual_cost';
 				$uicols['descr'][]			= lang('Actual cost');
@@ -282,7 +282,7 @@
 */
 				$cols.= ",$entity_table.user_id";
 
-				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
+//				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
 				$cols_return[] = 'billable_hours';
 
 				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
@@ -291,14 +291,15 @@
 				$joinmethod .= " $this->join fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
 
+/*
 				$joinmethod .= " $this->left_join fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
 				$paranthesis .='(';
-
+*/
 				//----- wo_hour_status
 
 				if($wo_hour_cat_id)
 				{
-					$joinmethod .= " $this->join fm_wo_hours ON (fm_workorder.id = fm_wo_hours.workorder_id))";
+					$joinmethod .= " {$this->join} fm_wo_hours ON (fm_workorder.id = fm_wo_hours.workorder_id))";
 					$paranthesis .='(';
 
 					$joinmethod .= " $this->join fm_wo_hours_category ON (fm_wo_hours.category = fm_wo_hours_category.id))";
@@ -520,6 +521,7 @@
 			//_debug_array($sql2);
 			$project_list = array();
 			$sql .= " $group_method";
+//_debug_array($sql . $ordermethod);
 			if(!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -558,6 +560,26 @@
 				}
 
 				$j++;
+			}
+
+			foreach($project_list as &$project)
+			{
+				$project['combined_cost']	= 0;
+				$project['actual_cost']		= 0;
+				$project['billable_hours']	= 0;
+
+				if($project['project_id'])
+				{
+					$sql  = 'SELECT sum(fm_workorder.combined_cost) as combined_cost,'
+					. ' (sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost,'
+					. ' sum(fm_workorder.billable_hours) as billable_hours'
+					. " FROM fm_workorder WHERE project_id = '{$project['project_id']}'";
+					$this->db->query($sql);
+					$this->db->next_record();
+					$project['combined_cost']	= (int)$this->db->f('combined_cost');
+					$project['actual_cost']		= (int)$this->db->f('actual_cost');
+					$project['billable_hours']	= (int)$this->db->f('billable_hours');
+				}
 			}
 			return $project_list;
 		}
