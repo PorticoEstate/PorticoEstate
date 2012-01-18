@@ -146,7 +146,7 @@
 			
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
-				'status = ' . $this->marshal($case->get_status(), 'int'),
+				'status = ' . $case->get_status(),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),

@@ -113,7 +113,7 @@
 			);
 		
 			$location_finder = new location_finder();
-			$locations = $location_finder->get_responsibilities( $criteria );
+			$my_locations = $location_finder->get_responsibilities( $criteria );
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
 		
@@ -133,6 +133,7 @@
 							
 			$data = array
 			(		
+				'my_locations'	  		  => $my_locations,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
@@ -185,8 +186,7 @@
 			);
 		
 			$location_finder = new location_finder();
-			$locations = $location_finder->get_responsibilities( $criteria );
-
+			$my_locations = $location_finder->get_responsibilities( $criteria );
 			$repeat_type = null;
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
@@ -246,6 +246,7 @@
 			
 			$data = array
 			(
+				'my_locations'	  		  => $my_locations,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
