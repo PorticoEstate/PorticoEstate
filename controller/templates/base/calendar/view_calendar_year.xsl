@@ -11,7 +11,7 @@
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
 
-		<div style="float:right;width:300px;margin-top:55px;">
+		<div style="float:right;width:300px;margin-top:40px;">
 			<select id="my_location_id">
 				<xsl:for-each select="my_locations">
 					<option value="{location_code}" selected="selected">
