@@ -1257,3 +1257,6 @@ a.view_check_list{
 .quick_menu a{
 	margin: 0 5px;	
 }
+#cal_wrp{
+	clear:both;
+}
