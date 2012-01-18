@@ -9,16 +9,24 @@
 			<h1><xsl:value-of select="location_array/loc1_name"/></h1>
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
-		
-				
-		<ul id="icon_color_map">
-			<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
-			<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-			<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-			<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-			<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
-			<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
-		</ul>
+						
+			<div style="float:right;width:300px;margin-top:55px;">
+			<select id="my_location_id">
+				<xsl:for-each select="my_locations">
+					<option value="{location_code}" selected="selected">
+						<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+					</option>
+				</xsl:for-each>
+			</select>		
+			<ul id="icon_color_map">
+				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
+				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
+				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
+				<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
+				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+			</ul>
+		</div>
 				
 		<div style="float: left;margin-bottom: 10px;margin-left: 735px;margin-top: 30px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
 		<div style="float:left;margin-top: 30px;margin-left: 374px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
