@@ -483,12 +483,13 @@
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
+						$send	= CreateObject('phpgwapi.send');
 						$subject = 'Ny faktura venter på behandling';
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'voucher_id' => $bilagsnr, 'query' => $bilagsnr, 'user_lid' =>'all'),false,true).'">Link til fakturabehandling</a>';
 
 						try
 						{
-							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
+							$rc = $send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
 						}
 						catch (phpmailerException $e)
 						{

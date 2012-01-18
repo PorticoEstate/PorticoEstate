@@ -267,12 +267,12 @@
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		function get_control_items($control_group_id)
+		function get_control_items($control_group_id, $return_type = "return_object")
 		{
 			$results = array();
 
 			$sql = "SELECT * FROM controller_control_item WHERE control_group_id={$control_group_id}";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
@@ -282,39 +282,23 @@
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 
-				$results[] = $control_item;
+				if($return_type == "return_object")
+					$results[] = $control_item;
+				else
+					$results[] = $control_item->toArray();
 			}
 
 			return $results;
 		}
 
-		function get_control_items_as_array($control_group_id)
+		function get_control_items_by_control($control_id, $returnType = "return_object")
 		{
 			$results = array();
 
-			$sql = "SELECT * FROM controller_control_item WHERE control_group_id=$control_group_id";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-
-			while ($this->db->next_record()) {
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-
-				$results[] = $control_item->toArray();
-			}
-
-			return $results;
-		}
-
-		function get_control_items_by_control($control_id, $returnType = "object")
-		{
-			$results = array();
-
-			$sql  = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl ";
-			$sql .= "WHERE cl.control_id=$control_id AND cl.control_item_id=ci.id";
+			$sql  = "SELECT ci.* ";
+			$sql .= "FROM controller_control_item ci, controller_control_item_list cl ";
+			$sql .= "WHERE cl.control_id=$control_id AND cl.control_item_id = ci.id ";
+									
 			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
@@ -326,7 +310,7 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				if($returnType == "array")
+				if($returnType == "return_array")
 					$results[] = $control_item->toArray();
 				else
 					$results[] = $control_item;

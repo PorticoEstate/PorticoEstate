@@ -12,41 +12,12 @@ class calendar_builder {
         $this->period_end_date = $period_end_date;
    	}
 	
-	public function build_calendar_array( $control_array, $controls_calendar_array, $num, $period_type ){
+	public function build_calendar_array( $control_array, $num, $period_type ){
 		
 		foreach($control_array as $control){
-						
-			// Initialises twelve_months_array
-			for($i=1;$i<=$num;$i++){
-				$calendar_array[$i] = null;
-			}
 
-			$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
-			$dates_array = $date_generator->get_dates();
-		
-			// Inserts dates on behalf of repeat type and repeat interval
-			foreach($dates_array as $date){
-				
-				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
-				
-				if($date < $todays_date){
-					$status = "control_not_accomplished";
-				}else{
-					$status = "control_registered";
-				}
-				
-				if( $period_type == "view_months" )
-				{
-					$calendar_array[ date("n", $date) ]["status"]  = $status;
-					$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());
-				}
-				else if( $period_type == "view_days" )
-				{
-					$calendar_array[ date("j", $date) ]["status"]  = $status;
-					$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());	
-				}
-			}
-			
+			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
+
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
 				
@@ -68,15 +39,15 @@ class calendar_builder {
 				{
 					$status = "control_not_accomplished";
 				}
-				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() > $check_list->get_deadline() )
+				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() > $check_list->get_deadline() & $check_list->get_num_open_cases() == 0)
 				{
 					$status = "control_accomplished_over_time_without_errors";
 				}
-				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() < $check_list->get_deadline() )
+				else if( $check_list->get_status() == 1 & $check_list->get_completed_date() < $check_list->get_deadline() & $check_list->get_num_open_cases() == 0)
 				{
 					$status = "control_accomplished_in_time_without_errors";
 				}
-				else if( $check_list->get_status() == 2  ){
+				else if( $check_list->get_status() == 1 & $check_list->get_num_open_cases() > 0){
 					$status = "control_accomplished_with_errors";
 					$check_list_status_info->set_num_open_cases($check_list->get_num_open_cases());
 				}
@@ -135,4 +106,40 @@ class calendar_builder {
 
 		return $control_calendar_array;
 	}
+	
+	function init_calendar( $control, $calendar_array, $num, $period_type ){
+		
+		// Initialises twelve_months_array
+		for($i=1;$i<=$num;$i++){
+			$calendar_array[$i] = null;
+		}
+		
+		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
+		$dates_array = $date_generator->get_dates();
+	
+		// Inserts dates on behalf of repeat type and repeat interval
+		foreach($dates_array as $date){
+			
+			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			
+			if($date < $todays_date){
+				$status = "control_not_accomplished";
+			}else{
+				$status = "control_registered";
+			}
+			
+			if( $period_type == "view_months" )
+			{
+				$calendar_array[ date("n", $date) ]["status"]  = $status;
+				$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());
+			}
+			else if( $period_type == "view_days" )
+			{
+				$calendar_array[ date("j", $date) ]["status"]  = $status;
+				$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date, "control_id" => $control->get_id());	
+			}
+		}
+		
+		return $calendar_array;
+	} 
 }

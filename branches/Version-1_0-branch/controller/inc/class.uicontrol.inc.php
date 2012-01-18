@@ -433,7 +433,7 @@
 			// Fetches control items for control group and populates groups_with_control_items with groups and chosen control items
 			foreach ($control_group_ids as $control_group_id)
 			{	
-				$group_control_items_array = $this->so_control_item->get_control_items_as_array($control_group_id);
+				$group_control_items_array = $this->so_control_item->get_control_items($control_group_id, "return_array");
 				
 				$control_items_for_group_array = array();
 				
@@ -734,7 +734,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list_for_location.add_check_list_for_location', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
 			$value['parameters'][] = "control_id";
 		}

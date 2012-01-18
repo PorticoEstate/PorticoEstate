@@ -21,7 +21,7 @@
 								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item" method="post">
 									<xsl:variable name="check_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="check_item_id" value="{$check_item_id}" />
-									<input type="hidden" name="type" value="measurement" />
+									<input type="hidden" name="type" value="control_item_type_2" />
 									 
 									<div class="check_item">
 									   <div>
