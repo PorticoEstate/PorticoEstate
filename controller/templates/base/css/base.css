@@ -1002,7 +1002,7 @@ label.comment{
     width: 440px;
     padding:0;
 }
-.calendar .months a{
+.calendar .heading a{
     text-decoration: none;
     color:#000;
 }
@@ -1244,6 +1244,9 @@ a.view_check_list{
     height: 13px;
     text-decoration: none;
     width: 24px;	
+}
+.months a.view_check_list {
+    width: 30px;
 }
 .cal_info_msg{
 	font-size: 16px;

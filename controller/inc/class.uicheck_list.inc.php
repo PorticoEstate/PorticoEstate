@@ -34,6 +34,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'date_helper', 'inc/helper/');
 
 	class controller_uicheck_list extends controller_uicommon
 	{
@@ -235,8 +236,8 @@
 			$completed_date = phpgw::get_var('completed_date');
 			$planned_date = phpgw::get_var('planned_date');
 			
-			$planned_date_ts = $this->get_timestamp_from_date( $planned_date ); 
-			$completed_date_ts = $this->get_timestamp_from_date( $completed_date );
+			$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date ); 
+			$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date );
 			
 			// Fetches check_list from DB
 			$update_check_list = $this->so_check_list->get_single($check_list_id);
@@ -715,18 +716,5 @@
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicheck_list.view_check_lists_for_control");
 
 			return $this->yui_results($results);
-		}
-		
-		function get_timestamp_from_date( $date_string ){
-			$pos_day = strpos($date_string, "/"); 
-			$day =  substr($date_string, 0, $pos_day);
-			
-			$pos_month = strpos($date_string, "-");
-			$len_month = $pos_month - $pos_day -1;
-			$month = substr($date_string, $pos_day+1, $len_month);
-			
-			$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
-			
-			return mktime(0, 0, 0, $month, $day, $year);
 		}
 	}

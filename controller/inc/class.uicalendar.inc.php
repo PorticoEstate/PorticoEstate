@@ -239,7 +239,7 @@
 			$month_controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_check_list_array, 12, "view_months" );
 					
 			$controls_calendar_array = array_merge($days_controls_calendar_array, $month_controls_calendar_array);
-			print_r($controls_calendar_array);
+			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
