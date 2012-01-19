@@ -63,7 +63,8 @@
 			$this->like				= & $this->db->like;
 			$this->dateformat		= $this->db->date_format();
 			$this->datetimeformat	= $this->db->datetime_format();
-			$this->config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->send				= CreateObject('phpgwapi.send');
 		}
 
 		function pre_run($data = array())
@@ -420,6 +421,23 @@
 					{
 						$this->receipt['error'][] = array('msg' => "Ikke gyldig leverandør id: {$_data['SUPPLIER.CODE']}");
 						$this->skip_import = true;
+
+						$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
+
+						if($to)
+						{
+							$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
+							$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
+
+							try
+							{
+								$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
+							}
+							catch (phpmailerException $e)
+							{
+								$receipt['error'][] = array('msg' => $e->getMessage());
+							}
+						}
 					}
 
 					$vendor_id = $_data['SUPPLIER.CODE'];
@@ -483,13 +501,12 @@
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
-						$send	= CreateObject('phpgwapi.send');
 						$subject = 'Ny faktura venter på behandling';
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'voucher_id' => $bilagsnr, 'query' => $bilagsnr, 'user_lid' =>'all'),false,true).'">Link til fakturabehandling</a>';
 
 						try
 						{
-							$rc = $send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
+							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,'','','html');
 						}
 						catch (phpmailerException $e)
 						{
