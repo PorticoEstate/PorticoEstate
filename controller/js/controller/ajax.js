@@ -1,5 +1,22 @@
 $(document).ready(function(){
 	
+	// file: uicalendar.xsl
+	$("#choose_my_location option").click(function () {
+		 var location_code = $(this).val();
+		 var thisForm = $(this).parents("form");
+		 
+		 var period_type = $(thisForm).find("input[name='period_type']").val();
+		 var year = $(thisForm).find("input[name='year']").val();
+		 var month = $(thisForm).find("input[name='month']").val();
+		 
+		 if(period_type == 'view_month')
+	         var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 else
+			 var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
+		
+		 window.location.href = requestUrl;
+    });
+	
 	// file: uicheck_list_for_location.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list option").click(function () {
@@ -308,6 +325,50 @@ $(document).ready(function(){
 		});
 	});
 	
+	
+	
+	
+	// Delete a case item from list
+	$(".delete_case").live("click", function(){
+		var clickElem = $(this);
+		var clickRow = $(this).closest("li");
+		var clickItem = $(this).closest("ul");
+		var checkItemRow = $(this).parents("li.check_item_case");
+		
+		var url = $(clickElem).attr("href");
+	
+		// Sending request for deleting a control item list
+		$.ajax({
+			type: 'POST',
+			url: url,
+			success: function(data) {
+				var obj = jQuery.parseJSON(data);
+		    		
+   			  	if(obj.status == "deleted"){
+	   			  	if( $(clickItem).children("li").length > 1){
+	   			  		$(clickRow).fadeOut(300, function(){
+	   			  			$(clickRow).remove();
+	   			  		});
+	   			  		
+		   			  	var next_row = $(clickRow).next();
+						
+						// Updating order numbers for rows below deleted row  
+						while( $(next_row).length > 0){
+							update_order_nr(next_row, "-");
+							next_row = $(next_row).next();
+						}
+	   			  	}else{
+		   			  	$(checkItemRow).fadeOut(300, function(){
+	   			  			$(checkItemRow).remove();
+	   			  		});
+	   			  	}
+   			  	}
+			}
+		});
+
+		return false;
+	});
+	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -332,3 +393,18 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 });
+
+//Updates order number for hidden field and number in front of row
+function update_order_nr(element, sign){
+	
+	var span_order_nr = $(element).find("span.order_nr");
+	var order_nr = $(span_order_nr).text();
+	
+	if(sign == "+")
+		var updated_order_nr = parseInt(order_nr) + 1;
+	else
+		var updated_order_nr = parseInt(order_nr) - 1;
+	
+	// Updating order number in front of row
+	$(span_order_nr).text(updated_order_nr);
+}

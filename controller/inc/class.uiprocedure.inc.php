@@ -515,8 +515,10 @@
 			
 			$data = array
 			(
-				'procedure'			=> $procedure->toArray()
+				'procedure'	=> $procedure->toArray()
 			);
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 			
 			self::render_template_xsl('procedure/print_procedure', $data);
 		}
