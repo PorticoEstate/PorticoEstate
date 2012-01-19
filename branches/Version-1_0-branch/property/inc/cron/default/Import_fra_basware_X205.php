@@ -432,6 +432,10 @@
 							try
 							{
 								$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
+								if($rc)
+								{
+									$receipt['error'][] = array('msg'=> "epost sendt til {$to}");							
+								}
 							}
 							catch (phpmailerException $e)
 							{
