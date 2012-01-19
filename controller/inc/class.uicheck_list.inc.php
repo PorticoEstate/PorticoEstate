@@ -230,7 +230,7 @@
 		
 		public function update_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
-			$status = phpgw::get_var('status');
+			$status = (int)phpgw::get_var('status');
 			$comment = phpgw::get_var('comment');
 			$deadline_date = phpgw::get_var('deadline_date');
 			$completed_date = phpgw::get_var('completed_date');
@@ -517,7 +517,7 @@
 		public function save_check_item(){
 			$check_item_id = phpgw::get_var('check_item_id');
 			$comment = phpgw::get_var('comment');
-			$status = phpgw::get_var('status');
+			$status = (int)phpgw::get_var('status');
 									
 			$check_item = $this->so_check_item->get_single($check_item_id);
 			$control_item_id = $check_item->get_control_item_id();
@@ -549,7 +549,7 @@
 			$control_item_id = phpgw::get_var('control_item_id');
 			$check_list_id = phpgw::get_var('check_list_id');
 			$comment = phpgw::get_var('comment');
-			$status = phpgw::get_var('status');
+			$status = (int)phpgw::get_var('status');
 			$type = phpgw::get_var('type');
 
 			$check_item_obj = new controller_check_item();

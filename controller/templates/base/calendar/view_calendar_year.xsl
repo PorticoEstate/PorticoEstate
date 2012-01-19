@@ -12,13 +12,23 @@
 		</div>
 
 		<div style="float:right;width:300px;margin-top:40px;">
-			<select id="my_location_id">
-				<xsl:for-each select="my_locations">
-					<option value="{location_code}" selected="selected">
-						<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-					</option>
-				</xsl:for-each>
-			</select>		
+			<form action="#">
+				<input type="hidden" name="period_type" value="view_year" />
+				<input type="hidden" name="year">
+			      <xsl:attribute name="value">
+			      	<xsl:value-of select="year"/>
+			      </xsl:attribute>
+				</input>
+				
+				<select id="choose_my_location">
+					<xsl:for-each select="my_locations">
+						<option value="{location_code}" selected="selected">
+							<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</form>
+					
 			<ul id="icon_color_map">
 				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
 				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
