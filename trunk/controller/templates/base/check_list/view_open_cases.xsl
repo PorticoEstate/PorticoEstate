@@ -16,12 +16,12 @@
 				<xsl:for-each select="open_check_items_and_cases">
 					<xsl:choose>
 					 	<xsl:when test="cases_array/child::node()">
-					 		<li class="check_item_cases">
+					 		<li class="check_item_case">
 						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><xsl:number />. <xsl:value-of select="descr"/>
+										<li><span class="order_nr"><xsl:number /></span>. <xsl:value-of select="descr"/>
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
@@ -39,7 +39,34 @@
 													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
 												</xsl:otherwise>
 											</xsl:choose>
-											<div class="quick_menu"><a href="">endre</a><a href="">slette</a></div>
+											<div class="quick_menu">
+												<a>
+													<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicase.edit_case</xsl:text>
+														<xsl:text>&amp;case_id=</xsl:text>
+														<xsl:value-of select="id"/>
+														<xsl:text>&amp;check_list_id=</xsl:text>
+														<xsl:value-of select="//check_list/id"/>
+														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													</xsl:attribute>
+													endre
+												</a>
+												<xsl:choose>
+													<xsl:when test="location_item_id = 0">
+														<a class="delete_case">
+															<xsl:attribute name="href">
+																<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
+																<xsl:text>&amp;case_id=</xsl:text>
+																<xsl:value-of select="id"/>
+																<xsl:text>&amp;check_list_id=</xsl:text>
+																<xsl:value-of select="//check_list/id"/>
+																<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+															</xsl:attribute>
+															slett
+														</a>
+													</xsl:when>
+												</xsl:choose>
+											</div>
 										</li>
 									</xsl:for-each>
 								</ul>
@@ -51,7 +78,7 @@
 			
 			<a style="font-size: 11px;margin-top: 20px;padding: 3px 20px;" class="btn focus">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_error</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>

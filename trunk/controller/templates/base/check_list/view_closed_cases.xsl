@@ -16,7 +16,7 @@
 				<xsl:for-each select="closed_check_items_and_cases">
 					<xsl:choose>
 					 	<xsl:when test="cases_array/child::node()">
-					 		<li class="check_item_cases">
+					 		<li class="check_item_case">
 						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
 						 		<ul>		
 									<xsl:for-each select="cases_array">

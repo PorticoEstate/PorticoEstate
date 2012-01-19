@@ -1223,13 +1223,13 @@ ul#icon_color_map span{
     text-align: left;
     width: 815px;
 }
-li.check_item_cases h4{
+li.check_item_case h4{
 	margin:5px 0;		
 }
-li.check_item_cases ul{
+li.check_item_case ul{
 	margin:10px;		
 }
-li.check_item_cases ul li {
+li.check_item_case ul li {
     margin: 5px 0 0 0;
 }
 a.view_check_list{

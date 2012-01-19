@@ -424,7 +424,7 @@
 		function save_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
-			$status = phpgw::get_var('status');
+			$status = (int)phpgw::get_var('status');
 
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$planned_date = phpgw::get_var('planned_date', 'string');
