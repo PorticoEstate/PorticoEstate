@@ -105,7 +105,7 @@
 					'calendar_overview' => array
 					(
 						'text'	=> lang('Calendar_overview'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicalendar.view_calendar_for_month', 'year' => '2011', 'month' => '10') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicalendar.view_calendar_for_year') ),
 						'image'	=> array('property', 'location_1'),
 					)
 				);

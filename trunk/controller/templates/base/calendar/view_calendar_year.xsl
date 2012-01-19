@@ -2,7 +2,7 @@
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 <xsl:variable name="year"><xsl:value-of select="year"/></xsl:variable>
-<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
+<xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
 		
@@ -19,14 +19,24 @@
 			      	<xsl:value-of select="year"/>
 			      </xsl:attribute>
 				</input>
-				
+
 				<select id="choose_my_location">
 					<xsl:for-each select="my_locations">
-						<option value="{location_code}" selected="selected">
-							<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-						</option>
+						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="location_code = $view_location_code">
+								<option value="{$loc_code}" selected="selected">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="{$loc_code}">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:for-each>
-				</select>
+				</select>					
 			</form>
 					
 			<ul id="icon_color_map">
@@ -40,9 +50,6 @@
 		</div>
 		
 		<ul class="calendar">
-			<xsl:choose>
-				<xsl:when test="controls_calendar_array/child::node()">
-
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
@@ -58,6 +65,8 @@
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
 									<xsl:value-of select="$year"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="//location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
@@ -68,6 +77,9 @@
 					</div>
 				</li>
 			
+			<xsl:choose>
+				<xsl:when test="controls_calendar_array/child::node()">
+				
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 					<li>
@@ -209,7 +221,7 @@
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<div>Ingen sjekklister for bygg i angitt periode</div>
+				<div class="cal_info_msg">Ingen sjekklister for bygg i angitt periode</div>
 			</xsl:otherwise>
 		</xsl:choose>
 	</ul>

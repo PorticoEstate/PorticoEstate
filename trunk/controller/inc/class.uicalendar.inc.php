@@ -96,10 +96,6 @@
 			
 			$to_date_ts = strtotime("$to_month/01/$year");
 												
-			if(empty($location_code)){
-				$location_code = "1101";	
-			}
-			
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
 			$repeat_type = 0;
@@ -114,6 +110,10 @@
 		
 			$location_finder = new location_finder();
 			$my_locations = $location_finder->get_responsibilities( $criteria );
+
+			if(empty($location_code)){
+				$location_code = $my_locations[0]["location_code"];	
+			}
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
 		
@@ -134,6 +134,7 @@
 			$data = array
 			(		
 				'my_locations'	  		  => $my_locations,
+				'view_location_code'	  => $location_code,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
@@ -156,7 +157,8 @@
 				foreach($control_id_with_check_list_array as $control_id){
 					if($control->get_id() == $control_id->get_id())
 						$control->set_check_lists_array($control_id->get_check_lists_array());						
-				}	
+				}
+					
 				$controls_with_check_list[] = $control;
 			}
 			
@@ -168,16 +170,16 @@
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			
+			if(empty($year)){
+				$year = date("Y");	
+			}
+			
 			$year = intval($year);
 						
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");	
 						
-			if(empty($location_code)){
-				$location_code = "1101";	
-			}
-			
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
@@ -188,6 +190,11 @@
 		
 			$location_finder = new location_finder();
 			$my_locations = $location_finder->get_responsibilities( $criteria );
+			
+			if(empty($location_code)){
+				$location_code = $my_locations[0]["location_code"];	
+			}
+			
 			$repeat_type = null;
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
@@ -233,7 +240,6 @@
 					
 			}
 			
-
 			$repeat_type = 2;
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
 			
@@ -248,6 +254,7 @@
 			$data = array
 			(
 				'my_locations'	  		  => $my_locations,
+				'view_location_code'	  => $location_code,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
