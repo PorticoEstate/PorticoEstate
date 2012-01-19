@@ -438,7 +438,6 @@
 
 		$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('sms', 'run'));
 
-		// common
 		$receipt_section_bergen = $custom_config->add_section(array
 			(
 				'name' => 'bergen_kommune',
@@ -494,7 +493,14 @@
 				'descr'			=> 'proxy_port'
 			)
 		);
-
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_bergen['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'orgnr',
+				'descr'			=> 'orgnr'
+			)
+		);
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_sms_tblsmsoutgoing','external_id',
 			array
