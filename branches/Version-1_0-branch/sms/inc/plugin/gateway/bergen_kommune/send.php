@@ -8,10 +8,9 @@
 			$this->sms_param = $GLOBALS['phpgw_info']['sms_config']['bergen_kommune'];
 		}
 
-		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false)
+		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false,$orgnr='')
 		{
-			$orgnr = '975621375';//BBB
-			$orgnr = 'IKT Drift';//BBB
+			$orgnr = $orgnr ? $orgnr : $this->sms_param['orgnr'];
 
 			$result = array();
 			$sms_msg = utf8_decode($sms_msg);
