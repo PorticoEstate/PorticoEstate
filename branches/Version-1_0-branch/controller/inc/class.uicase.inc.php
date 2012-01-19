@@ -49,7 +49,8 @@
 									'create_case_message' 	=> true,
 									'view_case_message' 	=> true,
 									'register_case_message' => true,
-									'updateStatusForCases' => true
+									'updateStatusForCases' 	=> true,
+									'delete_case' 				=> true
 								);
 
 		function __construct()
@@ -73,6 +74,16 @@
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
+			
+			/*
+			
+			$db_check_item = $this->so_check_item->get_db();
+			$db_check_item->transaction_begin();
+
+			$db_check_item->transaction_commit();
+			$db_check_item->transaction_abort();
+			
+			*/
 			
 			if($check_item == null){
 				$new_check_item = new controller_check_item();
@@ -329,6 +340,23 @@
 					}
 				}
 			}
+		}
+		
+		public function delete_case()
+		{
+			$case_id = phpgw::get_var('case_id');
+			$check_list_id = phpgw::get_var('check_list_id');
+				
+			$status = $this->so->delete($case_id);
+		
+			if($status){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );
+						
+				return json_encode( array( "status" => "deleted" ) );
+			}
+			else
+				return json_encode( array( "status" => "not_deleted" ) );
 		}
 		
 		public function query(){}

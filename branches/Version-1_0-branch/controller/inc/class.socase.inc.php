@@ -168,5 +168,19 @@
 			}
 		}
 		
+		function delete($case_id)
+		{
+			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
+					
+			if( isset($status) )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		function get_id_field_name(){}
 	}

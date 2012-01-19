@@ -139,6 +139,7 @@
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
 				'period' 			  	  => $month_array[ $month - 1],
+				'month_nr' 			  	  => $month,
 				'year' 			  	  	  => $year
 			);
 			
