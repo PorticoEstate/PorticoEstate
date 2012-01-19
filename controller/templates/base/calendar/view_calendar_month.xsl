@@ -2,6 +2,7 @@
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 <xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
+<xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
 		
@@ -12,25 +13,30 @@
 		
 		<div style="float:right;width:300px;margin-top:40px;">
 			<form action="#">
-				<input type="hidden" name="period_type" value="view_month" />
+				<input type="hidden" name="period_type" value="view_year" />
 				<input type="hidden" name="year">
 			      <xsl:attribute name="value">
 			      	<xsl:value-of select="year"/>
 			      </xsl:attribute>
 				</input>
-				<input type="hidden" name="month">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="month_nr"/>
-			      </xsl:attribute>
-				</input>
-				
+
 				<select id="choose_my_location">
 					<xsl:for-each select="my_locations">
-						<option value="{location_code}" selected="selected">
-							<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-						</option>
+						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="location_code = $view_location_code">
+								<option value="{$loc_code}" selected="selected">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="{$loc_code}">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:for-each>
-				</select>
+				</select>					
 			</form>
 					
 			<ul id="icon_color_map">

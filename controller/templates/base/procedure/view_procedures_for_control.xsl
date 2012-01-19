@@ -9,6 +9,10 @@
 				<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 				<xsl:text>&amp;procedure_id=</xsl:text>
 				<xsl:value-of select="control_procedure/id"/>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="control/id"/>
+				<xsl:text>&amp;location_code=</xsl:text>
+				<xsl:value-of select="location/location_code"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Skriv ut
@@ -26,7 +30,7 @@
 	
 	<h3 style="margin:15px 0 3px 0;">Prosedyrer for grupper</h3>
 	
-	<ul>
+	<ul id="groups">
 		<xsl:for-each select="group_procedures_array">
 			<li>
 				<h4 style="margin:2px 0;"><xsl:value-of select="procedure/title"/></h4>
@@ -37,6 +41,12 @@
 							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 							<xsl:text>&amp;procedure_id=</xsl:text>
 							<xsl:value-of select="procedure/id"/>
+							<xsl:text>&amp;control_id=</xsl:text>
+							<xsl:value-of select="//control/id"/>
+							<xsl:text>&amp;control_group_id=</xsl:text>
+							<xsl:value-of select="control_group/id"/>
+							<xsl:text>&amp;location_code=</xsl:text>
+							<xsl:value-of select="//location/location_code"/>
 							<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 						</xsl:attribute>
 						Skriv ut

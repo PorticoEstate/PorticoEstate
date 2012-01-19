@@ -1260,3 +1260,10 @@ a.view_check_list{
 #cal_wrp{
 	clear:both;
 }
+ul#groups {
+    margin-left: 10px;
+    margin-top: 5px;
+}
+ul#groups h4{
+    margin: 4px 0;
+}
