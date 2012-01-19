@@ -15,20 +15,8 @@
 
 		function gw_set_incoming_action()
 		{
-			$kodeord = 'Bgok';
-			$orgnr = '975621375';//BBB
-			$orgnr = 'IKT Drift';//BBB
-
-			$result = array();
-			$sms_msg = utf8_decode($sms_msg);
-			
-			$sms_to = ltrim($sms_to, '+');
-			
-			if( strlen($sms_to) < 9)
-			{
-				$sms_to = "47{$sms_to}";
-			}
-
+			$kodeord = 'BBB';
+	
 			require_once 'SmsService.php';
 
 			$options=array();
