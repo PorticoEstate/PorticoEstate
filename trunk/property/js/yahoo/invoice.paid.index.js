@@ -37,7 +37,8 @@
 		var toolTips = [
 			{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
 			{name:'vendor_id_lnk', title:'', description:'',ColumnDescription: 'vendor_name'},
-			{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'}
+			{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'voucher_date_lnk'},
+			{name:'approved_amount', title:'Sum', description:'',ColumnDescription:'amount'}
 		]
 
 		// define the hidden column in datatable
@@ -100,7 +101,7 @@
 		td_empty(14);
 		td_sum('Total');
 		td_sum(tmp_sum);
-		td_empty(12);
+		td_empty(14);
 
 		//Add to Table
 		myfoot = tableYUI.createTFoot();
