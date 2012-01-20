@@ -34,6 +34,7 @@
 		var $db;
 		var $db_table = 'phpgw_async';
 		var $debug = false;
+		protected $Exception_On_Error = false;
 
 		/**
 		* Constructor
@@ -43,6 +44,7 @@
 			$this->db =& $GLOBALS['phpgw']->db;
 			$this->cronline = PHPGW_SERVER_ROOT . '/phpgwapi/cron/asyncservices.php '.$GLOBALS['phpgw_info']['user']['domain'];
 			$this->only_fallback = substr(php_uname(), 0, 7) == "Windows";	// atm cron-jobs dont work on win
+			$this->Exception_On_Error =	$GLOBALS['phpgw']->db->Exception_On_Error; // continue on dberror
 		}
 
 		/**
@@ -383,6 +385,7 @@
 		function check_run($run_by='')
 		{
 			flush();
+			$error = false;
 
 			if (!$this->last_check_run(True,False,$run_by))
 			{
@@ -420,29 +423,56 @@
 					list($app) = explode('.',$job['method']);
 					$GLOBALS['phpgw']->translation->add_app($app);
 
+					$GLOBALS['phpgw']->db->Exception_On_Error = true;
+
 					if($job['next'] <= time())
 					{
-						ExecMethod($job['method'],$job['data']);
+						try
+						{
+							echo "{$job['method']}\n";
+							ExecMethod($job['method'],$job['data']);
+						}
+						catch (Exception $e)
+						{
+							if($e)
+							{
+								$GLOBALS['phpgw']->log->error(array(
+									'text'	=> 'asyncservice::check_run() : error when trying to execute %1. Error: %2',
+									'p1'	=> $job['method'],
+									'p2'	=> $e->getMessage(),
+									'line'	=> __LINE__,
+									'file'	=> __FILE__
+								));
+
+								// Do not throw further - it will stop the loop
+								// in case of a manual run
+								echo $e->getMessage() . "\n";
+								continue;
+							}
+						}
 					}
 
-					if ($job['next'] = $this->next_run($job['times']))
-					{
-						$updated_jobs = $this->read($id);
-						if (isset($updated_jobs[$id]) && isset($updated_jobs[$id]['data']))
-						{ // update async data field, it could be changed during ExecMethod()
-							$job['data'] = $updated_jobs[$id]['data'];
-						}
-						// TK 20.11.06 write job to get 'next' and alarm updated
-						$job['data']['time'] = $job['next'];
-						$this->write($job);
-					}
-					else	// no further runs
-					{
-						if($job['next'] <= time())
+					$GLOBALS['phpgw']->db->Exception_On_Error = $this->Exception_On_Error;
+
+						if ($job['next'] = $this->next_run($job['times']))
 						{
-							$this->delete($job['id']);
+							$updated_jobs = $this->read($id);
+							if (isset($updated_jobs[$id]) && isset($updated_jobs[$id]['data']))
+							{ // update async data field, it could be changed during ExecMethod()
+								$job['data'] = $updated_jobs[$id]['data'];
+							}
+							// TK 20.11.06 write job to get 'next' and alarm updated
+							$job['data']['time'] = $job['next'];
+							$this->write($job);
 						}
-					}
+						else	// no further runs
+						{
+							if($job['next'] <= time())
+							{
+								$this->delete($job['id']);
+							}
+						}
+
 				}
 			}
 			$this->last_check_run(True,True,$run_by);	// release semaphore

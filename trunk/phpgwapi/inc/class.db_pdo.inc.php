@@ -365,7 +365,7 @@
 
 			catch(PDOException $e)
 			{
-				if ( $e && $this->Halt_On_Error == 'yes' )
+				if ( $e && !$this->Exception_On_Error && $this->Halt_On_Error == 'yes' )
 				{
 					$this->transaction_abort();
 
@@ -379,7 +379,12 @@
 					}
 					exit;
 				}
-				else if($this->Exception_On_Error)
+				else if($this->Exception_On_Error && $this->Halt_On_Error == 'yes')
+				{
+					$this->transaction_abort();
+					throw $e;
+				}
+				else if($this->Exception_On_Error && $this->Halt_On_Error != 'yes')
 				{
 					throw $e;
 				}
@@ -451,7 +456,7 @@
 
 			catch(PDOException $e)
 			{
-				if ( $e && $this->Halt_On_Error == 'yes' )
+				if ( $e && !$this->Exception_On_Error && $this->Halt_On_Error == 'yes' )
 				{
 					$this->transaction_abort();
 
@@ -465,7 +470,12 @@
 					}
 					exit;
 				}
-				else if($this->Exception_On_Error)
+				else if($this->Exception_On_Error && $this->Halt_On_Error == 'yes')
+				{
+					$this->transaction_abort();
+					throw $e;
+				}
+				else if($this->Exception_On_Error && $this->Halt_On_Error != 'yes')
 				{
 					throw $e;
 				}
