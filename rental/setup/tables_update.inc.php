@@ -267,4 +267,23 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.15';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
-?>
+
+	/*
+	* function moved to so-class
+	*/
+	$test[] = '0.1.0.15';
+	function rental_upgrade0_1_0_15()
+	{
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->delete('rental_sync_party_name');
+		$asyncservice->set_timer(
+			array('day' => "*/1"),
+			'rental_sync_party_name',
+			'rental.soparty.syncronize_party_name',
+			null
+			);
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.16';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+

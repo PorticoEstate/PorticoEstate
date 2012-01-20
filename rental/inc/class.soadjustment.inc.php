@@ -4,7 +4,7 @@ phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socontract_price_item');
 phpgw::import_class('rental.soprice_item');
 phpgw::import_class('rental.soworkbench_notification');
-phpgw::import_class('rental.uicommon');
+//phpgw::import_class('rental.uicommon');
 
 include_class('rental', 'adjustment', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
