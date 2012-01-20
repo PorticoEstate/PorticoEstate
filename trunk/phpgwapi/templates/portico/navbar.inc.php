@@ -195,7 +195,7 @@ HTML;
 		{
 			$icon = $GLOBALS['phpgw']->common->image('phpgwapi', 'folder');
 			$icon_style = ' style="background-image: url(' . $icon . ')"';
-			$images[$item['image'][0]][$item['image'][1]] = $icon_style;
+		//	$images[$item['image'][0]][$item['image'][1]] = $icon_style;
 		}
 		if ( $children )
 		{
