@@ -185,13 +185,13 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, bilagsnr_ut, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,bilagsnr_ut,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
+			$sql = "SELECT bilagsnr, bilagsnr_ut, count(bilagsnr) as invoice_count, sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,bilagsnr_ut,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			$sql3 = "SELECT sum(belop) as sum_amount FROM  $table $join_tables $filtermethod $querymethod";
+			$sql3 = "SELECT sum(godkjentbelop) as sum_amount FROM  $table $join_tables $filtermethod $querymethod";
 			$this->db->query($sql3,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->sum_amount		= $this->db->f('sum_amount');
@@ -214,7 +214,8 @@
 						'voucher_id'		=> $this->db->f('bilagsnr'),
 						'voucher_out_id'	=> $this->db->f('bilagsnr_ut'),
 						'invoice_count'		=> $this->db->f('invoice_count'),
-						'amount'			=> $this->db->f('belop')
+						'amount'			=> $this->db->f('belop'),
+						'approved_amount'	=> $this->db->f('godkjentbelop')
 					);
 			}
 
@@ -305,6 +306,7 @@
 					$invoice[$i]['currency']				= $this->db->f('currency');
 					$invoice[$i]['order_id']				= $this->db->f('pmwrkord_code');
 					$invoice[$i]['amount']					= $invoice_temp['amount'];
+					$invoice[$i]['approved_amount']			= $invoice_temp['approved_amount'];
 					$invoice[$i]['num_days']				= intval(($timestamp_payment_date-$timestamp_voucher_date)/(24*3600));
 					$invoice[$i]['timestamp_voucher_date']	= $timestamp_voucher_date;
 
