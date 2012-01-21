@@ -365,7 +365,7 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_group');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
+				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 			else if(isset($_POST['save_control_group_items']))
 			{
@@ -490,7 +490,7 @@
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
+				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
 
@@ -654,7 +654,7 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control group');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
+				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
 
