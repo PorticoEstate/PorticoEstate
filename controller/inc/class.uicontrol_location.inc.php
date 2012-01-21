@@ -202,7 +202,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
-			self::render_template_xsl(array('control_location_tabs', 'common', 'view_locations_for_control'), $data);		
+			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
 		}
 		
 		function add_location_to_control()
@@ -313,7 +313,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
-			self::render_template_xsl(array('control_location_tabs', 'common', 'add_location_to_control'), $data);		
+			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/add_location_to_control', 'common'), $data);		
 		}
 		
 		public function query(){
