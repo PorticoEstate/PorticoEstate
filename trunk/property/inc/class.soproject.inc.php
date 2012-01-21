@@ -283,22 +283,24 @@
 				$cols.= ",$entity_table.user_id";
 
 //				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
-				$cols_return[] = 'billable_hours';
+//				$cols_return[] = 'billable_hours';
 
-				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
+				$joinmethod = " {$this->join} phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis ='(';
 
-				$joinmethod .= " $this->join fm_project_status ON ($entity_table.status = fm_project_status.id))";
+				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
-
 /*
-				$joinmethod .= " $this->left_join fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
+				$joinmethod .= " {$this->left_join} fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
 				$paranthesis .='(';
 */
 				//----- wo_hour_status
 
 				if($wo_hour_cat_id)
 				{
+					$joinmethod .= " {$this->join} fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
+					$paranthesis .='(';
+
 					$joinmethod .= " {$this->join} fm_wo_hours ON (fm_workorder.id = fm_wo_hours.workorder_id))";
 					$paranthesis .='(';
 
@@ -338,16 +340,55 @@
 			}
 
 
+			$order_field = '';
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
+				switch($order)
+				{
+					case 'project_id':
+						$ordermethod = " ORDER BY fm_project.id {$sort}";
+						break;
+					case 'actual_cost':
+						$order_field = ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
+						break;
+					case 'combined_cost':
+							$order_field = ',sum(fm_workorder.combined_cost) as combined_cost';
+						break;
+					case 'address':
+							$order_field = ", fm_project.address";
+						break;
+					case 'status':
+							$order_field = ", fm_project_status.descr as status";
+						break;
+					case 'entry_date':
+						$order_field = ", fm_project.entry_date";
+						break;
+					case 'start_date':
+						$order_field = ", fm_project.start_date";
+						break;
+					case 'end_date':
+						$order_field = ", fm_project.end_date";
+						break;
+					case 'ecodimb':
+						$order_field = ", fm_project.ecodimb";
+						break;
+					case 'location_code':
+						$order_field = ", fm_project.location_code";
+						break;
+
+
+					default:
+						$order_field = ", {$order}";
+				}
 			}
 			else
 			{
-				$ordermethod = ' order by fm_project.id DESC';
+				$ordermethod = ' ORDER BY fm_project.id DESC';
 			}
 
-			$where= 'WHERE';
+
+			$where = 'WHERE';
 
 			$filtermethod = '';
 
@@ -407,10 +448,11 @@
 				$where= 'AND';
 			}
 
+/*
 			$group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.entry_date,fm_project.start_date,fm_project.end_date,'
 				. 'fm_project.name,fm_project.ecodimb,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
 				. 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
-
+*/
 
 			if (is_array($this->grants))
 			{
@@ -502,29 +544,32 @@
 
 			$querymethod .= ')';
 
-			$sql .= " $filtermethod $querymethod";
-
+//			$sql .= " $filtermethod $querymethod";
+			$sql_full = "{$sql} {$filtermethod} {$querymethod}";
 			//echo substr($sql,strripos($sql,'from'));
+
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
-			{
-				$sql2 = 'SELECT count(*) as cnt FROM (SELECT DISTINCT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
-				$this->db->query($sql2,__LINE__,__FILE__);
+			{				
+				$sql_minimized = 'SELECT DISTINCT fm_project.id '  . substr($sql_full,strripos($sql_full,'FROM'));
+				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
+
+				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{
-				$sql2 = 'SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id';
-				$this->db->query($sql2,__LINE__,__FILE__);
+				$sql_count = 'SELECT DISTINCT fm_project.id ' . substr($sql_full,strripos($sql_full,'FROM'));
+				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
-			//_debug_array($sql2);
+
+			$sql_end =   str_replace('SELECT DISTINCT fm_project.id',"SELECT DISTINCT fm_project.id {$order_field}", $sql_minimized) . " GROUP BY fm_project.id {$ordermethod}";
+//			_debug_array($sql_end);die();
 			$project_list = array();
-			$sql .= " $group_method";
-//_debug_array($sql . $ordermethod);
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql_end,$start,__LINE__,__FILE__);
 			}
 			else
 			{
@@ -536,51 +581,54 @@
 				{
 					$_fetch_single = false;
 				}
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				$this->db->query($sql_end,__LINE__,__FILE__, false, $_fetch_single );
 				unset($_fetch_single);
 			}
 
 			$project_list = array();
-			$j=0;
-			$k=count($cols_return);
+
+
+
+			$count_cols_return=count($cols_return);
+
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<$k;$i++)
-				{
-					$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
-					$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
-				}
-				$location_code=	$this->db->f('location_code');
-				$location = explode('-',$location_code);
-				$n=count($location);
-				for ($m=0;$m<$n;$m++)
-				{
-					$project_list[$j]['loc' . ($m+1)] = $location[$m];
-					$project_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$j++;
+				$project_list[] = array('project_id' => $this->db->f('id'));
 			}
 
 			foreach($project_list as &$project)
 			{
-				$project['combined_cost']	= 0;
-				$project['actual_cost']		= 0;
-				$project['billable_hours']	= 0;
+				$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
+				$this->db->next_record();
 
-				if($project['project_id'])
+				for ($i=0;$i<$count_cols_return;$i++)
 				{
-					$sql  = 'SELECT sum(fm_workorder.combined_cost) as combined_cost,'
-					. ' (sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost,'
-					. ' sum(fm_workorder.billable_hours) as billable_hours'
-					. " FROM fm_workorder WHERE project_id = '{$project['project_id']}'";
-					$this->db->query($sql);
-					$this->db->next_record();
-					$project['combined_cost']	= (int)$this->db->f('combined_cost');
-					$project['actual_cost']		= (int)$this->db->f('actual_cost');
-					$project['billable_hours']	= (int)$this->db->f('billable_hours');
+					$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
+				$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
+
+				$location_code=	$this->db->f('location_code');
+				$location = explode('-',$location_code);
+				$count_location =count($location);
+
+				for ($m=0;$m<$count_location;$m++)
+				{
+					$project['loc' . ($m+1)] = $location[$m];
+					$project['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+				}
+
+				$sql_workder  = 'SELECT sum(fm_workorder.combined_cost) as combined_cost,'
+				. ' (sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost,'
+				. ' sum(fm_workorder.billable_hours) as billable_hours'
+				. " FROM fm_workorder WHERE project_id = '{$project['project_id']}'";
+				$this->db->query($sql_workder);
+				$this->db->next_record();
+				$project['combined_cost']	= (int)$this->db->f('combined_cost');
+				$project['actual_cost']		= (int)$this->db->f('actual_cost');
+				$project['billable_hours']	= (int)$this->db->f('billable_hours');
+
 			}
+
 			return $project_list;
 		}
 
