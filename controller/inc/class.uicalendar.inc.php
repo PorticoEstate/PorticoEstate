@@ -240,7 +240,8 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
-		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function view_check_lists_for_location()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -272,7 +273,10 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl('view_check_lists_for_location', $data);
 		}
-				
+		*/
+
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('id');
@@ -291,7 +295,10 @@
 			
 			self::render_template_xsl('view_check_lists', $data);
 		}
+		*/
 		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function view_control_items_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -317,6 +324,7 @@
 								
 			self::render_template_xsl('view_check_list', $data);
 		}
+		*/
 		
 		public function save_check_items(){
 			$check_item_ids = phpgw::get_var('check_item_ids');
@@ -336,7 +344,9 @@
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list', 'check_list_id'=>$check_list_id));	
 		}
-		/*
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function save_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -380,6 +390,9 @@
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));	
 		}
 		*/
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -422,7 +435,10 @@
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));	
 		}
+		*/
 		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function query()
 		{
 			$params = array(
@@ -463,6 +479,7 @@
 				$control = $this->so->get_single($control_id);
 			}
 */
+		/*
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
@@ -483,4 +500,7 @@
 
 			return $this->yui_results($results);
 		}
+		*/
+		
+		public function query(){}
 	}
