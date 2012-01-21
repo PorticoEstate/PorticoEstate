@@ -21,7 +21,12 @@
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><span class="order_nr"><xsl:number /></span>. <xsl:value-of select="descr"/>
+										<li><span style="float:left;" class="order_nr"><xsl:number />.</span> 
+											<div style="float:left;width:500px;" class="description">
+											
+													<xsl:value-of select="descr"/>
+											
+											</div>
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
@@ -40,7 +45,7 @@
 												</xsl:otherwise>
 											</xsl:choose>
 											<div class="quick_menu">
-												<a>
+												<a class="make_case_editable">
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicase.edit_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>

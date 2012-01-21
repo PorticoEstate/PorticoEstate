@@ -1,7 +1,8 @@
 <?php
-
+phpgw::import_class('controller.socheck_list');
 include_class('controller', 'date_generator', 'inc/component/');
 
+	
 class calendar_builder {
 	
 	private $period_start_date;
@@ -12,7 +13,7 @@ class calendar_builder {
         $this->period_end_date = $period_end_date;
    	}
 	
-	public function build_calendar_array( $control_array, $num, $period_type ){
+	public function build_calendar_array( $controls_calendar_array, $control_array, $num, $period_type ){
 		
 		foreach($control_array as $control){
 
@@ -76,37 +77,65 @@ class calendar_builder {
 		return $controls_calendar_array;
 	}
 	
-	// Function receives array with control objects that each contain check_lists for a certain period
-	public function build_agg_calendar_array( $controls_array ){
-					
-		$calendar_array = array();
-		
-		foreach($controls_array as $control_array){
-			
-			$control_info = $control_array['control'];
-			$check_list_array = $control_array['check_list'];
-			
-			$control_id = $control_info['id'];
-			 
-			// Initialises twelve_months_array
-			for($i=0;$i<12;$i++){
-				$calendar_array[$i] = null;
-			}
-			
-			$status = "control_agg_accomplished_with_errors";
-			
-			// Inserts check_list object on deadline month in twelve_months_array
-			foreach($check_list_array as $check_list){
-				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["status"] = $status;
-				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["info"] = $check_list['count']; 
-			}
-			
-			$control_calendar_array[] = array("control" => $control_info, "calendar_array" => $calendar_array);
+	public function build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year){
+				
+		if( date("Y", $control->get_start_date()) == $year ){
+			$from_month = date("n", $control->get_start_date());	
+		}else{
+			$from_month = 1;
 		}
+		
+		if( date("Y", $control->get_end_date()) == $year ){
+			$to_month = date("n", $control->get_end_date());
+		}else{
+			$to_month = 12;
+		}
+		
+		$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+		
+		$twelve_month_array = array();
+		
+		for($i=1;$i<=12;$i++){
+			$trail_date_ts = strtotime("$i/01/$year");
 
-		return $control_calendar_array;
-	}
+			if($trail_date_ts > $control->get_start_date() & $trail_date_ts < $todays_date_ts){
+				$status = "controls_not_accomplished";
+			}else if($trail_date_ts > $control->get_start_date() & $trail_date_ts > $todays_date_ts){
+				$status = "controls_registered";
+			}	
+
+			$twelve_month_array[$i-1]["status"] = $status;
+		}
+		
+		print_r($twelve_month_array);
+				
+		for($from_month;$from_month<=$to_month;$from_month++){
 	
+			$trail_from_date_ts = strtotime("$from_month/01/$year");
+			
+			$trail_to_date_ts = strtotime("$to_month/01/$year");
+			$so_check_list = CreateObject('controller.socheck_list');
+				
+			$num_open_cases_for_control_array = array();
+			$num_open_cases_for_control_array = $so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $trail_from_date_ts, $trail_to_date_ts );	
+	
+			if( !empty($num_open_cases_for_control_array) ){
+				$status = "controls_accomplished_with_errors";
+				
+				$twelve_month_array[$from_month-1]["status"] = $status;
+				$twelve_month_array[$from_month-1]["info"] = $num_open_cases_for_control_array["count"];
+			}else{
+				$status = "controls_accomplished_without_errors";
+				
+				$twelve_month_array[$from_month-1]["status"] = $status;
+			}
+		}
+	
+		$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $twelve_month_array);
+		 
+		return $controls_calendar_array;
+	}
+		
 	function init_calendar( $control, $calendar_array, $num, $period_type ){
 		
 		// Initialises twelve_months_array

@@ -40,12 +40,10 @@
 			</form>
 					
 			<ul id="icon_color_map">
-				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
-				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
-				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
+				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroller satt opp</span></li>
+				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroller gjennomført uten feil</span></li>
+				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroller gjennomført med rapporterte feil</span></li>
+				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroller ikke gjennomført</span></li>
 			</ul>
 		</div>
 		
@@ -111,7 +109,7 @@
 						<div class="months">
 						<xsl:for-each select="calendar_array">
 							<xsl:choose>
-									<xsl:when test="status = 'control_registered'">
+									<xsl:when test="status = 'control_registered' or status = 'controls_registered'">
 										<div>
 										<a>
 											<xsl:attribute name="href">
@@ -166,6 +164,11 @@
 											</a>
 										</div>
 									</xsl:when>
+									<xsl:when test="status = 'controls_accomplished_without_errors'">
+										<div>
+											<img height="15" src="controller/images/status_icon_dark_green.png" />
+										</div>
+									</xsl:when>
 									<xsl:when test="status = 'control_accomplished_with_errors'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
@@ -183,20 +186,10 @@
 											</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'control_agg_accomplished_with_errors'">
+									<xsl:when test="status = 'controls_accomplished_with_errors'">
 										<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-											<div id="info_box" style="position:absolute;display:none;"></div>
-					    					<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/check_list_id"/>
-												</xsl:attribute>
-												<span style="display:none">
-													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-												</span>
-												<xsl:value-of select="info"/>
+											<a class="view_check_list">
+											 	<xsl:value-of select="info"/>
 											</a>
 										</div>
 									
@@ -206,7 +199,7 @@
 											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'control_not_accomplished'">
+									<xsl:when test="status = 'control_not_accomplished' or status = 'controls_not_accomplished'">
 										<div>
 											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
