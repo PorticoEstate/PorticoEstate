@@ -66,7 +66,8 @@
 				
 	</script>
 		
-	<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
+	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
+	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
 	
 	<xsl:call-template name="check_list_tab_menu">
 	 	<xsl:with-param name="active_tab">view_control_info</xsl:with-param>

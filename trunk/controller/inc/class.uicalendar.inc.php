@@ -336,7 +336,7 @@
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list', 'check_list_id'=>$check_list_id));	
 		}
-		
+		/*
 		public function save_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -379,7 +379,7 @@
 			
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));	
 		}
-		
+		*/
 		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);

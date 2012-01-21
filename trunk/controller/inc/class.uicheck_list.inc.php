@@ -51,9 +51,9 @@
 		(
 			'index'	=>	true,
 			'view_check_lists_for_control'		=>	true,
-			'save_check_list'					=>	true,
+		//	'save_check_list'					=>	true,
 			'view_check_list'					=>	true,
-			'edit_check_list'					=>	true,
+		//	'edit_check_list'					=>	true,
 			'save_check_items'					=>	true,
 			'save_check_item'					=>	true,
 			'get_check_list_info'				=>	true,
@@ -212,6 +212,7 @@
 			return json_encode( $check_items_with_cases );
 		}
 
+		/*
 		public function edit_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -227,7 +228,7 @@
 
 			self::render_template_xsl('edit_check_list', $data);
 		}
-		
+		*/
 		public function update_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$status = (int)phpgw::get_var('status');
@@ -368,7 +369,8 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
-							
+			$control = $this->so_control->get_single($check_list->get_control_id());
+								
 			// Fetches all control items for check list
 			$control_items_for_check_list = array();
 			
@@ -389,10 +391,14 @@
 				}
 			}
 			
+			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
+			
 			$data = array
 			(
+				'control' 						=> $control->toArray(),
+				'check_list' 					=> $check_list->toArray(),
+				'location_array'	=> $location_array,
 				'control_items_for_check_list' 	=> $control_items_for_check_list,
-				'check_list' 					=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
@@ -570,7 +576,7 @@
 			else
 				return json_encode( array( "saveStatus" => "not_saved" ) );
 		}
-
+/*
 		public function save_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -580,8 +586,7 @@
 			$repeat_type = $control->get_repeat_type();
 			$repeat_interval = $control->get_repeat_interval();
 
-			$status = "FALSE";
-			$comment = "Kommentar for sjekkliste";
+		
 			$deadline = $start_date;
 
 			// Saving check_list
@@ -613,7 +618,7 @@
 
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));
 		}
-
+*/
 		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);

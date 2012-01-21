@@ -371,6 +371,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
+			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$location_code = $check_list->get_location_code();
@@ -379,9 +380,10 @@
 						
 			$data = array
 			(
-				'check_list' 					=> $check_list->toArray(),
-				'location_array'				=> $location_array,
-				'date_format' 					=> $date_format
+				'control' 			=> $control->toArray(),
+				'check_list' 		=> $check_list->toArray(),
+				'location_array'	=> $location_array,
+				'date_format' 		=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -398,7 +400,8 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
-			
+			$control = $this->so_control->get_single($check_list->get_control_id());
+				
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$location_code = $check_list->get_location_code();
 	
@@ -406,9 +409,10 @@
 			
 			$data = array
 			(
-				'check_list' 					=> $check_list->toArray(),
-				'location_array'				=> $location_array,
-				'date_format' 					=> $date_format
+				'control' 			=> $control->toArray(),
+				'check_list' 		=> $check_list->toArray(),
+				'location_array'	=> $location_array,
+				'date_format' 		=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
