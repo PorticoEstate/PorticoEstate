@@ -4,14 +4,14 @@
 
 <ul>
 	<xsl:for-each select="saved_groups_with_items_array">
-		<li class="list_item">
-			<h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
+		<li>
+			<h3><xsl:value-of select="control_group/group_name"/></h3>
 	
 			<form action="index.php?menuaction=controller.uicontrol_item.save_item_order" class="frm_save_order">
 			   	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 				<input type="hidden" name="control_group_id" value="{$control_group_id}" />
 		
-			 	<ul id="list">
+			 	<ul>
 					<xsl:for-each select="control_items">
 						<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 						<xsl:variable name="order_tag">
@@ -25,7 +25,7 @@
 							</xsl:choose>:<xsl:value-of select="id"/>
 						</xsl:variable>
 														
-			 			<li class="list_item">
+			 			<li>
 			 				<span>
 			 					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
 			 				</span>
