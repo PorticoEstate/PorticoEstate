@@ -177,7 +177,9 @@
 
 			self::render_template_xsl('datatable', $data);
 		}
-
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		* 
 		public function view_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -193,7 +195,8 @@
 
 			self::render_template_xsl('view_check_list', $data);
 		}
-
+		*/
+	
 		// Returns check list info as JSON
 		public function get_check_list_info()
 		{
@@ -255,7 +258,9 @@
 			else
 				return json_encode( array( "saveStatus" => "not_updated" ) );
 		}
-
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		* 
 		public function control_calendar_status_overview()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -274,7 +279,8 @@
 
 			self::render_template_xsl('control_calendar_status_overview', $data);
 		}
-
+		*/
+		
 		public function view_control_items(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -456,7 +462,9 @@
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_measurements'), $data );
 		}
-				
+
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		* 
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('id');
@@ -475,7 +483,10 @@
 
 			self::render_template_xsl('view_check_lists', $data);
 		}
-
+		*/
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		* 
 		public function view_control_items_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -501,7 +512,8 @@
 
 			self::render_template_xsl('view_check_list', $data);
 		}
-
+		*/
+		
 		public function save_check_items(){
 			$check_item_ids = phpgw::get_var('check_item_ids');
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -621,8 +633,10 @@
 
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));
 		}
-*/
+		*/
 		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -665,7 +679,8 @@
 
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));
 		}
-
+		*/
+		
 		public function query()
 		{
 			$params = array(
