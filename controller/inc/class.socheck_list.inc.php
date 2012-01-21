@@ -324,7 +324,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.deadline >= $from_date_ts AND $to_date_ts > cl.deadline ";
 		$sql .= "GROUP BY c.id";
-		 	
+		
 		$this->db->query($sql);
 		
 		if ($this->db->next_record() & $this->db->f('count', true) > 0) {

@@ -121,7 +121,8 @@
 			
 			$controls_with_check_list = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 			
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_with_check_list, 31, "view_days" );
+			$controls_calendar_array = array();
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $controls_with_check_list, 31, "view_days" );
 
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -198,55 +199,25 @@
 			$repeat_type = null;
 			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
-
+			
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
+		
+			$controls_calendar_array = array();
 
+			// Puts aggregate values for daily controls in a twelve month array 
 			foreach($controls_for_location_array as $control){
-				
 				if($control->get_repeat_type() == 0){
-					
-					$twelve_month_array = array();
-								
-					$trail_year = $year;
-					
-					for($from_month=1;$from_month<=12;$from_month++){
-				
-						$trail_from_date_ts = strtotime("$from_month/01/$trail_year");
-						
-						if(($from_month + 1) > 12)
-						{
-							$to_month = 1;
-							$cal_to_year = $year + 1;
-						}
-						else
-						{
-							$to_month = $from_month + 1;
-						}
-						
-						$trail_to_date_ts = strtotime("$to_month/01/$trail_year");
-						
-						$num_open_cases_for_control_array = array();
-						$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $trail_from_date_ts, $trail_to_date_ts );	
-				
-						$status = "control_agg_accomplished_with_errors";
-							
-						$twelve_month_array[$from_month-1]["status"] = $status;
-						$twelve_month_array[$from_month-1]["info"] = $num_open_cases_for_control_array["count"];
-						
-					}
-				
-					$days_controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $twelve_month_array);
+					$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year);
 				}
-					
 			}
 			
 			$repeat_type = 2;
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
 			
-			$month_controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_check_list_array, 12, "view_months" );
-					
-			$controls_calendar_array = array_merge($days_controls_calendar_array, $month_controls_calendar_array);
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 			
+			//print_r($controls_calendar_array);
+					
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
