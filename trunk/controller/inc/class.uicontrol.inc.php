@@ -243,8 +243,6 @@
 				$control = $this->so->get_single($control_id);
 			}
 
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -262,9 +260,9 @@
 			}
 			// END as categories
 
-			// Fetches prosedures that are related to first control area in list
-			$control_area_id = $control_areas_array[0]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			echo "Control area id: " . $control->get_control_area_id();
+			
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control->get_control_area_id());
 			$role_array = $this->so->get_roles();
 			
 			$tabs = array( array(
@@ -282,8 +280,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'						=> "control_details",
 				'editable' 					=> true,
-				'control'					=> (isset($control)) ? $control->toArray(): null,
-				'control_areas_array'		=> $control_areas_array,
+				'control'					=> $control->toArray(),
 				'control_areas_array2'		=> array('options' => $control_areas_array2),
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array
