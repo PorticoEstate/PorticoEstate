@@ -649,6 +649,8 @@
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_lists_for_control', 'control_id'=>$control_id ));
 		}
 		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -690,7 +692,8 @@
 			self::render_template_xsl(array('control/control_tabs', 'tab_view_check_lists'), $data);
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 		}
-			
+		*/	
+		
 		// Returns control list info as JSON
 		public function get_controls_by_control_area()
 		{

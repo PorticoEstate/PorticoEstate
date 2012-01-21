@@ -212,7 +212,8 @@
 			return json_encode( $check_items_with_cases );
 		}
 
-		/*
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		* 
 		public function edit_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -576,7 +577,9 @@
 			else
 				return json_encode( array( "saveStatus" => "not_saved" ) );
 		}
-/*
+		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function save_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
@@ -619,6 +622,7 @@
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));
 		}
 */
+		
 		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
