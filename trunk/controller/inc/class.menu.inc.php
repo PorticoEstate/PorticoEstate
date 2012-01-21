@@ -61,7 +61,7 @@
 											'location_for_check_list' => array
 											(
 												'text'	=> lang('Location'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 												'image'	=> array('property', 'location_1')
 											),
 											'component_for_check_list' => array

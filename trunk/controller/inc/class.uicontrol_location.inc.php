@@ -146,7 +146,7 @@
 						'label' => lang('View_locations_for_control')
 					), array(
 						'label' => lang('Add_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_location_to_control'))
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.add_location_to_control'))
 					));
 			
 			$data = array(
@@ -245,7 +245,7 @@
 			
 			$tabs = array( array(
 						'label' => lang('View_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.index'))
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
 			
 					), array(
 						'label' => lang('Add_locations_for_control')
@@ -265,7 +265,7 @@
 					'part_of_town_list' 		=> $part_of_town_list
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_location.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'location_code',
