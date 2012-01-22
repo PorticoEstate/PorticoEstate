@@ -56,6 +56,8 @@
 	*/
 	include(PHPGW_API_INC.'/functions.inc.php');
 	
+	$GLOBALS['phpgw_info']['user']['domain'] = $_GET['domain'];
+
 	echo 'Start cron: ' . date('Y/m/d H:i:s ') . "\n";
 	$num = ExecMethod('phpgwapi.asyncservice.check_run','crontab');
 	echo 'End cron: ' . date('Y/m/d H:i:s ') . "\n";
