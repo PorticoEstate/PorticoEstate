@@ -949,6 +949,12 @@
 				$workorder['workorder_num'] = $id;
 			}
 
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+			{
+				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
+			}
+			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
+
 			$values= array
 				(
 					$id,
@@ -1070,6 +1076,12 @@
 			{
 				$paid = 2;
 			}
+
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+			{
+				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
+			}
+			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
 
 
 			$value_set = array
