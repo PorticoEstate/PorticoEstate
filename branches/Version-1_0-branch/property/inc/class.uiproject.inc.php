@@ -1102,12 +1102,7 @@
 						$error_id=true;
 					}
 
-					if(!isset($values['b_account_id']) || !$values['b_account_id'])
-					{
-						$receipt['error'][]=array('msg'=>lang('Please select an account group!'));
-						$error_id=true;
-					}
-					else
+					if(isset($values['b_account_id']) && $values['b_account_id'])
 					{
 						$sogeneric		= CreateObject('property.sogeneric');
 						$sogeneric->get_location_info('b_account_category',false);

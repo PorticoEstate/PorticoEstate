@@ -243,10 +243,10 @@
 */
 				$cols .= ",fm_project.user_id as project_owner";
 
-				$joinmethod .= " $this->join  fm_workorder ON ($entity_table.id = fm_workorder.project_id) $this->join  phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
+				$joinmethod .= "{$this->join} fm_workorder ON ({$entity_table}.id = fm_workorder.project_id) {$this->join} phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
 				$paranthesis .='(';
 
-				$joinmethod .= " $this->join fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
+				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
 				$paranthesis .='(';
 
 				$cols .= ',fm_vendor.org_name';
@@ -279,17 +279,17 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= true;
 
-				$joinmethod .= " $this->left_join  fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
+				$joinmethod .= " {$this->left_join} fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
 
 				//----- wo_hour_status
 
 				if($wo_hour_cat_id)
 				{
-					$joinmethod .= " $this->join fm_wo_hours ON (fm_workorder.id = fm_wo_hours.workorder_id))";
+					$joinmethod .= " {$this->join} fm_wo_hours ON (fm_workorder.id = fm_wo_hours.workorder_id))";
 					$paranthesis .='(';
 
-					$joinmethod .= " $this->join fm_wo_hours_category ON (fm_wo_hours.category = fm_wo_hours_category.id))";
+					$joinmethod .= " {$this->join} fm_wo_hours_category ON (fm_wo_hours.category = fm_wo_hours_category.id))";
 					$paranthesis .='(';
 				}
 
@@ -300,7 +300,7 @@
 
 				if($b_group)
 				{
-					$joinmethod .= " $this->join fm_b_account ON (fm_workorder.account_id =fm_b_account.id))";
+					$joinmethod .= " {$this->join} fm_b_account ON (fm_workorder.account_id =fm_b_account.id))";
 					$paranthesis .='(';
 				}
 
@@ -369,16 +369,43 @@
 				$location_table = 'fm_workorder';
 			}
 
+			$order_field = '';
 			if ($order)
 			{
-				if($order == 'workorder_id')
+				$ordermethod = " ORDER BY $order $sort";
+				switch($order)
 				{
-	//				$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
-					$ordermethod = " ORDER BY fm_workorder.id {$sort}";	
-				}
-				else
-				{
-					$ordermethod = " ORDER BY $order $sort";
+					case 'workorder_id':
+	//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
+						$ordermethod = " ORDER BY fm_workorder.id {$sort}";
+						break;
+					case 'actual_cost':
+						$order_field = ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
+						break;
+					case 'address':
+						if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
+						{
+							$order_field = ", fm_workorder.address";
+						}
+						else
+						{
+							$order_field = ", fm_project.address";
+						}
+						break;
+					case 'entry_date':
+						$order_field = ", fm_workorder.entry_date";
+						break;
+					case 'start_date':
+						$order_field = ", fm_workorder.start_date";
+						break;
+					case 'end_date':
+						$order_field = ", fm_workorder.end_date";
+						break;
+					case 'ecodimb':
+						$order_field = ", fm_workorder.ecodimb";
+						break;
+					default:
+						$order_field = ", {$order}";
 				}
 			}
 			else
@@ -386,7 +413,7 @@
 	//			$ordermethod = ' ORDER BY fm_workorder.project_id DESC,fm_workorder.id DESC';
 				$ordermethod = ' ORDER BY fm_workorder.id DESC';
 			}
-
+//_debug_array($order_field);die;
 			$where= 'WHERE';
 
 			$filtermethod = '';
@@ -559,30 +586,32 @@
 			}
 			$querymethod .= ')';
 
-			$sql .= " $filtermethod $querymethod";
+			$sql_full = "{$sql} {$filtermethod} {$querymethod}";
 
-			//_debug_array($sql);
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
-			{
-				$sql2 = 'SELECT count(fm_workorder.id) as cnt ' . substr($sql,strripos($sql,'from'));
-				$this->db->query($sql2,__LINE__,__FILE__);
+			{				
+				$sql_minimized = 'SELECT DISTINCT fm_workorder.id '  . substr($sql_full,strripos($sql_full,'FROM'));
+				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
+
+				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{
-				$sql2 = 'SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'));
-				$this->db->query($sql2,__LINE__,__FILE__);
+				$sql_count = 'SELECT DISTINCT fm_workorder.id ' . substr($sql_full,strripos($sql_full,'FROM'));
+				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
 
 			$workorder_list = array();
 
-			$sql .= " $group_method";
+			$sql_end =   str_replace('SELECT DISTINCT fm_workorder.id',"SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
+//	_debug_array($sql_end);die();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql_end,$start,__LINE__,__FILE__);
 			}
 			else
 			{
@@ -594,31 +623,37 @@
 				{
 					$_fetch_single = false;
 				}
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				$this->db->query($sql_end,__LINE__,__FILE__, false, $_fetch_single );
 				unset($_fetch_single);
 			}
 
 			$count_cols_return=count($cols_return);
-			$j=0;
 
 			while ($this->db->next_record())
 			{
+				$workorder_list[] = array('workorder_id' => $this->db->f('id'));
+			}
+
+			foreach($workorder_list as &$workorder)
+			{
+				$this->db->query("{$sql} WHERE fm_workorder.id = '{$workorder['workorder_id']}'");
+				$this->db->next_record();
+
 				for ($i=0;$i<$count_cols_return;$i++)
 				{
-					$workorder_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$workorder_list[$j]['grants'] = (int)$this->grants[$this->db->f('project_owner')];
+					$workorder[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
+				$workorder['grants'] = (int)$this->grants[$this->db->f('project_owner')];
 
 				$location_code=	$this->db->f('location_code');
 				$location = explode('-',$location_code);
 				$count_location =count($location);
+
 				for ($m=0;$m<$count_location;$m++)
 				{
-					$workorder_list[$j]['loc' . ($m+1)] = $location[$m];
-					$workorder_list[$j]['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					$workorder['loc' . ($m+1)] = $location[$m];
+					$workorder['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
-
-				$j++;
 			}
 
 			return $workorder_list;
@@ -914,6 +949,12 @@
 				$workorder['workorder_num'] = $id;
 			}
 
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+			{
+				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
+			}
+			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
+
 			$values= array
 				(
 					$id,
@@ -1035,6 +1076,12 @@
 			{
 				$paid = 2;
 			}
+
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+			{
+				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
+			}
+			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
 
 
 			$value_set = array

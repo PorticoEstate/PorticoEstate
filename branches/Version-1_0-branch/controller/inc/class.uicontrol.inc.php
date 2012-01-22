@@ -243,8 +243,6 @@
 				$control = $this->so->get_single($control_id);
 			}
 
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -262,9 +260,9 @@
 			}
 			// END as categories
 
-			// Fetches prosedures that are related to first control area in list
-			$control_area_id = $control_areas_array[0]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			echo "Control area id: " . $control->get_control_area_id();
+			
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control->get_control_area_id());
 			$role_array = $this->so->get_roles();
 			
 			$tabs = array( array(
@@ -282,8 +280,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'						=> "control_details",
 				'editable' 					=> true,
-				'control'					=> (isset($control)) ? $control->toArray(): null,
-				'control_areas_array'		=> $control_areas_array,
+				'control'					=> $control->toArray(),
 				'control_areas_array2'		=> array('options' => $control_areas_array2),
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array
@@ -649,6 +646,8 @@
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_lists_for_control', 'control_id'=>$control_id ));
 		}
 		
+		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
+		 * 
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -690,7 +689,8 @@
 			self::render_template_xsl(array('control/control_tabs', 'tab_view_check_lists'), $data);
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 		}
-			
+		*/	
+		
 		// Returns control list info as JSON
 		public function get_controls_by_control_area()
 		{

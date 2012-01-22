@@ -5,21 +5,23 @@
 <xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
 
 <div id="control_info" style="margin:40px 0 0 40px;">
-
+	<h1 style="text-decoration: underline;text-transform: uppercase;"><xsl:value-of select="control/title"/></h1>
+	<h2 style="text-transform: uppercase;"><xsl:value-of select="location/loc1_name"/></h2>
+	<h3 style="text-transform: uppercase;"><xsl:value-of select="control_group/group_name"/></h3>
 </div>
 
 <div id="procedure" style="margin:40px 0 0 40px;">
 		<div>
 			<label for="title"><xsl:value-of select="php:function('lang','Procedure title')" /></label>
-			<xsl:value-of select="procedure/title" />
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/title" /></span>
 		</div>
 		<div>
 			<label for="revision_no"><xsl:value-of select="php:function('lang','Procedure revision')" /></label>
-			<xsl:value-of select="procedure/revision_no" />
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/revision_no" /></span>
 		</div>
 		<div>
 			<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
-			<xsl:value-of select="procedure/control_area_name" />
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/control_area_name" /></span>
 		</div>
 		<div>
 			<label for="start_date"><xsl:value-of select="php:function('lang','Procedure start date')" /></label>
@@ -43,15 +45,15 @@
 		</div>
 		<div>
 			<label for="purpose"><xsl:value-of select="php:function('lang','Procedure purpose')" /></label>
-			<xsl:value-of select="procedure/purpose" disable-output-escaping="yes"/>
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/purpose" disable-output-escaping="yes"/></span>
 		</div>
 		<div>
 			<label for="responsibility"><xsl:value-of select="php:function('lang','Procedure responsibility')" /></label>
-			<xsl:value-of select="procedure/responsibility" />
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/responsibility" /></span>
 		</div>
 		<div>
 			<label for="description"><xsl:value-of select="php:function('lang','Procedure description')" /></label>
-			<xsl:value-of select="procedure/description" disable-output-escaping="yes"/>
+			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/description" disable-output-escaping="yes"/></span>
 		</div>
 		<div>
 			<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
@@ -72,9 +74,10 @@
 		margin:10px 0;
 	 }
 	label{ 
-		font-weight: bold;
 		display: inline-block;
-		width: 200px;
+    	font-weight: bold;
+    	vertical-align: top;
+    	width: 200px;
 	}
 
 	.btn {
@@ -89,11 +92,12 @@
 	    text-decoration: none;
 	}
 	
-	ul{
-		list-style: none outside none;
+	ol{
+ 		margin: 0;
+    	padding: 0 20px;
 	}
 	
-	li{
+	ul{
 		list-style: none outside none;
 	}
 	
