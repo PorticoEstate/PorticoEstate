@@ -148,8 +148,11 @@
 			
 			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
 			$data = array
 			(
+				'location_array'	=> $location_array,
 				'categories'			=> $categories,
 				'check_list'			=> $check_list->toArray(),
 				'control'				=> $control->toArray(),

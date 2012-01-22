@@ -66,7 +66,8 @@
 				
 	</script>
 		
-	<h1>Sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
+	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
+	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
 	
 	<xsl:call-template name="check_list_tab_menu">
 	 	<xsl:with-param name="active_tab">view_control_info</xsl:with-param>
@@ -96,6 +97,8 @@
 				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
+				<xsl:text>&amp;location_code=</xsl:text>
+				<xsl:value-of select="location_array/location_code"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
 			Prosedyrer

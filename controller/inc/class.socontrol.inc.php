@@ -118,7 +118,7 @@
 			
 			$sql  = "SELECT distinct c.* FROM controller_control_location_list cll "; 
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
-			$sql .= "WHERE cll.location_code = $location_code ";
+			$sql .= "WHERE cll.location_code = '$location_code' ";
 			
 			if( is_numeric($repeat_type) )
 				$sql .= "AND c.repeat_type = $repeat_type ";
@@ -141,7 +141,7 @@
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
@@ -182,7 +182,7 @@
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 
@@ -212,7 +212,7 @@
 			while($this->db->next_record()) {
 				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
-				$location_code = $this->unmarshal($this->db->f('location_code', true), 'int');
+				$location_code = $this->unmarshal($this->db->f('location_code', true), 'strign');
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
@@ -355,7 +355,7 @@
 	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
@@ -397,7 +397,7 @@
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 

@@ -3,7 +3,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <div id="main_content">
-	<h1>Registrer avviksmelding</h1>
+	
+	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
+	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
 	
 	<xsl:call-template name="check_list_tab_menu" />
 

@@ -42,6 +42,7 @@
 		private $_category_acl;
 		private $so_control;
 		private $so_control_group_list;
+		private $so_control_group;
 
 		public $public_functions = array
 		(
@@ -63,6 +64,7 @@
 			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
+			$this->so_control_group = CreateObject('controller.socontrol_group');
 			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			
@@ -484,8 +486,11 @@
 
 		public function view_procedures_for_control(){
 			$control_id = phpgw::get_var('control_id');
+			$location_code = phpgw::get_var('location_code');
 			
 			$control = $this->so_control->get_single($control_id);
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$control_procedure = $this->so->get_single_with_documents( $control->get_procedure_id(), "return_array" );
 			
@@ -501,6 +506,8 @@
 			
 			$data = array
 			(
+				'location'					=> $location_array,
+				'control'					=> $control->toArray(),
 				'control_procedure'			=> $control_procedure,
 				'group_procedures_array'	=> $group_procedures_array
 			);
@@ -510,13 +517,27 @@
 		
 		public function print_procedure(){
 			$procedure_id = phpgw::get_var('procedure_id');
+			$location_code = phpgw::get_var('location_code');
+			$control_id = phpgw::get_var('control_id');
+			$control_group_id = phpgw::get_var('control_group_id');
+			
+			$control = $this->so_control->get_single($control_id);
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$procedure = $this->so->get_single($procedure_id);
 			
 			$data = array
 			(
+				'location'	=> $location_array,
+				'control'	=> $control->toArray(),
 				'procedure'	=> $procedure->toArray()
 			);
+			
+			if( !empty($control_group_id) ){
+				$control_group = $this->so_control_group->get_single($control_group_id);
+				$data['control_group'] = $control_group->toArray(); 
+			}
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 			

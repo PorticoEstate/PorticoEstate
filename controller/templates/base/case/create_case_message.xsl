@@ -4,8 +4,9 @@
 
 <div id="main_content">
 	
-		<h1>Registrer avviksmelding</h1>
-	
+		<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
+		<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
+		
 		<xsl:call-template name="check_list_tab_menu" />
 	
 		<h3 class="box_header">Meldingen gjelder</h3>
@@ -13,7 +14,7 @@
 			<h3 class="first">Tittel på kontroll: <xsl:value-of select="control/title"/></h3>
 			<xsl:choose>
 				<xsl:when test="check_list/completed_date != 0">
-					<h3>Kontroll ble utført dato:<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
+					<h3>Kontroll ble utført: <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></h3>
 				</xsl:when>
 				<xsl:otherwise>
 					<h3>Kontroll ble utført dato: Ikke registrert utført</h3>
@@ -100,7 +101,7 @@
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>
-					Ingen registrerte avvik
+					Ingen registrerte saker
 				</xsl:otherwise>
 			</xsl:choose>
 		</fieldset>

@@ -30,6 +30,7 @@
 	var toolTips = [
 		{name:'voucher_id_lnk',title:'Voucher ID', description:'click this link to enter the list of sub-invoices',ColumnDescription:''},
 		{name:'voucher_date_lnk', title:'Payment Date', description:'',ColumnDescription:'payment_date'},
+		{name:'approved_amount_lnk', title:'Sum', description:'',ColumnDescription:'amount'},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
 	]
 

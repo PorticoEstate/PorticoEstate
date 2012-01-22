@@ -61,7 +61,7 @@
 											'location_for_check_list' => array
 											(
 												'text'	=> lang('Location'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 												'image'	=> array('property', 'location_1')
 											),
 											'component_for_check_list' => array
@@ -75,7 +75,7 @@
 					'location_for_check_list' => array
 					(
 						'text'	=> lang('location_connections'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 						'image'	=> array('property', 'location_1')
 					),
 					'control_item' => array
@@ -105,7 +105,7 @@
 					'calendar_overview' => array
 					(
 						'text'	=> lang('Calendar_overview'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicalendar.view_calendar_for_month', 'year' => '2011', 'month' => '10') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicalendar.view_calendar_for_year') ),
 						'image'	=> array('property', 'location_1'),
 					)
 				);

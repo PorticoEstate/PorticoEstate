@@ -369,6 +369,13 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	$(".make_case_editable").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -393,6 +400,7 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 });
+
 
 //Updates order number for hidden field and number in front of row
 function update_order_nr(element, sign){
