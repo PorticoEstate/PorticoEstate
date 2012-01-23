@@ -5796,6 +5796,28 @@
 	}
 
 	/**
+	* Update property version from 0.9.17.632 to 0.9.17.633
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.632';
+	function property_upgrade0_9_17_632()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
+			. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.633';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 
