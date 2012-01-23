@@ -639,6 +639,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_activities()
 	{
+		//fromdate -> innparam for uthenting av delta - timestamp
 		$activities = array();
 		$sql = "SELECT * FROM activity_activity where state=3";
 		$this->db->query($sql, __LINE__, __FILE__);
@@ -1224,10 +1225,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		{
 			$sql = "SELECT * FROM activity_activity WHERE new_org AND organization_id={$org_id}";
 		}
+		//var_dump($sql);
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
-		$activity = new activitycalendar_activity((int) $activity_id);
+			$activity = new activitycalendar_activity((int) $this->db->f('id'));
 
 			$activity->set_title($this->unmarshal($this->db->f('title'), 'string'));
 			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
@@ -1261,6 +1263,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$contacts = activitycalendar_soorganization::get_instance()->get_contacts($activity->get_organization_id());
 				$activity->set_contact_persons($contacts);
 			}
+			
+			$activities[] = $activity;
 		}
+		
+		return $activities;
 	}
 }
