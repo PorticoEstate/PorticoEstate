@@ -50,14 +50,14 @@
 		public $public_functions = array
 		(
 			'index'	=>	true,
-			'view_check_lists_for_control'		=>	true,
+		//	'view_check_lists_for_control'		=>	true,
 		//	'save_check_list'					=>	true,
-			'view_check_list'					=>	true,
+		//	'view_check_list'					=>	true,
 		//	'edit_check_list'					=>	true,
 			'save_check_items'					=>	true,
 			'save_check_item'					=>	true,
 			'get_check_list_info'				=>	true,
-			'control_calendar_status_overview'	=>	true,
+		//	'control_calendar_status_overview'	=>	true,
 			'add_check_item_to_list'			=>	true,
 			'update_check_list'					=>	true,
 			'view_control_items'				=>	true,
@@ -241,8 +241,8 @@
 			$completed_date = phpgw::get_var('completed_date');
 			$planned_date = phpgw::get_var('planned_date');
 			
-			$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date ); 
-			$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date );
+			$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" ); 
+			$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
 			
 			// Fetches check_list from DB
 			$update_check_list = $this->so_check_list->get_single($check_list_id);
@@ -331,7 +331,7 @@
 			}
 			// END as categories
 			$control_area_id = $control_areas_array2[1]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control_area_id);
 			$role_array = $this->so_control->get_roles();
 			
 			$data = array

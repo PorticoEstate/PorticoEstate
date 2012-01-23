@@ -242,7 +242,7 @@
 			}
 		}
 
-		function get_procedures_by_control_area_id($control_area_id)
+		function get_procedures_by_control_area($control_area_id)
 		{
 			$results = array();
 
