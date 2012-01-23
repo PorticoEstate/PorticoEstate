@@ -247,8 +247,8 @@
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control->get_control_area_id(),'globals' => true,'use_acl' => $this->_category_acl));
+			
 			$control_areas_array2 = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
@@ -259,13 +259,40 @@
 				);		
 			}
 			// END as categories
-
-			echo "Control area id: " . $control->get_control_area_id();
-			
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control->get_control_area_id());
+		
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
 			$role_array = $this->so->get_roles();
 			
-			$tabs = array( array(
+			$repeat_type_array = array(
+									array('id' 	=> "0", 'value'	=> "Dag"),
+									array('id' 	=> "1", 'value'	=> "Uke"),
+									array('id' 	=> "2", 'value'	=> "Måned"),
+									array('id' 	=> "3", 'value'	=> "År")
+								);
+								
+			if( $control != null )
+			{
+				$tabs = array(
+						array(
+							'label' => "1: " . lang('Details'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
+																				   'id' => $control->get_id()))
+						),array(
+							'label' => "2: " . lang('Choose_control_groups'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
+																				   'control_id' => $control->get_id())) 
+						),array(
+							'label' => "3: " . lang('Choose_control_items'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
+																				   'control_id' => $control->get_id()))
+						),array('label' => "4: " . lang('Sort_check_list')
+						)
+						
+					);	
+			}
+			else
+			{
+				$tabs = array( array(
 							'label' => "1: " . lang('Details')
 						), array(
 							'label' => "2: " . lang('Choose_control_groups')
@@ -273,7 +300,8 @@
 							'label' => "3: " . lang('Choose_control_items')
 						), array(
 							'label' => "4: " . lang('Sort_check_list')
-						));
+						));	
+			}
 			
 			$data = array
 			(
@@ -281,9 +309,10 @@
 				'view'						=> "control_details",
 				'editable' 					=> true,
 				'control'					=> $control->toArray(),
-				'control_areas_array2'		=> array('options' => $control_areas_array2),
+				'control_areas_array2'		=> $control_areas_array2,
 				'procedures_array'			=> $procedures_array,
-				'role_array'				=> $role_array
+				'role_array'				=> $role_array,
+				'repeat_type_array'			=> $repeat_type_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -336,7 +365,7 @@
 				$saved_control_group_ids[] = $control_group->get_id();
 			}
 			
-			// Fetches  control groups based on selected control area						
+			// Fetches control groups based on selected control area						
 			$control_area = $this->so_control_area->get_single( $control->get_control_area_id );		
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			

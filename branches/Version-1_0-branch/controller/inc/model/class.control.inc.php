@@ -29,6 +29,7 @@
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
+	include_class('controller', 'date_helper', 'inc/helper/');
 
 	class controller_control extends controller_model
 	{
@@ -228,12 +229,21 @@
 		{
 				$this->set_title(phpgw::get_var('title','string'));
 				$this->set_description(phpgw::get_var('description','html'));
-				$this->set_start_date(strtotime( phpgw::get_var('start_date_hidden','string') ));
-				$this->set_end_date(strtotime( phpgw::get_var('end_date_hidden','string') ));
-				$this->set_procedure_id(phpgw::get_var('procedure_id','int'));
-				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
+				
+				$start_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('start_date','string'), "d/m-Y" );
+				$this->set_start_date($start_date_ts);
+				
+				if( phpgw::get_var('end_date','string') != ""){
+					$end_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('end_date','string'), "d/m-Y" );
+					$this->set_end_date( $end_date_ts );
+				}else{
+					$this->set_end_date( 0 );
+				}
+				
 				$this->set_repeat_type(phpgw::get_var('repeat_type','int'));
 				$this->set_repeat_interval(phpgw::get_var('repeat_interval','int'));
+				$this->set_procedure_id(phpgw::get_var('procedure_id','int'));
+				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
 				$this->set_responsibility_id(phpgw::get_var('responsibility_id','int'));
 		}
 		

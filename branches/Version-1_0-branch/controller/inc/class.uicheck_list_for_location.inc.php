@@ -218,13 +218,13 @@
 			$completed_date = phpgw::get_var('completed_date', 'string');
 							
 			if($planned_date != '')
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date );
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
 
 			if($deadline_date != '')
-				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date );
+				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
 			
 			if($completed_date != '')
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date );
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
 			
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
@@ -295,7 +295,7 @@
 
 			// Fetches prosedures that are related to first control area in list
 			$control_area_id = $control_areas_array2[1]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control_area_id);
 			$role_array = $this->so_control->get_roles();
 			
 			$location_code = $check_list->get_location_code();  
