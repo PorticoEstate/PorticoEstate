@@ -301,10 +301,18 @@
 
 								if(fclose($fp))
 								{
-									echo "File remote: ".$file_remote." was copied to local: $file_local<br/>";
+									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
 									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
 									{
-										echo "File remote: ".$file_remote." was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
+										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
+									}
+									else
+									{
+										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
+										if(unlink($file_local))
+										{
+											echo "Lokal file was deleted: {$file_local}<br/>";
+										}
 									}
 								}
 							}
