@@ -51,28 +51,12 @@ var lightbox;
 
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
-	    YAHOO.util.Dom.removeClass("dialog1", "yui-pe-content");
-
 		lightbox = new YAHOO.widget.Dialog("manual_invoice_lightbox",  
 			{ width : "700px", 
 				context:["ctx","tl","bl", ["beforeShow", "windowResize"]],
 				visible : false
-		//		constraintoviewport : true, 
-		//		buttons : [ { text:"Submit", handler:handleSubmit, isDefault:true }, 
-		//					{ text:"Cancel", handler:handleCancel } ] 
 			} ); 
 
-/*
-		lightbox = new YAHOO.widget.Dialog("manual_invoice_lightbox",
-		{
-			width : "600px",
-			fixedcenter : true,
-			visible : false,
-			modal : false,
-			draggable: true
-			//constraintoviewport : true
-		});
-*/
 		lightbox.render();
 
 		YAHOO.util.Dom.setStyle('manual_invoice_lightbox', 'display', 'block');
