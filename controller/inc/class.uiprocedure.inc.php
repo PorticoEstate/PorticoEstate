@@ -377,7 +377,7 @@
 		{
 			$control_area_id = phpgw::get_var('control_area_id');
 
-			$procedures_array = $this->so->get_procedures_by_control_area_id($control_area_id);
+			$procedures_array = $this->so->get_procedures_by_control_area($control_area_id);
 
 			if(count($procedures_array)>0)
 				return json_encode( $procedures_array );
