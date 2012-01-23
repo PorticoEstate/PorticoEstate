@@ -314,7 +314,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$message = lang('messages_saved_form');	
 					
 					//get affected activities and update with new org id
-					$update_activities = $so_activity->get_activities_for_update($new_org_id);
+					$update_activities = $so_activity->get_activities_for_update($id);
+					//var_dump($update_activities);
 					foreach($update_activities as $act)
 					{
 						$act->set_organization_id($new_org_id);

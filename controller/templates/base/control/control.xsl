@@ -4,6 +4,8 @@
 <xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 <xsl:variable name="control_area_id"><xsl:value-of select="control/control_area_id"/></xsl:variable>
 <xsl:variable name="control_procedure_id"><xsl:value-of select="control/procedure_id"/></xsl:variable>
+<xsl:variable name="control_repeat_type"><xsl:value-of select="control/repeat_type"/></xsl:variable>
+<xsl:variable name="control_role"><xsl:value-of select="control/responsibility_id"/></xsl:variable>
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
 <script>
@@ -34,7 +36,21 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<select id="control_area_id" name="control_area_id">
-							<xsl:apply-templates select="control_areas_array2/options"/>
+						<option value="">Velg kontrollområde</option>
+							<xsl:for-each select="control_areas_array2">
+								<xsl:choose>
+									<xsl:when test="id != control/control_area_id">
+										<option value="{id}">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{id}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>								
+							</xsl:for-each>
 						</select>
 					</xsl:when>
 					<xsl:otherwise>
@@ -49,6 +65,7 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<select id="procedure_id" name="procedure_id">
+							<option value="">Velg prosedyre</option>
 							<xsl:for-each select="procedures_array">
 								<xsl:choose>
 									<xsl:when test="id != $control_procedure_id">
@@ -87,10 +104,7 @@
 					<label for="start_date">Startdato</label>
 				</dt>
 				<dd>
-					<input>
-				      <xsl:attribute name="id">start_date</xsl:attribute>
-				      <xsl:attribute name="name">start_date</xsl:attribute>
-				      <xsl:attribute name="type">text</xsl:attribute>
+					<input id="start_date" name="start_date" type="text">
 				      <xsl:if test="control/start_date != ''">
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
 				      </xsl:if>
@@ -100,10 +114,7 @@
 					<label for="end_date">Sluttdato</label>
 				</dt>
 				<dd>
-					<input>
-				      <xsl:attribute name="id">end_date</xsl:attribute>
-				      <xsl:attribute name="name">end_date</xsl:attribute>
-				      <xsl:attribute name="type">text</xsl:attribute>
+					<input id="end_date" name="end_date" type="text">
 				      <xsl:if test="control/end_date != 0">
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/></xsl:attribute>
 				      </xsl:if>
@@ -114,11 +125,21 @@
 				</dt>
 				<dd>
 					<select id="repeat_type" name="repeat_type">
-						<option value="0">Ikke angitt</option>
-						<option value="1">Dag</option>
-						<option value="2">Uke</option>
-						<option value="3">Måned</option>
-						<option value="5">År</option>
+						<option value="">Velg frekvenstype</option>
+						<xsl:for-each select="repeat_type_array">
+							<xsl:choose>
+								<xsl:when test="id = $control_repeat_type">
+									<option value="{id}" selected="selected">
+										<xsl:value-of disable-output-escaping="yes" select="value"/>
+									</option>
+								</xsl:when>
+								<xsl:otherwise>
+									<option value="{id}">
+										<xsl:value-of disable-output-escaping="yes" select="value"/>
+									</option>
+								</xsl:otherwise>
+							</xsl:choose>								
+						</xsl:for-each>
 					</select>
 				</dd>
 				<dt>
@@ -141,10 +162,20 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<select id="responsibility_id" name="responsibility_id">
+							<option value="">Velg rolle</option>
 							<xsl:for-each select="role_array">
-								<option value="{id}">
-									<xsl:value-of disable-output-escaping="yes" select="name"/>
-								</option>
+								<xsl:choose>
+									<xsl:when test="id = $control_role">
+										<option value="{id}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{id}">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>								
 							</xsl:for-each>
 						</select>
 					</xsl:when>
@@ -184,13 +215,3 @@
 	</div>
 </div>
 </xsl:template>
-
-<xsl:template match="options">
-	<option value="{id}">
-		<xsl:if test="selected != 0">
-			<xsl:attribute name="selected" value="selected" />
-		</xsl:if>
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	</option>
-</xsl:template>
-

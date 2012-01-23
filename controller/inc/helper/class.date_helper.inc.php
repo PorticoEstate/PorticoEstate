@@ -3,16 +3,22 @@
 	
 	public function __construct(){}
 	 	
-	public static function get_timestamp_from_date( $date_string ){
-		$pos_day = strpos($date_string, "/"); 
-		$day =  substr($date_string, 0, $pos_day);
+	public static function get_timestamp_from_date( $date_string, $format  ){
 		
-		$pos_month = strpos($date_string, "-");
-		$len_month = $pos_month - $pos_day -1;
-		$month = substr($date_string, $pos_day+1, $len_month);
-		
-		$year = substr($date_string, $pos_month + $len_month-1, strlen($date_string)-1);
-		
-		return mktime(0, 0, 0, $month, $day, $year);
+		if( $format == "d/m-Y" ){
+			$pos_day = strpos($date_string, "/"); 
+			$day = date_helper::substring($date_string, 0, $pos_day);
+			
+			$pos_month = strpos($date_string, "-");
+			$month = date_helper::substring($date_string, $pos_day+1, $pos_month);
+			
+			$year = date_helper::substring($date_string, $pos_month+1, strlen($date_string));
+
+			return mktime(0, 0, 0, $month, $day, $year);
+		}
+	}
+	
+	public function substring($string, $from, $to){
+    	return substr($string, $from, $to - $from);
 	}
 }
