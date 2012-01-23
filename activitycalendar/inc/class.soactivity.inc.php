@@ -643,7 +643,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$whereclause_date = "";
 		if($parameters['fromdate'])
 		{
-			$whereclause_date = "AND last_change_date > {$parameters['fromdate']}";
+			$from_date = (int)$parameters['fromdate'];
+			$whereclause_date = "AND last_change_date > {$from_date}";
 		}
 		$activities = array();
 		$sql = "SELECT * FROM activity_activity where state=3 {$whereclause_date}";
