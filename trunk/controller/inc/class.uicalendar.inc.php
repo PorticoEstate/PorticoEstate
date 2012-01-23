@@ -311,7 +311,7 @@
 			foreach ($control_groups_array as $control_group)
 			{	
 				$control_group_id = $control_group->get_id();
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control_id, $control_group_id);
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group_id);
 				
 				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}	
@@ -369,7 +369,7 @@
 			
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 			
-			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
+			$control_items_list = $this->so_control_item_list->get_control_items_by_control($control_id);
 			
 			foreach($control_items_list as $control_item){
 				
@@ -415,7 +415,7 @@
 			
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 			
-			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
+			$control_items_list = $this->so_control_item_list->get_control_items_by_control($control_id);
 			
 			foreach($control_items_list as $control_item){
 				

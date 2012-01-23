@@ -145,6 +145,23 @@ $(document).ready(function(){
 			});	
 	});
 	
+	$("#frm_save_control_details").submit(function(e){
+			
+		var thisForm = $(this);
+		
+		var hidden_control_area_id = $(thisForm).find("input[name='control_area_id_hidden']").val();
+		var control_area_id = $("#control_area_id").val();
+		
+		if(hidden_control_area_id != control_area_id)
+		{
+			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
+								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
+			if (!answer){
+				e.preventDefault();
+			}
+		}
+	});
+	
 	// file: view_check_lists_for_location.xsl
 	// Fetches info about a check list on hover status image icon
 	$('a.view_check_list').bind('contextmenu', function(){

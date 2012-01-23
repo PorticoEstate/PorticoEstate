@@ -1,12 +1,12 @@
 <!-- $Id$ -->
 <xsl:template name="sort_check_list" xmlns:php="http://php.net/xsl">
 
+<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+
 <div class="yui-content tab_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
-
-		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
-		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
+		<input type="hidden" id="control_id" name="control_id" value="{$control_id}" />
 		
 		<ul class="groups">
 			<xsl:for-each select="saved_groups_with_items_array">
