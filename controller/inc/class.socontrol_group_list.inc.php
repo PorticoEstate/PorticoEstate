@@ -168,7 +168,13 @@
 
 		function get_control_groups_by_control($control_id, $returnType = "object")
 		{
-			$this->db->query("SELECT cg.*, cgl.order_nr FROM controller_control_group_list cgl, controller_control_group cg WHERE cgl.control_id=$control_id AND cgl.control_group_id=cg.id ORDER BY cgl.order_nr", __LINE__, __FILE__);
+			$sql =  "SELECT cg.*, cgl.order_nr "; 
+			$sql .= "FROM controller_control_group_list cgl, controller_control_group cg "; 
+			$sql .= "WHERE cgl.control_id=$control_id ";
+			$sql .= "AND cgl.control_group_id=cg.id ";
+			$sql .= "ORDER BY cgl.order_nr";
+			
+			$this->db->query($sql);
 
 			$control_group_list = array();
 
