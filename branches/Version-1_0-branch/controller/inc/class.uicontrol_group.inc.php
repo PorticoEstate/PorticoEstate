@@ -337,7 +337,7 @@
 					$control_items[] = $control_item->serialize();
 				}
 
-				$selected_control_items_array = controller_socontrol_item::get_instance()->get_control_items($control_group->get_id());
+				$selected_control_items_array = controller_socontrol_item_list::get_instance()->get_control_items($control_group->get_id());
 
 				$selected_control_items = array();
 
@@ -454,7 +454,7 @@
 					$control_items[] = $control_item->serialize();
 				}
 
-				$selected_control_items_array = controller_socontrol_item::get_instance()->get_control_items($control_group->get_id());
+				$selected_control_items_array = controller_socontrol_item_list::get_instance()->get_control_items($control_group->get_id());
 
 				$selected_control_items = array();
 
@@ -502,9 +502,6 @@
 			$status = true;
 
 			$control_group_list = $this->so_control_group_list->get_single_2($control_id, $control_group_id);
-
-			var_dump("Skriver ut control_group_list");
-			var_dump($control_group_list);
 
 			if( $control_group_list == null ){
 				$control_group_list = new controller_control_group_list();
@@ -630,7 +627,7 @@
 				$control_group_array = $control_group->toArray();
 				//var_dump($control_group_array);
 
-				$control_items_array = $this->so_control_item->get_control_items($control_group_id);
+				$control_items_array = $this->so_control_item_list->get_control_items($control_group_id);
 
 				$control_items = array();
 

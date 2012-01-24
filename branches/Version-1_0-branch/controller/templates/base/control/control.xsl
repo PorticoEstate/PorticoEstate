@@ -25,8 +25,9 @@
 
 <div class="yui-content">
 	<div id="control_details">
-		<form action="index.php?menuaction=controller.uicontrol.save_control_details" method="post">
-			<input type="hidden" name="control_id" value="{$control_id}" />	
+		<form id="frm_save_control_details" action="index.php?menuaction=controller.uicontrol.save_control_details" method="post">
+			<input type="hidden" name="control_id" value="{$control_id}" />
+			<input type="hidden" name="control_area_id_hidden" value="{$control_area_id}" />	
 	
 			<dl class="proplist-col">
 				<dt>
@@ -39,13 +40,13 @@
 						<option value="">Velg kontrollområde</option>
 							<xsl:for-each select="control_areas_array2">
 								<xsl:choose>
-									<xsl:when test="id != control/control_area_id">
-										<option value="{id}">
+									<xsl:when test="id = $control_area_id">
+										<option value="{id}" selected="selected">
 											<xsl:value-of disable-output-escaping="yes" select="name"/>
 										</option>
 									</xsl:when>
 									<xsl:otherwise>
-										<option value="{id}" selected="selected">
+										<option value="{id}">
 											<xsl:value-of disable-output-escaping="yes" select="name"/>
 										</option>
 									</xsl:otherwise>
@@ -68,13 +69,13 @@
 							<option value="">Velg prosedyre</option>
 							<xsl:for-each select="procedures_array">
 								<xsl:choose>
-									<xsl:when test="id != $control_procedure_id">
-										<option value="{id}">
+									<xsl:when test="id = $control_procedure_id">
+										<option value="{id}" selected="selected">
 											<xsl:value-of disable-output-escaping="yes" select="title"/>
 										</option>
 									</xsl:when>
 									<xsl:otherwise>
-										<option value="{id}" selected="selected">
+										<option value="{id}">
 											<xsl:value-of disable-output-escaping="yes" select="title"/>
 										</option>
 									</xsl:otherwise>

@@ -7,7 +7,7 @@
 	   <h2>Velg dine kontrollpunkt</h2>
 	   
 	   <!-- ==== CHOOSE NONE/ALL ===== -->
-	   	<h4 class="expand_header"><div class="expand_all">Vis alle</div><div class="collapse_all">Skjul alle</div></h4>
+	 	<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
 	   	
 		<form id="frm_control_items" action="index.php?menuaction=controller.uicontrol.save_control_items" method="post">	
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>

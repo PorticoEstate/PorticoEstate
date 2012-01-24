@@ -293,7 +293,7 @@
 			//Populating array with saved control items for each group
 			foreach ($control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
@@ -356,7 +356,7 @@
 			//Populating array with saved control items for each group
 			foreach ($control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
@@ -381,7 +381,7 @@
 			// Fetches all control items for check list
 			$control_items_for_check_list = array();
 			
-			$control_items = $this->so_control_item->get_control_items_by_control($check_list->get_control_id());
+			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
 			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
 			
 			$remove_control_item_ids_array = array();
@@ -499,7 +499,7 @@
 			foreach ($control_groups_array as $control_group)
 			{
 				$control_group_id = $control_group->get_id();
-				$saved_control_items = $this->so_control_item->get_control_items_by_control_and_group($control_id, $control_group_id);
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group_id);
 
 				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
@@ -613,7 +613,7 @@
 
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 
-			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
+			$control_items_list = $this->so_control_item_list->get_control_items_by_control($control_id);
 
 			foreach($control_items_list as $control_item){
 
@@ -659,7 +659,7 @@
 
 			$check_list_id = $this->so_check_list->store( $new_check_list );
 
-			$control_items_list = $this->so_control_item->get_control_items_by_control($control_id);
+			$control_items_list = $this->so_control_item_list->get_control_items_by_control($control_id);
 
 			foreach($control_items_list as $control_item){
 

@@ -96,17 +96,17 @@
 		function save_sessiondata()
 		{
 			$data = array
-				(
-					'start'			=> $this->start,
-					'query'			=> $this->query,
-					'sort'			=> $this->sort,
-					'order'			=> $this->order,
-					'filter'		=> $this->filter,
-					'cat_id'		=> $this->cat_id,
-					'user_lid'		=> $this->user_lid,
-					'allrows'		=> $this->allrows,
-					'district_id'		=> $this->district_id
-				);
+			(
+				'start'			=> $this->start,
+				'query'			=> $this->query,
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'filter'		=> $this->filter,
+				'cat_id'		=> $this->cat_id,
+				'user_lid'		=> $this->user_lid,
+				'allrows'		=> $this->allrows,
+				'district_id'	=> $this->district_id
+			);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -211,6 +211,8 @@
 			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 
+			$this->save_sessiondata();
+
 			//-- ubica focus del menu derecho
 			if ( $paid )
 			{
@@ -277,7 +279,7 @@
 						'cat_id'			=> $this->cat_id,
 						'user_lid'			=> $this->user_lid,
 						'sub'				=> $this->sub,
-						'query'				=> $this->query,
+					//	'query'				=> $this->query,
 						'paid'				=> $paid,
 						'vendor_id'			=> $vendor_id,
 						'workorder_id'		=> $workorder_id,
@@ -294,7 +296,7 @@
 					."cat_id: '{$this->cat_id}',"
 					."user_lid:'{$this->user_lid}',"
 					."sub:'{$this->sub}',"
-					."query:'{$this->query}',"
+				//	."query:'{$this->query}',"
 					."paid:'{$paid}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
@@ -628,8 +630,8 @@
 								'cat_id'			=> $this->cat_id,
 								'user_lid'			=> $this->user_lid,
 								'sub'				=> $this->sub,
-								'query'				=> $this->query,
-								'start'				=> $this->start,
+							//	'query'				=> $this->query,
+							//	'start'				=> $this->start,
 								'paid'				=> $paid,
 								'vendor_id'			=> $vendor_id,
 								'workorder_id'		=> $workorder_id,
@@ -1511,11 +1513,11 @@ JS;
 						'cat_id'		=> $this->cat_id,
 						'user_lid'		=> $this->user_lid,
 						'sub'			=> $this->sub,
-						'query'			=> $this->query,
-						'start'			=> $this->start,
+				//		'query'			=> $this->query,
+				//		'start'			=> $this->start,
 						'paid'			=> $paid,
 						'voucher_id'	=> $voucher_id,
-						'query'			=> $voucher_id
+				//		'query'			=> $voucher_id
 					));
 				$datatable['config']['allow_allrows'] = false;
 
@@ -1526,11 +1528,11 @@ JS;
 					."cat_id: '{$this->cat_id}',"
 					."user_lid:'{$this->user_lid}',"
 					."sub:'{$this->sub}',"
-					."query:'{$this->query}',"
-					."start:'{$this->start}',"
+				//	."query:'{$this->query}',"
+				//	."start:'{$this->start}',"
 					."paid:'{$paid}',"
-					."voucher_id:'{$voucher_id}',"
-					."query:'{$voucher_id}'";
+					."voucher_id:'{$voucher_id}'";
+				//	."query:'{$voucher_id}'";
 
 				$field_invoice = array
 					(array
@@ -2649,7 +2651,7 @@ JS;
 					(
 						'menuaction'		=> 'property.uiinvoice.index',
 						'paid'				=> true,
-						'user_lid'			=> 'all',
+				//		'user_lid'			=> 'all',
 						'district_id'		=> $district_id,
 						'b_account_class'	=> $b_account_class,
 						'start_date'		=> $start_date,

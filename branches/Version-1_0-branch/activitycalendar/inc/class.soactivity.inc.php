@@ -637,11 +637,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return isset($result);
 	}
 	
-	function get_activities()
+	function get_activities($parameters = array())
 	{
 		//fromdate -> innparam for uthenting av delta - timestamp
+		$whereclause_date = "";
+		if($parameters['fromdate'])
+		{
+			$from_date = (int)$parameters['fromdate'];
+			$whereclause_date = "AND last_change_date > {$from_date}";
+		}
 		$activities = array();
-		$sql = "SELECT * FROM activity_activity where state=3";
+		$sql = "SELECT * FROM activity_activity where state=3 {$whereclause_date}";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
