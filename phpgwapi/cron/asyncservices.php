@@ -58,6 +58,7 @@
 	
 	$GLOBALS['phpgw_info']['user']['domain'] = $_GET['domain'];
 
+	echo "Domain: {$GLOBALS['phpgw_info']['user']['domain']}\n";
 	echo 'Start cron: ' . date('Y/m/d H:i:s ') . "\n";
 	$num = ExecMethod('phpgwapi.asyncservice.check_run','crontab');
 	echo 'End cron: ' . date('Y/m/d H:i:s ') . "\n";
