@@ -41,20 +41,9 @@
 	
 	class controller_uicheck_list_for_location extends controller_uicommon
 	{
-		/*
-		var $cat_id;
-		var $start;
-		var $query;
-		var $sort;
-		var $order;
-		var $filter;
-		var $currentapp;
-		var $type_id;
-		var $location_code;
-		*/
+		private $so;
 		private $so_control_area;
 		private $so_control;
-		private $so;
 		private $so_control_item;
 		private $so_check_item;
 		private $so_procedure;
@@ -86,10 +75,7 @@
 		function __construct()
 		{
 			parent::__construct();
-/*
-			$this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= & $this->bo->bocommon;
-			*/
+
 			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control 			= CreateObject('controller.socontrol');
 			$this->so					= CreateObject('controller.socheck_list');
@@ -98,22 +84,7 @@
 			$this->so_procedure			= CreateObject('controller.soprocedure');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
-			/*
-			$this->type_id				= $this->bo->type_id;
-			
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
-			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
-			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
-			$this->location_code		= $this->bo->location_code;
-			*/
+
 			self::set_active_menu('controller::control::check_list');
 		}	
 	
