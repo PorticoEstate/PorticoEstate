@@ -418,12 +418,31 @@
 						}
 					}
 
-					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
+					$duplicate = false;
+					$sql = "SELECT external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
+					$this->db->query($sql,__LINE__,__FILE__);
+					if($this->db->next_record())
 					{
-						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
+						$duplicate = true;
 					}
 
-					$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $_data['SUPPLIER.CODE'];
+					$sql = "SELECT external_ref FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
+					$this->db->query($sql,__LINE__,__FILE__);
+					if($this->db->next_record())
+					{
+						$duplicate = true;
+					}
+					
+					
+					if($duplicate)
+					{
+						$this->receipt['error'][] = array('msg' => "Ikke importert duplikat : {$_data['SCANNINGNO']}");
+						$this->skip_import = true;
+					}
+					
+					$vendor_id = $_data['SUPPLIER.CODE'];
+
+					$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 					$this->db->query($sql,__LINE__,__FILE__);
 					if(!$this->db->next_record())
 					{
@@ -451,8 +470,13 @@
 							}
 						}
 					}
-
-					$vendor_id = $_data['SUPPLIER.CODE'];
+					else
+					{
+						if ($order_info['vendor_id'] != $vendor_id)
+						{
+							$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
+						}
+					}
 
 					if($this->auto_tax)
 					{
