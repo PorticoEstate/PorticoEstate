@@ -193,15 +193,23 @@
 
 			$control_id = phpgw::get_var('control_id');
 			$control_group_id = phpgw::get_var('control_group_id');
-			$order_nr = phpgw::get_var('order_nr');
+			$order_tags = phpgw::get_var('order_tags');
 
+			echo "Order tags : ";
+			print_r($order_tags);
+			
+			
 			$status = true;
-			foreach($order_nr as $order_tag){
+			foreach($order_tags as $order_tag){
 				$control_item_id = 	substr($order_tag, strpos($order_tag, ":")+1, strlen($order_tag));
 				$order_nr = substr($order_tag, 0, strpos($order_tag, ":"));
 
 				$control_item_list = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
 
+				echo "Order nr : " . $order_nr;
+				echo "Control item list : ";
+				print_r( $control_item_list );
+				
 				if($order_nr != $control_item_list->get_order_nr() ){
 					$control_item_list->set_order_nr($order_nr);
 
@@ -211,7 +219,13 @@
 				}
 			}
 
-			return status;
+			return $status;
+			
+			if($status)
+				return json_encode( array( "status" => "order_updated" ) );
+			else
+				return json_encode( array( "status" => "order_not_updated" ) );
+			
 		}
 
 		public function delete_item_list(){

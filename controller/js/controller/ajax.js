@@ -121,7 +121,7 @@ $(document).ready(function(){
 		var order_nr_array;
 		var requestUrl = $(thisForm).attr("action"); 
 		
-		$(this).find("input[name='order_nr[]']").each(function() {
+		$(this).find("input[name='order_tags[]']").each(function() {
 			order_nr_array += $(this).val() + ",";
 		});
 
@@ -371,7 +371,7 @@ $(document).ready(function(){
 						
 						// Updating order numbers for rows below deleted row  
 						while( $(next_row).length > 0){
-							update_order_nr(next_row, "-");
+							update_order_nr_for_row(next_row, "-");
 							next_row = $(next_row).next();
 						}
 	   			  	}else{
@@ -420,7 +420,7 @@ $(document).ready(function(){
 
 
 //Updates order number for hidden field and number in front of row
-function update_order_nr(element, sign){
+function update_order_nr_for_row(element, sign){
 	
 	var span_order_nr = $(element).find("span.order_nr");
 	var order_nr = $(span_order_nr).text();

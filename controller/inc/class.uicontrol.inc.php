@@ -246,9 +246,9 @@
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
-
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control->get_control_area_id(),'globals' => true,'use_acl' => $this->_category_acl));
 			
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+							
 			$control_areas_array2 = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
@@ -260,7 +260,9 @@
 			}
 			// END as categories
 		
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
+			if($control != null)
+				$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
+			
 			$role_array = $this->so->get_roles();
 			
 			$repeat_type_array = array(
@@ -289,7 +291,6 @@
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
 																				   'control_id' => $control->get_id()))
 						)
-						
 					);	
 			}
 			else
@@ -310,7 +311,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'						=> "control_details",
 				'editable' 					=> true,
-				'control'					=> $control->toArray(),
+				'control'					=> ($control != null) ? $control->toArray() : null,
 				'control_areas_array2'		=> $control_areas_array2,
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array,
@@ -400,17 +401,20 @@
 						array(
 							'label' => "1: " . lang('Details'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'id' => $control_id))
-						), 
-						array(
-							'label' => "2: " . lang('Choose_control_groups')
-						), 
-						array(
-							'label' => "3: " . lang('Choose_control_items')
-						), 
-						array(
-							'label' => "4: " . lang('Sort_check_list')
-						));
+																				   'id' => $control->get_id()))
+						),array(
+							'label' => "2: " . lang('Choose_control_groups'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
+																				   'control_id' => $control->get_id())) 
+						),array(
+							'label' => "3: " . lang('Choose_control_items'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
+																				   'control_id' => $control->get_id()))
+						),array('label' => "4: " . lang('Sort_check_list'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
+																				   'control_id' => $control->get_id()))
+						)
+					);
 			
 			$data = array
 			(
@@ -497,18 +501,21 @@
 			$tabs = array(
 						array(
 							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 'view' => "view_control_details", 
-																				   'id' => $control_id))
-						), 
-						array(
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
+																				   'id' => $control->get_id()))
+						),array(
 							'label' => "2: " . lang('Choose_control_groups'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																			       'control_id' => $control_id))
-						),
-						array('label' => "3: " . lang('Choose_control_items')),
-						array(
-							'label' => "4: " . lang('Sort_check_list')
-					));
+																				   'control_id' => $control->get_id())) 
+						),array(
+							'label' => "3: " . lang('Choose_control_items'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
+																				   'control_id' => $control->get_id()))
+						),array('label' => "4: " . lang('Sort_check_list'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
+																				   'control_id' => $control->get_id()))
+						)
+					);
 					
 			$data = array
 			(
