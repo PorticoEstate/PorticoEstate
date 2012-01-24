@@ -59,9 +59,9 @@
 
 		public $public_functions = array
 		(
-			'index'	=>	true,
-			'control_list'	=>	true,
-			'view'	=>	true,
+			'index'								=>	true,
+			'control_list'						=>	true,
+			'view'								=>	true,
 			'view_control_details'				=>	true,
 			'save_control_details'				=>	true,
 			'view_control_groups'				=>	true,

@@ -83,7 +83,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::check_list";
 		}
-
+/*
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -175,7 +175,7 @@
 
 			self::render_template_xsl('datatable', $data);
 		}
-		
+		*/
 		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
 		* 
 		public function view_check_list()
