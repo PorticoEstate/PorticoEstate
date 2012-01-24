@@ -62,16 +62,36 @@
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$b_account				= phpgw::get_var('b_account');
 
-			$this->start			= $start ? $start : 0;
+	//		$this->start			= $start ? $start : (int)$this->start;
+
+			$this->start			= isset($_REQUEST['start']) 		? $start			: $this->start;
+
+			if(phpgw::get_var('workorder_id', 'int'))
+			{
+				$this->start = 0;
+			}
+
+			$this->query			= isset($query) ? $query : $query;
+
+			if(!phpgw::get_var('paid', 'bool'))
+			{
+				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
+			}
+
+			if($voucher_id)
+			{
+				$this->start 	= 0;
+			}
+
+
 			$this->b_account		= isset($b_account) ? $b_account : $b_account;
 			$this->district_id		= isset($district_id) ? $district_id : $district_id;
 			$this->b_account_class	= isset($b_account_class) ? $b_account_class : $b_account_class;
-			$this->query			= isset($query) ? $query : $query;
 			$this->filter			= isset($filter) ? $filter : $filter;
 			$this->sort				= isset($sort) ? $sort : $sort;
 			$this->order			= isset($order) ? $order : $order;
 			$this->cat_id			= isset($cat_id) ? $cat_id : $cat_id;
-			$this->user_lid			= isset($user_lid) ? $user_lid : $user_lid;
+			$this->user_lid			= $user_lid ? $user_lid : $this->user_lid;
 			$this->allrows			= isset($allrows) ? $allrows : $allrows;
 		}
 
@@ -88,7 +108,7 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','invoice');
 
-			//	_debug_array($data);
+//_debug_array($data);
 
 			$this->start			= isset($data['start'])?$data['start']:'';
 			$this->query			= isset($data['query'])?$data['query']:'';
@@ -96,15 +116,20 @@
 			$this->sort				= isset($data['sort'])?$data['sort']:'';
 			$this->order			= isset($data['order'])?$data['order']:'';
 			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
-			$this->user_lid			= isset($data['user_lid'])?$data['user_lid']:'';
+			$this->user_lid			= $data['user_lid']?$data['user_lid']:'';
 			$this->sub				= isset($data['sub'])?$data['sub']:'';
 			$this->allrows			= isset($data['allrows'])?$data['allrows']:'';
 			$this->b_account_class	= isset($data['b_account_class'])?$data['b_account_class']:'';
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
-		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='')
+		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id=0)
 		{
+			if(!phpgw::get_var('paid', 'bool'))
+			{
+				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
+			}
+
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
 
