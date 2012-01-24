@@ -404,6 +404,7 @@
 						unset($GLOBALS['phpgw_info']['user']);
 
 						$GLOBALS['phpgw_info']['user']['domain'] = $domain;
+						$GLOBALS['phpgw_info']['server']['default_domain'] = $domain;
 
 						if ($job['account_id'])
 						{
