@@ -121,7 +121,7 @@ $(document).ready(function(){
 		var order_nr_array;
 		var requestUrl = $(thisForm).attr("action"); 
 		
-		$(this).find("input[name='order_nr[]']").each(function() {
+		$(this).find("input[name='order_tags[]']").each(function() {
 			order_nr_array += $(this).val() + ",";
 		});
 
@@ -143,6 +143,23 @@ $(document).ready(function(){
 				  $(this_submit_btn).attr('disabled', 'disabled');
 				}
 			});	
+	});
+	
+	$("#frm_save_control_details").submit(function(e){
+			
+		var thisForm = $(this);
+		
+		var hidden_control_area_id = $(thisForm).find("input[name='control_area_id_hidden']").val();
+		var control_area_id = $("#control_area_id").val();
+		
+		if(hidden_control_area_id != control_area_id)
+		{
+			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
+								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
+			if (!answer){
+				e.preventDefault();
+			}
+		}
 	});
 	
 	// file: view_check_lists_for_location.xsl
@@ -354,7 +371,7 @@ $(document).ready(function(){
 						
 						// Updating order numbers for rows below deleted row  
 						while( $(next_row).length > 0){
-							update_order_nr(next_row, "-");
+							update_order_nr_for_row(next_row, "-");
 							next_row = $(next_row).next();
 						}
 	   			  	}else{
@@ -403,7 +420,7 @@ $(document).ready(function(){
 
 
 //Updates order number for hidden field and number in front of row
-function update_order_nr(element, sign){
+function update_order_nr_for_row(element, sign){
 	
 	var span_order_nr = $(element).find("span.order_nr");
 	var order_nr = $(span_order_nr).text();
