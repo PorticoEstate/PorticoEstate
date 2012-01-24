@@ -17,7 +17,7 @@ class calendar_builder {
 		
 		foreach($control_array as $control){
 
-			$calendar_array = $this->init_calendar( $control, $calendar_array, $num_days_in_month, $period_type );
+			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
 
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
@@ -106,7 +106,7 @@ class calendar_builder {
 
 			$twelve_month_array[$i-1]["status"] = $status;
 		}
-				
+			
 		for($from_month;$from_month<=$to_month;$from_month++){
 	
 			$trail_from_date_ts = strtotime("$from_month/01/$year");
@@ -122,7 +122,7 @@ class calendar_builder {
 				
 				$twelve_month_array[$from_month-1]["status"] = $status;
 				$twelve_month_array[$from_month-1]["info"] = $num_open_cases_for_control_array["count"];
-			}else{
+			}else if( empty($num_open_cases_for_control_array) &  $todays_date_ts > $trail_to_date_ts){
 				$status = "controls_accomplished_without_errors";
 				
 				$twelve_month_array[$from_month-1]["status"] = $status;
@@ -134,10 +134,10 @@ class calendar_builder {
 		return $controls_calendar_array;
 	}
 		
-	function init_calendar( $control, $calendar_array, $num_days_in_month, $period_type ){
+	function init_calendar( $control, $calendar_array, $num, $period_type ){
 		
 		// Initialises twelve_months_array
-		for($i=1;$i<=$num_days_in_month;$i++){
+		for($i=1;$i<=$num;$i++){
 			$calendar_array[$i] = null;
 		}
 		

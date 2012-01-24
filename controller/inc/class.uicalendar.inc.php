@@ -218,8 +218,6 @@
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 			
-			//print_r($controls_calendar_array);
-					
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
@@ -344,7 +342,7 @@
 				$this->so_check_item->store( $check_item );
 			}
 			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list', 'check_list_id'=>$check_list_id));	
+			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.view_check_list', 'check_list_id'=>$check_list_id));	
 		}
 		
 		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...

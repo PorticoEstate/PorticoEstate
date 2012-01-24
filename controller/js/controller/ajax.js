@@ -170,7 +170,7 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
+		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list_for_location.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
@@ -342,9 +342,6 @@ $(document).ready(function(){
 		});
 	});
 	
-	
-	
-	
 	// Delete a case item from list
 	$(".delete_case").live("click", function(){
 		var clickElem = $(this);
@@ -386,13 +383,6 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$(".make_case_editable").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	
-	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -416,6 +406,7 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
+	
 });
 
 
