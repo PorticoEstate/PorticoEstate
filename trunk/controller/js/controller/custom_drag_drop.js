@@ -3,6 +3,9 @@ var drag_elem;
 var next_elem;
 var prev_elem;
 var adj_y;
+var status_drag_group = false;
+var status_drag = false;
+var saveOrderForm;
 
 $(document).ready(function(){
 
@@ -23,7 +26,9 @@ $(document).ready(function(){
 		
 		$(drag_elem).css("left", $(placeholder).position().left + "px");
 		$(drag_elem).css("top",  $(placeholder).position().top + "px");
-									
+								
+		saveOrderForm = $(this).parents("form");
+		
 		start_drag();
 	});
 	
@@ -47,33 +52,33 @@ $(document).ready(function(){
 									
 		start_drag_group();
 	});
+});
+
+//Delete a control item list
+$(".delete").live("click", function(){
+	var clickElem = $(this);
+	var clickRow = $(this).parent();
 	
-	// Delete a control item list
-	$(".delete").live("click", function(){
-		var clickElem = $(this);
-		var clickRow = $(this).parent();
-		
-		var url = $(clickElem).attr("href");
-	
-		// Sending request for deleting a control item list
-		$.ajax({
-			type: 'POST',
-			url: url,
-			success: function() {
-				$(clickRow).fadeOut("slow");
-				
-				var next_row = $(clickRow).next();
-				
-				// Updating order numbers for rows below deleted row  
-				while( $(next_row).length > 0){
-					update_order_nr(next_row, "-");
-					next_row = $(next_row).next();
-				}		
-			}
-		});
-		
-		return false;
+	var url = $(clickElem).attr("href");
+
+	// Sending request for deleting a control item list
+	$.ajax({
+		type: 'POST',
+		url: url,
+		success: function() {
+			$(clickRow).fadeOut("slow");
+			
+			var next_row = $(clickRow).next();
+			
+			// Updating order numbers for rows below deleted row  
+			while( $(next_row).length > 0){
+				update_order_nr(next_row, "-");
+				next_row = $(next_row).next();
+			}		
+		}
 	});
+	
+	return false;
 });
 
 function start_drag(){
@@ -96,6 +101,8 @@ function start_drag(){
 			// Updating order number for drag element and previous element
 			update_order_nr(placeholder, "+");
 			update_order_nr(prev_elem, "-");
+			
+			status_drag = true;
 		}
 		// Move drag element over previous element
 		else if( $(prev_elem).length > 0 && e.pageY < $(prev_elem).offset().top + $(prev_elem).height()/2 ){
@@ -106,8 +113,25 @@ function start_drag(){
 			// Updating order number for drag element and next element
 			update_order_nr(placeholder, "-");
 			update_order_nr(next_elem, "+");
+			
+			status_drag = true;
 		}
 	}); 
+}
+
+// Release binding for mouse events
+function stop_drag(){
+	$(drag_elem).remove();
+
+	$(document).unbind("mousemove");
+	$(document).unbind("mouseup");
+	
+	if(status_drag)
+	{
+		var this_submit_btn = $(saveOrderForm).find("input[type='submit']");
+		$(this_submit_btn).css({opacity: 1 });
+		$(this_submit_btn).removeAttr('disabled');
+	}
 }
 
 function start_drag_group(){
@@ -117,7 +141,7 @@ function start_drag_group(){
 		
 		var x = 0;
 		var y = e.pageY - adj_y;
-
+		
 		$(drag_elem).css("left", x + "px");
 		$(drag_elem).css("top", y + "px");
 		
@@ -130,9 +154,12 @@ function start_drag_group(){
 			// Updating order number for drag element and previous element
 			update_group_order_nr(placeholder, "+");
 			update_group_order_nr(prev_elem, "-");
+			
+			status_drag_group = true; 
 		}
 		// Move drag element over previous element
 		else if( $(prev_elem).length > 0 && e.pageY < $(prev_elem).offset().top + $(prev_elem).height()/2 ){
+			
 			$(placeholder).insertBefore(prev_elem);
 			prev_elem = $(placeholder).prev();
 			next_elem = $(placeholder).next();
@@ -140,45 +167,35 @@ function start_drag_group(){
 			// Updating order number for drag element and next element
 			update_group_order_nr(placeholder, "-");
 			update_group_order_nr(next_elem, "+");
+			
+			status_drag_group = true;
 		}
 	}); 
-}
-
-
-
-// Release binding for mouse events
-function stop_drag(){
-	$(drag_elem).remove();
-
-	$(document).unbind("mousemove");
-	$(document).unbind("mouseup");
-	
-	var thisForm = $(this);
-	var this_submit_btn = $(thisForm).find("input[type='submit']");
-	$(this_submit_btn).css({opacity: 1 });
-	$(this_submit_btn).removeAttr('disabled');
 }
 
 //Release binding for mouse events
 function stop_drag_group(){
 	$(drag_elem).remove();
 	
-	$('li.drag_group').each(function() {
-		var group_order_nr = $(this).find("span.group_order_nr").text();
-		var control_group_id = $(this).find("input[name='control_group_id']").val();
-		var control_id = $("#control_id").val();
+	if(status_drag_group){
+		$('li.drag_group').each(function() {
+			var group_order_nr = $(this).find("span.group_order_nr").text();
+			var control_group_id = $(this).find("input[name='control_group_id']").val();
+			var control_id = $("#control_id").val();
+			
+			var requestUrl = "index.php?menuaction=controller.uicontrol_group.save_group_order";
+			
+			$.ajax({
+				  type: 'POST',
+				  url: requestUrl + "&control_id=" + control_id + "&control_group_id=" + control_group_id + "&group_order_nr=" + group_order_nr,
+				  success: function() {
+					  
+				  }
+			});	
 		
-		var requestUrl = "index.php?menuaction=controller.uicontrol_group.save_group_order";
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&control_id=" + control_id + "&control_group_id=" + control_group_id + "&group_order_nr=" + group_order_nr,
-			  success: function() {
-				  
-			  }
 		});	
+	}
 	
-	});
 	
 	$(document).unbind("mousemove");
 	$(document).unbind("mouseup");

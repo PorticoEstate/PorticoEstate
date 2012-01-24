@@ -78,7 +78,7 @@
 			
 			<a style="font-size: 11px;margin-top: 20px;padding: 3px 20px;" class="btn focus">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_case</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>

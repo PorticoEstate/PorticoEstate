@@ -38,7 +38,7 @@
 </ul>
 <a style="margin-top:20px;" id="print_control_items" class="btn" target="_blank">
 	<xsl:attribute name="href">
-		<xsl:text>index.php?menuaction=controller.uicheck_list.print_check_list</xsl:text>
+		<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.print_check_list</xsl:text>
 		<xsl:text>&amp;check_list_id=</xsl:text>
 		<xsl:value-of select="check_list/id"/>
 		<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
