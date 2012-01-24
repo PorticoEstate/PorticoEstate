@@ -188,7 +188,7 @@ function stop_drag_group(){
 function update_order_nr(element, sign){
 	var hidden_order_nr = $(element).find("input");
 	var order_value = $(hidden_order_nr).attr("value");
-	
+
 	var span_order_nr = $(element).find("span.order_nr");
 	
 	var order_nr = order_value.substring( 0, order_value.indexOf(":") );
