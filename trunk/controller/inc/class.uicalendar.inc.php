@@ -115,6 +115,8 @@
 				$location_code = $my_locations[0]["location_code"];	
 			}
 			
+			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year) ; 
+			
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
 		
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts, $repeat_type);
@@ -122,16 +124,16 @@
 			$controls_with_check_list = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 			
 			$controls_calendar_array = array();
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $controls_with_check_list, 31, "view_days" );
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $controls_with_check_list, $num_days_in_month, "view_days" );
 
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
 			
-			for($i=1;$i<=31;$i++){
+			for($i=1;$i<=$num_days_in_month;$i++){
 				$heading_array[$i] = "$i";	
 			}
-							
+ 						
 			$data = array
 			(		
 				'my_locations'	  		  => $my_locations,
@@ -142,7 +144,7 @@
 				'date_format' 			  => $date_format,
 				'period' 			  	  => $month_array[ $month - 1],
 				'month_nr' 			  	  => $month,
-				'year' 			  	  	  => $year
+				'year' 			  	  	  => $year,
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
