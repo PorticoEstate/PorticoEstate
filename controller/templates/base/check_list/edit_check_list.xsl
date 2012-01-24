@@ -25,8 +25,8 @@
 		});
 	</script>
 	
-		<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
-		<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
+		<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+		<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
 		
 		<xsl:call-template name="check_list_tab_menu">
 	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>

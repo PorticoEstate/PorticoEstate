@@ -240,7 +240,7 @@
 		
 			if(isset($control_id) && $control_id > 0)
 			{
-				$control = $this->so->get_single($control_id);
+				$control = $this->so->get_single($control_id);	
 			}
 
 			// Sigurd: START as categories
@@ -571,9 +571,8 @@
 			{	
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id());
 				
-				$control_item = $this->so_control_item->get_single($control_item_id);
-				
-				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+				if(count($saved_control_items) > 0)				
+					$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
 			
 			$tabs = array(
