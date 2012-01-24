@@ -403,6 +403,8 @@
 						$lang   = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 						unset($GLOBALS['phpgw_info']['user']);
 
+						$GLOBALS['phpgw_info']['user']['domain'] = $domain;
+
 						if ($job['account_id'])
 						{
 							$GLOBALS['phpgw']->session->set_account_id($job['account_id']);
@@ -414,10 +416,6 @@
 							{
 								$GLOBALS['phpgw']->translation->add_app('common');
 							}
-						}
-						else
-						{
-							$GLOBALS['phpgw_info']['user']['domain'] = $domain;
 						}
 					}
 					list($app) = explode('.',$job['method']);
