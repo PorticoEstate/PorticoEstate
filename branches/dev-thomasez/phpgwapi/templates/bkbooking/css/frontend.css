@@ -300,26 +300,27 @@ padding: 0 0px 40px;
 overflow: hidden;
 line-height: 1;
 width: 1000px;
-background-image: none !important;
-height: 140px !important;
+background: url(../images/toppbanner_booking.png) no-repeat!important;
+height: 145px!important;
 }
 
 #login-bar{
-margin-top:10px;
+float: left; 
+margin-top: 0px;
+margin-left: 630px;
 }
 
 #login-bar a{
-border-right: 1px solid #575757;
 padding: 0 0.5em;
-line-height: 1.2em;
+line-height: 0.9em;
+color: white;
 }
 
 #logo{
-background: url(../images/nsf/Alltidberedt_farger.png) no-repeat;
-float: left;
-height: 145px!important;
-width: 212px!important;
-margin: 0px 0 0 0px !important;
+height: 110px!important;
+width: 132px!important;
+margin: 0px 0px 0px 830px!important;
+/*background: url(../images/nsf/Alltidberedt_farger.png) no-repeat;*/
 }
 
 #centerimage{

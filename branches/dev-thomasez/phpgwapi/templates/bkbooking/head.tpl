@@ -32,17 +32,16 @@
 <body>
     <div id="wrapper">
     <div id="header">
-	<div id="login-bar">
-		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a class="login" href="{login_url}">{login_text}</a>
-	</div>
-        <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
+		<div id="login-bar">
+			<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a class="login" href="{login_url}">{login_text}</a>
+		</div>
 		<div id="centerimage"></div>
 		<form action="index.php" method="get" id="header-search" class="{header_search_class}">
-			<input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
-          	<input class="query
-" type="text" name="searchterm"/>
-      		<xsl:text> </xsl:text><input type="submit" value="{lbl_search}"/>
+				<input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
+    	      	<input class="query" type="text" name="searchterm"/>
+			<xsl:text> </xsl:text><input type="submit" value="{lbl_search}"/>
 		</form>
+		<a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
     </div>
 <div class="yui-skin-sam" id='frontend'>
 <div id="line"></div>
