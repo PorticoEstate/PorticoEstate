@@ -54,7 +54,6 @@
 
 		function read_invoice($data)
 		{
-
 			$valid_order = array
 				(
 					'bilagsnr'			=> true,
