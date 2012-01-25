@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+		
 	// file: uicalendar.xsl
 	$("#choose_my_location option").click(function () {
 		 var location_code = $(this).val();
@@ -144,22 +144,57 @@ $(document).ready(function(){
 				}
 			});	
 	});
+
+	$("#frm_save_control_details input").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+	
+	$("#frm_save_control_details select").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
 	
 	$("#frm_save_control_details").submit(function(e){
-			
+		
 		var thisForm = $(this);
-		
-		var hidden_control_area_id = $(thisForm).find("input[name='control_area_id_hidden']").val();
-		var control_area_id = $("#control_area_id").val();
-		
-		if(hidden_control_area_id != control_area_id)
-		{
-			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
-								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
-			if (!answer){
-				e.preventDefault();
-			}
-		}
+
+		var $required_input_fields = $(this).find(".required");
+		var status = true;
+				
+	    $required_input_fields.each(function() {
+	    	
+	    	if($(this).val() == ''){
+	    		var nextElem = $(this).next();
+	    		
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");
+	    			    		
+	    		status = false;
+	    	}else{
+	    		var nextElem = $(this).next();
+
+	    		if( $(nextElem).hasClass("input_error_msg") )
+	    			$(nextElem).remove();
+	    	}
+	    });	
+
+	    if( status ){
+    		var saved_control_area_id = $(thisForm).find("input[name='saved_control_area_id']").val();
+    		var new_control_area_id = $("#control_area_id").val();
+
+    		if(saved_control_area_id != '' & saved_control_area_id != new_control_area_id)
+    		{
+    			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
+    								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
+    			if (!answer){
+    				e.preventDefault();
+    			}
+    		}
+	    }else{
+	    	e.preventDefault();
+	    }
+	    	
 	});
 	
 	// file: view_check_lists_for_location.xsl
@@ -170,7 +205,7 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
+		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list_for_location.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
@@ -342,9 +377,6 @@ $(document).ready(function(){
 		});
 	});
 	
-	
-	
-	
 	// Delete a case item from list
 	$(".delete_case").live("click", function(){
 		var clickElem = $(this);
@@ -385,13 +417,6 @@ $(document).ready(function(){
 
 		return false;
 	});
-	
-	$(".make_case_editable").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	
 	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);

@@ -54,10 +54,10 @@
 		/**
 		 * @var string $join the sql syntax to use for JOIN
 		 */
-		 var $join = ' INNER JOIN ';
+		 var $join = 'INNER JOIN';
 		 
 
-		 var $left_join = ' LEFT JOIN ';
+		 var $left_join = 'LEFT JOIN';
 		/**
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
@@ -138,7 +138,7 @@
 			switch ( $this->Type )
 			{
 				case 'postgres':
-					$this->join = " JOIN ";
+					$this->join = "JOIN";
 					$this->like = "ILIKE";
 					break;
 				default:

@@ -25,12 +25,17 @@ class date_generator
 	function generate_calendar(){
 	
 		$control_start_date = $this->find_control_start_date();
+		$control_end_date = $this->end_date;
+		if($control_end_date == null)
+		{
+			$control_end_date = $this->period_end_date;
+		}
 		
 		$period_start_date = $this->find_start_date_for_period( $control_start_date );
 	
 		$interval_date = $period_start_date;
 		
-		while($interval_date < $this->period_end_date){
+		while(($interval_date < $this->period_end_date) && ($interval_date <= $control_end_date)){
 			
 			$this->calendar_array[] = $interval_date; 
 						

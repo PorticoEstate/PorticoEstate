@@ -915,8 +915,17 @@
 		{
 			$receipt = array();
 			$this->db->transaction_begin();
+			
+			if($periodization)
+			{
+				$value = "'{$periodization}'";
+			}
+			else
+			{
+				$value = 'NULL';
+			}
 
-			$this->db->query("UPDATE fm_ecobilag set periodization='$periodization' where bilagsnr='$voucher_id'");
+			$this->db->query("UPDATE fm_ecobilag SET periodization={$value} where bilagsnr='{$voucher_id}'");
 
 			$this->db->transaction_commit();
 

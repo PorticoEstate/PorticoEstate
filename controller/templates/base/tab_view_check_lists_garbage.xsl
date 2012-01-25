@@ -48,7 +48,7 @@
 						   <div>
 							   <a>
 									<xsl:attribute name="href">
-										<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_list</xsl:text>
+										<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_check_list</xsl:text>
 										<xsl:text>&amp;check_list_id=</xsl:text>
 											<xsl:value-of select="id"/>
 									</xsl:attribute>

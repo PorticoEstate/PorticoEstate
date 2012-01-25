@@ -109,7 +109,7 @@
 						<div class="months">
 						<xsl:for-each select="calendar_array">
 							<xsl:choose>
-									<xsl:when test="status = 'control_registered' or status = 'controls_registered'">
+									<xsl:when test="status = 'control_registered'">
 										<div>
 										<a>
 											<xsl:attribute name="href">
@@ -123,6 +123,11 @@
 											</xsl:attribute>
 											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</a>
+										</div>
+									</xsl:when>
+									<xsl:when test="status = 'controls_registered'">
+										<div>
+											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_planned'">

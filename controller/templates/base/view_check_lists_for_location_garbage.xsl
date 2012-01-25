@@ -62,7 +62,7 @@
 												<xsl:otherwise>
 												 <a class="view_check_list">
 													<xsl:attribute name="href">
-														<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
+														<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.get_check_list_info</xsl:text>
 														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 														<xsl:text>&amp;check_list_id=</xsl:text>
 														<xsl:value-of select="id"/>

@@ -76,7 +76,7 @@
 	<div class="tab_menu">
 		<a id="view_control_details" class="active">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_details</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
@@ -85,7 +85,7 @@
 		</a>
 		<a id="view_control_items">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_items</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
