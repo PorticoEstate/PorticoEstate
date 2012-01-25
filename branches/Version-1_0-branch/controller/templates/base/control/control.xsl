@@ -22,12 +22,11 @@
 			});	
 		});
 	</script>
-
 <div class="yui-content">
 	<div id="control_details">
 		<form id="frm_save_control_details" action="index.php?menuaction=controller.uicontrol.save_control_details" method="post">
 			<input type="hidden" name="control_id" value="{$control_id}" />
-			<input type="hidden" name="control_area_id_hidden" value="{$control_area_id}" />	
+			<input type="hidden" name="saved_control_area_id" value="{$control_area_id}" />	
 	
 			<dl class="proplist-col">
 				<dt>
@@ -36,7 +35,7 @@
 				<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-						<select id="control_area_id" name="control_area_id">
+						<select class="required" id="control_area_id" name="control_area_id">
 						<option value="">Velg kontrollområde</option>
 							<xsl:for-each select="control_areas_array2">
 								<xsl:choose>
@@ -94,7 +93,7 @@
 				<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input type="text" name="title" id="title" value="{control/title}" size="80"/>
+							<input class="required" type="text" name="title" id="title" value="{control/title}" size="80"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control/title" />
@@ -105,7 +104,7 @@
 					<label for="start_date">Startdato</label>
 				</dt>
 				<dd>
-					<input id="start_date" name="start_date" type="text">
+					<input class="required" id="start_date" name="start_date" type="text">
 				      <xsl:if test="control/start_date != ''">
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
 				      </xsl:if>
@@ -125,7 +124,7 @@
 					<label>Frekvenstype</label>
 				</dt>
 				<dd>
-					<select id="repeat_type" name="repeat_type">
+					<select class="required" id="repeat_type" name="repeat_type">
 						<option value="">Velg frekvenstype</option>
 						<xsl:for-each select="repeat_type_array">
 							<xsl:choose>
@@ -149,7 +148,7 @@
 				<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-						<input size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
+						<input class="required" style="width:20px;" size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/repeat_interval" />
@@ -162,7 +161,7 @@
 				<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-						<select id="responsibility_id" name="responsibility_id">
+						<select class="required" id="responsibility_id" name="responsibility_id">
 							<option value="">Velg rolle</option>
 							<xsl:for-each select="role_array">
 								<xsl:choose>

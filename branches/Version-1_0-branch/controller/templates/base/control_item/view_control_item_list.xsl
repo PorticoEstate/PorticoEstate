@@ -51,7 +51,7 @@
 		<div style="margin:20px 0;">
 			<a  style="text-decoration:underline;font-size:20px;color:#333;">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list.save_check_list</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.save_check_list</xsl:text>
 					<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control_as_array/id"/>
 				</xsl:attribute>

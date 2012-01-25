@@ -60,12 +60,6 @@
 										'index' => true,
 										'view_locations_for_control' 	=> true,
 										'add_location_to_control' 		=> true,
-										'add_check_list' 				=> true,
-										'save_check_list' 				=> true,
-										'edit_check_list' 				=> true,
-										'create_case_message' 			=> true,
-										'view_control_info' 			=> true,
-										'view_cases_for_check_list'		=> true
 									);
 
 		function __construct()

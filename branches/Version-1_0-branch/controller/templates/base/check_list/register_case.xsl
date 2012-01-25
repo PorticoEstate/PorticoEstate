@@ -46,7 +46,7 @@
 									</form>
 								</xsl:when>
 								<xsl:when test="type = 'control_item_type_2'">
-								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item&amp;phpgw_return_as=json" method="post">
+								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list_for_location.save_check_item&amp;phpgw_return_as=json" method="post">
 									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 									<input name="status" type="hidden" value="1" />

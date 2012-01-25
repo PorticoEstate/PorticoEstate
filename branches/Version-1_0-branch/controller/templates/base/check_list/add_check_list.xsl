@@ -83,6 +83,13 @@
 				    </input>
 			    </div>
 				<div><label>Utstyr</label><input name="equipment_id" /></div>
+				<div>
+					<label class="comment">Kommentar</label>
+					<textarea>
+					  <xsl:attribute name="name">comment</xsl:attribute>
+					  <xsl:value-of select="check_list/comment"/>
+					</textarea>
+				</div>
 			</fieldset>
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
