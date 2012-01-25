@@ -564,7 +564,7 @@ class controller_socheck_list extends controller_socommon
 		
 		$values = array(
 			$this->marshal($check_list->get_control_id(), 'int'),
-			$this->marshal($check_list->get_status(), 'int'),
+			$check_list->get_status(),
 			$this->marshal($check_list->get_comment(), 'string'),
 			$this->marshal($check_list->get_deadline(), 'int'),
 			$this->marshal($check_list->get_planned_date(), 'int'),
