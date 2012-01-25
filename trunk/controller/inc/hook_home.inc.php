@@ -123,7 +123,7 @@
 			$next_date = date('d/m/Y', $current_date);
 			$portalbox->data[] = array
 			(
-				'text' => "{$current_control->get_title()} :: Neste gjennomføring: {$next_date}",
+				'text' => "{$current_control->get_title()} :: Fristdato: {$next_date}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
 			);
 		}
