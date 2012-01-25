@@ -380,6 +380,8 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
 		
@@ -465,6 +467,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
 		}
 		
