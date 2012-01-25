@@ -205,6 +205,8 @@
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
+			
+			$comment = phpgw::get_var('comment', 'string');
 							
 			if($planned_date != '')
 				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
@@ -219,6 +221,7 @@
 			$check_list->set_location_code($location_code);
 			$check_list->set_control_id($control_id);
 			$check_list->set_status($status);
+			$check_list->set_comment($comment);
 			$check_list->set_deadline( $deadline_date_ts );
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
