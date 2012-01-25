@@ -31,13 +31,13 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_list_status_info', 'inc/helper/');
-	include_class('controller', 'calendar_builder', 'inc/component/');
+	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 	
 	$so = CreateObject('controller.socheck_list');
 	$so_control = CreateObject('controller.socontrol');
 
-	echo '<H1> Hook for controller </H1>';	
+	//echo '<H1> Hook for controller </H1>';	
 	$location_code = '1101';
 	$year = phpgw::get_var('year');
 	
@@ -47,7 +47,8 @@
 	
 	$year = intval($year);
 				
-	$from_date_ts = strtotime("01/01/$year");
+	//$from_date_ts = strtotime("01/01/$year");
+	$from_date_ts = strtotime("now");
 	$to_year = $year + 1;
 	$to_date_ts = strtotime("01/01/$to_year");	
 				
@@ -61,7 +62,7 @@
 
 	$location_finder = new location_finder();
 	$my_locations = $location_finder->get_responsibilities( $criteria );
-	print_r($my_locations);
+	//print_r($my_locations);
 	
 	if(empty($location_code)){
 		$location_code = $my_locations[0]["location_code"];	
@@ -70,23 +71,14 @@
 	$repeat_type = null;
 	
 	$controls_for_location_array = $so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
-	
-	$calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
-
-	$controls_calendar_array = array();
-
-	// Puts aggregate values for daily controls in a twelve month array 
+	//var_dump($controls_for_location_array);
+	$controls_array = array();
+	$control_dates = array();
 	foreach($controls_for_location_array as $control){
-		if($control->get_repeat_type() == 0){
-			$controls_calendar_array = $calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year);
-		}
+		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_repeat_interval());
+		$controls_array[] = array($control, $date_generator->get_dates());
 	}
-	
-	$repeat_type = 2;
-	$control_check_list_array = $so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
-	
-	$controls_calendar_array = $calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
-	//print_r($controls_calendar_array);
+
 	$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 	
 	$portalbox = CreateObject('phpgwapi.listbox', array
@@ -122,42 +114,18 @@
 	$category_name = array(); // caching
 
 	$portalbox->data = array();
-	foreach ($control_check_list_array as $checklist)
+	foreach ($controls_array as $control_instance)
 	{
-/*		if(!$ticket['subject'])
+		$current_control = $control_instance[0];
+		$current_dates = $control_instance[1];
+		foreach($current_dates as $current_date)
 		{
-			if(!isset($category_name[$ticket['cat_id']]))
-			{
-				$ticket['subject']= execMethod('property.botts.get_category_name', $ticket['cat_id']);
-				$category_name[$ticket['cat_id']] = $ticket['subject'];
-			}
-			else
-			{
-				$ticket['subject'] = $category_name[$ticket['cat_id']];
-			}
+			$next_date = date('d/m/Y', $current_date);
+			$portalbox->data[] = array
+			(
+				'text' => "{$current_control->get_title()} :: Neste gjennomføring: {$next_date}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+			);
 		}
-
-		$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'], 'extra' => array('view' => true))); 
-
-		$group = '';
-		if($ticket['group_id'])
-		{
-			$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
-		}*/
-		$portalbox->data[] = array
-		(
-			'text' => "kontroll :: {$checklist->get_id()}",
-			'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index'))
-		);
 	}
-	
-	$portalbox->data[] = array
-	(
-		'text' => "test :: test",
-		'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index'))
-	);
-
-	echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
-
-	//var_dump($location_array);
-	//$calendar->view_calendar_for_year();
+	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox->draw()."\n".'<!-- END checklist info -->'."\n";
