@@ -206,5 +206,19 @@
                 'fk' => array('controller_check_item' => array('check_item_id' => 'id')),
                 'ix' => array(),
                 'uc' => array()
+		),
+		'controller_check_item_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'open' => array('type' => 'int','precision' => '2','nullable' => True),
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+				'pending' => array('type' => 'int','precision' => '2','nullable' => True),
+				'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
