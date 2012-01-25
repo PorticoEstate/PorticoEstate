@@ -668,6 +668,10 @@
 				);
 
 			$periodization_list = execMethod('property.bogeneric.get_list', array('type'=>'periodization'));
+			if($periodization_list)
+			{
+				array_unshift ($periodization_list,array('id' => '0', 'name' => lang('none')));
+			}
 
 			$jscode = <<<JS
 			    var myPeriodizationDropDown = function(elCell, oRecord, oColumn, oData)
