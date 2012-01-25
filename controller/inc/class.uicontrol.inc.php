@@ -271,40 +271,10 @@
 									array('id' 	=> "2", 'value'	=> "Måned"),
 									array('id' 	=> "3", 'value'	=> "År")
 								);
-								
-			if( $control != null )
-			{
-				$tabs = array(
-						array(
-							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'id' => $control->get_id()))
-						),array(
-							'label' => "2: " . lang('Choose_control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																				   'control_id' => $control->get_id())) 
-						),array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
-																				   'control_id' => $control->get_id()))
-						),array('label' => "4: " . lang('Sort_check_list'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
-																				   'control_id' => $control->get_id()))
-						)
-					);	
-			}
-			else
-			{
-				$tabs = array( array(
-							'label' => "1: " . lang('Details')
-						), array(
-							'label' => "2: " . lang('Choose_control_groups')
-						), array(
-							'label' => "3: " . lang('Choose_control_items')
-						), array(
-							'label' => "4: " . lang('Sort_check_list')
-						));	
-			}
+				
+			$tabs = $this->make_tab_menu($control_id);
+			
+			print_r( $tabs );
 			
 			$data = array
 			(
@@ -349,7 +319,7 @@
 
 			$control_area_id_from_req = $control->get_control_area_id();
 			
-			if($control_area_id_in_db != $control_area_id_from_req ){
+			if( $control_area_id_in_db > 0 & $control_area_id_in_db != $control_area_id_from_req ){
 								
 				// Deleting earlier saved control groups
 				$this->so_control_group_list->delete_control_groups($control_id);
@@ -397,24 +367,7 @@
 				}
 			}
 			
-			$tabs = array(
-						array(
-							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'id' => $control->get_id()))
-						),array(
-							'label' => "2: " . lang('Choose_control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																				   'control_id' => $control->get_id())) 
-						),array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
-																				   'control_id' => $control->get_id()))
-						),array('label' => "4: " . lang('Sort_check_list'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
-																				   'control_id' => $control->get_id()))
-						)
-					);
+			$tabs = $this->make_tab_menu($control_id);
 			
 			$data = array
 			(
@@ -498,24 +451,7 @@
 				$groups_with_control_items[] = array("control_group" => $control_group->toArray(), "group_control_items" => $control_items_for_group_array);
 			}			
 			
-			$tabs = array(
-						array(
-							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'id' => $control->get_id()))
-						),array(
-							'label' => "2: " . lang('Choose_control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																				   'control_id' => $control->get_id())) 
-						),array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
-																				   'control_id' => $control->get_id()))
-						),array('label' => "4: " . lang('Sort_check_list'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
-																				   'control_id' => $control->get_id()))
-						)
-					);
+			$tabs = $this->make_tab_menu($control_id);
 					
 			$data = array
 			(
@@ -542,6 +478,7 @@
 			// Deleting earlier saved control items
 			$this->so_control_item_list->delete_control_items($control_id);
 	
+			$order_nr = 1;
 			// Saving control items if submit save control items is clicked 
 			foreach ($control_tag_ids as $control_item_tag)
 			{	
@@ -552,7 +489,10 @@
 				$control_item_list = new controller_control_item_list();
 				$control_item_list->set_control_id($control_id);
 				$control_item_list->set_control_item_id($control_item_id);
+				$control_item_list->set_order_nr($order_nr);
 				$this->so_control_item_list->add($control_item_list);
+				
+				$order_nr++;
 			}	
 	
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id ));	
@@ -575,29 +515,13 @@
 					$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
 			
-			$tabs = array(
-						array(
-							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'id' => $control_id))
-						),array(
-							'label' => "2: " . lang('Choose_control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																				   'control_id' => $control_id))
-						),array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
-																				   'control_id' => $control_id))
-						),array('label' => "4: " . lang('Sort_check_list')
-						)
-						
-					);
+			$tabs = $this->make_tab_menu($control_id);
 			
 			$data = array
 			(
-				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
-				'view'					=> "sort_check_list",
-				'control'				=> $control->toArray(),
+				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
+				'view'							=> "sort_check_list",
+				'control'						=> $control->toArray(),
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
@@ -610,94 +534,77 @@
 			self::render_template_xsl(array('control/control_tabs', 'control_item/sort_check_list'), $data);
 		}
 		
-		/* Kommentert ut av Torstein 21.01.2012 - Tror ikke vi bruker denne... Kanskje den bør slettes...
-		 * 
-		public function generate_check_lists_for_control(){
-			$control_id = phpgw::get_var('control_id');
-			$control = $this->so->get_single($control_id);
-
-			$start_date = $control->get_start_date();
-			$end_date = $control->get_end_date();
-			$repeat_type = $control->get_repeat_type();
-			$repeat_interval = $control->get_repeat_interval();
+		function make_tab_menu($control_id){
+			$tabs = array();
 			
-			$status = FALSE;
-			$comment = "Kommentar for sjekkliste";
-			$deadline = $start_date;
-			
-			// Saving check_list
-			$new_check_list = new controller_check_list();
-			$new_check_list->set_control_id( $control_id );
-			$new_check_list->set_status( $status );
-			$new_check_list->set_comment( $comment );
-			$new_check_list->set_deadline( $deadline );
-			
-			$check_list_id = $this->so_check_list->store( $new_check_list );
-			
-			$control_items_list = $this->so_control_item_list->get_control_items_by_control($control_id);
-			
-			foreach($control_items_list as $control_item){
+			if($control_id > 0){
 				
-				$status = '0';
-				$comment = "Kommentar for sjekk item";
+				echo " Detaljer ";
+				$control = $this->so->get_single($control_id);
 				
-				// Saving check_items for a list
-				$new_check_item = new controller_check_item();
-				$new_check_item->set_check_list_id( $check_list_id );
-				
-				$new_check_item->set_control_item_id( $control_item->get_id() );
-				$new_check_item->set_status( $status );
-				$new_check_item->set_comment( $comment );
-								
-				$saved_check_item = $this->so_check_item->store( $new_check_item );
-			}	
-			
-			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_lists_for_control', 'control_id'=>$control_id ));
-		}
-		
-		
-		public function view_check_lists_for_control()
-		{
-			$control_id = phpgw::get_var('control_id');
-			$control = $this->so->get_single($control_id);
-			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		
-			$check_list_array = $this->so_check_list->get_check_lists_for_control( $control_id );	
-			
-			$tabs = array(
-						array(
+				$tabs[] = array(
 							'label' => "1: " . lang('Details'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
-																				   'view' => "view_control_details", 'id' => $control_id))
-						),array(
-							'label' => "2: " . lang('Choose_control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
-																				   'view' => "view_control_groups", 'control_id' => $control_id, 
-																				   'control_group_ids' => $control_group_ids, 
-																				   'control_area_id' => $control->get_control_area_id()))
-						),array(
-							'label' => "3: " . lang('Choose_control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
-																				   'view' => "view_control_items", 'control_id' => $control_id, 
-																				   'control_group_ids' => $control_group_ids))
-						),array('label' => "4: " . lang('Sort_check_list')
-						)
-					);
+																				   'id' => $control->get_id()))
+						);
+				
+				$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control( $control->get_id() );
+				
+				if(count($saved_control_groups) > 0)
+				{
+					echo " Grupper ";
+					$tabs[] = array(
+								'label' => "2: " . lang('Choose_control_groups'),
+								'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
+																					   'control_id' => $control->get_id())) 
+							);
+							
+					$saved_control_items = $this->so_control_item_list->get_control_items_by_control( $control->get_id() );
+					
+					if(count($saved_control_items) > 0)
+					{
+						echo " Punkter ";
+						$tabs[] = array(
+									'label' => "3: " . lang('Choose_control_items'),
+									'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
+																						   'control_id' => $control->get_id())));
+						$tabs[] = array('label' => "4: " . lang('Sort_check_list'),
+									'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_check_list', 
+																						   'control_id' => $control->get_id()))); 
+					}else{
+						$tabs[] = array('label' => "3: " . lang('Choose_control_items'));
+						$tabs[] = array('label' => "4: " . lang('Sort_check_list'));			 
+					}
+				}else{
+					$tabs[] = array('label' => "2: " . lang('Choose_control_groups'));
+					$tabs[] = array('label' => "3: " . lang('Choose_control_items'));
+					$tabs[] = array('label' => "4: " . lang('Sort_check_list'));
+				}
+			}else{
+				$tabs = array( 
+						   array(
+							'label' => "1: " . lang('Details')
+						), array(
+							'label' => "2: " . lang('Choose_control_groups')
+						), array(
+							'label' => "3: " . lang('Choose_control_items')
+						), array(
+							'label' => "4: " . lang('Sort_check_list')
+						));
+			}
 			
-			$data = array
-			(
-				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 4),
-				'view'				=> "view_check_lists",
-				'control_as_array'	=> $control->toArray(),
-				'check_list_array'	=> $check_list_array,
-				'date_format' 		=> $date_format
-			);
 			
-			self::render_template_xsl(array('control/control_tabs', 'tab_view_check_lists'), $data);
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-		}
-		*/	
+			
+			
+			
+			echo "  2: ";
+			print_r($tabs);
+			
+			return $tabs;
+		} 
+		
+		
+		
 		
 		// Returns control list info as JSON
 		public function get_controls_by_control_area()
