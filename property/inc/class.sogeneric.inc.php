@@ -2132,6 +2132,58 @@
 				break;
 
 // END BOOKING TABLES
+// START CONTROLLER TABLES
+			case 'controller_check_item_status':
+				$info = array
+					(
+						'table' 			=> 'controller_check_item_status',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'open',
+								'descr' => lang('open'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'pending',
+								'descr' => lang('pending'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('status'),
+						'acl_app' 			=> 'controller',
+						'acl_location' 		=> 'admin',
+						'menu_selection'	=> 'admin::controller::check_item_status'
+					);
+				break;
+
+// END CONTROLLER TABLES
+
+
 			default:
 				$message =lang('ERROR: illegal type %1', $type);
 				phpgwapi_cache::message_set($message, 'error');
