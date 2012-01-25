@@ -1267,3 +1267,15 @@ ul#groups {
 ul#groups h4{
     margin: 4px 0;
 }
+.input_error_msg{
+ 	background:#FBE3E4;
+ 	border-bottom-right-radius: 4px;
+ 	color: #D12F19;
+ 	display: block;
+ 	padding: 4px 5px;
+ 	width: 150px;
+}
+
+input.focus, select.focus{
+	border: 2px solid #dae6f4;
+}
