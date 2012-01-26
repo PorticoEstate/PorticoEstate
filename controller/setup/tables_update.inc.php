@@ -463,3 +463,36 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.22';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	/* Update Controller from v 0.1.22 to 0.1.23 
+	 * Add table for configurable status
+	*/
+
+	$test[] = '0.1.22';
+	function controller_upgrade0_1_22()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_check_item_status', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+					'open' => array('type' => 'int','precision' => '2','nullable' => True),
+					'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+					'pending' => array('type' => 'int','precision' => '2','nullable' => True),
+					'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.23';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}		
+	}

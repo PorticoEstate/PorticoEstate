@@ -144,6 +144,11 @@
 						'text'	=> lang('Configure Access Permissions'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'controller') )
 					),
+					'check_item_status'	=> array
+					(
+						'text'	=> lang('check item status'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'controller_check_item_status') )
+					),
 					'control_cats'	=> array
 					(
 						'text'	=> lang('Control area'),

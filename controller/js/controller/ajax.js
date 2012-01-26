@@ -144,7 +144,32 @@ $(document).ready(function(){
 				}
 			});	
 	});
-
+	
+	$("#frm_save_control_groups").submit(function(e){
+		var thisForm = $(this);
+		var num_checked = $(this).find("input:checked").length;
+		
+		if(num_checked == 0){
+			e.preventDefault();			
+			$(thisForm).before("<div style='margin: 10px 0;text-align: center;width: 200px;' class='input_error_msg'>Du må velge en eller flere grupper</div>");
+		}
+	});
+	
+	$("#frm_control_items").submit(function(e){
+		var thisForm = $(this);
+		var num_checked = $(this).find("input:checked").length;
+		
+		if(num_checked == 0){
+			e.preventDefault();			
+			$(thisForm).before("<div style='margin: 10px 0;text-align: center;width: 200px;' class='input_error_msg'>Du må velge en eller flere punkter</div>");
+		}
+	});
+	
+	$("#frm_save_control_details input").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+	
 	$("#frm_save_control_details input").focus(function(e){
 		$("#frm_save_control_details").find(".focus").removeClass("focus");
 		$(this).addClass("focus");

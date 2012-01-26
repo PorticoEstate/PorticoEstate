@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.22';
+	$setup_info['controller']['version'] = '0.1.23';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
@@ -50,5 +50,6 @@
 		'controller_control_component_list',
 		'controller_document',
 		'controller_document_types',
-		'controller_check_item_case'
+		'controller_check_item_case',
+		'controller_check_item_status'
  	);

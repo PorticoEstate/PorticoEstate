@@ -217,13 +217,13 @@
 					$public_user_list[] = $user;
 				}
 			}
-			
+
 			if($public_user_list)
 			{
 				$public_user_list = array_unique($public_user_list);
 				reset($public_user_list);
 				$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','property'))
@@ -286,7 +286,7 @@
 				{
 					if($value)
 					{
-						$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";					
+						$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";
 						$or = ' OR';
 					}
 				}
@@ -437,7 +437,7 @@
 			. "fm_tts_tickets.subject,fm_tts_tickets.address,fm_tts_tickets.location_code,fm_tts_tickets.priority,fm_tts_tickets.cat_id,fm_tts_tickets.group_id,"
 			. "fm_tts_tickets.entry_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
 			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name {$result_order_field}";
-			
+
 			//fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district
 			$sql = "SELECT DISTINCT {$return_fields}  FROM fm_tts_tickets"
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
@@ -464,7 +464,7 @@
 			{
 				$cache_info = array();
 			}
-			
+
 			if(!$cache_info)
 			{
 				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt}) as t";
@@ -689,7 +689,7 @@
 
 			if(isset($entity_category) && $entity_category)
 			{
-				$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";				
+				$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";
 			}
 
 			$address	= $this->db->db_addslashes(implode('::', $_address));
@@ -733,7 +733,7 @@
 						(
 							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']),
 							'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),			
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 							'location2_item_id' => $id,
 							'account_id'		=> $this->account
 						);
@@ -817,8 +817,9 @@
 				$check_old_custom = (int) trim($old_status,'C');
 				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
 				$this->db->next_record();
+				$old_closed = $this->db->f('closed');
 				$this->fields_updated = true;
-				if($old_status=='X' || $this->db->f('closed'))
+				if($old_status=='X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
@@ -831,6 +832,21 @@
 					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
+
+				//Close cases at controller
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
+					$check_new_custom = (int) trim($ticket['status'],'C');
+					$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+					$this->db->next_record();
+
+					if($this->db->f('closed') && ($old_status!='X' && !$old_closed))
+					{
+						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+	 					$controller = CreateObject('controller.uicase'); 
+	 					$controller->updateStatusForCases($location_id, $id, 0);
+					}
+				}
 			}
 
 			$this->db->transaction_commit();
@@ -985,8 +1001,9 @@
 				$check_old_custom = (int) trim($old_status,'C');
 				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
 				$this->db->next_record();
+				$old_closed = $this->db->f('closed');
 				$this->fields_updated[] = 'status';
-				if($old_status=='X' || $this->db->f('closed'))
+				if($old_status=='X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
 					$this->historylog->add('R',$id,$ticket['status'],$old_status);
@@ -999,6 +1016,21 @@
 					$this->db->query("UPDATE fm_tts_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
+
+				//Close cases at controller
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+				{
+					$check_new_custom = (int) trim($ticket['status'],'C');
+					$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+					$this->db->next_record();
+
+					if($this->db->f('closed') && ($old_status!='X' && !$old_closed))
+					{
+						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+ 						$controller = CreateObject('controller.uicase'); 
+ 						$controller->updateStatusForCases($location_id, $id, 0);
+					}
+				}
 			}
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
@@ -1170,7 +1202,7 @@
 
 					if(isset($entity_category) && $entity_category)
 					{
-						$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";				
+						$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";
 					}
 
 					$address	= $this->db->db_addslashes(implode('::', $_address));
@@ -1335,7 +1367,7 @@
 				throw new Exception("phpgwapi_locations::get_id ('property', '.ticket') returned 0");
 			}
 
-			$this->db->transaction_begin();	
+			$this->db->transaction_begin();
 
 			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
@@ -1358,7 +1390,7 @@
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_vendor.id, fm_vendor.org_name FROM fm_tts_tickets {$this->join} fm_vendor ON fm_tts_tickets.vendor_id = fm_vendor.id ORDER BY org_name ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1369,14 +1401,14 @@
 					'name'	=> $this->db->f('org_name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 		public function get_ecodimb()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_ecodimb.id, fm_ecodimb.descr as name FROM fm_tts_tickets {$this->join} fm_ecodimb ON fm_tts_tickets.ecodimb = fm_ecodimb.id ORDER BY name ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1387,14 +1419,14 @@
 					'name'	=> $this->db->f('name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 		public function get_b_account()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_b_account.id, fm_b_account.descr as name FROM fm_tts_tickets {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id ORDER BY id ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1405,14 +1437,14 @@
 					'name'	=> $this->db->f('name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 		public function get_building_part()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_building_part.id, fm_building_part.descr as name FROM fm_tts_tickets {$this->join} fm_building_part ON fm_tts_tickets.building_part = fm_building_part.id ORDER BY id ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1424,14 +1456,14 @@
 					'name'	=> $id . ' ' . $this->db->f('name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 		public function get_branch()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_branch.id, fm_branch.descr as name FROM fm_tts_tickets {$this->join} fm_branch ON fm_tts_tickets.branch_id = fm_branch.id ORDER BY name ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1442,14 +1474,14 @@
 					'name'	=> $this->db->f('name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 		public function get_order_dim1()
 		{
 			$values = array();
 			$sql = "SELECT DISTINCT fm_order_dim1.id, fm_order_dim1.descr as name FROM fm_tts_tickets {$this->join} fm_order_dim1 ON fm_tts_tickets.order_dim1 = fm_order_dim1.id ORDER BY name ASC";
-			
+
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -1460,7 +1492,7 @@
 					'name'	=> $this->db->f('name', true)
 				);
 			}
-	
+
 			return $values;
 		}
 	}

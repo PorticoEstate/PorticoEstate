@@ -54,18 +54,18 @@
 		//	'save_check_list'					=>	true,
 		//	'view_check_list'					=>	true,
 		//	'edit_check_list'					=>	true,
-			'save_check_items'					=>	true,
-			'save_check_item'					=>	true,
-			'get_check_list_info'				=>	true,
+		//	'save_check_items'					=>	true,
+		//	'save_check_item'					=>	true,
+		//	'get_check_list_info'				=>	true,
 		//	'control_calendar_status_overview'	=>	true,
-			'add_check_item_to_list'			=>	true,
-			'view_control_items'				=>	true,
+		//	'add_check_item_to_list'			=>	true,
+		//	'view_control_items'				=>	true,
 			//'view_control_details'				=>	true,
 			//'register_case'						=>	true,
 			//'view_open_cases'					=>	true,
 			//'view_closed_cases'					=>	true,
 			//'view_measurements'					=>	true,
-			'get_cases_for_check_list'			=>	true
+		//	'get_cases_for_check_list'			=>	true
 		);
 
 		public function __construct()
