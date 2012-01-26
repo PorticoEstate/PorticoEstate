@@ -46,12 +46,14 @@
 		function  __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-			$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->db 				= & $GLOBALS['phpgw']->db;
-			$this->join				= & $this->db->join;
+			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->db 					= & $GLOBALS['phpgw']->db;
+			$this->join					= & $this->db->join;
 
-			$this->soXport 			= CreateObject('property.soXport');
-			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->soXport 				= CreateObject('property.soXport');
+			$this->config				= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$this->cats->supress_info	= true;
 
 			if(!isset($this->config->config_data['common']['method']))
 			{
@@ -166,8 +168,9 @@
 			return $vendor_info;
 		}
 
-		protected function get_order_title($order_id='')
+		protected function get_order_info($order_id='')
 		{
+			$order_info = array();
 			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -175,20 +178,24 @@
 			switch($this->db->f('type'))
 			{
 				case 'workorder':
-					$sql2 = "SELECT title FROM fm_workorder WHERE id='$order_id'";
+					$sql2 = "SELECT title, category FROM fm_workorder WHERE id='$order_id'";
 					$this->db->query($sql2,__LINE__,__FILE__);
 					$this->db->next_record();
-					$order_title = $this->db->f('title');
+					$order_info['title'] = $this->db->f('title');
+					$cat_id = (int)$this->db->f('category');
+					$category = $this->cats->return_single($cat_id);
+					$category_arr = explode('-',$category[0]['name']);
+					$order_info['category'] = (int)trim($category_arr[0]);
 					break;
 				case 's_agreement':
 					$sql2 = "SELECT descr as title FROM fm_s_agreement WHERE id='$order_id'";
 					$this->db->query($sql2,__LINE__,__FILE__);
 					$this->db->next_record();
-					$order_title = $this->db->f('title');
+					$order_info['title'] = $this->db->f('title');
 					break;
 			}
 
-			return $order_title;
+			return $order_info;
 		}
 
 
@@ -708,6 +715,12 @@
 					$this->soXport->add_OverfBilag($oRsOverfBilag);
 				}
 
+				if ($line['order_id'])
+				{
+					$order_info = $this->get_order_info($line['order_id']);
+					$dim6 = isset($order_info['category']) && $order_info['category'] ? $order_info['category'] : '';
+				}
+
 				$descr = '';
 				if($line['merknad'])
 				{
@@ -715,7 +728,7 @@
 				}
 				else if ($line['order_id'])
 				{
-					$descr = $this->get_order_title($line['order_id']);
+					$descr = $order_info['title'];
 				}
 
 				$accountline[] = array
@@ -723,7 +736,7 @@
 					'TRANSACTIONTYPE'		=> 'R114',
 					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
 					'AMOUNT'				=> $amount, // 312500
-					'APPROVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], //Batch 04 - 14
+					'APPROVER.FULLNAME'		=> $line['budsjettansvarligid'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dimb'], // 1111
 					'DIMENSION.D2.CODE'		=> '',//$line['dima'], // 62000
 					'DIMENSION.D3.CODE'		=> '',
@@ -736,7 +749,7 @@
 					'POITEMNUMBER'			=> $itemnumber, //200200
 					'POITEMTYPE'			=> 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
 					'POLINENUMBER'			=> $linenumber, // 10
-					'RECEIVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], // Batch 04 - 14
+					'RECEIVER.FULLNAME'		=> $line['budsjettansvarligid'], // Batch 04 - 14
 					'STATUS'				=> 5,
 					'SUBACCOUNT'			=> $periode, //200905 Accounting period YYYYMM
 					'ALLOCATION.KEY'		=> $line['periodization'],//0

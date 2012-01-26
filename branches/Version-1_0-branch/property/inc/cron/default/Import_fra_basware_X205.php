@@ -461,12 +461,12 @@
 								$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
 								if($rc)
 								{
-									$receipt['error'][] = array('msg'=> "epost sendt til {$to}");							
+									$this->receipt['error'][] = array('msg'=> "epost sendt til {$to}");							
 								}
 							}
 							catch (phpmailerException $e)
 							{
-								$receipt['error'][] = array('msg' => $e->getMessage());
+								$this->receipt['error'][] = array('msg' => $e->getMessage());
 							}
 						}
 					}
@@ -546,12 +546,12 @@
 						}
 						catch (phpmailerException $e)
 						{
-							$receipt['error'][] = array('msg' => $e->getMessage());
+							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
 					}
 					else
 					{
-						$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+						$this->receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
 					}
 				}
 
@@ -620,6 +620,7 @@
 				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
 
+/*
 			$budget_responsible_user_id = $GLOBALS['phpgw']->accounts->name2id($order_info['budget_responsible']);
 			if($budget_responsible_user_id)
 			{
@@ -629,7 +630,7 @@
 					$toarray[] = $prefs['email'];
 				}
 			}
-
+*/
 			$order_info['toarray'] = $toarray;
 			return $order_info;
 		}
