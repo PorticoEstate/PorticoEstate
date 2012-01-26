@@ -451,7 +451,7 @@
 				{
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
-					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, null);
+					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array('edit_from_frontend' => 'yes'));
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,

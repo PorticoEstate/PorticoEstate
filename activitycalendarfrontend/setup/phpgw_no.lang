@@ -92,3 +92,4 @@ activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker �
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
 address	activitycalendarfrontend	no	Adresse
+activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for organisasjonen.<br/>Du velger organisasjon og aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.

@@ -44,6 +44,7 @@ YAHOO.util.Event.onDOMReady(function()
 	<form action="#" method="post">
 		<dl class="proplist-col" style="width: 200%">
 			<dt>
+				<?php echo lang('activity_edit_helptext_step1')?><br/><br/>
 				<?php echo lang('activity_org_helptext_step1')?><br/><br/>
 			</dt>
 			<dd>
