@@ -5817,6 +5817,47 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.633 to 0.9.17.634
+	* Add project budget per year
+	*/
+/*
+	$test[] = '0.9.17.633';
+	function property_upgrade0_9_17_633()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_budget', array(
+				'fd' => array(
+					'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'budget_account' =>  array('type' => 'varchar','precision' => 15,'nullable' => False),
+					'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'category' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('project_id','year'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.634';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+*/
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
