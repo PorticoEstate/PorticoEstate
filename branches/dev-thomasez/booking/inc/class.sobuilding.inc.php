@@ -46,6 +46,7 @@
 		function fylker()
 		{
 			return array( "akerhus" => "Akershus",
+				"oslo" => "Oslo",
 				"austagder" => "Aust-Agder",
 				"buskerud" => "Buskerud",
 				"finnmark" => "Finnmark",
