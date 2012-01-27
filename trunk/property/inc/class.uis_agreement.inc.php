@@ -1453,9 +1453,10 @@ die();
 			if($id)
 			{
 				$content_budget = $this->bo->get_budget($id);
+				$lang_delete = lang('Check to delete year');
 				foreach($content_budget as & $b_entry)
 				{
-					$b_entry['delete_year'] = '<input type="checkbox" name="values[delete_b_year][]" value="'.$b_entry['year'].'" title="'.lang('Check to delete year').'">';				
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
 				}
 			}
 
@@ -1479,7 +1480,7 @@ die();
 														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'delete_year','label'=>lang('Delete budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
 			//--------------------------------------------JSON CODE------------

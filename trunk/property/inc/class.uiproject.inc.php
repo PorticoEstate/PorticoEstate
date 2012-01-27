@@ -1603,12 +1603,24 @@
 
 			//---datatable settings---------------------------------------------------	
 
+
+			if($id)
+			{
+				$content_budget = array();//$this->bo->get_budget($id);
+				$lang_delete = lang('Check to delete year');
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
+				}
+			}
+
 			$datavalues[0] = array
 				(
 					'name'					=> "0",
-					'values' 				=> json_encode($values['workorder_budget']),
-					'total_records'			=> count($values['workorder_budget']),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'edit_action'			=> "''",
+					'permission'   			=> "''",
 					'is_paginator'			=> 1,
 					'footer'				=> 0
 				);
@@ -1617,6 +1629,30 @@
 			$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
+					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+				);
+
+
+			$datavalues[1] = array
+				(
+					'name'					=> "1",
+					'values' 				=> json_encode($values['workorder_budget']),
+					'total_records'			=> count($values['workorder_budget']),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+
+
+			$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
@@ -1629,28 +1665,6 @@
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-			$datavalues[1] = array
-				(
-					'name'					=> "1",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-
-			$myColumnDefs[1] = array
-				(
-					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
-				);
-
-		
 		
 			$invoices = array();
 			if ($id)
@@ -1724,13 +1738,36 @@
 			
 			$datavalues[] = $notify_info['datavalues'];
 
-			$myColumnDefs[] = $notify_info['column_defs'];
+			$myColumnDefs[3] = $notify_info['column_defs'];
 
 			$myButtons	= array();
 			if($mode == 'edit')
 			{
-				$myButtons[]	= $notify_info['buttons'];
+				$myButtons[3]	= $notify_info['buttons'];
 			}
+
+			$datavalues[4] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+
+			$myColumnDefs[4] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
+														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+
 
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------

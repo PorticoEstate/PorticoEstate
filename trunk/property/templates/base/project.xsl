@@ -364,6 +364,15 @@ Returns mixed
 								</td>
 							</tr>
 							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'budget')"/>
+								</td>
+								<td>
+									<div id="paging_0"> </div>
+									<div id="datatable-container_0"/>
+								</td>
+							</tr>
+							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_reserve"/>
 								</td>
@@ -415,8 +424,8 @@ Returns mixed
 									<xsl:otherwise>
 										<td>
 											<!-- DataTable -->
-											<div id="paging_0"> </div>
-											<div id="datatable-container_0"/>
+											<div id="paging_1"> </div>
+											<div id="datatable-container_1"/>
 										</td>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -572,8 +581,8 @@ Returns mixed
 						</table>
 					</div>
 					<div id="history">
-						<div id="paging_1"> </div>
-						<div id="datatable-container_1"/>
+						<div id="paging_4"> </div>
+						<div id="datatable-container_4"/>
 					</div>
 					<xsl:call-template name="attributes_values"/>
 				</div>
