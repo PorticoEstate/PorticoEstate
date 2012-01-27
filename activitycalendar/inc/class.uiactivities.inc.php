@@ -412,15 +412,22 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		}
     }
     
-    private function send_email_to_selection($activities)
+    function send_email_to_selection($activities)
     {
     	foreach($activities as $activity)
     	{
 	    	//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
     		$subject = lang('mail_subject_update');
-    		$link_text = "http://www.bergen.kommune.no/aktivby/registreringsskjema/endre/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
+    		$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/endre/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
-    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title(), $link_text, $office_name);
+    		if($activity->get_state() == 2)
+    		{
+    			$body = lang('mail_body_update_frontend', $activity->get_id() . ', ' . $activity->get_title(), $link_text, $office_name);
+    		}
+    		else
+    		{
+    			$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title(), $link_text, $office_name);
+    		}
 	    	
 	    	//var_dump($subject);
 	    	//var_dump($body);
@@ -428,14 +435,10 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	    	
 	    	if($activity->get_group_id() && $activity->get_group_id() > 0)
 	    	{
-	    		//var_dump("group!");
-	    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
 	    		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
 	    	}
 	    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 	    	{
-	    		//var_dump("org!");
-	    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
 	    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
 	    	}
 	    }
