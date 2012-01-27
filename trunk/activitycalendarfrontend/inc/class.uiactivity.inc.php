@@ -435,6 +435,7 @@
 				$activity->set_state(2);
 				if($this->so_activity->store($activity))
 				{
+					$this->send_email_to_selection(array($activity));
 					$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
 					return $this->render('activity_edit_step_1.php', array
 						(
