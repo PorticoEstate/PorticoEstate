@@ -1376,9 +1376,6 @@
 			'fd' => array(
 				'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'budget_account' =>  array('type' => 'varchar','precision' => 15,'nullable' => False),
-				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'category' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
