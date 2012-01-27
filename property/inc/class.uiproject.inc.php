@@ -1380,26 +1380,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-/*
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$table_header_workorder_budget[] = array
-				(
-					'lang_workorder_id'	=> lang('Workorder'),
-					'lang_title'		=> lang('title'),
-					'lang_budget'		=> lang('Budget'),
-					'lang_calculation'	=> lang('Calculation'),
-					'lang_vendor'		=> lang('Vendor'),
-					'lang_status'		=> lang('status')
-				);
-
-*/
 			if ($id)
 			{
 				$function_msg = lang("{$mode} project");
@@ -1606,14 +1586,14 @@
 
 			if($id)
 			{
-				$content_budget = array();//$this->bo->get_budget($id);
+				$content_budget = $this->bo->get_budget($id);
 				$lang_delete = lang('Check to delete year');
 				foreach($content_budget as & $b_entry)
 				{
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
 				}
 			}
-
+//_debug_array($content_budget);die();
 			$datavalues[0] = array
 				(
 					'name'					=> "0",
@@ -1630,11 +1610,8 @@
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'ecodimb','label'=>lang('dimb'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_account','label'=>lang('budget account'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
@@ -1776,6 +1753,21 @@
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 
+
+			$year	= date('Y') -1;
+			$limit	= $year + 8;
+
+			while ($year < $limit)
+			{
+				$year_list[] = array
+				(
+					'id'	=>  $year,
+					'name'	=>  $year
+				);
+				$year++;
+			}
+
+
 			$data = array
 				(
 					'mode'								=> $mode,
@@ -1795,6 +1787,7 @@
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
 					'value_origin_id'					=> isset($origin_id)?$origin_id:'',
+					'year_list'							=> array('options' => $year_list),
 					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
 					'lang_request_statustext'			=> lang('Link to the request for this project'),
@@ -1826,9 +1819,7 @@
 					'lang_power_meter'					=> lang('Power meter'),
 					'lang_power_meter_statustext'		=> lang('Enter the power meter'),
 					'value_power_meter'					=> isset($values['power_meter'])?$values['power_meter']:'',
-					'lang_budget'						=> lang('Budget'),
 					'value_budget'						=> isset($values['budget'])?$values['budget']:'',
-					'lang_budget_statustext'			=> lang('Enter the budget'),
 					'lang_reserve'						=> lang('reserve'),
 					'value_reserve'						=> isset($values['reserve'])?$values['reserve']:'',
 					'lang_reserve_statustext'			=> lang('Enter the reserve'),
@@ -1867,12 +1858,7 @@
 					'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 					'lang_workorder_id'					=> lang('Workorder ID'),
-					//'sum_workorder_budget'			=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
-					//'sum_workorder_calculation'		=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
-					//'workorder_budget'				=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
-					//'sum_workorder_actual_cost'		=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
 					'lang_sum'							=> lang('Sum'),
-					//'lang_actual_cost'				=> lang('Actual cost'),
 					'value_remainder'					=> $value_remainder,
 					'lang_remainder'					=> lang('remainder'),
 					'lang_coordinator'					=> lang('Coordinator'),
@@ -1911,7 +1897,7 @@
 					'value_approval_mail_address'		=> $supervisor_email,
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'base_java_notify_url'						=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+					'base_java_notify_url'				=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
 					'lang_edit_statustext'				=> lang('Edit this entry '),
 					'lang_edit'							=> lang('Edit'),

@@ -815,4 +815,9 @@
 		{
 			return $this->so->get_user_list();
 		}
+
+		public function get_budget($project_id)
+		{
+			return $this->so->get_budget($project_id);
+		}
 	}

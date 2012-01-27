@@ -49,7 +49,7 @@ var  myPaginator_4, myDataTable_4;
 /********************************************************************************/	
 	this.myParticularRenderEvent = function()
 	{
-	//	this.addFooterDatatable0(myPaginator_0,myDataTable_0);
+		this.addFooterDatatable0(myPaginator_0,myDataTable_0);
 		this.addFooterDatatable1(myPaginator_1,myDataTable_1);
 		this.addFooterDatatable2(myPaginator_2,myDataTable_2);
 	}
@@ -58,27 +58,28 @@ var  myPaginator_4, myDataTable_4;
   	this.addFooterDatatable0 = function(paginator,datatable)
   	{
   		//call getTotalSum(name of column) in property.js
-  		tmp_sum1 = getTotalSum('budget',2,paginator,datatable);
+  		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
+  		tmp_sum2 = getTotalSum('actual_cost',2,paginator,datatable);
 
-  		if(typeof(tableYUI)=='undefined')
+  		if(typeof(tableYUI0)=='undefined')
   		{
-			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
-			tableYUI.setAttribute("id","tableYUI");
+			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI0.setAttribute("id","tableYUI0");
   		}
   		else
   		{
-  			tableYUI.deleteTFoot();
+  			tableYUI0.deleteTFoot();
   		}
 
 		//Create ROW
 		newTR = document.createElement('tr');
 
 		td_sum('Sum');
-		td_empty(3);
 		td_sum(tmp_sum1);
-		td_empty(2);
+		td_sum(tmp_sum2);
+		td_empty(1);
 
-		myfoot = tableYUI.createTFoot();
+		myfoot = tableYUI0.createTFoot();
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR);
 	}
@@ -91,14 +92,14 @@ var  myPaginator_4, myDataTable_4;
   		tmp_sum3 = getTotalSum('actual_cost',2,paginator,datatable);
   		tmp_sum4 = getTotalSum('contract_sum',2,paginator,datatable);
 
-  		if(typeof(tableYUI)=='undefined')
+  		if(typeof(tableYUI1)=='undefined')
   		{
-			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
-			tableYUI.setAttribute("id","tableYUI");
+			tableYUI1 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI1.setAttribute("id","tableYUI1");
   		}
   		else
   		{
-  			tableYUI.deleteTFoot();
+  			tableYUI1.deleteTFoot();
   		}
 
 		//Create ROW
@@ -112,7 +113,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum3);
 		td_empty(5);
 
-		myfoot = tableYUI.createTFoot();
+		myfoot = tableYUI1.createTFoot();
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR);
 	}
@@ -127,7 +128,7 @@ var  myPaginator_4, myDataTable_4;
   		if(typeof(tableYUI2)=='undefined')
   		{
 			tableYUI2 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;
-			tableYUI2.setAttribute("id","tableYUI");
+			tableYUI2.setAttribute("id","tableYUI2");
   		}
  		else
   		{

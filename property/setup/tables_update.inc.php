@@ -5822,21 +5822,18 @@
 	* Update property version from 0.9.17.633 to 0.9.17.634
 	* Add project budget per year
 	*/
-/*
+
 	$test[] = '0.9.17.633';
 	function property_upgrade0_9_17_633()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
-
+/*
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_project_budget', array(
 				'fd' => array(
 					'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'budget_account' =>  array('type' => 'varchar','precision' => 15,'nullable' => False),
-					'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
-					'category' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 					'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
@@ -5849,6 +5846,42 @@
 				'uc' => array()
 			)
 		);
+*/
+		$sql = "SELECT id, budget, start_date, user_id,entry_date FROM fm_project ORDER BY ID ASC";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$budget_values[] = array
+			(
+				'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'budget'		=> $GLOBALS['phpgw_setup']->oProc->f('budget'),
+				'start_date'	=> $GLOBALS['phpgw_setup']->oProc->f('start_date'),
+				'user_id'		=> $GLOBALS['phpgw_setup']->oProc->f('user_id'),
+				'entry_date'	=> $GLOBALS['phpgw_setup']->oProc->f('entry_date')
+			);
+		}
+
+		foreach($budget_values as $entry)
+		{
+			if($entry['budget'])
+			{
+				$value_set = array
+				(
+					'project_id'		=> $entry['id'],
+					'year'				=> date('Y',$entry['start_date']),
+					'budget'			=> $entry['budget'],
+					'user_id'			=> $entry['user_id'],
+					'entry_date'		=> $entry['entry_date'],
+					'modified_date'		=> $entry['entry_date']
+				);
+			}
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})";
+//_debug_array($sql);
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -5857,7 +5890,6 @@
 		}
 	}
 
-*/
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets

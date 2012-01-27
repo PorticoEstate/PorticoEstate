@@ -116,7 +116,7 @@
 			$wo_hour_cat_id = isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
 			$district_id	= isset($data['district_id'])?$data['district_id']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
+			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -503,7 +503,7 @@
 					$matchtypes = array
 						(
 							'exact' => '=',
-							'like'	=> $this->like						
+							'like'	=> $this->like
 						);
 
 					if(count($criteria) > 1)
@@ -549,7 +549,7 @@
 			//echo substr($sql,strripos($sql,'from'));
 
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
-			{				
+			{
 				$sql_minimized = 'SELECT DISTINCT fm_project.id '  . substr($sql_full,strripos($sql_full,'FROM'));
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
 
@@ -862,6 +862,11 @@
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
+			if($project['budget'])
+			{
+				$this->updat_budget($id, $project['year'], $project['budget']);
+			}
+
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
 			{
 				$this->db->query("update fm_tenant set contact_phone='". $project['extra']['contact_phone']. "' where id='". $project['extra']['tenant_id']. "'",__LINE__,__FILE__);
@@ -883,12 +888,12 @@
 			if(is_array($project['origin']))
 			{
 				if($project['origin'][0]['data'][0]['id'])
-				{					
+				{
 					$interlink_data = array
 						(
 							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
 							'location1_item_id' => $project['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),
 							'location2_item_id' => $id,
 							'account_id'		=> $this->account
 						);
@@ -1012,7 +1017,6 @@
 				'end_date'			=> $project['end_date'],
 				'coordinator'		=> $project['coordinator'],
 				'descr'				=> $project['descr'],
-				'budget'			=> (int)$project['budget'],
 				'reserve'			=> (int)$project['reserve'],
 				'key_deliver'		=> $project['key_deliver'],
 				'key_fetch'			=> $project['key_fetch'],
@@ -1055,6 +1059,16 @@
 			$old_reserve = (int)$this->db->f('reserve');
 
 			$this->db->query("UPDATE fm_project SET $value_set WHERE id= {$project['id']}",__LINE__,__FILE__);
+
+			if($project['delete_b_year'])
+			{
+				$this->delete_year_from_budget($project['id'], $project['delete_b_year']);
+			}
+
+			if($project['budget'])
+			{
+				$new_budget = $this->updat_budget($project['id'], $project['year'], $project['budget']);
+			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
 			{
@@ -1202,7 +1216,7 @@
 				$receipt['notice_owner'][]=lang('Coordinator changed') . ': ' . $GLOBALS['phpgw']->accounts->id2name($project['coordinator']);
 			}
 
-			if ($old_budget != (int)$project['budget'])
+			if ($old_budget != $new_budget)
 			{
 				$historylog->add('B',$project['id'],$project['budget'], $old_budget);
 			}
@@ -1238,6 +1252,74 @@
 			return $receipt;
 		}
 
+
+		function updat_budget($project_id, $year, $budget)
+		{
+			$project_id = (int) $project_id;
+			$year = $year ? (int) $year : date('Y');
+			$budget = (int) $budget;
+			$now = time();
+			$sql = "SELECT budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = $year";
+			$this->db->query($sql,__LINE__,__FILE__);
+			if ($this->db->next_record())
+			{
+				$sql = "UPDATE fm_project_budget SET budget = {$budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = $year";
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+			else
+			{
+				$value_set = array
+				(
+					'project_id'		=> $project_id,
+					'year'				=> $year,
+					'budget'			=> $budget,
+					'user_id'			=> $this->account,
+					'entry_date'		=> $now,
+					'modified_date'		=> $now
+				);
+
+				$cols = implode(',', array_keys($value_set));
+				$values	= $this->db->validate_insert(array_values($value_set));
+				$this->db->query("INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+			}
+			$sql = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE project_id = {$project_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$sum_budget = (int)$this->db->f('sum_budget');
+			$sql = "UPDATE fm_project SET budget = {$sum_budget} WHERE id = {$project_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			return $sum_budget;
+		}
+
+		function get_budget($project_id)
+		{
+			$project_id = (int) $project_id;
+			$values = array();
+
+			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'project_id'		=> $this->db->f('project_id'),
+					'year'				=> $this->db->f('year'),
+					'budget'			=> (int)$this->db->f('budget'),
+					'actual_cost'		=> $this->db->f('actual_cost'),
+					'user_id'			=> $this->db->f('user_id'),
+					'entry_date'		=> $this->db->f('entry_date'),
+					'modified_date'		=> $this->db->f('modified_date')
+				);
+			}
+			return $values;
+		}
+
+		function delete_year_from_budget($project_id, $data)
+		{
+			$project_id = (int) $project_id;
+			$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year IN(" . implode(',', $data) . ')';
+			$this->db->query($sql,__LINE__,__FILE__);
+		}
 
 		function update_request_status($project_id='',$status='',$category=0,$coordinator=0)
 		{
@@ -1296,7 +1378,7 @@
 						(
 							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
 							'location1_item_id' => $add_request['request_id'][$i],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),
 							'location2_item_id' => $id,
 							'account_id'		=> $this->account
 						);
@@ -1398,7 +1480,7 @@
 					{
 						$filter .= " AND (act_mtrl_cost > 0 OR act_vendor_cost > 0)";
 					}
-					
+
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
@@ -1473,7 +1555,7 @@
 						'remark'			=> '',
 						'deadline'			=> ''
 					);
-	
+
 				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$status_new}'");
 				$this->db->next_record();
 				if ($this->db->f('approved') || $this->db->f('closed'))
