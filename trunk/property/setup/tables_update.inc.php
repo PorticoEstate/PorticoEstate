@@ -5828,14 +5828,13 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
-/*
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_project_budget', array(
 				'fd' => array(
 					'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
 					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
-					'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
@@ -5846,9 +5845,10 @@
 				'uc' => array()
 			)
 		);
-*/
+
 		$sql = "SELECT id, budget, start_date, user_id,entry_date FROM fm_project ORDER BY ID ASC";
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$budget_values = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$budget_values[] = array
@@ -5863,7 +5863,7 @@
 
 		foreach($budget_values as $entry)
 		{
-			if($entry['budget'])
+			if($entry['budget'] && abs($entry['budget']) > 0)
 			{
 				$value_set = array
 				(
@@ -5874,13 +5874,11 @@
 					'entry_date'		=> $entry['entry_date'],
 					'modified_date'		=> $entry['entry_date']
 				);
+				$cols = implode(',', array_keys($value_set));
+				$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+				$sql = "INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 			}
-
-			$cols = implode(',', array_keys($value_set));
-			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
-			$sql = "INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})";
-//_debug_array($sql);
-			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

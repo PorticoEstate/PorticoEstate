@@ -1294,23 +1294,78 @@
 		function get_budget($project_id)
 		{
 			$project_id = (int) $project_id;
+
+			$sql = "SELECT id AS order_id FROM fm_workorder WHERE project_id = {$project_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$orders = array();
+			while ($this->db->next_record())
+			{
+				$orders[] = $this->db->f('order_id');
+			}
+			
+			$actual_cost = array();
+			foreach($orders as $order)
+			{
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$order}' GROUP BY periode ORDER BY periode ASC ";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$year = substr( $this->db->f('periode'), 0, 4 );
+					$actual_cost[$year] += $this->db->f('actual_cost');
+				}
+			}
+
+			$sort_year = array();
 			$values = array();
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
+			
 			while ($this->db->next_record())
 			{
+				$year = $this->db->f('year');
+				$_actual_cost = isset($actual_cost[$year]) &&  $actual_cost[$year] ? $actual_cost[$year] : 0;
+				if($_actual_cost)
+				{
+					unset($actual_cost[$year]);
+				}
+
+				$sort_year[] = $year;
 				$values[] = array
 				(
-					'project_id'		=> $this->db->f('project_id'),
+					'project_id'		=> $project_id,
 					'year'				=> $this->db->f('year'),
 					'budget'			=> (int)$this->db->f('budget'),
-					'actual_cost'		=> $this->db->f('actual_cost'),
+					'actual_cost'		=> $_actual_cost,
 					'user_id'			=> $this->db->f('user_id'),
 					'entry_date'		=> $this->db->f('entry_date'),
 					'modified_date'		=> $this->db->f('modified_date')
 				);
 			}
+			
+			if($actual_cost && count($actual_cost))
+			{
+				foreach($actual_cost as $year => $_actual_cost)
+				{
+					$sort_year[] = $year;
+					$values[] = array
+					(
+						'project_id'		=> $project_id,
+						'year'				=> $year ,
+						'budget'			=> 0,
+						'actual_cost'		=> $_actual_cost,
+						'user_id'			=> 0,
+						'entry_date'		=> 0,
+						'modified_date'		=> 0
+					);
+				}
+			}
+
+			if($values)
+			{
+				array_multisort($sort_year, SORT_ASC, $values);
+			}
+
 			return $values;
 		}
 
