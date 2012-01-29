@@ -41,6 +41,17 @@ var  myPaginator_4, myDataTable_4;
 		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
 	}	
 
+	var FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+	var FormatterAmount2 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<center>"+oData+"</center>";
@@ -87,7 +98,7 @@ var  myPaginator_4, myDataTable_4;
   	this.addFooterDatatable1 = function(paginator,datatable)
   	{
   		//call getTotalSum(name of column) in property.js
-  		tmp_sum1 = getTotalSum('budget',2,paginator,datatable);
+  		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
   		tmp_sum2 = getTotalSum('calculation',2,paginator,datatable);
   		tmp_sum3 = getTotalSum('actual_cost',2,paginator,datatable);
   		tmp_sum4 = getTotalSum('contract_sum',2,paginator,datatable);

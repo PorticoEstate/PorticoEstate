@@ -1377,7 +1377,6 @@
 				'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
-				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
