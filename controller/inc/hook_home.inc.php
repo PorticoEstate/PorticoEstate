@@ -38,7 +38,7 @@
 	$so_control = CreateObject('controller.socontrol');
 
 	//echo '<H1> Hook for controller </H1>';	
-	$location_code = '1101';
+	//$location_code = '1101';
 	$year = phpgw::get_var('year');
 	
 	if(empty($year)){
@@ -62,24 +62,25 @@
 
 	$location_finder = new location_finder();
 	$my_locations = $location_finder->get_responsibilities( $criteria );
-	//print_r($my_locations);
-	
-	if(empty($location_code)){
-		$location_code = $my_locations[0]["location_code"];	
-	}
 	
 	$repeat_type = null;
+	$controls_for_location_array = array();
+	foreach($my_locations as $location)
+	{
+		$controls_for_location_array[] = array($location["location_code"], $so_control->get_controls_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type ));
+	}
 	
-	$controls_for_location_array = $so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
-	//var_dump($controls_for_location_array);
 	$controls_array = array();
 	$control_dates = array();
-	foreach($controls_for_location_array as $control){
-		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_repeat_interval());
-		$controls_array[] = array($control, $date_generator->get_dates());
+	foreach($controls_for_location_array as $control_arr){
+		$current_location = $control_arr[0];
+		$controls_for_loc_array = $control_arr[1];
+		foreach($controls_for_loc_array as $control)
+		{
+			$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_repeat_interval());
+			$controls_array[] = array($current_location, $control, $date_generator->get_dates());
+		}
 	}
-
-	$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 	
 	$portalbox1 = CreateObject('phpgwapi.listbox', array
 	(
@@ -121,10 +122,10 @@
 	$portalbox1_data = array();
 	foreach ($controls_array as $control_instance)
 	{
-		$current_control = $control_instance[0];
+		$curr_location = $control_instance[0];
+		$current_control = $control_instance[1];
 		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
-		$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
-		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $control_location));
+		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
 		foreach($control_areas['cat_list'] as $area)
 		{
@@ -188,10 +189,11 @@
 	$portalbox2_data = array();
 	foreach ($controls_array as $control_instance)
 	{
-		$current_control = $control_instance[0];
+		$curr_location = $control_instance[0];
+		$current_control = $control_instance[1];
 		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
-		$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
-		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $control_location));
+		//$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
+		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
 		foreach($control_areas['cat_list'] as $area)
 		{
@@ -205,7 +207,7 @@
 		{
 			$planned_lists = $check_list->get_deadline();
 		}
-		$current_dates = $control_instance[1];
+		$current_dates = $control_instance[2];
 		
 		foreach($current_dates as $current_date)
 		{
