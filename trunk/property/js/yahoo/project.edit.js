@@ -7,7 +7,7 @@ var  myPaginator_4, myDataTable_4;
 /********************************************************************************/
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 	{
-	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
+	  	elCell.innerHTML = "<a href="+datatable[1][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
 	};
 
 
@@ -70,7 +70,8 @@ var  myPaginator_4, myDataTable_4;
   	{
   		//call getTotalSum(name of column) in property.js
   		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
-  		tmp_sum2 = getTotalSum('actual_cost',2,paginator,datatable);
+  		tmp_sum2 = getTotalSum('sum_orders',0,paginator,datatable);
+  		tmp_sum3 = getTotalSum('actual_cost',2,paginator,datatable);
 
   		if(typeof(tableYUI0)=='undefined')
   		{
@@ -88,6 +89,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum('Sum');
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
+		td_sum(tmp_sum3);
 		td_empty(1);
 
 		myfoot = tableYUI0.createTFoot();
