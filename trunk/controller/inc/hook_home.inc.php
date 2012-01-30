@@ -138,7 +138,7 @@
 			$portalbox1->data[] = array
 			(
 				'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id' => $check_list->get_id()))
 			);
 		}
 /*		
