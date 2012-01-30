@@ -958,6 +958,12 @@
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
 				}
+
+				if(isset($config->config_data['workorder_require_vendor']) && $config->config_data['workorder_require_vendor'] == 1 && !$values['vendor_id'])
+				{
+					$receipt['error'][]=array('msg'=>lang('no vendor'));				
+				}
+
 				if(!$values['b_account_id'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
