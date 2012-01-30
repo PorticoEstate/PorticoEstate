@@ -17,7 +17,7 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
-	// file: uicheck_list_for_location.xsl
+	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list option").click(function () {
 		 var control_area_id = $(this).val();
@@ -230,7 +230,7 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list_for_location.get_cases_for_check_list" + add_param;
+		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
