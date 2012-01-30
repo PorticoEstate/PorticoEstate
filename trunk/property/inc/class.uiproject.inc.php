@@ -1637,6 +1637,7 @@
 														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'paid_percent','label'=>lang('paid percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))

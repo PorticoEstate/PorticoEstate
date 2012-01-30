@@ -716,8 +716,8 @@
 			$project_id = (int) $project_id;
 			$budget = array();
 			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,contract_sum,"
-				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
-				." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
+				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id,paid_percent"
+				." FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
@@ -733,6 +733,7 @@
 					'status'			=> $this->db->f('status'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
 					'contract_sum'		=> (int)$this->db->f('contract_sum'),
+					'paid_percent'		=> (int)$this->db->f('paid_percent')
 				);
 			}
 			return $budget;
@@ -1315,14 +1316,17 @@
 				}
 			}
 
-			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum FROM fm_workorder"
+			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget,"
+			. " sum(contract_sum) as contract_sum ,paid_percent"
+			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-			. " WHERE project_id = {$project_id} AND fm_workorder_status.closed IS NULL"
-			. " GROUP BY fm_workorder.id, fm_workorder.start_date";// ORDER BY start_date ASC";
+			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
+			. " GROUP BY fm_workorder.id, paid_percent, fm_workorder.start_date ORDER BY start_date ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
+				$paid_percent = (int)$this->db->f('paid_percent');
 				$year = $this->db->f('year');
 
 				if($this->db->f('contract_sum') > 0)
@@ -1341,9 +1345,10 @@
 				{
 					$_sum = 0;
 				}
+_debug_array((100 - $paid_percent)/100);
+				$_sum = $_sum * (100 - $paid_percent)/100;
 				$cost_info[$year]['sum_orders'] += $_sum;
 			}
-
 
 			$sort_year = array();
 			$values = array();

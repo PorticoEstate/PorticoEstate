@@ -515,6 +515,7 @@
 				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
 				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
 				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
+				$values['workorder_budget'][$i]['paid_percent'] = (int)$workorder_data[$i]['paid_percent'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
