@@ -1311,9 +1311,39 @@
 				while ($this->db->next_record())
 				{
 					$year = substr( $this->db->f('periode'), 0, 4 );
-					$actual_cost[$year] += $this->db->f('actual_cost');
+					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
 				}
 			}
+
+			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum FROM fm_workorder"
+			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+			. " WHERE project_id = {$project_id} AND fm_workorder_status.closed IS NULL"
+			. " GROUP BY fm_workorder.id ORDER BY start_date ASC";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$year = $this->db->f('year');
+
+				if($this->db->f('contract_sum') > 0)
+				{
+					$_sum = $this->db->f('contract_sum');
+				}
+				else if($this->db->f('calculation') > 0)
+				{
+					$_sum = $this->db->f('calculation');
+				}
+				else if($this->db->f('budget') > 0)
+				{
+					$_sum = $this->db->f('budget');
+				}
+				else
+				{
+					$_sum = 0;
+				}
+				$cost_info[$year]['sum_orders'] += $_sum;
+			}
+
 
 			$sort_year = array();
 			$values = array();
@@ -1324,10 +1354,11 @@
 			while ($this->db->next_record())
 			{
 				$year = $this->db->f('year');
-				$_actual_cost = isset($actual_cost[$year]) &&  $actual_cost[$year] ? $actual_cost[$year] : 0;
-				if($_actual_cost)
+				$_actual_cost = isset($cost_info[$year]['actual_cost']) &&  $cost_info[$year]['actual_cost'] ? $cost_info[$year]['actual_cost'] : 0;
+				$_sum_orders = isset($cost_info[$year]['sum_orders']) &&  $cost_info[$year]['sum_orders'] ? $cost_info[$year]['sum_orders'] : 0;
+				if(isset($cost_info[$year]))
 				{
-					unset($actual_cost[$year]);
+					unset($cost_info[$year]);
 				}
 
 				$sort_year[] = $year;
@@ -1336,16 +1367,16 @@
 					'project_id'		=> $project_id,
 					'year'				=> $this->db->f('year'),
 					'budget'			=> (int)$this->db->f('budget'),
+					'sum_orders'		=> $_sum_orders,
 					'actual_cost'		=> $_actual_cost,
 					'user_id'			=> $this->db->f('user_id'),
 					'entry_date'		=> $this->db->f('entry_date'),
 					'modified_date'		=> $this->db->f('modified_date')
 				);
 			}
-			
-			if($actual_cost && count($actual_cost))
+			if($cost_info && count($cost_info))
 			{
-				foreach($actual_cost as $year => $_actual_cost)
+				foreach($cost_info as $year => $cost_info)
 				{
 					$sort_year[] = $year;
 					$values[] = array
@@ -1353,13 +1384,16 @@
 						'project_id'		=> $project_id,
 						'year'				=> $year ,
 						'budget'			=> 0,
-						'actual_cost'		=> $_actual_cost,
+						'sum_orders'			=> isset($cost_info['sum_orders']) && $cost_info['sum_orders'] ? $cost_info['sum_orders'] : 0,
+						'actual_cost'		=> isset($cost_info['actual_cost']) && $cost_info['actual_cost'] ? $cost_info['actual_cost'] : 0,
 						'user_id'			=> 0,
 						'entry_date'		=> 0,
 						'modified_date'		=> 0
 					);
 				}
 			}
+//_debug_array($values);
+//die();			
 
 			if($values)
 			{
