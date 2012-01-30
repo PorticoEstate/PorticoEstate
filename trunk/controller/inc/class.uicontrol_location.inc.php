@@ -98,44 +98,24 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			$building_types  = execMethod('property.soadmin_location.read',array());
 			
-			$type_id = 1;
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
 			
-			$category_types = $this->bocommon->select_category_list(array(
-																		'format'=>'filter',
-																		'selected' => $this->cat_id,
-																		'type' =>'location',
-																		'type_id' =>$type_id,
-																		'order'=>'descr'
-																	));
-			
-			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-			$default_value = array ('id'=>'','name'=>lang('no district'));
-			array_unshift($district_list,$default_value);
-			
-			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
-			$default_value = array ('id'=>'','name'=>lang('no part of town'));
-			array_unshift($part_of_town_list,$default_value);
-			
-			$_role_criteria = array
-					(
-						'type'		=> 'responsibility_role',
-						'filter'	=> array('location' => ".location.{$type_id}"),
-						'order'		=> 'name'
-					);
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+							
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
 
-			$responsibility_roles_list =   execMethod('property.sogeneric.get_list',$_role_criteria);
-			$default_value = array ('id'=>'','name'=>lang('no role'));
-			array_unshift ($responsibility_roles,$default_value);
-			
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-			$controls_array = $this->so_control->get_controls_by_control_area($control_areas_array[0]['id']);
-			$control_id = $control_areas_array[0]['id'];
-			
-			if($control_id == null)
-				$control_id = 0;
-			
 			$tabs = array( array(
 						'label' => lang('View_locations_for_control')
 					), array(
@@ -146,8 +126,7 @@
 			$data = array(
 				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'					=> "view_locations_for_control",
-				'control_area_array' 	=> $control_areas_array,
-				'control_array'			=> $control_array,
+				'control_areas_array2'	=> $control_areas_array2,
 				'locations_table' => array(
 					'source' => self::link(array('menuaction' => 'controller.uicontrol.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
 					'field' => array(
@@ -237,6 +216,24 @@
 			
 			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 			
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+			
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+							
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
+			
+			
 			$tabs = array( array(
 						'label' => lang('View_locations_for_control'),
 						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
@@ -249,7 +246,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 				'view'						=> "add_location_to_control",
 				'control_filters'			=> array(
-					'control_area_array' 		=> $control_areas_array,
+					'control_areas_array2' 	=> $control_areas_array2,
 					'control_array' 			=> $control_array
 				),
 				'filter_form' 				=> array(
