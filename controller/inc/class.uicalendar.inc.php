@@ -202,7 +202,7 @@
 
 			// Puts aggregate values for daily controls in a twelve month array 
 			foreach($controls_for_location_array as $control){
-				if($control->get_repeat_type() == 0){
+				if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1){
 					$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year);
 				}
 			}
