@@ -38,13 +38,13 @@
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches controls from db and populates the control list.
 			 The ajax opearation is handled in ajax.js --> 
 		 <select style="float:left;" id="control_area_list" name="control_area_list">
-			<xsl:for-each select="control_area_array">
-				<xsl:variable name="control_area_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$control_area_id}">
-					<xsl:value-of select="title"/>
-				</option>			
+			<option value="">Velg kontrollområde</option>
+			<xsl:for-each select="control_areas_array2">
+				<option value="{id}">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</option>
 			</xsl:for-each>
-		</select>
+		  </select>
 		 
 		 <form id="loc_form" action="" method="GET">
 			<select id="control_id" name="control_id">

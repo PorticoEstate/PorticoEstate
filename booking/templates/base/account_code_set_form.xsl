@@ -110,9 +110,7 @@
 			<div class="clr"/>
 			<dl class="form">
 				<dt><label for="field_invoice_instruction"><xsl:value-of select="php:function('lang', 'Invoice instruction')" /></label></dt>
-				<dd>
-					<textarea id="field_invoice_instruction" class="full-width" name="invoice_instruction"><xsl:value-of select="account_code_set/invoice_instruction"/></textarea>
-				</dd>
+				<dd><input size="120" id="field_invoice_instruction" name="invoice_instruction" value="{account_code_set/invoice_instruction}" /></dd>
 			</dl>
 
 			<div class="clr"/>

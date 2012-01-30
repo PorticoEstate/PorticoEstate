@@ -115,6 +115,10 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$filter_clauses[] = "org.id = {$id}";
 			}
 		}
+		if(isset($filters['edit_from_frontend']))
+		{
+			$filter_clauses[] = "org.id IN (SELECT organization_id from activity_activity where state = 3 OR state = 4)";
+		}
 
 /*
 		// All parties with contracts of type X

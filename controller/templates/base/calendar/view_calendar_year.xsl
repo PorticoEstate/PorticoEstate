@@ -113,7 +113,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
 												<xsl:text>&amp;date=</xsl:text>
 												<xsl:value-of select="info/date"/>
 												<xsl:text>&amp;control_id=</xsl:text>
@@ -134,7 +134,7 @@
 										<div>
 										<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list_for</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -146,7 +146,7 @@
 										<div>
 											<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -160,7 +160,7 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a>
 											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 												<xsl:text>&amp;check_list_id=</xsl:text>
 												<xsl:value-of select="info/check_list_id"/>
 											</xsl:attribute>
@@ -179,7 +179,7 @@
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
 											<a class="view_check_list">
 											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 													<xsl:text>&amp;check_list_id=</xsl:text>
 													<xsl:value-of select="info/check_list_id"/>
 												</xsl:attribute>

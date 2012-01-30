@@ -302,6 +302,8 @@
 				$sql .= "AND cic.status = 0 ";
 			else if($status == 'closed')
 				$sql .= "AND cic.status = 1 ";
+			else if($status == 'open_or_waiting')
+				$sql .= "AND cic.status = 0 OR cic.status = 2";
 				
 			if($messageStatus != null & $messageStatus == 'no_message_registered')
 				$sql .= "AND cic.location_item_id IS NULL ";

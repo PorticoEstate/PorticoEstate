@@ -38,7 +38,7 @@
 	$so_control = CreateObject('controller.socontrol');
 
 	//echo '<H1> Hook for controller </H1>';	
-	$location_code = '1101';
+	//$location_code = '1101';
 	$year = phpgw::get_var('year');
 	
 	if(empty($year)){
@@ -62,28 +62,100 @@
 
 	$location_finder = new location_finder();
 	$my_locations = $location_finder->get_responsibilities( $criteria );
-	//print_r($my_locations);
-	
-	if(empty($location_code)){
-		$location_code = $my_locations[0]["location_code"];	
-	}
 	
 	$repeat_type = null;
+	$controls_for_location_array = array();
+	foreach($my_locations as $location)
+	{
+		$controls_for_location_array[] = array($location["location_code"], $so_control->get_controls_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type ));
+	}
 	
-	$controls_for_location_array = $so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
-	//var_dump($controls_for_location_array);
 	$controls_array = array();
 	$control_dates = array();
-	foreach($controls_for_location_array as $control){
-		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_repeat_interval());
-		$controls_array[] = array($control, $date_generator->get_dates());
+	foreach($controls_for_location_array as $control_arr){
+		$current_location = $control_arr[0];
+		$controls_for_loc_array = $control_arr[1];
+		foreach($controls_for_loc_array as $control)
+		{
+			$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_repeat_interval());
+			$controls_array[] = array($current_location, $control, $date_generator->get_dates());
+		}
+	}
+	
+	$portalbox1 = CreateObject('phpgwapi.listbox', array
+	(
+		'title'		=> "Mine planlagte kontroller",
+		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+		'width'	=> '100%',
+		'outerborderwidth'	=> '0',
+		'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
+	));
+
+	$app_id = $GLOBALS['phpgw']->applications->name2id('controller');
+	if( !isset($GLOBALS['portal_order']) ||!in_array($app_id, $GLOBALS['portal_order']) )
+	{
+		$GLOBALS['portal_order'][] = $app_id;
+	}
+	$var = array
+	(
+		'up'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+		'down'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+		'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+		'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
+		'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
+	);
+
+	foreach ( $var as $key => $value )
+	{
+		//			$portalbox->set_controls($key,$value);
 	}
 
-	$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+	$category_name = array(); // caching
 	
-	$portalbox = CreateObject('phpgwapi.listbox', array
+	$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+	$cats->supress_info	= true;
+	$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
+
+	$portalbox1->data = array();
+	$portalbox1_data = array();
+	foreach ($controls_array as $control_instance)
+	{
+		$curr_location = $control_instance[0];
+		$current_control = $control_instance[1];
+		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
+		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
+		$location_name = $location_array["loc1_name"];
+		foreach($control_areas['cat_list'] as $area)
+		{
+			if($area['cat_id'] == $current_control->get_control_area_id())
+			{
+				$control_area_name = $area['name'];
+			}
+		}
+		foreach($check_lists as $check_list)
+		{
+			$next_date = "Planlagt: " . date('d/m/Y', $check_list->get_planned_date());
+			$portalbox1_data[] = array
+			($check_list->get_planned_date(), array
+			(
+				'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list->get_id()))
+			));
+		}
+	}
+	//sort data by planned date for check list
+	sort($portalbox1_data);
+	foreach($portalbox1_data as $check_list_dates)
+	{
+		$portalbox1->data[] = $check_list_dates[1];
+	}
+	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox1->draw()."\n".'<!-- END checklist info -->'."\n";
+	
+	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "Mine kontroller",
+		'title'		=> "Mine tildelte kontroller",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -113,19 +185,64 @@
 
 	$category_name = array(); // caching
 
-	$portalbox->data = array();
+	$portalbox2->data = array();
+	$portalbox2_data = array();
 	foreach ($controls_array as $control_instance)
 	{
-		$current_control = $control_instance[0];
-		$current_dates = $control_instance[1];
+		$curr_location = $control_instance[0];
+		$current_control = $control_instance[1];
+		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
+		//$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
+		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
+		$location_name = $location_array["loc1_name"];
+		foreach($control_areas['cat_list'] as $area)
+		{
+			if($area['cat_id'] == $current_control->get_control_area_id())
+			{
+				$control_area_name = $area['name'];
+			}
+		}
+		$planned_lists = array();
+		foreach($check_lists as $check_list)
+		{
+			$planned_lists = $check_list->get_deadline();
+		}
+		$current_dates = $control_instance[2];
+		
 		foreach($current_dates as $current_date)
 		{
-			$next_date = date('d/m/Y', $current_date);
-			$portalbox->data[] = array
-			(
-				'text' => "{$current_control->get_title()} :: Fristdato: {$next_date}",
-				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
-			);
+			if(isset($check_lists))
+			{
+				foreach($check_lists as $check_list)
+				{
+					if($current_date != $check_list->get_deadline())
+					{
+						$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+						$portalbox2_data[] = array
+						($current_date, array
+						(
+							'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+						));
+					}
+				}
+			}
+			else
+			{
+				$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+				$portalbox2_data[] = array
+				($current_date, array
+				(
+					'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+				));					
+			}
 		}
 	}
-	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox->draw()."\n".'<!-- END checklist info -->'."\n";
+	//sort data by due date for check list
+	sort($portalbox2_data);
+	foreach($portalbox2_data as $check_list_dates)
+	{
+		$portalbox2->data[] = $check_list_dates[1];
+	}
+	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
