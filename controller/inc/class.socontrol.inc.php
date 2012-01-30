@@ -518,4 +518,16 @@
 				return preg_split('/,/', $result);
 			}
 		}
+		
+		public function getLocationCodeFromControl($control_id)
+		{
+			$sql = "select location_code from controller_control_location_list where control_id={$control_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->num_rows() > 0)
+			{
+				$this->db->next_record();
+				$result = $this->db->f(location_code);
+				return $result;
+			}
+		}
 	}
