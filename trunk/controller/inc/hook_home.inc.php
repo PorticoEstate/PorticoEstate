@@ -192,6 +192,7 @@
 	foreach ($controls_array as $control_instance)
 	{
 		$current_control = $control_instance[0];
+		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
 		$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $control_location));
 		$location_name = $location_array["loc1_name"];
@@ -202,15 +203,26 @@
 				$control_area_name = $area['name'];
 			}
 		}
+		$planned_lists = array();
+		foreach($check_lists as $check_list)
+		{
+			$planned_lists = $check_list->get_deadline();
+		}
 		$current_dates = $control_instance[1];
 		foreach($current_dates as $current_date)
 		{
-			$next_date = "Fristdato: " . date('d/m/Y', $current_date);
-			$portalbox2->data[] = array
-			(
-				'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
-			);
+			foreach($check_lists as $check_list)
+			{
+				if($current_date != $check_list->get_deadline())
+				{
+					$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+					$portalbox2->data[] = array
+					(
+						'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+					);
+				}
+			}
 		}
 	}
 	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
