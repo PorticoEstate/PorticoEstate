@@ -21,7 +21,7 @@
 						 		<ul>		
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><xsl:value-of select="descr"/>
+										<li><xsl:number />. <xsl:value-of select="descr"/>
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">

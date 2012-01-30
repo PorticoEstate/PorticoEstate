@@ -92,8 +92,6 @@
 												
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
-			$repeat_type = 0;
-
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
@@ -111,9 +109,9 @@
 			
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year) ; 
 			
-			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts);
 		
-			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts, $repeat_type);
+			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts);
 			
 			$controls_with_check_list = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 			

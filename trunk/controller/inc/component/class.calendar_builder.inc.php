@@ -19,24 +19,27 @@ class calendar_builder {
 
 			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
 
+			echo " Kontroll: " . $control->get_title();
+			
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
 				
 				$check_list_status_info = new check_list_status_info();
 				$check_list_status_info->set_check_list_id( $check_list->get_id() );
 		
-				$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
-				
-				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() > $todays_date)
+				$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+
+				echo " Dato: "	. $check_list->get_id() . "  deadline: " . 	date("d/m-Y", $check_list->get_deadline());
+		
+				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() > $todays_date_ts)
 				{
 					$status = "control_planned";
-					$check_list_status_info->set_info_text("Planlagt utført: " . $check_list->get_planned_date());
 				}
-				else if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() < $todays_date)
+				else if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() < $todays_date_ts )
 				{
 					$status = "control_not_accomplished_with_info";
 				}
-				else if( $check_list->get_status() == 0 & $check_list->get_deadline() > $todays_date )
+				else if( $check_list->get_status() == 0 & $check_list->get_deadline() < $todays_date_ts )
 				{
 					$status = "control_not_accomplished";
 				}
@@ -136,14 +139,13 @@ class calendar_builder {
 		
 	function init_calendar( $control, $calendar_array, $num, $period_type ){
 		
-		// Initialises twelve_months_array
 		for($i=1;$i<=$num;$i++){
 			$calendar_array[$i] = null;
 		}
 		
 		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
 		$dates_array = $date_generator->get_dates();
-	
+		
 		// Inserts dates on behalf of repeat type and repeat interval
 		foreach($dates_array as $date){
 			

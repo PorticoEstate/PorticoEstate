@@ -27,6 +27,7 @@
 			</xsl:attribute>
 			Lukkede saker
 		</a>
+		<!-- 
 		<a id="view_measurements">
 			<xsl:if test="$active_tab = 'view_measurements'">
 				<xsl:attribute name="class">active</xsl:attribute>
@@ -39,5 +40,6 @@
 			</xsl:attribute>
 			Målinger
 		</a>
+		 -->
 	</div>
 </xsl:template>

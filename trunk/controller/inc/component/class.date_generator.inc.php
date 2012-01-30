@@ -39,9 +39,13 @@ class date_generator
 			
 			$this->calendar_array[] = $interval_date; 
 						
-			if($this->repeat_type == 1 || $this->repeat_type == 0)
+			if($this->repeat_type == 0)
 			{
 				$interval_date = mktime(0,0,0, date("m", $interval_date), date("d", $interval_date)+$this->repeat_interval, date("Y", $interval_date));
+			}
+			else if($this->repeat_type == 1)
+			{
+				$interval_date = mktime(0,0,0, date("m", $interval_date), date("d", $interval_date) + ($this->repeat_interval * 7), date("Y", $interval_date));
 			}
 			else if($this->repeat_type == 2)
 			{
@@ -88,6 +92,10 @@ class date_generator
 		else if( $this->repeat_type == 2 ){
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
 			$search_date = mktime(0,0,0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+		}
+   		else if( $this->repeat_type == 3 ){
+			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
+			$search_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
 		}
 		
 		return $search_date;
