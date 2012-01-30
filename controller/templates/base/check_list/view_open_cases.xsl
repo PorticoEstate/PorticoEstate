@@ -18,7 +18,7 @@
 					 	<xsl:when test="cases_array/child::node()">
 					 		<li class="check_item_case">
 						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
-						 		<ul>		
+						 		<ul>
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
 										<li><span class="order_nr"><xsl:number /></span>. <xsl:value-of select="descr"/>

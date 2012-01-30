@@ -267,7 +267,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "WHERE cl.control_id = $control_id "; 
 		$sql .= "ORDER BY cl.id;";
-		//var_dump($sql);
+		
 		$this->db->query($sql);
 		
 		$check_list_id = 0;
@@ -665,7 +665,7 @@ class controller_socheck_list extends controller_socommon
 		$values = array(
 			'control_id = ' . $this->marshal($check_list->get_control_id(), 'int'),
 			'status = ' . $check_list->get_status(),
-			'comment = ' . $this->marshal($check_list->get_comment(), 'string'),
+			'comment = ' . $check_list->get_comment(),
 			'deadline = ' . $this->marshal($check_list->get_deadline(), 'int'),
 			'planned_date = ' . $this->marshal($check_list->get_planned_date(), 'int'),
 			'completed_date = ' . $this->marshal($check_list->get_completed_date(), 'int'),
