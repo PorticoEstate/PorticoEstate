@@ -99,7 +99,7 @@
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 						'image'	=> array('property', 'location_1'),
 					),
 					'calendar_overview' => array
@@ -117,7 +117,7 @@
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 						'image'	=> array('property', 'location_1'),
 					),
 					'location_check_list' => array

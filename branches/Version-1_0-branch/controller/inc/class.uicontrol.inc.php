@@ -274,8 +274,6 @@
 				
 			$tabs = $this->make_tab_menu($control_id);
 			
-			print_r( $tabs );
-			
 			$data = array
 			(
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
@@ -542,7 +540,6 @@
 			
 			if($control_id > 0){
 				
-				echo " Detaljer ";
 				$control = $this->so->get_single($control_id);
 				
 				$tabs[] = array(
@@ -555,7 +552,6 @@
 				
 				if(count($saved_control_groups) > 0)
 				{
-					echo " Grupper ";
 					$tabs[] = array(
 								'label' => "2: " . lang('Choose_control_groups'),
 								'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
@@ -566,7 +562,6 @@
 					
 					if(count($saved_control_items) > 0)
 					{
-						echo " Punkter ";
 						$tabs[] = array(
 									'label' => "3: " . lang('Choose_control_items'),
 									'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
@@ -595,13 +590,6 @@
 							'label' => "4: " . lang('Sort_check_list')
 						));
 			}
-			
-			
-			
-			
-			
-			echo "  2: ";
-			print_r($tabs);
 			
 			return $tabs;
 		} 
@@ -652,7 +640,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
 			$value['parameters'][] = "control_id";
 		}

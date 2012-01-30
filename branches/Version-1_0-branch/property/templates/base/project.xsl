@@ -358,9 +358,41 @@ Returns mixed
 							</xsl:choose>
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_budget"/>
+									<xsl:value-of select="php:function('lang', 'budget')"/>
 								</td>
-								<td><input type="text" name="values[budget]" value="{value_budget}"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								<td>
+									<table>
+									<tr>
+									<td>
+									<input type="text" name="values[budget]" value="">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									</td>
+									<td>
+									<select name="values[budget_year]">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'year')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'year')"/>
+										</option>
+										<xsl:apply-templates select="year_list/options"/>
+									</select>
+									</td>
+									</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'budget')"/>
+								</td>
+								<td>
+									<div id="paging_0"> </div>
+									<div id="datatable-container_0"/>
 								</td>
 							</tr>
 							<tr>
@@ -415,8 +447,8 @@ Returns mixed
 									<xsl:otherwise>
 										<td>
 											<!-- DataTable -->
-											<div id="paging_0"> </div>
-											<div id="datatable-container_0"/>
+											<div id="paging_1"> </div>
+											<div id="datatable-container_1"/>
 										</td>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -572,8 +604,8 @@ Returns mixed
 						</table>
 					</div>
 					<div id="history">
-						<div id="paging_1"> </div>
-						<div id="datatable-container_1"/>
+						<div id="paging_4"> </div>
+						<div id="datatable-container_4"/>
 					</div>
 					<xsl:call-template name="attributes_values"/>
 				</div>
@@ -645,42 +677,6 @@ Returns mixed
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="workorder_budget">
-		<xsl:variable name="workorder_link"><xsl:value-of select="//workorder_link"/>&amp;id=<xsl:value-of select="workorder_id"/></xsl:variable>
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td align="right">
-				<a href="{$workorder_link}">
-					<xsl:value-of select="workorder_id"/>
-				</a>
-			</td>
-			<td align="right">
-				<xsl:value-of select="budget"/>
-			</td>
-			<td align="right">
-				<xsl:value-of select="calculation"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="vendor_name"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="status"/>
-			</td>
-		</tr>
-	</xsl:template>
 
 	<!-- New template-->
 	<xsl:template match="branch_list">

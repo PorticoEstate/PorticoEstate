@@ -1380,26 +1380,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-/*
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$table_header_workorder_budget[] = array
-				(
-					'lang_workorder_id'	=> lang('Workorder'),
-					'lang_title'		=> lang('title'),
-					'lang_budget'		=> lang('Budget'),
-					'lang_calculation'	=> lang('Calculation'),
-					'lang_vendor'		=> lang('Vendor'),
-					'lang_status'		=> lang('status')
-				);
-
-*/
 			if ($id)
 			{
 				$function_msg = lang("{$mode} project");
@@ -1603,12 +1583,24 @@
 
 			//---datatable settings---------------------------------------------------	
 
+
+			if($id)
+			{
+				$content_budget = $this->bo->get_budget($id);
+				$lang_delete = lang('Check to delete year');
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
+				}
+			}
+//_debug_array($content_budget);die();
 			$datavalues[0] = array
 				(
 					'name'					=> "0",
-					'values' 				=> json_encode($values['workorder_budget']),
-					'total_records'			=> count($values['workorder_budget']),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'edit_action'			=> "''",
+					'permission'   			=> "''",
 					'is_paginator'			=> 1,
 					'footer'				=> 0
 				);
@@ -1617,25 +1609,20 @@
 			$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
+					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
 			$datavalues[1] = array
 				(
 					'name'					=> "1",
-					'values' 				=> json_encode($record_history),
-					'total_records'			=> count($record_history),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
+					'values' 				=> json_encode($values['workorder_budget']),
+					'total_records'			=> count($values['workorder_budget']),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
+					'is_paginator'			=> 1,
 					'footer'				=> 0
 				);
 
@@ -1643,14 +1630,19 @@
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
-														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
-														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
+					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'paid_percent','label'=>lang('paid percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-		
 		
 			$invoices = array();
 			if ($id)
@@ -1724,13 +1716,36 @@
 			
 			$datavalues[] = $notify_info['datavalues'];
 
-			$myColumnDefs[] = $notify_info['column_defs'];
+			$myColumnDefs[3] = $notify_info['column_defs'];
 
 			$myButtons	= array();
 			if($mode == 'edit')
 			{
-				$myButtons[]	= $notify_info['buttons'];
+				$myButtons[3]	= $notify_info['buttons'];
 			}
+
+			$datavalues[4] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($record_history),
+					'total_records'			=> count($record_history),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+
+			$myColumnDefs[4] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
+														array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
+				);
+
+
 
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
@@ -1738,6 +1753,21 @@
 
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+
+
+			$year	= date('Y') -1;
+			$limit	= $year + 8;
+
+			while ($year < $limit)
+			{
+				$year_list[] = array
+				(
+					'id'	=>  $year,
+					'name'	=>  $year
+				);
+				$year++;
+			}
+
 
 			$data = array
 				(
@@ -1758,6 +1788,7 @@
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
 					'value_origin_id'					=> isset($origin_id)?$origin_id:'',
+					'year_list'							=> array('options' => $year_list),
 					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
 					'lang_request_statustext'			=> lang('Link to the request for this project'),
@@ -1789,9 +1820,7 @@
 					'lang_power_meter'					=> lang('Power meter'),
 					'lang_power_meter_statustext'		=> lang('Enter the power meter'),
 					'value_power_meter'					=> isset($values['power_meter'])?$values['power_meter']:'',
-					'lang_budget'						=> lang('Budget'),
 					'value_budget'						=> isset($values['budget'])?$values['budget']:'',
-					'lang_budget_statustext'			=> lang('Enter the budget'),
 					'lang_reserve'						=> lang('reserve'),
 					'value_reserve'						=> isset($values['reserve'])?$values['reserve']:'',
 					'lang_reserve_statustext'			=> lang('Enter the reserve'),
@@ -1830,12 +1859,7 @@
 					'value_cat_id'						=> isset($values['cat_id'])?$values['cat_id']:'',
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 					'lang_workorder_id'					=> lang('Workorder ID'),
-					//'sum_workorder_budget'			=> isset($values['sum_workorder_budget'])?$values['sum_workorder_budget']:'',
-					//'sum_workorder_calculation'		=> isset($values['sum_workorder_calculation'])?$values['sum_workorder_calculation']:'',
-					//'workorder_budget'				=> isset($values['workorder_budget'])?$values['workorder_budget']:'',
-					//'sum_workorder_actual_cost'		=> isset($values['sum_workorder_actual_cost'])?$values['sum_workorder_actual_cost']:'',
 					'lang_sum'							=> lang('Sum'),
-					//'lang_actual_cost'				=> lang('Actual cost'),
 					'value_remainder'					=> $value_remainder,
 					'lang_remainder'					=> lang('remainder'),
 					'lang_coordinator'					=> lang('Coordinator'),
@@ -1874,7 +1898,7 @@
 					'value_approval_mail_address'		=> $supervisor_email,
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'base_java_notify_url'						=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
+					'base_java_notify_url'				=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.edit', 'id' => $id)),
 					'lang_edit_statustext'				=> lang('Edit this entry '),
 					'lang_edit'							=> lang('Edit'),

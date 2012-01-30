@@ -5817,6 +5817,97 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.633 to 0.9.17.634
+	* Add project budget per year
+	*/
+
+	$test[] = '0.9.17.633';
+	function property_upgrade0_9_17_633()
+	{
+		date_default_timezone_set('UTC');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_budget', array(
+				'fd' => array(
+					'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('project_id','year'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$sql = "SELECT id, budget, start_date, user_id,entry_date FROM fm_project ORDER BY ID ASC";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$budget_values = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$budget_values[] = array
+			(
+				'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'budget'		=> $GLOBALS['phpgw_setup']->oProc->f('budget'),
+				'start_date'	=> $GLOBALS['phpgw_setup']->oProc->f('start_date'),
+				'user_id'		=> $GLOBALS['phpgw_setup']->oProc->f('user_id'),
+				'entry_date'	=> $GLOBALS['phpgw_setup']->oProc->f('entry_date')
+			);
+		}
+
+		foreach($budget_values as $entry)
+		{
+			if($entry['budget'] && abs($entry['budget']) > 0)
+			{
+				$value_set = array
+				(
+					'project_id'		=> $entry['id'],
+					'year'				=> date('Y',$entry['start_date']),
+					'budget'			=> $entry['budget'],
+					'user_id'			=> $entry['user_id'],
+					'entry_date'		=> $entry['entry_date'],
+					'modified_date'		=> $entry['entry_date']
+				);
+				$cols = implode(',', array_keys($value_set));
+				$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+				$sql = "INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+		$sql = 'SELECT DISTINCT pmwrkord_code from fm_ecobilagoverf WHERE loc1 IS NULL AND pmwrkord_code IS NOT NULL';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$orders = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[] = $GLOBALS['phpgw_setup']->oProc->f('pmwrkord_code');
+		}
+		
+		foreach($orders as $order)
+		{
+			$sql = "SELECT loc1 FROM fm_project JOIN fm_workorder ON fm_project.id = fm_workorder.project_id WHERE fm_workorder.id = '{$order}'";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			if($loc1 = $GLOBALS['phpgw_setup']->oProc->f('loc1'))
+			{
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecobilagoverf SET loc1 = '{$loc1}' WHERE pmwrkord_code = '{$order}'",__LINE__,__FILE__);
+			}
+		}
+			
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.634';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets

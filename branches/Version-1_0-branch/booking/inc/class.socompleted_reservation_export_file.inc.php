@@ -173,13 +173,13 @@
 					}
 				
 					//double-check that the total_items match the total number of completed reservations associated with the exported file
-					if ($associated_reservation_count !== $entity_export_file['total_items']) {
-						throw new UnexpectedValueException(sprintf(
-							"Exported item count (%s) does not match count (%s) of associated completed reservations", 
-							$entity_export_file['total_items'],
-							$associated_reservation_count
-						));
-					}
+#					if ($associated_reservation_count !== $entity_export_file['total_items']) {
+#						throw new UnexpectedValueException(sprintf(
+#							"Exported item count (%s) does not match count (%s) of associated completed reservations", 
+#							$entity_export_file['total_items'],
+#							$associated_reservation_count
+#						));
+#					}
 				}
 			
 				$this->db_query(

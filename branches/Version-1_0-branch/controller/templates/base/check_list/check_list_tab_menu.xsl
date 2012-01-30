@@ -9,7 +9,7 @@
 				<xsl:attribute name="class">active</xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.edit_check_list</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
@@ -20,7 +20,7 @@
 				<xsl:attribute name="class">active</xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_cases_for_check_list</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_cases_for_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
@@ -31,7 +31,7 @@
 				<xsl:attribute name="class">active</xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_control_info</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_info</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 			</xsl:attribute>
@@ -40,7 +40,7 @@
 		<div>
 			<a class="btn focus first">
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.register_case</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 				</xsl:attribute>

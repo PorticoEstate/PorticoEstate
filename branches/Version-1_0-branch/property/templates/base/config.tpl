@@ -93,6 +93,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_require_vendor_at_workorder}:</td>
+			<td>
+				<select name="newsettings[workorder_require_vendor]">
+					<option value="" {selected_workorder_require_vendor_}>NO</option>
+					<option value="1" {selected_workorder_require_vendor_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_Default_municipal_number}:</td>
 			<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>

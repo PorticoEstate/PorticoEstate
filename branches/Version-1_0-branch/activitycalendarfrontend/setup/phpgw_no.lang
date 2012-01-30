@@ -63,7 +63,7 @@ change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
 district_not_selected	activitycalendarfrontend	no	Distrikt må velges!
 org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. 
-group_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal registreres med andre kontaktpersoner og beskrivelse, kan du gjøre det ved å velge «Ny gruppe» og fylle ut feltene under.<br/>Du kan også velge en eksisterende  gruppe/lag fra listen, eller ikke velge en gruppe/lag.<br/>Ønsker du å redigere/endre eksisterende informasjonen om organisasjon eller beskrivelse,<br/>vil du etter at du har valgt Lagre-knappen få opp et nytt bilde hvor du du kan velge Rediger.
+group_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal registreres med andre kontaktpersoner og beskrivelse, kan du gjøre det ved å velge «Ny gruppe» og fylle ut feltene under.<br/>Du kan også velge en eksisterende  gruppe/lag fra listen, eller ikke velge en gruppe/lag.<br/>Ønsker du å redigere/endre eksisterende informasjonen om organisasjon eller beskrivelse,<br/>vil du etter at du har valgt Send-knappen få opp et nytt bilde hvor du du kan velge Rediger.
 criteria_label	activitycalendarfrontend	no	Valgkriterier/søkeord i portalen
 criteria_helptext	activitycalendarfrontend	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
 what	activitycalendarfrontend	no	HVA
@@ -92,3 +92,5 @@ activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker �
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
 address	activitycalendarfrontend	no	Adresse
+activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for organisasjonen.<br/>Du velger organisasjon og aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
+mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
