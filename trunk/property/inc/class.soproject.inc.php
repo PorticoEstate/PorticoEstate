@@ -1318,7 +1318,7 @@
 			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND fm_workorder_status.closed IS NULL"
-			. " GROUP BY fm_workorder.id ORDER BY start_date ASC";
+			. " GROUP BY fm_workorder.id;"// ORDER BY start_date ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
