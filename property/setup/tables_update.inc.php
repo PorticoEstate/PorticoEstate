@@ -5826,6 +5826,7 @@
 	$test[] = '0.9.17.633';
 	function property_upgrade0_9_17_633()
 	{
+		date_default_timezone_set('UTC');
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
 
