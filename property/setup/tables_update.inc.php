@@ -5882,6 +5882,25 @@
 			}
 		}
 
+		$sql = 'SELECT DISTINCT pmwrkord_code from fm_ecobilagoverf WHERE loc1 IS NULL AND pmwrkord_code IS NOT NULL';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$orders = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[] = $GLOBALS['phpgw_setup']->oProc->f('pmwrkord_code');
+		}
+		
+		foreach($orders as $order)
+		{
+			$sql = "SELECT loc1 FROM fm_project JOIN fm_workorder ON fm_project.id = fm_workorder.project_id WHERE fm_workorder.id = '{$order}'";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			if($loc1 = $GLOBALS['phpgw_setup']->oProc->f('loc1'))
+			{
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecobilagoverf SET loc1 = '{$loc1}' WHERE pmwrkord_code = '{$order}'",__LINE__,__FILE__);
+			}
+		}
+			
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.634';
