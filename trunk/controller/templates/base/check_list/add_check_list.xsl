@@ -29,7 +29,7 @@
 	
 	<h3 class="box_header">Sjekklistedetaljer</h3>
 	<fieldset class="check_list_details">
-		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list_for_location.save_check_list" method="post">
+		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list.save_check_list" method="post">
 					
 			<div id="calendar_dates">
 				<xsl:for-each select="calendar_array">

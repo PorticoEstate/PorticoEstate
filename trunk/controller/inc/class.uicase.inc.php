@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicheck_list_for_location.inc.php 8419 2011-12-23 09:54:15Z vator $
+ 	* @version $Id: class.uicheck_list.inc.php 8419 2011-12-23 09:54:15Z vator $
 	*/
 	
 	phpgw::import_class('phpgwapi.yui');

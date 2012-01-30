@@ -64,7 +64,7 @@
 		
 		<a style="display:none;" id="view_open_cases">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.view_open_cases</xsl:text>
+				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>

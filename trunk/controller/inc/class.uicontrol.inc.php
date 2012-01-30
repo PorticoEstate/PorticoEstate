@@ -640,7 +640,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
 			$value['parameters'][] = "control_id";
 		}
