@@ -118,6 +118,7 @@
 	$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
 
 	$portalbox1->data = array();
+	$portalbox1_data = array();
 	foreach ($controls_array as $control_instance)
 	{
 		$current_control = $control_instance[0];
@@ -135,24 +136,19 @@
 		foreach($check_lists as $check_list)
 		{
 			$next_date = "Planlagt: " . date('d/m/Y', $check_list->get_planned_date());
-			$portalbox1->data[] = array
+			$portalbox1_data[] = array
+			($check_list->get_planned_date(), array
 			(
 				'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id' => $check_list->get_id()))
-			);
+			));
 		}
-/*		
-		$current_dates = $control_instance[1];
-		foreach($current_dates as $current_date)
-		{
-			$next_date = "Planlagt: " . date('d/m/Y', $current_date);
-			$portalbox1->data[] = array
-			(
-				'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
-			);
-		}
-*/
+	}
+	//sort data by planned date for check list
+	sort($portalbox1_data);
+	foreach($portalbox1_data as $check_list_dates)
+	{
+		$portalbox1->data[] = $check_list_dates[1];
 	}
 	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox1->draw()."\n".'<!-- END checklist info -->'."\n";
 	
@@ -189,6 +185,7 @@
 	$category_name = array(); // caching
 
 	$portalbox2->data = array();
+	$portalbox2_data = array();
 	foreach ($controls_array as $control_instance)
 	{
 		$current_control = $control_instance[0];
@@ -209,20 +206,41 @@
 			$planned_lists = $check_list->get_deadline();
 		}
 		$current_dates = $control_instance[1];
+		
 		foreach($current_dates as $current_date)
 		{
-			foreach($check_lists as $check_list)
+			if(isset($check_lists))
 			{
-				if($current_date != $check_list->get_deadline())
+				foreach($check_lists as $check_list)
 				{
-					$next_date = "Fristdato: " . date('d/m/Y', $current_date);
-					$portalbox2->data[] = array
-					(
-						'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
-					);
+					if($current_date != $check_list->get_deadline())
+					{
+						$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+						$portalbox2_data[] = array
+						($current_date, array
+						(
+							'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+						));
+					}
 				}
 			}
+			else
+			{
+				$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+				$portalbox2_data[] = array
+				($current_date, array
+				(
+					'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
+					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_location.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+				));					
+			}
 		}
+	}
+	//sort data by due date for check list
+	sort($portalbox2_data);
+	foreach($portalbox2_data as $check_list_dates)
+	{
+		$portalbox2->data[] = $check_list_dates[1];
 	}
 	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
