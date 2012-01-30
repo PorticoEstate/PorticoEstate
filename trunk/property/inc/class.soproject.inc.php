@@ -1345,7 +1345,7 @@
 				{
 					$_sum = 0;
 				}
-_debug_array((100 - $paid_percent)/100);
+
 				$_sum = $_sum * (100 - $paid_percent)/100;
 				$cost_info[$year]['sum_orders'] += $_sum;
 			}
