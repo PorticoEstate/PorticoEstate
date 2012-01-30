@@ -277,8 +277,7 @@ class controller_socheck_list extends controller_socommon
 			if( $this->db->f('cl_id', true) != $check_list_id ){
 				
 				if($check_list_id != 0){
-					$check_list->set_check_item_array($check_items_array);
-					$check_list_array[] = $check_list->toArray();
+					$check_list_array[] = $check_list;
 				}
 				
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
@@ -449,10 +448,15 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
 		$sql .= "WHERE cl.location_code = $location_code ";
-		$sql .= "AND c.repeat_type = $repeat_type ";
+		
+		if( is_numeric($repeat_type) )
+			$sql .= "AND c.repeat_type = $repeat_type ";
+		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
 
+		
+		
 		$this->db->query($sql);
 		
 		$control_id = 0;
