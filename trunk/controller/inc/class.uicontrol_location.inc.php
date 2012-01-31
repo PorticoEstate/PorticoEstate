@@ -59,7 +59,7 @@
 		var $public_functions = array(
 										'index' => true,
 										'view_locations_for_control' 	=> true,
-										'add_location_to_control' 		=> true,
+										'register_control_to_location' 		=> true,
 									);
 
 		function __construct()
@@ -120,7 +120,7 @@
 						'label' => lang('View_locations_for_control')
 					), array(
 						'label' => lang('Add_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.add_location_to_control'))
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_to_control_to_location'))
 					));
 			
 			$data = array(
@@ -178,7 +178,7 @@
 			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
 		}
 		
-		function add_location_to_control()
+		function register_control_to_location()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
@@ -214,8 +214,6 @@
 			$default_value = array ('id'=>'','name'=>lang('no role'));
 			array_unshift ($responsibility_roles,$default_value);
 			
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -244,7 +242,7 @@
 					
 			$data = array(
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'						=> "add_location_to_control",
+				'view'						=> "register_control_to_location",
 				'control_filters'			=> array(
 					'control_areas_array2' 	=> $control_areas_array2,
 					'control_array' 			=> $control_array
@@ -304,7 +302,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
-			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/add_location_to_control', 'common'), $data);		
+			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/register_control_to_location', 'common'), $data);		
 		}
 		
 		public function query(){
@@ -348,7 +346,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.add_location_to_control', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.register_control_to_location', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_location');
 			$value['parameters'][] = "control_id";
 		}
