@@ -256,7 +256,7 @@
 					'part_of_town_list' 		=> $part_of_town_list
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control')),
 					'field' => array(
 						array(
 							'key' => 'location_code',
@@ -324,8 +324,6 @@
 				$results['total_records'] = count( $locations_for_control_array );
 				$results['start'] = 1;
 				$results['sort'] = 'location_code';
-							
-				array_walk($results['results'], array($this, 'add_actions'), array($type));
 			}
 			else
 			{
@@ -337,6 +335,7 @@
 		
 		public function query(){
 			$type_id = phpgw::get_var('type_id');
+			$view_type = phpgw::get_var('view_type');
 			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
 			
 			$type_id = $type_id ? $type_id : 1;
