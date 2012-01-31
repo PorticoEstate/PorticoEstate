@@ -31,6 +31,7 @@
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control', 'inc/model/');
+	include_class('controller', 'control_location', 'inc/model/');
 
 	class controller_socontrol extends controller_socommon
 	{
@@ -228,10 +229,26 @@
 			}
 		}
 
+		function get_control_location($control_id, $location_code)
+		{
+			$sql =  "SELECT * FROM controller_control_location_list WHERE control_id = $control_id AND location_code=$location_code";
+			
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			$this->db->next_record();
+
+			$control_location = new controller_control_location($this->unmarshal($this->db->f('id', true), 'int'));
+
+			$control_location->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+			$control_location->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+						
+			return $control_location
+		}
+		
 		function register_control_to_location($control_id, $location_code)
 		{
 			$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) values($control_id, $location_code)";
-			$this->db->query($sql);
+			
+			return $this->db->query($sql);
 		}
 
 		function add_component_to_control($control_id, $component_id)

@@ -212,12 +212,12 @@
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-												
+												alert("!!")
 				//... check whether this action should be an AJAX call
 				if( record.getData().ajax[task.index] ) {
 									
 					var alertStatus = false;
-
+alert(record.getData().actions[ task.index ]);
 					// Check if confirm box should be displayed before request is executed
 					if( record.getData().alert != null )
 					    alertStatus = record.getData().alert[0];
