@@ -1,4 +1,4 @@
-add_check_list_to_location	controller	no	Registrer sjekkliste for bygg
+add_check_list_to_location	controller	no	Registrer kontroll for bygg
 location_connections	controller	no	Byggknytning
 control	controller	no	Kontroll
 controller	common	no	Kontroll

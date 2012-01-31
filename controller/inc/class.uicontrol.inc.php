@@ -73,7 +73,7 @@
 			'view_check_lists_for_control'		=>	true,
 			'get_controls_by_control_area'		=>	true,
 			'get_locations_for_control'			=>	true,
-			'add_location_to_control'			=>	true
+			'register_control_to_location'		=>	true
 		);
 
 		public function __construct()
@@ -594,9 +594,6 @@
 			return $tabs;
 		} 
 		
-		
-		
-		
 		// Returns control list info as JSON
 		public function get_controls_by_control_area()
 		{
@@ -614,19 +611,27 @@
 		public function get_locations_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
-			$locations_for_control_array = $this->so->get_locations_for_control($control_id);
 			
-			foreach($locations_for_control_array as $location)
+			if(is_numeric($control_id) & $control_id > 0)
 			{
-				$results['results'][]= $location;	
-			}
+				$locations_for_control_array = $this->so->get_locations_for_control($control_id);
 			
-			$results['total_records'] = count( $locations_for_control_array );
-			$results['start'] = 1;
-			$results['sort'] = 'location_code';
-						
-			array_walk($results['results'], array($this, 'add_actions'), array($type));
+				foreach($locations_for_control_array as $location)
+				{
+					$results['results'][]= $location;	
+				}
+				
+				$results['total_records'] = count( $locations_for_control_array );
+				$results['start'] = 1;
+				$results['sort'] = 'location_code';
 							
+				array_walk($results['results'], array($this, 'add_actions'), array($type));
+			}
+			else
+			{
+				$results['total_records'] = 0;
+			}				
+			
 			return $this->yui_results($results);
 		}
 		
@@ -645,12 +650,12 @@
 			$value['parameters'][] = "control_id";
 		}
 		
-		public function add_location_to_control()
+		public function register_control_to_location()
 		{
 			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			
-			$this->so->add_location_to_control($control_id, $location_code);
+			$this->so->register_control_to_location($control_id, $location_code);
 		}
 		
 		public function query()

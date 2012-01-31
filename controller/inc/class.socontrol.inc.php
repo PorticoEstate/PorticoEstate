@@ -228,7 +228,7 @@
 			}
 		}
 
-		function add_location_to_control($control_id, $location_code)
+		function register_control_to_location($control_id, $location_code)
 		{
 			$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) values($control_id, $location_code)";
 			$this->db->query($sql);
