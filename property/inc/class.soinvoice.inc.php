@@ -354,14 +354,16 @@
 				$table ='fm_ecobilag';
 			}
 
-
-			if ($order)
+			switch($order)
 			{
-				$ordermethod = " order by $order $sort";
-			}
-			else
-			{
-				$ordermethod = ' order by id DESC';
+				case 'dima':
+				case 'belop':
+				case 'spbudact_code':
+				case 'pmwrkord_code':
+					$ordermethod = " ORDER BY $order $sort";
+					break;
+				default:
+					$ordermethod = ' ORDER BY pmwrkord_code DESC, id DESC';					
 			}
 
 			$filtermethod = '';
@@ -387,9 +389,9 @@
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
 				. "fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table"
-				. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
-				. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
-				. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
+				. " {$this->left_join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -435,6 +437,103 @@
 			}
 
 			return $invoice;
+		}
+
+		function read_invoice_sub_sum($data)
+		{
+			$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
+			$paid		= isset($data['paid']) ? $data['paid'] : '';
+			$project_id	= isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
+			$order_id 	= isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0 ;//might be bigint
+
+			if ($paid)
+			{
+				$table = 'fm_ecobilagoverf';
+				$overftid = ',overftid';
+			}
+			else
+			{
+				$table ='fm_ecobilag';
+				$overftid = '';
+			}
+
+			switch($order)
+			{
+				case 'dima':
+				case 'belop':
+				case 'spbudact_code':
+				case 'pmwrkord_code':
+					$ordermethod = " ORDER BY $order $sort";
+					break;
+				default:
+					$ordermethod = " ORDER BY pmwrkord_code DESC";
+			}
+
+			$filtermethod = '';
+			$where = 'WHERE';
+
+			if ($voucher_id)
+			{
+				$filtermethod .= " {$where} bilagsnr= '$voucher_id'";
+				$where = 'AND';
+			}
+
+			if ($order_id)
+			{
+				$filtermethod .= " {$where} pmwrkord_code= '{$order_id}'";
+				$where = 'AND';
+			}
+
+			if ($project_id)
+			{
+				$filtermethod .= " {$where} fm_project.id = '{$project_id}'";
+				$where = 'AND';
+			}
+
+			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
+				. " currency,budsjettansvarligid,org_name";
+			
+			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
+				. " currency,budsjettansvarligid,org_name"
+				. " FROM $table"
+				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " {$this->join} fm_vendor ON {$table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
+
+			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'workorder_id'			=> $this->db->f('pmwrkord_code'),
+					'voucher_id'			=> $this->db->f('bilagsnr'),
+					'voucher_out_id'		=> $this->db->f('bilagsnr_ut'),
+					'invoice_id'			=> $this->db->f('fakturanr'),
+					'amount'				=> $this->db->f('belop'),
+					'approved_amount'		=> $this->db->f('godkjentbelop'),
+					'vendor'				=> $this->db->f('org_name'),
+					'currency'				=> $this->db->f('currency'),
+					'budget_responsible'	=> $this->db->f('budsjettansvarligid')
+				);
+			}
+
+			foreach ($values as &$entry)
+			{
+				$sql = "SELECT budsjettsigndato{$overftid} FROM $table WHERE pmwrkord_code = '{$entry['workorder_id']}' AND bilagsnr = '{$entry['voucher_id']}' AND fakturanr = '{$entry['invoice_id']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$entry['budsjettsigndato']	= $this->db->f('budsjettsigndato');
+				$entry['transfer_time']		= $this->db->f('overftid');
+			}
+
+			return $values;
 		}
 
 

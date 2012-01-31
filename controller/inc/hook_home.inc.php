@@ -36,6 +36,11 @@
 	
 	$so = CreateObject('controller.socheck_list');
 	$so_control = CreateObject('controller.socontrol');
+	
+	$config	= CreateObject('phpgwapi.config','controller');
+	$config->read();
+	$limit_no_of_planned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'] : (isset($config->config_data['no_of_planned_controls']) && $config->config_data['no_of_planned_controls'] > 0 ? $config->config_data['no_of_planned_controls']:5);
+	$limit_no_of_assigned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'] : (isset($config->config_data['no_of_assigned_controls']) && $config->config_data['no_of_assigned_controls'] > 0 ? $config->config_data['no_of_assigned_controls']:10);
 
 	//echo '<H1> Hook for controller </H1>';	
 	//$location_code = '1101';
@@ -147,12 +152,18 @@
 	}
 	//sort data by planned date for check list
 	sort($portalbox1_data);
+	//$limit = 5;
+	$tmp = 0;
 	foreach($portalbox1_data as $check_list_dates)
 	{
-		$portalbox1->data[] = $check_list_dates[1];
+		if($tmp < $limit_no_of_planned)
+		{
+			$portalbox1->data[] = $check_list_dates[1];
+		}
+		$tmp++;
 	}
 	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox1->draw()."\n".'<!-- END checklist info -->'."\n";
-	
+
 	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
 		'title'		=> "Mine tildelte kontroller",
@@ -180,7 +191,7 @@
 
 	foreach ( $var as $key => $value )
 	{
-		//			$portalbox->set_controls($key,$value);
+//					$portalbox2->set_controls($key,$value);
 	}
 
 	$category_name = array(); // caching
@@ -241,8 +252,14 @@
 	}
 	//sort data by due date for check list
 	sort($portalbox2_data);
+	//$limit = 20;
+	$tmp = 0;
 	foreach($portalbox2_data as $check_list_dates)
 	{
-		$portalbox2->data[] = $check_list_dates[1];
+		if($tmp < $limit_no_of_assigned)
+		{
+			$portalbox2->data[] = $check_list_dates[1];
+		}
+		$tmp++;
 	}
 	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
