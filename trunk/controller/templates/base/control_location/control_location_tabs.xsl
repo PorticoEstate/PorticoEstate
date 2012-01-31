@@ -13,13 +13,13 @@
 			 
 			<xsl:call-template name="view_locations_for_control" />
 		</xsl:when>
-		<xsl:when test="view = 'add_location_to_control'">
+		<xsl:when test="view = 'register_control_to_location'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Add_location_to_control')"/></h1>
+				<h1>Legg kontroll til bygg</h1>
 			</div>
 			<!-- Prints tabs array -->
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="add_location_to_control" />
+			<xsl:call-template name="register_control_to_location" />
 		</xsl:when>
 	</xsl:choose>
 </div>

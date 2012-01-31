@@ -72,8 +72,6 @@
 			'generate_check_lists_for_control'	=>	true,
 			'view_check_lists_for_control'		=>	true,
 			'get_controls_by_control_area'		=>	true,
-			'get_locations_for_control'			=>	true,
-			'register_control_to_location'		=>	true
 		);
 
 		public function __construct()
@@ -607,6 +605,9 @@
 				return null;
 		}
 		
+		public function query(){}
+		
+		/*
 		// Returns locations for a control
 		public function get_locations_for_control()
 		{
@@ -729,4 +730,5 @@
 
 			return $this->yui_results($results);
 		}
+		*/
 	}

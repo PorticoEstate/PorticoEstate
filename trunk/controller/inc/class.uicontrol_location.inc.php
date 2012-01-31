@@ -59,7 +59,9 @@
 		var $public_functions = array(
 										'index' => true,
 										'view_locations_for_control' 	=> true,
-										'register_control_to_location' 		=> true,
+										'register_control_to_location' 	=> true,
+										'register_control_to_location_2' 	=> true,
+										'get_locations_for_control' 	=> true
 									);
 
 		function __construct()
@@ -120,7 +122,7 @@
 						'label' => lang('View_locations_for_control')
 					), array(
 						'label' => lang('Add_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_to_control_to_location'))
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
 					));
 			
 			$data = array(
@@ -128,7 +130,7 @@
 				'view'					=> "view_locations_for_control",
 				'control_areas_array2'	=> $control_areas_array2,
 				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -305,6 +307,34 @@
 			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/register_control_to_location', 'common'), $data);		
 		}
 		
+		// Returns locations for a control
+		public function get_locations_for_control()
+		{
+			$control_id = phpgw::get_var('control_id');
+			
+			if(is_numeric($control_id) & $control_id > 0)
+			{
+				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+			
+				foreach($locations_for_control_array as $location)
+				{
+					$results['results'][]= $location;	
+				}
+				
+				$results['total_records'] = count( $locations_for_control_array );
+				$results['start'] = 1;
+				$results['sort'] = 'location_code';
+							
+				array_walk($results['results'], array($this, 'add_actions'), array($type));
+			}
+			else
+			{
+				$results['total_records'] = 0;
+			}				
+			
+			return $this->yui_results($results);
+		}
+		
 		public function query(){
 			$type_id = phpgw::get_var('type_id');
 			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
@@ -335,7 +365,20 @@
 							
 			return $this->yui_results($results);
 		}
+
+		public function register_control_to_location_2()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$location_code = phpgw::get_var('location_code');
 			
+			$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code);
+			
+			if($control_location_id > 0)
+				return json_encode( array( "status" => "saved" ) );
+			else
+				return json_encode( array( "status" => "not_saved" ) );
+		}
+		
 		public function add_actions(&$value, $key, $params)
 		{
 			unset($value['query_location']);
@@ -346,7 +389,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.register_control_to_location', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol_location.register_control_to_location_2','location_code' => $value['location_code'], 'phpgw_return_as' => 'json')));
 			$value['labels'][] = lang('add_location');
 			$value['parameters'][] = "control_id";
 		}
