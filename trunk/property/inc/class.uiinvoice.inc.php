@@ -1666,7 +1666,9 @@ JS;
 				array(
 					'col_name'=>'counter',		'visible'=>false),
 				array(
-					'col_name'=>'id',		'visible'=>false)
+					'col_name'=>'id',		'visible'=>false),
+				array(
+					'col_name'=>'_external_ref',		'visible'=>false)
 				);
 
 
@@ -1915,6 +1917,10 @@ JS;
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
 						}					
+						else if($i == 18)
+						{
+							$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
+						}					
 					}
 
 					if($invoices['workorder_id'])
@@ -2024,6 +2030,31 @@ JS;
 					)
 				);
 
+			$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'docid',
+							'source'	=> '_external_ref'
+						),
+					)
+				);
+
+
+			if($this->acl_read && $baseurl_invoice)
+			{
+				$_baseurl_invoice = rtrim($baseurl_invoice,"?{$parameters2['parameter'][0]['name']}=");
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'picture',
+						'text'			=> $lang_picture,
+						'action'		=> "{$_baseurl_invoice}?target=_blank",
+						'parameters'	=> $parameters2
+					);
+			}
+
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array
@@ -2040,6 +2071,7 @@ JS;
 						'parameters'	=> $parameters
 					);
 			}
+
 
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 			{
