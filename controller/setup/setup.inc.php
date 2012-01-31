@@ -30,6 +30,7 @@
 		'menu'			=> 'controller.menu.get_menu',
 		'config',
 		'home',
+		'settings',
 		'cat_add'		=> 'controller.cat_hooks.cat_add',
 		'cat_delete'	=> 'controller.cat_hooks.cat_delete',
 		'cat_edit'		=> 'controller.cat_hooks.cat_edit'
