@@ -39,7 +39,7 @@
 	include_class('controller', 'date_helper', 'inc/helper/');
 	include_class('controller', 'check_item', 'inc/model/');
 	
-	class controller_uicheck_list_for_location extends controller_uicommon
+	class controller_uicheck_list extends controller_uicommon
 	{
 		private $so;
 		private $so_control_area;
