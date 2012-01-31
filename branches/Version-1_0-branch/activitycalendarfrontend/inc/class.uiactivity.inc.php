@@ -215,8 +215,9 @@
 							$persons[] = $p;
 						}
 						$desc = phpgw::get_var('group_description');
-						$group = $this->so_group>get_group_local($g_id);
+						$group = $this->so_group->get_group_local($g_id);
 						$person_ids = $this->so_group->get_contacts_local($g_id);
+						$organization = $this->so_organization->get_single($o_id);
 					}
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
@@ -761,6 +762,72 @@
 							'contact1' => $persons[0],
 							'contact2' => $persons[1],
 							'districts' => $districts,
+							'editable' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+					);
+				}
+			}
+		}
+		
+		function edit_group_values()
+		{
+			$group_id = phpgw::get_var('group_id');
+			if(isset($group_id))
+			{
+				if(isset($_POST['save_group'])) //save updated organization info
+				{
+					$group = $this->so_group->get_single($group_id);
+					
+					$group_info['name'] = phpgw::get_var('groupname');
+					$group_info['organization_id'] = phpgw::get_var('orgid');
+					$group_info['description'] = phpgw::get_var('org_description');
+					$group_info['status'] = "change";
+					$group_info['original_group_id'] = $group_id;
+					$g_id = $this->so_activity->add_group_local($group_info);
+					
+					//add contact persons
+					$contact1 = array();
+					$contact1['name'] = phpgw::get_var('group_contact1_name');
+					$contact1['phone'] = phpgw::get_var('group_contact1_phone');
+					$contact1['mail'] = phpgw::get_var('group_contact1_email');
+					$contact1['org_id'] = 0;
+					$contact1['group_id'] = $g_id;
+					$this->so_activity->add_contact_person_local($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('group_contact2_name');
+					$contact2['phone'] = phpgw::get_var('group_contact2_phone');
+					$contact2['mail'] = phpgw::get_var('group_contact2_email');
+					$contact2['org_id'] = 0;
+					$contact2['group_id'] = $g_id;
+					$this->so_activity->add_contact_person_local($contact2);
+					
+					$message = lang('change_request_ok', $group_info['name']);
+					
+					$this->render('group_reciept.php', array
+						(
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+					);
+					 
+				}
+				else
+				{
+					$group = $this->so_group->get_single($group_id);
+					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array('group_id' => $group_id));
+					foreach($person_arr as $p)
+					{
+						$persons[] = $p;
+					}
+					
+					$this->render('group_edit.php', array
+						(
+							'group' => $group,
+							'contact1' => $persons[0],
+							'contact2' => $persons[1],
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error')

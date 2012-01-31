@@ -1647,8 +1647,8 @@
 			$invoices = array();
 			if ($id)
 			{
-				$active_invoices = execMethod('property.soinvoice.read_invoice_sub', array('project_id' => $id));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub', array('project_id' => $id, 'paid' => true));
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id, 'paid' => true));
 				$invoices = array_merge($active_invoices,$historical_invoices);
 			}
 

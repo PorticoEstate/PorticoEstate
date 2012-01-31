@@ -164,6 +164,11 @@
 						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.responsiblility_role', 'menu_selection' => 'admin::controller::role_at_location') ),
 						'text'	=>	lang('role at location'),
 						'image'	=> array('property', 'responsibility_role')
+					),
+					'controller_document_types'	=> array
+					(
+						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'controller.uidocument.document_types', 'menu_selection' => 'admin::controller::controller_document_types') ),
+						'text'	=>	lang('Document types')
 					)
 				);
 			}
@@ -173,13 +178,13 @@
 				$menus['preferences'] = array
 				(
 					// in case of userprefs - need a hook for 'settings'
-/*
+
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'controller', 'type'=> 'user') )
 					),
-*/
+
 					array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),

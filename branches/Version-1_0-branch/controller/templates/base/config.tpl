@@ -22,6 +22,18 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>Antall planlagte kontroller som skal vises.</td>
+			<td>
+				<input type="text" name="newsettings[no_of_planned_controls]" value="{value_no_of_planned_controls}"/>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>Antall tildelte kontroller som skal vises</td>
+			<td>
+				<input type="text" name="newsettings[no_of_assigned_controls]" value="{value_no_of_assigned_controls}"/>
+			</td>
+		</tr>
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">
