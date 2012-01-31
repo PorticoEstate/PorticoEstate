@@ -31,9 +31,7 @@
 	include_class('controller', 'model', 'inc/model/');
 
 	class controller_control_location extends controller_model
-	{
-		public static $so;
-		
+	{		
 		protected $id;
 		protected $location_code;
 		protected $control_id;
@@ -54,12 +52,7 @@
 			$this->id = $id;
 		}
 		
-		public function get_id() { return $this->id; }
-		
-		public function set_title($title)
-		{
-			$this->title = $title;
-		}
+		public function get_id() { return (int)$this->id; }
 		
 		public function get_location_code() { return $this->location_code; }
 		
@@ -68,10 +61,10 @@
 			$this->location_code = $location_code;
 		}
 		
-		public function get_control_id() { return $this->control_id; }
+		public function get_control_id() { return (int)$this->control_id; }
 		
 		public function set_control_id($control_id)
 		{
-			$this->control_id = $control_id;
+			$this->control_id = (int)$control_id;
 		}
 	}

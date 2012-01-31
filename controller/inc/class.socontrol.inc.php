@@ -231,17 +231,22 @@
 
 		function get_control_location($control_id, $location_code)
 		{
-			$sql =  "SELECT * FROM controller_control_location_list WHERE control_id = $control_id AND location_code=$location_code";
+			$sql =  "SELECT * FROM controller_control_location_list WHERE control_id = $control_id AND location_code = '$location_code'";
 			
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			$this->db->next_record();
-
-			$control_location = new controller_control_location($this->unmarshal($this->db->f('id', true), 'int'));
-
-			$control_location->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-			$control_location->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-						
-			return $control_location
+			
+			if($this->db->next_record()){
+				$control_location = new controller_control_location($this->unmarshal($this->db->f('id', true), 'int'));
+	
+				$control_location->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$control_location->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+							
+				return $control_location;
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		function register_control_to_location($control_id, $location_code)

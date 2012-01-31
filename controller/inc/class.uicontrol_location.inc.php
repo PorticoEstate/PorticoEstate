@@ -371,7 +371,15 @@
 			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			
-			$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code);
+			$control_location  = null;
+			$control_location_id = 0;
+			
+			$control_location = $this->so_control->get_control_location($control_id, $location_code);
+			
+			if($control_location == null ){
+				
+				$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code);
+			}
 			
 			if($control_location_id > 0)
 				return json_encode( array( "status" => "saved" ) );
