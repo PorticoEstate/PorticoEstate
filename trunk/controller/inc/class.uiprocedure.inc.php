@@ -190,7 +190,7 @@
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
 					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference'));
+					$procedure->set_reference(phpgw::get_var('reference','html'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -253,7 +253,7 @@
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
 					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference'));
+					$procedure->set_reference(phpgw::get_var('reference','html'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -366,7 +366,7 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
-				$this->use_yui_editor(array('responsibility','description'));
+				$this->use_yui_editor(array('responsibility','description', 'reference'));
 
 				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
 			}

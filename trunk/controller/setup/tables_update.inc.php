@@ -496,3 +496,15 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}		
 	}
+	
+	$test[] = '0.1.23';
+	function controller_upgrade0_1_23()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_procedure','reference',array(
+			'type' => 'text', 
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.24';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
