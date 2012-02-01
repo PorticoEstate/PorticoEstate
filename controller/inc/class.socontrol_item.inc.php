@@ -233,6 +233,11 @@
 			{
 				$filter_clauses[] = "controller_control_item.control_group_id = {$this->marshal($filters['control_groups'],'int')}";
 			}
+			if(isset($filters['control_areas']))
+			{
+				$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+			}
+			
 
 			if(count($filter_clauses))
 			{
@@ -251,7 +256,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
+				$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -279,6 +284,7 @@
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 			}
 
