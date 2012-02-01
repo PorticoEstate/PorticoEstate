@@ -162,7 +162,7 @@
 		}
 		$tmp++;
 	}
-	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox1->draw()."\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n<div class='controller_checklist' style='padding-left: 10px;'>".$portalbox1->draw()."</div>\n".'<!-- END checklist info -->'."\n";
 
 	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
@@ -262,4 +262,4 @@
 		}
 		$tmp++;
 	}
-	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n<div class='controller_checklist' style='padding-left: 10px;'>".$portalbox2->draw()."</div>\n".'<!-- END assigned checklist info -->'."\n";
