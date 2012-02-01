@@ -137,26 +137,13 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input type="text" name="reference" id="reference" value="{procedure/reference}"  />
+							<textarea id="reference" name="reference" rows="5" cols="60"><xsl:value-of select="procedure/reference" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="procedure/reference" />
+							<xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					</dd>	
-					<dt>
-					<label for="attachment"><xsl:value-of select="php:function('lang','Procedure Attachment')" /></label>
-					</dt>
-					<dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<input type="text" name="attachment" id="attachment" value="{procedure/attachment}"  />
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="procedure/attachment" />
-						</xsl:otherwise>
-					</xsl:choose>
-					</dd>			
+					</dd>				
 				</dl>
 				
 				<div class="form-buttons">
