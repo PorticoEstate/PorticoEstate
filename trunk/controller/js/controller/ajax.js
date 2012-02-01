@@ -38,10 +38,10 @@ $(document).ready(function(){
 						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
 		    			});
 					 				  				  
-					  $("#control_id").html( htmlString );
+					  $("#control_id").innerHTML( htmlString );
 					}else {
          		  		htmlString  += "<option>Ingen kontroller</option>"
-         		  		$("#control_id").html( htmlString );
+         		  		$("#control_id").innerHTML( htmlString );
          		  	}
 			  }  
 			});
