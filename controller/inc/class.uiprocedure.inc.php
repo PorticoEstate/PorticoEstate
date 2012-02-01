@@ -501,7 +501,10 @@
 			foreach ($control_groups as $control_group)
 			{	
 				$group_procedure = $this->so->get_single( $control_group->get_procedure_id() );
-				$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+				if(isset($group_procedure))
+				{
+					$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+				}
 			}
 			
 			$data = array
