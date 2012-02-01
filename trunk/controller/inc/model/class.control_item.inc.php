@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -40,6 +40,7 @@
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
+		protected $control_area_id;
 		protected $type;
 		
 		/**
@@ -102,6 +103,13 @@
 		
 		public function get_control_group_name() { return $this->control_group_name; }
 		
+		public function set_control_area_id($control_area_id)
+		{
+			$this->control_area_id = $control_area_id;
+		}
+		
+		public function get_control_area_id() { return $this->control_area_id; }
+		
 		public function set_type($type)
 		{
 			$this->type = $type;
@@ -133,6 +141,7 @@
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
+			$result['control_area'] = $this->get_control_area_id();
 						
 			return $result;
 		}
