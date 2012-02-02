@@ -77,6 +77,10 @@
 			{
 				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
 			}
+			else
+			{
+				$user_lid = 'all';
+			}
 
 			if($voucher_id)
 			{
