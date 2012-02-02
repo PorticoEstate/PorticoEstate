@@ -99,25 +99,6 @@
 			        <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>
 			    </input>
 			</dd>
-			<dt style="margin-top: 40px;"><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
-			<dd>
-				<select name="activity_id" id="field_activity">
-					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
-					<xsl:for-each select="activities">
-						<option>
-							<xsl:if test="../organization/activity_id = id">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-							<xsl:value-of select="name"/>
-						</option>
-					</xsl:for-each>
-				</select>
-			</dd>
-			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
-			<dd class="yui-skin-sam">
-			    <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
-			</dd>
 		</dl>
 		<dl class="form-col">
             <xsl:if test="currentapp = 'booking'">
@@ -187,8 +168,30 @@
 			</dd>
 			<!--</xsl:if>-->
 		</dl>
+		<div class="clr"/>
+		<dl class="form-col">
+			<dt style="margin-top: 40px;"><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dd>
+				<select name="activity_id" id="field_activity">
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<xsl:for-each select="activities">
+						<option>
+							<xsl:if test="../organization/activity_id = id">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</dd>
+			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
+			<dd class="yui-skin-sam">
+			    <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
+			</dd>
+		</dl>
 
-		<div style='clear:left; padding:0; margin:0'/>
+		<div class="clr"/>
 
 		<xsl:if test='new_form or organization/permission/write'>
 		

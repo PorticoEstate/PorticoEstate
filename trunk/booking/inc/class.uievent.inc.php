@@ -315,6 +315,41 @@
 				$event['is_public'] = 1;
 				$event['building_name'] = $_POST['building_name'];
 
+				if ($_POST['organization_name'] || $_POST['org_id2']) {
+					if ($_POST['organization_name']) {
+						$event['customer_organization_name'] = $_POST['organization_name'];
+						$event['customer_organization_id'] = $_POST['organization_id'];
+						$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+					} else {
+						$orgid = $this->bo->so->get_org($_POST['org_id2']);
+						$event['org_id2'] = $_POST['org_id2'];
+						$event['customer_organization_name'] = $orgid['name'];
+						$event['customer_organization_id'] = $orgid['id'];
+						$organization = $this->organization_bo->read_single(intval($orgid['id']));
+					}
+										
+					if ($organization['customer_internal'] == 0) {
+						$_POST['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$_POST['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_organization_number']) == 9) {
+							$_POST['customer_organization_number'] = $organization['customer_organization_number'];
+						} else {
+							$errors['organization_number'] = lang('The organization number is wrong or not present');
+						}
+					} else {
+						$_POST['customer_identifier_type'] = 'organization_number';
+						$_POST['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_number']) == 5) {
+ 							$_POST['customer_organization_number'] = $organization['customer_number'];
+						} else {
+							$errors['resource_number'] = lang('The resource number is wrong or not present');
+						}
+					}
+					$_POST['contact_name'] = $organization['contacts'][0]['name'];
+					$_POST['contact_email'] = $organization['contacts'][0]['email'];
+					$_POST['contact_phone'] = $organization['contacts'][0]['phone'];
+				} 
+
 				if (!$_POST['application_id'])
 				{
                     $temp_errors = array();
@@ -352,28 +387,6 @@
 						}
 					}  
 				}
-				if ($_POST['organization_name']) {
-					$event['customer_organization_name'] = $_POST['organization_name'];
-					$event['customer_organization_id'] = $_POST['organization_id'];
-					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
-					if ($organization['customer_internal'] == 0) {
-						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
-						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_organization_number']) == 9) {
-							$event['customer_organization_number'] = $organization['customer_organization_number'];
-						} else {
-							$errors['organization_number'] = lang('The organization number is wrong or not present');
-						}
-					} else {
-						$event['customer_identifier_type'] = 'organization_number';
-						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_number']) == 5) {
- 							$event['customer_organization_number'] = $organization['customer_number'];
-						} else {
-							$errors['resource_number'] = lang('The resource number is wrong or not present');
-						}
-					}
-				} 
 
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
