@@ -508,3 +508,24 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.24';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.24';
+	function controller_upgrade0_1_24()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		//Drop and reinsert because og the datatype int can't be altered to varchar
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_check_list', array(), 'location_code');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','location_code',array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.25';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}		
+	}

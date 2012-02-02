@@ -76,7 +76,7 @@
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => false),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
