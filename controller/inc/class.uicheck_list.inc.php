@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -39,7 +39,7 @@
 	include_class('controller', 'date_helper', 'inc/helper/');
 	include_class('controller', 'check_item', 'inc/model/');
 	
-	class controller_uicheck_list_for_location extends controller_uicommon
+	class controller_uicheck_list extends controller_uicommon
 	{
 		private $so;
 		private $so_control_area;
@@ -320,7 +320,7 @@
 			
 			$check_list_id = $this->so->store($check_list);
 			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list_for_location.edit_check_list', 'check_list_id'=>$check_list_id));
+			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
 		}
 		
 		function create_case_message(){

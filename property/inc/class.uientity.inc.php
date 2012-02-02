@@ -715,14 +715,80 @@
 
 			$uicols = $this->bo->uicols;
 
+			$uicols['name'][]		= 'img_id';
+			$uicols['descr'][]		= 'dummy';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'directory';
+			$uicols['descr'][]		= 'directory';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'file_name';
+			$uicols['descr'][]		= lang('name');
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'picture';
+			$uicols['descr'][]		= '';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= 'show_picture';
+			$uicols['input_type'][]	= '';
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
 			$content = array();
 			$j=0;
 			if (isset($entity_list) && is_array($entity_list))
 			{
-				foreach($entity_list as $entity_entry)
+				foreach($entity_list as &$entity_entry)
 				{
+					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
+
+					$_files = $vfs->ls(array(
+						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+						'relatives' => array(RELATIVE_NONE)));
+	
+					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+					{
+						$entity_entry['file_name']	= urlencode($_files[0]['name']);
+						$entity_entry['directory']	= urlencode($_files[0]['directory']);
+						$entity_entry['img_id']		= $_files[0]['file_id'];
+					}
+
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
+
+						switch ($uicols['name'][$i])
+						{
+							case 'num':
+							case 'loc1':
+							case 'loc1_name':
+								$uicols['input_type'][$i] = 'hidden';
+								break;
+						}
+
 						if($uicols['input_type'][$i]!='hidden')
 						{
 							if(isset($entity_entry['query_location'][$uicols['name'][$i]]))
@@ -763,7 +829,7 @@
 					$j++;
 				}
 			}
-
+			$vfs->override_acl = 0;
 			//indica que de la fila seleccionada escogera de la columna "id" el valor "id". Para agregarlo al URL
 			$parameters = array
 				(

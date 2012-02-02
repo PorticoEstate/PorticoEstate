@@ -59,7 +59,9 @@
 		var $public_functions = array(
 										'index' => true,
 										'view_locations_for_control' 	=> true,
-										'add_location_to_control' 		=> true,
+										'register_control_to_location' 	=> true,
+										'register_control_to_location_2' 	=> true,
+										'get_locations_for_control' 	=> true
 									);
 
 		function __construct()
@@ -120,7 +122,7 @@
 						'label' => lang('View_locations_for_control')
 					), array(
 						'label' => lang('Add_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.add_location_to_control'))
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
 					));
 			
 			$data = array(
@@ -128,7 +130,7 @@
 				'view'					=> "view_locations_for_control",
 				'control_areas_array2'	=> $control_areas_array2,
 				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -178,7 +180,7 @@
 			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
 		}
 		
-		function add_location_to_control()
+		function register_control_to_location()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
@@ -214,8 +216,6 @@
 			$default_value = array ('id'=>'','name'=>lang('no role'));
 			array_unshift ($responsibility_roles,$default_value);
 			
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -244,7 +244,7 @@
 					
 			$data = array(
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'						=> "add_location_to_control",
+				'view'						=> "register_control_to_location",
 				'control_filters'			=> array(
 					'control_areas_array2' 	=> $control_areas_array2,
 					'control_array' 			=> $control_array
@@ -256,7 +256,7 @@
 					'part_of_town_list' 		=> $part_of_town_list
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control')),
 					'field' => array(
 						array(
 							'key' => 'location_code',
@@ -304,11 +304,38 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
-			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/add_location_to_control', 'common'), $data);		
+			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/register_control_to_location', 'common'), $data);		
+		}
+		
+		// Returns locations for a control
+		public function get_locations_for_control()
+		{
+			$control_id = phpgw::get_var('control_id');
+			
+			if(is_numeric($control_id) & $control_id > 0)
+			{
+				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+			
+				foreach($locations_for_control_array as $location)
+				{
+					$results['results'][]= $location;	
+				}
+				
+				$results['total_records'] = count( $locations_for_control_array );
+				$results['start'] = 1;
+				$results['sort'] = 'location_code';
+			}
+			else
+			{
+				$results['total_records'] = 0;
+			}				
+			
+			return $this->yui_results($results);
 		}
 		
 		public function query(){
 			$type_id = phpgw::get_var('type_id');
+			$view_type = phpgw::get_var('view_type');
 			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
 			
 			$type_id = $type_id ? $type_id : 1;
@@ -337,7 +364,28 @@
 							
 			return $this->yui_results($results);
 		}
+
+		public function register_control_to_location_2()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$location_code = phpgw::get_var('location_code');
 			
+			$control_location  = null;
+			$control_location_id = 0;
+			
+			$control_location = $this->so_control->get_control_location($control_id, $location_code);
+			
+			if($control_location == null ){
+				
+				$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code);
+			}
+			
+			if($control_location_id > 0)
+				return json_encode( array( "status" => "saved" ) );
+			else
+				return json_encode( array( "status" => "not_saved" ) );
+		}
+		
 		public function add_actions(&$value, $key, $params)
 		{
 			unset($value['query_location']);
@@ -348,7 +396,7 @@
 			$value['parameters'] = array();
 			
 			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.add_location_to_control', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol_location.register_control_to_location_2','location_code' => $value['location_code'], 'phpgw_return_as' => 'json')));
 			$value['labels'][] = lang('add_location');
 			$value['parameters'][] = "control_id";
 		}

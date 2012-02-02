@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -261,13 +261,14 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
-		function get_planned_check_lists_for_control($control_id){
+	function get_planned_check_lists_for_control($control_id, $location_code){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases ";
 		$sql .= "FROM controller_check_list cl ";
-		$sql .= "WHERE cl.control_id = $control_id "; 
+		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "ORDER BY cl.id;";
-		
+		//var_dump($sql);
 		$this->db->query($sql);
 		
 		$check_list_id = 0;
@@ -386,7 +387,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		$sql .= "AND c.repeat_type = $repeat_type ";
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
@@ -447,7 +448,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "WHERE cl.location_code = '{$location_code} ";
 		
 		if( is_numeric($repeat_type) )
 			$sql .= "AND c.repeat_type = $repeat_type ";

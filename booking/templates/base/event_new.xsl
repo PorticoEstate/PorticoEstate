@@ -135,6 +135,58 @@
 			</dd>
 		</dl>
 		<div class="clr"/>
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'Cost')" /></dt>
+            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
+            <dd>
+                <input id="field_cost" name="cost" type="text">
+                    <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
+                </input>
+            </dd>
+		</dl>
+		<dl class="form-col">
+		</dl>
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></dt>
+			<dt style="visibility: hidden;">!</dt>
+			<dd>
+				<select name="reminder" id="field_reminder">
+					<xsl:choose>
+						<xsl:when test="event/reminder = 1">
+							<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+							<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						</xsl:when>
+						<xsl:otherwise test="event/reminder = 0">
+							<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+							<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						</xsl:otherwise>
+					</xsl:choose>
+				</select>
+			</dd>
+		</dl>
+		<div class="clr"/>
+		<dl class="form-col">
+			<dt class="heading"><xsl:value-of select="php:function('lang', 'Get all contact and invoice information from organization')" /></dt> 
+            <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
+            <dd>
+                <div class="autocomplete">
+                    <input id="field_org_id" name="organization_id" type="hidden">
+                        <xsl:attribute name="value"><xsl:value-of select="event/customer_organization_id"/></xsl:attribute>
+                    </input>
+                    <input id="field_org_name" name="organization_name" type="text">
+                        <xsl:attribute name="value"><xsl:value-of select="event/customer_organization_name"/></xsl:attribute>
+                    </input>
+                    <div id="org_container"/>
+                </div>
+				<span><xsl:value-of select="php:function('lang', 'Or')" /></span>
+				<dt><label for="field_org_id2"><xsl:value-of select="php:function('lang', 'Organization_number')" /></label></dt>
+				<dd>
+					<input id="field_org_id2" name="org_id2" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="event/org_id2"/></xsl:attribute>
+					</input>
+				</dd>
+            </dd>
+		</dl>
         <dl class="form-col">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></dt>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
@@ -155,53 +207,16 @@
 					<xsl:attribute name="value"><xsl:value-of select="event/contact_phone"/></xsl:attribute>
 				</input>
 			</dd>
-            <dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
-            <dd>
-                <input id="field_cost" name="cost" type="text">
-                    <xsl:attribute name="value"><xsl:value-of select="event/cost"/></xsl:attribute>
-                </input>
-            </dd>
         </dl>
 		<dl class="form-col">
 
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Invoice information')" /></dt>
-
-            <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
-            <dd>
-                <div class="autocomplete">
-                    <input id="field_org_id" name="organization_id" type="hidden">
-                        <xsl:attribute name="value"><xsl:value-of select="event/organization_id"/></xsl:attribute>
-                    </input>
-                    <input id="field_org_name" name="organization_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="event/customer_organization_name"/></xsl:attribute>
-                    </input>
-                    <div id="org_container"/>
-                </div>
-            </dd>
 
 			<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
 
 		
 			<dt><label for="field_customer_internal"><xsl:value-of select="php:function('lang', 'Internal Customer')"/></label></dt>
 			<dd><xsl:copy-of select="phpgw:option_checkbox(event/customer_internal, 'customer_internal')"/></dd>
-		</dl>
-		<dl class="form-col">
-			<dt class="heading"><xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" /></dt>
-			<dt style="visibility: hidden;">!</dt>
-			<dd>
-				<select name="reminder" id="field_reminder">
-					<xsl:choose>
-						<xsl:when test="event/reminder = 1">
-							<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-							<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-						</xsl:when>
-						<xsl:otherwise test="event/reminder = 0">
-							<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
-							<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
-						</xsl:otherwise>
-					</xsl:choose>
-				</select>
-			</dd>
 		</dl>
         <div class="form-buttons">
             <input type="submit">
