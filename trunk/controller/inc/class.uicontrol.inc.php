@@ -152,15 +152,10 @@
                                     )
                                 )
                             ),
-							array('type' => 'filter',
-								'name' => 'control_areas',
-                                'text' => lang('Control_area'),
-                                'list' => $this->so_control_area->get_control_area_select_array(),
-							),
 							//as categories
 							array('type' => 'filter',
 								'name' => 'control_areas',
-								'text' => lang('Control_area') . 2,
+								'text' => lang('Control_area'),
 								'list' => $control_areas_array2,
 							),
 							array('type' => 'filter',
@@ -605,9 +600,6 @@
 				return null;
 		}
 		
-		public function query(){}
-		
-		/*
 		// Returns locations for a control
 		public function get_locations_for_control()
 		{
@@ -658,7 +650,7 @@
 			
 			$this->so->register_control_to_location($control_id, $location_code);
 		}
-		
+	
 		public function query()
 		{
 			$params = array(
@@ -730,5 +722,5 @@
 
 			return $this->yui_results($results);
 		}
-		*/
+
 	}
