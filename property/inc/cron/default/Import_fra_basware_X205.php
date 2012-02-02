@@ -364,7 +364,7 @@
 					$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
 					$order_id 		= $_data['PURCHASEORDERNO'];
-					$fakturanr		= $_data['KEY'];
+					$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
 					$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 					$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
 					$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
