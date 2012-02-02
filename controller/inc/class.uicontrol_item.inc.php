@@ -490,7 +490,10 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-
+				
+				$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
+				$control_item->set_control_area_name($category[0]['name']);
+				
 				$control_item_array = $control_item->toArray();
 
 				$data = array
