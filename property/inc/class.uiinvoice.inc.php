@@ -2190,9 +2190,12 @@ JS;
 //					$receipt['error'][]=array('msg'=>lang('Missing log message'));
 				}
 
-				if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
+				if($line['approved_amount'])
 				{
-					$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));				
+					if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
+					{
+						$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));				
+					}
 				}
 
 				if(isset($values['split_line']) && isset($values['split_amount']) && $values['split_amount'])
@@ -2309,6 +2312,7 @@ JS;
 					'project_group_data'	=> $project_group_data,
 					'order_id'				=> $line['order_id'],
 					'value_amount'			=> $line['amount'],
+					'value_approved_amount'	=> $line['approved_amount'],
 					'value_currency'		=> $line['currency'],
 					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
 			);
