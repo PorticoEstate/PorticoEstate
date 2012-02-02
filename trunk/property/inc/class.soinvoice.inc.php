@@ -691,8 +691,15 @@
 
 				$n=$entry[0];
 
-
 				//_debug_array($entry);
+				$id			= (int)$values['id'][$n];
+				$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
+				if(!$approved_amount || $approved_amount == '00.0')
+				{
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET godkjentbelop = $approved_amount WHERE id='$id'");
+					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
+					continue;
+				}
 
 				if ($values['budget_account'][$n])
 				{
@@ -762,10 +769,8 @@
 
 				if (! $local_error)
 				{
-					$id			= (int)$values['id'][$n];
 					$tax_code	= (int)$values['tax_code'][$n];
 					$dimb		= isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int)$values['dimb'][$n] : 'NULL';
-					$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
 					$workorder_id=$values['workorder_id'][$n];
 					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
