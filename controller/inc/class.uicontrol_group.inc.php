@@ -178,6 +178,11 @@
 							'sortable'	=> false
 						),
 						array(
+							'key' => 'control_area',
+							'label' => lang('Control area'),
+							'sortable'	=> false
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
