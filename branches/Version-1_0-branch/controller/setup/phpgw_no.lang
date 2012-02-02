@@ -1,4 +1,4 @@
-add_check_list_to_location	controller	no	Registrer sjekkliste for bygg
+add_check_list_to_location	controller	no	Registrer kontroll for bygg
 location_connections	controller	no	Byggknytning
 control	controller	no	Kontroll
 controller	common	no	Kontroll
@@ -66,7 +66,7 @@ save_order	controller	no	Lagre rekkefølge
 6 characters	controller	no	6 tegn
 active	controller	no	Aktiv
 add	controller	no	Legg til
-add_location	controller	no	Legg enhet til kontrollen
+add_location	controller	no	Registrer kontroll til bygg
 all	controller	no	Alle
 all_locations	controller	no	Enheter fra eiendomsregisteret
 annually	controller	no	Årlig
@@ -311,3 +311,4 @@ View_documents_for_procedure	controller	no	Tilknyttede dokumenter
 Document title	controller	no	Dokumentets tittel
 Document name	controller	no	Filnavn
 Document description	controller	no	Beskrivelse
+select value	controller	no	Velg

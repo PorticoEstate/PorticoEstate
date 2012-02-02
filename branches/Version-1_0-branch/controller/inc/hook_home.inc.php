@@ -129,7 +129,8 @@
 	{
 		$curr_location = $control_instance[0];
 		$current_control = $control_instance[1];
-		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
+		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id(), $curr_location);
+		//_debug_array($check_lists);
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
 		foreach($control_areas['cat_list'] as $area)
@@ -162,7 +163,7 @@
 		}
 		$tmp++;
 	}
-	echo "\n".'<!-- BEGIN checklist info -->'."\n".$portalbox1->draw()."\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n<div class='controller_checklist' style='padding-left: 10px;'>".$portalbox1->draw()."</div>\n".'<!-- END checklist info -->'."\n";
 
 	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
@@ -202,7 +203,7 @@
 	{
 		$curr_location = $control_instance[0];
 		$current_control = $control_instance[1];
-		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id());
+		$check_lists = $so->get_planned_check_lists_for_control($current_control->get_id(), $curr_location);
 		//$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
@@ -233,7 +234,7 @@
 						($current_date, array
 						(
 							'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => $curr_location))
 						));
 					}
 				}
@@ -245,7 +246,7 @@
 				($current_date, array
 				(
 					'text' => "{$location_name} - {$control_area_name} - {$current_control->get_title()} :: {$next_date}",
-					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => '1101'))
+					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control->get_id(), 'location_code' => $curr_location))
 				));					
 			}
 		}
@@ -262,4 +263,4 @@
 		}
 		$tmp++;
 	}
-	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n".$portalbox2->draw()."\n".'<!-- END assigned checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN assigned checklist info -->'."\n<div class='controller_checklist' style='padding-left: 10px;'>".$portalbox2->draw()."</div>\n".'<!-- END assigned checklist info -->'."\n";

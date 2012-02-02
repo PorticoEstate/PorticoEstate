@@ -121,9 +121,9 @@
 
 			$joins = "	{$this->left_join} fm_building_part ON (p.building_part_id = CAST(fm_building_part.id AS INT))";
 			$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
-			$joins .= "	{$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+			//$joins .= "	{$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
 
-			$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name FROM controller_control_group p {$joins} WHERE p.id = " . $id;
+			$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title FROM controller_control_group p {$joins} WHERE p.id = " . $id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
@@ -132,7 +132,9 @@
 			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
 			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-			$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+			$control_group->set_control_area_name($category[0]['name']);
+			//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
 			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
@@ -304,7 +306,7 @@
 			$tables = "controller_control_group";
 			$joins = "	{$this->left_join} fm_building_part ON (building_part_id = CAST(fm_building_part.id AS INT))";
 			$joins .= "	{$this->left_join} controller_procedure ON (controller_control_group.procedure_id = controller_procedure.id)";
-			$joins .= "	{$this->left_join} controller_control_area ON (controller_control_group.control_area_id = controller_control_area.id)";
+//			$joins .= "	{$this->left_join} controller_control_area ON (controller_control_group.control_area_id = controller_control_area.id)";
 			//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 			//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 
@@ -315,8 +317,8 @@
 			else
 			{
 				$cols .= "controller_control_group.id, group_name, controller_control_group.procedure_id, controller_control_group.control_area_id as control_area_id, ";
-				$cols .= "building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, "; 
-				$cols .= "controller_control_area.title as control_area_name ";
+				$cols .= "building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title "; 
+				//$cols .= "controller_control_area.title as control_area_name ";
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -335,7 +337,9 @@
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$control_group->set_control_area_name($category[0]['name']);
+				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 			}

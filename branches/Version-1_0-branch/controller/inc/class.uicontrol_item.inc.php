@@ -73,6 +73,22 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
+			// Sigurd: Start categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END categories
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -114,8 +130,8 @@
 							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
-								'text' => lang('Control_area').':',
-								'list' => $this->so_control_area->get_control_area_select_array(),
+								'text' => lang('Control_area'),
+								'list' => $control_areas_array2,
 							),
 							array('type' => 'text', 
 								'text' => lang('searchfield'),
@@ -303,8 +319,23 @@
 			}
 			else
 			{
-
-				$control_area_array = $this->so_control_area->get_control_area_array();
+				//Sigurd: START as categories
+				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+				$cats->supress_info	= true;
+				
+				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+								
+				$control_area_array = array();
+				foreach($control_areas['cat_list'] as $cat_list)
+				{
+					$control_area_array[] = array
+					(
+						'id' 	=> $cat_list['cat_id'],
+						'name'	=> $cat_list['name'],
+					);		
+				}
+				// END as categories
+				//$control_area_array = $this->so_control_area->get_control_area_array();
 				$control_group_array = $this->so_control_group->get_control_group_array();
 
 
@@ -314,7 +345,7 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
-				foreach ($control_area_array as $control_area)
+/*				foreach ($control_area_array as $control_area)
 				{
 					$control_area_options[] = array
 					(
@@ -323,7 +354,7 @@
 						 
 					);
 				}
-
+*/
 				foreach ($control_group_array as $control_group)
 				{
 					$control_group_options[] = array
@@ -342,7 +373,7 @@
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'control_item'			=> $control_item_array,
-					'control_area'			=> array('options' => $control_area_options),
+					'control_area'			=> array('options' => $control_area_array),
 					'control_group'			=> array('options' => $control_group_options),
 				);
 
@@ -459,7 +490,10 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-
+				
+				$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
+				$control_item->set_control_area_name($category[0]['name']);
+				
 				$control_item_array = $control_item->toArray();
 
 				$data = array

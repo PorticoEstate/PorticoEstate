@@ -82,8 +82,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		unset($contact2);
 		if($type)
 		{
-			//var_dump($type);
-			$group_array = $so_group->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
+			$sogroup = activitycalendar_sogroup::get_instance();
+			$soactivity = activitycalendar_soactivity::get_instance();
+			$socontact = activitycalendar_socontactperson::get_instance();
+			$group_array = $sogroup->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
 			if(count($group_array) > 0){
 				$keys = array_keys($group_array);
 				$group = $group_array[$keys[0]];
@@ -109,10 +111,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2['org_id'] = 0;
 				$contact2['group_id'] = $group->get_id();
 				
-				if($so_group->update_local($group))
+				if($sogroup->update_local($group))
 				{
-					$so_contact->update_local_contact_person($contact1);
-					$so_contact->update_local_contact_person($contact2);
+					$socontact->update_local_contact_person($contact1);
+					$socontact->update_local_contact_person($contact2);
 					$message = lang('messages_saved_form');	
 				}
 				else
@@ -143,7 +145,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2_email = phpgw::get_var('contact2_email');
 
 				
-				$new_group_id = $so_group->transfer_group($group_info);
+				$new_group_id = $sogroup->transfer_group($group_info);
 				if($new_group_id)
 				{
 					//update activity with new org id
@@ -153,24 +155,24 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact1['phone'] = $contact1_phone;
 					$contact1['mail'] = $contact1_email;
 					$contact1['group_id'] = $new_group_id;
-					$so_activity->add_contact_person_group($contact1);
+					$soactivity->add_contact_person_group($contact1);
 					
 					$contact2 = array();
 					$contact2['name'] = $contact2_name;
 					$contact2['phone'] = $contact2_phone;
 					$contact2['mail'] = $contact_mail_2;
 					$contact2['group_id'] = $new_group_id;
-					$so_activity->add_contact_person_group($contact2);
+					$soactivity->add_contact_person_group($contact2);
 					
 					$message = lang('messages_saved_form');	
 					
 					//get affected activities and update with new org id
-					$update_activities = $so_activity->get_activities_for_update($new_group_id, true);
+					$update_activities = $soactivity->get_activities_for_update($new_group_id, true);
 					foreach($update_activities as $act)
 					{
 						$act->set_group_id($new_group_id);
 						$act->set_new_org(false);
-						$so_activity->store($act);
+						$soactivity->store($act);
 					}
 					
 					//set local group as stored
@@ -184,7 +186,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				}
 			}
 			
-			$contact_persons = $so_contact->get_local_contact_persons($group->get_id(), true);
+			$contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
 			$cp1 = $contact_persons[0];
 			$cp2 = $contact_persons[1];
 			

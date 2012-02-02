@@ -587,8 +587,6 @@
 
 			$project_list = array();
 
-
-
 			$count_cols_return=count($cols_return);
 
 			while ($this->db->next_record())
@@ -617,16 +615,48 @@
 					$project['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
 
-				$sql_workder  = 'SELECT sum(fm_workorder.combined_cost) as combined_cost,'
-				. ' (sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost,'
-				. ' sum(fm_workorder.billable_hours) as billable_hours'
-				. " FROM fm_workorder WHERE project_id = '{$project['project_id']}'";
-				$this->db->query($sql_workder);
-				$this->db->next_record();
-				$project['combined_cost']	= (int)$this->db->f('combined_cost');
-				$project['actual_cost']		= (int)$this->db->f('actual_cost');
-				$project['billable_hours']	= (int)$this->db->f('billable_hours');
+				$project['combined_cost']	= 0;
+				$project['actual_cost']		= 0;
+				$project['billable_hours']	= 0;
 
+				$sql_workder  = 'SELECT paid_percent,contract_sum, calculation, budget,'
+				. ' (fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost) as actual_cost,'
+				. ' billable_hours,closed'
+				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+				. " WHERE project_id = '{$project['project_id']}'";
+
+				$this->db->query($sql_workder);
+				while ($this->db->next_record())
+				{
+					$paid_percent = (int)$this->db->f('paid_percent');
+
+					if($this->db->f('closed'))
+					{
+						$_sum = 0;
+					}
+					else if($this->db->f('contract_sum') > 0)
+					{
+						$_sum = $this->db->f('contract_sum');
+					}
+					else if($this->db->f('calculation') > 0)
+					{
+						$_sum = $this->db->f('calculation');
+					}
+					else if($this->db->f('budget') > 0)
+					{
+						$_sum = $this->db->f('budget');
+					}
+					else
+					{
+						$_sum = 0;
+					}
+
+					$_sum = $_sum * (100 - $paid_percent)/100;
+
+					$project['combined_cost']	+= $_sum;
+					$project['actual_cost']		+= (int)$this->db->f('actual_cost');
+					$project['billable_hours']	+= (int)$this->db->f('billable_hours');
+				}
 			}
 
 			return $project_list;
@@ -865,7 +895,7 @@
 
 			if($project['budget'])
 			{
-				$this->updat_budget($id, $project['year'], $project['budget']);
+				$this->updat_budget($id, $project['budget_year'], $project['budget']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1068,7 +1098,7 @@
 
 			if($project['budget'])
 			{
-				$new_budget = $this->updat_budget($project['id'], $project['year'], $project['budget']);
+				$new_budget = $this->updat_budget($project['id'], $project['budget_year'], $project['budget']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])

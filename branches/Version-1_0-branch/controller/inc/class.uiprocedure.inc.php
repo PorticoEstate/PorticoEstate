@@ -190,7 +190,7 @@
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
 					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference'));
+					$procedure->set_reference(phpgw::get_var('reference','html'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -253,7 +253,7 @@
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
 					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference'));
+					$procedure->set_reference(phpgw::get_var('reference','html'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -366,7 +366,7 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
-				$this->use_yui_editor(array('responsibility','description'));
+				$this->use_yui_editor(array('responsibility','description', 'reference'));
 
 				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
 			}
@@ -425,6 +425,10 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
+				
+				$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
+				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				
 
 				$procedure_array = $procedure->toArray();
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
@@ -501,7 +505,10 @@
 			foreach ($control_groups as $control_group)
 			{	
 				$group_procedure = $this->so->get_single( $control_group->get_procedure_id() );
-				$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+				if(isset($group_procedure))
+				{
+					$group_procedures_array[] = array("control_group" => $control_group->toArray(), "procedure" => $group_procedure->toArray());
+				}
 			}
 			
 			$data = array

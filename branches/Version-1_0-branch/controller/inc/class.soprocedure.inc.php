@@ -146,9 +146,8 @@
 			$documents = null;
 			
 
-			$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
 			$joins .= " {$this->left_join} controller_document ON (p.id = controller_document.procedure_id)";
-			$sql = "SELECT p.*, controller_control_area.title AS control_area_name, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
+			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record()) {
@@ -165,8 +164,12 @@
 					$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
-					$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
+					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
+					
+					$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+					$procedure->set_control_area_name($category[0]['name']);
+					
+					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 				}
 				
 				if($this->db->f('document_id', true) != ''){
@@ -191,10 +194,8 @@
 			$counter = 0;
 			$documents = null;
 			
-
-			$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
 			$joins .= " {$this->left_join} controller_document ON (p.id = controller_document.procedure_id)";
-			$sql = "SELECT p.*, controller_control_area.title AS control_area_name, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
+			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record()) {
@@ -211,8 +212,10 @@
 					$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
-					$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
+					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
+					$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+					$procedure->set_control_area_name($category[0]['name']);
+					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 				}
 				
 				if($this->db->f('document_id', true) != ''){
@@ -364,7 +367,9 @@
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+				$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 
 				$results[] = $procedure->toArray();;
 			}
@@ -439,7 +444,7 @@
 
 			$condition =  join(' AND ', $clauses);
 
-			$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
+			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
 			$tables = "controller_procedure";
 
@@ -449,7 +454,7 @@
 			}
 			else
 			{
-				$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date, controller_control_area.title AS control_area_name ";
+				$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date, controller_procedure.control_area_id ";
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -476,8 +481,10 @@
 				$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
-				$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
+				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
+				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
+				$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$procedure->set_control_area_name($category[0]['name']);
 			}
 
 			return $procedure;

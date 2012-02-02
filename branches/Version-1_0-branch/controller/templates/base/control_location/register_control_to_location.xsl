@@ -16,7 +16,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template name="add_location_to_control">
+<xsl:template name="register_control_to_location">
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
