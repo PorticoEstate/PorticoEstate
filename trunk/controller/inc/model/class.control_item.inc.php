@@ -40,7 +40,9 @@
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
+		protected $control_group_name;
 		protected $control_area_id;
+		protected $control_area_name;
 		protected $type;
 		
 		/**
@@ -110,6 +112,13 @@
 		
 		public function get_control_area_id() { return $this->control_area_id; }
 		
+		public function set_control_area_name($control_area_name)
+		{
+			$this->control_area_name = $control_area_name;
+		}
+		
+		public function get_control_area_name() { return $this->control_area_name; }
+		
 		public function set_type($type)
 		{
 			$this->type = $type;
@@ -141,7 +150,7 @@
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
-			$result['control_area'] = $this->get_control_area_id();
+			$result['control_area'] = $this->get_control_area_name();
 						
 			return $result;
 		}
