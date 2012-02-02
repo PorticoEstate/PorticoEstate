@@ -893,15 +893,22 @@
 
 			$value_set = array
 			(
+				'godkjentbelop'	=> $values['approved_amount'],
 				'project_id'	=> $values['project_group'] ? $values['project_group'] : '',
 				'pmwrkord_code'	=> $values['order_id'],
 				'process_log'	=> $this->db->db_addslashes($values['process_log']),
 				'process_code'	=> $values['process_code'],
 			);
+			
 
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+
+			if(!$values['approved_amount'])
+			{
+				$this->db->query("UPDATE {$table} SET godkjentbelop = 0 WHERE id= {$id}" ,__LINE__,__FILE__);
+			}
 
 			if(isset($values['split_line']) && $values['split_amount'] && isset($values['split_amount']) && $values['split_amount'])
 			{

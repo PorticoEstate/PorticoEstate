@@ -1391,8 +1391,21 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
-				<!--<xsl:variable name="lang_process_code"><xsl:value-of select="php:function('lang', 'voucher process code')" /></xsl:variable>-->
-				<xsl:apply-templates select="approved_list"/>
+
+				<xsl:for-each select="approved_list">
+					<tr>
+						<td align="left" style="white-space: nowrap;">
+							<xsl:value-of select="role"/>
+						</td>
+						<td align="left" style="white-space: nowrap;">
+							<xsl:if test="initials != ''">
+								<xsl:value-of select="initials"/>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="date"/>
+							</xsl:if>		
+						</td>
+					</tr>
+				</xsl:for-each>				
 				<tr>
 					<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
 					<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
@@ -1411,6 +1424,7 @@
 						</select>
 					</td>
 				</tr>
+
 				<tr>
 					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'voucher process code')"/>
@@ -1456,6 +1470,25 @@
 						</textarea>
 					</td>
 				</tr>
+
+
+				<tr>
+					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+						<xsl:value-of select="php:function('lang', 'approved amount')"/>
+					</td>
+					<td align="left" class="th_text" valign="top">
+						<input type="text" name="values[approved_amount]" value="{value_approved_amount}">
+							<xsl:attribute name="size">
+								<xsl:text>20</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'approved amount')"/>
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
+
+
 				<tr>
 					<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'split line')"/>
