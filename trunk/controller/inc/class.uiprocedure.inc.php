@@ -425,6 +425,10 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
+				
+				$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
+				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				
 
 				$procedure_array = $procedure->toArray();
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
