@@ -397,6 +397,7 @@ Your application has now been registered and a confirmation email has been sent 
 A Case officer will review your application as soon as possible.	booking	no	En saksbehandler vil behandle søknaden så fort som mulig.
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	booking	no	Organisasjonsnummer er ugyldig
+Organization_number	booking	no	Organisasjonsnummer
 Select an organization first	booking	no	Velg organisasjon først
 Add Resource	booking	no	Ny ressurs
 %1 e-mails were sent successfully	booking	no	%1 e-poster ble sendt
@@ -405,6 +406,7 @@ activity_id	booking	no	Aktivitet
 contact_email	booking	no	E-post
 contact_name	booking	no	Navn
 customer_identifier_type	booking	no	Fakturainformasjon
+Or	booking	no	Eller
 group_id	booking	no	Gruppe/Lag
 organization_id	booking	no	Organisasjon
 season_id	booking	no	Sesong
@@ -542,3 +544,4 @@ Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velg
 There is a cost of %1 assosiated with the allocation you are useing	booking	no	Det er en kostnad på %1kr knyttet til den tildelingen du bruker.
 Export	booking	no	Eksport
 Upload	booking	no	Last opp
+Get all contact and invoice information from organization	booking	no	Hent all kontakt/faktura informasjon fra Organisasjon 
