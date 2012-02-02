@@ -40,7 +40,7 @@
 			var frame = document.createElement('iframe');
 			frame.src = sUrl;
 			frame.width = "100%";
-			frame.height = "460";
+			frame.height = "500";
 			o.setBody(frame);
 		};
 		lightbox.showEvent.subscribe(onDialogShow, lightbox);

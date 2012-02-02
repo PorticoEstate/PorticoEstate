@@ -2190,12 +2190,19 @@ JS;
 //					$receipt['error'][]=array('msg'=>lang('Missing log message'));
 				}
 
-				if($line['approved_amount'])
+				if($values['approved_amount'])
 				{
+					$values['approved_amount'] 		= str_replace(' ','',$values['approved_amount']);
+					$values['approved_amount'] 		= str_replace(',','.',$values['approved_amount']);
 					if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
 					{
 						$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));				
 					}
+				}
+				else
+				{
+					unset($values['split_amount']);
+					unset($values['split_line']);
 				}
 
 				if(isset($values['split_line']) && isset($values['split_amount']) && $values['split_amount'])
@@ -3659,6 +3666,11 @@ JS;
 				case 's_agreement':
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
 					break;
+				default:
+					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+					$GLOBALS['phpgw']->common->phpgw_header(true);
+					echo 'No such order';
+					$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 		}
 
