@@ -311,3 +311,4 @@ View_documents_for_procedure	controller	no	Tilknyttede dokumenter
 Document title	controller	no	Dokumentets tittel
 Document name	controller	no	Filnavn
 Document description	controller	no	Beskrivelse
+select value	controller	no	Velg
