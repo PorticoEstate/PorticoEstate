@@ -865,7 +865,7 @@
 
 			if($project['budget'])
 			{
-				$this->updat_budget($id, $project['year'], $project['budget']);
+				$this->updat_budget($id, $project['budget_year'], $project['budget']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1068,7 +1068,7 @@
 
 			if($project['budget'])
 			{
-				$new_budget = $this->updat_budget($project['id'], $project['year'], $project['budget']);
+				$new_budget = $this->updat_budget($project['id'], $project['budget_year'], $project['budget']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
