@@ -1105,9 +1105,9 @@
 
 			if($ticket['billable_hours'])
 			{
-				$ticket['billable_hours'] = str_replace(',','.', $ticket['billable_hours']);
+				$ticket['billable_hours'] = (float)str_replace(',','.', $ticket['billable_hours']);
 			}
-			if ((float)$old_billable_hours != (float)$ticket['billable_hours'])
+			if ((float)$old_billable_hours != $ticket['billable_hours'])
 			{
 				$this->db->query("UPDATE fm_tts_tickets SET billable_hours='{$ticket['billable_hours']}'"
 					. " WHERE id='{$id}'",__LINE__,__FILE__);
