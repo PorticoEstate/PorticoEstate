@@ -108,7 +108,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+		echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
 
 		unset($tts);
 		unset($portalbox);
@@ -189,7 +189,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+		echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
 
 		unset($tts);
 		unset($portalbox);
@@ -269,7 +269,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+		echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
 
 		unset($tts);
 		unset($portalbox);
@@ -361,7 +361,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN ticket info -->'."\n".$portalbox->draw()."\n".'<!-- END ticket info -->'."\n";
+		echo "\n".'<!-- BEGIN ticket info -->'."\n<div class='property_tickets' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END ticket info -->'."\n";
 
 		unset($tts);
 		unset($portalbox);
@@ -418,7 +418,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN project 1 info -->'."\n".$portalbox->draw()."\n".'<!-- END project 1 info -->'."\n";
+		echo "\n".'<!-- BEGIN project 1 info -->'."\n<div class='property_project' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END project 1 info -->'."\n";
 
 		unset($obj);
 		unset($portalbox);
@@ -474,7 +474,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN workorder 1 info -->'."\n".$portalbox->draw()."\n".'<!-- END workorder 1 info -->'."\n";
+		echo "\n".'<!-- BEGIN workorder 1 info -->'."\n<div class='property_workorder' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END workorder 1 info -->'."\n";
 
 		unset($obj);
 		unset($portalbox);
@@ -529,7 +529,7 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN workorder 2 info -->'."\n".$portalbox->draw()."\n".'<!-- END workorder 2 info -->'."\n";
+		echo "\n".'<!-- BEGIN workorder 2 info -->'."\n<div class='property_workorder' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END workorder 2 info -->'."\n";
 
 		unset($obj);
 		unset($portalbox);
@@ -653,7 +653,8 @@
 			);
 		}
 
-		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+		echo "\n".'<!-- BEGIN approval info -->'."\n<div class='property_approval' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END approval info -->'."\n";
+
 		unset($portalbox);
 		unset($obj);
 		unset($pending_approvals);
@@ -781,7 +782,8 @@
 		$portalbox->setvar('title', $title);
 		$portalbox->start_template();
 
-		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+		echo "\n".'<!-- BEGIN approval info -->'."\n<div class='property_approval' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END approval info -->'."\n";
+
 		unset($portalbox);
 		unset($pending_approvals);
 	}
@@ -859,7 +861,8 @@
 		$portalbox->setvar('title', $title);
 		$portalbox->start_template();
 
-		echo "\n".'<!-- BEGIN reminder info -->'."\n".$portalbox->draw()."\n".'<!-- END reminder info -->'."\n";
+		echo "\n".'<!-- BEGIN reminder info -->'."\n<div class='property_reminder' style='padding-left: 10px;'>".$portalbox->draw()."</div>\n".'<!-- END reminder info -->'."\n";
+
 		unset($pending_reminder);
 		unset($portalbox);
 	}
