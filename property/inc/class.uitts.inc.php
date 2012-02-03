@@ -1038,6 +1038,7 @@
 						);
 				}
 
+				$view_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'property.uitts.view','id'=> $ticket['id']));
 				foreach($ticket_list as $ticket)
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
@@ -1055,12 +1056,8 @@
 						if($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'entry_date')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['link']		=	$GLOBALS['phpgw']->link('/index.php',array
-								(
-									'menuaction'	=> 'property.uitts.view',
-									'id'			=> $ticket['id']
-								));
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]] .  $ticket['new_ticket'];
+							$datatable['rows']['row'][$j]['column'][$k]['link']		= "{$view_action}&id={$ticket['id']}";
+							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]] . $ticket['new_ticket'];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
 						}
 
