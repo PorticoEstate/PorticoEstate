@@ -291,9 +291,9 @@ Control title	controller	no	Tittel
 start_date	controller	no	Start dato
 planned_date	controller	no	Planlagt dato
 end_date	controller	no	Slutt dato
-View_locations_for_control	controller	no	Vis bygg/kontroll-knytning	
-Add_locations_for_control	controller	no	Legg til knytning for bygg
-View_component_for_control	controller	no	Vis bygg/utstyr-knytning
+View_locations_for_control	controller	no	Vis knytning mot lokasjon
+Add_locations_for_control	controller	no	Legg til knytning mot lokasjon
+View_component_for_control	controller	no	Vis knytning mot utstyr
 Add_component_for_control	controller	no	Legg til knytning mot utstyr
 component_for_control	controller	no	Utstyr tilknyttet kontroll
 Choose_component_type	controller	no	Velg utstyrstype
