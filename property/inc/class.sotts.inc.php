@@ -896,24 +896,25 @@
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			$location_code 	= $this->db->f('location_code');
-			$oldlocation_code 	= $this->db->f('location_code');
-			$oldfinnish_date 	= $this->db->f('finnish_date');
-			$oldfinnish_date2 	= $this->db->f('finnish_date2');
-			$oldassigned 		= $this->db->f('assignedto');
-			$oldgroup_id 		= $this->db->f('group_id');
-			$oldpriority 		= $this->db->f('priority');
-			$oldcat_id 			= $this->db->f('cat_id');
-			$old_status  		= $this->db->f('status');
-			$old_budget  		= $this->db->f('budget');
-			$old_billable_hours	= $this->db->f('billable_hours');
-			//	$old_billable_rate	= $this->db->f('billable_rate');
-			$old_subject		= $this->db->f('subject');
-			$old_contact_id		= $this->db->f('contact_id');
-			$old_actual_cost	= $this->db->f('actual_cost');
-			$old_order_cat_id	= $this->db->f('order_cat_id');
-			$old_building_part	= $this->db->f('building_part',true);
-			$old_order_dim1		= (int)$this->db->f('order_dim1');
+			$location_code 			= $this->db->f('location_code');
+			$oldlocation_code 		= $this->db->f('location_code');
+			$oldfinnish_date 		= $this->db->f('finnish_date');
+			$oldfinnish_date2 		= $this->db->f('finnish_date2');
+			$oldassigned 			= $this->db->f('assignedto');
+			$oldgroup_id 			= $this->db->f('group_id');
+			$oldpriority 			= $this->db->f('priority');
+			$oldcat_id 				= $this->db->f('cat_id');
+			$old_status  			= $this->db->f('status');
+			$ticket['old_status']	= $old_status; // used for custom functions
+			$old_budget  			= $this->db->f('budget');
+			$old_billable_hours		= $this->db->f('billable_hours');
+		//	$old_billable_rate	= $this->db->f('billable_rate');
+			$old_subject			= $this->db->f('subject');
+			$old_contact_id			= $this->db->f('contact_id');
+			$old_actual_cost		= $this->db->f('actual_cost');
+			$old_order_cat_id		= $this->db->f('order_cat_id');
+			$old_building_part		= $this->db->f('building_part',true);
+			$old_order_dim1			= (int)$this->db->f('order_dim1');
 
 
 			if($oldcat_id ==0){$oldcat_id ='';}
@@ -1281,6 +1282,7 @@
 			{
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
 
+/*
 				$criteria = array
 					(
 						'appname'	=> 'property',
@@ -1304,6 +1306,7 @@
 						require_once $file;
 					}
 				}
+*/
 			}
 			return $receipt;
 		}
