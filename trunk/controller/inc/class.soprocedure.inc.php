@@ -29,6 +29,7 @@
 	*/	
 
 	phpgw::import_class('controller.socommon');
+	phpgw::import_class('controller.uidocument');
 
 	include_class('controller', 'procedure', 'inc/model/');
 	include_class('controller', 'document', 'inc/model/');
@@ -225,7 +226,12 @@
 					$document->set_description($this->unmarshal($this->db->f('document_description', true), 'string'));
 					
 					if($return_type == "return_array")
-						$documents_array[] = $document->toArray();
+					{
+						$doc_as_array = $document->toArray();
+						$doc_as_array['document_link'] = controller_uidocument::link(array('menuaction' => 'controller.uidocument.view', 'id' => $document->get_id()));
+						//_debug_array($doc_as_array);
+						$documents_array[] = $doc_as_array;
+					}
 					else
 						$documents_array[] = $document;
 				}

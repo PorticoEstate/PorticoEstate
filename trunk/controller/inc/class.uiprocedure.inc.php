@@ -439,7 +439,7 @@
 				}
 				
 				$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
-				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				$procedure->set_control_area_name($category[0]['name']);
 				
 
 				$procedure_array = $procedure->toArray();
@@ -545,6 +545,9 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$procedure = $this->so->get_single($procedure_id);
+			
+			$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
+			$procedure->set_control_area_name($category[0]['name']);
 			
 			$data = array
 			(
