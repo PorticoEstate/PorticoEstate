@@ -37,7 +37,8 @@
 					} 			
                     else
                     {
-                       	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = lang('None');
+                       	// FIXME Sigurd Nes 4. februar 2012: det er feil i datasettet om denne slår til
+                       	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_number'];//lang('None');
                     }
                 } 
                 else 

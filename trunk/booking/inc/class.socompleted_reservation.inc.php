@@ -154,10 +154,6 @@
 			$this->$method($reservation, $entity);
 			$this->set_description($type, $reservation, $entity);
 
-			//FIXME
-			// Sigurd Nes, 3.februar 2012: Feiler stygt hvis $entity['customer_organization_number'] kommer inn som 'Ikke angitt'			
-			$entity['customer_organization_number'] = (int) $entity['customer_organization_number'];
-
 			$this->add($entity);
 		}
 		
