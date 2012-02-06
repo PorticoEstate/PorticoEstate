@@ -306,7 +306,7 @@ class controller_socheck_list extends controller_socommon
 		
 		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(ci.id) ";
 		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
-		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.id = ci.check_list_id ";
@@ -360,7 +360,7 @@ class controller_socheck_list extends controller_socommon
 		
 		$sql = 	"SELECT c.id as c_id, sum(cl.num_open_cases) as count ";
 		$sql .= "FROM controller_check_list cl, controller_control c ";
-		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		$sql .= "AND c.id = $control_id ";
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
@@ -448,7 +448,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-		$sql .= "WHERE cl.location_code = '{$location_code} ";
+		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		
 		if( is_numeric($repeat_type) )
 			$sql .= "AND c.repeat_type = $repeat_type ";
