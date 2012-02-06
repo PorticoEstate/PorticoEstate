@@ -581,9 +581,7 @@
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 
-//			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
-//			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
-//			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
+/*
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
 
@@ -592,7 +590,7 @@
 			{
 				$toarray[] = $prefs['email'];
 			}
-
+*/
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
 			if($supervisor_contact_id)

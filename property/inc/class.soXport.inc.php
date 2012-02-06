@@ -749,11 +749,22 @@
 			$amount = $amount/100;
 			if(!$table)
 			{
-				throw new Exception('ERROR: the order id seems to not correspond with any order type');
-			}
+				$message = 'property_soXport::correct_actual_cost() ERROR: the order id %1 seems to not correspond with any order type';
+				$GLOBALS['phpgw']->log->error(array(
+						'text'	=> $message,
+						'p1'	=> $order_id,
+						'p2'	=> '',
+						'line'	=> __LINE__,
+						'file'	=> __FILE__
+					));
 
-			$sql="UPDATE {$table} SET {$actual_cost_field}={$actual_cost_field} {$operator} {$amount} {$update_paid} WHERE id='{$order_id}'";
-			$this->db->query($sql,__LINE__,__FILE__);
+				echo $message . "\n";
+			}
+			else
+			{
+				$sql="UPDATE {$table} SET {$actual_cost_field}={$actual_cost_field} {$operator} {$amount} {$update_paid} WHERE id='{$order_id}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
 		}
 
 		public function check_voucher_id($voucher_id)
