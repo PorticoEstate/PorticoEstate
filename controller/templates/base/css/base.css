@@ -702,7 +702,7 @@ ul.row li{
 }
 
 .check_list li.heading {
-    background: url("/pe/phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #D8D8D8;
+    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #D8D8D8;
     height: 20px;
     padding-left: 25px;
 }
@@ -1278,4 +1278,9 @@ ul#groups h4{
 
 input.focus, select.focus{
 	border: 2px solid #dae6f4;
+}
+
+div.controller_checklist {
+	padding: 20px;
+	border: 1px solid #ABABAB;
 }

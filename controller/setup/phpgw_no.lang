@@ -312,3 +312,6 @@ Document title	controller	no	Dokumentets tittel
 Document name	controller	no	Filnavn
 Document description	controller	no	Beskrivelse
 select value	controller	no	Velg
+component_for_control_group	controller	no	Utstyr tilknyttet kontrollgrupper
+View_component_for_control_group	controller	no	Vis knytning mot utstyr
+Add_component_for_control_group	controller	no	Legg til knytning mot utstyr

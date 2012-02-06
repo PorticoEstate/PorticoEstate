@@ -54,7 +54,8 @@
 			'edit'	=>	true,
 			'view'	=>	true,
 			'add'	=>	true,
-			'save_group_order'	=>	true
+			'save_group_order'	=>	true,
+			'get_control_groups_by_control_area' => true
 		);
 
 		public function __construct()
@@ -708,5 +709,17 @@
 			}
 		}
 
+		// Returns control group list info as JSON
+		public function get_control_groups_by_control_area()
+		{
+			$control_area_id = phpgw::get_var('control_area_id');
+			
+			$control_groups_array = $this->so->get_control_groups_by_control_area($control_area_id);
+			
+			if(count($control_groups_array)>0)
+				return json_encode( $control_groups_array );
+			else
+				return null;
+		}
 
 	}
