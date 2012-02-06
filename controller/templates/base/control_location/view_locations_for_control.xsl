@@ -16,7 +16,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template name="view_locations_for_control">
+<xsl:template name="view_locations_for_control" xmlns:php="http://php.net/xsl">
 
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
