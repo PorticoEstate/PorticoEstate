@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -88,7 +88,15 @@
 					(
 						'text'	=> lang('Control_group'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group.index') ),
-						'image'	=> array('property', 'location_1')
+						'image'	=> array('property', 'location_1'),
+						'children' => array(
+											'component_for_control_group' => array
+											(
+												'text'	=> lang('component'),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group_component.index') ),
+												'image'	=> array('property', 'entity_1')
+											)
+										)
 					),
 					'procedure' => array
 					(
