@@ -49,6 +49,8 @@
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
 		var $skip_import = false;
+		protected $export;
+		protected $receipt = array();
 
 
 		function __construct()
@@ -65,6 +67,9 @@
 			$this->datetimeformat	= $this->db->datetime_format();
 			$this->config			= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->send				= CreateObject('phpgwapi.send');
+
+			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/Basware_X114");
+			$this->export		= new export_conv;
 		}
 
 		function pre_run($data = array())
@@ -119,8 +124,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 
-
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$data = array
 			(
@@ -185,6 +189,7 @@
 						$movefrom = "{$dirname}/{$_file}";
 						$moveto = "{$dirname}/archive/{$_file}";
 
+						@unlink($moveto);//in case of duplicates
 						$ok = @rename($movefrom, $moveto);
 						if(!$ok) // Should never happen.
 						{
@@ -204,7 +209,7 @@
 				$this->confirm($execute=false);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$insert_values= array
 			(
@@ -302,6 +307,10 @@
 								if(fclose($fp))
 								{
 									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
+									if( ssh2_sftp_unlink ($sftp, "{$directory_remote}/archive/{$file_name}" ))
+									{
+										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";									
+									}
 									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
 									{
 										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
@@ -419,34 +428,41 @@
 					}
 
 					$duplicate = false;
-					$sql = "SELECT external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
+					$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
 					$this->db->query($sql,__LINE__,__FILE__);
 					if($this->db->next_record())
 					{
 						$duplicate = true;
+						$bilagsnr = $this->db->f('bilagsnr');
+						$this->receipt['message'][] = array('msg' => "Ikke importert duplikat til arbeidsregister: {$_data['SCANNINGNO']}");
 					}
 
-					$sql = "SELECT external_ref FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
+					$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
 					$this->db->query($sql,__LINE__,__FILE__);
 					if($this->db->next_record())
 					{
 						$duplicate = true;
+						$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
+						$bilagsnr = $this->db->f('bilagsnr');
+						$this->export->RullTilbake(false,false,$_bilagsnr_ut);
+						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
+						unset($_bilagsnr_ut);
 					}
-					
-					
-					if($duplicate)
-					{
-						$this->receipt['error'][] = array('msg' => "Ikke importert duplikat : {$_data['SCANNINGNO']}");
-						$this->skip_import = true;
-					}
-					
+
 					$vendor_id = $_data['SUPPLIER.CODE'];
 
 					$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 					$this->db->query($sql,__LINE__,__FILE__);
-					if(!$this->db->next_record())
+
+					
+					if(!$_data['SUPPLIER.CODE'])
 					{
-						$this->receipt['error'][] = array('msg' => "Ikke gyldig leverandør id: {$_data['SUPPLIER.CODE']}");
+						$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
+						$this->skip_import = true;
+					}
+					else if(!$this->db->next_record())
+					{
+						$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Faktura: {$_data['SCANNINGNO']}");
 						$this->skip_import = true;
 
 						$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
@@ -461,7 +477,7 @@
 								$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
 								if($rc)
 								{
-									$this->receipt['error'][] = array('msg'=> "epost sendt til {$to}");							
+									$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");							
 								}
 							}
 							catch (phpmailerException $e)
@@ -518,7 +534,7 @@
 
 //_debug_array($buffer);
 //_debug_array($this->receipt);
-
+//_debug_array($order_info['toarray']);
 			if(!$this->skip_import)
 			{
 				if(!$bilagsnr)
@@ -555,7 +571,15 @@
 					}
 				}
 
-				return $this->import_end_file($buffer);
+				if(!$duplicate)
+				{
+					return $this->import_end_file($buffer);
+				}
+				else
+				{
+					$duplicate  = false;
+					return $bilagsnr;
+				}
 			}
 			$this->skip_import = false;
 			return false;
