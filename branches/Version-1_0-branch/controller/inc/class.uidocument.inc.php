@@ -44,7 +44,8 @@
 				'add'		=> true,
 				'view'		=> true,
 				'delete'	=> true,
-				'show'		=> true
+				'show'		=> true,
+				'document_types'	=> true
 			);
 		
 		public function __construct()
@@ -106,6 +107,36 @@
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}
 		
+		public function get_document_types()
+		{
+			$result_objects = $this->so->list_document_types();
+			
+			//Serialize the documents found
+/*			$rows = array();
+			foreach ($result_objects as $result) {
+				if(isset($result))
+				{
+					$rows[] = $result->serialize();
+				}
+			}
+*/
+			
+			$editable = phpgw::get_var('editable') == '1' ? true : false;
+			$result_data = array('results' => $result_objects);
+			
+			//Add context menu columns (actions and labels)
+			//array_walk($result_objects, array($this, 'add_actions'), array('admin', isset($procedure) ? $procedure->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
+			array_walk(
+					$result_data['results'],
+					array($this, '_add_links'),
+					"controller.uidocument.edit_document_type");
+				
+			
+			//Build a YUI result from the data
+			//$result_data = array('results' => $result_objects, 'total_records' => $result_count);	
+			return $this->yui_results($result_data, 'total_records', 'results');
+		}
+		
 		/**
 		 * Add data for context menu
 		 *
@@ -138,6 +169,11 @@
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uidocument.delete', 'id' => $value['id'])));
 						$value['labels'][] = lang('delete');
 					}
+					break;
+				case 'admin':
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uidocument.edit_document_type', 'id' => $value['id'])));
+					$value['labels'][] = lang('Edit document type');
 					break;
 			}
 		}
@@ -434,5 +470,45 @@
 				//self::render_template_xsl('procedure_item', $data);
 				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_documents'), $data);
 			}
+		}
+		
+		public function document_types()
+		{
+			//self::set_active_menu('controller::control_item2::control_item_list2');
+			if(phpgw::get_var('phpgw_return_as') == 'json') {
+				return $this->get_document_types();
+				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_documents'), $data);
+			}
+			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
+			$data = array(
+				'form' => array(
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'controller.uidocument.document_types', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable'	=> true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),
+						array(
+							'key' => 'title',
+							'label' => lang('Procedure title'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						)
+					)
+				),
+			);
+//_debug_array($data);
+
+			self::render_template_xsl('datatable', $data);
 		}
 	}

@@ -471,11 +471,14 @@
 			}
 		}
 		
-		public function get_check_items_by_message($message_ticket_id, $return_type = "return_array" ){
+		public function get_check_items_by_message($location_id, $location_item_id, $return_type = "return_array" )
+		{
+			$location_id		= (int)$location_id;
+			$location_item_id	= (int)$location_item_id;
 			$sql  = "SELECT ci.* "; 
 			$sql .= "FROM controller_check_item ci "; 
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
-			$sql .= "WHERE cic.location_item_id = $message_ticket_id ";
+			$sql .= "WHERE cic.location_id = {$location_id} AND cic.location_item_id = {$location_item_id} ";
 								
 			$this->db->query($sql);
 			

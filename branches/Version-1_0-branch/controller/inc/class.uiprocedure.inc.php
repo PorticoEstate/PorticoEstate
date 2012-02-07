@@ -309,11 +309,23 @@
 				$control_areas_array2 = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
-					$control_areas_array2[] = array
-					(
-						'id' 	=> $cat_list['cat_id'],
-						'name'	=> $cat_list['name'],
-					);		
+					if($cat_list['cat_id'] == $procedure->get_control_area_id())
+					{
+						$control_areas_array2[] = array
+						(
+							'id' 	=> $cat_list['cat_id'],
+							'name'	=> $cat_list['name'],
+							'selected' => 1,
+						);
+					}
+					else
+					{
+						$control_areas_array2[] = array
+						(
+							'id' 	=> $cat_list['cat_id'],
+							'name'	=> $cat_list['name'],
+						);
+					}
 				}
 				// END as categories
 /*				$control_area_array = $this->so_control_area->get_control_area_array();
@@ -427,7 +439,7 @@
 				}
 				
 				$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
-				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				$procedure->set_control_area_name($category[0]['name']);
 				
 
 				$procedure_array = $procedure->toArray();
@@ -533,6 +545,9 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$procedure = $this->so->get_single($procedure_id);
+			
+			$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
+			$procedure->set_control_area_name($category[0]['name']);
 			
 			$data = array
 			(

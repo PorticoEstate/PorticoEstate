@@ -346,4 +346,76 @@
 			//var_dump($control_group);
 			return $control_group;
 		}
+		
+		function get_control_groups_by_control_area($control_area_id)
+		{
+			$controls_array = array();
+
+			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
+			$this->db->query($sql);
+
+			while($this->db->next_record()) {
+				$control_group = new controller_control_group((int) $this->db->f('id'));
+
+				$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
+				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
+				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$control_group->set_control_area_name($category[0]['name']);
+				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
+
+				$control_groups_array[] = $control_group->toArray();
+			}
+
+			if( count( $control_groups_array ) > 0 ){
+				return $control_groups_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		public function get_control_group_component($noOfObjects = null, $bim_type = null)
+		{
+			$filters = array();
+			if($noOfObjects != null && is_numeric($noOfObjects))
+			{
+				$limit = "LIMIT {$noOfObjects}";
+			}
+			else
+			{
+				$limit = "LIMIT 10";
+			}
+
+			$joins = " {$this->left_join} controller_control_group ON (controller_control_group_component_list.control_group_id = controller_control_group.id)";
+			$joins .= " {$this->left_join} fm_bim_item ON (controller_control_group_component_list.component_id = fm_bim_item.id)";
+			$joins .= " {$this->left_join} fm_bim_type ON (fm_bim_item.type= fm_bim_type.id)";
+			//$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+			$sql  = "SELECT controller_control_group.id AS control_group_id, controller_control_group.group_name AS control_group_name, fm_bim_type.name AS type_name, fm_bim_item.id AS bim_id, fm_bim_item.guid as bim_item_guid FROM controller_control_group_component_list {$joins} {$limit}";
+			$controlGroupArray = array();
+			//var_dump($sql);
+			$this->db->query($sql, __LINE__, __FILE__);
+			$i=1;
+			while($this->db->next_record())
+			{
+				$controlGroupArray[$i]['id'] = $this->db->f('control_group_id');
+				$controlGroupArray[$i]['title'] = $this->db->f('control_group_name');
+				$controlGroupArray[$i]['bim_id'] = $this->db->f('bim_id');
+				$controlGroupArray[$i]['bim_item_guid'] = $this->db->f('bim_item_guid');
+				$controlGroupArray[$i]['bim_type'] = $this->db->f('type_name');
+				$i++;
+			}
+
+			return $controlGroupArray;
+		}
+		
+		function add_component_to_control_group($control_group_id, $component_id)
+		{
+			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, component_id) values($control_group_id, $component_id)";
+			$this->db->query($sql);
+		}
 	}
