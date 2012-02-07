@@ -16,7 +16,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template name="register_control_to_location">
+<xsl:template name="register_control_to_location" xmlns:php="http://php.net/xsl">
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
@@ -32,7 +32,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="control_filters" name="control_filters">
+<xsl:template match="control_filters" name="control_filters" xmlns:php="http://php.net/xsl">
 	<div style="margin: 10px;padding: 10px; width: 25%;">
 		
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches controls from db and populates the control list.
@@ -68,7 +68,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="filter_form">
+<xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
 	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
@@ -154,14 +154,88 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="datatable">
+<xsl:template match="datatable" xmlns:php="http://php.net/xsl">
+	<script type="text/javascript">
+	<![CDATA[
+	function checkAll(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+		for(i=0;i<controls.length;i++)
+		{
+			//for class=mychecks, they have to be interchanged
+			//checkbox is located within td->div->input. To get the input-object, use controls[i].children[0].children[0]
+			if(myclass=='mychecks')
+			{
+				if(controls[i].children[0].children[0].checked)
+				{
+					controls[i].children[0].children[0].checked = false;
+				}
+				else
+				{
+					controls[i].children[0].children[0].checked = true;
+				}
+			}
+			//for the rest, always id checked
+			else
+			{
+				controls[i].children[0].children[0].checked = true;
+			}
+		}
+	}
+	
+	function saveLocationToControl()
+	{
+		var divs = YAHOO.util.Dom.getElementsByClassName('location_submit');
+		var mydiv = divs[divs.length-1];
+
+		// styles for dont show
+		mydiv.style.display = "none";
+
+		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('mychecks');
+		var values_return = ""; //new Array(); 
+		
+		for(i=0;i<valuesForPHP.length;i++)
+		{
+			if(valuesForPHP[i].children[0].children[0].checked)
+			{
+				if(values_return != "")
+					values_return +="|"+valuesForPHP[i].parentNode.firstChild.firstChild.firstChild.firstChild.nodeValue+';'+valuesForPHP[i].children[0].children[0].value;
+				else
+					values_return += valuesForPHP[i].parentNode.firstChild.firstChild.firstChild.firstChild.nodeValue+';'+valuesForPHP[i].children[0].children[0].value;
+			}
+		}
+		
+		//alert(document.getElementById('control_id').value);
+		var control_id_value = document.getElementById('control_id').value;
+
+		var returnfield = document.createElement('input');
+		returnfield.setAttribute('name', 'values_assign');
+		returnfield.setAttribute('type', 'text');
+		returnfield.setAttribute('value', values_return);
+		mydiv.appendChild(returnfield);
+		
+		var control_id_field = document.createElement('input');
+		control_id_field.setAttribute('name', 'control_id');
+		control_id_field.setAttribute('type', 'text');
+		control_id_field.setAttribute('value', control_id_value);
+		mydiv.appendChild(control_id_field); 
+		
+	}
+	]]>
+	</script>
 	<div id="data_paginator"/>
 	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
+  	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+  	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
+  	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
+  	<form action="#" name="location_form" id="location_form" method="post">
+  		<div class="location_submit"><input type="submit" name="save_location" id="save_location" value="{$label_submit}" onclick="return saveLocationToControl()"/></div>
+  	</form>
 </xsl:template>
 
 
-<xsl:template name="datasource-definition">
+<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
 	<script>
 		YAHOO.namespace('controller');
 	 

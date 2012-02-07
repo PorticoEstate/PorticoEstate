@@ -32,7 +32,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="control_filters" name="control_filters">
+<xsl:template match="control_filters" name="control_filters" xmlns:php="http://php.net/xsl">
 	<div style="margin: 10px;padding: 10px; width: 25%;">
 		
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches controls from db and populates the control list.
@@ -68,7 +68,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="filter_form">
+<xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
 	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
@@ -128,7 +128,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="datatable">
+<xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
 	<![CDATA[
 	function checkAll(myclass)
@@ -209,7 +209,7 @@
 </xsl:template>
 
 
-<xsl:template name="datasource-definition">
+<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
 	<script>
 		YAHOO.namespace('controller');
 	 

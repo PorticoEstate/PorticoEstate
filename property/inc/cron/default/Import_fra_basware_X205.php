@@ -567,7 +567,7 @@
 			$toarray = array();
 			$order_id = (int) $order_id;
 			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id"
-			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = $order_id";
+			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			if ($this->db->f('location_code'))
@@ -581,18 +581,15 @@
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 
-//			$criteria_janitor					= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->bestiller ); //bestiller
-//			$janitor_contact_id					= $this->responsible->get_responsible($criteria_janitor);
-//			$janitor_user_id					= $this->responsible->get_contact_user_id($janitor_contact_id);
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
-
+/*
 			$prefs = $this->bocommon->create_preferences('property', $janitor_user_id);
 			if($prefs['email'])
 			{
 				$toarray[] = $prefs['email'];
 			}
-
+*/
 			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
 			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
 			if($supervisor_contact_id)

@@ -894,7 +894,7 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
-			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
+			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
 			$cols = array();
 			$vals = array();
@@ -1040,7 +1040,7 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
-			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
+			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
 			$this->db->query("SELECT status,budget,calculation,billable_hours FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();

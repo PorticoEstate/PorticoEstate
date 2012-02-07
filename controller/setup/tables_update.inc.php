@@ -529,3 +529,28 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}		
 	}
+	
+	/* Update Controller from v 0.1.25 to 0.1.26
+	 * Added table for connecting gontrol groups to components  
+	*/
+	
+	$test[] = '0.1.25';
+	function controller_upgrade0_1_25()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_group_component_list', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'control_group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'component_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);			
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.26';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

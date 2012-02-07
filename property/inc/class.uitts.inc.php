@@ -897,6 +897,8 @@
 
 			$uicols['name'][] = 'priority';
 			$uicols['descr'][]	= lang('priority');
+			$uicols['name'][] = 'hidden_id';
+			$uicols['descr'][]	= 'hidden_id';
 			$uicols['name'][] = 'id';
 			$uicols['descr'][]	= lang('id');
 			$uicols['name'][] = 'bgcolor';
@@ -1036,6 +1038,7 @@
 						);
 				}
 
+				$view_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'property.uitts.view','id'=> $ticket['id']));
 				foreach($ticket_list as $ticket)
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
@@ -1053,14 +1056,16 @@
 						if($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'entry_date')
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 	= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['link']		=	$GLOBALS['phpgw']->link('/index.php',array
-								(
-									'menuaction'	=> 'property.uitts.view',
-									'id'			=> $ticket['id']
-								));
-							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]] .  $ticket['new_ticket'];
+							$datatable['rows']['row'][$j]['column'][$k]['link']		= "{$view_action}&id={$ticket['id']}";
+							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]] . $ticket['new_ticket'];
 							$datatable['rows']['row'][$j]['column'][$k]['target']	= '_blank';
 						}
+
+						if($uicols['name'][$k] == 'hidden_id')//hidden
+						{
+							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket['id'];
+						}
+
 
 						$n = 0;
 						foreach($uicols_related as $related)
@@ -1077,7 +1082,6 @@
 							$n++;
 						}
 					}
-
 					$j++;
 				}
 			}
@@ -1089,7 +1093,7 @@
 						array
 						(
 							'name'		=> 'id',
-							'source'	=> 'id'
+							'source'	=> 'hidden_id'
 						),
 					)
 				);
@@ -1258,7 +1262,7 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
 					}
-					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext')
+					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext' || $uicols['name'][$i]=='hidden_id')
 					{
 						$datatable['headers']['header'][$i]['visible'] 		= false;
 						$datatable['headers']['header'][$i]['format'] 		= 'hidden';

@@ -153,6 +153,7 @@
 			$method = "initialize_completed_{$type}";
 			$this->$method($reservation, $entity);
 			$this->set_description($type, $reservation, $entity);
+
 			$this->add($entity);
 		}
 		

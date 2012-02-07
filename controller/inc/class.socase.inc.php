@@ -81,10 +81,10 @@
 			}
 		}
 		
-		public function get_cases_by_message($message_ticket_id, $return_type = "return_object")
+		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
 		{
 			$sql = "SELECT * FROM controller_check_item_case "; 
-			$sql .= "WHERE location_item_id = $message_ticket_id";
+			$sql .= "WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
 
 			$this->db->query($sql);
 

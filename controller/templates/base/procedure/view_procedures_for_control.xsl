@@ -22,8 +22,9 @@
 		<h4 style="margin:5px 0;">Dokumenter</h4>
 		<xsl:for-each select="control_procedure/documents">
 			<div style="margin-left:10px;">
-				<span><xsl:value-of select="title"/></span>
-				<span style="margin-left:10px;"><xsl:value-of select="description"/></span>
+				<xsl:variable name="doc_link"><xsl:value-of select='document_link'/></xsl:variable>
+				<span><a href="{$doc_link}"><xsl:value-of select="title"/></a></span>
+				<span style="margin-left:10px;"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
 			</div>	
 		</xsl:for-each>
 	</xsl:if>
@@ -56,8 +57,9 @@
 				<h4 style="margin:5px 0;">Dokumenter</h4>
 					<xsl:for-each select="documents">
 						<div style="margin-left:10px;">
-							<span><xsl:value-of select="title"/></span>
-							<span style="margin-left:10px;"><xsl:value-of select="description"/></span>
+							<xsl:variable name="doc_link"><xsl:value-of select='document_link'/></xsl:variable>
+							<span><a href="{$doc_link}"><xsl:value-of select="title"/></a></span>
+							<span style="margin-left:10px;"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
 						</div>	
 					</xsl:for-each>
 				</xsl:if>

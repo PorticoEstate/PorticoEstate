@@ -298,14 +298,14 @@
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
 			
-			$cases_array = $this->so->get_cases_by_message( $location_item_id );
+			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
 			
 			foreach($cases_array as $case){
 				$case->set_status( $updateStatus );
 				$this->so->update( $case );	
 			}
 			
-			$check_items = $this->so_check_item->get_check_items_by_message($message_ticket_id, "return_object");
+			$check_items = $this->so_check_item->get_check_items_by_message($location_id, $location_item_id, "return_object");
 			
 			if($updateStatus == 0){
 

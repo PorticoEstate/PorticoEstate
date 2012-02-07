@@ -229,6 +229,21 @@ class controller_sodocument extends controller_socommon
 		
 	}
 	
+	public function list_document_types()
+	{
+		$sql = "SELECT id, title FROM controller_document_types";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$results = array();
+		while($this->db->next_record()){
+			$result[] = $this->db->f('id', true);
+			$result[] = $this->db->f('title', true);
+			$results[] = $result;
+		}
+		//$document_type_list = $results;
+		return $results;
+		
+	}
+	
 	private function get_document_path(string $document_type, $id)
 	{
 		$root_directory = self::$ROOT_FOR_DOCUMENTS;

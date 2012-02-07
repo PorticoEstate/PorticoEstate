@@ -713,7 +713,7 @@ JS;
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
-			
+
 
 			$uicols = array (
 				'input_type'	=>	array
@@ -1351,7 +1351,7 @@ JS;
 							}
 							else
 							{
-								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";							
+								$json_row[$column['name']] = "<a target='".$column['target']."' href='".$column['link']."' >".$column['value']."</a>";
 							}
 						}
 						else if($column['format']== "input")
@@ -1605,7 +1605,14 @@ JS;
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
-				$receipt = $this->bo->update_invoice_sub($values);
+				if($this->get_approve_role())
+				{
+					$receipt = $this->bo->update_invoice_sub($values);
+				}
+				else
+				{
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
+				}
 			}
 
 			if ($voucher_id)
@@ -1912,15 +1919,15 @@ JS;
 						else if($i == 16)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
-						}					
+						}
 						else if($i == 17)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
-						}					
+						}
 						else if($i == 18)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
-						}					
+						}
 					}
 
 					if($invoices['workorder_id'])
@@ -2153,21 +2160,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$roles 	= $this->bo->check_role();
-
-			$approve = array();
-			foreach ($roles as $role => $role_value)
-			{
-				if ($role_value && isset($role_check[$role]))
-				{
-					$approve[] = array
-					(
-						'id'		=> $role,
-						'name'		=> $role_check[$role],
-						'selected'	=> 0
-					);
-				}	
-			}
+			$approve = $this->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -2182,7 +2175,7 @@ JS;
 
 				if(!$approve)
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));					
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
 				}
 
 				if(!isset($values['process_log']) || !$values['process_log'])
@@ -2196,7 +2189,7 @@ JS;
 					$values['approved_amount'] 		= str_replace(',','.',$values['approved_amount']);
 					if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
 					{
-						$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));				
+						$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));
 					}
 				}
 				else
@@ -2228,7 +2221,7 @@ JS;
 //			_debug_array($line);
 
 			$approved_list = array();
-			
+
 			$approved_list[] = array
 			(
 				'role'		=> $role_check['is_janitor'],
@@ -2338,13 +2331,13 @@ JS;
 			$paid 	= phpgw::get_var('paid', 'bool');
 
 			$text = $this->bo->read_remark($id,$paid);
-			
+
 			$html = '';
 			if(stripos($text, '<table') )
 			{
 				$html = 1;
 			}
-			
+
 			$data = array
 			(
 				'remark' => $text,
@@ -3693,7 +3686,7 @@ JS;
 			if($values)
 			{
 	//		_debug_array($values);die();
-			
+
 				if(isset($values['export_reconciliation']) && $values['export_reconciliation'])
 				{
 					if(!isset($values['periods']))
@@ -3704,7 +3697,7 @@ JS;
 					else
 					{
 						$this->bo->export_historical_transactions_at_periods($values['periods']);
-					
+
 					}
 				}
 				else if(isset($values['export_deposition']) && $values['export_deposition'])
@@ -3768,21 +3761,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$roles 	= $this->bo->check_role();
-
-			$approve = array();
-			foreach ($roles as $role => $role_value)
-			{
-				if ($role_value && isset($role_check[$role]))
-				{
-					$approve[] = array
-					(
-						'id'		=> $role,
-						'name'		=> $role_check[$role],
-						'selected'	=> 0
-					);
-				}	
-			}
+			$approve = $this->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -3796,7 +3775,7 @@ JS;
 
 				if(!$approve)
 				{
-					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));					
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));
 				}
 
 				if (!$receipt['error'])
@@ -3821,7 +3800,7 @@ JS;
 					$_orders[] = $line['order_id'];
 				}
 			}
-			
+
 			$_orders = array_unique($_orders);
 
 			foreach ($_orders as $_order)
@@ -3924,5 +3903,32 @@ JS;
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
+		}
+
+		function get_approve_role()
+		{
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
+			$roles 	= $this->bo->check_role();
+
+			$approve = array();
+			foreach ($roles as $role => $role_value)
+			{
+				if ($role_value && isset($role_check[$role]))
+				{
+					$approve[] = array
+					(
+						'id'		=> $role,
+						'name'		=> $role_check[$role],
+						'selected'	=> 0
+					);
+				}
+			}
+			return $approve;
 		}
 	}

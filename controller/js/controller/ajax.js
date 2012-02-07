@@ -38,15 +38,47 @@ $(document).ready(function(){
 						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
 		    			});
 					 				  				  
-					  $("#control_id").innerHTML( htmlString );
+					  $("#control_id").html( htmlString );
 					}else {
          		  		htmlString  += "<option>Ingen kontroller</option>"
-         		  		$("#control_id").innerHTML( htmlString );
+         		  		$("#control_id").html( htmlString );
          		  	}
 			  }  
 			});
 			
     });
+
+	// file: uicheck_list.xsl
+	// When control area is selected, controls are fetched from db and control select list is populated
+	$("#control_group_area_list option").click(function () {
+		 var control_area_id = $(this).val();
+		 
+         var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
+         		  		$("#control_group_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+
 	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
