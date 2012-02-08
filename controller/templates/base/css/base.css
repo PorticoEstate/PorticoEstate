@@ -851,6 +851,9 @@ ul.calendar li div.date, ul.calendar.info div.date {
 ul.calendar div.title, ul.calendar.info div.title {
 	width: 200px;
 }
+ul.calendar div.title {
+	width: 150px;
+}
 ul.calendar div.id, ul.calendar.info div.id {
 	width: 50px;
 }

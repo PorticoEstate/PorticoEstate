@@ -218,11 +218,55 @@
 						array(
 							'key' => 'link',
 							'hidden' => true
+						),
+						array(
+							'key' => 'show_locations',
+							'label' => '',
+							'sortable' => false,
+							'formatter' => 'YAHOO.portico.formatGenericLink'
 						)
 					)
 				),
 			);
-//_debug_array($data);
+/*	
+ * 						,
+						array(
+							'key' => 'actions',
+							'hidden' => true
+						),
+						array(
+							'key' => 'labels',
+							'hidden' => true
+						),
+						array(
+							'key' => 'ajax',
+							'hidden' => true
+						)		
+ * 
+ * $parameters3 = array
+					(
+						'parameter' => array
+						(
+							array
+							(
+								'name'		=> 'search_for',
+								'source'	=> 'location_code'
+							),
+						)
+					);
+			$data['rowactions']['action'][] = array
+						(
+							'my_name'			=> 'view',
+							'text' 			=> lang('composites'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	  => 'rental.uicomposite.index',
+								'search_type'	  => 'location_id',
+								'populate_form'   => 'yes'
+							)),
+							'parameters'	=> $parameters3
+						);*/
+//_debug_array($data);	
 
 			self::render_template_xsl('datatable', $data);
 		}
@@ -635,12 +679,22 @@
 			$value['ajax'] = array();
 			$value['actions'] = array();
 			$value['labels'] = array();
-			$value['parameters'] = array();
+			//$value['parameters'] = array();
+			
+			$value['ajax'][] = false;
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_control_details', 'id' => $value['control_id'])));
+			$value['labels'][] = lang('View control');
+			//$value['parameters'][] = "control_id";
+			
+			$value['ajax'][] = false;
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $value['control_id'])));
+			$value['labels'][] = lang('View locations for control');
+			//$value['parameters'][] = "control_id";
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
-			$value['parameters'][] = "control_id";
+			//$value['parameters'][] = "control_id";
 		}
 		
 		public function register_control_to_location()
@@ -710,6 +764,12 @@
 			
 			foreach($result_objects as $control_obj)
 			{
+/*				$obj_serialized = $control_obj->serialize();
+				$obj_serialized['show_locations'] = array(
+					'href' => html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $result['location_id']))),
+					'label' => lang('show_controls_for_location')
+				);
+				$results['results'][] = $obj_serialized;*/
 				$results['results'][] = $control_obj->serialize();	
 			}
 			
@@ -718,9 +778,16 @@
 			$results['sort'] = $params['sort'];
 			$results['dir'] = $params['dir'];
 
+			//array_walk($results["results"], array($this, "add_actions"), array($type));
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view_control_details");
+			
+			foreach($results["results"] as &$res) {
+				$res['show_locations'] = array(
+					'href' => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_locations', 'control_id' => $res['id'])),
+					'label' => lang('show_controls_for_location'),
+				);
+			}
 
 			return $this->yui_results($results);
 		}
-
 	}
