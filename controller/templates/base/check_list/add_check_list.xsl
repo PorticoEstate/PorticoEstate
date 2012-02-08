@@ -23,7 +23,18 @@
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 
-	<xsl:call-template name="add_check_list_tab_menu" />
+	<div id="edit_check_list_menu" class="hor_menu">
+		<a href="#" class="active">
+			Vis detaljer for sjekkliste
+		</a>
+		<a href="#">
+			Vis saker
+		</a>			
+		<a href="#">
+			Vis info om kontroll
+		</a>
+	</div>
+	
 	
 	<h3 class="box_header">Sjekklistedetaljer</h3>
 	<fieldset class="check_list_details">
@@ -38,7 +49,7 @@
 			</div>
 		
 			<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
-			<xsl:variable name="control_id"><xsl:value-of select="control_array/id"/></xsl:variable>
+			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 		
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<input type="hidden" name="location_code" value="{$location_code}" />
