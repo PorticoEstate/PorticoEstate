@@ -91,7 +91,7 @@
 				</ul>			
 				</xsl:when>
 				<xsl:otherwise>
-					Alle sjekkpunkter for kontroll er registert som åpent/håndtert avvik eller måling 
+					Alle sjekkpunkter for kontroll er registert som åpne/håndterte saker 
 				</xsl:otherwise>
 		</xsl:choose>
 	</div>

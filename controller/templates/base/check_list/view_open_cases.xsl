@@ -87,7 +87,7 @@
 			
 			</xsl:when>
 			<xsl:otherwise>
-				Ingen registrerte åpne avvik
+				Ingen åpne saker
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>
