@@ -554,3 +554,24 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.26';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.26';
+	function controller_upgrade0_1_26()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		//Drop and reinsert because og the datatype int can't be altered to varchar
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control_group', array(), 'building_part_id');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group','building_part_id',array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.27';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}		
+	}
