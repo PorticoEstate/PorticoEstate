@@ -174,11 +174,6 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
-							),
-							array(
-								'type' => 'link',
 								'value' => lang('New control'),
 								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
 								'class' => 'new_item'
