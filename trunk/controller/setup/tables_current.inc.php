@@ -111,7 +111,7 @@
 				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'building_part_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'building_part_id' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
