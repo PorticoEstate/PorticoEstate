@@ -4,9 +4,6 @@
 
 <div id="edit_check_list_menu" class="hor_menu">
 		<a>
-			<xsl:if test="$active_tab = 'view_details'">
-				<xsl:attribute name="class">active</xsl:attribute>
-			</xsl:if>
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -14,15 +11,7 @@
 			</xsl:attribute>
 			Vis detaljer for sjekkliste
 		</a>
-		<a>
-			<xsl:if test="$active_tab = 'view_cases'">
-				<xsl:attribute name="class">active</xsl:attribute>
-			</xsl:if>
-			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicheck_list.view_cases_for_check_list</xsl:text>
-				<xsl:text>&amp;check_list_id=</xsl:text>
-				<xsl:value-of select="check_list/id"/>
-			</xsl:attribute>
+		<a href="#">
 			Vis saker
 		</a>			
 		<a>
