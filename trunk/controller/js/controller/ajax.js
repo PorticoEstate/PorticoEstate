@@ -10,9 +10,19 @@ $(document).ready(function(){
 		 var month = $(thisForm).find("input[name='month']").val();
 		 
 		 if(period_type == 'view_month')
-	         var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
+			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
+	         //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 }
 		 else
-			 var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
+			 //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
+		 }
 		
 		 window.location.href = requestUrl;
     });
@@ -21,8 +31,9 @@ $(document).ready(function(){
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list option").click(function () {
 		 var control_area_id = $(this).val();
-		 
-         var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -52,8 +63,10 @@ $(document).ready(function(){
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_group_area_list option").click(function () {
 		 var control_area_id = $(this).val();
-		 
-         var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -85,7 +98,9 @@ $(document).ready(function(){
 	$("#ifc option").click(function () {
 		 var ifc_id = $(this).val();
 		 
-         var requestUrl = "index.php?menuaction=controller.uicheck_list_for_component.get_component_types_by_category&phpgw_return_as=json"
+		 var oArgs = {menuaction:'controller.uicheck_list_for_component.get_component_types_by_category', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicheck_list_for_component.get_component_types_by_category&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -115,7 +130,10 @@ $(document).ready(function(){
 	// When control area is selected, procedures are fetched from db and procedure select list is populated
 	$("#control_area_id option").click(function () {
 		 var control_area_id = $(this).val();
-         var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
+		 
+		 var oArgs = {menuaction:'controller.uiprocedure.get_procedures'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -262,7 +280,11 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
+		var oArgs = {menuaction:'controller.uicheck_list.get_cases_for_check_list'};
+		var baseUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = baseUrl + add_param
+		
+		//var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
