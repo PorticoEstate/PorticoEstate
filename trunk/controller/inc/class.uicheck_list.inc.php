@@ -216,7 +216,7 @@
 			$data = array
 			(
 				'location_array'	=> $location_array,
-				'control_array'		=> $control->toArray(),
+				'control'			=> $control->toArray(),
 				'deadline'			=> $calendar_array[0],
 				'date_format' 		=> $date_format			
 			);
@@ -235,6 +235,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
+			
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
