@@ -307,7 +307,7 @@ $(document).ready(function(){
 		$(infoBox).hide();
 	});
 	
-	$("#frm_save_check_item").live("submit", function(e){
+	$(".frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -320,7 +320,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-		    		  if(obj.saveStatus == "saved"){
+		    		  if(obj.status == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    				  
@@ -349,7 +349,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		  
-		    		  if(obj.saveStatus == "saved"){
+		    		  if(obj.status == "saved"){
 		    			  $(liWrp).fadeOut('3000', function() {
 		    				  $(liWrp).addClass("hidden");
 		    			  });
@@ -373,7 +373,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.saveStatus == "updated"){
+	    			  if(obj.status == "updated"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    				  
@@ -388,7 +388,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#frm_register_case").live("submit", function(e){
+	$(".frm_register_case").live("submit", function(e){
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -402,7 +402,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.saveStatus == "saved"){
+	    			  if(obj.status == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    			  
@@ -427,6 +427,35 @@ $(document).ready(function(){
 		    			  window.setTimeout(function() {
 							$(submitBnt).val('Registrer sak');
 							$(submitBnt).addClass("not_active");
+		    			  }, 1000);
+					  }
+				  }
+				}
+		});
+	});
+	
+	$(".frm_register_measurement_case").live("submit", function(e){
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var thisRow = $(this).parents("li");
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		
+	    			  if(obj.status == "saved"){
+		    			  var submitBnt = $(thisForm).find("input[type='submit']");
+		    			  $(submitBnt).val("Lagret");
+		    			  
+		    			  // Changes text on save button back to original
+		    			  window.setTimeout(function() {
+							$(thisRow).remove();
 		    			  }, 1000);
 					  }
 				  }
@@ -487,13 +516,19 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$("#frm_save_check_item").live("click", function(e){
+	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$("#frm_register_case").live("click", function(e){
+	$(".frm_register_case").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+	$(".frm_register_measurement_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
