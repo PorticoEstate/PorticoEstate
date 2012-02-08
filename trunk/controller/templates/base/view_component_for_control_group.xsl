@@ -39,7 +39,7 @@
 				 
 				 <form id="loc_form" action="" method="GET">
 			
-					<select id="control_group_id" name="control_group_id">
+					<select id="control_group_id" name="control_group_id" style="width: 250px;">
 					<xsl:choose>
 						<xsl:when test="control_group_array/child::node()">
 							<xsl:for-each select="control_group_array">

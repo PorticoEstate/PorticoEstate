@@ -49,12 +49,13 @@
 		
 		<ul class="calendar">
 				<li class="heading">
-					<div class="id">ID</div>
+					<xsl:if test="show_location">
+					<div class="title">Lokasjon</div>
+					</xsl:if>
 					<div class="title">Tittel</div>
 					<div class="date">Start dato</div>
 					<div class="date">Slutt dato</div>
 					<div class="frequency">Frekvenstype</div>
-					<div class="frequency">Frekvensintervall</div>
 					<div class="months">
 					<xsl:for-each select="heading_array">
 						<div>
@@ -81,9 +82,11 @@
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 					<li>
-			    		<div class="id">
-			      			<xsl:value-of select="control/id"/>
-						</div>
+						<xsl:if test="//show_location">
+							<div class="title">
+								<xsl:value-of select="control/location_name"/>
+							</div>
+						</xsl:if>
 						<div class="title">
 			      			<xsl:value-of select="control/title"/>
 						</div>
@@ -102,9 +105,6 @@
 						</div>
 						<div class="frequency">
 			      			<xsl:value-of select="control/repeat_type"/>
-						</div>
-						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_interval"/>
 						</div>							
 						<div class="months">
 						<xsl:for-each select="calendar_array">
