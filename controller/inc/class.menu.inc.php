@@ -60,7 +60,7 @@
 						'children' => array(
 											'location_for_check_list' => array
 											(
-												'text'	=> lang('Location'),
+												'text'	=> lang('location_connections'),
 												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 												'image'	=> array('property', 'location_1')
 											),
@@ -72,12 +72,12 @@
 											)
 										)
 					),
-					'location_for_check_list' => array
+/*					'location_for_check_list' => array
 					(
 						'text'	=> lang('location_connections'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 						'image'	=> array('property', 'location_1')
-					),
+					),*/
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),

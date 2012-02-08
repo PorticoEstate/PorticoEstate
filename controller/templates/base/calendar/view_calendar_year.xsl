@@ -7,37 +7,49 @@
 <div id="main_content">
 		
 		<div style="float:left;">
-			<h1><xsl:value-of select="location_array/loc1_name"/></h1>
+			<xsl:choose>
+				<xsl:when test="show_location">
+					<h1><xsl:value-of select="control_name"/></h1>
+				</xsl:when>
+				<xsl:otherwise>
+					<h1><xsl:value-of select="location_array/loc1_name"/></h1>
+				</xsl:otherwise>
+			</xsl:choose>
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
 
 		<div style="float:right;width:300px;margin-top:40px;">
-			<form action="#">
-				<input type="hidden" name="period_type" value="view_year" />
-				<input type="hidden" name="year">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="year"/>
-			      </xsl:attribute>
-				</input>
-
-				<select id="choose_my_location">
-					<xsl:for-each select="my_locations">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<xsl:choose>
-							<xsl:when test="location_code = $view_location_code">
-								<option value="{$loc_code}" selected="selected">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="{$loc_code}">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</select>					
-			</form>
+			<xsl:choose>
+				<xsl:when test="show_location">&nbsp;</xsl:when>
+				<xsl:otherwise>
+					<form action="#">
+						<input type="hidden" name="period_type" value="view_year" />
+						<input type="hidden" name="year">
+					      <xsl:attribute name="value">
+					      	<xsl:value-of select="year"/>
+					      </xsl:attribute>
+						</input>
+		
+						<select id="choose_my_location">
+							<xsl:for-each select="my_locations">
+								<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
+								<xsl:choose>
+									<xsl:when test="location_code = $view_location_code">
+										<option value="{$loc_code}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{$loc_code}">
+											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</select>					
+					</form>
+				</xsl:otherwise>
+			</xsl:choose>
 					
 			<ul id="icon_color_map">
 				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroller satt opp</span></li>
@@ -50,12 +62,13 @@
 		<ul class="calendar">
 				<li class="heading">
 					<xsl:if test="show_location">
-					<div class="title">Lokasjon</div>
+					<div class="location">Lokasjon</div>
 					</xsl:if>
 					<div class="title">Tittel</div>
+					<div class="assigned">Tildelt</div>
 					<div class="date">Start dato</div>
 					<div class="date">Slutt dato</div>
-					<div class="frequency">Frekvenstype</div>
+					<div class="frequency">Frekvens</div>
 					<div class="months">
 					<xsl:for-each select="heading_array">
 						<div>
@@ -83,12 +96,15 @@
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 					<li>
 						<xsl:if test="//show_location">
-							<div class="title">
+							<div class="location">
 								<xsl:value-of select="control/location_name"/>
 							</div>
 						</xsl:if>
 						<div class="title">
 			      			<xsl:value-of select="control/title"/>
+						</div>
+						<div class="assigned">
+			      			<xsl:value-of select="control/responsibility_name"/>
 						</div>
 						<div class="date">
 			      			<xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/>

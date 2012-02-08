@@ -268,12 +268,12 @@
 			
 			foreach($controls_calendar_array as &$inst)
 			{	
-				$control = &$inst['control'];
+				$curr_control = &$inst['control'];
 				//var_dump($control['location_code']);
 				foreach($locations_for_control_array as $loc1)
 				{
-					if($control["location_code"] == $loc1["location_code"])
-						$control["location_name"] = $loc1["loc1_name"];
+					if($curr_control["location_code"] == $loc1["location_code"])
+						$curr_control["location_name"] = $loc1["loc1_name"];
 				}
 			}
 			
@@ -291,7 +291,8 @@
 				'date_format' 			  => $date_format,
 				'period' 			  	  => $year,
 				'year' 			  	  	  => $year,
-				'show_location'			  => 'yes'
+				'show_location'			  => 'yes',
+				'control_name'			  => $control->get_title()
 			);
 			
 			self::render_template_xsl('calendar/view_calendar_year', $data);
