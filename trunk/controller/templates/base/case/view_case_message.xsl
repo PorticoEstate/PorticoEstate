@@ -4,7 +4,7 @@
 
 <div id="main_content">
 	
-		<h1>Avviksmelding registrert</h1>
+		<h1>Melding registrert</h1>
 		
 		<xsl:call-template name="check_list_tab_menu" />
 		
@@ -35,7 +35,7 @@
 			</div>
 	
 	
-			<h3 class="check_item_details">Avviksmeldingen omfattet følgende saker</h3>					
+			<h3 class="check_item_details">Meldingen omfattet følgende saker</h3>					
 			<ul class="check_items">
 				<xsl:for-each select="check_items_and_cases">
 					<xsl:choose>

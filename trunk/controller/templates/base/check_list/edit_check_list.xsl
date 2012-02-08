@@ -63,7 +63,7 @@
 				</select>
 			</div>
 			<div>
-				<label>Antall åpne avvik</label>
+				<label>Antall åpne saker</label>
 			     <xsl:value-of select="check_list/num_open_cases"/>
 		    </div>
 			<div>
