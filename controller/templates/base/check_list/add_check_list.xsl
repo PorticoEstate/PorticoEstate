@@ -23,9 +23,7 @@
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 
-	<xsl:call-template name="check_list_tab_menu">
-		<xsl:with-param name="active_tab">view_details</xsl:with-param>
-	</xsl:call-template>
+	<xsl:call-template name="add_check_list_tab_menu" />
 	
 	<h3 class="box_header">Sjekklistedetaljer</h3>
 	<fieldset class="check_list_details">
