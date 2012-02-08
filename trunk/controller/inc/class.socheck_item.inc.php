@@ -297,7 +297,7 @@
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 			$sql .= "WHERE ci.check_list_id = $check_list_id ";
-			echo $sql; 
+			
 			if($status == 'open')
 				$sql .= "AND cic.status = 0 ";
 			else if($status == 'closed')
