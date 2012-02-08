@@ -25,7 +25,7 @@
 		    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>	
 							<xsl:choose>
 								<xsl:when test="type = 'control_item_type_1'">
-									<form id="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+									<form class="frm_register_case" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
 										<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 										<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -46,14 +46,22 @@
 									</form>
 								</xsl:when>
 								<xsl:when test="type = 'control_item_type_2'">
-								<form id="frm_save_check_item" action="index.php?menuaction=controller.uicheck_list.save_check_item&amp;phpgw_return_as=json" method="post">
+								<form class="frm_register_measurement_case" action="index.php?menuaction=controller.uicase.register_measurement_case&amp;phpgw_return_as=json" method="post">
 									<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-									<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-									<input name="status" type="hidden" value="1" />
-									<input name="type" type="hidden" value="control_item_type_2" />
-									<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+										<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+										<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+									    <input name="status" type="hidden" value="0" />
+										<input name="type" type="hidden" value="control_item_type_2" />
 							    	
 									<div class="check_item">
+										<div>
+											<label>Status</label>
+											<select name="status">
+												<option value="0" SELECTED="SELECTED">Ikke utført</option>
+												<option value="1" >Utført</option>
+												<option value="2" >Venter på tilbakemelding</option>
+									   		</select>
+									   </div>
 								       <div>
 								         <label class="comment">Registrer målingsverdi</label>
 								           <input>

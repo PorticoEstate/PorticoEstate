@@ -64,55 +64,58 @@ class date_generator
 				$interval_date = mktime(0,0,0, date("m", $interval_date), date("d", $interval_date), date("Y", $interval_date)+$this->repeat_interval);
 			}
 		}
-	
    	}
    	
    	public function find_control_start_date(){
    	
    		if( $this->repeat_type == 0 ){
-			$search_date = $this->start_date;
+			$control_start_date = $this->start_date;
 		}
 		else if( $this->repeat_type == 1 ){
-			$search_date = $this->start_date;
+			$control_start_date = $this->start_date;
 	
-			while(date("l", $search_date) != "Sunday")
+			while(date("l", $control_start_date) != "Sunday")
 			{
-				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $search_date), date("y", $search_date));
+				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $control_start_date), date("y", $control_start_date));
 				
-				if($num_days_in_month <= date("d", $search_date) )
+				if($num_days_in_month <= date("d", $control_start_date) )
 				{
-					$search_date = mktime(0,0,0, date("m", $search_date)+1, 1, date("Y", $search_date));
+					$control_start_date = mktime(0,0,0, date("m", $control_start_date)+1, 1, date("Y", $control_start_date));
 				}	
 				else
 				{
-					$search_date = mktime(0,0,0, date("m", $search_date), date("d", $search_date)+1, date("Y", $search_date));
+					$control_start_date = mktime(0,0,0, date("m", $control_start_date), date("d", $control_start_date)+1, date("Y", $control_start_date));
 				}
 			}
 		}
 		else if( $this->repeat_type == 2 ){
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
-			$search_date = mktime(0,0,0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+			$control_start_date = mktime(0,0,0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
 		}
    		else if( $this->repeat_type == 3 ){
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
-			$search_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
+			$control_start_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
 		}
 		
-		return $search_date;
+		return $control_start_date;
    	}
    	
-   	public function find_start_date_for_period( $trail_date ){
-   		
-   		while( $trail_date < $this->period_start_date ){
+   	public function find_start_date_for_period( $trail_period_start_date ){
+   		   		
+   		while( $trail_period_start_date < $this->period_start_date ){
 
-			if($this->repeat_type == 1 || $this->repeat_type == 0)
+			if($this->repeat_type == 0)
 			{
-				$trail_date = mktime(0,0,0, date("m", $trail_date), date("d", $trail_date)+$this->repeat_interval, date("Y", $trail_date));
+				$trail_period_start_date = mktime(0,0,0, date("m", $trail_period_start_date), date("d", $trail_period_start_date) + $this->repeat_interval, date("Y", $trail_period_start_date));
+			}
+   			else if($this->repeat_type == 1)
+			{
+				$trail_period_start_date = mktime(0,0,0, date("m", $trail_period_start_date), date("d", $trail_period_start_date) + ($this->repeat_interval * 7), date("Y", $trail_period_start_date));
 			}
 			else if($this->repeat_type == 2)
 			{
-				$month = date("m", $trail_date) + $this->repeat_interval;
-				$year = date("Y", $trail_date);
+				$month = date("m", $trail_period_start_date) + $this->repeat_interval;
+				$year = date("Y", $trail_period_start_date);
 				
 				if($month > 12){
 					$month = $month % 12;
@@ -120,15 +123,15 @@ class date_generator
 				}
 
 				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-				$trail_date = mktime(0,0,0, $month, $num_days_in_month, $year);
+				$trail_period_start_date = mktime(0,0,0, $month, $num_days_in_month, $year);
 			}
 			else if($this->repeat_type == 3)
 			{
-				$trail_date = mktime(0,0,0, date("m", $trail_date), date("d", $trail_date), date("Y", $trail_date)+$this->repeat_interval);	
+				$trail_period_start_date = mktime(0,0,0, date("m", $trail_period_start_date), date("d", $trail_period_start_date), date("Y", $trail_period_start_date)+$this->repeat_interval);	
 			}
 		}
 		
-		return $trail_date;
+		return $trail_period_start_date;
    	}
    	
    		
