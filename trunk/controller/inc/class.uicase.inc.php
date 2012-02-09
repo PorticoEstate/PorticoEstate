@@ -103,7 +103,7 @@
 				$check_item = $this->so_check_item->get_single($saved_check_item_id);
 			}
 			
-			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 						
@@ -111,8 +111,8 @@
 			$case->set_check_item_id( $check_item->get_id() );
 			$case->set_descr($case_descr);
 			$case->set_user_id($user_id);
-			$case->set_entry_date($todays_date);
-			$case->set_modified_date($todays_date);
+			$case->set_entry_date($todays_date_ts);
+			$case->set_modified_date($todays_date_ts);
 			$case->set_modified_by($user_id);
 			$case->set_modified_by($user_id);
 			$case->set_measurement($measurement);
@@ -243,7 +243,7 @@
 			$botts = CreateObject('property.botts',true);
 			$message_ticket_id = $botts->add_ticket($ticket);
 
-			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 						
