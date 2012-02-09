@@ -426,9 +426,9 @@
 			}
 			else
 			{
+				$this->global_lock = false;
 				$this->db->transaction_begin();
 			}
-
 
 			foreach ($voucher as $line)
 			{
