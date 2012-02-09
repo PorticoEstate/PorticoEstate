@@ -44,6 +44,7 @@
 		protected $entry_date;
 		protected $modified_date;
 		protected $modified_by;
+		protected $measurement;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -124,5 +125,12 @@
 		public function set_modified_by($modified_by)
 		{
 			$this->modified_by = $modified_by;
+		}
+		
+		public function get_measurement() { return $this->measurement; }
+		
+		public function set_measurement($measurement)
+		{
+			$this->measurement = $measurement;
 		}
 	}
