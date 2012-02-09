@@ -312,6 +312,8 @@ class rental_socontract extends rental_socommon
 			$filter_clauses[] = "(contract.billing_start IS NULL OR contract.billing_start < {$timestamp_end})";
 
 			$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
+			$this->order_field = 'invoice.timestamp_end, contract.billing_start, contract.date_start, contract.date_end';
+
 			$order = $order ? $order.', '.$specific_ordering : "ORDER BY {$specific_ordering}";
 		}
 
