@@ -491,6 +491,11 @@
 			}
 			else
 			{
+				if ( !$this->global_lock )
+				{
+					$this->db->transaction_commit();
+				}
+
 				$receipt['error'][]= array('msg' => lang('Sorry - No hits'));
 			}
 			return $receipt;
