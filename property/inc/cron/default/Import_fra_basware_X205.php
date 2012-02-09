@@ -444,7 +444,8 @@
 						$duplicate = true;
 						$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 						$bilagsnr = $this->db->f('bilagsnr');
-						$this->export->RullTilbake(false,false,$_bilagsnr_ut);
+						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
+			_debug_array($receipt);
 						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
 						unset($_bilagsnr_ut);
 					}
