@@ -514,7 +514,7 @@
 			// Fetches all control items for a check list
 			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
 			
-			// Fetches all check items for a check list as objects 
+			// Fetches all check items for a check list as objects
 			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
 			
 			// Puts closed check items of type measurement into array  
