@@ -121,6 +121,7 @@
 					'entry_date',
 					'modified_date',
 					'modified_by',
+					'measurement',
 			);
 
 			$values = array(
@@ -132,7 +133,8 @@
 				$this->marshal($case->get_user_id(), 'int'),
 				$this->marshal($case->get_entry_date(), 'int'),
 				$this->marshal($case->get_modified_date(), 'int'),
-				$this->marshal($case->get_modified_by(), 'int')
+				$this->marshal($case->get_modified_by(), 'int'),
+				$this->marshal($case->get_measurement(), 'int')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -154,6 +156,7 @@
 				'entry_date = ' . $this->marshal($case->get_entry_date(), 'int'),
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
+				'measurement = ' . $this->marshal($case->get_measurement(), 'int')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
