@@ -75,7 +75,7 @@
 						<input type="file" id="file" name="file" />
 					</div>
 			
-					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i avviksmelding</h3>					
+					<h3 class="check_item_details">Velg sjekkpunkter som skal være med i melding</h3>					
 					<ul class="check_items">
 						<xsl:for-each select="check_items_and_cases">
 							<xsl:choose>

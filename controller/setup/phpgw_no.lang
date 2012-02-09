@@ -4,7 +4,7 @@ control	controller	no	Kontroll
 controller	common	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
-Calendar_overview	controller	no	Kalenderoversikt
+Calendar_overview	controller	no	Kontrollplan
 Check_lists	controller	no	Sjekklister
 Choose_control_groups	controller	no	Velg kontrollgrupper
 Choose_control_items	controller	no	Velg kontrollpunkt
@@ -57,7 +57,6 @@ year controller	no	År
 location_code	controller	no	Enhetsnummer
 included_units	controller	no	Kontrollens enheter
 floor	controller	no	Etasje
-register_error	controller	no	Registrer avvik
 section	controller	no	Seksjon
 room	controller	no	Rom
 save	controller	no	Lagre
@@ -315,3 +314,7 @@ select value	controller	no	Velg
 component_for_control_group	controller	no	Utstyr tilknyttet kontrollgrupper
 View_component_for_control_group	controller	no	Vis knytning mot utstyr
 Add_component_for_control_group	controller	no	Legg til knytning mot utstyr
+show_controls_for_location	controller	no	Vis lokasjoner
+Property name	controller	no	Lokasjonsnavn
+Address	controller	no	Adresse
+Zip code	controller	no	Postnummer

@@ -10,9 +10,19 @@ $(document).ready(function(){
 		 var month = $(thisForm).find("input[name='month']").val();
 		 
 		 if(period_type == 'view_month')
-	         var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
+			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
+	         //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 }
 		 else
-			 var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
+			 //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
+		 }
 		
 		 window.location.href = requestUrl;
     });
@@ -21,8 +31,9 @@ $(document).ready(function(){
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list option").click(function () {
 		 var control_area_id = $(this).val();
-		 
-         var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -52,8 +63,10 @@ $(document).ready(function(){
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_group_area_list option").click(function () {
 		 var control_area_id = $(this).val();
-		 
-         var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -85,7 +98,9 @@ $(document).ready(function(){
 	$("#ifc option").click(function () {
 		 var ifc_id = $(this).val();
 		 
-         var requestUrl = "index.php?menuaction=controller.uicheck_list_for_component.get_component_types_by_category&phpgw_return_as=json"
+		 var oArgs = {menuaction:'controller.uicheck_list_for_component.get_component_types_by_category', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicheck_list_for_component.get_component_types_by_category&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -115,7 +130,10 @@ $(document).ready(function(){
 	// When control area is selected, procedures are fetched from db and procedure select list is populated
 	$("#control_area_id option").click(function () {
 		 var control_area_id = $(this).val();
-         var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
+		 
+		 var oArgs = {menuaction:'controller.uiprocedure.get_procedures'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -262,7 +280,11 @@ $(document).ready(function(){
 		
 		var add_param = $(thisA).find("span").text();
 		
-		var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
+		var oArgs = {menuaction:'controller.uicheck_list.get_cases_for_check_list'};
+		var baseUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = baseUrl + add_param
+		
+		//var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
 		
 		$.ajax({
 			  type: 'POST',
@@ -307,7 +329,7 @@ $(document).ready(function(){
 		$(infoBox).hide();
 	});
 	
-	$("#frm_save_check_item").live("submit", function(e){
+	$(".frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -320,7 +342,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-		    		  if(obj.saveStatus == "saved"){
+		    		  if(obj.status == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    				  
@@ -349,7 +371,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		  
-		    		  if(obj.saveStatus == "saved"){
+		    		  if(obj.status == "saved"){
 		    			  $(liWrp).fadeOut('3000', function() {
 		    				  $(liWrp).addClass("hidden");
 		    			  });
@@ -373,7 +395,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.saveStatus == "updated"){
+	    			  if(obj.status == "updated"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    				  
@@ -388,7 +410,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#frm_register_case").live("submit", function(e){
+	$(".frm_register_case").live("submit", function(e){
 		e.preventDefault();
 
 		var thisForm = $(this);
@@ -402,7 +424,7 @@ $(document).ready(function(){
 				  if(data){
 	    			  var obj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.saveStatus == "saved"){
+	    			  if(obj.status == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    			  
@@ -427,6 +449,35 @@ $(document).ready(function(){
 		    			  window.setTimeout(function() {
 							$(submitBnt).val('Registrer sak');
 							$(submitBnt).addClass("not_active");
+		    			  }, 1000);
+					  }
+				  }
+				}
+		});
+	});
+	
+	$(".frm_register_measurement_case").live("submit", function(e){
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var thisRow = $(this).parents("li");
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		
+	    			  if(obj.status == "saved"){
+		    			  var submitBnt = $(thisForm).find("input[type='submit']");
+		    			  $(submitBnt).val("Lagret");
+		    			  
+		    			  // Changes text on save button back to original
+		    			  window.setTimeout(function() {
+							$(thisRow).remove();
 		    			  }, 1000);
 					  }
 				  }
@@ -487,13 +538,19 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$("#frm_save_check_item").live("click", function(e){
+	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$("#frm_register_case").live("click", function(e){
+	$(".frm_register_case").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+	
+	$(".frm_register_measurement_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");

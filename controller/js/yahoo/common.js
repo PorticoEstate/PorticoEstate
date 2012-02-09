@@ -118,10 +118,21 @@ YAHOO.portico.formatLink = function(elCell, oRecord, oColumn, oData) {
 	elCell.innerHTML = '<a href="' + link + '">' + name + '</a>'; 
 };
 
+YAHOO.portico.formatGenericLink = function(elCell, oRecord, oColumn, oData)
+{
+	var data = oRecord.getData(oColumn.key);
+	//console.log(data['href']);
+	var link = data['href'];
+	var name = data['label'];
+	
+	elCell.innerHTML = '<a href="' + link + '">' + name + '</a>';
+};
+
+/*
 YAHOO.portico.formatGenericLink = function() {
 	var links = [];
 	var nOfLinks = arguments.length;
-	
+
 	for (var i=0; i < nOfLinks; i++) { links[i] = arguments[i]; }
 	
 	return function(elCell, oRecord, oColumn, oData)
@@ -150,7 +161,7 @@ YAHOO.portico.formatGenericLink = function() {
 		elCell.innerHTML = linksHtml;
 	};
 };
-
+*/
 YAHOO.portico.autocompleteHelper = function(url, field, hidden, container, label_attr) {
 	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);

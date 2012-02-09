@@ -68,7 +68,7 @@
 				$this->marshal($control_group->get_group_name(), 'string'),
 				$this->marshal($control_group->get_procedure_id(), 'int'),
 				$this->marshal($control_group->get_control_area_id(), 'int'),
-				$this->marshal($control_group->get_building_part_id(), 'int'),
+				$this->marshal($control_group->get_building_part_id(), 'string'),
 			);
 
 			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -100,7 +100,7 @@
 				'group_name = ' . $this->marshal($control_group->get_group_name(), 'string'),
 				'procedure_id = '. $this->marshal($control_group->get_procedure_id(), 'int'),
 				'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int'),
-				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'int')
+				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string')
 			);
 
 			//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
@@ -119,7 +119,7 @@
 		{
 			$id = (int)$id;
 
-			$joins = "	{$this->left_join} fm_building_part ON (p.building_part_id = CAST(fm_building_part.id AS INT))";
+			$joins = "	{$this->left_join} fm_building_part ON (p.building_part_id = fm_building_part.id)";
 			$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
 			//$joins .= "	{$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
 
@@ -135,7 +135,7 @@
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control_group->set_control_area_name($category[0]['name']);
 			//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
-			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
 			return $control_group;
@@ -304,7 +304,7 @@
 			$condition =  join(' AND ', $clauses);
 
 			$tables = "controller_control_group";
-			$joins = "	{$this->left_join} fm_building_part ON (building_part_id = CAST(fm_building_part.id AS INT))";
+			$joins = "	{$this->left_join} fm_building_part ON (building_part_id = fm_building_part.id)";
 			$joins .= "	{$this->left_join} controller_procedure ON (controller_control_group.procedure_id = controller_procedure.id)";
 //			$joins .= "	{$this->left_join} controller_control_area ON (controller_control_group.control_area_id = controller_control_area.id)";
 			//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
@@ -340,7 +340,7 @@
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
 				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
-				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 			}
 			//var_dump($control_group);
@@ -364,7 +364,7 @@
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
 				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
-				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
 				$control_groups_array[] = $control_group->toArray();

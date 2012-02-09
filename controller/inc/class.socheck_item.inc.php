@@ -66,7 +66,7 @@
 
 			$values = array(
 				$this->marshal($check_item->get_control_item_id(), 'int'),
-				$this->marshal($check_item->get_status(), 'int'),
+				$check_item->get_status(),
 				$this->marshal($check_item->get_comment(), 'string'),
 				$this->marshal($check_item->get_check_list_id(), 'int'),
 				$this->marshal($check_item->get_measurement(), 'int')
@@ -83,7 +83,7 @@
 
 			$values = array(
 				'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-				'status = ' . $this->marshal($check_item->get_status(), 'int'),
+				'status = ' . $check_item->get_status(),
 				'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
 				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int'),
 				'measurement = ' . $this->marshal($check_item->get_measurement(), 'string')

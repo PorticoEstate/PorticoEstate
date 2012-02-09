@@ -3,7 +3,6 @@
 <xsl:param name="active_tab" />
 
 <div id="edit_check_list_menu" class="hor_menu">
-		
 		<a>
 			<xsl:if test="$active_tab = 'view_details'">
 				<xsl:attribute name="class">active</xsl:attribute>
