@@ -272,6 +272,7 @@
 				{
 					$control_item->set_title(phpgw::get_var('title'));
 					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
+					$control_item->set_type(phpgw::get_var('measurement') == 'on' ? 'control_item_type_2' : 'control_item_type_1');
 					$control_item->set_what_to_do( phpgw::get_var('what_to_do','html') );
 					$control_item->set_how_to_do( phpgw::get_var('how_to_do','html') );
 					$control_item->set_control_group_id( phpgw::get_var('control_group_id') );

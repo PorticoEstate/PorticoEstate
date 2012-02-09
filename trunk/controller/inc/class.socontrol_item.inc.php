@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -60,6 +60,7 @@
 			$cols = array(
 					'title',
 					'required',
+					'type',
 					'what_to_do',
 					'how_to_do',
 					'control_group_id'
@@ -68,6 +69,7 @@
 			$values = array(
 				$this->marshal($control_item->get_title(), 'string'),
 				$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
+				$this->marshal($control_item->get_type(), 'string'),
 				$this->marshal($control_item->get_what_to_do(), 'string'),
 				$this->marshal($control_item->get_how_to_do(), 'string'),
 				$this->marshal($control_item->get_control_group_id(), 'int')
@@ -102,6 +104,7 @@
 			$values = array(
 				'title = ' . $this->marshal($control_item->get_title(), 'string'),
 				'required = ' . $this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
+				'type = ' . $this->marshal($control_item->get_type(), 'string'),
 				'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
 				'how_to_do = ' . $this->marshal($control_item->get_how_to_do(), 'string'),
 				'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int')
@@ -168,6 +171,7 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
@@ -259,7 +263,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
+				$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.type, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -291,6 +295,7 @@
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control_item->set_control_area_name($category[0]['name']);
 				$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
+				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 			}
 
 			return $control_item;

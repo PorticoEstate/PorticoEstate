@@ -66,6 +66,34 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="required">Måling</label>
+					</dt>
+					<dd>
+					<xsl:variable name="measurement_item"><xsl:value-of select="control_item/type" /></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:choose>
+								<xsl:when test="$measurement_item='control_item_type_2'">
+									<input type="checkbox" name="measurement" id="measurement" checked="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="measurement" id="measurement"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$measurement_item='control_item_type_2'">
+									<input type="checkbox" name="measurement" id="measurement" checked="true" disabled="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="measurement" id="measurement" disabled="true" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<dt>
 						<label for="what_to_do">Hva skal utføres</label>
 					</dt>
 					<dd>
