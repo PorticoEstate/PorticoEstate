@@ -516,22 +516,22 @@ $(document).ready(function(){
 });
 
 function clear_form( form ){
-	 // Clear form
-	  $(form).find(':input').each(function() {
-	        switch(this.type) {
-	            case 'select-multiple':
-	            case 'select-one':
-	            case 'text':
-	                $(this).val('');
-	                break;
-	            case 'textarea':
-	                $(this).val('');
-	                break;
-	            case 'checkbox':
-	            case 'radio':
-	                this.checked = false;
-	        }
-	    });
+	// Clear form
+	$(form).find(':input').each(function() {
+        switch(this.type) {
+            case 'select-multiple':
+            case 'select-one':
+            case 'text':
+                $(this).val('');
+                break;
+            case 'textarea':
+                $(this).val('');
+                break;
+            case 'checkbox':
+            case 'radio':
+                this.checked = false;
+        }
+    });
 }
 
 

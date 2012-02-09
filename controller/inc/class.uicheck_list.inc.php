@@ -362,7 +362,7 @@
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
@@ -554,11 +554,13 @@
 			$check_list = $this->so->get_single($check_list_id);
 			
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, 'open', null, 'return_array');
+			$open_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, 'waiting', null, 'return_array');
 			
 			$data = array
 			(
-				'open_check_items_and_cases'	=> $open_check_items_and_cases,
-				'check_list' 					=> $check_list->toArray()
+				'open_check_items_and_cases'		=> $open_check_items_and_cases,
+				'open_check_items_and_measurements'	=> $open_check_items_and_measurements,
+				'check_list' 						=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			

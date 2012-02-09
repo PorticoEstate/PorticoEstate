@@ -25,18 +25,17 @@
 		
 		foreach($check_items as $check_item){
 			
-			if($check_item->get_control_item()->get_type() == "control_item_type_2" & $check_item->get_status() == 0){
-				$num_open_cases++;
-			}else{
-				foreach($check_item->get_cases_array() as $case){
-					if($case->get_status() == 0){
-						$num_open_cases++;
-					}
-				}	
-			}
+			foreach($check_item->get_cases_array() as $case){
+				if($case->get_status() == 0 | $case->get_status() == 2){
+					$num_open_cases++;
+				}
+			}	
 		}
 		
 		$check_list->set_num_open_cases($num_open_cases);
+		
+		if($num_open_cases > 0)
+			$check_list->set_status(1);
 		
 		$this->so_check_list->store($check_list);
 	}

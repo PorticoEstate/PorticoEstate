@@ -4,17 +4,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
 
-<div id="control_info" style="margin:40px 0 0 40px;">
-	<h1 style="text-decoration: underline;text-transform: uppercase;"><xsl:value-of select="control/title"/></h1>
-	<h2 style="text-transform: uppercase;"><xsl:value-of select="location/loc1_name"/></h2>
-	<h3 style="text-transform: uppercase;"><xsl:value-of select="control_group/group_name"/></h3>
-</div>
+<div id="procedure">
+		<h1><xsl:value-of select="procedure/title" /></h1>
 
-<div id="procedure" style="margin:40px 0 0 40px;">
-		<div>
-			<label for="title"><xsl:value-of select="php:function('lang','Procedure title')" /></label>
-			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/title" /></span>
-		</div>
 		<div>
 			<label for="revision_no"><xsl:value-of select="php:function('lang','Procedure revision')" /></label>
 			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/revision_no" /></span>
@@ -62,17 +54,23 @@
 		<div>
 			<label for="attachment"><xsl:value-of select="php:function('lang','Procedure Attachment')" /></label>
 			<xsl:value-of select="procedure/attachment" />
-		</div>		
+		</div>
+		<a href="#print" class="btn" onClick="window.print()">Skriv ut</a>		
 </div>
 <style>
 
-	#procedure{
-		font-family: arial;
-		font-size:16px;
+	#procedure {
+ 	   font-family: arial;
+   	   font-size: 15px;
+       padding: 5px 25px;
 	}
-	#procedure div{
-		margin:10px 0;
-	 }
+	#procedure h1{
+    	font-size: 24px;
+    	margin-bottom: 25px;
+	}	
+	#procedure div {
+    	margin: 15px 0;
+	}
 	label{ 
 		display: inline-block;
     	font-weight: bold;
@@ -87,9 +85,9 @@
 	    cursor: pointer;
 	    display: inline-block;
 	    font-family: arial;
-	    margin-right: 5px;
 	    padding: 5px 20px;
 	    text-decoration: none;
+	    margin-top:20px;
 	}
 	
 	ol{
@@ -115,5 +113,4 @@
 	}
 		
 </style>
-<a style="margin:20px 0 0 40px;" href="#print" class="btn" onClick="window.print()">Skriv ut</a>
 </xsl:template>
