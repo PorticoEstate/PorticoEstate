@@ -419,7 +419,16 @@
 		public function RullTilbake($Filnavn, $date,$rollback_voucher)
 		{
 			$voucher = $this->select_invoice_rollback($date, $Filnavn,$rollback_voucher);
-			$this->db->transaction_begin();
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->global_lock = false;
+				$this->db->transaction_begin();
+			}
 
 			foreach ($voucher as $line)
 			{
@@ -457,12 +466,20 @@
 
 				if($rollback_voucher)
 				{
-					$this->db->transaction_commit();
+					if ( !$this->global_lock )
+					{
+						$this->db->transaction_commit();
+					}
+
 					$receipt['message'][]= array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
 				}
 				else if(unlink ($fil_katalog. '/' . $Filnavn))
 				{
-					$this->db->transaction_commit();
+					if ( !$this->global_lock )
+					{
+						$this->db->transaction_commit();
+					}
+
 					$receipt['message'][]= array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
 					$receipt['message'][]= array('msg' => lang('File %1 is deleted',$Filnavn));
 				}
@@ -474,6 +491,11 @@
 			}
 			else
 			{
+				if ( !$this->global_lock )
+				{
+					$this->db->transaction_commit();
+				}
+
 				$receipt['error'][]= array('msg' => lang('Sorry - No hits'));
 			}
 			return $receipt;
