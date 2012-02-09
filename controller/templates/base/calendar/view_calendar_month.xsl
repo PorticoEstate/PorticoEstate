@@ -5,13 +5,13 @@
 <xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
-		
-		<div style="float:left;">
+	<div id="control_plan">
+		<div class="col_1">
 			<h1><xsl:value-of select="location_array/loc1_name"/></h1>
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
 		
-		<div style="float:right;width:300px;margin-top:40px;">
+		<div class="col_2">
 			<form action="#">
 				<input type="hidden" name="period_type" value="view_year" />
 				<input type="hidden" name="year">
@@ -49,13 +49,10 @@
 			</ul>
 		</div>
 		
-		<div id="cal_wrp">		
-		<div style="float: left;margin-bottom: 10px;margin-left: 735px;margin-top: 30px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
-		<div style="float:left;margin-top: 30px;margin-left: 374px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
-		
+		<div id="cal_wrp">
 		<script>
 			$(document).ready(function() {
-				$(".move_cal_left").click(function(){
+				$(".move_left").click(function(){
 	  			  	var leftStrVal = $("#days_view").css("left");
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
@@ -70,7 +67,7 @@
 					}
 	  			});
 	  			
-	  			$(".move_cal_right").click(function(){
+	  			$(".move_right").click(function(){
 					var leftStrVal = $("#days_view").css("left");
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
@@ -89,7 +86,11 @@
 			});
 		</script>
 		
-			<ul style="clear:left;" class="calendar info month">
+			<div class="nav">
+				<a class="move_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a>
+				<a class="move_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a>
+			</div>
+			<ul class="calendar month">
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
@@ -272,5 +273,6 @@
 				</ul>
 			</div>
 		</div>
+</div>
 </div>
 </xsl:template>
