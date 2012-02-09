@@ -49,6 +49,7 @@
 		'controller_control_group_list',
 		'controller_control_location_list',
 		'controller_control_component_list',
+		'controller_control_group_component_list',
 		'controller_document',
 		'controller_document_types',
 		'controller_check_item_case',
