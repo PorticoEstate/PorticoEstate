@@ -446,7 +446,7 @@
 						$bilagsnr = $this->db->f('bilagsnr');
 						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
 
-						isset($receipt['message'])
+						if( isset($receipt['message']) )
 						{
 							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
 						}
