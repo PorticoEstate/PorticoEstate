@@ -68,14 +68,17 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
-											
+			$type = phpgw::get_var('type');
+			$measurement = phpgw::get_var('measurement');
+			$status = phpgw::get_var('status');
+			 
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
-			
+						
 			/*
 			
 			$db_check_item = $this->so_check_item->get_db();
@@ -90,7 +93,10 @@
 				$new_check_item = new controller_check_item();
 				$new_check_item->set_check_list_id( $check_list_id );
 				$new_check_item->set_control_item_id( $control_item_id );
-				$new_check_item->set_status( 0 );
+				if($status == 0)
+					$new_check_item->set_status( 0 );
+				else
+					$new_check_item->set_status( 1 );
 				$new_check_item->set_comment( null );
 				
 				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
@@ -100,62 +106,21 @@
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
-			$case_status = 0;
-			
+						
 			$case = new controller_check_item_case();
 			$case->set_check_item_id( $check_item->get_id() );
-			$case->set_status($case_status);
 			$case->set_descr($case_descr);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date);
 			$case->set_modified_date($todays_date);
 			$case->set_modified_by($user_id);
+			$case->set_modified_by($user_id);
+			$case->set_measurement($measurement);
+			$case->set_status($status);
 				
 			$case_id = $this->so->store($case);
 			
 			if($case_id > 0){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
-						
-				return json_encode( array( "status" => "saved" ) );
-			}
-			else
-				return json_encode( array( "status" => "not_saved" ) );	
-		}
-		
-		function register_measurement_case(){
-			$check_list_id = phpgw::get_var('check_list_id');
-			$control_item_id = phpgw::get_var('control_item_id');
-			$case_descr = phpgw::get_var('case_descr');
-			$measurement = phpgw::get_var('measurement');
-			$status = (int)phpgw::get_var('status');
-											
-			$check_list = $this->so_check_list->get_single($check_list_id);
-						
-			$control_id = $check_list->get_control_id();
-			$control = $this->so_control->get_single( $control_id );
-			
-			/*
-			
-			$db_check_item = $this->so_check_item->get_db();
-			$db_check_item->transaction_begin();
-
-			$db_check_item->transaction_commit();
-			$db_check_item->transaction_abort();
-			
-			*/
-	
-			$new_check_item = new controller_check_item();
-			$new_check_item->set_check_list_id( $check_list_id );
-			$new_check_item->set_control_item_id( $control_item_id );
-			$new_check_item->set_status( $status );
-			$new_check_item->set_comment($case_descr);
-			$new_check_item->set_measurement($measurement);
-
-			$saved_check_item_id = 0;
-			$saved_check_item_id = $this->so_check_item->store( $new_check_item );
-
-			if($saved_check_item_id > 0){
 				$status_checker = new status_checker();
 				$status_checker->update_check_list_status( $check_list_id );
 						

@@ -422,62 +422,20 @@ $(document).ready(function(){
 			  url: requestUrl + "&" + $(thisForm).serialize(),
 			  success: function(data) {
 				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
+	    			  var jsonObj = jQuery.parseJSON(data);
 		    		
-	    			  if(obj.status == "saved"){
+	    			  if(jsonObj.status == "saved"){
 		    			  var submitBnt = $(thisForm).find("input[type='submit']");
 		    			  $(submitBnt).val("Lagret");	
 		    			  
-		    			  $(thisForm).find(':input').each(function() {
-		    			        switch(this.type) {
-		    			            case 'password':
-		    			            case 'select-multiple':
-		    			            case 'select-one':
-		    			            case 'text':
-		    			                $(this).val('');
-		    			                break;
-		    			            case 'textarea':
-		    			                $(this).val('');
-		    			                break;
-		    			            case 'checkbox':
-		    			            case 'radio':
-		    			                this.checked = false;
-		    			        }
-		    			    });
+		    			  clear_form( thisForm );
+		    			  
+		    			 
 		    				  
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
 							$(submitBnt).val('Registrer sak');
 							$(submitBnt).addClass("not_active");
-		    			  }, 1000);
-					  }
-				  }
-				}
-		});
-	});
-	
-	$(".frm_register_measurement_case").live("submit", function(e){
-		e.preventDefault();
-
-		var thisForm = $(this);
-		var thisRow = $(this).parents("li");
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var requestUrl = $(thisForm).attr("action");
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		
-	    			  if(obj.status == "saved"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");
-		    			  
-		    			  // Changes text on save button back to original
-		    			  window.setTimeout(function() {
-							$(thisRow).remove();
 		    			  }, 1000);
 					  }
 				  }
@@ -556,6 +514,25 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 });
+
+function clear_form( form ){
+	 // Clear form
+	  $(form).find(':input').each(function() {
+	        switch(this.type) {
+	            case 'select-multiple':
+	            case 'select-one':
+	            case 'text':
+	                $(this).val('');
+	                break;
+	            case 'textarea':
+	                $(this).val('');
+	                break;
+	            case 'checkbox':
+	            case 'radio':
+	                this.checked = false;
+	        }
+	    });
+}
 
 
 //Updates order number for hidden field and number in front of row
