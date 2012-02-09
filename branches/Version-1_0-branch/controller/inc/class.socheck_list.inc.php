@@ -302,11 +302,15 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
-	function get_agg_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts ){
-		
+	function get_agg_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $control_id = 0 ){
+				
 		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(ci.id) ";
 		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
 		$sql .= "WHERE cl.location_code = '{$location_code}' ";
+		if($control_id > 0)
+		{
+			$sql .= "AND c.id = {$control_id} ";
+		}
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.id = ci.check_list_id ";
@@ -314,7 +318,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "GROUP BY c.id, title, start_date, end_date, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
 		$sql .= "ORDER BY c.id";
-
+//var_dump($sql);
 		$this->db->query($sql);
 		
 		$control_id = 0;
@@ -381,17 +385,26 @@ class controller_socheck_list extends controller_socommon
 		return $control_array;
 	}
 	
-	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type ){
+	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type = null, $control_id = 0 ){
+		$use_location_inparam = false;
 		$sql = 	"SELECT c.id as c_id, title, description, start_date, end_date, control_area_id, c.location_code as c_location_code, repeat_type, repeat_interval, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
 		$sql .= "WHERE cl.location_code = '{$location_code}' ";
-		$sql .= "AND c.repeat_type = $repeat_type ";
+		if($control_id > 0)
+		{
+			$sql .= "AND c.id={$control_id} ";
+			$use_location_inparam = true;
+		}
+		if($repeat_type != null)
+		{
+			$sql .= "AND c.repeat_type = $repeat_type ";
+		}
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
-
+//var_dump($sql);
 		$this->db->query($sql);
 		
 		$control_id = 0;
@@ -412,7 +425,14 @@ class controller_socheck_list extends controller_socommon
 				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('c_location_code', true), 'string'));
+				if($use_location_inparam)
+				{
+					$control->set_location_code($location_code);
+				}
+				else
+				{
+					$control->set_location_code($this->unmarshal($this->db->f('c_location_code', true), 'string'));
+				}
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 								
@@ -666,7 +686,7 @@ class controller_socheck_list extends controller_socommon
 		$values = array(
 			'control_id = ' . $this->marshal($check_list->get_control_id(), 'int'),
 			'status = ' . $check_list->get_status(),
-			'comment = ' . $check_list->get_comment(),
+			'comment = ' . $this->marshal($check_list->get_comment(), 'string'),
 			'deadline = ' . $this->marshal($check_list->get_deadline(), 'int'),
 			'planned_date = ' . $this->marshal($check_list->get_planned_date(), 'int'),
 			'completed_date = ' . $this->marshal($check_list->get_completed_date(), 'int'),

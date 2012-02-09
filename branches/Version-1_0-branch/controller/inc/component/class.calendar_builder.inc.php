@@ -19,8 +19,6 @@ class calendar_builder {
 
 			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
 
-			echo " Kontroll: " . $control->get_title();
-			
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
 				
@@ -29,8 +27,6 @@ class calendar_builder {
 		
 				$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
-				echo " Dato: "	. $check_list->get_id() . "  deadline: " . 	date("d/m-Y", $check_list->get_deadline());
-		
 				if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() > $todays_date_ts)
 				{
 					$status = "control_planned";

@@ -52,7 +52,8 @@
 		(
 			'index'	=>	true,
 			'view_calendar_for_month'			=>	true,
-			'view_calendar_for_year'			=>	true
+			'view_calendar_for_year'			=>	true,
+			'view_calendar_for_locations'		=>  true
 		);
 
 		public function __construct()
@@ -224,6 +225,74 @@
 				'date_format' 			  => $date_format,
 				'period' 			  	  => $year,
 				'year' 			  	  	  => $year
+			);
+			
+			self::render_template_xsl('calendar/view_calendar_year', $data);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+		}
+		
+		public function view_calendar_for_locations()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$control = $this->so_control->get_single($control_id);
+			
+			if(is_numeric($control_id) & $control_id > 0)
+			{
+				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+			}
+			
+			$year = date("Y");
+			
+			$year = intval($year);
+						
+			$from_date_ts = strtotime("01/01/$year");
+			$to_year = $year + 1;
+			$to_date_ts = strtotime("01/01/$to_year");	
+
+			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
+		
+			$controls_calendar_array = array();
+			foreach($locations_for_control_array as $location)
+			{
+				$control->set_location_code($location["location_code"]);
+				$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location["location_code"], $year);
+				//_debug_array($controls_calendar_array);
+				$control_check_list_array = $this->so->get_check_lists_for_location( $location["location_code"], $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_id() );
+				//_debug_array($controls_check_list_array);
+			}
+			
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+			//_debug_array($controls_calendar_array);
+			
+			foreach($controls_calendar_array as &$inst)
+			{	
+				$curr_control = &$inst['control'];
+				//var_dump($control['location_code']);
+				foreach($locations_for_control_array as $loc1)
+				{
+					if($curr_control["location_code"] == $loc1["location_code"])
+						$curr_control["location_name"] = $loc1["loc1_name"];
+				}
+			}
+			
+			//_debug_array($controls_calendar_array);
+			
+			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
+			
+			$data = array
+			(
+				'my_locations'	  		  => $locations_for_control_array,
+				'view_location_code'	  => null,
+				'location_array'		  => $locations_for_control_array,
+				'heading_array'		  	  => $heading_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'date_format' 			  => $date_format,
+				'period' 			  	  => $year,
+				'year' 			  	  	  => $year,
+				'show_location'			  => 'yes',
+				'control_name'			  => $control->get_title()
 			);
 			
 			self::render_template_xsl('calendar/view_calendar_year', $data);

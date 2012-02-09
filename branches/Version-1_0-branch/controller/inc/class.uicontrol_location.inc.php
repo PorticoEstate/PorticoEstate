@@ -182,7 +182,7 @@
 		
 		function register_control_to_location()
 		{
-			if(phpgw::get_var('save_component'))
+			if(phpgw::get_var('save_location'))
 			{
 				//add component to control using component item ID
 				$items_checked = array();
@@ -210,11 +210,12 @@
 					}
 				}
 				
-				if($control_location_id > 0)
+/*				if($control_location_id > 0)
 					return json_encode( array( "status" => "saved" ) );
 				else
 					return json_encode( array( "status" => "not_saved" ) );
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.index'));
+*/
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'));
 
 			}
 			else

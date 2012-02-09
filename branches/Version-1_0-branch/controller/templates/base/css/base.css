@@ -851,6 +851,17 @@ ul.calendar li div.date, ul.calendar.info div.date {
 ul.calendar div.title, ul.calendar.info div.title {
 	width: 200px;
 }
+ul.calendar div.title {
+	width: 150px;
+}
+ul.calendar div.location {
+	width: 150px;
+	text-align: left;
+}
+ul.calendar div.assigned {
+	width: 80px;
+	text-align: left;
+}
 ul.calendar div.id, ul.calendar.info div.id {
 	width: 50px;
 }
@@ -861,7 +872,7 @@ ul.calendar .heading div.title{
 	text-align: center;
 }
 ul.calendar div.frequency, ul.calendar.info div.frequency {
-	width: 120px;	
+	width: 100px;	
 }
 ul.calendar.month {
    	margin-top:0;
