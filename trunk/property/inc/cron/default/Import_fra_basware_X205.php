@@ -445,8 +445,15 @@
 						$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 						$bilagsnr = $this->db->f('bilagsnr');
 						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
-			_debug_array($receipt);
-						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
+
+						isset($receipt['message'])
+						{
+							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
+						}
+						else
+						{
+							$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$_bilagsnr_ut}, extern ref: {$_data['SCANNINGNO']}");
+						}
 						unset($_bilagsnr_ut);
 					}
 
