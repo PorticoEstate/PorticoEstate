@@ -159,7 +159,7 @@ $(document).ready(function(){
 			  }  
 			});	
     });
-	
+			
 	// file: sort_check_list.xsl
 	// Saves order of control items for a group
 	$(".frm_save_order").submit(function(e){
@@ -429,9 +429,7 @@ $(document).ready(function(){
 		    			  $(submitBnt).val("Lagret");	
 		    			  
 		    			  clear_form( thisForm );
-		    			  
-		    			 
-		    				  
+			      				  
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
 							$(submitBnt).val('Registrer sak');
@@ -442,6 +440,66 @@ $(document).ready(function(){
 				}
 		});
 	});
+	
+	$(".frm_update_case").live("submit", function(e){
+		e.preventDefault();
+
+		var thisForm = $(this);
+		//var submitBnt = $(thisForm).find("input[type='submit']");
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var jsonObj = jQuery.parseJSON(data);
+		    		
+	    			  if(jsonObj.status == "saved"){
+		    			  
+	    				  alert("SAVED");
+					  }
+				  }
+				}
+		});
+	});
+	
+	$("a.quick_edit").live("click", function(e){
+		var clickElem = $(this);
+		var clickRow = $(this).closest("li");
+				
+		var case_info = $(clickRow).find(".case_info");
+		var case_id = $(clickRow).find(".case_id").text();
+		var case_descr = $(clickRow).find(".case_descr").text();
+		var case_status = $(clickRow).find(".case_status").text();
+		var case_measurement = $(clickRow).find(".case_measurement").text();
+		var requestUrl = $(clickElem).attr('href');
+		
+		$(clickRow).hide();
+		
+		
+		var quickEditRowTagStr = "<li class='quick_edit'><h3>Hurtigendring</h3><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
+				
+		if(case_status == 1)
+			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option SELECTED='SELECTED' value='1'>Utført</option><option value='2'>Venter på tilbakemelding</option></select>";
+		else if(case_status == 2)
+			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option value='1'>Utført</option><option SELECTED='SELECTED' value='2'>Venter på tilbakemelding</option></select>";
+		
+		quickEditRowTagStr += "<label>Beskrivelse</label><textarea name='case_descr'>" + case_descr + "</textarea>";
+		quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
+		
+		quickEditRowTagStr += "<input type='submit' value='Oppdater' />";
+		
+		quickEditRowTagStr += "</fieldset></form></li>";
+		
+		$quickEditRow = $(clickRow).before(quickEditRowTagStr);
+		
+		return false;	
+	});
+	
+	
+	
+	
 	
 	// Delete a case item from list
 	$(".delete_case").live("click", function(){
@@ -508,11 +566,6 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$(".frm_register_measurement_case").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
 });
 
 function clear_form( form ){
@@ -533,7 +586,6 @@ function clear_form( form ){
         }
     });
 }
-
 
 //Updates order number for hidden field and number in front of row
 function update_order_nr_for_row(element, sign){

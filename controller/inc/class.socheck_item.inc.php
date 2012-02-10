@@ -289,8 +289,8 @@
 			return $check_items_array;
 		}
 		
-		public function get_check_items_with_cases($check_list_id, $status = "open", $messageStatus = null, $return_type = "return_object"){
-			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, ci.measurement, check_list_id, ";
+		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $return_type = "return_object"){
+			$sql  = "SELECT ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment, check_list_id, ";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci "; 
@@ -307,6 +307,11 @@
 			else if($status == 'open_or_waiting')
 				$sql .= "AND cic.status = 0 OR cic.status = 2";
 				
+			if($type == 'control_item_type_1')
+				$sql .= "AND coi.type = 'control_item_type_1' ";
+			else if($type == 'control_item_type_2')
+				$sql .= "AND coi.type = 'control_item_type_2' ";
+							
 			if($messageStatus != null & $messageStatus == 'no_message_registered')
 				$sql .= "AND cic.location_item_id IS NULL ";
 			else if($messageStatus != null &  $messageStatus == 'message_registered')
@@ -363,8 +368,8 @@
 					$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
 					$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-				
-				
+					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+								
 					if($return_type == "return_array")
 						$cases_array[] = $case->toArray();
 					else

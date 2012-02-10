@@ -72,6 +72,7 @@
 				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
+				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
 					
 				return $case;
 			}
@@ -98,7 +99,8 @@
 				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-
+				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+				
 				if($return_type == "return_object")
 					$cases_array[] = $case;
 				else
@@ -134,7 +136,7 @@
 				$this->marshal($case->get_entry_date(), 'int'),
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
-				$this->marshal($case->get_measurement(), 'int')
+				$this->marshal($case->get_measurement(), 'string')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -156,7 +158,7 @@
 				'entry_date = ' . $this->marshal($case->get_entry_date(), 'int'),
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
-				'measurement = ' . $this->marshal($case->get_measurement(), 'int')
+				'measurement = ' . $this->marshal($case->get_measurement(), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

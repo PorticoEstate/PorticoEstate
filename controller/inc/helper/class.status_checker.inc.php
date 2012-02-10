@@ -19,7 +19,8 @@
 	
 		$status = null;
 		$control_item_type = null;
-		$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $status, $control_item_type, "return_object");
+		$messageStatus = null;
+		$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type, $status, $messageStatus, "return_object");
 		
 		$num_open_cases = 0;
 		
