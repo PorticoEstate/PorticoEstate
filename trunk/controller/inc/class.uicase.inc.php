@@ -46,6 +46,7 @@
 		
 		var $public_functions = array(
 									'register_case' 			=> true,
+									'save_case' 				=> true,
 									'create_case_message' 		=> true,
 									'view_case_message' 		=> true,
 									'register_case_message' 	=> true,
@@ -130,11 +131,39 @@
 				return json_encode( array( "status" => "not_saved" ) );	
 		}
 		
+		function save_case(){
+			$case_id = phpgw::get_var('case_id');
+			$case_descr = phpgw::get_var('case_descr');
+			$case_status = phpgw::get_var('case_status');
+			$measurement = phpgw::get_var('measurement');
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
+			
+			$case = $this->so->get_single($case_id);
+			$case->set_descr($case_descr);
+			$case->set_modified_date($todays_date_ts);
+			$case->set_measurement($measurement);
+			$case->set_status($case_status);
+			
+			$case_id = $this->so->store($case);
+			
+			if($case_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );
+						
+				return json_encode( array( "status" => "saved" ) );
+			}
+			else
+				return json_encode( array( "status" => "not_saved" ) );
+			
+		}
+		
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
-			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "open", "no_message_registered", "return_array");
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered", "return_array");
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );

@@ -23,6 +23,12 @@
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
 										<li><span class="order_nr"><xsl:number /></span>. <xsl:value-of select="descr"/>
+											Status: 
+											<xsl:choose>
+												<xsl:when test="status = 1">Utført</xsl:when>
+												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
+											</xsl:choose>
+											
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
@@ -40,10 +46,11 @@
 													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
 												</xsl:otherwise>
 											</xsl:choose>
+											
 											<div class="quick_menu">
-												<a>
+												<a class="quick_edit">
 													<xsl:attribute name="href">
-														<xsl:text>index.php?menuaction=controller.uicase.edit_case</xsl:text>
+														<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>
 														<xsl:value-of select="id"/>
 														<xsl:text>&amp;check_list_id=</xsl:text>
@@ -67,6 +74,12 @@
 														</a>
 													</xsl:when>
 												</xsl:choose>
+											</div>
+											<div style="display:none;" class="case_info">
+												<div class="case_id"><xsl:value-of select="id"/></div>
+												<div class="case_descr"><xsl:value-of select="descr"/></div>
+												<div class="case_status"><xsl:value-of select="status"/></div>
+												<div class="case_measurement"><xsl:value-of select="measurement"/></div>
 											</div>
 										</li>
 									</xsl:for-each>
