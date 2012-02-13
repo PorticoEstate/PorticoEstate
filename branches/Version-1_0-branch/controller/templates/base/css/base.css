@@ -667,8 +667,8 @@ ul.row li{
 }
 
 #main_content {
-	padding:20px;	
-	width: 1150px;
+    padding: 20px;
+    width: 1150px;
 }
 
 #main_content.groups{
@@ -766,7 +766,7 @@ fieldset.check_item_details h3 {
 fieldset.check_list_details label{
 	display: inline-block;
     font-weight: bold;
-    width: 135px;
+    width: 150px;
 }
 .check_item{
     margin: 25px 0;
@@ -806,6 +806,21 @@ h3.check_item_details{
 ul.check_list {
 	width: 925px;	
 }
+
+/* ======================  CALENDAR ========================== */
+
+#control_plan .col_1 {
+    float: left;
+    height: 240px;
+    width: 600px;
+}
+
+#control_plan .col_2 {
+    float:right;
+    width:300px;
+    margin-top:40px;
+}
+
 ul.calendar li{
 	clear:left;	
 }
@@ -814,8 +829,14 @@ ul.calendar li.heading div {
     font-size:16px;
 }
 ul.calendar {
+    clear: right;
     float: left;
     margin-top: 30px;
+    width: 100%;
+}
+ul.calendar.month {
+    margin-top: 0;
+    width: 60%;
 }
 ul.calendar li div {
     float: left;
@@ -823,19 +844,28 @@ ul.calendar li div {
     padding: 3px;
     text-align: center;
 }
-ul.calendar.info {
-    background:none;
-    border:0;
+#cal_wrp {
+    clear: both;
     float: left;
+    margin-top: 30px;
+    width: 100%;
 }
-
+#cal_wrp .nav{
+	padding: 1% 0;	
+}
+a.move_left{
+	float: right;
+}
+a.move_right {
+    float: right;
+    margin-right: 34%;
+}
 #days_wrp {
-    float: left;
-    position: relative;
-    width: 420px;
-    overflow-x: hidden;
+    float: right;
     height: 800px;
-    margin-left: 40px;
+    overflow-x: hidden;
+    position: relative;
+    width: 37%;
 }
 ul.calendar.days li div {
     width: 24px;
@@ -874,9 +904,14 @@ ul.calendar .heading div.title{
 ul.calendar div.frequency, ul.calendar.info div.frequency {
 	width: 100px;	
 }
-ul.calendar.month {
-   	margin-top:0;
+.months a.view_check_list {
+    width: 30px;
 }
+.cal_info_msg{
+	font-size: 16px;
+    padding: 40px 20px;	
+}
+
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #243356;
@@ -1027,10 +1062,6 @@ ul.check_items li.hidden{
 .frm_save_check_item input[type='submit']{
 	width: 165px;
 }
-ul.check_items {
-    width: 625px;
-}
-
 ul.check_items h5{
 	margin:10px;
 	font-size: 13px;
@@ -1079,6 +1110,9 @@ ul.check_items h5{
 .tab_item h2{
 	margin:0 0 10px;
 	font-size: 17px;	
+}
+.tab_item h2.last{
+	margin:20px 0 10px;	
 }
 .tab_item.active {
 	display:block;	
@@ -1234,14 +1268,19 @@ ul#icon_color_map span{
     text-align: left;
     width: 815px;
 }
-li.check_item_case h4{
-	margin:5px 0;		
+
+/* ======================== VIEW CASES ============================= */
+
+li.check_item_case h4 {
+    margin: 5px 0;
 }
 li.check_item_case ul{
-	margin:10px;		
+    margin-bottom: 20px;
 }
 li.check_item_case ul li {
-    margin: 5px 0 0 0;
+    border: 1px solid #AAAAAA;
+    margin: 5px 0 0;
+    padding: 5px;
 }
 a.view_check_list{
  	color: #FFFFFF;
@@ -1252,12 +1291,13 @@ a.view_check_list{
     text-decoration: none;
     width: 24px;	
 }
-.months a.view_check_list {
-    width: 30px;
+li.quick_edit label{
+	font-weight:bold;
+	vertical-align:top;
 }
-.cal_info_msg{
-	font-size: 16px;
-    padding: 40px 20px;	
+li.quick_edit textarea, li.quick_edit select{
+	display: inline-block;
+	vertical-align:top;
 }
 .quick_menu {
     font-size: 12px;
@@ -1267,9 +1307,6 @@ a.view_check_list{
 }
 .quick_menu a{
 	margin: 0 5px;	
-}
-#cal_wrp{
-	clear:both;
 }
 ul#groups {
     margin-left: 10px;

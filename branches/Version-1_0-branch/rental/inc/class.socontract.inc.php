@@ -413,12 +413,27 @@ class rental_socontract extends rental_socommon
 		$order_field = $this->order_field ? ", {$this->order_field}" : '';
 		$sql_end =   str_replace('SELECT DISTINCT contract.id',"SELECT DISTINCT contract.id {$order_field}", $sql_minimized) . " GROUP BY contract.id {$order_field} {$this->ordermethod}";
 	//_debug_array($sql_end);
-		$this->db->limit_query($sql_end,$start_index,__LINE__,__FILE__, $num_of_objects);
 
 		$records = array();
-		while ($this->db->next_record())
+		if( isset($filters['contract_id']) && $filters['contract_id'])
 		{
-			$records[] =  (int)$this->db->f('id');
+			$records[] =  (int)$filters['contract_id'];
+		}
+		else
+		{
+			if($num_of_objects == null)
+			{
+				$this->db->query($sql_end,__LINE__,__FILE__, false, true);
+			}
+			else
+			{
+				$this->db->limit_query($sql_end,$start_index,__LINE__,__FILE__, $num_of_objects);
+			}
+
+			while ($this->db->next_record())
+			{
+				$records[] =  (int)$this->db->f('id');
+			}
 		}
 
 		foreach ($records as $id)

@@ -561,7 +561,7 @@
 					width: '700px',
 					animate: true,
 					dompath: true,
- 					handleSubmit: true,
+ 					handleSubmit: true
 				};
 
 				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);

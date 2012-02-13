@@ -66,6 +66,10 @@
 				<label>Antall åpne saker</label>
 			     <xsl:value-of select="check_list/num_open_cases"/>
 		    </div>
+		    <div>
+				<label>Antall ventende saker</label>
+			     <xsl:value-of select="check_list/num_pending_cases"/>
+		    </div>
 			<div>
 				<label>Skal utføres innen</label>
 				<input>
