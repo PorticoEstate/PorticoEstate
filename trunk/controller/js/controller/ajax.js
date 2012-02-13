@@ -445,7 +445,6 @@ $(document).ready(function(){
 		e.preventDefault();
 
 		var thisForm = $(this);
-		//var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
 		
 		$.ajax({
@@ -456,8 +455,12 @@ $(document).ready(function(){
 	    			  var jsonObj = jQuery.parseJSON(data);
 		    		
 	    			  if(jsonObj.status == "saved"){
-		    			  
-	    				  alert("SAVED");
+	    				  var case_id = "#case_" + jsonObj.case.id; 
+	    				  var case_descr = jsonObj.case.descr;
+	    				  
+	    				  $(case_id).show();
+	    				  $(case_id).find(".case_descr").text(case_descr);
+	    				  $(thisForm).parents("li").remove();	  
 					  }
 				  }
 				}
@@ -466,19 +469,23 @@ $(document).ready(function(){
 	
 	$("a.quick_edit").live("click", function(e){
 		var clickElem = $(this);
-		var clickRow = $(this).closest("li");
+		var clickRow = $(this).parents("li.check_item_case");
 				
 		var case_info = $(clickRow).find(".case_info");
-		var case_id = $(clickRow).find(".case_id").text();
-		var case_descr = $(clickRow).find(".case_descr").text();
-		var case_status = $(clickRow).find(".case_status").text();
-		var case_measurement = $(clickRow).find(".case_measurement").text();
+		var case_id = $(case_info).find(".case_id").text();
+		var case_descr = $(case_info).find(".case_descr").text();
+		var case_status = $(case_info).find(".case_status").text();
+		var case_measurement = $(case_info).find(".case_measurement").text();
+		var case_type = $(case_info).find(".case_type").text();
 		var requestUrl = $(clickElem).attr('href');
 		
 		$(clickRow).hide();
 		
+		$(clickRow).attr("id", "case_" + case_id);
 		
-		var quickEditRowTagStr = "<li class='quick_edit'><h3>Hurtigendring</h3><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
+		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><h3>Hurtigendring</h3><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
+			
+		if(case_type == "control_item_type_2")
 			quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
 		
 		if(case_status == 1)
@@ -497,10 +504,6 @@ $(document).ready(function(){
 		
 		return false;	
 	});
-	
-	
-	
-	
 	
 	// Delete a case item from list
 	$(".delete_case").live("click", function(){
