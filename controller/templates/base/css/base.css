@@ -1277,7 +1277,7 @@ li.check_item_case h4 {
 li.check_item_case ul{
     margin-bottom: 20px;
 }
-li.check_item_case ul li {
+li.check_item_case ul li, li.quick_edit fieldset {
     border: 1px solid #AAAAAA;
     margin: 5px 0 0;
     padding: 5px;

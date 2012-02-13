@@ -147,12 +147,13 @@
 			$case->set_status($case_status);
 			
 			$case_id = $this->so->store($case);
+			$case = $this->so->get_single($case_id);
 			
 			if($case_id > 0){
 				$status_checker = new status_checker();
 				$status_checker->update_check_list_status( $check_list_id );
 						
-				return json_encode( array( "status" => "saved" ) );
+				return json_encode( array( "status" => "saved", "case" => $case->toArray() ) );
 			}
 			else
 				return json_encode( array( "status" => "not_saved" ) );
