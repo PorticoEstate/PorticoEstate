@@ -59,7 +59,7 @@
 		<dd>
 	      <xsl:choose>
 		      <xsl:when test="not(control/end_date = '0') or not(control/end_date = '')">
-		      	Dato ikke angitt
+		      	Løpende
 		      </xsl:when>
 		      <xsl:otherwise>
 		      	<xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/>
@@ -70,13 +70,13 @@
 			<label>Frekvenstype</label>
 		</dt>
 		<dd>
-			<select id="repeat_type" name="repeat_type">
-				<option value="0">Ikke angitt</option>
-				<option value="1">Dag</option>
-				<option value="2">Uke</option>
-				<option value="3">Måned</option>
-				<option value="5">År</option>
-			</select>
+		
+			<xsl:choose>
+		      <xsl:when test="control/repeat_type = 0">Dag</xsl:when>
+		      <xsl:when test="control/repeat_type = 1">Uke</xsl:when>
+		      <xsl:when test="control/repeat_type = 2">Måned</xsl:when>
+		      <xsl:when test="control/repeat_type = 3">År</xsl:when>
+	      </xsl:choose>
 		</dd>
 		<dt>
 			<label>Frekvens</label>

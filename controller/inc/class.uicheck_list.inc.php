@@ -233,7 +233,10 @@
 		
 		function edit_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
-			
+
+			$status_checker = new status_checker();
+			$status_checker->update_check_list_status( $check_list_id );
+				
 			$check_list = $this->so->get_single($check_list_id);
 			
 			$control = $this->so_control->get_single($check_list->get_control_id());
@@ -362,7 +365,7 @@
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
@@ -514,7 +517,7 @@
 			// Fetches all control items for a check list
 			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
 			
-			// Fetches all check items for a check list as objects 
+			// Fetches all check items for a check list as objects
 			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
 			
 			// Puts closed check items of type measurement into array  
@@ -553,12 +556,14 @@
 			
 			$check_list = $this->so->get_single($check_list_id);
 			
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, 'open', null, 'return_array');
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_1", 'open', null, 'return_array');
+			$open_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_2", 'open_or_waiting', null, 'return_array');
 			
 			$data = array
 			(
-				'open_check_items_and_cases'	=> $open_check_items_and_cases,
-				'check_list' 					=> $check_list->toArray()
+				'open_check_items_and_cases'		=> $open_check_items_and_cases,
+				'open_check_items_and_measurements'	=> $open_check_items_and_measurements,
+				'check_list' 						=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			
@@ -569,7 +574,7 @@
 			
 			$check_list = $this->so->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, 'closed', null, 'return_array');
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, 'return_array');
 							
 			$data = array
 			(
@@ -578,23 +583,6 @@
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
-		}
-		
-		function view_measurements(){
-			$check_list_id = phpgw::get_var('check_list_id');
-			
-			$check_list = $this->so->get_single($check_list_id);
-						
-			// Fetches check items that registeres measurement
-			$measurement_check_items = $this->so_check_item->get_check_items($check_list_id, null, 'control_item_type_2', "return_array");
-			
-			$data = array
-			(
-				'measurement_check_items'	=> $measurement_check_items,
-				'check_list' 				=> $check_list->toArray()
-			);
-			
-			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_measurements'), $data );
 		}
 		
 		function view_control_items(){
@@ -714,7 +702,7 @@
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 
-			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "open", null, "return_array");
+			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", null, "return_array");
 			
 			return json_encode( $check_items_with_cases );
 		}

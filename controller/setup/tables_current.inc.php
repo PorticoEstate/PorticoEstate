@@ -77,7 +77,8 @@
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => false),
-				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -204,14 +205,15 @@
 			'fd' => array(
 				'id'            	=> array('type' => 'auto', 'nullable' => false),
 				'check_item_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'status' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
-                'location_item_id' => array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
-                'descr' => array('type' => 'text','nullable' => true),
-                'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
-                'entry_date' => array('type' => 'int', 'precision' => 8,'nullable' => false),
-                'modified_date' => array('type' => 'int', 'precision' => 8,'nullable' => True),
-                'modified_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'status' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'measurement'       => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'location_id' 		=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
+                'location_item_id' 	=> array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
+                'descr' 			=> array('type' => 'text','nullable' => true),
+                'user_id' 			=> array('type' => 'int','precision' => '4','nullable' => true),
+                'entry_date' 		=> array('type' => 'int', 'precision' => 8,'nullable' => false),
+                'modified_date'	 	=> array('type' => 'int', 'precision' => 8,'nullable' => True),
+                'modified_by' 		=> array('type' => 'int', 'precision' => 4,'nullable' => True),
               ),
                 'pk' => array('id'),
                 'fk' => array('controller_check_item' => array('check_item_id' => 'id')),

@@ -575,3 +575,34 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}		
 	}
+	
+	$test[] = '0.1.27';
+	function controller_upgrade0_1_27()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','measurement',array(
+			'type' => 'varchar',
+			'precision' => 50,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.28';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.28';
+	function controller_upgrade0_1_28()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','num_pending_cases',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.29';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

@@ -5,8 +5,9 @@
 <xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
-		
-		<div style="float:left;">
+
+	<div id="control_plan">
+		<div class="col_1">
 			<xsl:choose>
 				<xsl:when test="show_location">
 					<h1><xsl:value-of select="control_name"/></h1>
@@ -18,7 +19,7 @@
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
 		</div>
 
-		<div style="float:right;width:300px;margin-top:40px;">
+		<div class="col_2">
 			<xsl:choose>
 				<xsl:when test="show_location">&nbsp;</xsl:when>
 				<xsl:otherwise>
@@ -239,5 +240,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</ul>
+</div>
 </div>
 </xsl:template>
