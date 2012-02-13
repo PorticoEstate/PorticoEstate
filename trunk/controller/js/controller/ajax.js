@@ -547,7 +547,7 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	// Close a case item from list
+	// Closes a case
 	$(".close_case").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
@@ -610,8 +610,7 @@ $(document).ready(function(){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
-	});
-	
+	});	
 });
 
 function clear_form( form ){
