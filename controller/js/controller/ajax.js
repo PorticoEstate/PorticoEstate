@@ -1,7 +1,7 @@
 $(document).ready(function(){
 		
 	// file: uicalendar.xsl
-	$("#choose_my_location option").click(function () {
+	$("#choose_my_location").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
 		 
@@ -27,10 +27,74 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
+	//update location category based on location type
+	//file: 
+	$("#type_id").change(function () {
+		var location_type_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&type_id=" + location_type_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+					 				  				  
+					  $("#cat_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#cat_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
+	//update part of town category based on district
+	//file: 
+	$("#district_id").change(function () {
+		var district_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&district_id=" + district_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+					 				  				  
+					  $("#part_of_town_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#part_of_town_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
-	$("#control_area_list option").click(function () {
-		 var control_area_id = $(this).val();
+	$("#control_area_list").change(function () {
+		var control_area_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
@@ -43,6 +107,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -61,7 +126,7 @@ $(document).ready(function(){
 
 	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
-	$("#control_group_area_list option").click(function () {
+	$("#control_group_area_list").change(function () {
 		 var control_area_id = $(this).val();
 	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -76,6 +141,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -95,7 +161,7 @@ $(document).ready(function(){
 	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
-	$("#ifc option").click(function () {
+	$("#ifc").change(function () {
 		 var ifc_id = $(this).val();
 		 
 		 var oArgs = {menuaction:'controller.uicheck_list_for_component.get_component_types_by_category', phpgw_return_as:'json'};
@@ -110,6 +176,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&ifc=" + ifc_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg type</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -128,7 +195,7 @@ $(document).ready(function(){
 	
 	// file: control.xsl 
 	// When control area is selected, procedures are fetched from db and procedure select list is populated
-	$("#control_area_id option").click(function () {
+	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
 		 
 		 var oArgs = {menuaction:'controller.uiprocedure.get_procedures'};
@@ -143,6 +210,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg prosedyre</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -453,18 +521,19 @@ $(document).ready(function(){
 			  success: function(data) {
 				  if(data){
 	    			  var jsonObj = jQuery.parseJSON(data);
-		    		
+		 
 	    			  if(jsonObj.status == "saved"){
-	    				  var case_id = "#case_" + jsonObj.case.id; 
-	    				  var case_descr = jsonObj.case.descr;
+	    				//  var case_id = "#case_" + jsonObj.case.id; 
+	    				//  var case_descr = jsonObj.case.descr;
 	    				  
 	    				  $(case_id).show();
 	    				  $(case_id).find(".case_descr").text(case_descr);
-	    				  $(thisForm).parents("li").remove();	  
+	    				  $(thisForm).parents("li.quick_edit").remove();	  
 					  }
 				  }
-				}
+			  }
 		});
+		
 	});
 	
 	$("a.quick_edit").live("click", function(e){
@@ -546,6 +615,47 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	// Closes a case
+	$(".close_case").live("click", function(){
+		var clickElem = $(this);
+		var clickRow = $(this).closest("li");
+		var clickItem = $(this).closest("ul");
+		var checkItemRow = $(this).parents("li.check_item_case");
+		
+		var url = $(clickElem).attr("href");
+	
+		// Sending request for deleting a control item list
+		$.ajax({
+			type: 'POST',
+			url: url,
+			success: function(data) {
+				var obj = jQuery.parseJSON(data);
+		    		
+   			  	if(obj.status == "closed"){
+	   			  	if( $(clickItem).children("li").length > 1){
+	   			  		$(clickRow).fadeOut(300, function(){
+	   			  			$(clickRow).remove();
+	   			  		});
+	   			  		
+		   			  	var next_row = $(clickRow).next();
+						
+						// Updating order numbers for rows below deleted row  
+						while( $(next_row).length > 0){
+							update_order_nr_for_row(next_row, "-");
+							next_row = $(next_row).next();
+						}
+	   			  	}else{
+		   			  	$(checkItemRow).fadeOut(300, function(){
+	   			  			$(checkItemRow).remove();
+	   			  		});
+	   			  	}
+   			  	}
+			}
+		});
+
+		return false;
+	});
+	
 	$("#frm_update_check_list").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -568,8 +678,7 @@ $(document).ready(function(){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
-	});
-	
+	});	
 });
 
 function clear_form( form ){
