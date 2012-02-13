@@ -148,6 +148,7 @@ $aclobj->save_repository();
  */
 
 //insert control areas
+/* EHL: removed 13/02-2012 
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('Miljø')");
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('IK - Brann')");
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('IK - Løfteinnretning')");
@@ -163,7 +164,8 @@ $oProc->query("INSERT INTO controller_control_area (title) VALUES ('Enøk')");
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('Divese - Leietaker')");
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('Diverse - Byggforvalter')");
 $oProc->query("INSERT INTO controller_control_area (title) VALUES ('Legionella')");
-
+*/
+/* EHL: removed 13/02-2012
 //insert control groups
 $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id, procedure_id) VALUES ('Utstyr, f. eks blomster - og plantekasser', 1, NULL)");
 $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id, procedure_id) VALUES ('Benker', 1, NULL)");
@@ -193,7 +195,8 @@ $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id
 $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id, procedure_id) VALUES ('Sjekkliste og rutiner', 5, NULL)");
 $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id, procedure_id) VALUES ('Sjekklister, rutiner og logg', 5, NULL)");
 $oProc->query("INSERT INTO controller_control_group (group_name, control_area_id, procedure_id) VALUES ('Vannprøver og resultater', 5, NULL)");
-
+*/
+/* EHL: removed 13/02-2012
 //insert control items
 $oProc->query("INSERT INTO controller_control_item (title, required, what_to_do, how_to_do, control_group_id) VALUES ('Er alle elektriske kabler betryggende festet?', false, 'Kommer', 'Kommer', 1)");
 $oProc->query("INSERT INTO controller_control_item (title, required, what_to_do, how_to_do, control_group_id) VALUES ('Er alle svakstrøm/sterkstrømkabler forlagt adskilt?', false, 'Kommer', 'Kommer', 1)");
@@ -222,4 +225,4 @@ $oProc->query("INSERT INTO controller_control_item (title, required, what_to_do,
 $oProc->query("INSERT INTO controller_procedure (title, purpose, responsibility, description, reference, attachment, revision_no) VALUES ('P40 Hvordan utføre egenkontroll av elektriske anlegg i kommunale bygg', 'Å sikre at elektriske anlegg i holdes forsvarlig stand i.h.t. forskrift om internkontroll av elektriske installasjoner', 'Bergen kommunale bygg er ansvarlig for oppdatering av rutiner og informasjon', 'Elektriske installasjoner skal kontrolleres i.h.t. internkontrollforskriftens § 5', '', '',1)");
 $oProc->query("INSERT INTO controller_procedure (title, purpose, responsibility, description, reference, attachment, revision_no) VALUES ('P3811 Vannprøver og resultater', 'Ved jevnlig prøvetaking kan vi avklare avvik så tidlig så mulig og dermed sikre stabil vannkvalitet', 'Byggeier representert ved ansvarlig drifts- og vedlikeholdsingeniør BBE KF.', '<ol><li><span>Drifts- og vedlikeholdsingeniør skal sørge for at det foretas jevnlig prøvetaking med maks 3 måneders intervaller. </span></li><li><span><span></span></span><span>Prøvetakingsutstyret skal være godkjent av Næringsmiddeltilsynet og teknisk hygiene for Bergen og Omland.</span></li><li><span>Personell som skal innhente vannprøver skal ha nødvendig opplæring i dette. </span>Opplæring blir gitt av Næringsmiddeltilsynet.</li><li><span><span></span></span><span>Prøvetaking skal foregå iht. rutiner for prøvetaking som er vedlagt. </span></li><li><span><span></span></span><span>Analyseresultater blir sendt til BBE KF og tjenestested.</span></li><li><span><span></span></span><span>Kopi analyseresultat settes i denne IK-perm kap. 3.</span></li><li><span><span></span></span><span>Dersom vannkvalitet ikke tilfredsstiller kravet må DV-ingeniør konferere Næringsmiddeltilsynet for korrigerende tiltak.</span></li><li><span><span></span></span><span>Eventuelle avvik og korrigerende tiltak loggføres under kap. 6.</span></li><li><span>Punkt 9<br></span></li></ol></li>', '', '',1)");
 $oProc->query("INSERT INTO controller_procedure (title, purpose, responsibility, description, reference, attachment, revision_no) VALUES ('P3812 Sjekkliste/Rutiner/Logg', '&nbsp;Ved bruk av sjekklister og faste tilsynsrutiner oppnås stabil drift. Tilsyn og nødvendige kontrollpunkter skal dokumenteres (loggføres) for&nbsp; at vi på en bedre måte kan vurdere anleggets tilstand og dermed raskere oppdage avvik.', 'Driftsleder i bydel skal sørge for at nødvendig tilsyn blir utført i tråd med fastalgte rutiner.', '<ol><li>Drifts- og vedlikeholdsingeniør skal sørge for at denne IK-håndbok ettterleves.</li><li>Driftsleder skal påse at ansvarlig driftspersonell foretar rutinemessig tilsyn/ inspeksjon iht. kapittel 5.</li><li>Evt. avvik i forhold til beskrevne rutiner skal begrunnes under kap. 6 avviksbehandling- (bruk rapportskjema under kap. 6)</li><li>Avvik skal rapporteres til drifts- og vedlikeholdsingeniør. Avvik kan være rutiner som ikke er fulgt, tekniske feil/ mangler, vannkvalitet som ikke tilfredsstiller gjeldende krav o.l.</li></ol></li>', '', '',1)");
-
+*/
