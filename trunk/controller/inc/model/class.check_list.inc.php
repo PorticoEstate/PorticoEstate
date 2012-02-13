@@ -44,8 +44,9 @@
 		protected $location_code;
 		protected $component_id;
 		
-		// Aggregate field. Field not in a table
+		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
+		protected $num_pending_cases;
 		
 		// Objects
 		protected $check_item_array = array();
@@ -137,6 +138,13 @@
 		public function set_num_open_cases($num_open_cases)
 		{
 			$this->num_open_cases = $num_open_cases;
+		}
+
+		public function get_num_pending_cases() { return $this->num_pending_cases; }
+		
+		public function set_num_pending_cases($num_pending_cases)
+		{
+			$this->num_pending_cases = $num_pending_cases;
 		}
 		
 		public function set_control($control)

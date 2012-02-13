@@ -23,17 +23,23 @@
 		$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type, $status, $messageStatus, "return_object");
 		
 		$num_open_cases = 0;
+		$num_pending_cases = 0;
 		
 		foreach($check_items as $check_item){
 			
 			foreach($check_item->get_cases_array() as $case){
+				
 				if($case->get_status() == 0 | $case->get_status() == 2){
 					$num_open_cases++;
+				}
+				else if($case->get_status() == 2){
+					$num_pending_cases++;
 				}
 			}	
 		}
 		
 		$check_list->set_num_open_cases($num_open_cases);
+		$check_list->set_num_pending_cases($num_pending_cases);
 		
 		if($num_open_cases > 0)
 			$check_list->set_status(1);

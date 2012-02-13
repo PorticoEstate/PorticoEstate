@@ -479,14 +479,15 @@ $(document).ready(function(){
 		
 		
 		var quickEditRowTagStr = "<li class='quick_edit'><h3>Hurtigendring</h3><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
-				
+			quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
+		
 		if(case_status == 1)
 			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option SELECTED='SELECTED' value='1'>Utført</option><option value='2'>Venter på tilbakemelding</option></select>";
 		else if(case_status == 2)
 			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option value='1'>Utført</option><option SELECTED='SELECTED' value='2'>Venter på tilbakemelding</option></select>";
 		
 		quickEditRowTagStr += "<label>Beskrivelse</label><textarea name='case_descr'>" + case_descr + "</textarea>";
-		quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
+		
 		
 		quickEditRowTagStr += "<input type='submit' value='Oppdater' />";
 		
