@@ -205,7 +205,6 @@
 			}
 		}
 		
-		//alert(document.getElementById('control_id').value);
 		var control_id_value = document.getElementById('control_id').value;
 
 		var returnfield = document.createElement('input');
@@ -218,8 +217,7 @@
 		control_id_field.setAttribute('name', 'control_id');
 		control_id_field.setAttribute('type', 'text');
 		control_id_field.setAttribute('value', control_id_value);
-		mydiv.appendChild(control_id_field); 
-		
+		mydiv.appendChild(control_id_field);
 	}
 	]]>
 	</script>
@@ -261,7 +259,7 @@
 		var main_source = '<xsl:value-of select="source"/>';
 		var main_columnDefs = YAHOO.controller.columnDefs;
 		var main_form = 'queryForm';
-		var main_filters = ['type_id', 'cat_id', 'district_id', 'part-of_town_list', 'responsibility_roles_list'];
+		var main_filters = ['type_id', 'cat_id', 'district_id', 'part_of_town_id', 'responsibility_roles_list'];
 		var main_container = 'datatable-container';
 		var main_table_id = 'datatable';
 		var main_pag = 'data_paginator';
