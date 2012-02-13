@@ -39,24 +39,22 @@
 				  </select>
 				 
 				 <form id="loc_form" action="" method="GET">
-			
 					<select id="control_id" name="control_id">
-					<xsl:choose>
-						<xsl:when test="control_array/child::node()">
-							<xsl:for-each select="control_array">
-								<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
-								<option value="{$control_id}">
-									<xsl:value-of select="title"/>
-								</option>				
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:otherwise>
-							<option>
-								Ingen kontroller
-							</option>
-						</xsl:otherwise>
-					</xsl:choose>
-						
+						<xsl:choose>
+							<xsl:when test="control_array/child::node()">
+								<xsl:for-each select="control_array">
+									<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
+									<option value="{$control_id}">
+										<xsl:value-of select="title"/>
+									</option>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<option>
+									Ingen kontroller
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
 					</select>
 				</form>
 			</div>
@@ -78,6 +76,7 @@
 			
 			<xsl:apply-templates select="locations_table"/>
 			<xsl:call-template name="yui_booking_i18n"/>
+			
 		</div>
 	</div>
 </xsl:template>
