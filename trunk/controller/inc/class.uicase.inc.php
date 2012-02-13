@@ -52,7 +52,8 @@
 									'register_case_message' 	=> true,
 									'register_measurement_case' => true,
 									'updateStatusForCases' 		=> true,
-									'delete_case' 				=> true
+									'delete_case' 				=> true,
+									'close_case' 				=> true
 								);
 
 		function __construct()
@@ -397,6 +398,26 @@
 			}
 			else
 				return json_encode( array( "status" => "not_deleted" ) );
+		}
+		
+		public function close_case()
+		{
+			$case_id = phpgw::get_var('case_id');
+			$check_list_id = phpgw::get_var('check_list_id');
+				
+			$case = $this->so->get_single($case_id);
+			$case->set_status(1);
+			
+			$case_id = $this->so->store($case);
+					
+			if($case_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );
+						
+				return json_encode( array( "status" => "closed" ) );
+			}
+			else
+				return json_encode( array( "status" => "not_closed" ) );
 		}
 		
 		public function query(){}
