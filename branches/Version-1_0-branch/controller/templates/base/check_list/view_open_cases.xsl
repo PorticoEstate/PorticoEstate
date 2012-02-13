@@ -80,6 +80,7 @@
 												<div class="case_descr"><xsl:value-of select="descr"/></div>
 												<div class="case_status"><xsl:value-of select="status"/></div>
 												<div class="case_measurement"><xsl:value-of select="measurement"/></div>
+												<div class="case_type"><xsl:value-of select="control_item/type"/></div>
 											</div>
 										</li>
 									</xsl:for-each>
@@ -108,7 +109,7 @@
 						 		<ul>
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li><span class="order_nr"><xsl:number /></span>. <xsl:value-of select="descr"/>
+										<li><span class="order_nr"><xsl:number /></span>. <span class="case_descr"><xsl:value-of select="descr"/></span>
 											<xsl:choose>
 												<xsl:when test="location_item_id > 0">
 													<div style="float:right;">
@@ -158,7 +159,7 @@
 												<div class="case_id"><xsl:value-of select="id"/></div>
 												<div class="case_descr"><xsl:value-of select="descr"/></div>
 												<div class="case_status"><xsl:value-of select="status"/></div>
-												<div class="case_measurement"><xsl:value-of select="measurement"/></div>
+												<div class="case_type"><xsl:value-of select="control_item/type"/></div>
 											</div>
 										</li>
 									</xsl:for-each>
