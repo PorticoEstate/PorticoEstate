@@ -43,6 +43,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -76,6 +77,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -110,6 +112,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&ifc=" + ifc_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg type</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -143,6 +146,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
+					  htmlString  = "<option>Velg prosedyre</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
