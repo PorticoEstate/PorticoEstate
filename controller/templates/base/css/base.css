@@ -766,7 +766,7 @@ fieldset.check_item_details h3 {
 fieldset.check_list_details label{
 	display: inline-block;
     font-weight: bold;
-    width: 135px;
+    width: 150px;
 }
 .check_item{
     margin: 25px 0;
@@ -1111,6 +1111,9 @@ ul.check_items h5{
 	margin:0 0 10px;
 	font-size: 17px;	
 }
+.tab_item h2.last{
+	margin:20px 0 10px;	
+}
 .tab_item.active {
 	display:block;	
 }
@@ -1268,8 +1271,11 @@ ul#icon_color_map span{
 
 /* ======================== VIEW CASES ============================= */
 
-li.check_item_case h4{
-	margin:5px 0;		
+li.check_item_case h4 {
+    margin: 5px 0;
+}
+li.check_item_case ul{
+    margin-bottom: 20px;
 }
 li.check_item_case ul li {
     border: 1px solid #AAAAAA;

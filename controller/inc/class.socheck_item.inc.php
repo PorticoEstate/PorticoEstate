@@ -305,7 +305,7 @@
 			else if($status == 'waiting')
 				$sql .= "AND cic.status = 2 ";
 			else if($status == 'open_or_waiting')
-				$sql .= "AND cic.status = 0 OR cic.status = 2";
+				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
 				
 			if($type == 'control_item_type_1')
 				$sql .= "AND coi.type = 'control_item_type_1' ";

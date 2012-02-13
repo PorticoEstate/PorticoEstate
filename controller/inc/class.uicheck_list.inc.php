@@ -233,7 +233,10 @@
 		
 		function edit_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
-			
+
+			$status_checker = new status_checker();
+			$status_checker->update_check_list_status( $check_list_id );
+				
 			$check_list = $this->so->get_single($check_list_id);
 			
 			$control = $this->so_control->get_single($check_list->get_control_id());
