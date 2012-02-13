@@ -225,7 +225,7 @@
 				}
 				$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
 			}
-_debug_array($buffer);
+
 			return $buffer;
 		}
 		
