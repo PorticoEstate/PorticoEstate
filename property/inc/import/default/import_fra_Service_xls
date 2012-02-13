@@ -185,13 +185,16 @@
 					$buffer[$this->id]['loc1'] = $loc1=substr($value,0,4);
 				}
 
-				if($name=='mvakode' && $invoice_common['auto_tax'])
+				if($name=='mvakode')
 				{
-					$value = (int)$this->soXport->auto_tax($buffer[$this->id]['loc1']);
-				}
-				else
-				{
-					$value = (int) $value;
+					if( $invoice_common['auto_tax'])
+					{
+						$value = (int)$this->soXport->auto_tax($buffer[$this->id]['loc1']);
+					}
+					else
+					{
+						$value = (int) $value;
+					}
 				}
 
 				$buffer[$this->id][$name] = $value;
