@@ -187,7 +187,11 @@
 
 				if($name=='mvakode' && $invoice_common['auto_tax'])
 				{
-					$value = $this->soXport->auto_tax($buffer[$this->id]['loc1']);
+					$value = (int)$this->soXport->auto_tax($buffer[$this->id]['loc1']);
+				}
+				else
+				{
+					$value = (int) $value;
 				}
 
 				$buffer[$this->id][$name] = $value;
