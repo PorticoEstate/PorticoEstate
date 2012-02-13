@@ -24,15 +24,16 @@
 		
 		$num_open_cases = 0;
 		$num_pending_cases = 0;
-		
+				
 		foreach($check_items as $check_item){
 			
 			foreach($check_item->get_cases_array() as $case){
 				
-				if($case->get_status() == 0 | $case->get_status() == 2){
+				if($case->get_status() == 0){
 					$num_open_cases++;
 				}
-				else if($case->get_status() == 2){
+				
+				if($case->get_status() == 2){
 					$num_pending_cases++;
 				}
 			}	

@@ -59,6 +59,17 @@
 													</xsl:attribute>
 													endre
 												</a>
+												<a class="close_case">
+													<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
+														<xsl:text>&amp;case_id=</xsl:text>
+														<xsl:value-of select="id"/>
+														<xsl:text>&amp;check_list_id=</xsl:text>
+														<xsl:value-of select="//check_list/id"/>
+														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													</xsl:attribute>
+													lukk
+												</a>
 												<xsl:choose>
 													<xsl:when test="location_item_id = 0">
 														<a class="delete_case">
@@ -138,6 +149,17 @@
 														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 													</xsl:attribute>
 													endre
+												</a>
+												<a class="close_case">
+													<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
+														<xsl:text>&amp;case_id=</xsl:text>
+														<xsl:value-of select="id"/>
+														<xsl:text>&amp;check_list_id=</xsl:text>
+														<xsl:value-of select="//check_list/id"/>
+														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													</xsl:attribute>
+													lukk
 												</a>
 												<xsl:choose>
 													<xsl:when test="location_item_id = 0">

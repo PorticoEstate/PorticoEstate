@@ -829,7 +829,7 @@ ul.calendar li.heading div {
     font-size:16px;
 }
 ul.calendar {
-    clear: right;
+    clear: both;
     float: left;
     margin-top: 30px;
     width: 100%;
