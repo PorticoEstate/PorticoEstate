@@ -61,7 +61,9 @@
 										'view_locations_for_control' 	=> true,
 										'register_control_to_location' 	=> true,
 										'register_control_to_location_2' 	=> true,
-										'get_locations_for_control' 	=> true
+										'get_locations_for_control' 	=> true,
+										'get_location_category'			=> true,
+										'get_district_part_of_town'		=> true
 									);
 
 		function __construct()
@@ -224,7 +226,8 @@
 					return $this->query();
 				}
 				$building_types  = execMethod('property.soadmin_location.read',array());
-				
+				//$type_id=phpgw::get_var('type_id');
+				//if(!isset($type_id))
 				$type_id = 1;
 				
 				$category_types = $this->bocommon->select_category_list(array(
@@ -234,7 +237,9 @@
 																			'type_id' =>$type_id,
 																			'order'=>'descr'
 																		));
-				
+				$default_value = array ('id'=>'','name'=>lang('no category selected'));
+				array_unshift($category_types,$default_value);
+																		
 				$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift($district_list,$default_value);
@@ -381,6 +386,7 @@
 		
 		public function query(){
 			$type_id = phpgw::get_var('type_id');
+			//var_dump($type_id);
 			$view_type = phpgw::get_var('view_type');
 			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
 			
@@ -393,7 +399,7 @@
 			
 			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
 												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
-
+//_debug_array($location_list);
 			$rows_total = $this->bo->read(array('type_id' => $type_id, 'allrows' => true));
 			
 			foreach($location_list as $location)
@@ -446,5 +452,36 @@
 			$value['labels'][] = lang('add_location');
 			$value['parameters'][] = "control_id";
 			*/
+		}
+		
+		/*
+		 * Return categories based on chosen location
+		 */
+		public function get_location_category()
+		{
+			$type_id = phpgw::get_var('type_id');
+		 	$category_types = $this->bocommon->select_category_list(array(
+																		'format'=>'filter',
+																		'selected' => 0,
+																		'type' =>'location',
+																		'type_id' =>$type_id,
+																		'order'=>'descr'
+																	));
+			$default_value = array ('id'=>'','name'=>lang('no category selected'));
+			array_unshift($category_types,$default_value);
+			return json_encode( $category_types );
+		}
+		
+		/*
+		 * Return parts of town based on chosen district
+		 */
+		public function get_district_part_of_town()
+		{
+			$district_id = phpgw::get_var('district_id');
+			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',null,$district_id);
+			$default_value = array ('id'=>'','name'=>lang('no part of town'));
+			array_unshift($part_of_town_list,$default_value);
+
+			return json_encode( $part_of_town_list );
 		}
 	}

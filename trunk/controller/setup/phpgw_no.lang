@@ -318,3 +318,4 @@ show_controls_for_location	controller	no	Vis lokasjoner
 Property name	controller	no	Lokasjonsnavn
 Address	controller	no	Adresse
 Zip code	controller	no	Postnummer
+no category selected	controller	no	Kategori ikke valgt
