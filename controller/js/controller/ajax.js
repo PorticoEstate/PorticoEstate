@@ -27,6 +27,70 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
+	//update location category based on location type
+	//file: 
+	$("#type_id").change(function () {
+		var location_type_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&type_id=" + location_type_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+					 				  				  
+					  $("#cat_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#cat_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
+	//update part of town category based on district
+	//file: 
+	$("#district_id").change(function () {
+		var district_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&district_id=" + district_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+					 				  				  
+					  $("#part_of_town_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#part_of_town_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list").change(function () {

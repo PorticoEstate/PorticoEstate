@@ -90,9 +90,6 @@
 	  <ul id="filters">
 	  	<li>
 		  <select id="type_id" name="type_id">
-		  	<option value="">
-				<xsl:value-of select="php:function('lang', 'Choose_building_type')"/>
-			</option>
 			<xsl:for-each select="building_types">
 				<xsl:variable name="building_type_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$building_type_id}">
@@ -103,9 +100,6 @@
 		</li>
 		<li>
 		  <select id="cat_id" name="cat_id">
-		  	<option value="">
-				<xsl:value-of select="php:function('lang', 'Choose_building_category')"/>
-			</option>
 			<xsl:for-each select="category_types">
 				<xsl:variable name="category_type_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$category_type_id}">
@@ -116,9 +110,6 @@
 		</li>
 		<li>
 		  <select id="district_id" name="district_id">
-		  	<option value="">
-					<xsl:value-of select="php:function('lang', 'Choose_district')"/>
-			</option>
 			<xsl:for-each select="district_list">
 				<xsl:variable name="district_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$district_id}">
@@ -129,9 +120,6 @@
 		</li>
 		<li>
 		  <select id="part_of_town_id" name="part_of_town_id">
-		  	<option value="">
-					<xsl:value-of select="php:function('lang', 'Choose_part_of_town')"/>
-			</option>
 			<xsl:for-each select="part_of_town_list">
 				<xsl:variable name="part_of_town_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$part_of_town_id}">
