@@ -43,6 +43,8 @@
 		private $so;
 		private $so_check_list;
 		private $so_control;
+		private $so_control_item;
+		private $so_check_item;
 		
 		var $public_functions = array(
 									'register_case' 			=> true,
@@ -64,6 +66,7 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_check_item = CreateObject('controller.socheck_item');
+			$this->so_control_item = CreateObject('controller.socontrol_item');
 		}	
 		
 		function register_case(){
@@ -154,7 +157,12 @@
 				$status_checker = new status_checker();
 				$status_checker->update_check_list_status( $check_list_id );
 						
-				return json_encode( array( "status" => "saved", "case" => $case->toArray() ) );
+				$check_item = $this->so_check_item->get_single($case->get_check_item_id());
+				$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
+				
+				$type = $control_item->get_type();
+				
+				return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
 			}
 			else
 				return json_encode( array( "status" => "not_saved" ) );

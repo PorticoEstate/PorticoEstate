@@ -13,12 +13,16 @@
 			$( "#start_date" ).datepicker({ 
 				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
 				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'd/m-yy' 
+				dateFormat: 'd/m-yy',
+				changeMonth: true,
+				changeYear: true 
 			});
 			$( "#end_date" ).datepicker({ 
 				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
 				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'd/m-yy' 
+				dateFormat: 'd/m-yy',
+				changeMonth: true,
+				changeYear: true
 			});	
 		});
 	</script>

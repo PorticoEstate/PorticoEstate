@@ -8,12 +8,16 @@
 		$( "#planned_date" ).datepicker({ 
 			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
 			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-			dateFormat: 'dd/mm-yy' 
+			dateFormat: 'dd/mm-yy',
+			changeMonth: true,
+			changeYear: true
 		});
 		$( "#completed_date" ).datepicker({ 
 			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
 			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-			dateFormat: 'dd/mm-yy' 
+			dateFormat: 'dd/mm-yy',
+			changeMonth: true,
+			changeYear: true 
 		});
 	});
 </script>
