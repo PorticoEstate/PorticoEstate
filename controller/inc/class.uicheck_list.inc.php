@@ -48,6 +48,7 @@
 		private $so_check_item;
 		private $so_procedure;
 		private $so_control_group_list;
+		private $so_control_group;
 		private $so_control_item_list;
 	
 		var $public_functions = array(
@@ -84,6 +85,7 @@
 			$this->so_check_item		= CreateObject('controller.socheck_item');
 			$this->so_procedure			= CreateObject('controller.soprocedure');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
+			$this->so_control_group		= CreateObject('controller.socontrol_group');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 
 			self::set_active_menu('controller::control::check_list');
@@ -526,6 +528,40 @@
 					$remove_control_item_ids_array[] = $check_item->get_control_item_id();
 				}
 			}
+			
+			//get control items based on control group/component connection
+			$control_groups_for_control = $this->so_control_group->get_control_group_ids_for_control($control->get_id());
+			//_debug_array($control_groups_for_control);
+			foreach($control_groups_for_control as $cg)
+			{
+				$components_for_control_group[] = array($cg => $this->so_control_group->get_components_for_control_group($cg));
+			}
+			//_debug_array($components_for_control_group);
+			$control_group_check_items = array();
+			foreach($components_for_control_group as $cg_components)
+			{
+				foreach($control_groups_for_control as $cg_control)
+				{
+					$components = $cg_components[$cg_control];
+					//_debug_array($components);
+					$location_has_component = false;
+					foreach($components as $comp)
+					{
+						if(!$location_has_component)
+						{
+							//check if current location has component
+							$location_has_component = $this->so_control_item->location_has_component($comp, $check_list->get_location_code);
+						}
+					}
+					if($location_has_component)
+					{
+						//the check items for the control group shall be added
+						$check_items = $this->so_control_item->get_items_for_control_group($control->get_id(), $cg_control);
+						$control_group_check_items[] = $check_items;
+					}
+				}
+			}
+			//_debug_array($control_group_check_items);
 			
 			// Makes control items list stripped for closed check items of type measurement			
 			foreach($control_items as $control_item){

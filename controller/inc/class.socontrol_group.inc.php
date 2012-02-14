@@ -418,4 +418,34 @@
 			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, component_id) values($control_group_id, $component_id)";
 			$this->db->query($sql);
 		}
+		
+		function get_control_group_ids_for_control($control_id)
+		{
+			$results = array();
+
+			$sql = "select distinct(cg.id) from controller_control_group cg, controller_control_item ci, controller_control_item_list cil where cil.control_id = {$control_id} and ci.id = cil.control_item_id and cg.id = ci.control_group_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('id');
+			}
+
+			return $results;
+		}
+		
+		function get_components_for_control_group($control_group_id)
+		{
+			$results = array();
+			
+			$sql = "select * from controller_control_group_component_list where control_group_id={$control_group_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('component_id');
+			}
+
+			return $results;
+		}
 	}
