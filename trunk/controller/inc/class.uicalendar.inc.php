@@ -227,7 +227,7 @@
 				{
 					$repeat_type = 2;
 					$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
-					print_r($control_check_list_array);
+					//print_r($control_check_list_array);
 								
 					$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 				}
