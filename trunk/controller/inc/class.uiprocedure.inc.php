@@ -553,7 +553,8 @@
 			(
 				'location'	=> $location_array,
 				'control'	=> $control->toArray(),
-				'procedure'	=> $procedure->toArray()
+				'procedure'	=> $procedure->toArray(),
+				'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 			);
 			
 			if( !empty($control_group_id) ){
