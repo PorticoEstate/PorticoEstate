@@ -585,6 +585,11 @@
 		*/
 		public function transaction_abort()
 		{
+/*
+			$bt = debug_backtrace();
+			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
+			unset($bt);
+*/
 			$ret = false;
 
 			if($this->Transaction)
