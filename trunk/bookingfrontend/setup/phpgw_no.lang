@@ -355,4 +355,4 @@ Cancel information	bookingfrontend	no	Hvis du kun skal avbestille tildeling på 
 Cancel information2	bookingfrontend	no	Skal du Avbestille flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Cancel information	bookingfrontend	no	Hvis du skal avbestille booking på valgt dato, velg Avbestill-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
 Booking Cancel information2	bookingfrontend	no	Skal du avbestille flere kan du velge Ut sesong eller Avbestill til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-
+You cant edit a booking that is older than 2 weeks	bookingfrontend	no	Du kan ikke redigere en booking som er eldre en 2 uker.
