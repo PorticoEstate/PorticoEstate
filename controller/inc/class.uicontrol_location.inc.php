@@ -141,7 +141,7 @@
 						),
 						array(
 							'key'	=>	'title',
-							'label'	=>	lang('Property name'),
+							'label'	=>	lang('Control title'),
 							'sortable'	=>	false
 						),
 						array(
@@ -151,7 +151,7 @@
 						),
 						array(
 							'key' => 'loc1_name',
-							'label' => lang('Location_name'),
+							'label' => lang('Property name'),
 							'sortable'	=> false
 						),
 						array(
