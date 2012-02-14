@@ -33,10 +33,14 @@
 </xsl:template>
 
 <xsl:template match="control_filters" name="control_filters" xmlns:php="http://php.net/xsl">
-	<div style="margin: 10px;padding: 10px; width: 25%;">
-		
-		<!-- When control area is chosen, an ajax request is executed. The operation fetches controls from db and populates the control list.
-			 The ajax opearation is handled in ajax.js --> 
+	
+	<div id="choose_control">
+		<!-- 
+			When control area is chosen, an ajax request is executed. 
+			The operation fetches controls from db and populates the control list.
+			The ajax opearation is handled in ajax.js 
+		-->
+		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div> 
 		 <select style="float:left;" id="control_area_list" name="control_area_list">
 			<option value="">Velg kontrollområde</option>
 			<xsl:for-each select="control_areas_array2">
@@ -69,6 +73,7 @@
 </xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
+
 	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
@@ -80,13 +85,11 @@
 		<xsl:call-template name="filter_list"/>
 	</form>
 	
-	<form id="update_table_dummy" method='POST' action='' >
-	</form>
+	<form id="update_table_dummy" method='POST' action='' ></form>
 
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
-	<div>
 	  <ul id="filters">
 	  	<li>
 		  <select id="type_id" name="type_id">
@@ -138,8 +141,6 @@
 		  	<input type="submit" name="search" value="{$lang_search}" title = "{$lang_search}" />
 		  </li>	  		
 	  </ul>
-	
-	</div>
 </xsl:template>
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
@@ -173,15 +174,29 @@
 	
 	function saveLocationToControl()
 	{
+		var control_id_value = document.getElementById('control_id').value;
+		
+		if( !(control_id_value > 0) ){
+			var choose_control_elem = document.getElementById('choose_control');
+			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
+						
+			error_elem.style.display = 'block';
+			
+			return false;
+		}else{
+			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
+			error_elem.style.display = 'none';
+		}
+				
 		var divs = YAHOO.util.Dom.getElementsByClassName('location_submit');
 		var mydiv = divs[divs.length-1];
 
 		// styles for dont show
-		mydiv.style.display = "none";
+		
 
 		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('mychecks');
 		var values_return = ""; //new Array(); 
-		
+			
 		for(i=0;i<valuesForPHP.length;i++)
 		{
 			if(valuesForPHP[i].children[0].children[0].checked)
@@ -193,7 +208,19 @@
 			}
 		}
 		
-		var control_id_value = document.getElementById('control_id').value;
+		if( !(values_return.length > 0) ){
+			var datatable_container_elem = document.getElementById('datatable-container');
+			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[1];
+						
+			error_elem.style.display = 'block';
+			
+			return false;
+		}else{
+			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[1];
+			error_elem.style.display = 'none';
+		}
+
+		mydiv.style.display = "none";
 
 		var returnfield = document.createElement('input');
 		returnfield.setAttribute('name', 'values_assign');
@@ -210,7 +237,9 @@
 	]]>
 	</script>
 	<div id="data_paginator"/>
+	<div class="error_msg" style="margin-left:20px;">Du må velge bygg før du kan legge til en kontroll</div>
 	<div id="datatable-container"/>
+	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
   	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>

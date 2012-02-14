@@ -523,8 +523,8 @@ $(document).ready(function(){
 	    			  var jsonObj = jQuery.parseJSON(data);
 		 
 	    			  if(jsonObj.status == "saved"){
-	    				//  var case_id = "#case_" + jsonObj.case.id; 
-	    				//  var case_descr = jsonObj.case.descr;
+	    				  var case_id = "#case_" + jsonObj.caseObj.id; 
+	    				  var case_descr = jsonObj.caseObj.descr;
 	    				  
 	    				  $(case_id).show();
 	    				  $(case_id).find(".case_descr").text(case_descr);
@@ -532,8 +532,7 @@ $(document).ready(function(){
 					  }
 				  }
 			  }
-		});
-		
+		});	
 	});
 	
 	$("a.quick_edit").live("click", function(e){
