@@ -868,6 +868,7 @@ a.move_right {
     width: 37%;
 }
 ul.calendar.days li div {
+    height: 17px;
     width: 24px;
 }
 ul.calendar.days {

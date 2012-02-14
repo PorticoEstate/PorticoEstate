@@ -42,9 +42,9 @@
 			<ul id="icon_color_map">
 				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
 				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten feil før frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten feil etter frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med rapporterte feil</span></li>
+				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten åpne saker før frist</span></li>
+				<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten åpne saker etter frist</span></li>
+				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med åpne saker</span></li>
 				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 			</ul>
 		</div>
@@ -146,98 +146,12 @@
 					</li>
 					<xsl:choose>	
 					<xsl:when test="controls_calendar_array/child::node()">
-					<xsl:for-each select="controls_calendar_array">
-					<li>
-						<xsl:for-each select="calendar_array">
-					    		<xsl:choose>
-									<xsl:when test="status = 'control_registered'">
-										<div>
-										<a>
-											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
-												<xsl:text>&amp;date=</xsl:text>
-												<xsl:value-of select="info/date"/>
-												<xsl:text>&amp;control_id=</xsl:text>
-												<xsl:value-of select="info/control_id"/>
-												<xsl:text>&amp;location_code=</xsl:text>
-												<xsl:value-of select="$location_code"/>
-											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
-										</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_planned'">
-										<div>
-										<a>
-											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="info/check_list_id"/>
-											</xsl:attribute>
-											<img height="15" src="controller/images/status_icon_yellow.png" />
-										</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
-										<div>
-											<a>
-											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="info/check_list_id"/>
-											</xsl:attribute>
-												<span style="display:none"><xsl:value-of select="info/id"/></span>
-												<img height="15" src="controller/images/status_icon_dark_green.png" />
-											</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
-										<div style="position:relative;">
-					    					<div id="info_box" style="position:absolute;display:none;"></div>
-											<a>
-											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="info/check_list_id"/>
-											</xsl:attribute>
-												<span style="display:none"><xsl:value-of select="info/id"/></span>
-												<img height="15" src="controller/images/status_icon_light_green.png" />
-											</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_accomplished_with_errors'">
-										<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-											<div id="info_box" style="position:absolute;display:none;"></div>
-					    					<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/check_list_id"/>
-												</xsl:attribute>
-												<span style="display:none">
-													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-												</span>
-												<xsl:value-of select="info/num_open_cases"/>
-											</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_not_accomplished_with_info'">
-										<div style="position:relative;">
-					    					<div id="info_box" style="position:absolute;display:none;"></div>
-											<a>
-											<xsl:attribute name="href">
-												<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="info/check_list_id"/>
-											</xsl:attribute>
-												<span style="display:none"><xsl:value-of select="info/id"/></span>
-												<img height="15" src="controller/images/status_icon_red_cross.png" />
-											</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_not_accomplished'">
-										<div>
+						<xsl:for-each select="controls_calendar_array">
+						<li>
+							<xsl:for-each select="calendar_array">
+						    		<xsl:choose>
+										<xsl:when test="status = 'control_registered'">
+											<div>
 											<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
@@ -248,23 +162,108 @@
 													<xsl:text>&amp;location_code=</xsl:text>
 													<xsl:value-of select="$location_code"/>
 												</xsl:attribute>
-												<img height="15" src="controller/images/status_icon_red_cross.png" />
+												<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 											</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'control_canceled'">
-										<div>
-											<img height="15" src="controller/images/status_icon_red_cross.png" />
-										</div>
-									</xsl:when>
-									<xsl:otherwise>
-									<div></div>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:for-each>
-						</li>
-						
-					</xsl:for-each>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_planned'">
+											<div>
+											<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+												<img height="15" src="controller/images/status_icon_yellow.png" />
+											</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
+											<div>
+												<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+													<span style="display:none"><xsl:value-of select="info/id"/></span>
+													<img height="15" src="controller/images/status_icon_dark_green.png" />
+												</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
+											<div style="position:relative;">
+						    					<div id="info_box" style="position:absolute;display:none;"></div>
+												<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+													<span style="display:none"><xsl:value-of select="info/id"/></span>
+													<img height="15" src="controller/images/status_icon_light_green.png" />
+												</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_accomplished_with_errors'">
+											<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+												<div id="info_box" style="position:absolute;display:none;"></div>
+						    					<a class="view_check_list">
+												 	<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+														<xsl:text>&amp;check_list_id=</xsl:text>
+														<xsl:value-of select="info/check_list_id"/>
+													</xsl:attribute>
+													<span style="display:none">
+														<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													</span>
+													<xsl:value-of select="info/num_open_cases"/>
+												</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_not_accomplished_with_info'">
+											<div style="position:relative;">
+						    					<div id="info_box" style="position:absolute;display:none;"></div>
+												<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+													<span style="display:none"><xsl:value-of select="info/id"/></span>
+													<img height="15" src="controller/images/status_icon_red_cross.png" />
+												</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_not_accomplished'">
+											<div>
+												<a>
+													<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
+														<xsl:text>&amp;date=</xsl:text>
+														<xsl:value-of select="info/date"/>
+														<xsl:text>&amp;control_id=</xsl:text>
+														<xsl:value-of select="info/control_id"/>
+														<xsl:text>&amp;location_code=</xsl:text>
+														<xsl:value-of select="$location_code"/>
+													</xsl:attribute>
+													<img height="15" src="controller/images/status_icon_red_cross.png" />
+												</a>
+											</div>
+										</xsl:when>
+										<xsl:when test="status = 'control_canceled'">
+											<div>
+												<img height="15" src="controller/images/status_icon_red_cross.png" />
+											</div>
+										</xsl:when>
+										<xsl:otherwise>
+										<div></div>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:for-each>
+							</li>
+						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
 						<div>Ingen sjekklister for bygg i angitt periode</div>
