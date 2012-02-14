@@ -116,9 +116,11 @@
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
 		{
 			$controls_array = array();
+			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 			
-			$sql  = "SELECT distinct c.* FROM controller_control_location_list cll "; 
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name FROM controller_control_location_list cll "; 
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
+			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql .= "WHERE cll.location_code = '$location_code' ";
 			
 			if( is_numeric($repeat_type) )
@@ -139,6 +141,7 @@
 				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
