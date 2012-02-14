@@ -284,17 +284,29 @@
 
 			if ($order)
 			{
-				switch ($order)
+				if(!$detail)
 				{
-					case 'id':
-					case 'status':
-						$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
-						break;
-					case 'category':
-						$ordermethod = " ORDER BY {$category_table}.descr {$sort}";					
-						break;
-					default:
-						$ordermethod = " ORDER BY {$order} {$sort}";
+					switch ($order)
+					{
+						case 'id':
+						case 'status':
+							$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
+							break;
+						case 'category':
+							$ordermethod = " ORDER BY {$category_table}.descr {$sort}";					
+							break;
+						default:
+							$ordermethod = " ORDER BY {$order} {$sort}";
+					}
+				}
+				else
+				{
+					switch ($order)
+					{
+						case 'id':
+							$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
+							break;
+					}
 				}
 			}
 			else

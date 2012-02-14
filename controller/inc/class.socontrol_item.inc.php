@@ -300,5 +300,49 @@
 
 			return $control_item;
 		}
+		
+		function get_control_items_for_component($control_group_id, $location_code)
+		{
+			$results = array();
+			$sql1 = "select distinct(cg.id) from controller_control_group cg, controller_control_item ci, controller_control_item_list cil where cil.control_id = {$control_id} and ci.id = cil.control_item_id and cg.id = ci.control_group_id";
+			//var_dump($sql1);
+			$this->db->query($sql1, __LINE__, __FILE__);
+
+			while ($this->db->next_record()) {
+				$results[] = array('control_group' => $this->db->f('id'));
+			}
+
+			return $results;
+			
+		}
+		
+		function location_has_component($comp, $location_code)
+		{
+			return true;
+		}
+		
+		function get_items_for_control_group($control_id, $control_group_id)
+		{
+			$results = array();
+			
+			$sql = "select ci.* from controller_control_item ci, controller_control_item_list cil where ci.control_group_id = {$control_group_id} and cil.control_id = {$control_id} and ci.id = cil.control_item_id";
+			//var_dump($sql);
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			while($this->db->next_record())
+			{
+				//create check_item and add to return array
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+
+				$results[] = $control_item;
+			}
+			return $results;
+		}
 
 	}

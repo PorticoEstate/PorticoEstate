@@ -331,6 +331,9 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$location_code			= phpgw::get_var('location_code');*/
 
+			$control_group_id = phpgw::get_var('control_group_id');
+			//var_dump($control_group_id);
+			
 			$type_id = phpgw::get_var('bim_type_id');
 
 			$start = phpgw::get_var('startIndex');
