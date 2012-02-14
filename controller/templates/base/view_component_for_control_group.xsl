@@ -38,25 +38,25 @@
 				 </select>
 				 
 				 <form id="loc_form" action="" method="GET">
-			
-					<select id="control_group_id" name="control_group_id" style="width: 250px;">
-					<xsl:choose>
-						<xsl:when test="control_group_array/child::node()">
-							<xsl:for-each select="control_group_array">
-								<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>
-								<option value="{$control_group_id}">
-									<xsl:value-of select="group_name"/>
-								</option>				
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:otherwise>
-							<option>
-								Ingen kontrollgrupper
-							</option>
-						</xsl:otherwise>
-					</xsl:choose>
-						
-					</select>
+					<div id="control_group_id_div">
+						<select id="control_group_id" name="control_group_id" style="width: 250px;">
+						<xsl:choose>
+							<xsl:when test="control_group_array/child::node()">
+								<xsl:for-each select="control_group_array">
+									<xsl:variable name="c_g_id"><xsl:value-of select="id"/></xsl:variable>
+									<option value="{c_g_id}">
+										<xsl:value-of select="group_name"/>
+									</option>				
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<option>
+									Ingen kontrollgrupper
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
+						</select>
+					</div>
 				</form>
 			</div>
 			
