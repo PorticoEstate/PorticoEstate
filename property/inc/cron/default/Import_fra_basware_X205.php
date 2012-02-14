@@ -148,9 +148,72 @@
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+
+		protected function check_archive()
+		{
+			$dirname = $this->config->config_data['import']['local_path'];
+
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$archive = "{$dirname}/archive";
+			$file_list = array();
+			$dir = new DirectoryIterator($archive); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xml' ) != 0 )
+ 					{
+						continue;
+					}
+
+					$file_list[] = (string) $file;
+				}
+			}
+
+			foreach($file_list as $file)
+			{
+				$file_parts = explode('_', basename($file, '.xml'));
+				$external_ref = $file_parts[2];
+
+				$duplicate = false;
+				$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$external_ref}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$duplicate = true;
+				}
+
+				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_ref = '{$external_ref}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$duplicate = true;
+				}
+
+				if( !$duplicate )
+				{
+					rename("{$archive}/{$file}", "{$dirname}/{$file}");
+					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_ref}");
+				}
+			}
+		}
+
 		public function execute($cron='')
 		{
-			$this->get_files();
+			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
+			{
+				$this->check_archive();			
+			}		
+
+//			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
@@ -181,6 +244,7 @@
 			{
 				foreach($file_list as $file)
 				{
+					$this->db->transaction_begin();
 					$bilagsnr = $this->import($file);
 					if ($bilagsnr)
 					{
@@ -189,13 +253,26 @@
 						$movefrom = "{$dirname}/{$_file}";
 						$moveto = "{$dirname}/archive/{$_file}";
 
-						@unlink($moveto);//in case of duplicates
+						if( is_file($moveto) )
+						{
+							@unlink($moveto);//in case of duplicates
+						}
+
 						$ok = @rename($movefrom, $moveto);
 						if(!$ok) // Should never happen.
 						{
-							$this->invoice->delete($bilagsnr);
+						//	$this->invoice->delete($bilagsnr);
+							$this->db->transaction_abort();
 							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil til arkiv, Bilag {$bilagsnr} er slettet");
 						}
+						else
+						{
+							$this->db->transaction_commit();
+						}
+					}
+					else
+					{
+						$this->db->transaction_abort();					
 					}
 				}
 			}
@@ -337,6 +414,7 @@
 //			$valid_data= False;
 
 			$buffer = array();
+			$bilagsnr = false;
 
 			$xmlparse = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('UTF-8');
@@ -344,199 +422,193 @@
 
 			set_time_limit(300);
 
-			if (isset($var_result['INVOICES']) AND is_array($var_result['INVOICES']))
+			if (isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
 			{
 				$transferdate =  str_replace('.', '-', $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERDATE']);// 2009.05.28
 				$transfertime =  $var_result['TRANSACTIONINFORMATION'][0]['TRANSFERTIME'];// 13:10:28
 				$regtid		= date($this->datetimeformat,strtotime("{$transferdate} {$transfertime}"));
 
 				$i = 0;
-				foreach ($var_result['INVOICES'] as $dummy => $entry)
-				{
-					$_data = $entry['INVOICE'][0]['INVOICEHEADER'][0];
+				$_data = $var_result['INVOICES'][0]['INVOICE'][0]['INVOICEHEADER'][0];
 
 //_debug_array($_data);
 //die();
 
-					$_data['KEY']; // => 1400050146
-					$_data['ARRIVAL']; // => 2009.05.28
-					$_data['CLIENT.CODE']; // => 14
-					$_data['EXCHANGERATE']; // => 1
-					$_data['LOCALAMOUNT']; // => 312500
-					$_data['LOCALVATAMOUNT']; // => 62500
-					$_data['PAYAMOUNT']; // => 0
-					$_data['POSTATUSUPDATED']; // => 0
-					$_data['PURCHASEORDERSTATUS.CODE']; // => WaitForMatch
-					$_data['SUPPLIER.BANKGIRO']; // => 70580621110
-					$_data['VATAMOUNT']; // => 62500
+				$_data['KEY']; // => 1400050146
+				$_data['ARRIVAL']; // => 2009.05.28
+				$_data['CLIENT.CODE']; // => 14
+				$_data['EXCHANGERATE']; // => 1
+				$_data['LOCALAMOUNT']; // => 312500
+				$_data['LOCALVATAMOUNT']; // => 62500
+				$_data['PAYAMOUNT']; // => 0
+				$_data['POSTATUSUPDATED']; // => 0
+				$_data['PURCHASEORDERSTATUS.CODE']; // => WaitForMatch
+				$_data['SUPPLIER.BANKGIRO']; // => 70580621110
+				$_data['VATAMOUNT']; // => 62500
 
-					$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
+				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-					$order_id 		= $_data['PURCHASEORDERNO'];
-					$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
-					$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
-					$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
-					$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
-					$belop 			= $_data['AMOUNT']/100;
+				$order_id 		= $_data['PURCHASEORDERNO'];
+				$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
+				$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+				$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
+				$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+				$belop 			= $_data['AMOUNT']/100;
 
-					if( $belop < 0 )
+				if( $belop < 0 )
+				{
+					$buffer[$i]['artid'] = 2;
+				}
+				else
+				{
+					$buffer[$i]['artid'] = 1;
+				}
+
+				$kidnr 	= $_data['KIDNO'];
+
+				if($order_id)
+				{
+					$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);
+				}
+
+				$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
+				$buffer[$i]['pmwrkord_code']	= $order_id;
+				$buffer[$i]['fakturanr']		= $fakturanr;
+				$buffer[$i]['periode']			= $periode;
+				$buffer[$i]['forfallsdato']		= $forfallsdato;
+				$buffer[$i]['fakturadato']		= $fakturadato;
+				$buffer[$i]['belop']			= $belop;
+				$buffer[$i]['currency']			= $_data['CURRENCY.CURRENCYID'];
+				$buffer[$i]['godkjentbelop']	= $belop;
+
+				$buffer[$i]['kidnr']			= $kidnr;
+				$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
+				$buffer[$i]['referanse']		= "ordre: {$order_id}";
+
+				$order_info = $this->get_order_info($order_id);
+
+				$buffer[$i]['dimb'] = $order_info['dimb'];
+				$buffer[$i]['dima'] = $order_info['dima'];
+				$buffer[$i]['loc1'] = $order_info['loc1'];
+
+				$buffer[$i]['mvakode'] = $this->mvakode;
+
+				if($buffer[$i]['loc1'] && $this->auto_tax)
+				{
+					$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
+
+					if($mvakode)
 					{
-						$buffer[$i]['artid'] = 2;
+						$buffer[$i]['mvakode'] = $mvakode;
+					}
+				}
+
+				$duplicate = false;
+				$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$duplicate = true;
+					$bilagsnr = $this->db->f('bilagsnr');
+					$this->receipt['message'][] = array('msg' => "Ikke importert duplikat til arbeidsregister: {$_data['SCANNINGNO']}");
+				}
+
+				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$duplicate = true;
+					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
+					$bilagsnr = $this->db->f('bilagsnr');
+					$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
+
+					if( isset($receipt['message']) )
+					{
+						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
 					}
 					else
 					{
-						$buffer[$i]['artid'] = 1;
+						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$_bilagsnr_ut}, extern ref: {$_data['SCANNINGNO']}");
 					}
+					unset($_bilagsnr_ut);
+				}
 
-					$kidnr 	= $_data['KIDNO'];
+				$vendor_id = $_data['SUPPLIER.CODE'];
 
-					if($order_id)
-					{
-						$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);
-					}
-
-					$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
-					$buffer[$i]['pmwrkord_code']	= $order_id;
-					$buffer[$i]['fakturanr']		= $fakturanr;
-					$buffer[$i]['periode']			= $periode;
-					$buffer[$i]['forfallsdato']		= $forfallsdato;
-					$buffer[$i]['fakturadato']		= $fakturadato;
-					$buffer[$i]['belop']			= $belop;
-					$buffer[$i]['currency']			= $_data['CURRENCY.CURRENCYID'];
-					$buffer[$i]['godkjentbelop']	= $belop;
-
-					$buffer[$i]['kidnr']			= $kidnr;
-					$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
-					$buffer[$i]['referanse']		= "ordre: {$order_id}";
-
-					$order_info = $this->get_order_info($order_id);
-
-					$buffer[$i]['dimb'] = $order_info['dimb'];
-					$buffer[$i]['dima'] = $order_info['dima'];
-					$buffer[$i]['loc1'] = $order_info['loc1'];
-
-					$buffer[$i]['mvakode'] = $this->mvakode;
-
-					if($buffer[$i]['loc1'] && $this->auto_tax)
-					{
-						$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
-
-						if($mvakode)
-						{
-							$buffer[$i]['mvakode'] = $mvakode;
-						}
-					}
-
-					$duplicate = false;
-					$sql = "SELECT bilagsnr, external_ref FROM fm_ecobilag WHERE external_ref = '{$_data['SCANNINGNO']}'";
-					$this->db->query($sql,__LINE__,__FILE__);
-					if($this->db->next_record())
-					{
-						$duplicate = true;
-						$bilagsnr = $this->db->f('bilagsnr');
-						$this->receipt['message'][] = array('msg' => "Ikke importert duplikat til arbeidsregister: {$_data['SCANNINGNO']}");
-					}
-
-					$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
-					$this->db->query($sql,__LINE__,__FILE__);
-					if($this->db->next_record())
-					{
-						$duplicate = true;
-						$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
-						$bilagsnr = $this->db->f('bilagsnr');
-						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
-
-						if( isset($receipt['message']) )
-						{
-							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
-						}
-						else
-						{
-							$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$_bilagsnr_ut}, extern ref: {$_data['SCANNINGNO']}");
-						}
-						unset($_bilagsnr_ut);
-					}
-
-					$vendor_id = $_data['SUPPLIER.CODE'];
-
-					$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
-					$this->db->query($sql,__LINE__,__FILE__);
-
+				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
+				$this->db->query($sql,__LINE__,__FILE__);
 					
-					if(!$_data['SUPPLIER.CODE'])
-					{
-						$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
-						$this->skip_import = true;
-					}
-					else if(!$this->db->next_record())
-					{
-						$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Faktura: {$_data['SCANNINGNO']}");
-						$this->skip_import = true;
+				if(!$_data['SUPPLIER.CODE'])
+				{
+					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
+					$this->skip_import = true;
+				}
+				else if(!$this->db->next_record())
+				{
+					$this->receipt['error'][] = array('msg' => "Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Faktura: {$_data['SCANNINGNO']}");
+					$this->skip_import = true;
 
-						$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
+					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
 
-						if($to)
+					if($to)
+					{
+						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
+						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
+
+						try
 						{
-							$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
-							$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit', 'appname' => 'property', 'type' => 'vendor'),false,true).'">Link til å legge inn ny leverandør</a>';
-
-							try
+							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
+							if($rc)
 							{
-								$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
-								if($rc)
-								{
-									$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");							
-								}
-							}
-							catch (phpmailerException $e)
-							{
-								$this->receipt['error'][] = array('msg' => $e->getMessage());
+								$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");							
 							}
 						}
-					}
-					else
-					{
-						if ($order_info['vendor_id'] != $vendor_id)
+						catch (phpmailerException $e)
 						{
-							$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
+							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
 					}
-
-					if($this->auto_tax)
+				}
+				else
+				{
+					if ($order_info['vendor_id'] != $vendor_id)
 					{
-						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
-						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
+						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 					}
+				}
 
-					$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
+				if($this->auto_tax)
+				{
+					$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
+					$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
+				}
 
-					$merknad = '';
+				$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
 
-					$buffer[$i]['merknad'] = $merknad;
-					$buffer[$i]['splitt'] = $this->splitt;
-					$buffer[$i]['kildeid'] = $this->kildeid;
-					$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
-					$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
-					$buffer[$i]['regtid'] = $regtid;
+				$merknad = '';
 
-					$buffer[$i]['spvend_code'] = $vendor_id;
+				$buffer[$i]['merknad'] = $merknad;
+				$buffer[$i]['splitt'] = $this->splitt;
+				$buffer[$i]['kildeid'] = $this->kildeid;
+				$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
+				$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
+				$buffer[$i]['regtid'] = $regtid;
 
-					if(isset($order_info['janitor']) && $order_info['janitor'])
-					{
-						$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
-					}
+				$buffer[$i]['spvend_code'] = $vendor_id;
 
-					if(isset($order_info['supervisor']) && $order_info['supervisor'])
-					{
-						$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
-					}
+				if(isset($order_info['janitor']) && $order_info['janitor'])
+				{
+					$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
+				}
 
-					if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
-					{
-						$buffer[$i]['budsjettansvarligid']	= $order_info['budget_responsible'];
-					}
+				if(isset($order_info['supervisor']) && $order_info['supervisor'])
+				{
+				$buffer[$i]['saksbehandlerid']		= $order_info['supervisor'];
+				}
 
-					$i++;
+				if(isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
+				{
+					$buffer[$i]['budsjettansvarligid']	= $order_info['budget_responsible'];
 				}
 			}
 
@@ -581,7 +653,30 @@
 
 				if(!$duplicate)
 				{
-					return $this->import_end_file($buffer);
+					$GLOBALS['phpgw']->db->Exception_On_Error = true;
+					try
+					{
+						$bilagsnr = $this->import_end_file($buffer);
+					}
+					catch (Exception $e)
+					{
+						if($e)
+						{
+							$GLOBALS['phpgw']->log->error(array(
+								'text'	=> 'import_fra_basware_X205::import() : error when trying to execute import_end_file(): %1',
+								'p1'	=> $e->getMessage(),
+								'p2'	=> '',
+								'line'	=> __LINE__,
+								'file'	=> __FILE__
+							));
+
+							$this->receipt['error'][] = array('msg'=> $e->getMessage());
+						}
+						return false;
+					}
+					
+					$GLOBALS['phpgw']->db->Exception_On_Error = false;
+					return $bilagsnr;
 				}
 				else
 				{
@@ -629,11 +724,13 @@
 				$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
 				$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
 
+/*
 				$prefs = $this->bocommon->create_preferences('property', $supervisor_user_id);
 				if($prefs['email'])
 				{
 					$toarray[] = $prefs['email'];
 				}
+*/
 			}
 
 			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
@@ -669,7 +766,7 @@
 			$num = $this->soXport->add($buffer);
 			if($num > 0)
 			{
-				$this->receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $buffer[0]['bilagsnr']);
+				$this->receipt['message'][]= array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, ref: {$buffer[0]['external_ref']}");
 				return $buffer[0]['bilagsnr'];
 			}
 			return false;
