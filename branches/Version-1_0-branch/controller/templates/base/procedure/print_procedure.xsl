@@ -16,7 +16,7 @@
 			<span style="display: inline-block;width: 600px;"><xsl:value-of select="procedure/control_area_name" /></span>
 		</div>
 		<div>
-			<label for="start_date"><xsl:value-of select="php:function('lang','Procedure start date')" /></label>
+			<label for="start_date"><xsl:value-of select="php:function('lang','Procedure valid from date')" /></label>
 			<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
 			<xsl:value-of select="php:function('date', $dateformat, $startdate)" />
 		</div>
@@ -49,11 +49,7 @@
 		</div>
 		<div>
 			<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
-			<xsl:value-of select="procedure/reference" />
-		</div>
-		<div>
-			<label for="attachment"><xsl:value-of select="php:function('lang','Procedure Attachment')" /></label>
-			<xsl:value-of select="procedure/attachment" />
+			<xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
 		</div>
 		<a href="#print" class="btn" onClick="window.print()">Skriv ut</a>		
 </div>

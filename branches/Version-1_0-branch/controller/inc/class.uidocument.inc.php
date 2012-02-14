@@ -220,7 +220,7 @@
 				$document->set_name($_FILES["file_path"]["name"]);
 				$document->set_type_id(phpgw::get_var('document_type'));
 				$desc = phpgw::get_var('document_description','html');
-				var_dump($desc);
+				//var_dump($desc);
 				$document->set_description($desc);
 				$document->set_procedure_id($procedure_id);
 				//var_dump($document);

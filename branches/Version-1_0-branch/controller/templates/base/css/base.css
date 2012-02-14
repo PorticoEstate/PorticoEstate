@@ -1332,3 +1332,24 @@ div.controller_checklist {
 	padding: 20px;
 	border: 1px solid #ABABAB;
 }
+
+/* ======================== REGISTER CONTROL FOR LOCATION ============================== */
+#choose_control{
+	margin: 10px;
+	padding: 10px; 
+	width: 25%;
+}
+.error_msg {
+  	color: red;
+    display: none;
+    font-size: 14px;
+    padding: 7px 0;
+}
+
+#control_details #select_all{
+	margin-left: 660px;	
+}
+#control_details #location_form{
+	margin-left: 20px;
+	margin-bottom: 20px;	
+}
