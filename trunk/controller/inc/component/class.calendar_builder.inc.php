@@ -76,7 +76,7 @@ class calendar_builder {
 		return $controls_calendar_array;
 	}
 	
-	public function build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year){
+	public function build_agg_calendar($controls_calendar_array, $control, $location_code, $year){
 				
 		if( date("Y", $control->get_start_date()) == $year ){
 			$from_month = date("n", $control->get_start_date());	
