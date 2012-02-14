@@ -213,7 +213,7 @@
 				$this->check_archive();			
 			}		
 
-//			$this->get_files();
+			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
