@@ -108,7 +108,7 @@
 				$location_code = $my_locations[0]["location_code"];	
 			}
 			
-			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year) ; 
+			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year); 
 			
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts);
@@ -121,6 +121,20 @@
 			
 			$controls_calendar_array = array();
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $controls_with_check_list, $num_days_in_month, "view_days" );
+			
+			foreach($controls_calendar_array as &$inst)
+			{	
+				$curr_control = &$inst['control'];
+
+				if($curr_control['repeat_type'] == 0)
+					$curr_control['repeat_type'] = "Dag";
+				else if($curr_control['repeat_type'] == 1)
+					$curr_control['repeat_type'] = "Uke";
+				else if($curr_control['repeat_type'] == 2)
+					$curr_control['repeat_type'] = "Måned";
+				else if($curr_control['repeat_type'] == 3)
+					$curr_control['repeat_type'] = "År";
+			}
 
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -129,7 +143,7 @@
 			for($i=1;$i<=$num_days_in_month;$i++){
 				$heading_array[$i] = "$i";	
 			}
- 						
+ 			
 			$data = array
 			(		
 				'my_locations'	  		  => $my_locations,
@@ -170,15 +184,15 @@
 			$year = phpgw::get_var('year');
 			
 			if(empty($year)){
-				$year = date("Y");	
+				$year = date("Y");
 			}
 			
 			$year = intval($year);
-						
+
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");	
-						
+			
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
@@ -196,21 +210,41 @@
 			
 			$repeat_type = null;
 			
-			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type );
-			
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
+			 
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 		
 			$controls_calendar_array = array();
 
 			// Puts aggregate values for daily controls in a twelve month array 
 			foreach($controls_for_location_array as $control){
-				if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1){
-					$controls_calendar_array = $this->calendar_builder->build_agg_calendar($controls_calendar_array, $control, $location_code, $year);
+				
+				if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1)
+				{
+					$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year);
+				}
+				else if($control->get_repeat_type() == 2)
+				{
+					$repeat_type = 2;
+					$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
+					//print_r($control_check_list_array);
+								
+					$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+				}
+				else if($control->get_repeat_type() == 3)
+				{
+					$repeat_type = 3;
+					$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
+								
+					$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 				}
 			}
 			
+			/*
 			$repeat_type = 2;
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
+			print_r($controls_calendar_array);
+			print_r($controls_calendar_array);			
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 			
@@ -218,6 +252,20 @@
 			$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type );
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+			*/
+			foreach($controls_calendar_array as &$inst)
+			{	
+				$curr_control = &$inst['control'];
+
+				if($curr_control['repeat_type'] == 0)
+					$curr_control['repeat_type'] = "Dag";
+				else if($curr_control['repeat_type'] == 1)
+					$curr_control['repeat_type'] = "Uke";
+				else if($curr_control['repeat_type'] == 2)
+					$curr_control['repeat_type'] = "Måned";
+				else if($curr_control['repeat_type'] == 3)
+					$curr_control['repeat_type'] = "År";
+			}
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -240,7 +288,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
-		/*
+
 		public function view_calendar_for_locations()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -283,6 +331,15 @@
 					if($curr_control["location_code"] == $loc1["location_code"])
 						$curr_control["location_name"] = $loc1["loc1_name"];
 				}
+
+				if($curr_control['repeat_type'] == 0)
+					$curr_control['repeat_type'] = "Dag";
+				else if($curr_control['repeat_type'] == 1)
+					$curr_control['repeat_type'] = "Uke";
+				else if($curr_control['repeat_type'] == 2)
+					$curr_control['repeat_type'] = "Måned";
+				else if($curr_control['repeat_type'] == 3)
+					$curr_control['repeat_type'] = "År";
 			}
 			
 			//_debug_array($controls_calendar_array);
@@ -308,6 +365,6 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
-		*/
+
 		public function query(){}
 	}

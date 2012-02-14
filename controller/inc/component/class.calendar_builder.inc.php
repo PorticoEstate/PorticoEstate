@@ -19,7 +19,6 @@ class calendar_builder {
 
 			$calendar_array = $this->init_calendar( $control, $calendar_array, $num, $period_type );
 
-			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($control->get_check_lists_array() as $check_list){
 				
 				$check_list_status_info = new check_list_status_info();
@@ -76,7 +75,7 @@ class calendar_builder {
 		return $controls_calendar_array;
 	}
 	
-	public function build_agg_calendar($controls_calendar_array, $control, $location_code, $year){
+	public function build_agg_calendar_array($controls_calendar_array, $control, $location_code, $year){
 				
 		if( date("Y", $control->get_start_date()) == $year ){
 			$from_month = date("n", $control->get_start_date());	
@@ -90,9 +89,11 @@ class calendar_builder {
 			$to_month = 12;
 		}
 		
+		/*
 		$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 		
 		$twelve_month_array = array();
+		
 		
 		for($i=1;$i<=12;$i++){
 			$trail_date_ts = strtotime("$i/01/$year");
@@ -105,7 +106,8 @@ class calendar_builder {
 
 			$twelve_month_array[$i-1]["status"] = $status;
 		}
-			
+		*/
+		
 		for($from_month;$from_month<=$to_month;$from_month++){
 	
 			$trail_from_date_ts = strtotime("$from_month/01/$year");
@@ -142,7 +144,7 @@ class calendar_builder {
 		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
 		$dates_array = $date_generator->get_dates();
 		
-		// Inserts dates on behalf of repeat type and repeat interval
+		// Inserts dates 
 		foreach($dates_array as $date){
 			
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
