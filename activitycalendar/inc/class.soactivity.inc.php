@@ -43,6 +43,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		(
 			'name'       => 'get_groups',
 			'decription' => 'Get list of groups'
+		),
+		array
+		(
+			'name'       => 'debug_xmlrpc',
+			'decription' => 'Return incoming params'
 		)
 	);
 
@@ -792,6 +797,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 //	_debug_array($groups);
 		return $groups;
 	}
+
+
+	/*
+	* Return incoming
+	*/
+	function debug_xmlrpc($data = array())
+	{
+		return $data;
+	}
+
 	
 	function get_group_info($group_id)
 	{
