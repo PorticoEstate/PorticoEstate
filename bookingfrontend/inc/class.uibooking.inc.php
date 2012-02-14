@@ -325,10 +325,10 @@
 					$this->agegroup_bo->extract_form_data($booking);
 					$errors = $this->bo->validate($booking);
 				
-					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2))
-					{
-						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
-					}										
+#					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2))
+#					{
+#						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
+#					}										
 					if (!$errors) {
 						$receipt = $this->bo->update($booking);
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
