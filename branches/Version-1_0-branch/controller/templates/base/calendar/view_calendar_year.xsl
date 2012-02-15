@@ -138,15 +138,10 @@
 												<xsl:text>&amp;control_id=</xsl:text>
 												<xsl:value-of select="info/control_id"/>
 												<xsl:text>&amp;location_code=</xsl:text>
-												<xsl:value-of select="$location_code"/>
+												<xsl:value-of select="$view_location_code"/>
 											</xsl:attribute>
 											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</a>
-										</div>
-									</xsl:when>
-									<xsl:when test="status = 'controls_registered'">
-										<div>
-											<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_planned'">
@@ -188,11 +183,6 @@
 											</a>
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'controls_accomplished_without_errors'">
-										<div>
-											<img height="15" src="controller/images/status_icon_dark_green.png" />
-										</div>
-									</xsl:when>
 									<xsl:when test="status = 'control_accomplished_with_errors'">
 										<div style="position:relative;">
 					    					<div id="info_box" style="position:absolute;display:none;"></div>
@@ -216,14 +206,13 @@
 											 	<xsl:value-of select="info"/>
 											</a>
 										</div>
-									
 									</xsl:when>
 									<xsl:when test="status = 'control_canceled'">
 										<div>
 											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
 									</xsl:when>
-									<xsl:when test="status = 'control_not_accomplished' or status = 'controls_not_accomplished'">
+									<xsl:when test="status = 'control_not_accomplished'">
 										<div>
 											<img height="12" src="controller/images/status_icon_red_cross.png" />
 										</div>
