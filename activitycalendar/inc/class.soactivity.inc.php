@@ -690,19 +690,19 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_contact_person($org_id, $group_id, $cont_pers)
 	{
-		if($group_id && $cont_pers)
+		if($group_id)
 		{
-			$cont_pers = (int)$cont_pers;
+			$group_id = (int)$group_id;
 	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
-			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_group_contact WHERE group_id={$group_id} LIMIT 1", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
-		else if($org_id && $cont_pers)
+		else if($org_id)
 		{
-			$cont_pers = (int)$cont_pers;
-			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$org_id = (int)$org_id;
+			$this->db->query("SELECT * FROM bb_organization_contact WHERE organization_id={$org_id} LIMIT 1", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
@@ -782,7 +782,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_groups()
 	{
 		$groups = array();
-		$this->db->query("SELECT * FROM bb_group WHERE show_in_portal=1", __LINE__, __FILE__);
+		$join = " {$this->left_join} bb_organization ON (bb_group.organization_id = bb_organization.id)";
+		$this->db->query("SELECT bb_group.*, bb_organization.homepage FROM bb_group {$join} WHERE bb_group.show_in_portal=1", __LINE__, __FILE__);
 		while($this->db->next_record())
 		{
 			$groups[] = array
@@ -791,6 +792,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'name'				=> utf8_decode($this->db->f('name')),
 				'shortname'			=> utf8_decode($this->db->f('shortname')),
 				'description'		=> utf8_decode($this->db->f('description')),
+				'homepage'			=> utf8_decode($this->db->f('homepage')),
 				'organization_id'	=> $this->db->f('organization_id')
 			);
 		}
