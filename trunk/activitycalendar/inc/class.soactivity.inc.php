@@ -684,7 +684,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
-	_debug_array($activities);
+//	_debug_array($activities);
 		return $activities;
 	}
 	
