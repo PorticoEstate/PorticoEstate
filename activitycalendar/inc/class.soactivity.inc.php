@@ -782,7 +782,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_groups()
 	{
 		$groups = array();
-		$this->db->query("SELECT * FROM bb_group WHERE show_in_portal=1", __LINE__, __FILE__);
+		$join = " {$this->left_join} bb_organization ON (bb_group.organization_id = bb_organization.id)";
+		$this->db->query("SELECT bb_group.*, bb_organization.homepage FROM bb_group {$join} WHERE bb_group.show_in_portal=1", __LINE__, __FILE__);
 		while($this->db->next_record())
 		{
 			$groups[] = array
@@ -791,6 +792,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'name'				=> utf8_decode($this->db->f('name')),
 				'shortname'			=> utf8_decode($this->db->f('shortname')),
 				'description'		=> utf8_decode($this->db->f('description')),
+				'homepage'			=> utf8_decode($this->db->f('homepage')),
 				'organization_id'	=> $this->db->f('organization_id')
 			);
 		}
