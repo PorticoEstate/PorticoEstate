@@ -57,7 +57,8 @@
 
 		// Objects
 		protected $check_lists_array = array();
-		
+		// Array that contains open cases for a month   
+		protected $agg_check_lists_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
