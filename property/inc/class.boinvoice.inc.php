@@ -127,7 +127,7 @@
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
-		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id=0)
+		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id=0, $invoice_id = '')
 		{
 			if(!phpgw::get_var('paid', 'bool'))
 			{
@@ -142,7 +142,7 @@
 				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
 				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
 				'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
-				'district_id' => $this->district_id));
+				'district_id' => $this->district_id, 'invoice_id' => $invoice_id));
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
