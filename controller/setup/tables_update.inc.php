@@ -606,3 +606,19 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.29';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.29';
+	function controller_upgrade0_1_29()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_procedure','responsibility',array(
+			'type' => 'text', 
+			'nullable' => true
+		));
+		
+		$sql = "INSERT INTO controller_document_types (title) values('procedures')";
+		$db = clone $GLOBALS['phpgw']->db;
+		$result = $db->query($sql, __LINE__, __FILE__);
+				
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.30';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
