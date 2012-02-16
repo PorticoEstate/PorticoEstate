@@ -654,6 +654,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_activities($parameters = array())
 	{
+		$soap = isset($parameters['soap']) && $parameters['soap'] ? true : false:
 		//fromdate -> innparam for uthenting av delta - timestamp
 		$whereclause_date = "";
 		if($parameters['fromdate'])
@@ -669,7 +670,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activities[]= array
 			(
 				'id'				=> (int) $this->db->f('id'),
-				'title'				=> utf8_decode($this->db->f('title',true)),
+				'title'				=> $soap ? $this->db->f('title',true) : utf8_decode($this->db->f('title',true)),
 				'organization_id'	=> $this->db->f('organization_id',true),
 				'group_id'			=> $this->db->f('group_id'),
 				'district'			=> $this->db->f('district',true),
@@ -677,7 +678,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'state'				=> $this->db->f('state',true),
 				'target'			=> $this->db->f('target'),
 				'arena'				=> $this->db->f('arena'),
-				'time'				=> utf8_decode($this->db->f('time')),
+				'time'				=> $soap ? $this->db->f('time') : utf8_decode($this->db->f('time')),
 				'contact_person_1'	=> $this->db->f('contact_person_1'),
 				'contact_person_2'	=> $this->db->f('contact_person_2'),
 				'special_adaptation'=> $this->db->f('special_adaptation'),
