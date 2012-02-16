@@ -214,10 +214,9 @@
 			}
 
 			// max. one mail each day
-			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (5 * 3600 * 24)) )
+			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)) )
 			{
 				$toarray = array();
-				$_toarray = array();
 				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsmannid IS NOT NULL';
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
@@ -240,7 +239,7 @@
 
 				$subject = 'Du har faktura til behandling';
 
-				foreach ($toarray as $lid => &$email)
+				foreach ($toarray as $lid => $dummy)
 				{
 					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
 					if(isset($prefs['email']) && $prefs['email'])
