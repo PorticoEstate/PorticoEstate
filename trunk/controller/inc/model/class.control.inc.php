@@ -35,12 +35,18 @@
 	{
 		public static $so;
 		
+		const REPEAT_TYPE_DAY = 0;
+		const REPEAT_TYPE_WEEK = 1;
+		const REPEAT_TYPE_MONTH = 2;
+		const REPEAT_TYPE_YEAR = 3;
+		
 		protected $id;
 		protected $title;
 		protected $description;
 		protected $start_date;
 		protected $end_date;
 		protected $repeat_type;
+		protected $repeat_type_label;
 		protected $repeat_interval;
 		protected $procedure_id;
 		protected $procedure_name;
@@ -112,6 +118,30 @@
 		}
 					
 		public function get_repeat_type() { return $this->repeat_type; }
+		
+		public function set_repeat_type_label(int $repeat_type = null)
+		{
+			switch($repeat_type)
+			{
+				case controller_control::REPEAT_TYPE_DAY:
+					$this->repeat_type_label = lang('repeat_type_day');
+					break;
+				case controller_control::REPEAT_TYPE_WEEK:
+					$this->repeat_type_label = lang('repeat_type_week');
+					break;
+				case controller_control::REPEAT_TYPE_MONTH:
+					$this->repeat_type_label = lang('repeat_type_month');
+					break;
+				case controller_control::REPEAT_TYPE_YEAR;
+					$this->repeat_type_label = lang('repeat_type_year');
+					break;
+				default:
+					$this->repeat_type_label = lang('repeat_type_none');
+					break;
+			}
+		}
+					
+		public function get_repeat_type_label() { return $this->repeat_type_label; }
 		
 		public function set_repeat_interval($repeat_interval)
 		{
