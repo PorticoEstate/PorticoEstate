@@ -90,7 +90,7 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'title' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
 				'purpose' => array('type' => 'text', 'nullable' => True),
-				'responsibility' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'responsibility' => array('type' => 'text', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'reference' => array('type' => 'text', 'nullable' => True),
 				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
