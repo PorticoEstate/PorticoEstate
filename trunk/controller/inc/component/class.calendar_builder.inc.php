@@ -1,8 +1,9 @@
 <?php
 phpgw::import_class('controller.socheck_list');
 include_class('controller', 'date_generator', 'inc/component/');
-
-	
+include_class('controller', 'check_list_status_info', 'inc/helper/');
+include_class('controller', 'check_list_status_manager', 'inc/helper/');
+		
 class calendar_builder {
 	
 	private $period_start_date;
@@ -50,9 +51,9 @@ class calendar_builder {
 		return $calendar_array;
 	}
    	
-	public function build_calendar_array( $controls_for_location_array, $num, $period_type ){
+	public function build_calendar_array( $controls_with_check_lists_array, $num, $period_type ){
 		
-		foreach($controls_for_location_array as $control){
+		foreach($controls_with_check_lists_array as $control){
 
 			$calendar_array = $this->init_calendar( $control, $num, $period_type );
 
@@ -60,43 +61,11 @@ class calendar_builder {
 			{
 				foreach($control->get_check_lists_array() as $check_list)
 				{
-					$check_list_status_info = new check_list_status_info();
-					$check_list_status_info->set_check_list_id( $check_list->get_id() );
-			
-					$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
-	
-					if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() > $todays_date_ts)
-					{
-						$status = "control_planned";
-					}
-					else if( $check_list->get_status() == 0 & $check_list->get_planned_date() > 0 & $check_list->get_deadline() < $todays_date_ts )
-					{
-						$status = "control_not_accomplished_with_info";
-					}
-					else if( $check_list->get_status() == 0 & $check_list->get_deadline() < $todays_date_ts )
-					{
-						$status = "control_not_accomplished";
-					}
-					else if( $check_list->get_status() == 1 & $check_list->get_completed_date() > $check_list->get_deadline() & $check_list->get_num_open_cases() == 0)
-					{
-						$status = "control_accomplished_over_time_without_errors";
-					}
-					else if( $check_list->get_status() == 1 & $check_list->get_completed_date() < $check_list->get_deadline() & $check_list->get_num_open_cases() == 0)
-					{
-						$status = "control_accomplished_in_time_without_errors";
-					}
-					else if( $check_list->get_status() == 1 & $check_list->get_num_open_cases() > 0){
-						$status = "control_accomplished_with_errors";
-						$check_list_status_info->set_num_open_cases($check_list->get_num_open_cases());
-					}
-					else if( $check_list->get_status() == 3 )
-					{
-						$status = "control_canceled";
-					}
+					$check_list_status_manager = new check_list_status_manager( $check_list );
 					
-					$check_list_status_info->set_deadline_date( date("d/m-Y", $check_list->get_deadline()) );
-					
-					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = $status;
+					$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
+								
+					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = $check_list_status_info->get_status();
 					$calendar_array[ date("j", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();
 				}
 				
