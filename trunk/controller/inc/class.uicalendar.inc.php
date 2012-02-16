@@ -276,6 +276,7 @@
 			}
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+			
 			//_debug_array($controls_calendar_array);
 			
 			foreach($controls_calendar_array as &$inst)
