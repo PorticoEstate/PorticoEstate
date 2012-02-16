@@ -1346,6 +1346,10 @@
 				}
 			}
 
+			$config = CreateObject('phpgwapi.config','property');
+			$config->read();
+			$tax = 1+(($config->config_data['fm_tax'])/100);
+
 			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget,"
 			. " sum(contract_sum) as contract_sum ,paid_percent"
 			. " FROM fm_workorder"
@@ -1353,6 +1357,7 @@
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
 			. " GROUP BY fm_workorder.id, paid_percent, fm_workorder.start_date ORDER BY start_date ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
+
 
 			while ($this->db->next_record())
 			{
@@ -1365,7 +1370,7 @@
 				}
 				else if($this->db->f('calculation') > 0)
 				{
-					$_sum = $this->db->f('calculation');
+					$_sum = $this->db->f('calculation') * $tax;
 				}
 				else if($this->db->f('budget') > 0)
 				{
