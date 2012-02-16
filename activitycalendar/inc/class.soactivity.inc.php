@@ -11,7 +11,7 @@ include_class('activitycalendar', 'category', 'inc/model/');
 class activitycalendar_soactivity extends activitycalendar_socommon
 {
 	protected static $so;
-
+	protected $soap = false;
 
 	public $soap_functions = array
 		(
@@ -655,6 +655,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_activities($parameters = array())
 	{
 		$soap = isset($parameters['soap']) && $parameters['soap'] ? true : false;
+		$this->soap = $soap;
 		//fromdate -> innparam for uthenting av delta - timestamp
 		$whereclause_date = "";
 		if($parameters['fromdate'])
@@ -690,7 +691,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				//$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
 				//$activity['group_info']			= $this->get_group_info($activity['group_id']);
 				$activity['district_name']		= $soap ? $this->get_district_name($activity['district']) : utf8_decode($this->get_district_name($activity['district']));
-				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) : utf8_decode($this->get_category_name($activity['category']));
+				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) utf8_decode($this->get_category_name($activity['category']));
 				$activity['description']		= $this->get_activity_description($activity['organization_id'],$activity['group_id']);
 				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
@@ -707,7 +708,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 			$this->db->query("SELECT * FROM bb_group_contact WHERE group_id={$group_id} LIMIT 1", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
+				$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
 		else if($org_id)
@@ -715,7 +716,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$org_id = (int)$org_id;
 			$this->db->query("SELECT * FROM bb_organization_contact WHERE organization_id={$org_id} LIMIT 1", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
+				$result = array('name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
 		return $result;
@@ -728,7 +729,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$group_id = (int)$group_id;
 			$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = utf8_decode($this->db->f('description'));
+				$result = $this->soap ? $this->db->f('description') : utf8_decode($this->db->f('description'));
 			}
 		}
 		else if($org_id)
@@ -736,7 +737,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$org_id = (int)$org_id;
 			$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = utf8_decode($this->db->f('description'));
+				$result = $this->soap ? $this->db->f('description') : utf8_decode($this->db->f('description'));
 			}
 		}
 		return $result;
@@ -858,8 +859,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$this->db->next_record();
 			$result = array
 			(
-				'arena_name' => utf8_decode($this->db->f('arena_name')),
-				'address' => utf8_decode($this->db->f('address'))
+				'arena_name' => $this->soap ? $this->db->f('arena_name') : utf8_decode($this->db->f('arena_name')),
+				'address' => $this->soap ? $this->db->f('address') : utf8_decode($this->db->f('address'))
 			);
 		}
 		return $result;
