@@ -36,7 +36,7 @@
 		private $deadline_date;
 		private $info_text;
 		private $num_open_cases;
-	
+			
 		public function __construct(){}
 		
 		public function set_check_list_id($check_list_id)

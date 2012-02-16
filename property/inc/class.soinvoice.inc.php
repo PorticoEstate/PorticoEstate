@@ -81,6 +81,7 @@
 			$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
 			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
 			$district_id 	= isset($data['district_id'])?$data['district_id']:'';
+			$invoice_id		= $data['invoice_id'] ? $data['invoice_id'] :'';
 
 			$join_tables	= '';
 			$filtermethod	= '';
@@ -131,12 +132,18 @@
 
 			if ($vendor_id)
 			{
-				$filtermethod .= " $where  spvend_code ='$vendor_id' ";
+				$filtermethod .= " $where  spvend_code ='{$vendor_id}' ";
 				$where= 'AND';
 			}
 			if ($loc1)
 			{
-				$filtermethod .= " $where  dima $this->like '%$loc1%' ";
+				$filtermethod .= " $where  dima {$this->like} '%$loc1%' ";
+				$where= 'AND';
+			}
+
+			if ($invoice_id)
+			{
+				$filtermethod .= " $where fakturanr ='{$invoice_id}'";
 				$where= 'AND';
 			}
 
@@ -151,7 +158,7 @@
 					$join_tables .= " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code = fm_b_account.id";
 				}
 
-				if (!$workorder_id && !$voucher_id)
+				if (!$workorder_id && !$voucher_id && !$invoice_id)
 				{
 					$start_periode = date('Ym',$start_date);
 					$end_periode = date('Ym',$end_date);

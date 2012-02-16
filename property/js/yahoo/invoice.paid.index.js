@@ -22,16 +22,17 @@
 		 [
 		  {name:'lnk_workorder', title:'Workorder ID', description:'enter the Workorder ID to search by workorder - at any Date'},
 		  {name:'lnk_vendor', title:'Vendor', description:'Select the vendor by clicking this link'},
+		  {name:'lnk_invoice', title:'Invoice', description:'Enter the invoice id - any Date'},
 		  {name:'lnk_property', title:'Facilities Managements', description:'Select the property by clicking this link'},
 		  {name:'lnk_voucher', title:'Voucher', description:'enter the voucher ID to search by vouvher - at any Date'}
 		 ]
 
-
 		var textImput = [
 			{order:0, name:'workorder_id',	id:'txt_workorder'},
 			{order:1, name:'vendor_id',		id:'txt_vendor'},
-			{order:1, name:'loc1',			id:'txt_loc1'},
-			{order:3, name:'voucher_id',	id:'txt_voucher'}
+			{order:2, name:'invoice_id',	id:'txt_invoice'},
+			{order:3, name:'loc1',			id:'txt_loc1'},
+			{order:4, name:'voucher_id',	id:'txt_voucher'}
 		]
 
 		var toolTips = [
@@ -131,9 +132,3 @@
 
 		    loader.insert();
 		});
-
-
-
-
-
-
