@@ -372,7 +372,6 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "FROM controller_check_list cl, controller_control c ";
 		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		$sql .= "AND c.id = $control_id ";
-		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.deadline >= $from_date_ts AND $to_date_ts > cl.deadline ";
 		$sql .= "GROUP BY c.id";
