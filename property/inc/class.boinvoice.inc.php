@@ -79,7 +79,7 @@
 			}
 			else
 			{
-				$user_lid = 'all';
+				$user_lid = isset($_REQUEST['user_lid']) ? $user_lid : 'all';
 			}
 
 			if($voucher_id)
