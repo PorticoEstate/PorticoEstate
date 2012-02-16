@@ -654,7 +654,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_activities($parameters = array())
 	{
-		$soap = isset($parameters['soap']) && $parameters['soap'] ? true : false:
+		$soap = isset($parameters['soap']) && $parameters['soap'] ? true : false;
 		//fromdate -> innparam for uthenting av delta - timestamp
 		$whereclause_date = "";
 		if($parameters['fromdate'])
