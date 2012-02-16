@@ -206,6 +206,64 @@
 			}
 		}
 
+		protected function remind()
+		{
+			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
+			{
+				return;
+			}
+
+			// max. one mail each day
+			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (5 * 3600 * 24)) )
+			{
+				$toarray = array();
+				$_toarray = array();
+				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsmannid IS NOT NULL';
+				$this->db->query($sql,__LINE__,__FILE__);
+				while($this->db->next_record())
+				{
+					$toarray[$this->db->f('responsible')] = true;
+				}
+				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksbehandlerid IS NOT NULL';
+				$this->db->query($sql,__LINE__,__FILE__);
+				while($this->db->next_record())
+				{
+					$toarray[$this->db->f('responsible')] = true;
+				}
+				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE budsjettansvarligid IS NOT NULL';
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				while($this->db->next_record())
+				{
+					$toarray[$this->db->f('responsible')] = true;
+				}
+
+				$subject = 'Du har faktura til behandling';
+
+				foreach ($toarray as $lid => &$email)
+				{
+					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
+					if(isset($prefs['email']) && $prefs['email'])
+					{
+						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.index', 'voucher_id' => $bilagsnr, 'user_lid' => $lid ),false,true).'">Link til fakturabehandling</a>';
+						try
+						{
+							$rc = $this->send->msg('email',$prefs['email'], $subject, stripslashes($body), '', '', '','','','html');
+						}
+						catch (phpmailerException $e)
+						{
+							$this->receipt['error'][] = array('msg' => $e->getMessage());
+						}
+					}
+				}
+				// save time of mail, to not send to many mails
+				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config->read_repository();
+				$config->value('invoice_mail_reminder_time', time());
+				$config->save_repository();
+			}
+		}
+
 		public function execute($cron='')
 		{
 			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
@@ -280,6 +338,8 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
+
+			$this->remind();
 
 			if(!$cron)
 			{

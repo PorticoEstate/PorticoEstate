@@ -806,7 +806,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	*/
 	function debug_xmlrpc($data = array())
 	{
-		return $data;
+		if($data['fromdate'])
+		{
+			return $data['fromdate'];
+		}
+		else
+		{
+			return $data;
+		}
 	}
 
 	

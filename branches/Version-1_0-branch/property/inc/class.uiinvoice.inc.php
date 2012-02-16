@@ -209,6 +209,7 @@
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
 			$loc1 			= phpgw::get_var('loc1');
 			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id', 'int');
+			$invoice_id		= phpgw::get_var('invoice_id');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 
 			$this->save_sessiondata();
@@ -510,6 +511,25 @@
 								'style' => 'filter'
 							),
 							array
+							( // Voucher link
+								'type' => 'link',
+								'id' => 'lnk_invoice',
+								'url' => "",
+								'value' => lang('invoice number'),
+								'tab_index' => 9,
+								'style' => 'filter'
+							),
+							array
+							( // Vendor box
+								'name'     => 'invoice_id',
+								'id'     => 'txt_invoice',
+								'value'    => $invoice_id,
+								'type' => 'text',
+								'size'    => 10,
+								'tab_index' => 10,
+								'style' => 'filter'
+							),
+							array
 							(
 								'type' => 'link',
 								'id' => 'lnk_property',
@@ -522,7 +542,7 @@
 									'lookup_name'  	=> 0,
 								))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 								'value' => lang('property'),
-								'tab_index' => 9,
+								'tab_index' => 11,
 								'style' => 'filter'
 							),
 							array
@@ -541,7 +561,7 @@
 								'value'    => $loc1,
 								'type' => 'text',
 								'size'    => 8,
-								'tab_index' => 10,
+								'tab_index' => 12,
 								'style' => 'filter'
 							),
 							array
@@ -550,7 +570,7 @@
 								'id' => 'lnk_voucher',
 								'url' => "",
 								'value' => lang('Voucher ID'),
-								'tab_index' => 11,
+								'tab_index' => 13,
 								'style' => 'filter'
 							),
 							array
@@ -560,7 +580,7 @@
 								'value'    => $voucher_id,
 								'type' => 'text',
 								'size'    => 8,
-								'tab_index' => 12,
+								'tab_index' => 14,
 								'style' => 'filter'
 							),
 							array
@@ -569,14 +589,14 @@
 								'name' => 'search',
 								'value'    => lang('search'),
 								'type' => 'button',
-								'tab_index' => 13,
+								'tab_index' => 15,
 								'style' => 'filter'
 							),
 							array
 							( // boton exportar
 								'type'	=> 'button',
 								'id'	=> 'btn_export',
-								'tab_index' => 13,
+								'tab_index' => 16,
 								'value'	=> lang('download')
 							),
 							array
@@ -585,7 +605,7 @@
 								'name' => 'cat_id',
 								'value'	=> lang('Category'),
 								'type' => 'button',
-								'tab_index' => 14,
+								'tab_index' => 17,
 								'style' => 'filter'
 							),
 							array
@@ -594,7 +614,7 @@
 								'name' => 'user_lid',
 								'value'	=> user_lid,
 								'type' => 'button',
-								'tab_index' => 15,
+								'tab_index' => 18,
 								'style' => 'filter'
 							),
 							array
@@ -603,7 +623,7 @@
 								'name' => 'b_account_class',
 								'value'	=> lang('No account'),
 								'type' => 'button',
-								'tab_index' => 16,
+								'tab_index' => 19,
 								'style' => 'filter'
 							),
 							array
@@ -712,7 +732,7 @@ JS;
 
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
-			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
+			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id);
 
 
 			$uicols = array (
