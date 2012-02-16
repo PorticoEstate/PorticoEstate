@@ -691,7 +691,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				//$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
 				//$activity['group_info']			= $this->get_group_info($activity['group_id']);
 				$activity['district_name']		= $soap ? $this->get_district_name($activity['district']) : utf8_decode($this->get_district_name($activity['district']));
-				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) utf8_decode($this->get_category_name($activity['category']));
+				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) : utf8_decode($this->get_category_name($activity['category']));
 				$activity['description']		= $this->get_activity_description($activity['organization_id'],$activity['group_id']);
 				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
