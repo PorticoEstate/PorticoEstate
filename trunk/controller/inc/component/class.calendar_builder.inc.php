@@ -15,7 +15,7 @@ class calendar_builder {
    	}
 	
 	function init_calendar( $control, $num, $period_type ){
-		
+
 		$calendar_array = array();
 		
 		for($i=1;$i<=$num;$i++){
@@ -48,42 +48,49 @@ class calendar_builder {
 			}
 		}
 		
-		return $calendar_array;
+		return $calendar_array; 
 	}
    	
 	public function build_calendar_array( $controls_with_check_lists_array, $num, $period_type ){
 		
 		foreach($controls_with_check_lists_array as $control){
-
-			$calendar_array = $this->init_calendar( $control, $num, $period_type );
-
 			if($period_type == "view_days" | ($period_type == "view_months" & $control->get_repeat_type() == 2 | $control->get_repeat_type() == 3))
 			{
+				$calendar_array = $this->init_calendar( $control, $num, $period_type );
+				
 				foreach($control->get_check_lists_array() as $check_list)
 				{
 					$check_list_status_manager = new check_list_status_manager( $check_list );
 					
 					$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
-								
-					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = $check_list_status_info->get_status();
-					$calendar_array[ date("j", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();
+					
+					if( $period_type == "view_months" )
+					{
+						$calendar_array[ date("n", $check_list_status_info->get_deadline_date_ts()) ]["status"]  = $check_list_status_info->get_status();
+						$calendar_array[ date("n", $check_list_status_info->get_deadline_date_ts()) ]["info"]  = $check_list_status_info->serialize();
+					}
+					else if( $period_type == "view_days" )
+					{
+						$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = $check_list_status_info->get_status();
+						$calendar_array[ date("j", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();
+					}
 				}
 				
 				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			}
 			else if($period_type == "view_months" & ($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1))
 			{
-				$twelve_month_array = array();
+				$calendar_array = array();
 				
 				foreach($control->get_agg_open_cases_for_month_array() as $status_agg_month_info)
 				{
 					$status = "controls_accomplished_with_errors";
-						
-					$twelve_month_array[$status_agg_month_info->get_month_nr()]["status"] = $status;
-					$twelve_month_array[$status_agg_month_info->get_month_nr()]["info"] = $status_agg_month_info->get_agg_open_cases();
+					
+					$calendar_array[$status_agg_month_info->get_month_nr()]["status"] = $status;
+					$calendar_array[$status_agg_month_info->get_month_nr()]["info"] = $status_agg_month_info->get_agg_open_cases();
 				}
 					
-				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $twelve_month_array);
+				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			}
 		}
 
