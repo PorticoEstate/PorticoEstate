@@ -123,7 +123,7 @@
 			      			</xsl:choose>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_type"/>
+			      			<xsl:value-of select="control/repeat_type_label"/>
 						</div>							
 						<div class="months">
 						<xsl:for-each select="calendar_array">
