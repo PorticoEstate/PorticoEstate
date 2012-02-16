@@ -75,7 +75,8 @@
 			}
 			
 			
-			$check_list_status_info->set_deadline_date( date("d/m-Y", $this->check_list->get_deadline()) );
+			$check_list_status_info->set_deadline_date_txt( date("d/m-Y", $this->check_list->get_deadline()) );
+			$check_list_status_info->set_deadline_date_ts( $this->check_list->get_deadline() );
 			$check_list_status_info->set_status($status);
 		
 			return $check_list_status_info; 

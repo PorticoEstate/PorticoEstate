@@ -10,6 +10,7 @@ function get_address_search()
 	var div_address = document.getElementById('address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
 var divcontent_end = "</select>";

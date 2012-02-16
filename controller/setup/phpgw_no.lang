@@ -320,3 +320,8 @@ Property name	controller	no	Lokasjonsnavn
 Address	controller	no	Adresse
 Zip code	controller	no	Postnummer
 no category selected	controller	no	Kategori ikke valgt
+repeat_type_none	controller	no	Ingen
+repeat_type_day	controller	no	Dag
+repeat_type_week	controller	no	Uke
+repeat_type_month	controller	no	Måned
+repeat_type_year	controller	no	År
