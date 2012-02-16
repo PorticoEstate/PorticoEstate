@@ -163,21 +163,6 @@
 			self::render_template_xsl('calendar/view_calendar_month', $data);
 		}
 		
-		public function populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array){
-			$controls_with_check_list = array();
-			
-			foreach($controls_for_location_array as $control){
-				foreach($control_id_with_check_list_array as $control_id){
-					if($control->get_id() == $control_id->get_id())
-						$control->set_check_lists_array($control_id->get_check_lists_array());						
-				}
-					
-				$controls_with_check_list[] = $control;
-			}
-			
-			return $controls_with_check_list;
-		}
-		
 		public function view_calendar_for_year()
 		{
 			$location_code = phpgw::get_var('location_code');
@@ -349,6 +334,21 @@
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+		}
+		
+		public function populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array){
+			$controls_with_check_list = array();
+			
+			foreach($controls_for_location_array as $control){
+				foreach($control_id_with_check_list_array as $control_id){
+					if($control->get_id() == $control_id->get_id())
+						$control->set_check_lists_array($control_id->get_check_lists_array());						
+				}
+					
+				$controls_with_check_list[] = $control;
+			}
+			
+			return $controls_with_check_list;
 		}
 		
 		function build_agg_open_cases_for_month_array($control, $location_code, $year){
