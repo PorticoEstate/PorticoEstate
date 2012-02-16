@@ -12,6 +12,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 {
 	protected static $so;
 
+
+	public $soap_functions = array
+		(
+			'get_activities' => array
+			(
+				'in'  => array('array'),
+				'out' => array('array')
+			)
+		);
+
 	public $xmlrpc_methods = array
 	(
 		array
