@@ -14,8 +14,10 @@ function get_available_groups()
 
 <?php if($activity->get_group_id()){?>
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id + "&amp;groupid=" + <?php echo $activity->get_group_id();?>;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id + "&amp;groupid=" + <?php echo $activity->get_group_id();?>;
 <?php }else{?>
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 <?php }?>
 
 	if(org_id != null && org_id == 'new_org')
@@ -80,6 +82,7 @@ function get_address_search()
 	var div_address = document.getElementById('address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
 var divcontent_end = "</select>";
@@ -102,6 +105,7 @@ function get_address_search_cp2()
 	var div_address = document.getElementById('contact2_address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"contact2_address\" id=\"address_cp2\" size\"5\">";
 var divcontent_end = "</select>";

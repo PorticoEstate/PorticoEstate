@@ -223,20 +223,6 @@
 	
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_for_location_array, 12, "view_months" );
 			
-			foreach($controls_calendar_array as &$inst)
-			{	
-				$curr_control = &$inst['control'];
-
-				if($curr_control['repeat_type'] == 0)
-					$curr_control['repeat_type'] = "Dag";
-				else if($curr_control['repeat_type'] == 1)
-					$curr_control['repeat_type'] = "Uke";
-				else if($curr_control['repeat_type'] == 2)
-					$curr_control['repeat_type'] = "Måned";
-				else if($curr_control['repeat_type'] == 3)
-					$curr_control['repeat_type'] = "År";
-			}
-			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
@@ -290,6 +276,7 @@
 			}
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+			
 			//_debug_array($controls_calendar_array);
 			
 			foreach($controls_calendar_array as &$inst)

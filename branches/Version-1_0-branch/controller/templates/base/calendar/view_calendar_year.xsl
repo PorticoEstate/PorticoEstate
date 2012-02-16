@@ -123,7 +123,7 @@
 			      			</xsl:choose>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_type"/>
+			      			<xsl:value-of select="control/repeat_type_label"/>
 						</div>							
 						<div class="months">
 						<xsl:for-each select="calendar_array">
@@ -184,22 +184,22 @@
 										</div>
 									</xsl:when>
 									<xsl:when test="status = 'control_accomplished_with_errors'">
-										<div style="position:relative;">
-					    					<div id="info_box" style="position:absolute;display:none;"></div>
-											<a class="view_check_list">
-											 	<xsl:attribute name="href">
-													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-													<xsl:text>&amp;check_list_id=</xsl:text>
-													<xsl:value-of select="info/check_list_id"/>
-												</xsl:attribute>
-												<span style="display:none">
-													<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-												</span>
-												<img height="15" src="controller/images/status_icon_red.png" />
-											</a>
-										</div>
-									</xsl:when>
+											<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+												<div id="info_box" style="position:absolute;display:none;"></div>
+						    					<a class="view_check_list">
+												 	<xsl:attribute name="href">
+														<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+														<xsl:text>&amp;check_list_id=</xsl:text>
+														<xsl:value-of select="info/check_list_id"/>
+													</xsl:attribute>
+													<span style="display:none">
+														<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													</span>
+													<xsl:value-of select="info/num_open_cases"/>
+												</a>
+											</div>
+										</xsl:when>
 									<xsl:when test="status = 'controls_accomplished_with_errors'">
 										<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
 											<a class="view_check_list">

@@ -33,7 +33,8 @@
 		private $check_list_id;
 		private $status;
 		private $status_text;
-		private $deadline_date;
+		private $deadline_date_ts;
+		private $deadline_date_txt;
 		private $info_text;
 		private $num_open_cases;
 			
@@ -60,12 +61,19 @@
 		
 		public function get_status_text() { return $this->status_text; }
 		
-		public function set_deadline_date($deadline_date)
+		public function set_deadline_date_ts($deadline_date_ts)
 		{
-			$this->deadline_date = $deadline_date;
+			$this->deadline_date_ts = $deadline_date_ts;
 		}
 		
-		public function get_deadline_date() { return $this->deadline_date; }
+		public function get_deadline_date_ts() { return $this->deadline_date_ts; }
+
+		public function set_deadline_date_txt($deadline_date_txt)
+		{
+			$this->deadline_date_txt = $deadline_date_txt;
+		}
+		
+		public function get_deadline_date_txt() { return $this->deadline_date_txt; }
 		
 		public function set_info_text($info_text)
 		{
@@ -88,7 +96,8 @@
 				'check_list_id' => $this->get_check_list_id(),
 				'status' => $this->get_status(),
 				'status_text' => $this->get_status_text(),
-				'deadline_date' => $this->get_deadline_date(),
+				'deadline_date_ts' => $this->get_deadline_date_ts(),
+				'deadline_date_txt' => $this->get_deadline_date_txt(),
 				'info_text' => $this->get_info_text(),
 				'num_open_cases' => $this->get_num_open_cases()
 			);

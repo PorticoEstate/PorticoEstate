@@ -39,6 +39,7 @@ function get_address_search()
 	var div_address = document.getElementById('address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
 var divcontent_end = "</select>";
@@ -61,6 +62,7 @@ function get_address_search_arena()
 	var div_address = document.getElementById('arena_address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"arena_address\" id=\"arena_address\" size\"5\">";
 var divcontent_end = "</select>";
@@ -83,6 +85,7 @@ function get_address_search_cp2()
 	var div_address = document.getElementById('contact2_address_container');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"contact2_address\" id=\"address_cp2\" size\"5\">";
 var divcontent_end = "</select>";

@@ -671,6 +671,7 @@ class controller_socheck_list extends controller_socommon
 				'num_pending_cases'
 		);
 		
+		
 		$values = array(
 			$this->marshal($check_list->get_control_id(), 'int'),
 			$check_list->get_status(),

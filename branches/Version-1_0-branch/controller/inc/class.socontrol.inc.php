@@ -147,6 +147,7 @@
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
 				if($return_type == "return_object")
@@ -189,7 +190,7 @@
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
-
+				
 				$controls_array[] = $control->toArray();
 			}
 

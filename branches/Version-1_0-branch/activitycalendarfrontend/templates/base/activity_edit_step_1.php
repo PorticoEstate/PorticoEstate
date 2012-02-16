@@ -18,6 +18,7 @@ function get_activities()
 	var div_select = document.getElementById('activity_select');
 
 	url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_activities&amp;phpgw_return_as=json&amp;orgid=" + org_id;
+	//url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_activities&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 
 var divcontent_start = "<select name=\"activity_id\" id=\"activity_id\">";
 var divcontent_end = "</select>";

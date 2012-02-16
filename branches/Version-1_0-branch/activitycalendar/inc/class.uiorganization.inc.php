@@ -178,7 +178,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					//set local group as stored
 					$group->set_change_type('added');
 					$group->set_transferred(true);
-					$so_group->update_local($group);
+					$sogroup->update_local($group);
 				}
 				else
 				{
