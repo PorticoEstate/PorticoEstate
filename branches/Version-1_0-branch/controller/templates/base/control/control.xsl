@@ -98,6 +98,7 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<input class="required" type="text" name="title" id="title" value="{control/title}" size="80"/>
+							<div class="help_text">Legg til tittel på kontrollen</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control/title" />
@@ -113,6 +114,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
+				    <div class="help_text">Legg til startdato for kontrollen</div>
 				</dd>
 				<dt>
 					<label for="end_date">Sluttdato</label>
@@ -123,6 +125,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
+				    <div class="help_text">Legg til sluttdato for kontrollen. Hvis kontrollen ikke har sluttdato, lar du feltet være tomt</div>
 				</dd>
 				<dt>
 					<label>Frekvenstype</label>
@@ -145,6 +148,7 @@
 							</xsl:choose>								
 						</xsl:for-each>
 					</select>
+					<div class="help_text">Angi hvilken frekvenstype kontrollen skal ha</div>
 				</dd>
 				<dt>
 					<label>Frekvens</label>
@@ -153,6 +157,7 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<input class="required" style="width:20px;" size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
+						<div class="help_text">Angi hvilket frekvensintervall kontrollen skal ha. Hvis du velger 2, betyr det at kontrollen skal gjennomføres annenhver dag</div>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/repeat_interval" />
@@ -160,13 +165,12 @@
 				</xsl:choose>
 				</dd>
 				<dt>
-					<label>Rolle</label>
+					<label>Tildelt rolle</label>
 				</dt>
 				<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
 						<select class="required" id="responsibility_id" name="responsibility_id">
-							<option value="">Velg rolle</option>
 							<xsl:for-each select="role_array">
 								<xsl:choose>
 									<xsl:when test="id = $control_role">
@@ -182,6 +186,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<div class="help_text">Angi hvilken rolle som skal ha ansvar for å gjennomføre kontrollen på de ulike byggene</div>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/role_name" />
