@@ -746,7 +746,18 @@ $(document).ready(function(){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
-	});	
+	});
+	
+	$("#control_details input").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
+	});
+	
+	$("#control_details input").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
 });
 
 function clear_form( form ){
