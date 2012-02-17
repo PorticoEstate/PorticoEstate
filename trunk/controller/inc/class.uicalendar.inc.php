@@ -269,13 +269,13 @@
 			foreach($locations_for_control_array as $location)
 			{
 				$control->set_location_code($location["location_code"]);
-				$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array($controls_calendar_array, $control, $location["location_code"], $year);
+				$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array_2($controls_calendar_array, $control, $location["location_code"], $year);
 				//_debug_array($controls_calendar_array);
 				$control_check_list_array = $this->so->get_check_lists_for_location( $location["location_code"], $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_id() );
 				//_debug_array($controls_check_list_array);
 			}
 			
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array_2( $controls_calendar_array, $control_check_list_array, 12, "view_months" );
 			
 			//_debug_array($controls_calendar_array);
 			
