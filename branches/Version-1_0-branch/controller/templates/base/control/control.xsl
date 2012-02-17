@@ -56,6 +56,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<span class="help_text">Angi hvilket kontrollområde kontrollen skal gjelde for</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/control_area_name" />
@@ -85,6 +86,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<span class="help_text">Angi hvilken prosedyre kontrollen er basert på</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/procedure_name" />
@@ -98,7 +100,7 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<input class="required" type="text" name="title" id="title" value="{control/title}" size="80"/>
-							<div class="help_text">Legg til tittel på kontrollen</div>
+							<div class="help_text">Angi tittel på kontrollen</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control/title" />
@@ -114,7 +116,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
-				    <div class="help_text">Legg til startdato for kontrollen</div>
+				    <span class="help_text">Angi startdato for kontrollen</span>
 				</dd>
 				<dt>
 					<label for="end_date">Sluttdato</label>
@@ -125,7 +127,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
-				    <div class="help_text">Legg til sluttdato for kontrollen. Hvis kontrollen ikke har sluttdato, lar du feltet være tomt</div>
+				    <span class="help_text">Angi sluttdato for kontrollen. Hvis kontrollen ikke har sluttdato, lar du feltet være tomt</span>
 				</dd>
 				<dt>
 					<label>Frekvenstype</label>
@@ -148,7 +150,7 @@
 							</xsl:choose>								
 						</xsl:for-each>
 					</select>
-					<div class="help_text">Angi hvilken frekvenstype kontrollen skal ha</div>
+					<span class="help_text">Angi hvilken frekvenstype kontrollen skal ha</span>
 				</dd>
 				<dt>
 					<label>Frekvens</label>
@@ -157,7 +159,7 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<input class="required" style="width:20px;" size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
-						<div class="help_text">Angi hvilket frekvensintervall kontrollen skal ha. Hvis du velger 2, betyr det at kontrollen skal gjennomføres annenhver dag</div>
+						<span class="help_text">Angi hvilket frekvensintervall kontrollen skal ha. Hvis du velger 2, betyr det at kontrollen skal gjennomføres annenhver dag</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/repeat_interval" />
@@ -186,7 +188,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
-						<div class="help_text">Angi hvilken rolle som skal ha ansvar for å gjennomføre kontrollen på de ulike byggene</div>
+						<span class="help_text">Angi hvilken rolle som skal ha ansvar for å gjennomføre kontrollen på de ulike byggene</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/role_name" />
