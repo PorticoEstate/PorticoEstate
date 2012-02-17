@@ -30,7 +30,7 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input type="text" name="title" id="title" value="{control_item/title}" />
+							<input type="text" name="title" id="title" value="{control_item/title}" size="80"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control_item/title"/>
@@ -120,6 +120,21 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="control_area">Kontrollområde</label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<select id="control_area" name="control_area">
+								<xsl:apply-templates select="control_area/options"/>
+							</select>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="control_item/control_area_name" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+										<dt>
 						<label for="control_group">Kontrollgruppe</label>
 					</dt>
 					<dd>
@@ -132,21 +147,6 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control_item/control_group_name" />
-						</xsl:otherwise>
-					</xsl:choose>
-					</dd>
-					<dt>
-						<label for="control_area">Kontrollområde</label>
-					</dt>
-					<dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<select id="control_area" name="control_area">
-								<xsl:apply-templates select="control_area/options"/>
-							</select>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="control_item/control_area_name" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>				

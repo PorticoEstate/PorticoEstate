@@ -379,6 +379,27 @@
 			}
 		}
 		
+		function get_control_areas_by_control_group($control_group_id)
+		{
+			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id=$control_group_id";
+			$this->db->query($sql);
+
+			while($this->db->next_record()) {
+				$control_area = $this->unmarshal($this->db->f('control_area_id'), 'int');
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				
+				$control_area_array[] = array($control_area => $category[0]['name']);
+			}
+
+			if( count( $control_area_array ) > 0 ){
+				return $control_area_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
 		public function get_control_group_component($noOfObjects = null, $bim_type = null)
 		{
 			$filters = array();
@@ -447,5 +468,17 @@
 			}
 
 			return $results;
+		}
+		
+		function get_all_control_groups_array()
+		{
+				$results = array();
+				$this->db->query("SELECT id, group_name FROM controller_control_group ORDER BY group_name ASC", __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$results[] = array('id' => $this->db->f('id', false),
+									   'group_name' => $this->db->f('group_name', false));
+				}
+				return $results;
 		}
 	}
