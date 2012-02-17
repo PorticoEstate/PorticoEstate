@@ -56,6 +56,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<span class="help_text">Angi hvilket kontrollområde kontrollen skal gjelde for</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/control_area_name" />
@@ -85,6 +86,7 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<span class="help_text">Angi hvilken prosedyre kontrollen er basert på</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/procedure_name" />
@@ -98,7 +100,7 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<input class="required" type="text" name="title" id="title" value="{control/title}" size="80"/>
-							<div class="help_text">Legg til tittel på kontrollen</div>
+							<div class="help_text">Angi tittel på kontrollen</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control/title" />
@@ -114,7 +116,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
-				    <span class="help_text">Legg til startdato for kontrollen</span>
+				    <span class="help_text">Angi startdato for kontrollen</span>
 				</dd>
 				<dt>
 					<label for="end_date">Sluttdato</label>
@@ -125,7 +127,7 @@
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/></xsl:attribute>
 				      </xsl:if>
 				    </input>
-				    <span class="help_text">Legg til sluttdato for kontrollen. Hvis kontrollen ikke har sluttdato, lar du feltet være tomt</span>
+				    <span class="help_text">Angi sluttdato for kontrollen. Hvis kontrollen ikke har sluttdato, lar du feltet være tomt</span>
 				</dd>
 				<dt>
 					<label>Frekvenstype</label>
