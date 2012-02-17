@@ -758,6 +758,16 @@ $(document).ready(function(){
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
 	
+	$("#control_details select").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
+	});
+	
+	$("#control_details select").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
 });
 
 function clear_form( form ){
