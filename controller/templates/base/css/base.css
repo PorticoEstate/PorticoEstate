@@ -1354,3 +1354,9 @@ div.controller_checklist {
 	margin-left: 20px;
 	margin-bottom: 20px;	
 }
+
+.help_text {
+    background: none repeat scroll 0 0 #DDDDDD;
+    padding: 3px 6px;
+    display: none;
+}
