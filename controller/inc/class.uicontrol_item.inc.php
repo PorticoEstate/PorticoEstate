@@ -267,7 +267,7 @@
 							$error = lang('messages_form_error');
 						}
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $ctrl_item_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
 				}
 			}
 			else if(isset($_POST['cancel_control_item'])) // The user has pressed the cancel button
