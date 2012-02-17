@@ -1346,7 +1346,7 @@
 			$config->read();
 			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, calculation, budget, contract_sum"
+			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
