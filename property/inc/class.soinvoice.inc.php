@@ -86,7 +86,6 @@
 			$join_tables	= '';
 			$filtermethod	= '';
 			$querymethod	= '';
-			//_debug_array($data);
 
 			$this->db->query("SELECT * FROM fm_ecoart");
 			$art_list = array();
@@ -175,7 +174,7 @@
 			$no_q = false;
 			if ($voucher_id)
 			{
-				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";
+				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}' OR spvend_code = ". (int)$query;
 				$no_q = true;
 			}
 
@@ -193,7 +192,7 @@
 
 			$sql = "SELECT bilagsnr, bilagsnr_ut, count(bilagsnr) as invoice_count, sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,bilagsnr_ut,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
-
+			_debug_array($sql);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
