@@ -255,7 +255,7 @@
 		{
 			$results = array();
 
-			$sql = "SELECT * FROM controller_procedure WHERE control_area_id=$control_area_id";
+			$sql = "SELECT * FROM controller_procedure WHERE control_area_id={$control_area_id} AND end_date IS NULL ORDER BY title ASC";
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
