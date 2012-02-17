@@ -266,8 +266,8 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= '';
 
-				$cols .= ',planned_cost';
-				$cols_return[] = 'planned_cost';
+//				$cols .= ',planned_cost';
+//				$cols_return[] = 'planned_cost';
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'planned_cost';
@@ -619,7 +619,7 @@
 				$project['actual_cost']		= 0;
 				$project['billable_hours']	= 0;
 
-				$sql_workder  = 'SELECT paid_percent,contract_sum, calculation, budget,'
+				$sql_workder  = 'SELECT contract_sum, calculation, budget,'
 				. ' (fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost) as actual_cost,'
 				. ' billable_hours,closed'
 				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
@@ -628,8 +628,6 @@
 				$this->db->query($sql_workder);
 				while ($this->db->next_record())
 				{
-					$paid_percent = (int)$this->db->f('paid_percent');
-
 					if($this->db->f('closed'))
 					{
 						$_sum = 0;
@@ -651,10 +649,9 @@
 						$_sum = 0;
 					}
 
-					$_sum = $_sum * (100 - $paid_percent)/100;
-
-					$project['combined_cost']	+= $_sum;
-					$project['actual_cost']		+= (int)$this->db->f('actual_cost');
+					$_actual_cost = (int)$this->db->f('actual_cost');
+					$project['combined_cost']	+= ($_sum - $_actual_cost);
+					$project['actual_cost']		+= $_actual_cost;
 					$project['billable_hours']	+= (int)$this->db->f('billable_hours');
 				}
 			}
@@ -691,7 +688,7 @@
 						'descr'					=> $this->db->f('descr', true),
 						'status'				=> $this->db->f('status'),
 						'budget'				=> (int)$this->db->f('budget'),
-						'planned_cost'			=> (int)$this->db->f('planned_cost'),
+			//			'planned_cost'			=> (int)$this->db->f('planned_cost'),
 						'reserve'				=> (int)$this->db->f('reserve'),
 						'tenant_id'				=> $this->db->f('tenant_id'),
 						'user_id'				=> $this->db->f('user_id'),
@@ -746,7 +743,7 @@
 			$project_id = (int) $project_id;
 			$budget = array();
 			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,contract_sum,"
-				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id,paid_percent"
+				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 				." FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
@@ -762,8 +759,7 @@
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
-					'contract_sum'		=> (int)$this->db->f('contract_sum'),
-					'paid_percent'		=> (int)$this->db->f('paid_percent')
+					'contract_sum'		=> (int)$this->db->f('contract_sum')
 				);
 			}
 			return $budget;
@@ -1262,7 +1258,7 @@
 				$historylog->add('RM',$project['id'],$project['remark']);
 			}
 
-			execMethod('property.soworkorder.update_planned_cost', $project['id']);
+//			execMethod('property.soworkorder.update_planned_cost', $project['id']);
 
 			$receipt['id'] = $project['id'];
 			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));
@@ -1350,39 +1346,53 @@
 			$config->read();
 			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-			$sql = "SELECT EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget,"
-			. " sum(contract_sum) as contract_sum ,paid_percent"
+			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, calculation, budget, contract_sum"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
-			. " GROUP BY fm_workorder.id, paid_percent, fm_workorder.start_date ORDER BY start_date ASC";
+			. " GROUP BY fm_workorder.id, fm_workorder.start_date ORDER BY start_date ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 
+			$orders = array();
 			while ($this->db->next_record())
 			{
-				$paid_percent = (int)$this->db->f('paid_percent');
 				$year = $this->db->f('year');
 
 				if($this->db->f('contract_sum') > 0)
 				{
-					$_sum = $this->db->f('contract_sum');
+					$_amount = $this->db->f('contract_sum');
 				}
 				else if($this->db->f('calculation') > 0)
 				{
-					$_sum = $this->db->f('calculation') * $tax;
+					$_amount = $this->db->f('calculation') * $tax;
 				}
 				else if($this->db->f('budget') > 0)
 				{
-					$_sum = $this->db->f('budget');
+					$_amount = $this->db->f('budget');
 				}
 				else
 				{
-					$_sum = 0;
+					$_amount = 0;
 				}
 
-				$_sum = $_sum * (100 - $paid_percent)/100;
-				$cost_info[$year]['sum_orders'] += $_sum;
+				$orders[] = array
+				(
+					'order_id'	=> $this->db->f('id'),
+					'year'		=> $year,
+					'amount'	=> $_amount
+				);
+			}
+
+			foreach ($orders as $order)
+			{
+				$cost_info[$year]['sum_orders'] += $order['amount'];
+				$sql = "SELECT godkjentbelop as amount FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$order['order_id']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$cost_info[$year]['sum_orders'] -= $this->db->f('amount');
+				}
 			}
 
 			$sort_year = array();

@@ -426,6 +426,7 @@ Returns mixed
 									<xsl:text> % )</xsl:text>
 								</td>
 							</tr>
+<!--
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_planned_cost"/>
@@ -434,6 +435,7 @@ Returns mixed
 									<xsl:value-of select="value_planned_cost"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</td>
 							</tr>
+-->
 							<tr>
 								<td class="th_text" valign="top">
 									<xsl:value-of select="lang_workorder_id"/>

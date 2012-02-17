@@ -1570,7 +1570,7 @@
 			}
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
-			$values['planned_cost']  = number_format($values['planned_cost'], 0, ',', ' ');
+//			$values['planned_cost']  = number_format($values['planned_cost'], 0, ',', ' ');
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('values_start_date');
@@ -1626,18 +1626,16 @@
 					'footer'				=> 0
 				);
 
-
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'paid_percent','label'=>lang('paid percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
@@ -1669,7 +1667,6 @@
 					'amount'				=> $entry['amount'],
 					'approved_amount'		=> $entry['approved_amount'],
 					'vendor'				=> $entry['vendor'],
-					'paid_percent'			=> $entry['paid_percent'],
 					'project_group'			=> $entry['project_id'],
 					'currency'				=> $entry['currency'],
 					'budget_responsible'	=> $entry['budget_responsible'],
@@ -1828,8 +1825,8 @@
 					'lang_reserve_remainder'			=> lang('reserve remainder'),
 					'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
 					'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
-					'lang_planned_cost'					=> lang('planned cost'),
-					'value_planned_cost'				=> $values['planned_cost'],
+//					'lang_planned_cost'					=> lang('planned cost'),
+//					'value_planned_cost'				=> $values['planned_cost'],
 					'location_data'						=> $location_data,
 					'location_type'						=> 'form',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -2259,7 +2256,6 @@
 					'amount'				=> $entry['amount'],
 					'approved_amount'		=> $entry['approved_amount'],
 					'vendor'				=> $entry['vendor'],
-					'paid_percent'			=> $entry['paid_percent'],
 					'project_group'			=> $entry['project_id'],
 					'currency'				=> $entry['currency'],
 					'budget_responsible'	=> $entry['budget_responsible'],
@@ -2323,7 +2319,7 @@
 				'value_sum'							=> isset($values['sum'])?$values['sum']:'',
 				'value_reserve_remainder'			=> isset($reserve_remainder)?$reserve_remainder:'',
 				'value_reserve_remainder_percent'	=> isset($remainder_percent)?$remainder_percent:'',
-				'value_planned_cost'				=> $values['planned_cost'],
+//				'value_planned_cost'				=> $values['planned_cost'],
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
 				'project_group_data'				=> $project_group_data,
