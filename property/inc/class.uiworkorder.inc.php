@@ -1537,7 +1537,7 @@
 					'amount'				=> $entry['amount'],
 					'approved_amount'		=> $entry['approved_amount'],
 					'vendor'				=> $entry['vendor'],
-					'paid_percent'			=> $entry['paid_percent'],
+		//			'paid_percent'			=> $entry['paid_percent'],
 					'project_group'			=> $entry['project_id'],
 					'currency'				=> $entry['currency'],
 					'budget_responsible'	=> $entry['budget_responsible'],

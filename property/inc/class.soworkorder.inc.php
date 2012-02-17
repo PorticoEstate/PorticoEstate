@@ -1150,7 +1150,7 @@
 				$this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			}
  */
-			$this->update_planned_cost($workorder['project_id']); // at project
+//			$this->update_planned_cost($workorder['project_id']); // at project
 
 			$check_pending_action = false;
 			if ((float)$old_billable_hours != (float)$workorder['billable_hours'])
@@ -1309,7 +1309,7 @@
 							$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$id}'",__LINE__,__FILE__);
 							$this->db->next_record();
 							$project_id = $this->db->f('project_id');
-							$this->update_planned_cost($project_id);
+				//			$this->update_planned_cost($project_id);
 							break;
 					}
 				}
