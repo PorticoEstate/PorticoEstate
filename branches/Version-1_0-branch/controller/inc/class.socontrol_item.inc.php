@@ -63,7 +63,8 @@
 					'type',
 					'what_to_do',
 					'how_to_do',
-					'control_group_id'
+					'control_group_id',
+					'control_area_id'
 			);
 
 			$values = array(
@@ -72,7 +73,8 @@
 				$this->marshal($control_item->get_type(), 'string'),
 				$this->marshal($control_item->get_what_to_do(), 'string'),
 				$this->marshal($control_item->get_how_to_do(), 'string'),
-				$this->marshal($control_item->get_control_group_id(), 'int')
+				$this->marshal($control_item->get_control_group_id(), 'int'),
+				$this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -107,7 +109,8 @@
 				'type = ' . $this->marshal($control_item->get_type(), 'string'),
 				'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
 				'how_to_do = ' . $this->marshal($control_item->get_how_to_do(), 'string'),
-				'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int')
+				'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int'),
+				'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
 			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
@@ -175,6 +178,7 @@
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 
 				$results[] = $control_item;
 			}
@@ -339,6 +343,7 @@
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 
 				$results[] = $control_item;
 			}

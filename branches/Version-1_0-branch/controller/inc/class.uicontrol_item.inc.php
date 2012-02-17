@@ -89,9 +89,6 @@
 				);		
 			}
 			// END categories
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
 				'form' => array(
@@ -192,6 +189,10 @@
 					)
 				),
 			);
+			
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+			self::add_javascript('controller', 'yahoo', 'datatable.js');
 //_debug_array($data);
 
 			self::render_template_xsl('datatable', $data);
@@ -268,8 +269,8 @@
 					$control_item->set_type(phpgw::get_var('measurement') == 'on' ? 'control_item_type_2' : 'control_item_type_1');
 					$control_item->set_what_to_do( phpgw::get_var('what_to_do','html') );
 					$control_item->set_how_to_do( phpgw::get_var('how_to_do','html') );
-					$control_item->set_control_group_id( phpgw::get_var('control_group_id') );
-					$control_item->set_control_area_id( phpgw::get_var('control_area_id') );
+					$control_item->set_control_group_id( phpgw::get_var('control_group') );
+					$control_item->set_control_area_id( phpgw::get_var('control_area') );
 
 					//$this->so->store($control_item);
 

@@ -1665,8 +1665,6 @@ JS;
 				array(
 					'col_name'=>'close_order',	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>'paid_percent',	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
-				array(
 					'col_name'=>'change_tenant',	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
 					'col_name'=>'invoice_id',		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
@@ -1756,21 +1754,6 @@ JS;
 						}
 						else if(($i == 3))
 						{
-							if($invoices['workorder_id'] == "")
-							{
-								//nothing
-							}
-							else if(!array_key_exists($invoices['workorder_id'], $workorders))
-							{
-								if(!$invoices['paid_percent'])
-								{
-									$invoices['paid_percent'] = 100;
-								}
-								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[paid_percent][".$j."]' id='values[paid_percent][".$j."]'  class='myValuesForPHP'  type='text' size='3' maxlength='3' value='".$invoices['paid_percent']."'/>";
-							}
-						}
-						else if(($i == 4))
-						{
 							if($invoices['charge_tenant'] == 1)
 							{
 								if($invoices['claim_issued'] == '')
@@ -1790,12 +1773,12 @@ JS;
 							}
 
 						}
-						else if(($i == 5))
+						else if(($i == 4))
 						{
 							$json_row[$uicols[$i]['col_name']]  .= $invoices['invoice_id'];
 						}
 
-						else if(($i == 6))
+						else if(($i == 5))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1807,12 +1790,12 @@ JS;
 							}
 						}
 
-						else if(($i == 7))
+						else if(($i == 6))
 						{
 							$json_row[$uicols[$i]['col_name']]  .= $invoices['amount'];
 						}
 
-						else if(($i == 8))
+						else if(($i == 7))
 						{
 
 							if($invoices['paid'] == true)
@@ -1827,12 +1810,12 @@ JS;
 
 						}
 
-						else if(($i == 9))
+						else if(($i == 8))
 						{
 							$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
 						}
 
-						else if(($i == 10))
+						else if(($i == 9))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1843,7 +1826,7 @@ JS;
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
 							}
 						}
-						else if(($i == 11))
+						else if(($i == 10))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1870,7 +1853,7 @@ JS;
 
 							}
 						}
-						else if(($i == 12))
+						else if(($i == 11))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1881,7 +1864,7 @@ JS;
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
 							}
 						}
-						else if(($i == 13))
+						else if(($i == 12))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1908,7 +1891,7 @@ JS;
 
 							}
 						}
-						else if(($i == 14))
+						else if(($i == 13))
 						{
 							if($invoices['remark'] == true)
 							{
@@ -1924,7 +1907,7 @@ JS;
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						else if(($i == 15))
+						else if(($i == 14))
 						{
 							if(isset($invoices['external_ref']) && $invoices['external_ref'])
 							{
@@ -1936,15 +1919,15 @@ JS;
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						else if($i == 16)
+						else if($i == 15)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
 						}
-						else if($i == 17)
+						else if($i == 16)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
 						}
-						else if($i == 18)
+						else if($i == 17)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['external_ref'];
 						}
