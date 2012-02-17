@@ -395,7 +395,7 @@
 			}
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
-				. "fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table"
+				. "fm_workorder.claim_issued FROM $table"
 				. " {$this->left_join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
 				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
@@ -431,7 +431,7 @@
 						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'charge_tenant'			=> $this->db->f('charge_tenant'),
 						'vendor'				=> $this->db->f('org_name'),
-						'paid_percent'			=> $this->db->f('paid_percent'),
+			//			'paid_percent'			=> $this->db->f('paid_percent'),
 						'project_group'			=> $this->db->f('project_id'),
 						'external_ref'			=> $this->db->f('external_ref'),
 						'currency'				=> $this->db->f('currency'),
@@ -789,11 +789,12 @@
 						$update_status[$workorder_id]='R';
 					}
 
+/*
 					if(isset($values['paid_percent'][$n]) && $values['paid_percent'][$n])
 					{
 						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
 					}
-
+*/
 					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,{$dimd_field}, mvakode = {$tax_code},spbudact_code = '{$budget_account}',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
@@ -824,6 +825,7 @@
 				}
 			}
 
+/*
 			if (isset($update_paid_percent) AND is_array($update_paid_percent))
 			{
 				$workorder = CreateObject('property.soworkorder');
@@ -845,7 +847,7 @@
 					}
 				}
 			}
-
+*/
 			$GLOBALS['phpgw']->db->transaction_commit();
 
 			return $receipt;
