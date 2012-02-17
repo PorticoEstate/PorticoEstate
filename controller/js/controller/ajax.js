@@ -157,7 +157,76 @@ $(document).ready(function(){
 			});
 			
     });
+	
+	// When control area is selected, controls are fetched from db and control select list is populated
+	$("#control_area").change(function () {
+		 var control_area_id = $(this).val();
+		 if(control_area_id == '')
+			 control_area_id = "all";
+			 
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
+         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Velg kontrollgruppe</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
+         		  		$("#control_group").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
+	// When control area is selected, controls are fetched from db and control select list is populated
+/*	$("#control_group").change(function () {
+		 var control_group_id = $(this).val();
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_area_by_control_group', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_group_id=" + control_group_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Ingen kontrollområde</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollområder</option>"
+         		  		$("#control_group_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+*/
 	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated

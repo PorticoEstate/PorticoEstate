@@ -100,32 +100,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter', 
-								'name' => 'status',
-								'text' => lang('Status').':',
-								'list' => array(
-									array(
-										'id' => 'none',
-										'name' => lang('Not selected')
-									), 
-									array(
-										'id' => 'NEW',
-										'name' => lang('NEW')
-									), 
-									array(
-										'id' => 'PENDING',
-										'name' =>  lang('PENDING')
-									), 
-									array(
-										'id' => 'REJECTED',
-										'name' => lang('REJECTED')
-									), 
-									array(
-										'id' => 'ACCEPTED',
-										'name' => lang('ACCEPTED')
-									)
-								)
-							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
@@ -299,6 +273,7 @@
 				$cats->supress_info	= true;
 				
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
 								
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
@@ -312,8 +287,7 @@
 				// END as categories
 
 				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures();
-
+				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
 
 				if($this->flash_msgs)
 				{
@@ -362,6 +336,7 @@
 						);
 					}
 				}
+				array_unshift($procedure_options,array ('id'=>'','name'=> lang('select value')));
 
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
 
@@ -403,6 +378,9 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_group');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+				self::add_javascript('controller', 'controller', 'jquery.js');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 			else if(isset($_POST['save_control_group_items']))
@@ -432,6 +410,7 @@
 				$cats->supress_info	= true;
 				
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
 								
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
@@ -445,8 +424,7 @@
 				// END as categories
 
 				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$procedure_array = $this->so_procedure->get_procedures();
-
+				$procedure_array = $this->so_procedure->get_procedures(null,null,'title','ASC',null,null,null);
 
 				if($this->flash_msgs)
 				{
@@ -495,6 +473,7 @@
 						);
 					}
 				}
+				array_unshift($procedure_options,array ('id'=>'','name'=> lang('select value')));
 
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
 
@@ -544,6 +523,9 @@
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+				self::add_javascript('controller', 'controller', 'jquery.js');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
@@ -713,11 +695,44 @@
 		public function get_control_groups_by_control_area()
 		{
 			$control_area_id = phpgw::get_var('control_area_id');
-			
-			$control_groups_array = $this->so->get_control_groups_by_control_area($control_area_id);
+			if($control_area_id == "all")
+			{
+				//get all control groups
+				$control_groups_array = $this->so->get_all_control_groups_array();
+			}
+			else
+				$control_groups_array = $this->so->get_control_groups_by_control_area($control_area_id);
 			
 			if(count($control_groups_array)>0)
 				return json_encode( $control_groups_array );
+			else
+				return null;
+		}
+		
+		public function get_control_area_by_control_group()
+		{
+			$control_group_id = phpgw::get_var('control_group_id');
+			if($control_group_id)
+			{
+				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+								
+				$control_area_array = array();
+				foreach($control_areas['cat_list'] as $cat_list)
+				{
+					$control_area_array[] = array
+					(
+						'id' 	=> $cat_list['cat_id'],
+						'name'	=> $cat_list['name'],
+					);		
+				}
+			}
+			else
+			{
+				$control_areas_array = $this->so->get_control_areas_by_control_group($control_group_id);
+			}
+			
+			if(count($control_areas_array)>0)
+				return json_encode( $control_areas_array );
 			else
 				return null;
 		}

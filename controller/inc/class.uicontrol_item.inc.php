@@ -94,32 +94,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter', 
-								'name' => 'status',
-								'text' => lang('Status').':',
-								'list' => array(
-									array(
-										'id' => 'none',
-										'name' => lang('Not selected')
-									), 
-									array(
-										'id' => 'NEW',
-										'name' => lang('NEW')
-									), 
-									array(
-										'id' => 'PENDING',
-										'name' =>  lang('PENDING')
-									), 
-									array(
-										'id' => 'REJECTED',
-										'name' => lang('REJECTED')
-									), 
-									array(
-										'id' => 'ACCEPTED',
-										'name' => lang('ACCEPTED')
-									)
-								)
-							),
 							array('type' => 'filter',
 								'name' => 'control_groups',
 								'text' => lang('Control_group').':',
@@ -138,11 +112,6 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 							array(
 								'type' => 'link',
@@ -319,6 +288,7 @@
 				$cats->supress_info	= true;
 				
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
 								
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
@@ -374,9 +344,14 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
 
-				$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
+				/*$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
 				$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
-				$GLOBALS['phpgw']->richtext->generate_script();
+				$GLOBALS['phpgw']->richtext->generate_script();*/
+				$this->use_yui_editor(array('what_to_do','how_to_do'));
+				
+				self::add_javascript('controller', 'controller', 'jquery.js');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 
 				self::render_template_xsl('control_item/control_item', $data);
 			}
