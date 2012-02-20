@@ -200,6 +200,7 @@ class controller_socheck_list extends controller_socommon
 			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+			$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
 			$results[] = $control->toArray(); 
@@ -430,6 +431,7 @@ class controller_socheck_list extends controller_socommon
 				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+								
 				if($use_location_inparam)
 				{
 					$control->set_location_code($location_code);
@@ -481,8 +483,6 @@ class controller_socheck_list extends controller_socommon
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
-
-		
 		
 		$this->db->query($sql);
 		

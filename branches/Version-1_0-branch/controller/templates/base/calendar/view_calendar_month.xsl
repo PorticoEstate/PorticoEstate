@@ -141,7 +141,7 @@
 				<ul id="days_view" class="calendar days">
 					<li class="heading">
 						<xsl:for-each select="heading_array">
-							<div><xsl:value-of select="."/></div>
+							<div class="cell"><xsl:value-of select="."/></div>
 						</xsl:for-each>
 					</li>
 					<xsl:choose>	
@@ -151,7 +151,7 @@
 							<xsl:for-each select="calendar_array">
 						    		<xsl:choose>
 										<xsl:when test="status = 'control_registered'">
-											<div>
+											<div class="cell">
 											<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
@@ -167,7 +167,7 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_planned'">
-											<div>
+											<div class="cell">
 											<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -179,7 +179,7 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
-											<div>
+											<div class="cell">
 												<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -192,8 +192,8 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
-											<div style="position:relative;">
-						    					<div id="info_box" style="position:absolute;display:none;"></div>
+											<div class="cell" style="position:relative;">
+						    					<div id="info_box"></div>
 												<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -206,8 +206,8 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_accomplished_with_errors'">
-											<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-												<div id="info_box" style="position:absolute;display:none;"></div>
+											<div class="cell" style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+												<div id="info_box"></div>
 						    					<a class="view_check_list">
 												 	<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -223,8 +223,8 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_not_accomplished_with_info'">
-											<div style="position:relative;">
-						    					<div id="info_box" style="position:absolute;display:none;"></div>
+											<div class="cell" style="position:relative;">
+						    					<div id="info_box"></div>
 												<a>
 												<xsl:attribute name="href">
 													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -237,7 +237,7 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_not_accomplished'">
-											<div>
+											<div class="cell">
 												<a>
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
@@ -253,12 +253,12 @@
 											</div>
 										</xsl:when>
 										<xsl:when test="status = 'control_canceled'">
-											<div>
+											<div class="cell">
 												<img height="15" src="controller/images/status_icon_red_cross.png" />
 											</div>
 										</xsl:when>
 										<xsl:otherwise>
-										<div></div>
+											<div class="cell"></div>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:for-each>

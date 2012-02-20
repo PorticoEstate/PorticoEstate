@@ -79,7 +79,7 @@ YAHOO.portico.initializeDataTable = function()
 		resultsList: "ResultSet.Result",
 		fields: fields,
 		metaFields : {
-			totalResultsAvailable: "ResultSet.totalResultsAvailable",
+			totalResultsAvailable: "ResultSet.totalRecords",
 			recordsReturned: "ResultSet.recordsReturned",
 			startIndex: 'ResultSet.startIndex',
 			sortKey: 'ResultSet.sortKey',

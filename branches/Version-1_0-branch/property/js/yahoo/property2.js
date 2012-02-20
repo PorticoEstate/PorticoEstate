@@ -529,18 +529,13 @@
 
 	this.execute_async = function(datatable, incoming_url)
 	{
-		if(incoming_url !='undfined')
+		if(typeof(incoming_url) != 'undefined')
 		{
 			base_java_url = incoming_url;
 		}
-		try	{
-	 			ds = phpGWLink('index.php',base_java_url,true);
-	 			//ds = url;
-			}
-		catch(e)
-			{
-				alert(e);
-			}
+
+ 		ds = phpGWLink('index.php',base_java_url,true);
+		
 		var callback =
 		{
 			success: function(o)

@@ -64,7 +64,7 @@
 		// Objects
 		protected $check_lists_array = array();
 		// Array that contains open cases for a month   
-		protected $agg_open_cases_for_month_array = array();
+		protected $agg_open_cases_pr_month_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -241,12 +241,12 @@
 		
 		public function get_check_lists_array() { return $this->check_lists_array; }
 		
-		public function set_agg_open_cases_for_month_array($agg_open_cases_for_month_array)
+		public function set_agg_open_cases_pr_month_array($agg_open_cases_pr_month_array)
 		{
-			$this->agg_open_cases_for_month_array = $agg_open_cases_for_month_array;
+			$this->agg_open_cases_pr_month_array = $agg_open_cases_pr_month_array;
 		}
 		
-		public function get_agg_open_cases_for_month_array() { return $this->agg_open_cases_for_month_array; }
+		public function get_agg_open_cases_pr_month_array() { return $this->agg_open_cases_pr_month_array; }
 		
 		/**
 		 * Get a static reference to the storage object associated with this model object

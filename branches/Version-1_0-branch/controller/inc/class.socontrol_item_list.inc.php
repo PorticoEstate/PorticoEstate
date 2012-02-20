@@ -218,17 +218,33 @@
 			return $results;
 		}
 
+		// Deletes control list item defines by control id and control item id
 		function delete($control_id, $control_item_id)
 		{
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
 
 			return isset($result);
 		}
-
+		
+		// Deletes all control items that a control has
 		function delete_control_items($control_id)
 		{
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 
+			return isset($result);
+		}
+
+		// Deletes all control items that a control has
+		function delete_control_items_for_group_list($control_id, $control_group_id)
+		{
+  			$sql  = "DELETE FROM controller_control_item_list "; 
+  			$sql .= "USING controller_control_item ";
+  			$sql .= "WHERE control_id = $control_id ";
+  			$sql .= "AND control_item_id = controller_control_item.id ";
+  			$sql .= "AND controller_control_item.control_group_id = $control_group_id";
+			
+			$result = $this->db->query($sql);
+			
 			return isset($result);
 		}
 

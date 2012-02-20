@@ -415,28 +415,58 @@
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
 		
+		/**
+		 * Public function for saving control groups. Saves 
+		 * the database and the virtual file system (vfs).
+		 * 
+		 * @param HTTP::id	the document id
+		 * @return true if successful, false if error, permission denied message on
+		 * 			not enough privileges
+		 */
 		public function save_control_groups(){
 			$control_id = phpgw::get_var('control_id');
 			$control_group_ids = phpgw::get_var('control_group_ids');		
 
+			// Fetches saved control groups 
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			
+			// Deletes groups from control that's not among the chosen groups
+			foreach($saved_control_groups as $group)
+			{
+				// If saved group id not among chosen control ids, delete the group for the control    
+				if( !in_array($group->get_id(), $saved_control_groups) ){
+						$this->so_control_group_list->delete($control_id, $group->get_id());
+						
+						// Deletes control items for group
+						$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
+				}
+			}
+			
+			/*
 			// Deleting earlier saved control groups
 			$this->so_control_group_list->delete_control_groups($control_id);
 			
 			// Deleting earlier saved control items
 			$this->so_control_item_list->delete_control_items($control_id);
+			*/
 			
 			$group_order_nr = 1;
 
 			// Saving control groups 
 			foreach ($control_group_ids as $control_group_id)
 			{
-				$control_group_list = new controller_control_group_list();
-				$control_group_list->set_control_id($control_id);
-				$control_group_list->set_control_group_id($control_group_id);
-				$control_group_list->set_order_nr($group_order_nr);
+				$control_group = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $control_group_id);
+				
+				if($control_group == null)
+				{
+					$control_group_list = new controller_control_group_list();
+					$control_group_list->set_control_id($control_id);
+					$control_group_list->set_control_group_id($control_group_id);
+					$control_group_list->set_order_nr($group_order_nr);
 							
-				$this->so_control_group_list->add($control_group_list);
-				$group_order_nr++;
+					$this->so_control_group_list->add($control_group_list);
+					$group_order_nr++;	
+				}
 			}
 
 			// Redirect: view_control_items
