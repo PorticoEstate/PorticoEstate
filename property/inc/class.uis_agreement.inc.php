@@ -198,17 +198,18 @@
 						'status_id'		=> $this->status_id
 					));
 
-				$datatable['config']['base_java_url'] = "menuaction:'property.uis_agreement.index'";
-/*
+				$datatable['config']['base_java_url'] = "menuaction:'property.uis_agreement.index',"
 					."sort:'{$this->sort}',"
 					."order:'{$this->order}',"
 					."cat_id: '{$this->cat_id}',"
+					."vendor_id: '{$this->vendor_id}',"
+					."status_id: '{$this->status_id}',"
 					."filter:'{$this->filter}',"
 					."query:'{$this->query}',"
 					."p_num: '{$this->p_num}',"
 					."role:'{$this->role}',"
 					."member_id:'{$this->member_id}'";
-*/
+
 				$datatable['config']['allow_allrows'] = true;
 
 				$link_data = array

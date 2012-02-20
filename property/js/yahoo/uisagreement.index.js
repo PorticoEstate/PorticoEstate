@@ -42,6 +42,29 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			//category
+			index = locate_in_array_options(0,"value",path_values.member_id);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+			index = locate_in_array_options(1,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
+			index = locate_in_array_options(2,"value",path_values.vendor_id);
+console.log(index);
+			if(index)
+			{
+				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+			}
+			index = locate_in_array_options(3,"value",path_values.status_id);
+console.log(path_values);
+			if(index)
+			{
+				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
+			}
 			//focus initial
 			oMenuButton_0.focus();
 		}
