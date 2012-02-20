@@ -150,6 +150,7 @@
 			}
 			else
 			{
+				$query = '';
 				$allrows=true;
 				$entity_table = 'fm_s_agreement_detail';
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail'); 
@@ -400,6 +401,7 @@
 					}
 
 					$query_arr[]= "location_code {$this->like} '$query%'";
+					$query_arr[]= "org_name {$this->like} '%$query%'";
 
 					if (isset($query_arr[0]))
 					{
