@@ -224,7 +224,7 @@
 				}
 			}
 			
-			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'customer_type,customer_organization_number,customer_ssn,to_', 'dir' => 'asc'));
+			$reservations = $this->completed_reservation_so->read(array('filters' => $filters, 'results' => 'all', 'order' => 'customer_type,customer_identifier_type,customer_organization_number,customer_ssn,to_', 'dir' => 'asc'));
 			
 			if (count($reservations['results']) > 0) {
 				return $reservations['results'];
