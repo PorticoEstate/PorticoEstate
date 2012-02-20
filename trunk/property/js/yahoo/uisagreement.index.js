@@ -54,13 +54,11 @@
 				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
 			}
 			index = locate_in_array_options(2,"value",path_values.vendor_id);
-console.log(index);
 			if(index)
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
 			index = locate_in_array_options(3,"value",path_values.status_id);
-console.log(path_values);
 			if(index)
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));

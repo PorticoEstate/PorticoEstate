@@ -139,7 +139,6 @@ var Button_2_0;
 				break;
 			}
 		}
-
 		if(flag)
 		{
 			//asign value to hidden
@@ -149,7 +148,6 @@ var Button_2_0;
 			YAHOO.util.Connect.setForm(formObject[3]);
 			execute_async(myDataTable_1);
 		}
-
 	}
 
 /********************************************************************************/
