@@ -159,8 +159,8 @@
 				),
 			);
 			
-			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('datatable');
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 //_debug_array($data);
 
@@ -293,12 +293,24 @@
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
-					$control_area_array[] = array
-					(
-						'id' 	=> $cat_list['cat_id'],
-						'name'	=> $cat_list['name'],
-					);		
-				}
+					if($cat_list['cat_id'] == $control_item->get_control_area_id())
+					{
+						$control_area_array[] = array
+						(
+							'id' 	=> $cat_list['cat_id'],
+							'name'	=> $cat_list['name'],
+							'selected' => 1,
+						);
+					}
+					else
+					{
+						$control_area_array[] = array
+						(
+							'id' 	=> $cat_list['cat_id'],
+							'name'	=> $cat_list['name'],
+						);
+					}
+				}				
 				// END as categories
 				//$control_area_array = $this->so_control_area->get_control_area_array();
 				$control_group_array = $this->so_control_group->get_control_group_array();
@@ -322,12 +334,24 @@
 */
 				foreach ($control_group_array as $control_group)
 				{
-					$control_group_options[] = array
-					(
-						'id'	=> $control_group->get_id(),
-						'name'	=> $control_group->get_group_name()
-						 
-					);
+					if($control_group->get_id() == $control_item->get_control_group_id())
+					{
+						$control_group_options[] = array
+						(
+							'id'	=> $control_group->get_id(),
+							'name'	=> $control_group->get_group_name(),
+							'selected' => 1
+						);
+					}
+					else
+					{
+						$control_group_options[] = array
+						(
+							'id'	=> $control_group->get_id(),
+							'name'	=> $control_group->get_group_name()
+							 
+						);
+					}
 				}
 
 				$control_item_array = $control_item->toArray();
@@ -420,8 +444,8 @@
 			}
 
 			$results['total_records'] = $object_count;
-			$results['start'] = $params['start'];
-			$results['sort'] = $params['sort'];
+			$results['start'] = $start_index;
+			$results['sort'] = $sort_field;
 			$results['dir'] = $params['dir'];
 
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item.view");
