@@ -816,9 +816,9 @@ ul.check_list {
 }
 
 #control_plan .col_2 {
-    float:right;
-    width:300px;
-    margin-top:40px;
+    float: right;
+    margin-top: 40px;
+    width: 330px;
 }
 
 ul.calendar li{
@@ -867,7 +867,7 @@ a.move_right {
     position: relative;
     width: 37%;
 }
-ul.calendar.days li div {
+ul.calendar.days li div.cell {
     height: 17px;
     width: 24px;
 }
@@ -924,6 +924,8 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     width: 350px;
     z-index: 1;
     font-size:12px;
+    position:absolute;
+    display:none;
 }
 
 #info_box label{
