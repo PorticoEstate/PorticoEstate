@@ -457,7 +457,6 @@
 			$columns[] = 'short_info';
 
 			$output[] = $this->format_to_csv_line($columns);
-
 			foreach ($reservations as $reservation) {
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
@@ -640,6 +639,7 @@
 
 			$stored_header = array();			
 			$line_no = 0;
+            $header_count = 0;
 			foreach($reservations as &$reservation) {
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
@@ -650,7 +650,7 @@
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
-
+                    $header_count += 1;
 					//header level
 					$header = $this->get_agresso_row_template();
 					$header['accept_flag'] = '1';
@@ -878,8 +878,8 @@
 			if (count($export_info) == 0) {
 				return null;
 			}
-			
-			return array('data' => implode("\n", $output), 'info' => $export_info);
+		
+			return array('data' => implode("\n", $output), 'info' => $export_info, 'header_count' => $header_count);
 		}
 		
 		protected function get_agresso_row_template() {

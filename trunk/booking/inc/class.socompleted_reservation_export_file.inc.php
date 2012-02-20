@@ -121,6 +121,9 @@
 						if (!is_null($export_result['export'])) {
 							$export_infos[$export_type][] = $export_result['export']['info'];	
 						}
+                        if ($export_type == 'external') {
+							$export_result['total_items'] = $export_result['export']['header_count'];	
+                        }
 						
 						$export_configurations[$export_type][$export['id']] = $conf;
 						$total_items[$export_type] += $export_result['total_items'];
