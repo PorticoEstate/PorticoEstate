@@ -434,25 +434,22 @@ $(document).ready(function(){
 	    			  // Show info box with info about check list
 		    		  var infoBox = $(divWrp).find("#info_box");
 		    		  $(infoBox).show();
-		    		  $(infoBox).html("");
 		    		  
-		    		  $(infoBox).html("<h5>Åpne saker</h5>");
-		    		  
-		    		  var htmlList = "<ul>";
+		    		  var htmlStr = "<h5>Åpne saker</h5><ul>";
 		    		
 		    		  $.each(obj, function(i) {
-		    			  htmlList += "<li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj[i].control_item.title + "</span>";
-		    			  htmlList += "<ul>";
+		    			  htmlStr += "<li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj[i].control_item.title + "</span>";
+		    			  htmlStr += "<ul>";
 		    			  
 		    			  $(obj[i].cases_array).each(function(j) {
-		    				  htmlList += "<li>" + "Sak " + (parseInt(j) + 1) + ":  " + obj[i].cases_array[j].descr + "</li>";
+		    				  htmlStr += "<li>" + "Sak " + (parseInt(j) + 1) + ":  " + obj[i].cases_array[j].descr + "</li>";
 		    			  });
-		    			  htmlList += "</li></ul>";
+		    			  htmlStr += "</ul></li>";
 		    			});
 		    		  
-		    		  htmlList += "</ul>"; 
+		    		  htmlStr += "</ul>"; 
 		    		
-		    		  $(infoBox).append( htmlList );  
+		    		  $(infoBox).html( htmlStr );  
 	    		  }
 	    	  }
 		   });

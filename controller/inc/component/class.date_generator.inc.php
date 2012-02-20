@@ -1,5 +1,9 @@
 <?php
-	
+
+/* This class generates dates based on start date, end date, 
+ * repeat type(day, week, month, year) and repeat interval
+ */
+
 class date_generator 
 {		
 	private $start_date;

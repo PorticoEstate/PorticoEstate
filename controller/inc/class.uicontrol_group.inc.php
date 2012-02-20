@@ -537,7 +537,7 @@
 
 			$status = true;
 
-			$control_group_list = $this->so_control_group_list->get_single_2($control_id, $control_group_id);
+			$control_group_list = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $control_group_id);
 
 			if( $control_group_list == null ){
 				$control_group_list = new controller_control_group_list();

@@ -160,7 +160,7 @@
 
 			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 			$sql = "SELECT * FROM controller_control_group $order";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{

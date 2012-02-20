@@ -37,6 +37,7 @@
 						 				<span class="drag">
 						 					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_tags[]" value="{$order_tag}" />
 						 				</span>
+						 				<!-- 
 						 				<a class="delete">
 											<xsl:attribute name="href">
 												<xsl:text>index.php?menuaction=controller.uicontrol_item.delete_item_list</xsl:text>
@@ -47,6 +48,7 @@
 											</xsl:attribute>
 											<span>x</span>
 										</a>
+										 -->
 						 			</li>
 								</xsl:for-each>
 							</ul>

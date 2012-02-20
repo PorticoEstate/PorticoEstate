@@ -613,11 +613,9 @@
 								<div id="contextmenu_1"/>
 								<div style="height:15px;"/>
 								<div id="datatable-buttons_2" class="div-buttons">
-									<input type="text" id="values_date" class="calendar-opt" name="values[date]" size="10" value="{date}" readonly="readonly" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+									<input type="text" id="values_date" class="calendar-opt" name="values[date]" size="10" value="{date}" readonly="readonly">
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
