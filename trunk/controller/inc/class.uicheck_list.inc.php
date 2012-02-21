@@ -91,6 +91,12 @@
 			self::set_active_menu('controller::control::check_list');
 		}	
 		
+		/**
+		 * Public function for displaying checklists  
+		 * 
+		 * @param HTTP:: phpgw_return_as
+		 * @return data array
+		*/
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -182,6 +188,12 @@
 			self::render_template_xsl('datatable', $data);
 		}
 		
+		/**
+		 * Public function for displaying the add check list form  
+		 * 
+		 * @param HTTP:: location code, control id, date
+		 * @return data array
+		*/
 		function add_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
@@ -233,6 +245,12 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/add_check_list'), $data);
 		}
 		
+		/**
+		 * Public function for displaying the edit check list form  
+		 * 
+		 * @param HTTP:: check list id
+		 * @return data array
+		*/
 		function edit_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 
@@ -266,6 +284,12 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
 		
+		/**
+		 * Public function for displaying the edit check list form
+		 * 
+		 * @param HTTP:: check list id
+		 * @return data array
+		*/
 		function view_cases_for_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
@@ -295,6 +319,12 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
+		/**
+		 * Public function for saving a check list
+		 * 
+		 * @param HTTP:: location code, control id, status etc.. (check list details) 
+		 * @return data array
+		*/
 		function save_check_list(){
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
@@ -329,6 +359,12 @@
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
 		}
 		
+		/**
+		 * Public function for displaying the create message form
+		 * 
+		 * @param HTTP:: check list id 
+		 * @return data array
+		*/
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
@@ -361,6 +397,12 @@
 			self::render_template_xsl('create_case_messsage', $data);
 		}
 		
+		/**
+		 * Public function for displaying the create message form
+		 * 
+		 * @param HTTP:: check list id 
+		 * @return data array
+		*/
 		public function view_control_info(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
