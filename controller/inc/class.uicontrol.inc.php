@@ -96,6 +96,12 @@
 			self::set_active_menu('controller::control');
 		}
 		
+		/**
+		 * Fetches controls and returns to datatable 
+		 *
+		 * @param HTTP::phpgw_return_as	specifies how data should be returned
+		 * @return data array
+		 */
 		public function control_list()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -266,6 +272,12 @@
 			self::render_template_xsl('datatable', $data);
 		}
 		
+		/**
+		 * Fetches control details from db and returns to view 
+		 *
+		 * @param HTTP:: control id
+		 * @return data array 
+		 */
 		public function view_control_details()
 		{
 			$control_id = phpgw::get_var('id');
@@ -330,6 +342,12 @@
 			$this->use_yui_editor(array('description'));
 		}
 		
+		/**
+		 * Public function for saving control details 
+		 *
+		 * @param HTTP:: control id, control details fields
+		 * @return redirect to function view_control_groups
+		 */
 		public function save_control_details(){
 			$control_id = phpgw::get_var('control_id');
 			
@@ -367,7 +385,13 @@
 			}
 		}
 						
-		// Displays control groups based on previously chosen control area
+		/**
+		 * Public function for viewing control groups 
+		 * Displays control groups by chosen control area  
+		 *
+		 * @param HTTP:: control id 
+		 * @return data array 
+		 */
 		public function view_control_groups(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);	
@@ -416,12 +440,10 @@
 		}
 		
 		/**
-		 * Public function for saving control groups. Saves 
-		 * the database and the virtual file system (vfs).
+		 * Public function for saving control groups. 
 		 * 
-		 * @param HTTP::id	the document id
-		 * @return true if successful, false if error, permission denied message on
-		 * 			not enough privileges
+		 * @param HTTP::id	the control_id, and a comma seperated list of group ids
+		 * @return redirect to function view_control_items
 		 */
 		public function save_control_groups(){
 			$control_id = phpgw::get_var('control_id');
@@ -441,14 +463,6 @@
 						$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
 				}
 			}
-			
-			/*
-			// Deleting earlier saved control groups
-			$this->so_control_group_list->delete_control_groups($control_id);
-			
-			// Deleting earlier saved control items
-			$this->so_control_item_list->delete_control_items($control_id);
-			*/
 			
 			$group_order_nr = 1;
 
@@ -473,7 +487,12 @@
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_items', 'control_id'=>$control_id));	
 		}
 		
-		// Gets a comma separated list of control groups, and displays control items for these groups
+		/**
+		 * Public function for viewing control items 
+		 * 
+		 * @param HTTP::id	the control_id
+		 * @return redirect to function view_control_items
+		 */
 		public function view_control_items(){
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so->get_single($control_id);
@@ -531,7 +550,12 @@
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
 		}
 		
-		// Saves chosen control items through receiving a comma separated list of control tags (1:2, control_group_id:control_item_id) 
+		/**
+		 * Public function for saving control items 
+		 * 
+		 * @param HTTP::id	the control_id and a comma separated list of tags (1:2, control_group_id:control_item_id)
+		 * @return redirect to function view_control_items
+		 */ 
 		public function save_control_items(){
 			$control_id = phpgw::get_var('control_id');
 			
@@ -560,7 +584,13 @@
 	
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id ));	
 		}
-		
+
+		/**
+		 * Public function for viewing chosen control items
+		 * 
+		 * @param HTTP::id the control_id
+		 * @return data array 
+		*/ 
 		public function view_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);
@@ -655,8 +685,13 @@
 			
 			return $tabs;
 		} 
-		
-		// Returns control list info as JSON
+
+		/**
+		 * Public function for retrieving controls that has a certain control area  
+		 * 
+		 * @param HTTP:: control area id
+		 * @return array of controls as json 
+		*/ 
 		public function get_controls_by_control_area()
 		{
 			$control_area_id = phpgw::get_var('control_area_id');
@@ -669,7 +704,12 @@
 				return null;
 		}
 		
-		// Returns locations for a control
+		/**
+		 * Public function for retrieving locations that is assigned to a control  
+		 * 
+		 * @param HTTP:: control id
+		 * @return array of locations as json 
+		*/
 		public function get_locations_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -697,6 +737,13 @@
 			return $this->yui_results($results);
 		}
 		
+		/**
+		 * Add data for context menu
+		 *
+		 * @param $value pointer to
+		 * @param $key ?
+		 * @param $params [type of query, editable]
+		 */
 		public function add_actions(&$value, $key, $params)
 		{
 			unset($value['query_location']);
