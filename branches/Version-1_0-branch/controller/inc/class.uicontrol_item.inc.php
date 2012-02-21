@@ -70,6 +70,15 @@
 
 		public function index()
 		{
+			$dir = phpgw::get_var('dir');
+			if($dir)
+			{
+				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json', 'sort_dir' => 'desc');
+			}
+			else
+			{
+				$query_array = array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json');
+			}
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -123,7 +132,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_item.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link($query_array),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -267,7 +276,7 @@
 							$error = lang('messages_form_error');
 						}
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index', 'dir' => 'desc'));
 				}
 			}
 			else if(isset($_POST['cancel_control_item'])) // The user has pressed the cancel button
@@ -388,9 +397,17 @@
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
 				'query'	=> phpgw::get_var('query'),
 				'sort'	=> phpgw::get_var('sort'),
-				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
+			
+			if(phpgw::get_var('sort_dir'))
+			{
+				$params['dir'] = phpgw::get_var('sort_dir');
+			}
+			else
+			{
+				$params['dir'] = phpgw::get_var('dir');
+			}
 
 			$ctrl_area = phpgw::get_var('control_areas');
 			if(isset($ctrl_area) && $ctrl_area > 0)
@@ -421,7 +438,10 @@
 			{
 				$sort_field = 'control_item_id';
 			}
-			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			if(phpgw::get_var('sort_dir') == 'desc')
+				$sort_ascending = false;
+			else
+				$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			//Create an empty result set
 			$records = array();
 

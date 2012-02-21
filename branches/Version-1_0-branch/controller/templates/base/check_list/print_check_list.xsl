@@ -27,6 +27,8 @@
 														
 			 			<li class="list_item">
 			 				<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
+			 				<br/><i>Hva skal utføres</i><br/><xsl:value-of select="what_to_do" disable-output-escaping="yes"/>
+			 				<br/><i>Utførelsesbeskrivelse</i><br/><xsl:value-of select="how_to_do" disable-output-escaping="yes"/><br/><br/>
 			 			</li>
 					</xsl:for-each>
 				</ul>
