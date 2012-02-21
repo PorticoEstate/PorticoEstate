@@ -471,46 +471,8 @@ dd ul li {
 	list-style-position: inside;
 }
 
-ul.expand_list h4 {
-    cursor: pointer;
-    font-size: 17px;
-    margin-bottom: 6px;
-    margin-top: 0;
-}
 
-ul.expand_list li ul {
-    display:none;
-    margin-left:21px;
-}
-
-ul.expand_list li ul li{
-    margin-bottom: 3px;
-}
-
-ul.expand_list h4 span {
-    padding-left: 5px;
-    vertical-align: middle;
-}
-
-.yui-content input[type="submit"] {
-    margin: 15px 0 0;
-    padding: 1px 15px;
-}
-h1 img{
- 	margin-right:5px;
- }
- 
-#control_tabview .yui-navset, #control_location_tabview .yui-navset{
-	margin:0;
-}
-
-#control_tabview .identifier-header, #control_location_tabview .identifier-header {
-	padding-left:0;
-}
-
-#control_tabview .yui-content{
-	padding:20px;
-}
+/* =======================================  ITEM LIST  ========================================= */
 
 ul.itemlist {
     position: relative;
@@ -546,6 +508,54 @@ ul.groups h3 {
 
 .drag_group {
 	width: 650px;
+}
+
+/* =======================================  EXPAND LIST  ========================================= */
+
+ul.expand_list h4 {
+    cursor: pointer;
+    font-size: 17px;
+    margin-bottom: 6px;
+    margin-top: 0;
+}
+
+ul.expand_list li ul {
+    display:none;
+    margin-left:21px;
+}
+
+ul.expand_list li ul li {
+    margin-bottom: 3px;
+    padding: 3px;
+}
+
+ul.expand_list input {
+    margin: 0 8px 0 5px;
+}
+
+ul.expand_list h4 span {
+    padding-left: 5px;
+    vertical-align: middle;
+}
+
+.yui-content input[type="submit"] {
+    margin: 15px 0 0;
+    padding: 1px 15px;
+}
+h1 img{
+ 	margin-right:5px;
+ }
+ 
+#control_tabview .yui-navset, #control_location_tabview .yui-navset{
+	margin:0;
+}
+
+#control_tabview .identifier-header, #control_location_tabview .identifier-header {
+	padding-left:0;
+}
+
+#control_tabview .yui-content{
+	padding:20px;
 }
 
 .yui-content h2{
@@ -1004,6 +1014,9 @@ fieldset.add_check_list label{
 textarea{
 	padding: 4px;	
 }
+
+/*==================================  EXPAND MENU  ======================================== */
+
 .expand_menu div.focus{
 	background: url('../../../images/bg_expand_active.png') no-repeat;
 	color: #FFF;

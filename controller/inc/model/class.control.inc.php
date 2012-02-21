@@ -268,13 +268,19 @@
 				$this->set_title(phpgw::get_var('title','string'));
 				$this->set_description(phpgw::get_var('description','html'));
 				
-				$start_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('start_date','string'), "d/m-Y" );
-				$this->set_start_date($start_date_ts);
-				
-				if( phpgw::get_var('end_date','string') != ""){
+				if(phpgw::get_var('start_date','string') != '')
+				{
+					$start_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('start_date','string'), "d/m-Y" );
+					$this->set_start_date($start_date_ts);
+				}else
+					$this->set_start_date(0);
+								
+				if( phpgw::get_var('end_date','string') != '')
+				{
 					$end_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('end_date','string'), "d/m-Y" );
 					$this->set_end_date( $end_date_ts );
-				}else{
+				}else
+				{
 					$this->set_end_date( 0 );
 				}
 				
@@ -299,8 +305,7 @@
 				'control_area_name' => $this->get_control_area_name(),
 			   	'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
-				'responsibility_name' => $this->get_responsibility_name(),
-			
-				);
+				'responsibility_name' => $this->get_responsibility_name()
+			);
 		}
 	}

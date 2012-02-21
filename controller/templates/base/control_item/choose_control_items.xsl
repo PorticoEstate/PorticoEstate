@@ -18,7 +18,7 @@
 			
 			<ul class="control_items">
 				<xsl:for-each select="groups_with_control_items">
-					<ul class="itemlist expand_list">
+					<ul class="expand_list">
 					<li>
 					 	<xsl:choose>
 						 	<xsl:when test="group_control_items/child::node()">
@@ -29,10 +29,10 @@
 										<xsl:variable name="control_item_id"><xsl:value-of select="control_item/id"/></xsl:variable>
 										<xsl:choose>
 											<xsl:when test="checked = 1">
-												<li><xsl:number/>.  <input type="checkbox"  checked="checked" id="ch_{$control_group_id}:{$control_item_id}" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="control_item/title"/></li>
+												<li><span><xsl:number/>.</span><input type="checkbox"  checked="checked" id="ch_{$control_group_id}:{$control_item_id}" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="control_item/title"/></li>
 											</xsl:when>
 											<xsl:otherwise>
-												<li><xsl:number/>.  <input type="checkbox"  id="ch_{$control_group_id}:{$control_item_id}" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="control_item/title"/></li>
+												<li><span><xsl:number/>.</span><input type="checkbox"  id="ch_{$control_group_id}:{$control_item_id}" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="control_item/title"/></li>
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:for-each>
