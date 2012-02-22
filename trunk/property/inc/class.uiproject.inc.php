@@ -1256,7 +1256,10 @@
 								)
 								{
 									$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
-									$toarray[] = $prefs_coordinator['email'];
+									if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+									{
+										$toarray[] = $prefs_coordinator['email'];
+									}
 								}
 							}
 						

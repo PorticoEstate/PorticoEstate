@@ -1099,16 +1099,19 @@
 						if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 						{
 							$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
-							$toarray[] = $prefs_coordinator['email'];
+							if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
+							{
+								$toarray[] = $prefs_coordinator['email'];
+							}
 						}
 					}
 
-						$notify_list = execMethod('property.notify.read', array
-							(
-								'location_id'		=> $location_id,
-								'location_item_id'	=> $id
-							)
-						);
+					$notify_list = execMethod('property.notify.read', array
+						(
+							'location_id'		=> $location_id,
+							'location_item_id'	=> $id
+						)
+					);
 
 					$subject=lang('workorder %1 has been edited',$id);
 					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
