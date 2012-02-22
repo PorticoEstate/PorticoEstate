@@ -754,11 +754,32 @@
 
 		function oppdater_boa_objekt()
 		{
+			$sql = " SELECT TOP 100 PERCENT v_Objekt.objekt_id,bydel_id,tjenestested,navn,v_Objekt.eier_id FROM v_Objekt";
+			$this->db_boei->query($sql,__LINE__,__FILE__);
+
+			while ($this->db_boei->next_record())
+			{
+				$sql2_utf = " UPDATE fm_location1 SET "
+				. " loc1_name = '" . utf8_encode($this->db_boei->f('navn')) . "',"
+				. " part_of_town_id = " . (int)$this->db_boei->f('bydel_id') . ","
+				. " owner_id = " . (int)$this->db_boei->f('eier_id') . ","
+				. " kostra_id = " . (int)$this->db_boei->f('tjenestested')
+				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
+				$sql2_latin = " UPDATE fm_location1 SET "
+				. " loc1_name = '" . $this->db_boei->f('navn') . "',"
+				. " part_of_town_id = " . (int)$this->db_boei->f('bydel_id') . ","
+				. " owner_id = " . (int)$this->db_boei->f('eier_id') . ","
+				. " kostra_id = " . (int)$this->db_boei->f('tjenestested')
+				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
+
+				$this->db->query($sql2_utf,__LINE__,__FILE__);
+				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+			}
 
 			$sql = " SELECT TOP 100 PERCENT sum(v_Leieobjekt.boareal) as sum_boa, count(leie_id) as ant_leieobjekt,"
-					. " v_Objekt.objekt_id,bydel_id,tjenestested,navn,v_Objekt.eier_id FROM  v_Objekt $this->join v_Leieobjekt ON v_Objekt.objekt_id = v_Leieobjekt.objekt_id"
+					. " v_Objekt.objekt_id FROM  v_Objekt {$this->join} v_Leieobjekt ON v_Objekt.objekt_id = v_Leieobjekt.objekt_id"
 					. " WHERE v_Leieobjekt.formaal_id NOT IN (99)"
-					. " GROUP BY bydel_id,v_Objekt.objekt_id,navn,tjenestested,eier_id";
+					. " GROUP BY v_Objekt.objekt_id";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
 
@@ -768,25 +789,12 @@
 			$i=0;
 			while ($this->db_boei->next_record())
 			{
-				$sql2_utf = " UPDATE fm_location1 SET "
-				. " loc1_name = '" . utf8_encode($this->db_boei->f('navn')) . "',"
+				$sql2 = " UPDATE fm_location1 SET "
 				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "',"
-				. " part_of_town_id = '" . $this->db_boei->f('bydel_id') . "',"
-				. " owner_id = '" . $this->db_boei->f('eier_id') . "',"
-				. " kostra_id = '" . $this->db_boei->f('tjenestested') . "'"
+				. " ant_leieobjekt = " . (int)$this->db_boei->f('ant_leieobjekt')
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
-				$sql2_latin = " UPDATE fm_location1 SET "
-				. " loc1_name = '" . $this->db_boei->f('navn') . "',"
-				. " sum_boa = '" . $this->db_boei->f('sum_boa') . "',"
-				. " ant_leieobjekt = '" . $this->db_boei->f('ant_leieobjekt') . "',"
-				. " part_of_town_id = '" . $this->db_boei->f('bydel_id') . "',"
-				. " owner_id = '" . $this->db_boei->f('eier_id') . "',"
-				. " kostra_id = '" . $this->db_boei->f('tjenestested') . "'"
-				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'";
-
-				$this->db->query($sql2_utf,__LINE__,__FILE__);
-				$this->db_boei2->query($sql2_latin,__LINE__,__FILE__);
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db_boei2->query($sql2,__LINE__,__FILE__);
 				$i++;
 			}
 		//	$this->db->transaction_commit();
@@ -795,8 +803,6 @@
 			$msg = $i . ' Objekt er oppdatert';
 			$this->receipt['message'][]=array('msg'=> $msg);
 			return $msg;
-
-
 		}
 
 		function oppdater_boa_bygg()
