@@ -18,6 +18,9 @@ $(document).ready(function() {
 		}
 	});
 	
+	
+	/* ==========================  EXPANDING/COLLAPSING ALL LISTS ====================== */
+	
 	$(".expand_all").live("click", function(){
 		$(this).addClass("focus");
 		$(".collapse_all").removeClass("focus");
