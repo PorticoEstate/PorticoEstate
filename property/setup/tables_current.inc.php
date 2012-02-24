@@ -2128,14 +2128,30 @@
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
-				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
-				'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_responsibility_module' => array(
+			'fd' => array(
+				'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'cat_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+			),
+			'pk' => array('responsibility_id', 'location_id', 'cat_id'),
+			'fk' => array
+					(
+						'fm_responsibility' => array('responsibility_id' => 'id'),
+						'phpgw_locations' 	=> array('location_id' => 'location_id'),
+						'phpgw_categories'	=> array('cat_id' => 'cat_id')
+					),
 			'ix' => array(),
 			'uc' => array()
 		),
