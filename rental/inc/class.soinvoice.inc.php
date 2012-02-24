@@ -119,7 +119,7 @@ class rental_soinvoice extends rental_socommon
 				$invoice->set_term_label(lang('annually'));
 			}
 			else if($invoice->get_term_id() == 3){ // half year
-				if($invoice->get_month() == 7){
+				if($invoice->get_month() == 6){
 					$invoice->set_term_label(lang('first_half'));
 				}
 				else{
