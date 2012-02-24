@@ -334,7 +334,7 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
 
-			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();				
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
 			$_user_columns = array();
 			foreach ($user_columns as $user_column_id)
 			{
@@ -356,22 +356,23 @@
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
 
 			$_custom_cols = '';
-			$i	= count($uicols['name']);
+
+			$_attrib = array();
 			while ($this->db->next_record())
 			{
 				$_column_name = $this->db->f('column_name');
+				$_attrib[$_column_name] = $this->db->f('id');
 				$_custom_cols.= ", fm_project.{$_column_name}";
 				$cols_return[] 				= $_column_name;
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= $_column_name;
 				$uicols['descr'][]			= $this->db->f('input_text');
 				$uicols['statustext'][]		= $this->db->f('statustext');
-				$uicols['datatype'][$i]		= $this->db->f('datatype');
-				$uicols['sortable'][$i]		= true;
-				$uicols['exchange'][$i]		= false;
-				$uicols['formatter'][$i]	= '';
-				$uicols['classname'][$i]	= '';
-				$i++;
+				$uicols['datatype'][]		= $this->db->f('datatype');
+				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]	= '';
+				$uicols['classname'][]	= '';
 			}
 
 			$this->uicols = $uicols;
@@ -584,7 +585,7 @@
 			}
 
 			$querymethod .= ')';
-			
+
 			$sql = str_replace('FROM', "{$_custom_cols} FROM", $sql);
 
 //			$sql .= " $filtermethod $querymethod";
@@ -698,7 +699,30 @@
 				}
 			}
 
-			return $project_list;
+			$_datatype = array();
+			foreach($this->uicols['name'] as $key => $_name)
+			{
+				$_datatype[$_name] =  $this->uicols['datatype'][$key];
+			}
+
+			$dataset = array();
+			$j=0;
+
+			foreach($project_list as $project)
+			{
+				foreach ($project as $field => $value)
+				{
+					$dataset[$j][$field] = array
+					(
+						'value'		=> $value,
+						'datatype'	=> $_datatype[$field],
+						'attrib_id'	=> $_attrib[$field]
+					);
+				}
+				$j++;
+			}
+			$values = $this->custom->translate_value($dataset, $location_id);
+			return $values;
 		}
 
 		function get_meter_table()
@@ -1371,7 +1395,7 @@
 			{
 				$orders[] = $this->db->f('order_id');
 			}
-			
+
 			$actual_cost = array();
 			foreach($orders as $order)
 			{
@@ -1442,7 +1466,7 @@
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
-			
+
 			while ($this->db->next_record())
 			{
 				$year = $this->db->f('year');
@@ -1485,7 +1509,7 @@
 				}
 			}
 //_debug_array($values);
-//die();			
+//die();
 
 			if($values)
 			{
