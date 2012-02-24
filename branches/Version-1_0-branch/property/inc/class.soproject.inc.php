@@ -328,17 +328,58 @@
 			}
 			else
 			{
-				$this->uicols		= $this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id);
+				$uicols				= $this->bocommon->fm_cache('uicols_project_' . !!$wo_hour_cat_id);
 				$cols_return		= $this->bocommon->fm_cache('cols_return_project_' . !!$wo_hour_cat_id);
-				$type_id		= $this->bocommon->fm_cache('type_id_project_' . !!$wo_hour_cat_id);
+				$type_id			= $this->bocommon->fm_cache('type_id_project_' . !!$wo_hour_cat_id);
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_project_' . !!$wo_hour_cat_id);
 			}
+
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();				
+			$_user_columns = array();
+			foreach ($user_columns as $user_column_id)
+			{
+				if(ctype_digit($user_column_id))
+				{
+					$_user_columns[] = $user_column_id;
+				}
+			}
+			$user_column_filter = '';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project');
+			$attribute_filter = " location_id = {$location_id}";
+
+			if ($_user_columns)
+			{
+				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
+			}
+
+			$attribute_table = 'phpgw_cust_attribute';
+			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
+
+			$_custom_cols = '';
+			$i	= count($uicols['name']);
+			while ($this->db->next_record())
+			{
+				$_column_name = $this->db->f('column_name');
+				$_custom_cols.= ", fm_project.{$_column_name}";
+				$cols_return[] 				= $_column_name;
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= $_column_name;
+				$uicols['descr'][]			= $this->db->f('input_text');
+				$uicols['statustext'][]		= $this->db->f('statustext');
+				$uicols['datatype'][$i]		= $this->db->f('datatype');
+				$uicols['sortable'][$i]		= true;
+				$uicols['exchange'][$i]		= false;
+				$uicols['formatter'][$i]	= '';
+				$uicols['classname'][$i]	= '';
+				$i++;
+			}
+
+			$this->uicols = $uicols;
 
 			if($dry_run)
 			{
 				return array();
 			}
-
 
 			$order_field = '';
 			if ($order)
@@ -543,6 +584,8 @@
 			}
 
 			$querymethod .= ')';
+			
+			$sql = str_replace('FROM', "{$_custom_cols} FROM", $sql);
 
 //			$sql .= " $filtermethod $querymethod";
 			$sql_full = "{$sql} {$filtermethod} {$querymethod}";
@@ -552,7 +595,6 @@
 			{
 				$sql_minimized = 'SELECT DISTINCT fm_project.id '  . substr($sql_full,strripos($sql_full,'FROM'));
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
-
 				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
@@ -565,7 +607,7 @@
 			}
 
 			$sql_end =   str_replace('SELECT DISTINCT fm_project.id',"SELECT DISTINCT fm_project.id {$order_field}", $sql_minimized) . " GROUP BY fm_project.id {$ordermethod}";
-//			_debug_array($sql_end);die();
+
 			$project_list = array();
 			if(!$allrows)
 			{

@@ -64,7 +64,7 @@ class rental_sobilling_info extends rental_socommon
 		
 		$tables = "rental_billing_info";
 		$joins = '';
-		
+		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -82,7 +82,7 @@ class rental_sobilling_info extends rental_socommon
 				$billing_info->set_term_label(lang('annually'));
 			}
 			else if($billing_info->get_term_id() == 3){ // half year
-				if($billing_info->get_month() == 7){
+				if($billing_info->get_month() == 6){
 					$billing_info->set_term_label(lang('first_half'));
 				}
 				else{
