@@ -5908,6 +5908,78 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.633 to 0.9.17.634
+	* Add project budget per year
+	*/
+
+	$test[] = '0.9.17.634';
+	function property_upgrade0_9_17_634()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility_module', array(
+				'fd' => array(
+					'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'cat_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'active' => array('type' => 'int','precision' => 2,'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				),
+				'pk' => array('responsibility_id', 'location_id', 'cat_id'),
+				'fk' => array
+						(
+							'fm_responsibility' => array('responsibility_id' => 'id'),
+							'phpgw_locations' 	=> array('location_id' => 'location_id'),
+							'phpgw_categories'	=> array('cat_id' => 'cat_id')
+						),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$sql = 'SELECT * FROM fm_responsibility';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$responsibilities = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			if($cat_id = $GLOBALS['phpgw_setup']->oProc->f('cat_id'))
+			{
+				$responsibilities[] = array
+				(
+					'responsibility_id' => $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'location_id' => $GLOBALS['phpgw_setup']->oProc->f('location_id'),
+					'cat_id' => $cat_id,
+					'active' => $GLOBALS['phpgw_setup']->oProc->f('active'),
+					'created_on' => $GLOBALS['phpgw_setup']->oProc->f('created_on'),
+					'created_by' => $GLOBALS['phpgw_setup']->oProc->f('created_by')
+				);
+			}
+		}
+
+		foreach ($responsibilities as $value_set)
+		{
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_responsibility_module ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility',array(),'location_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility',array(),'cat_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility',array(),'active');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.635';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets

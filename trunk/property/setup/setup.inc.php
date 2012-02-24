@@ -192,6 +192,7 @@
 		'fm_responsibility',
 		'fm_responsibility_role',
 		'fm_responsibility_contact',
+		'fm_responsibility_module',
 		'fm_action_pending',
 		'fm_action_pending_category',
 		'fm_jasper',
