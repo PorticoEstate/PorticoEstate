@@ -1,6 +1,9 @@
 <?php
 
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
+		
+		// out: 'deliver'
+		// in: 'pickup'
 
 	$export = new catch_ticket_export();
 	$export->export_ticket($ticket);
