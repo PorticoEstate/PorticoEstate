@@ -161,7 +161,7 @@
 					'id'		=> $id,
 					'name'		=> $this->db->f('name',true),
 					'descr'		=> $this->db->f('descr',true),
-					'weight'	=> $this->db->f('priority_key')					
+					'weight'	=> $this->db->f('priority_key')
 				);
 			}
 			return $values;
@@ -343,7 +343,7 @@
 			$uicols['classname'][]		= 'rightClasss';
 			$uicols['sortable'][]		= true;
 
-			
+
 
 			$cols.= ",sum(amount) as consume";
 			$cols_return[] 				= 'consume';
@@ -429,7 +429,7 @@
 			$cols_group[] = "{$entity_table}.address";
 
 			$groupmethod = 'GROUP BY ' . implode(',', $cols_group);
-			
+
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -512,7 +512,7 @@
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($project_id && !$status_id)// lookup requests not already allocated to projects
@@ -586,7 +586,7 @@
 			$this->total_records = $this->db->f('cnt');
 			$this->sum_budget	= $this->db->f('sum_budget');
 			$this->sum_consume	= $this->db->f('sum_consume');
-			
+
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)
 			{
@@ -621,7 +621,7 @@
 							'attrib_id'	=> $_attrib[$field]
 						);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -877,7 +877,7 @@
 
 				$this->interlink->add($interlink_data,$this->db);
 			}
-			
+
 			$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1005,7 +1005,7 @@
 				$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
-			
+
 				if($this->db->f('in_progress'))
 				{
 					$value_set['in_progress_date']	= time();
@@ -1075,7 +1075,7 @@
 			{
 				foreach ($request['delete_planning'] as $delete_planning)
 				{
-					$this->db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);				
+					$this->db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);
 				}
 			}
 
@@ -1094,7 +1094,7 @@
 			{
 				foreach ($request['delete_consume'] as $delete_consume)
 				{
-					$this->db->query("DELETE FROM fm_request_consume WHERE id =" . (int)$delete_consume,__LINE__,__FILE__);				
+					$this->db->query("DELETE FROM fm_request_consume WHERE id =" . (int)$delete_consume,__LINE__,__FILE__);
 				}
 			}
 
