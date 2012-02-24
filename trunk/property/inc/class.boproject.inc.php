@@ -153,7 +153,9 @@
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : '';
 			}
-			$columns	= $this->get_column_list();
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property','.project', 0, '','','',true, false, $filter);
+			$columns = array_merge( $columns, $this->get_column_list() );
 			return $this->bocommon->select_multi_list($selected,$columns);
 		}
 
@@ -417,16 +419,19 @@
 
 			foreach ($custom_cols as $col_id)
 			{
-				$this->uicols['input_type'][]	= 'text';
-				$this->uicols['name'][]			= $col_id;
-				$this->uicols['descr'][]		= $column_list[$col_id]['name'];
-				$this->uicols['statustext'][]	= $column_list[$col_id]['name'];
-				$this->uicols['exchange'][]		= false;
-				$this->uicols['align'][] 		= '';
-				$this->uicols['datatype'][]		= false;
-				$this->uicols['sortable'][]		= $column_list[$col_id]['sortable'];
-				$this->uicols['formatter'][]	= $column_list[$col_id]['formatter'];
-				$this->uicols['classname'][]	= $column_list[$col_id]['classname'];
+				if(!ctype_digit($col_id))
+				{
+					$this->uicols['input_type'][]	= 'text';
+					$this->uicols['name'][]			= $col_id;
+					$this->uicols['descr'][]		= $column_list[$col_id]['name'];
+					$this->uicols['statustext'][]	= $column_list[$col_id]['name'];
+					$this->uicols['exchange'][]		= false;
+					$this->uicols['align'][] 		= '';
+					$this->uicols['datatype'][]		= false;
+					$this->uicols['sortable'][]		= $column_list[$col_id]['sortable'];
+					$this->uicols['formatter'][]	= $column_list[$col_id]['formatter'];
+					$this->uicols['classname'][]	= $column_list[$col_id]['classname'];
+				}
 			}
 
 			if(!isset($data['skip_origin']) || !$data['skip_origin'])
@@ -438,6 +443,9 @@
 				$this->uicols['exchange'][]		= false;
 				$this->uicols['align'][] 		= '';
 				$this->uicols['datatype'][]		= 'link';
+				$this->uicols['sortable'][]		= '';
+				$this->uicols['formatter'][]	= '';
+				$this->uicols['classname'][]	= '';
 			}
 
 			$cols_extra		= $this->so->cols_extra;

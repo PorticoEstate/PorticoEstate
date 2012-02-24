@@ -1223,7 +1223,7 @@
 			{
 				$values_hour = $common_data['content'];
 			}
-			$project	= $this->boproject->read_single($common_data['workorder']['project_id']);
+			$project	= $this->boproject->read_single($common_data['workorder']['project_id'],array(),true);
 
 			$bolocation	= CreateObject('property.bolocation');
 
@@ -1864,10 +1864,9 @@ HTML;
 			$preview = phpgw::get_var('preview', 'bool');
 
 			$common_data		= $this->common_data($workorder_id);
-			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
+			$project			= $this->boproject->read_single($common_data['workorder']['project_id'],array(),true);
 
 			$content = $this->_get_order_details($common_data['content'],	$show_cost);
-
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
