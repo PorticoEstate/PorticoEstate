@@ -430,6 +430,21 @@
 		}
 
 		/**
+		 * Read single responsibility
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array holding data of responsibility type
+		 */
+
+		public function read_single($id)
+		{
+			$values = $this->so->read_single($id);
+			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
+			return $values;
+		}
+
+		/**
 		 * Read single contact for responsibility type at physical location
 		 *
 		 * @param integer $id ID of responsibility type

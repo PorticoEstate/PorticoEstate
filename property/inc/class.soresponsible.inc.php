@@ -264,6 +264,54 @@
 		}
 
 		/**
+		 * Read single responsibility type
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array Responsibility type
+		 */
+
+		public function read_single($id)
+		{
+			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int) $id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			if(	$this->db->next_record())
+			{
+				$values = array
+				(
+					'id'			=> $this->db->f('id'),
+					'name'			=> $this->db->f('name', true),
+					'descr'			=> $this->db->f('descr', true),
+					'active'		=> $this->db->f('active'),
+					'cat_id'		=> $this->db->f('cat_id'),
+					'created_by'	=> $this->db->f('created_by'),
+					'created_on'	=> $this->db->f('created_on'),
+				);
+
+				$sql = 'SELECT * FROM fm_responsibility_module WHERE responsibility_id= ' . (int) $id;
+				$this->db->query($sql, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$values['module'][] = array
+					(
+						'location_id'		=> $this->db->f('location_id'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						'active'			=> $this->db->f('active'),
+						'created_on'		=> $this->db->f('created_on'),
+						'created_by'		=> $this->db->f('created_by'),
+					);
+				}
+			}
+
+			return $values;
+		}
+
+
+		/**
 		 * Delete responsibility type
 		 *
 		 * @param integer $id ID of responsibility type
