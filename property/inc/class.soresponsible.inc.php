@@ -105,18 +105,19 @@
  */
 			if($location)
 			{
-				$filtermethod .= " $where fm_responsibility.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
+				$filtermethod .= " $where fm_responsibility_module.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
 				$where = 'AND';
 			}
 
 			$querymethod = '';
 			if($query)
 			{
-				$querymethod = "$where (fm_responsibility.name $this->like '%$query%' OR fm_responsibility.descr $this->like '%$query%')";
+				$querymethod = "$where (fm_responsibility.name {$this->like} '%$query%' OR fm_responsibility.descr {$this->like} '%$query%')";
 			}
 
 			$sql = "SELECT fm_responsibility.*, phpgw_locations.name as location FROM fm_responsibility"
-			. " {$this->join} phpgw_locations ON fm_responsibility.location_id = phpgw_locations.location_id"
+			. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
+			. " {$this->join} phpgw_locations ON fm_responsibility_module.location_id = phpgw_locations.location_id"
 			. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
 			. " WHERE app_name = '{$appname}' $filtermethod $querymethod";
 
@@ -486,7 +487,7 @@
 		{
 			$sql = "SELECT fm_responsibility_contact.*,  fm_responsibility.name as responsibility_name"
 				. " FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
 				. ' WHERE fm_responsibility_contact.id='  . (int) $id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -546,7 +547,7 @@
 			$value_set['expired_on']	= time();
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
-			$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int) $id, __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_responsibility_contact SET {$value_set} WHERE id = " . (int) $id, __LINE__, __FILE__);
 			$this->db->transaction_commit();
 		}
 
@@ -565,8 +566,8 @@
 			$time = time() +1;
 
 			$sql = "SELECT fm_responsibility_contact.id, contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. " $this->join fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
 				. " WHERE fm_responsibility_role.id ={$role_id}"
 				. " AND fm_responsibility_contact.location_code ='{$location_code}'"
 				. " AND active_from < {$time} AND (active_to > {$time} OR active_to = 0) AND expired_on IS NULL";
@@ -644,7 +645,8 @@
 			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
 				. ' WHERE cat_id =' . (int) $values['cat_id']
 				. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
 				. " {$item_filter}";
@@ -692,7 +694,7 @@
 			$responsibility_id = (int)$responsibility_id;
 			$now = time();
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
 				. " AND active = 1 AND active_from < {$now} AND active_to > {$now} AND expired_on IS NULL";
 
 			$this->db->query($sql, __LINE__, __FILE__);
