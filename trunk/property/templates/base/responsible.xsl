@@ -1,6 +1,9 @@
   <!-- $Id$ -->
 	<xsl:template name="app_data">
 		<xsl:choose>
+			<xsl:when test="edit">
+				<xsl:apply-templates select="edit"/>
+			</xsl:when>
 			<xsl:when test="edit_type">
 				<xsl:apply-templates select="edit_type"/>
 			</xsl:when>
@@ -14,6 +17,199 @@
 				<xsl:apply-templates select="list_type"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+
+	<!-- add / edit  -->
+	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
+		</xsl:variable>
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<tr>
+				<td>
+					<table cellpadding="2" cellspacing="2" align="left">
+						<xsl:choose>
+							<xsl:when test="msgbox_data != ''">
+								<tr>
+									<td align="left" colspan="3">
+										<xsl:call-template name="msgbox"/>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="value_id != ''">
+								<tr>
+									<td valign="top">
+										<xsl:value-of select="php:function('lang', 'id')"/>
+									</td>
+									<td>
+										<xsl:value-of select="value_id"/>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>
+						<form name="form_app" method="post" action="{$form_action}">
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'application')"/>
+								</td>
+								<td align="left">
+									<select name="appname" onChange="this.form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'application')"/>
+										</xsl:attribute>
+										<xsl:apply-templates select="apps_list/options"/>
+									</select>
+								</td>
+							</tr>
+						</form>
+						<form name="form_location" method="post" action="{$form_action}">
+							<tr>
+								<td>
+									<input type="hidden" name="appname" value="{value_appname}"/>
+									<xsl:value-of select="php:function('lang', 'location')"/>
+								</td>
+								<td align="left">
+									<select name="location" onChange="this.form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Select submodule')"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'No location')"/>
+										</option>
+										<xsl:apply-templates select="location_list/options"/>
+									</select>
+								</td>
+							</tr>
+						</form>
+					</table>
+					<tr>
+						<td>
+							<form name="form" method="post" action="{$form_action}">
+								<table cellpadding="2" cellspacing="2" align="left">
+									<tr>
+										<td>
+											<input type="hidden" name="values[appname]" value="{value_appname}"/>
+											<input type="hidden" name="values[location]" value="{value_location}"/>
+											<xsl:value-of select="php:function('lang', 'category')"/>
+										</td>
+										<td>
+											<xsl:call-template name="categories"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'name')"/>
+										</td>
+										<td>
+											<input type="text" name="values[name]" value="{value_name}" size="60">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'name')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'descr')"/>
+										</td>
+										<td>
+											<textarea cols="60" rows="10" name="values[descr]">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'descr')"/>
+												</xsl:attribute>
+												<xsl:value-of select="value_descr"/>
+											</textarea>
+										</td>
+									</tr>
+									<tr>
+										<td class="th_text" valign="top">
+											<xsl:value-of select="php:function('lang', 'details')"/>
+										</td>
+										<td>
+											<table width="100%" cellpadding="2" cellspacing="2" align="center">
+												<!--  DATATABLE 0-->
+												<td>
+													<div id="paging_0"/>
+													<div id="datatable-container_0"/>
+												</td>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<table cellpadding="2" cellspacing="2" width="50%" align="center">
+												<xsl:variable name="lang_save">
+													<xsl:value-of select="php:function('lang', 'save')"/>
+												</xsl:variable>
+												<xsl:variable name="lang_apply">
+													<xsl:value-of select="php:function('lang', 'apply')"/>
+												</xsl:variable>
+												<xsl:variable name="lang_cancel">
+													<xsl:value-of select="php:function('lang', 'cancel')"/>
+												</xsl:variable>
+												<tr height="50">
+													<td>
+														<input type="submit" name="values[save]" value="{$lang_save}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'save')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="submit" name="values[apply]" value="{$lang_apply}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'apply')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'cancel')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</td>
+					</tr>
+				</td>
+			</tr>
+		</table>
+		<!--  DATATABLE DEFINITIONS-->
+		<script type="text/javascript">
+			var property_js = <xsl:value-of select="property_js"/>;
+			var base_java_url = <xsl:value-of select="base_java_url"/>;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+			var td_count = <xsl:value-of select="td_count"/>;
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+					<!--permission:<xsl:value-of select="permission"/>, -->
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
 	</xsl:template>
 
 	<!-- New template-->
@@ -677,3 +873,14 @@
 			</form>
 		</div>
 	</xsl:template>
+
+	<!-- New template-->
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+

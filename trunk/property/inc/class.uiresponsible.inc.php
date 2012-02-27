@@ -107,6 +107,7 @@
 			(
 				'index' 		=> true,
 				'contact' 		=> true,
+				'edit' 			=> true,
 				'edit_type' 	=> true,
 				'edit_contact' 	=> true,
 				'no_access'		=> true,
@@ -603,6 +604,201 @@
 
 			$this->_save_sessiondata();
 		}
+
+
+		function edit()
+		{
+//_debug_array($_POST); die();
+
+			if(!$this->acl_add && !$this->acl_edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
+			}
+
+			$id			= phpgw::get_var('id', 'int');
+			$location	= phpgw::get_var('location', 'string');
+			$values		= phpgw::get_var('values');
+
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			{
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
+
+				if(!isset($values['location']) || !$values['location'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+				}
+
+				if(!isset($values['title']) || !$values['title'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a title!'));
+				}
+
+				if($id)
+				{
+					$values['id']=$id;
+				}
+				else
+				{
+					$id = $values['id'];
+				}
+
+				if(!$receipt['error'])
+				{
+					$receipt = $this->bo->save($values);
+					$id = $receipt['id'];
+
+					if (isset($values['save']) && $values['save'])
+					{
+						$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'app' => $this->appname));
+					}
+				}
+			}
+
+			if (isset($values['cancel']) && $values['cancel'])
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'app' => $this->appname));
+			}
+
+			if ($id)
+			{
+				$values = $this->bo->read_single($id);
+				$function_msg = lang('edit responsible');
+/*
+				$this->acl->set_account_id($this->account);
+				$grants	= $this->acl->get_grants('property','.responsible');
+				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
+				{
+					$values = array();
+					$receipt['error'][]=array('msg'=>lang('You are not granted sufficient rights for this entry'));
+				}
+
+*/
+			}
+			else
+			{
+				$function_msg = lang('add responsible');
+			}
+
+			$link_data = array
+				(
+					'menuaction'	=> 'property.uiresponsible.edit',
+					'id'		=> $id,
+					'app'		=> $this->appname
+				);
+
+			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->appname, false, false, true);
+
+			$selected_location = $location ? $location : $values['location'];
+			if(isset($values['location_id']) && $values['location_id'] && !$selected_location)
+			{
+				$locations_info = $GLOBALS['phpgw']->locations->get_name($values['location_id']);
+				$selected_location = $locations_info['location'];
+			}
+
+			$location_list = array();
+			foreach ( $locations as $location => $descr )
+			{
+				$location_list[] = array
+					(
+						'id'		=> $location,
+						'name'		=> "{$location} [{$descr}]",
+						'selected'	=> $location == $selected_location
+					);
+			}
+
+			$module_def = array
+			(
+				array('key' => 'appname',	'label'=>lang('appname'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'location',	'label'=>lang('location'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'category',	'label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'active',	'label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'delete_module','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
+			);
+
+			$responsibility_module = isset($values['module']) && $values['module'] ? $values['module'] : array();
+
+			foreach($responsibility_module as &$module)
+			{
+				$_location_info = $GLOBALS['phpgw']->locations->get_name($module['location_id']);
+				$module['appname'] = $_location_info['appname'];
+				$module['location'] = $_location_info['location'];
+				$category = $this->cats->return_single($module['cat_id']);
+				$module['category'] = $category[0]['name'];
+
+				if ($this->acl->check('admin', PHPGW_ACL_EDIT, $module['appname']))
+				{
+					$_checked = $module['active'] ? 'checked = "checked"' : '';
+					$module['active'] = "<input type='checkbox' name='values[set active][]' {$_checked} value='{$module['location_id']}_{$module['cat_id']}' title='".lang('Check to set active')."'>";
+					$module['delete_module'] = "<input type='checkbox' name='values[delete_module][]' value='{$module['location_id']}_{$module['cat_id']}' title='".lang('Check to delete')."'>";
+				}
+			}
+
+			//---datatable settings--------------------------
+			$datavalues[0] = array
+				(
+					'name'					=> "0",
+					'values' 				=> json_encode($responsibility_module),
+					'total_records'			=> count($responsibility_module),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);					
+			$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode($module_def)
+				);		
+			//-----------------------------------------------
+
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+				(
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'value_appname'					=> $this->appname,
+					'value_id'						=> $id,
+					'value_name'					=> $values['name'],
+					'value_descr'					=> $values['descr'],
+					'value_access'					=> $values['access'],
+					'apps_list'						=> array('options' => execMethod('property.bojasper.get_apps', $this->appname)), 
+					'location_list'					=> array('options' => $location_list),
+					'td_count'						=> '""',
+					'base_java_url'					=> "{menuaction:'property.uiresponsible.edit'}",
+					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+					'datatable'						=> $datavalues,
+					'myColumnDefs'					=> $myColumnDefs,
+					'lang_category'					=> lang('category'),
+					'lang_no_cat'					=> lang('no category'),
+					'cat_select'					=> $this->cats->formatted_xslt_list(array
+					(
+						'select_name' => 'values[cat_id]',
+						'selected' => isset($values['cat_id'])?$values['cat_id']:''
+					)),
+				);
+
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('loader');
+
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'responsible.edit', 'property' );
+			//-----------------------datatable settings---
+
+			$appname						= 'Responsible';
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::$function_msg::".lang($this->appname);
+			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+		}
+
+
 
 		/**
 		 * Add or Edit available responsible types
