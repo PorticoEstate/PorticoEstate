@@ -68,7 +68,12 @@
 			</xsl:for-each>
 		</select>
 		<div id="field_campsites">
-		Minimum antall plasser: 
+            <span id="field_campsites2">
+		        Minimum antall plasser: 
+            </span>
+            <span id="field_meetingroom">
+    		    Antall deltakere: 
+            </span>
 		<input type="text" size="3" id="campsites" name="campsites">
 			<xsl:if test="resource/campsite">
 				<xsl:attribute name="value"><xsl:value-of select="resource/campsite"/></xsl:attribute>

@@ -109,7 +109,7 @@ jun	booking	no	juni
 last modified	booking	no	Sist endret
 loading...	booking	no	Laster...
 location	booking	no	Møtelokale
-male	booking	no	Mann
+male	booking	no	Personer
 mar	booking	no	mars
 may	booking	no	mai
 mo	booking	no	ma.
@@ -120,10 +120,10 @@ new	booking	no	NY
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
 new allocation	booking	no	Ny tildeling
-new application	booking	no	Ny søknad
+new application	booking	no	Booking
 new audience group	booking	no	Ny målgruppe
 new booking	booking	no	Ny booking
-new booking application	booking	no	Ny søknad
+new booking application	booking	no	Gå til booking
 new building	booking	no	Nytt sted/utstyr
 new building permission	booking	no	Nye rettigheter sted/utstyr
 New Resource Permission	booking	no	Nye rettigheter objekt
@@ -520,6 +520,7 @@ Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
 House	booking	no	Hytte/hus
+Campsite	booking	no	Teltplass
 Campsites	booking	no	Teltplass
 Boat	booking	no	Seilbåt
 Bedspaces	booking	no	Sengeplasser

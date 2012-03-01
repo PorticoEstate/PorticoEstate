@@ -113,7 +113,7 @@
 			<dd>
 				<table id="agegroup">
 					<tr><th/><th><xsl:value-of select="php:function('lang', 'Male')" /></th>
-					    <th><xsl:value-of select="php:function('lang', 'Female')" /></th></tr>
+					   <!-- <th><xsl:value-of select="php:function('lang', 'Female')" /></th>--></tr>
 					<xsl:for-each select="agegroups">
 						<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 						<tr>
@@ -124,12 +124,12 @@
 									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/></xsl:attribute>
 								</input>
 							</td>
-							<td>
+<!--							<td>
 								<input type="text">
 									<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 									<xsl:attribute name="value"><xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/></xsl:attribute>
 								</input>
-							</td>
+							</td>-->
 						</tr>
 					</xsl:for-each>
 				</table>

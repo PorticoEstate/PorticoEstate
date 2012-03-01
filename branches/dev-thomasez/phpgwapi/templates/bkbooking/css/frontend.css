@@ -232,12 +232,16 @@ dl.contactinfo dd {
 }
 
 #frontend dl.proplist-col.main {
-	width: 400px;
+	width: 550px;
 }
 
 #frontend dl.proplist-col.images {
 	float:right;
 	clear:right;
+}
+#frontend dl.proplist-col.images dt {
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 
@@ -375,6 +379,10 @@ height:160px;
 #footer_address{
 padding-top: 1.5em;
 font-size: 0.9em;
+}
+
+#schedule_container .freegreen {
+    cursor: pointer;
 }
 
 

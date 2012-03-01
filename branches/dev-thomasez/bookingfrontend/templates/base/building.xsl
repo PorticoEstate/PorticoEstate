@@ -23,7 +23,7 @@
 			<dl class="proplist-col main">
 				<xsl:if test="normalize-space(description)">
 					<dl class="proplist description">
-						<dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
+						<h3><xsl:value-of select="php:function('lang', 'Description')" /></h3>
 						<dd><xsl:value-of select="description" disable-output-escaping="yes"/></dd>
 					</dl>
 				</xsl:if>

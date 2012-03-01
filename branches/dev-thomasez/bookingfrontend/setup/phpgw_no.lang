@@ -110,7 +110,7 @@ last modified	bookingfrontend	no	Sist endret
 location	bookingfrontend	no	Møtelokale
 log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
-male	bookingfrontend	no	Mann
+male	bookingfrontend	no	Personer
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai
 mo	bookingfrontend	no	ma.
@@ -121,10 +121,10 @@ new	bookingfrontend	no	Ny
 new activity	bookingfrontend	no	Ny aktivitet
 new age group	bookingfrontend	no	Ny aldersgruppe
 new allocation	bookingfrontend	no	Ny tildeling
-new application	bookingfrontend	no	Ny søknad
+new application	bookingfrontend	no	Booking
 new audience group	bookingfrontend	no	Ny målgruppe
 new booking	bookingfrontend	no	Ny booking
-new booking application	bookingfrontend	no	Ny søknad
+new booking application	bookingfrontend	no	Gå til booking
 new building	bookingfrontend	no	Nytt sted/utstyr
 new building permission	bookingfrontend	no	Nye rettigheter sted/utstyr
 new contact	bookingfrontend	no	Ny kontakt

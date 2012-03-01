@@ -208,14 +208,21 @@ YAHOO.booking.initializeDataTable = function()
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
 					ResetBeds();
 				} 
-				else if (['Location','Campsite','Boat'].indexOf(val) >= 0) 
+				else if (['Location','Campsite'].indexOf(val) >= 0) 
 				{
 					ResetBeds();
 					YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 					YAHOO.util.Dom.setStyle('field_campsites', 'display', 'inline');	
-					ResetCampsites();
+                    if (['Location'].indexOf(val) >= 0) {
+    					YAHOO.util.Dom.setStyle('field_campsites2', 'display', 'none');	
+	    				YAHOO.util.Dom.setStyle('field_meetingroom', 'display', 'inline');	
+                    } else {
+    					YAHOO.util.Dom.setStyle('field_campsites2', 'display', 'inline');	
+	    				YAHOO.util.Dom.setStyle('field_meetingroom', 'display', 'none');	
+                    }
+    				ResetCampsites();
 				}
-				else if (['Equipment',''].indexOf(val) >= 0)		
+				else if (['Equipment','Boat',''].indexOf(val) >= 0)		
 				{
 					ResetBeds();
 					ResetCampsites();

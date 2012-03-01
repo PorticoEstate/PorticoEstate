@@ -95,7 +95,7 @@
 				<dd><input id="field_map_url" name="map_url" type="text" value="{building/map_url}"/></dd>
 			</dl>
 			<dl class="form-col">
-				<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather ul')"/></label></dt>
+				<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather url')"/></label></dt>
 				<dd><input type="text" name="weather_url" id="field_weather_url" value="{building/weather_url}"/></dd>
 			</dl>
 			<div class="clr"/>

@@ -199,7 +199,8 @@ YAHOO.booking.nextWeek = function() {
 }
 
 YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
-	if(elCell) 
+	
+    if(elCell) 
 	{	
 		resource = elCell.parentNode.parentNode.getAttribute('resource');
 	}
@@ -221,7 +222,10 @@ YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
     weekday[4]="thursday";
     weekday[5]="friday";
     weekday[6]="saturday";
-	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&weekday=' + weekday[day];
+    if (resource != null) {
+    	url += '&resource=' + resource;
+    }
 	window.location.href = url;
 }
 
