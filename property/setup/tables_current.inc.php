@@ -2160,7 +2160,7 @@
 				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
 				'remark' => array('type' => 'text','nullable' => True),
-				'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'location_level' => array('type' => 'varchar', 'precision' => 200),
 				'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'appname' => array('type' => 'varchar', 'precision' => 25,'nullable' => False),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),

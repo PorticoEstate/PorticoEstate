@@ -406,8 +406,8 @@
 						'text'			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'		=> 'property.uigeneric.edit',
-							'appname'		=> $this->appname,
+							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'			=> $this->appname,
 							'type'				=> $this->type,
 							'type_id'			=> $this->type_id
 						)),
@@ -419,7 +419,7 @@
 						'text' 			=> lang('open edit in new window'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'		=> 'property.uigeneric.edit',
+							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
 							'appname'		=> $this->appname,
 							'type'				=> $this->type,
 							'type_id'			=> $this->type_id,
@@ -458,7 +458,7 @@
 						'text'			=> lang('add'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uigeneric.edit',
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
 							'appname'		=> $this->appname,
 							'type'			=> $this->type,
 							'type_id'		=> $this->type_id

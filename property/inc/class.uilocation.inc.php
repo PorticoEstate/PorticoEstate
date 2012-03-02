@@ -1239,9 +1239,10 @@ JS;
  */
 				$_role_criteria = array
 					(
-						'type'		=> 'responsibility_role',
-						'filter'	=> array('location' => ".location.{$type_id}"),
-						'order'		=> 'name'
+						'type'			=> 'responsibility_role',
+						'filter'		=> array('location_level' => $type_id),
+						'filter_method'	=> 'like',
+						'order'			=> 'name'
 					);
 
 				$values_combo_box[4] =   execMethod('property.sogeneric.get_list',$_role_criteria);

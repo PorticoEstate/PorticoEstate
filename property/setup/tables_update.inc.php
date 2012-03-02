@@ -5973,6 +5973,29 @@
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility',array(),'cat_id');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_responsibility',array(),'active');
 
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_responsibility_role','location','location_level');		
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_role','location_level',array('type' => 'varchar','precision' => '200','nullable' => True));
+
+		$sql = 'SELECT * FROM fm_responsibility_role';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$roles = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$roles[] = array
+			(
+				'id' => $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'location_level' => explode(',', ltrim($GLOBALS['phpgw_setup']->oProc->f('location_level'), '.location.'))
+			);
+		}
+
+		foreach ($roles as $role)
+		{
+			$sql = 'UPDATE fm_responsibility_role SET location_level = ' . implode(',', $role['location_level']) . " WHERE id = {$role['id']}";			
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);		
+		}
+
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.635';

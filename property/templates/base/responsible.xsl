@@ -4,9 +4,6 @@
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
-			<xsl:when test="edit_type">
-				<xsl:apply-templates select="edit_type"/>
-			</xsl:when>
 			<xsl:when test="edit_contact">
 				<xsl:apply-templates select="edit_contact"/>
 			</xsl:when>
@@ -19,8 +16,8 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- add / edit responsibility type-->
 
-	<!-- add / edit  -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
@@ -212,169 +209,139 @@
 		</script>
 	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list_type">
-		<xsl:variable name="responsible_action">
-			<xsl:value-of select="responsible_action"/>
+	<!-- add / edit  -->
+	<xsl:template xmlns:php="http://php.net/xsl" match="edit_role">
+		<xsl:variable name="form_action">
+			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<tr>
+				<td>
+					<table cellpadding="2" cellspacing="2" align="left">
+						<xsl:choose>
+							<xsl:when test="msgbox_data != ''">
+								<tr>
+									<td align="left" colspan="3">
+										<xsl:call-template name="msgbox"/>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>
+					</table>
 					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
+						<td>
+							<form name="form" method="post" action="{$form_action}">
+								<table cellpadding="2" cellspacing="2" align="left">
+									<xsl:choose>
+										<xsl:when test="value_id != ''">
+											<tr>
+												<td valign="top">
+													<xsl:value-of select="php:function('lang', 'id')"/>
+												</td>
+												<td>
+													<xsl:value-of select="value_id"/>
+												</td>
+											</tr>
+										</xsl:when>
+									</xsl:choose>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'name')"/>
+										</td>
+										<td>
+											<input type="text" name="values[name]" value="{value_name}" size="60">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'name')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'descr')"/>
+										</td>
+										<td>
+											<textarea cols="60" rows="10" name="values[remark]">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'descr')"/>
+												</xsl:attribute>
+												<xsl:value-of select="value_remark"/>
+											</textarea>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'responsibility')"/>
+										</td>
+										<td align="left">
+											<select name="values[responsibility_id]">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'Select submodule')"/>
+												</xsl:attribute>
+												<option value="">
+													<xsl:value-of select="php:function('lang', 'select')"/>
+												</option>
+												<xsl:apply-templates select="responsibility_list/options"/>
+											</select>
+										</td>
+									</tr>
+
+									<tr>
+										<td valign = 'top'>
+											<xsl:value-of select="php:function('lang', 'level')"/>
+										</td>
+										<td align="left">
+											<table>
+												<xsl:apply-templates select="level_list/checkbox"/>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="2">
+											<table cellpadding="2" cellspacing="2" width="50%" align="center">
+												<xsl:variable name="lang_save">
+													<xsl:value-of select="php:function('lang', 'save')"/>
+												</xsl:variable>
+												<xsl:variable name="lang_apply">
+													<xsl:value-of select="php:function('lang', 'apply')"/>
+												</xsl:variable>
+												<xsl:variable name="lang_cancel">
+													<xsl:value-of select="php:function('lang', 'cancel')"/>
+												</xsl:variable>
+												<tr height="50">
+													<td>
+														<input type="submit" name="values[save]" value="{$lang_save}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'save')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="submit" name="values[apply]" value="{$lang_apply}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'apply')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'cancel')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</form>
 						</td>
 					</tr>
-				</xsl:when>
-			</xsl:choose>
-			<tr>
-				<td align="left">
-					<xsl:call-template name="filter_location"/>
-				</td>
-				<td align="right">
-					<xsl:call-template name="search_field"/>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" width="100%">
-					<xsl:call-template name="nextmatchs"/>
 				</td>
 			</tr>
 		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-			<xsl:apply-templates select="table_header_type"/>
-			<xsl:choose>
-				<xsl:when test="values_type != ''">
-					<xsl:apply-templates select="values_type"/>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="table_add != ''">
-					<xsl:apply-templates select="table_add"/>
-				</xsl:when>
-			</xsl:choose>
-		</table>
-	</xsl:template>
-
-	<!-- New template-->
-	<xsl:template match="table_header_type">
-		<xsl:variable name="sort_name">
-			<xsl:value-of select="sort_name"/>
-		</xsl:variable>
-		<tr class="th">
-			<td class="th_text" width="10%" align="left">
-				<a href="{$sort_name}">
-					<xsl:value-of select="lang_name"/>
-				</a>
-			</td>
-			<td class="th_text" width="30%" align="center">
-				<xsl:value-of select="lang_descr"/>
-			</td>
-			<td class="th_text" width="10%" align="center">
-				<xsl:value-of select="lang_category"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_created_by"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_app_name"/>
-			</td>
-			<td class="th_text" width="1%" align="center">
-				<xsl:value-of select="lang_active"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_contacts"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_edit"/>
-			</td>
-			<td class="th_text" width="5%" align="center">
-				<xsl:value-of select="lang_delete"/>
-			</td>
-		</tr>
-	</xsl:template>
-
-	<!-- New template-->
-	<xsl:template match="values_type">
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td align="left">
-				<xsl:value-of select="name"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="descr"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="category"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="created_by"/>
-			</td>
-			<td align="left">
-				<xsl:value-of select="app_name"/>
-			</td>
-			<td align="center">
-				<xsl:value-of select="active"/>
-			</td>
-			<td align="center" title="{lang_contacts_text}">
-				<xsl:variable name="link_contacts">
-					<xsl:value-of select="link_contacts"/>
-				</xsl:variable>
-				<a href="{link_contacts}">
-					<xsl:value-of select="text_contacts"/>
-				</a>
-			</td>
-			<xsl:choose>
-				<xsl:when test="link_edit != ''">
-					<td align="center" title="{lang_edit_text}">
-						<xsl:variable name="link_edit">
-							<xsl:value-of select="link_edit"/>
-						</xsl:variable>
-						<a href="{link_edit}">
-							<xsl:value-of select="text_edit"/>
-						</a>
-					</td>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="link_delete != ''">
-					<td align="center" title="{lang_delete_text}">
-						<xsl:variable name="link_delete">
-							<xsl:value-of select="link_delete"/>
-						</xsl:variable>
-						<a href="{link_delete}">
-							<xsl:value-of select="text_delete"/>
-						</a>
-					</td>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="lang_select != ''">
-					<form>
-						<td class="small_text" valign="top">
-							<input type="hidden" name="" value="{id}"/>
-							<input type="hidden" name="" value="{name}"/>
-							<input type="button" name="select" value="{lang_select}" onClick="Exchange_values(this.form);" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_select_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</td>
-					</form>
-				</xsl:when>
-			</xsl:choose>
-		</tr>
 	</xsl:template>
 
 	<!-- New template-->
@@ -583,137 +550,6 @@
 		</tr>
 	</xsl:template>
 
-	<!-- New template-->
-	<!-- add / edit responsibility type-->
-	<xsl:template match="edit_type">
-		<div align="left">
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-			<form method="post" action="{$form_action}">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<xsl:choose>
-						<xsl:when test="msgbox_data != ''">
-							<tr>
-								<td align="left" colspan="3">
-									<xsl:call-template name="msgbox"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="value_id != ''">
-							<tr>
-								<td valign="top" width="30%">
-									<xsl:value-of select="lang_id"/>
-								</td>
-								<td align="left">
-									<xsl:value-of select="value_id"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_entry_date"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_entry_date"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-					<tr>
-						<td>
-							<xsl:value-of select="lang_category"/>
-						</td>
-						<td>
-							<xsl:call-template name="categories"/>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" width="10%" title="{lang_name_status_text}">
-							<xsl:value-of select="lang_name"/>
-						</td>
-						<td>
-							<input type="text" size="60" name="values[name]" value="{value_name}" onMouseout="window.status='';return true;">
-							</input>
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" title="{lang_descr_status_text}">
-							<xsl:value-of select="lang_descr"/>
-						</td>
-						<td>
-							<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
-								<xsl:value-of select="value_descr"/>
-							</textarea>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<xsl:value-of select="lang_active"/>
-						</td>
-						<td>
-							<xsl:choose>
-								<xsl:when test="value_active = '1'">
-									<input type="checkbox" name="values[active]" value="1" checked="checked" onMouseout="window.status='';return true;">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_active_on_statustext"/>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="checkbox" name="values[active]" value="1" onMouseout="window.status='';return true;">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_active_off_statustext"/>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>
-						</td>
-					</tr>
-					<tr height="50">
-						<td colspan="2" align="center">
-							<table>
-								<tr>
-									<td valign="bottom">
-										<xsl:variable name="lang_save">
-											<xsl:value-of select="lang_save"/>
-										</xsl:variable>
-										<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_save_status_text"/>
-											</xsl:attribute>
-										</input>
-									</td>
-									<td valign="bottom">
-										<xsl:variable name="lang_apply">
-											<xsl:value-of select="lang_apply"/>
-										</xsl:variable>
-										<input type="submit" name="values[apply]" value="{$lang_apply}" onMouseout="window.status='';return true;">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_apply_status_text"/>
-											</xsl:attribute>
-										</input>
-									</td>
-									<td align="left" valign="bottom">
-										<xsl:variable name="lang_cancel">
-											<xsl:value-of select="lang_cancel"/>
-										</xsl:variable>
-										<input type="submit" name="values[cancel]" value="{$lang_cancel}" onMouseout="window.status='';return true;">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_cancel_status_text"/>
-											</xsl:attribute>
-										</input>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	</xsl:template>
-
 	<!-- add / edit contact-->
 	<xsl:template match="edit_contact">
 		<div align="left">
@@ -884,3 +720,19 @@
 		</option>
 	</xsl:template>
 
+	<!-- New template-->
+	<xsl:template match="checkbox">
+		<tr>
+			<td value="{id}">
+				<input type="checkbox" name="values[location_level][]" value="{id}">
+					<xsl:attribute name="title">
+						<xsl:value-of select="name"/>
+					</xsl:attribute>
+					<xsl:if test="selected != 0">
+						<xsl:attribute name="checked" value="checked"/>
+					</xsl:if>
+				</input>
+				<xsl:value-of select="name"/>
+			</td>
+		</tr>
+	</xsl:template>
