@@ -108,7 +108,7 @@
 				'index' 		=> true,
 				'contact' 		=> true,
 				'edit' 			=> true,
-				'edit_type' 	=> true,
+				'edit_role'		=> true,
 				'edit_contact' 	=> true,
 				'no_access'		=> true,
 				'delete_type'	=> true
@@ -299,7 +299,7 @@
 
 			$uicols = array (
 				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','hidden','hidden'),
-				'name'			=>	array('id','name','descr','category','created_by','created_on','app_name','active','loc','location'),
+				'name'			=>	array('id','name','descr','category','created_by','created_on','appname','active','loc','location'),
 				'formatter'		=>	array('','','','','','','','','',''),
 				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('user'),'',lang('application'),lang('active'),'','')
 			);
@@ -418,7 +418,7 @@
 							'text' 			=> lang('edit'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiresponsible.edit_type',
+								'menuaction'	=> 'property.uiresponsible.edit',
 								'appname'	=> $this->appname
 //								'location'		=> $this->location
 							)),
@@ -462,7 +462,7 @@
 							'text' 			=> lang('add'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiresponsible.edit_type',
+								'menuaction'	=> 'property.uiresponsible.edit',
 								'appname'		=> $this->appname,
 								'location'		=> $this->location
 							))
@@ -608,8 +608,6 @@
 
 		function edit()
 		{
-//_debug_array($_POST); die();
-
 			if(!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
@@ -626,15 +624,14 @@
 	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-
 				if(!isset($values['location']) || !$values['location'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+//					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
 				}
 
-				if(!isset($values['title']) || !$values['title'])
+				if(!isset($values['name']) || !$values['name'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a title!'));
+					$receipt['error'][]=array('msg'=>lang('Please enter a name!'));
 				}
 
 				if($id)
@@ -648,20 +645,20 @@
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->save($values);
+					$receipt = $this->bo->save_type($values);
 					$id = $receipt['id'];
 
 					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'app' => $this->appname));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
 					}
 				}
 			}
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'app' => $this->appname));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiresponsible.index', 'appname' => $this->appname));
 			}
 
 			if ($id)
@@ -701,13 +698,13 @@
 			}
 
 			$location_list = array();
-			foreach ( $locations as $location => $descr )
+			foreach ( $locations as $_location => $descr )
 			{
 				$location_list[] = array
 					(
-						'id'		=> $location,
-						'name'		=> "{$location} [{$descr}]",
-						'selected'	=> $location == $selected_location
+						'id'		=> $_location,
+						'name'		=> "{$_location} [{$descr}]",
+						'selected'	=> $_location == $selected_location
 					);
 			}
 
@@ -733,7 +730,7 @@
 				if ($this->acl->check('admin', PHPGW_ACL_EDIT, $module['appname']))
 				{
 					$_checked = $module['active'] ? 'checked = "checked"' : '';
-					$module['active'] = "<input type='checkbox' name='values[set active][]' {$_checked} value='{$module['location_id']}_{$module['cat_id']}' title='".lang('Check to set active')."'>";
+					$module['active'] = "<input type='checkbox' name='values[set_active][]' {$_checked} value='{$module['location_id']}_{$module['cat_id']}' title='".lang('Check to set active')."'>";
 					$module['delete_module'] = "<input type='checkbox' name='values[delete_module][]' value='{$module['location_id']}_{$module['cat_id']}' title='".lang('Check to delete')."'>";
 				}
 			}
@@ -761,6 +758,7 @@
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'value_appname'					=> $this->appname,
+					'value_location'				=> $location,
 					'value_id'						=> $id,
 					'value_name'					=> $values['name'],
 					'value_descr'					=> $values['descr'],
@@ -799,142 +797,143 @@
 		}
 
 
-
-		/**
-		 * Add or Edit available responsible types
-		 *
-		 * @return void
-		 */
-
-		public function edit_type()
+		function edit_role()
 		{
-			if(!$this->acl_add)
+			if(!$this->acl_add && !$this->acl_edit)
 			{
-				$this->no_access();
-				return;
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			if(!$GLOBALS['phpgw']->locations->get_id($this->appname, $this->location))
+			$id			= phpgw::get_var('id', 'int');
+			$location	= phpgw::get_var('location', 'string');
+			$values		= phpgw::get_var('values');
+
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				$receipt['error'][]=array('msg'=>lang('not a valid location!'));
-			}
-
-			$id		= phpgw::get_var('id', 'int');
-			$values	= phpgw::get_var('values', 'string', 'POST');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
-
-			if (isset($values) && is_array($values))
-			{
-				if(!$this->acl_edit)
+				if($GLOBALS['phpgw']->session->is_repost())
 				{
-					$this->no_access();
-					return;
+	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+				if(!isset($values['location']) || !$values['location'])
 				{
-					$values['location'] = $this->location;
-					if(!$values['cat_id'] || $values['cat_id'] == 'none')
-					{
-						//			$receipt['error'][]=array('msg'=>lang('Please select a category!'));
-					}
-					if(!$values['name'])
-					{
-						$receipt['error'][]=array('msg'=>lang('Please enter a name !'));
-					}
+	//				$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+				}
 
-					if($id)
-					{
-						$values['id']=$id;
-					}
+				if(!isset($values['name']) || !$values['name'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a name!'));
+				}
 
-					if(!isset($receipt['error']) || !$receipt['error'])
-					{
-						$receipt = $this->bo->save_type($values);
-						$id = $receipt['id'];
-
-						if (isset($values['save']) && $values['save'])
-						{
-							$GLOBALS['phpgw']->session->appsession('session_data', 'responsible_receipt', $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array
-								(
-									'menuaction'=> 'property.uiresponsible.index',
-									'appname'	=> $this->appname,
-									'location' => $this->location
-								));
-						}
-					}
+				if($id)
+				{
+					$values['id']=$id;
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array
-						(
-							'menuaction'=> 'property.uiresponsible.index',
-							'appname'	=> $this->appname,
-							'location' => $this->location
-						));
+					$id = $values['id'];
+				}
+
+				if(!$receipt['error'])
+				{
+					$receipt = $this->bo->save_role($values);
+					$id = $receipt['id'];
+
+					if (isset($values['save']) && $values['save'])
+					{
+						$GLOBALS['phpgw']->session->appsession('session_data','responsible_receipt',$receipt);
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type' => 'responsibility_role', 'appname' => $this->appname));
+					}
 				}
 			}
 
+			if (isset($values['cancel']) && $values['cancel'])
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type' => 'responsibility_role', 'appname' => $this->appname));
+			}
 
 			if ($id)
 			{
-				$function_msg = lang('edit responsible type');
-				$values = $this->bo->read_single_type($id);
+				$values = $this->bo->read_single_role($id);
+				$function_msg = lang('edit role');
+/*
+				$this->acl->set_account_id($this->account);
+				$grants	= $this->acl->get_grants('property','.responsible');
+				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
+				{
+					$values = array();
+					$receipt['error'][]=array('msg'=>lang('You are not granted sufficient rights for this entry'));
+				}
+
+*/
 			}
 			else
 			{
-				$function_msg = lang('add responsible type');
+				$function_msg = lang('add role');
 			}
 
-			$link_data = array
-				(
-					'menuaction'	=> 'property.uiresponsible.edit_type',
-					'id'			=> $id,
-					'appname'		=> $this->appname,
-					'location'		=> $this->location
-				);
 
-			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiresponsible.edit_role',
+				'id'		=> $id,
+				'app'		=> $this->appname
+			);
+
+			$location_types = execMethod('property.soadmin_location.get_location_type');
+
+			$levels = isset($values['location_level']) && $values['location_level'] ? $values['location_level'] : array();
+			$level_list = array();
+			foreach ( $location_types as $location_type )
+			{
+				$level_list[] = array
+					(
+						'id'		=> $location_type['id'],
+						'name'		=>  $location_type['name'],
+						'selected'	=> in_array($location_type['id'], $levels)
+					);
+			}
+			//-----------------------------------------------
+
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 				(
-					'value_entry_date'				=> isset($values['entry_date']) ? $values['entry_date'] : '',
-					'value_name'					=> isset($values['name']) ? $values['name'] : '',
-					'value_descr'					=> isset($values['descr']) ? $values['descr'] : '',
-					'value_active'					=> isset($values['active']) ? $values['active'] : '',
-
-					'lang_entry_date'				=> lang('Entry date'),
-					'lang_name'						=> lang('name'),
-					'lang_descr'					=> lang('descr'),
-
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php', $link_data),
-					'lang_id'						=> lang('ID'),
-					'lang_save'						=> lang('save'),
-					'lang_cancel'					=> lang('cancel'),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'value_appname'					=> $this->appname,
+					'value_location'				=> $location,
 					'value_id'						=> $id,
-					'lang_active'					=> lang('active'),
-					'lang_active_on_statustext'		=> lang('set this item inactive'),
-					'lang_active_off_statustext'	=> lang('set this item active'),
-					'lang_cancel_status_text'		=> lang('Back to the list'),
-					'lang_save_status_text'			=> lang('Save the responsible type'),
-					'lang_apply'					=> lang('apply'),
-					'lang_apply_status_text'		=> lang('Apply the values'),
-
-					'lang_category'					=> lang('category'),
-					'lang_no_cat'					=> lang('no category'),
-					'cat_select'					=> $this->cats->formatted_xslt_list(array
-					(
-						'select_name' => 'values[cat_id]',
-						'selected' => isset($values['cat_id'])?$values['cat_id']:''
-					)),
+					'value_name'					=> $values['name'],
+					'value_remark'					=> $values['remark'],
+					'value_access'					=> $values['access'],
+					'responsibility_list'			=> array('options' => execMethod('property.boresponsible.get_responsibilities', array('appname' => $this->appname,	'selected' => $values['responsibility_id']))),
+					'level_list'					=> array('checkbox' => $level_list),
+					'td_count'						=> '""',
+					'base_java_url'					=> "{menuaction:'property.uiresponsible.edit'}",
+					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+					'datatable'						=> $datavalues,
+					'myColumnDefs'					=> $myColumnDefs,
 				);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$this->location}::{$function_msg}";
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_type' => $data));
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('loader');
+
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'responsible.edit', 'property' );
+			//-----------------------datatable settings---
+
+			$appname						= 'Responsible';
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::$function_msg::".lang($this->appname);
+			$GLOBALS['phpgw']->xslttpl->add_file(array('responsible'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_role' => $data));
 		}
+
+
 
 		/**
 		 * List of contacts given responsibilities within locations

@@ -289,6 +289,27 @@
 		}
 
 		/**
+		 * Save responsibility role
+		 *
+		 * @param array $values values to be stored/edited and referencing ID if editing
+		 *
+		 * @return array $receip with result on the action(failed/success)
+		 */
+
+		public function save_role($values)
+		{
+			if (isset($values['id']) && $values['id'])
+			{
+				$receipt = $this->so->edit_role($values);
+			}
+			else
+			{
+				$receipt = $this->so->add_role($values);
+			}
+			return $receipt;
+		}
+
+		/**
 		 * Save responsibility contact
 		 *
 		 * @param array $values values to be stored/edited and referencing ID if editing
@@ -426,6 +447,20 @@
 		{
 			$values = $this->so->read_single_type($id);
 			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
+			return $values;
+		}
+
+		/**
+		 * Read single responsibility type
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array holding data of responsibility type
+		 */
+
+		public function read_single_role($id)
+		{
+			$values = $this->so->read_single_role($id);
 			return $values;
 		}
 
