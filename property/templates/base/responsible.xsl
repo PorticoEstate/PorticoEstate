@@ -288,7 +288,7 @@
 
 									<tr>
 										<td valign = 'top'>
-											<xsl:value-of select="php:function('lang', 'level')"/>
+											<xsl:value-of select="php:function('lang', 'location level')"/>
 										</td>
 										<td align="left">
 											<table>

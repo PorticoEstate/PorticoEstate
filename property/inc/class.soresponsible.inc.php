@@ -151,20 +151,28 @@
 				);
 			}
 
+			$cats	= CreateObject('phpgwapi.categories', -1);
 			foreach($values as &$entry)
 			{
-				$sql = "SELECT location_id FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
+				$sql = "SELECT location_id, cat_id FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
 				$this->db->query($sql, __LINE__, __FILE__);			
 				$locations = array();
 				while ($this->db->next_record())
 				{
-					$locations[$this->db->f('location_id')] = true;
+					$location_id = $this->db->f('location_id');
+					$cat_id = $this->db->f('cat_id');
+					$locations["{$location_id}_{$cat_id}"] = true;
 				}		
 				$__location_info = array();
-				foreach($locations as $location_id => $dummy)
+				foreach($locations as $location => $dummy)
 				{
-					$_location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
-					$__location_info[] = "{$_location_info['appname']}::{$_location_info['location']}";
+					
+					$location_arr = explode('_', $location);
+					$_location_info = $GLOBALS['phpgw']->locations->get_name($location_arr[0]);
+
+					$category = $cats->return_single($location_arr[1]);
+
+					$__location_info[] = "{$_location_info['appname']}::{$_location_info['location']}::{$category[0]['name']}({$location_arr[1]})";
 				}	
 				$entry['appname'] = implode(' | ', $__location_info);
 			}
@@ -202,6 +210,8 @@
 			$this->db->query("INSERT INTO fm_responsibility (name, descr, created_by, created_on) "
 				. "VALUES ($insert_values)", __LINE__, __FILE__);
 
+			$id = $this->db->get_last_insert_id('fm_responsibility', 'id');
+
 			if($data['cat_id'])
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id( $data['appname'],  $data['location']);
@@ -212,7 +222,7 @@
 				{
 					$value_set = array();
 
-					$value_set['responsibility_id']		= (int) $data['id'];
+					$value_set['responsibility_id']		= $id;
 					$value_set['location_id']			= $location_id;
 					$value_set['cat_id']				= (int) $data['cat_id'];
 					$value_set['active']				= 1;//isset($data['active']) ? !!$data['active'] : '';
@@ -227,8 +237,8 @@
 
 			if($this->db->transaction_commit())
 			{
-				$receipt['message'][]=array('msg'=>lang('Responsibility type has been saved'));
-				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility', 'id');
+				$receipt['message'][]	= array('msg'=>lang('Responsibility type has been saved'));
+				$receipt['id']			= $id;
 			}
 			else
 			{
@@ -265,7 +275,7 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id( $data['appname'],  $data['location']);
 
 				$this->db->query("SELECT * FROM fm_responsibility_module  WHERE responsibility_id = " . (int) $data['id'] . ' AND location_id = ' . (int) $location_id . ' AND cat_id = ' . (int)$data['cat_id'], __LINE__, __FILE__);
-//_debug_array("SELECT * FROM fm_responsibility_module  WHERE location_id = " . (int) $location_id . ' AND cat_id = ' . (int)$data['cat_id']);				
+
 				if(!$this->db->next_record())
 				{
 					$value_set = array();
@@ -471,6 +481,7 @@
 		function delete_type($id)
 		{
 			$this->db->transaction_begin();
+			$this->db->query('DELETE FROM fm_responsibility_module WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->transaction_commit();
@@ -787,42 +798,47 @@
 		 * Get the responsibility for a particular category conserning a given location or item
 		 * Locations are checked bottom up at the deepest level - before checkin on it's parent if it is a miss.
 		 *
-		 * @param array $values containing cat_id, location_code and optional item-information
+		 * @param array $data containing cat_id, location_code and optional item-information
 		 *
 		 * @return contact_id
 		 */
 
-		public function get_responsible($values = array())
+		public function get_responsible($data = array())
 		{
 			$location_filter = array();
 
 			$todo = false;
 			$item_filter = '';
 
-			if(isset($values['ecodimb']) && $values['ecodimb'])
+			if(isset($data['ecodimb']) && $data['ecodimb'])
 			{
-				$item_filter =   " AND ecodimb = '{$values['ecodimb']}'";
+				$item_filter =   " AND ecodimb = '{$data['ecodimb']}'";
 				$location_filter[] = '';
 				$todo = true;
 			}
-			elseif(isset($values['extra']['p_entity_id']) && $values['extra']['p_entity_id'])
+			elseif(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
 			{
-				$location_code = implode('-', $values['location']);
+				$location_code = implode('-', $data['location']);
 
-				$item_filter =   " AND p_num = '{$values['extra']['p_num']}'"
-					.' AND p_entity_id =' . (int) $values['extra']['p_entity_id']
-					.' AND p_cat_id =' . (int) $values['extra']['p_cat_id'];
+				$item_filter =   " AND p_num = '{$data['extra']['p_num']}'"
+					.' AND p_entity_id =' . (int) $data['extra']['p_entity_id']
+					.' AND p_cat_id =' . (int) $data['extra']['p_cat_id'];
 
 				$location_filter[] = " AND location_code = '{$location_code}'";
 				$ordermethod = '';
 				$todo = true;
 			}
-			else if(isset($values['location']) && $values['location'])
+			else if(isset($data['location']) && $data['location'])
 			{
+				if(!is_array($data['location']))
+				{
+					throw new exception('soresponsible::get_responsible(): location-input needs to be an array');
+				}
+
 				$location_filter[] = ''; // when the responsibility is generic - not located to any location
 				$location_code = '';
 				$location_array = array();
-				foreach ($values['location'] as $location)
+				foreach ($data['location'] as $location)
 				{
 					$location_array[]	= $location;
 					$location_code		= implode('-', $location_array);
@@ -844,7 +860,7 @@
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
 				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
 				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
-				. ' WHERE cat_id =' . (int) $values['cat_id']
+				. ' WHERE cat_id =' . (int) $data['cat_id']
 				. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
 				. " {$item_filter}";
 

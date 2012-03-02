@@ -162,11 +162,6 @@
 						'text'	=> lang('Control area'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'controller', 'location' => '.control', 'global_cats' => 'true', 'menu_selection' => 'admin::controller::control_cats') )
 					),
-					'responsibility_role'	=> array
-					(
-						'text'	=> lang('responsibility role'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'responsibility_role', 'appname' => 'controller') )
-					),
 					'role_at_location'	=> array
 					(
 						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.responsiblility_role', 'menu_selection' => 'admin::controller::role_at_location') ),
