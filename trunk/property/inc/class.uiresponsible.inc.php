@@ -298,10 +298,10 @@
 			$responsible_info = $this->bo->read_type();
 
 			$uicols = array (
-				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','hidden','hidden'),
+				'input_type'	=>	array('text','text','text','hidden','hidden','hidden','text','hidden','hidden','hidden'),
 				'name'			=>	array('id','name','descr','category','created_by','created_on','appname','active','loc','location'),
 				'formatter'		=>	array('','','','','','','','','',''),
-				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('user'),'',lang('application'),lang('active'),'','')
+				'descr'			=>	array(lang('id'),lang('name'),lang('descr'),lang('category'),lang('user'),'',lang('application'),lang('active'),'','')
 			);
 
 			$j=0;
@@ -348,6 +348,11 @@
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'name';
+					}		
+					else if($uicols['name'][$i]=='id')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'id';
 					}		
 				}
 				else

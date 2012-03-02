@@ -1938,7 +1938,7 @@
 							array
 							(
 								'name'			=> 'location_level',
-								'descr'			=> lang('location'),
+								'descr'			=> lang('location level'),
 								'type'			=> 'select',
 								'values_def'	=> array
 								(
