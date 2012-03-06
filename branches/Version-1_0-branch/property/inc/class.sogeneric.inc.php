@@ -523,6 +523,12 @@
 						(
 							array
 							(
+								'name' => 'percent',
+								'descr' => lang('percent'),
+								'type' => 'int'
+							),
+							array
+							(
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'

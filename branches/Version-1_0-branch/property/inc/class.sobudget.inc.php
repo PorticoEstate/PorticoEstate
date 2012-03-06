@@ -285,13 +285,12 @@
 						'budget_id'		=> $this->db->f('id'),
 						'year'			=> $this->db->f('year'),
 						'grouping'		=> $this->db->f('b_group'),
-						'district_id'		=> $this->db->f('district_id'),
+						'district_id'	=> $this->db->f('district_id'),
 						'revision'		=> $this->db->f('revision'),
-						'budget_cost'		=> $this->db->f('budget_cost'),
-						'entry_date'		=> $this->db->f('entry_date'),
-						'ecodimb'			=> $this->db->f('ecodimb'),
-						'cat_id'			=> $this->db->f('category'),
-						//		'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+						'budget_cost'	=> $this->db->f('budget_cost'),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'ecodimb'		=> $this->db->f('ecodimb'),
+						'cat_id'		=> $this->db->f('category'),
 					);
 			}
 			return $budget;
@@ -797,20 +796,29 @@
 			$start_periode = date('Ym',mktime(2,0,0,1,1,$year));
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
 
-			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb FROM fm_ecobilagoverf"
+			$this->db->query('SELECT id, percent FROM fm_ecomva',__LINE__,__FILE__);
+			$_taxcode = array(0 => 0);
+			while ($this->db->next_record())
+			{
+				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
+			}
+			
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
+				. " FROM fm_ecobilagoverf"
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
 				. " {$this->join} fm_workorder ON fm_ecobilagoverf.pmwrkord_code = fm_workorder.id"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " WHERE periode >= $start_periode AND periode <= $end_periode {$filtermethod}"
-				. " GROUP BY fm_b_account.{$b_account_field}, district_id,dimb";
+				. " GROUP BY fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
-				$_actual_cost = round($this->db->f('actual_cost'));
+				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
+				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 				$sum_actual_cost += $_actual_cost;
 				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
@@ -818,9 +826,7 @@
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
 		
-
 // start service agreements
-
 
 			$filtermethod = " fm_s_agreement_budget.year = $year";
 			$where = 'AND';
