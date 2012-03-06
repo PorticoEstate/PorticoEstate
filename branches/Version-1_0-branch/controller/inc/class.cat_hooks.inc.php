@@ -60,6 +60,7 @@
 			}
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'controller');
 			
+/*
 			$this->soresponsible->add_type(array
 				(
 					'name'	=> $data['cat_name'],
@@ -69,6 +70,7 @@
 					'active'	=> true
 				)
 			);
+*/
 		}
 
 		/**
@@ -85,7 +87,7 @@
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->delete('controller', $location, false);
-				$this->_db->query("DELETE FROM fm_responsibility WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
+//				$this->_db->query("DELETE FROM fm_responsibility WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
 			}
 		}
 
@@ -105,11 +107,13 @@
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'controller');
 
+/*
 				$value_set['name']		= $this->_db->db_addslashes($data['cat_name']);
 				$value_set['descr']		= $value_set['name'];
 
 				$value_set	= $this->_db->validate_update($value_set);
 				$this->_db->query("UPDATE fm_responsibility SET $value_set WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
+*/
 			}
 		}
 	}

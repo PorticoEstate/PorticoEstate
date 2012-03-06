@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.634';
+	$setup_info['property']['version']		= '0.9.17.635';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -192,6 +192,7 @@
 		'fm_responsibility',
 		'fm_responsibility_role',
 		'fm_responsibility_contact',
+		'fm_responsibility_module',
 		'fm_action_pending',
 		'fm_action_pending_category',
 		'fm_jasper',

@@ -174,12 +174,14 @@
 		{
 			$location_list = array();
 	
-			$grant		= isset($data['grant']) && $data['grant'] ? $data['grant'] : false;
-			$grant		= isset($data['allow_c_attrib']) && $data['allow_c_attrib'] ? $data['allow_c_attrib'] : false;
-			$acl_app	= isset($data['acl_app']) && $data['acl_app'] ? $data['acl_app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$selected	= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
+			$grant				= isset($data['grant']) && $data['grant'] ? $data['grant'] : false;
+			$grant				= isset($data['allow_c_attrib']) && $data['allow_c_attrib'] ? $data['allow_c_attrib'] : false;
+			$acl_app			= isset($data['acl_app']) && $data['acl_app'] ? $data['acl_app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$selected			= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
+			$c_function			= isset($data['$c_function']) && $data['$c_function'] ? true : false;
+			$have_categories	= isset($data['have_categories']) && $data['have_categories'] ? true : false;
 
-			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $acl_app, $allow_c_attrib);
+			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $acl_app, $allow_c_attrib, $c_function, $have_categories);
 
 			foreach ( $locations as $loc_id => $loc_descr )
 			{

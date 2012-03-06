@@ -93,7 +93,7 @@
 				$ordermethod = ' order by fm_responsibility.id DESC';
 			}
 
-			$where= 'AND';
+			$where= 'WHERE';
 			$filtermethod = '';
 
 /*
@@ -102,23 +102,25 @@
 				$filtermethod .= " $where cat_id IN (" . implode(',', $filter) . ')';
 				$where = 'AND';
 			}
- */
+
 			if($location)
 			{
-				$filtermethod .= " $where fm_responsibility.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
+				$filtermethod .= " $where fm_responsibility_module.location_id =" . $GLOBALS['phpgw']->locations->get_id($this->appname, $location);
 				$where = 'AND';
 			}
-
+ */
 			$querymethod = '';
 			if($query)
 			{
-				$querymethod = "$where (fm_responsibility.name $this->like '%$query%' OR fm_responsibility.descr $this->like '%$query%')";
+				$querymethod = "$where (fm_responsibility.name {$this->like} '%$query%' OR fm_responsibility.descr {$this->like} '%$query%')";
 			}
 
-			$sql = "SELECT fm_responsibility.*, phpgw_locations.name as location FROM fm_responsibility"
-			. " {$this->join} phpgw_locations ON fm_responsibility.location_id = phpgw_locations.location_id"
-			. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-			. " WHERE app_name = '{$appname}' $filtermethod $querymethod";
+			$sql = "SELECT fm_responsibility.* FROM fm_responsibility"
+//			. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
+//			. " {$this->join} phpgw_locations ON fm_responsibility_module.location_id = phpgw_locations.location_id"
+//			. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+			. " {$filtermethod} {$querymethod}";
+//			. " WHERE app_name = '{$appname}' $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -137,42 +139,66 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array
-					(
-						'id'			=> $this->db->f('id'),
-						'name'			=> $this->db->f('name', true),
-						'descr'			=> $this->db->f('descr', true),
-						'active'		=> $this->db->f('active'),
-						'location'		=> $this->db->f('location'),
-						'cat_id'		=> $this->db->f('cat_id'),
-						'created_by'	=> $this->db->f('created_by'),
-						'created_on'	=> $this->db->f('created_on'),
-					);
+				(
+					'id'			=> $this->db->f('id'),
+					'name'			=> $this->db->f('name', true),
+					'descr'			=> $this->db->f('descr', true),
+					'active'		=> $this->db->f('active'),
+					'location'		=> $this->db->f('location'),
+					'cat_id'		=> $this->db->f('cat_id'),
+					'created_by'	=> $this->db->f('created_by'),
+					'created_on'	=> $this->db->f('created_on'),
+				);
 			}
 
+			$cats	= CreateObject('phpgwapi.categories', -1);
+			foreach($values as &$entry)
+			{
+				$sql = "SELECT location_id, cat_id FROM fm_responsibility_module WHERE responsibility_id = {$entry['id']}";
+				$this->db->query($sql, __LINE__, __FILE__);			
+				$locations = array();
+				while ($this->db->next_record())
+				{
+					$location_id = $this->db->f('location_id');
+					$cat_id = $this->db->f('cat_id');
+					$locations["{$location_id}_{$cat_id}"] = true;
+				}		
+				$__location_info = array();
+				foreach($locations as $location => $dummy)
+				{
+					
+					$location_arr = explode('_', $location);
+					$_location_info = $GLOBALS['phpgw']->locations->get_name($location_arr[0]);
+
+					$category = $cats->return_single($location_arr[1]);
+
+					$__location_info[] = "{$_location_info['appname']}::{$_location_info['location']}::{$category[0]['name']}({$location_arr[1]})";
+				}	
+				$entry['appname'] = implode(' | ', $__location_info);
+			}
+
+//_debug_array($values);die();
 			return $values;
 		}
 
 		/**
 		 * Add responsibility type
 		 *
-		 * @param array $values values to be stored/edited and referencing ID if editing
+		 * @param array $data values to be stored/edited and referencing ID if editing
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
 
-		public function add_type($values)
+		public function add_type($data)
 		{
 			$receipt = array();
-			$values['name'] = $this->db->db_addslashes($values['name']);
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
+			$data['name'] = $this->db->db_addslashes($data['name']);
+			$data['descr'] = $this->db->db_addslashes($data['descr']);
 
 			$insert_values = array
 			(
-				$values['name'],
-				$values['descr'],
-				$GLOBALS['phpgw']->locations->get_id($this->appname, $values['location']),
-				(int) $values['cat_id'],
-				isset($values['active']) ? !!$values['active'] : '',
+				$data['name'],
+				$data['descr'],
 				$this->account,
 				time()
 			);
@@ -181,13 +207,38 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO fm_responsibility (name, descr,location_id, cat_id, active, created_by, created_on) "
+			$this->db->query("INSERT INTO fm_responsibility (name, descr, created_by, created_on) "
 				. "VALUES ($insert_values)", __LINE__, __FILE__);
+
+			$id = $this->db->get_last_insert_id('fm_responsibility', 'id');
+
+			if($data['cat_id'])
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id( $data['appname'],  $data['location']);
+
+				$this->db->query("SELECT * FROM fm_responsibility_module  WHERE location_id = " . (int) $location_id . ' AND cat_id = ' . (int)$data['cat_id'], __LINE__, __FILE__);
+				
+				if(!$this->db->next_record())
+				{
+					$value_set = array();
+
+					$value_set['responsibility_id']		= $id;
+					$value_set['location_id']			= $location_id;
+					$value_set['cat_id']				= (int) $data['cat_id'];
+					$value_set['active']				= 1;//isset($data['active']) ? !!$data['active'] : '';
+					$value_set['created_on']			= time();										
+					$value_set['created_by']			= $this->account;
+
+					$cols = implode(',', array_keys($value_set));
+					$values	= $this->db->validate_insert(array_values($value_set));
+					$this->db->query("INSERT INTO fm_responsibility_module ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+				}
+			}
 
 			if($this->db->transaction_commit())
 			{
-				$receipt['message'][]=array('msg'=>lang('Responsibility type has been saved'));
-				$receipt['id']= $this->db->get_last_insert_id('fm_responsibility', 'id');
+				$receipt['message'][]	= array('msg'=>lang('Responsibility type has been saved'));
+				$receipt['id']			= $id;
 			}
 			else
 			{
@@ -200,26 +251,69 @@
 		/**
 		 * Edit responsibility type
 		 *
-		 * @param array $values values to be stored/edited and referencing ID if editing
+		 * @param array $data values to be stored/edited and referencing ID if editing
 		 *
 		 * @return array $receip with result on the action(failed/success)
 		 */
 
-		public function edit_type($values)
+		public function edit_type($data)
 		{
 			$receipt = array();
-			$value_set['name']		= $this->db->db_addslashes($values['name']);
-			$value_set['descr']		= $this->db->db_addslashes($values['descr']);
-			$value_set['cat_id']	= (int) $values['cat_id'];
-			$value_set['active']	= isset($values['active']) ? !!$values['active'] : '';
+			$value_set = array();
+			$value_set['name']		= $this->db->db_addslashes($data['name']);
+			$value_set['descr']		= $this->db->db_addslashes($data['descr']);
 
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_responsibility set $value_set WHERE id = " . (int) $values['id'], __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_responsibility SET $value_set WHERE id = " . (int) $data['id'], __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_responsibility_module SET active = NULL WHERE responsibility_id = " . (int) $data['id'], __LINE__, __FILE__);
 
-			$receipt['id']= $values['id'];
+			if($data['cat_id'])
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id( $data['appname'],  $data['location']);
+
+				$this->db->query("SELECT * FROM fm_responsibility_module  WHERE responsibility_id = " . (int) $data['id'] . ' AND location_id = ' . (int) $location_id . ' AND cat_id = ' . (int)$data['cat_id'], __LINE__, __FILE__);
+
+				if(!$this->db->next_record())
+				{
+					$value_set = array();
+
+					$value_set['responsibility_id']		= (int) $data['id'];
+					$value_set['location_id']			= $location_id;
+					$value_set['cat_id']				= (int) $data['cat_id'];
+					$value_set['active']				= 1;//isset($data['active']) ? !!$data['active'] : '';
+					$value_set['created_on']			= time();										
+					$value_set['created_by']			= $this->account;
+
+					$cols = implode(',', array_keys($value_set));
+					$values	= $this->db->validate_insert(array_values($value_set));
+					$this->db->query("INSERT INTO fm_responsibility_module ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+				}
+			}
+
+//_debug_array($data);die();
+			if(isset($data['delete_module']) && $data['delete_module'])
+			{
+				foreach($data['delete_module'] as $to_delete)
+				{
+					$_to_delete = explode('_', $to_delete);
+					$this->db->query("DELETE FROM fm_responsibility_module  WHERE location_id = " . (int) $_to_delete[0] . ' AND cat_id = ' . (int) $_to_delete[1], __LINE__, __FILE__);
+				}
+			}
+
+			if(isset($data['set_active']) && $data['set_active'])
+			{
+				foreach($data['set_active'] as $set_active)
+				{
+					$_set_active = explode('_', $set_active);
+					$this->db->query("UPDATE fm_responsibility_module SET active = 1 WHERE location_id = " . (int) $_set_active[0] . ' AND cat_id = ' . (int) $_set_active[1], __LINE__, __FILE__);
+				}
+			}
+//_debug_array($data);die();
+
+			$receipt['id']= $data['id'];
 			if($this->db->transaction_commit())
 			{
 				$receipt['message'][]=array('msg'=>lang('responsibility type has been edited'));
@@ -263,6 +357,120 @@
 		}
 
 		/**
+		 * Read single responsibility role
+		 *
+		 * @param integer $id ID of responsibility role
+		 *
+		 * @return array Responsibility type
+		 */
+
+		public function read_single_role($id)
+		{
+			$sql = 'SELECT * FROM fm_responsibility_role WHERE id= ' . (int) $id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			$this->db->next_record();
+			$values = array
+			(
+				'id'				=> $this->db->f('id'),
+				'name'				=> $this->db->f('name', true),
+				'remark'			=> $this->db->f('remark', true),
+				'location_level'	=> explode(',', ltrim($this->db->f('location_level'), '.location.')),
+				'responsibility_id'	=> $this->db->f('responsibility_id'),
+				'user_id'			=> $this->db->f('user_id'),
+				'entry_date'		=> $this->db->f('entry_date'),
+				'modified_date'		=> $this->db->f('modified_date'),
+				'appname'			=> $this->db->f('appname'),
+			);
+
+			return $values;
+		}
+
+
+
+		public function edit_role($data)
+		{
+			$receipt = array();
+
+			$value_set['name']					=$this->db->db_addslashes($data['name']);
+			$value_set['remark']				= $this->db->db_addslashes($data['remark']);
+			$value_set['responsibility_id']		= $data['responsibility_id'];
+			$value_set['location_level']				= implode(',', $data['location_level']);
+			$value_set['modified_date']			= time();
+
+
+			$value_set	= $this->db->validate_update($value_set);
+
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_responsibility_role set $value_set WHERE id = " . (int) $data['id'], __LINE__, __FILE__);
+
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('Responsibility role has been changed'));
+			}
+			else
+			{
+				$receipt['message'][]=array('msg'=>lang('Nothing changed'));
+			}
+			$receipt['id']= $data['id'];
+
+			return $receipt;
+		}
+
+
+		/**
+		 * Read single responsibility type
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array Responsibility type
+		 */
+
+		public function read_single($id)
+		{
+			$sql = 'SELECT * FROM fm_responsibility WHERE id= ' . (int) $id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			if(	$this->db->next_record())
+			{
+				$values = array
+				(
+					'id'			=> $this->db->f('id'),
+					'name'			=> $this->db->f('name', true),
+					'descr'			=> $this->db->f('descr', true),
+					'active'		=> $this->db->f('active'),
+					'cat_id'		=> $this->db->f('cat_id'),
+					'created_by'	=> $this->db->f('created_by'),
+					'created_on'	=> $this->db->f('created_on'),
+				);
+
+				$sql = 'SELECT * FROM fm_responsibility_module WHERE responsibility_id= ' . (int) $id;
+				$this->db->query($sql, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$values['module'][] = array
+					(
+						'location_id'		=> $this->db->f('location_id'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						'active'			=> $this->db->f('active'),
+						'created_on'		=> $this->db->f('created_on'),
+						'created_by'		=> $this->db->f('created_by'),
+					);
+				}
+			}
+
+			return $values;
+		}
+
+
+		/**
 		 * Delete responsibility type
 		 *
 		 * @param integer $id ID of responsibility type
@@ -273,6 +481,7 @@
 		function delete_type($id)
 		{
 			$this->db->transaction_begin();
+			$this->db->query('DELETE FROM fm_responsibility_module WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE responsibility_id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->query('DELETE FROM fm_responsibility WHERE id='  . (int) $id, __LINE__, __FILE__);
 			$this->db->transaction_commit();
@@ -486,7 +695,7 @@
 		{
 			$sql = "SELECT fm_responsibility_contact.*,  fm_responsibility.name as responsibility_name"
 				. " FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id" 
 				. ' WHERE fm_responsibility_contact.id='  . (int) $id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -546,7 +755,7 @@
 			$value_set['expired_on']	= time();
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
-			$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int) $id, __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_responsibility_contact SET {$value_set} WHERE id = " . (int) $id, __LINE__, __FILE__);
 			$this->db->transaction_commit();
 		}
 
@@ -565,8 +774,8 @@
 			$time = time() +1;
 
 			$sql = "SELECT fm_responsibility_contact.id, contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. " $this->join fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
 				. " WHERE fm_responsibility_role.id ={$role_id}"
 				. " AND fm_responsibility_contact.location_code ='{$location_code}'"
 				. " AND active_from < {$time} AND (active_to > {$time} OR active_to = 0) AND expired_on IS NULL";
@@ -589,42 +798,47 @@
 		 * Get the responsibility for a particular category conserning a given location or item
 		 * Locations are checked bottom up at the deepest level - before checkin on it's parent if it is a miss.
 		 *
-		 * @param array $values containing cat_id, location_code and optional item-information
+		 * @param array $data containing cat_id, location_code and optional item-information
 		 *
 		 * @return contact_id
 		 */
 
-		public function get_responsible($values = array())
+		public function get_responsible($data = array())
 		{
 			$location_filter = array();
 
 			$todo = false;
 			$item_filter = '';
 
-			if(isset($values['ecodimb']) && $values['ecodimb'])
+			if(isset($data['ecodimb']) && $data['ecodimb'])
 			{
-				$item_filter =   " AND ecodimb = '{$values['ecodimb']}'";
+				$item_filter =   " AND ecodimb = '{$data['ecodimb']}'";
 				$location_filter[] = '';
 				$todo = true;
 			}
-			elseif(isset($values['extra']['p_entity_id']) && $values['extra']['p_entity_id'])
+			elseif(isset($data['extra']['p_entity_id']) && $data['extra']['p_entity_id'])
 			{
-				$location_code = implode('-', $values['location']);
+				$location_code = implode('-', $data['location']);
 
-				$item_filter =   " AND p_num = '{$values['extra']['p_num']}'"
-					.' AND p_entity_id =' . (int) $values['extra']['p_entity_id']
-					.' AND p_cat_id =' . (int) $values['extra']['p_cat_id'];
+				$item_filter =   " AND p_num = '{$data['extra']['p_num']}'"
+					.' AND p_entity_id =' . (int) $data['extra']['p_entity_id']
+					.' AND p_cat_id =' . (int) $data['extra']['p_cat_id'];
 
 				$location_filter[] = " AND location_code = '{$location_code}'";
 				$ordermethod = '';
 				$todo = true;
 			}
-			else if(isset($values['location']) && $values['location'])
+			else if(isset($data['location']) && $data['location'])
 			{
+				if(!is_array($data['location']))
+				{
+					throw new exception('soresponsible::get_responsible(): location-input needs to be an array');
+				}
+
 				$location_filter[] = ''; // when the responsibility is generic - not located to any location
 				$location_code = '';
 				$location_array = array();
-				foreach ($values['location'] as $location)
+				foreach ($data['location'] as $location)
 				{
 					$location_array[]	= $location;
 					$location_code		= implode('-', $location_array);
@@ -644,8 +858,9 @@
 			}
 
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. ' WHERE cat_id =' . (int) $values['cat_id']
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
+				. ' WHERE cat_id =' . (int) $data['cat_id']
 				. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
 				. " {$item_filter}";
 
@@ -692,7 +907,7 @@
 			$responsibility_id = (int)$responsibility_id;
 			$now = time();
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
-				. " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
 				. " AND active = 1 AND active_from < {$now} AND active_to > {$now} AND expired_on IS NULL";
 
 			$this->db->query($sql, __LINE__, __FILE__);
