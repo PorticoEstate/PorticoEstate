@@ -94,7 +94,6 @@
 				<div id="documents_container"/>
 			</dl>
 			<dl class="proplist-col images">	
-
 			<xsl:if test="not(campsites='')">				
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
 				<dd><xsl:value-of select="campsites"/></dd>
@@ -126,6 +125,26 @@
 			<xsl:if test="not(usage_time='')">				
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
 				<dd><xsl:value-of select="usage_time"/></dd>
+			</xsl:if>
+			<xsl:if test="not(swiming='')">				
+				<dt><label for='field_swiming'><xsl:value-of select="php:function('lang', 'Swiming')"/></label></dt>
+				<dd><xsl:value-of select="swiming"/></dd>
+			</xsl:if>
+			<xsl:if test="not(sanitation_facilities='')">				
+				<dt><label for='field_sanitation_facilities'><xsl:value-of select="php:function('lang', 'Sanitation facilities')"/></label></dt>
+				<dd><xsl:value-of select="sanitation_facilities"/></dd>
+			</xsl:if>
+			<xsl:if test="not(animals='')">				
+				<dt><label for='field_animals'><xsl:value-of select="php:function('lang', 'Animals')"/></label></dt>
+				<dd><xsl:value-of select="animals"/></dd>
+			</xsl:if>
+			<xsl:if test="not(internett_phone='')">				
+				<dt><label for='field_internett_phone'><xsl:value-of select="php:function('lang', 'Internett/phone')"/></label></dt>
+				<dd><xsl:value-of select="internett_phone"/></dd>
+			</xsl:if>
+			<xsl:if test="not(handicap='')">				
+				<dt><label for='field_handicap'><xsl:value-of select="php:function('lang', 'Handicap')"/></label></dt>
+				<dd><xsl:value-of select="handicap"/></dd>
 			</xsl:if>
 			<div id="images_container"></div>
 

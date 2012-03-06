@@ -23,7 +23,8 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time',
+'swiming','sanitation_facilities','animals','internett_phone','handicap');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -183,7 +184,7 @@
 				$resource = array_merge($resource, extract_values($_POST, $this->fields));
 				$errors = $this->bo->validate($building);
 
-				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50 ||  strlen($_POST['swiming']) > 50 ||  strlen($_POST['sanitation_facilities']) > 50 ||  strlen($_POST['animals']) > 50 ||  strlen($_POST['internett_phone']) > 50 ||  strlen($_POST['handicap']) > 50)
 				{
 					$errors['extrafields'] = lang('Max 50 characters in text fields');
 				}	

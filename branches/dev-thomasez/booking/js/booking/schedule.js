@@ -47,6 +47,8 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		if (booking.name == 'Ledig tid' || booking.name == 'Ledig' || booking.name == 'Åpen' || booking.name == 'Åpent') {
 			var data = oRecord.getData();
 			YAHOO.util.Dom.addClass(elCell, 'freegreen');
+    		YAHOO.util.Dom.setStyle(elCell, 'cursor', 'pointer');
+			YAHOO.util.Dom.addClass(elCell, 'selector');
 			elCell.onclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
 		} else {
 			elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
@@ -54,7 +56,8 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 
 	}
 	else {
-//		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		YAHOO.util.Dom.addClass(elCell, 'selector');
+		YAHOO.util.Dom.setStyle(elCell, 'cursor', 'pointer');
 		elCell.innerHTML = '...';
 		var data = oRecord.getData();
 		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };

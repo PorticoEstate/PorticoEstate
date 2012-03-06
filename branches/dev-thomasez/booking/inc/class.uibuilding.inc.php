@@ -27,7 +27,7 @@
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','internal_cost','external_cost','cost_type','campsites','bedspaces',
-'heating','kitchen','water','location','communication','usage_time','weather_url','map_url');
+'heating','kitchen','water','location','communication','usage_time','weather_url','map_url','swiming','sanitation_facilities','animals','internett_phone','handicap');
 		}
 		
 		protected function building_cost_types()
@@ -161,7 +161,7 @@
 				$building = extract_values($_POST, $this->fields);
 				$building['active'] = '1';
 				$errors = $this->bo->validate($building);
-				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50 ||  strlen($_POST['swiming']) > 50 ||  strlen($_POST['sanitation_facilities']) > 50 ||  strlen($_POST['animals']) > 50 ||  strlen($_POST['internett_phone']) > 50 ||  strlen($_POST['handicap']) > 50)
 				{
 					$errors['extrafields'] = lang('Max 50 characters in text fields');
 				}	
@@ -203,7 +203,7 @@
 				$building = array_merge($building, extract_values($_POST, $this->fields));
 			
 				$errors = $this->bo->validate($building);
-				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50 ||  strlen($_POST['swiming']) > 50 ||  strlen($_POST['sanitation_facilities']) > 50 ||  strlen($_POST['animals']) > 50 ||  strlen($_POST['internett_phone']) > 50 ||  strlen($_POST['handicap']) > 50)
 				{
 					$errors['extrafields'] = lang('Max 50 characters in text fields');
 				}	

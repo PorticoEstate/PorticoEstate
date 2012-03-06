@@ -1,5 +1,5 @@
 <?php
-	$setup_info['booking']['version'] = '0.2.12';
+	$setup_info['booking']['version'] = '0.2.13';
 	$setup_info['booking']['name'] = 'booking';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;

@@ -58,7 +58,7 @@
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
-						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time'), true),
+						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time','swiming','sanitation_facilities','animals','internett_phone','handicap'), true),
 					),
 					'parent_role_permissions' => array
 					(

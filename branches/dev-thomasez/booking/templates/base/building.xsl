@@ -75,6 +75,18 @@
 				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
 				<dd><xsl:value-of select="building/kitchen"/></dd>
 			</xsl:if>
+			<xsl:if test="not(building/swiming='')">				
+				<dt><label for='field_swiming'><xsl:value-of select="php:function('lang', 'Swiming')"/></label></dt>
+				<dd><xsl:value-of select="building/swiming"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/sanitation_facilities='')">				
+				<dt><label for='field_sanitation_facilities'><xsl:value-of select="php:function('lang', 'Sanitation facilities')"/></label></dt>
+				<dd><xsl:value-of select="building/sanitation_facilities"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/handicap='')">				
+				<dt><label for='field_handicap'><xsl:value-of select="php:function('lang', 'Handicap')"/></label></dt>
+				<dd><xsl:value-of select="building/handicap"/></dd>
+			</xsl:if>
 			</dl>
 			<dl class="form-col">
 			<xsl:if test="not(building/water='')">				
@@ -92,6 +104,14 @@
 			<xsl:if test="not(building/usage_time='')">				
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
 				<dd><xsl:value-of select="building/usage_time"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/internett_phone='')">				
+				<dt><label for='field_internett_phone'><xsl:value-of select="php:function('lang', 'Internett/phone')"/></label></dt>
+				<dd><xsl:value-of select="building/internett_phone"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/animals='')">				
+				<dt><label for='field_animals'><xsl:value-of select="php:function('lang', 'Animals')"/></label></dt>
+				<dd><xsl:value-of select="building/animals"/></dd>
 			</xsl:if>
 		</dl>
 		<div class="clr"/>

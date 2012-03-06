@@ -66,8 +66,86 @@
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
 			</dd>
 		</dl>
+		<div class="clr"/>
 		<dl class="form-col">
-			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
+			<div class="heading">2. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
+			<xsl:if test="config/application_where">
+				<p>
+					<xsl:value-of select="config/application_where"/>
+				</p>		
+			</xsl:if>
+<!--			<xsl:if test="not (config/application_where)">-->
+<!--				<p>Velg hus og ressurser</p>-->
+<!--			</xsl:if>-->
+			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
+			<dd>
+				<div class="autocomplete">
+					<input id="field_building_id" name="building_id" type="hidden">
+						<xsl:attribute name="value"><xsl:value-of select="application/building_id"/></xsl:attribute>
+					</input>
+					<input id="field_building_name" name="building_name" type="text">
+						<xsl:attribute name="value"><xsl:value-of select="application/building_name"/></xsl:attribute>
+					</input>
+					<div id="building_container"/>
+				</div>
+			</dd>
+			<dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
+			<dd>
+				<div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
+			</dd>
+		</dl>
+		<div class="clr"/>
+		<dl class="form-col">
+			<div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
+			<xsl:if test="config/application_when">
+				<p>
+					<xsl:value-of select="config/application_when"/>
+				</p>		
+			</xsl:if>
+<!--			<xsl:if test="not (config/application_when)">-->
+<!--				<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med 				timer:minutter. Du kan søke om flere tider ved å velge Legg til dato. For søknad om fast tid i en gitt periode legg inn startdato og 				klokkeslett for den første gangen her og oppgi intervall og sluttdato i felt 1: "Informasjon om aktiviteten"</p>-->
+<!--			</xsl:if>-->
+			<div id="dates-container">
+				<xsl:for-each select="application/dates">
+					<div class="date-container">
+						<a href="#" class="close-btn">-</a>
+						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
+						<dd class="datetime-picker">
+							<input id="field_from" name="from_[]" type="text">
+								<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
+							</input>
+						</dd>
+						<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+						<dd class="datetime-picker">
+							<input id="field_to" name="to_[]" type="text">
+								<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
+							</input>
+						</dd>
+					</div>
+				</xsl:for-each>
+			</div>
+
+
+			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+		</dl>
+		<div class="clr"/>
+		<dl class="form-col">
+			<div class="heading">4. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
+			<xsl:if test="config/application_who">
+				<p>
+					<xsl:value-of select="config/application_who"/>
+				</p>		
+			</xsl:if>
+<!--			<xsl:if test="not (config/application_who)">-->
+<!--				<p>Kryss av for hvilken målgruppe arrangementet/treningen er rettet mot. Du kan krysse av for flere.</p>-->
+<!--			</xsl:if>-->
+			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
+			<dd>
+				<div id="audience_container">&nbsp;</div>
+			</dd>
+		</dl>
+		<dl class="form-col">
+			<div class="heading">5. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
 			<xsl:if test="config/application_howmany">
 			<p>
 				<xsl:value-of select="config/application_howmany"/>
@@ -102,84 +180,6 @@
 						</tr>
 					</xsl:for-each>
 				</table>
-			</dd>
-		</dl>
-		<div class="clr"/>
-		<dl class="form-col">
-			<div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
-			<xsl:if test="config/application_where">
-				<p>
-					<xsl:value-of select="config/application_where"/>
-				</p>		
-			</xsl:if>
-<!--			<xsl:if test="not (config/application_where)">-->
-<!--				<p>Velg hus og ressurser</p>-->
-<!--			</xsl:if>-->
-			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
-			<dd>
-				<div class="autocomplete">
-					<input id="field_building_id" name="building_id" type="hidden">
-						<xsl:attribute name="value"><xsl:value-of select="application/building_id"/></xsl:attribute>
-					</input>
-					<input id="field_building_name" name="building_name" type="text">
-						<xsl:attribute name="value"><xsl:value-of select="application/building_name"/></xsl:attribute>
-					</input>
-					<div id="building_container"/>
-				</div>
-			</dd>
-			<dt><label for="field_resources"><xsl:value-of select="php:function('lang', 'Resources')" /></label></dt>
-			<dd>
-				<div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
-			</dd>
-		</dl>
-		<div class="clr"/>
-		<dl class="form-col">
-			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-			<xsl:if test="config/application_when">
-				<p>
-					<xsl:value-of select="config/application_when"/>
-				</p>		
-			</xsl:if>
-<!--			<xsl:if test="not (config/application_when)">-->
-<!--				<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med 				timer:minutter. Du kan søke om flere tider ved å velge Legg til dato. For søknad om fast tid i en gitt periode legg inn startdato og 				klokkeslett for den første gangen her og oppgi intervall og sluttdato i felt 1: "Informasjon om aktiviteten"</p>-->
-<!--			</xsl:if>-->
-			<div id="dates-container">
-				<xsl:for-each select="application/dates">
-					<div class="date-container">
-						<a href="#" class="close-btn">-</a>
-						<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
-						<dd class="datetime-picker">
-							<input id="field_from" name="from_[]" type="text">
-								<xsl:attribute name="value"><xsl:value-of select="from_"/></xsl:attribute>
-							</input>
-						</dd>
-						<dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
-						<dd class="datetime-picker">
-							<input id="field_to" name="to_[]" type="text">
-								<xsl:attribute name="value"><xsl:value-of select="to_"/></xsl:attribute>
-							</input>
-						</dd>
-					</div>
-				</xsl:for-each>
-			</div>
-
-
-			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
-		</dl>
-		<div class="clr"/>
-		<dl class="form-col">
-			<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
-			<xsl:if test="config/application_who">
-				<p>
-					<xsl:value-of select="config/application_who"/>
-				</p>		
-			</xsl:if>
-<!--			<xsl:if test="not (config/application_who)">-->
-<!--				<p>Kryss av for hvilken målgruppe arrangementet/treningen er rettet mot. Du kan krysse av for flere.</p>-->
-<!--			</xsl:if>-->
-			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
-			<dd>
-				<div id="audience_container">&nbsp;</div>
 			</dd>
 		</dl>
 		<div class="clr"/>

@@ -241,9 +241,11 @@ dl.contactinfo dd {
 }
 #frontend dl.proplist-col.images dt {
     margin-top: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 }
-
+#frontend dl.proplist-col.images dd {
+    margin-bottom: 3px;
+}
 
 
 #frontend h2 { margin-bottom: 0.1em;}
@@ -380,9 +382,8 @@ height:160px;
 padding-top: 1.5em;
 font-size: 0.9em;
 }
-
-#schedule_container .freegreen {
-    cursor: pointer;
+.selector {
+    cursor: pointer!important;
 }
 
 

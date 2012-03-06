@@ -50,8 +50,6 @@
 			<div id="documents_container"/>
 		</dl>
 		<dl class="proplist-col images">	
-			<div id="images_container"></div>
-
 			<xsl:if test="not(resource/campsites='')">				
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
 				<dd><xsl:value-of select="resource/campsites"/></dd>
@@ -84,7 +82,27 @@
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
 				<dd><xsl:value-of select="resource/usage_time"/></dd>
 			</xsl:if>
-
+			<xsl:if test="not(resource/swiming='')">				
+				<dt><label for='field_swiming'><xsl:value-of select="php:function('lang', 'Swiming')"/></label></dt>
+				<dd><xsl:value-of select="resource/swiming"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/sanitation_facilities='')">				
+				<dt><label for='field_sanitation_facilities'><xsl:value-of select="php:function('lang', 'Sanitation facilities')"/></label></dt>
+				<dd><xsl:value-of select="resource/sanitation_facilities"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/animals='')">				
+				<dt><label for='field_animals'><xsl:value-of select="php:function('lang', 'Animals')"/></label></dt>
+				<dd><xsl:value-of select="resource/animals"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/internett_phone='')">				
+				<dt><label for='field_internett_phone'><xsl:value-of select="php:function('lang', 'Internett/phone')"/></label></dt>
+				<dd><xsl:value-of select="resource/internett_phone"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/handicap='')">				
+				<dt><label for='field_handicap'><xsl:value-of select="php:function('lang', 'Handicap')"/></label></dt>
+				<dd><xsl:value-of select="resource/handicap"/></dd>
+			</xsl:if>
+			<div id="images_container"></div>
 		</dl>
 	</div>
 

@@ -103,6 +103,14 @@
 
 				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
 				<dd><input type="text" name="kitchen" id="field_kitchen" value="{resource/kitchen}"/></dd>
+
+				<dt><label for='field_swiming'><xsl:value-of select="php:function('lang', 'Swiming')"/></label></dt>
+				<dd><input type="text" name="swiming" id="field_swiming" value="{resource/swiming}"/></dd>
+
+				<dt><label for='field_sanitation_facilities'><xsl:value-of select="php:function('lang', 'Sanitation facilities')"/></label></dt>
+				<dd><input type="text" name="sanitation_facilities" id="field_sanitation_facilities" value="{resource/sanitation_facilities}"/></dd>
+				<dt><label for='field_handicap'><xsl:value-of select="php:function('lang', 'Handicap')"/></label></dt>
+				<dd><input type="text" name="handicap" id="field_handicap" value="{resource/handicap}"/></dd>
 				
 			</dl>
 			<dl class="form-col">
@@ -117,6 +125,12 @@
 
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
 				<dd><input type="text" name="usage_time" id="field_usage_time" value="{resource/usage_time}"/></dd>
+
+				<dt><label for='field_internett_phone'><xsl:value-of select="php:function('lang', 'Internett/phone')"/></label></dt>
+				<dd><input type="text" name="internett_phone" id="field_internett_phone" value="{resource/internett_phone}"/></dd>
+
+				<dt><label for='field_animals'><xsl:value-of select="php:function('lang', 'Animals')"/></label></dt>
+				<dd><input type="text" name="animals" id="field_animals" value="{resource/animals}"/></dd>
 				
 			</dl>
 			<div class="clr"/>

@@ -2718,4 +2718,31 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	* Update booking version from 0.2.10 to 0.2.11
+	* Update bb_building with som new fields.
+	* 
+	*/
+  $test[] = '0.2.12';
+	function booking_upgrade0_2_12()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN swiming varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN sanitation_facilities varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN animals varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN internett_phone varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN handicap varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN swiming varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN sanitation_facilities varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN animals varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN internett_phone varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN handicap varchar(50) DEFAULT NULL");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.13';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

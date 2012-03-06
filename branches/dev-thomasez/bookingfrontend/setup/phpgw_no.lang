@@ -352,21 +352,26 @@ West	bookingfrontend	no	Vestlandet
 Middle	bookingfrontend	no	Midt-Norge
 North	bookingfrontend	no	Nord-Norge
 Select bedspaces	bookingfrontend	no	Velg antall sengeplasser
-akerhus	booking	no	Akershus
-austagder	booking	no	Aust-Agder
-buskerud	booking	no	Buskerud
-finnmark	booking	no	Finnmark
-hedemark	booking	no	Hedmark
-hordaland	booking	no	Hordaland
-moreogromsdal	booking	no	Møre og Romsdal
-nordland	booking	no	Nordland
-nordtrodelag	booking	no	Nord-Trøndelag
-oppland	booking	no	Oppland
-rogaland	booking	no	Rogaland
-songogfjordane	booking	no	Sogn og Fjordane
-sortrondelag	booking	no	Sør-Trøndelag
-telemark	booking	no	Telemark
-troms	booking	no	Troms
-vestagder	booking	no	Vest-Agder
-vestfold	booking	no	Vestfold
-ostfold	booking	no	Østfold
+akerhus	bookingfrontend	no	Akershus
+austagder	bookingfrontend	no	Aust-Agder
+buskerud	bookingfrontend	no	Buskerud
+finnmark	bookingfrontend	no	Finnmark
+hedemark	bookingfrontend	no	Hedmark
+hordaland	bookingfrontend	no	Hordaland
+moreogromsdal	bookingfrontend	no	Møre og Romsdal
+nordland	bookingfrontend	no	Nordland
+nordtrodelag	bookingfrontend	no	Nord-Trøndelag
+oppland	bookingfrontend	no	Oppland
+rogaland	bookingfrontend	no	Rogaland
+songogfjordane	bookingfrontend	no	Sogn og Fjordane
+sortrondelag	bookingfrontend	no	Sør-Trøndelag
+telemark	bookingfrontend	no	Telemark
+troms	bookingfrontend	no	Troms
+vestagder	bookingfrontend	no	Vest-Agder
+vestfold    bookingfrontend	no	Vestfold
+ostfold bookingfrontend no  Østfold
+Swiming bookingfrontend no  Bading
+Sanitation facilities	bookingfrontend	no	Sanitære fasiliteter
+Animals	bookingfrontend	no	Tillatt med dyr?
+Internett/phone	bookingfrontend	no	Internett/telefon
+Handicap	bookingfrontend	no	Handikap

@@ -38,7 +38,12 @@
 					'communication' => array('type' => 'string', 'query' => true),
 					'usage_time' 	=> array('type' => 'string', 'query' => true),
 					'weather_url'		=> array('type' => 'string'),
-					'map_url'		=> array('type' => 'string')
+					'map_url'		=> array('type' => 'string'),
+					'swiming' 		=> array('type' => 'string', 'query' => true),
+					'sanitation_facilities' 		=> array('type' => 'string', 'query' => true),
+					'animals' 		=> array('type' => 'string', 'query' => true),
+					'internett_phone' 		=> array('type' => 'string', 'query' => true),
+					'handicap' 		=> array('type' => 'string', 'query' => true)
 				)
 			);
 		}
