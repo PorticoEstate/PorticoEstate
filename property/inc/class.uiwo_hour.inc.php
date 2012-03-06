@@ -456,7 +456,7 @@
 					'lang_edit'			=> lang('edit'),
 					'lang_delete'		=> lang('delete'),
 					'lang_category'		=> lang('category'),
-					'lang_per_cent'		=> lang('Per Cent'),
+					'lang_per_cent'		=> lang('percent'),
 				);
 
 			$tax = $this->config->config_data['fm_tax'];
@@ -836,7 +836,7 @@
 			$uicols = array (
 				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);
 
@@ -2211,7 +2211,7 @@ HTML;
 				'type'			=>	array('','','','','','','','','','','','text','',''),				
 				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
 				'formatter'		=>	array('','','','','','','','','','','','','',''),
-				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('Per Cent')),
+				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('percent')),
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
 			);
 
@@ -2313,7 +2313,7 @@ HTML;
 			$uicols_details = array (
 				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);
 
@@ -2834,7 +2834,7 @@ HTML;
 			$uicols_details = array (
 				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
-				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('Per Cent')),
+				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
 			);
 
@@ -3254,7 +3254,7 @@ HTML;
 					'wo_hour_cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['wo_hour_cat'],'type' =>'wo_hours','order'=>'id')),
 					'lang_cat_per_cent_statustext'	=> lang('the percentage of the category'),
 					'value_cat_per_cent'			=> $values['cat_per_cent'],
-					'lang_per_cent'					=> lang('Per Cent')
+					'lang_per_cent'					=> lang('percent')
 				);
 			//_debug_array($data);
 			$appname = lang('Workorder');
