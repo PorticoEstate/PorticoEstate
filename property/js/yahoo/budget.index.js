@@ -95,10 +95,8 @@
 
 	  	this.addFooterDatatable = function()
 	  	{
-  		
 	  		//call getSumPerPage(name of column) in property.js
-	  		tmp_sum = getSumPerPage('budget_cost',0);
-
+			tmp_sum = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 			//Create ROW
 			newTR = document.createElement('tr');
 			td_empty(9);

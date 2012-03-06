@@ -459,7 +459,8 @@
 					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
+					'records'			=> array(),
+					'sum_budget'		=> $this->bo->sum_budget_cost
 				);
 
 			// values for datatable
