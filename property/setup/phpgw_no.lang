@@ -11,7 +11,7 @@ accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap
 accounting dim b	property	no	Kostnadssted
 accounting dim d	property	no	Regnskap dim d
-accounting tax	property	no	Regnskap skatter
+accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
 accounting voucher type	property	no	Regnskap type faktura
 acl_locastion is missing	property	no	ACL-lokalisering mangler
@@ -1161,7 +1161,7 @@ part of town id	property	no	Bydel
 payment date	property	no	Forfallsdato
 pdf	property	no	PDF
 per agreement	property	no	pr avtale
-per cent	property	no	Prosent
+percent	property	no	Prosent
 percentage addition	property	no	prosentvis tillegg
 performed	property	no	Utført
 period	property	no	Periode
