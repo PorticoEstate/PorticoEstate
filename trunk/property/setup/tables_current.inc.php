@@ -1183,6 +1183,7 @@
 		'fm_ecomva' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'percent' => array('type' => 'int','precision' => '4','nullable' => True),
 				'descr' => array('type' => 'varchar','precision' => '25','nullable' => False)
 			),
 			'pk' => array('id'),
