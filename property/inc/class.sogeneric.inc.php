@@ -1937,14 +1937,15 @@
 							),
 							array
 							(
-								'name'			=> 'location',
-								'descr'			=> lang('location'),
+								'name'			=> 'location_level',
+								'descr'			=> lang('location level'),
 								'type'			=> 'select',
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
 									'method'		=> 'preferences.boadmin_acl.get_locations',
 									'method_input'	=> array('acl_app' => 'property',	'selected' => '##location##')
+//									'method_input'	=> array('acl_app' => '$this->appname',	'selected' => '##location##', 'have_categories' => true)
 								)
 							),
 							array
@@ -1960,6 +1961,7 @@
 								)
 							)
 						),
+						'edit_action'		=> 'property.uiresponsible.edit_role',
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('responsibility role'),
@@ -2259,7 +2261,14 @@
 				$_filter = array();
 				foreach ($data['filter'] as $_field => $_value)
 				{
-					$_filter[] = "{$_field} = '{$_value}'";
+					if($data['filter_method'] == 'like')
+					{
+						$_filter[] = "{$_field} {$this->_db->like} '%{$_value}%'";
+					}
+					else
+					{
+						$_filter[] = "{$_field} = '{$_value}'";
+					}
 				}
 				if($_filter)
 				{

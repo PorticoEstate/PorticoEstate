@@ -669,7 +669,7 @@
 
 			//_debug_array($values);
 
-			$project_values	= $this->boproject->read_single($values['project_id']);
+			$project_values	= $this->boproject->read_single($values['project_id'], array(), true);
 
 			$soinvoice	= CreateObject('property.soinvoice');
 
@@ -683,7 +683,9 @@
 				else
 				{
 					$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
+
 					$workorder['voucher_id'] = isset($vouchers[0]['voucher_id']) ? $vouchers[0]['voucher_id'] : '';
+					$workorder['actual_cost'] =  isset($vouchers[0]['approved_amount']) ? $vouchers[0]['approved_amount'] : '';
 				}
 			}
 
@@ -823,10 +825,10 @@
 					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
 															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
+															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
 															array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
 															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
 															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
 															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
 															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
 				);
