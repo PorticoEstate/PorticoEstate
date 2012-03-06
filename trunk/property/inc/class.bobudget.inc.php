@@ -145,8 +145,8 @@
 				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
 				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id));
 
-			$this->total_records = $this->so->total_records;
-
+			$this->total_records		= $this->so->total_records;
+			$this->sum_budget_cost		= $this->so->sum_budget_cost;
 			foreach ($budget as & $entry)
 			{
 //				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
