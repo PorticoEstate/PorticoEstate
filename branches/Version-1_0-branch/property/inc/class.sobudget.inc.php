@@ -152,10 +152,25 @@
 			}
 
 
-			$sql = "SELECT fm_budget.*, fm_budget.category as cat_id, ecodimb, descr,fm_b_account.category as grouping FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id $filtermethod $querymethod";
+			$sql = "SELECT fm_budget.*, fm_budget.category as cat_id, ecodimb, descr,fm_b_account.category as grouping FROM fm_budget {$this->join} fm_b_account ON fm_budget.b_account_id = fm_b_account.id $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+
+			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
+			{
+				$sql_count = 'SELECT count(id) as cnt, sum(budget_cost) AS sum_budget_cost FROM (SELECT DISTINCT fm_budget.id, budget_cost '. substr($sql,strripos($sql,'FROM')) .') AS t';
+				$this->db->query($sql_count,__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records 		= $this->db->f('cnt');
+				$this->sum_budget_cost		= $this->db->f('sum_budget_cost');
+			}
+			else
+			{
+				$sql_count = 'SELECT count(fm_budget.id) as cnt, sum(budget_cost) AS sum_budget_cost ' . substr($sql,strripos($sql,'FROM'));
+				$this->db->query($sql_count,__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records 		= $this->db->f('cnt');
+				$this->sum_budget_cost		= $this->db->f('sum_budget_cost');
+			}
 
 			if(!$allrows)
 			{
@@ -182,7 +197,7 @@
 						'entry_date'		=> $this->db->f('entry_date'),
 						'ecodimb'			=> $this->db->f('ecodimb'),
 						'cat_id'			=> $this->db->f('cat_id'),
-						//			'user'				=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+			//			'user'				=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
 					);
 			}
 			return $budget;
