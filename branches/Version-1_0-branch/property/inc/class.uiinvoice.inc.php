@@ -208,7 +208,7 @@
 			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
 			$loc1 			= phpgw::get_var('loc1');
-			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id', 'int');
+			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
 			$invoice_id		= phpgw::get_var('invoice_id');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 
@@ -297,7 +297,7 @@
 					."cat_id: '{$this->cat_id}',"
 					."user_lid:'{$this->user_lid}',"
 					."sub:'{$this->sub}',"
-				//	."query:'{$this->query}',"
+					."query:'{$this->query}',"
 					."paid:'{$paid}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
@@ -374,6 +374,135 @@
 								'value'	=> lang('add')
 							),
 							array
+							( // workorder link
+								'type' => 'link',
+								'id' => 'lnk_workorder',
+								'url' => "",
+								'value' => lang('Workorder ID'),
+								'tab_index' => 5,
+								'style' => 'filter'
+							),
+							array
+							( // workorder box
+								'name'     => 'workorder_id',
+								'id'     => 'txt_workorder',
+								'value'    => $workorder_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 10,
+								'tab_index' => 6,
+								'style' => 'filter'
+							),
+							array
+							( //vendor link
+								'type' => 'link',
+								'id' => 'lnk_vendor',
+								'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+								array
+								(
+									'menuaction' => 'property.uilookup.vendor',
+								))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+								'value' => lang('Vendor'),
+								'tab_index' => 7,
+								'style' => 'filter'
+							),
+							array
+							( // Vendor box HIDDEN
+								'name'     => 'vendor_name',
+								'id'     => 'txt_vendor_name',
+								'value'    => "",
+								'type' => 'hidden',
+								'size'    => 10,
+								'style' => 'filter'
+							),
+							array
+							( // Vendor box
+								'name'     => 'vendor_id',
+								'id'     => 'txt_vendor',
+								'value'    => $vendor_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 10,
+								'tab_index' => 8,
+								'style' => 'filter'
+							),
+							array
+							( // Voucher link
+								'type' => 'link',
+								'id' => 'lnk_invoice',
+								'url' => "",
+								'value' => lang('invoice number'),
+								'tab_index' => 9,
+								'style' => 'filter'
+							),
+							array
+							( // Vendor box
+								'name'     => 'invoice_id',
+								'id'     => 'txt_invoice',
+								'value'    => $invoice_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 10,
+								'tab_index' => 10,
+								'style' => 'filter'
+							),
+							array
+							(
+								'type' => 'link',
+								'id' => 'lnk_property',
+								'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+								array
+								(
+									'menuaction' => 'property.uilocation.index',
+									'lookup'  	=> 1,
+									'type_id'  	=> 1,
+									'lookup_name'  	=> 0,
+								))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+								'value' => lang('property'),
+								'tab_index' => 11,
+								'style' => 'filter'
+							),
+							array
+							( // txt Facilities Management
+								'name'     => 'loc1_name',
+								'id'     => 'txt_loc1_name',
+								'value'    => "",
+								'type' => 'hidden',
+								'size'    => 8,
+								'style' => 'filter'
+							),
+							array
+							( // txt Facilities Management
+								'name'     => 'loc1',
+								'id'     => 'txt_loc1',
+								'value'    => $loc1,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 8,
+								'tab_index' => 12,
+								'style' => 'filter'
+							),
+							array
+							( // Voucher link
+								'type' => 'link',
+								'id' => 'lnk_voucher',
+								'url' => "",
+								'value' => lang('Voucher ID'),
+								'tab_index' => 13,
+								'style' => 'filter'
+							),
+							array
+							( // Voucher box
+								'name'     => 'voucher_id',
+								'id'     => 'txt_voucher',
+								'value'    => $voucher_id,
+								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
+								'size'    => 8,
+								'tab_index' => 14,
+								'style' => 'filter'
+							),
+							array
 							( //boton   SEARCH
 								'id' => 'btn_search',
 								'name' => 'search',
@@ -381,6 +510,7 @@
 								'tab_index' => 4,
 								'type' => 'button'
 							),
+/*
 							array
 							( // TEXT IMPUT
 								'name'     => 'query',
@@ -391,6 +521,7 @@
 								'tab_index' => 3,
 								'size'    => 28
 							),
+*/
 							array
 							( // txtbox end_data hidden
 								'name'     => 'end_date',
@@ -474,6 +605,7 @@
 								'id'     => 'txt_workorder',
 								'value'    => $workorder_id,
 								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
 								'size'    => 10,
 								'tab_index' => 6,
 								'style' => 'filter'
@@ -506,6 +638,7 @@
 								'id'     => 'txt_vendor',
 								'value'    => $vendor_id,
 								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
 								'size'    => 10,
 								'tab_index' => 8,
 								'style' => 'filter'
@@ -525,6 +658,7 @@
 								'id'     => 'txt_invoice',
 								'value'    => $invoice_id,
 								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
 								'size'    => 10,
 								'tab_index' => 10,
 								'style' => 'filter'
@@ -560,6 +694,7 @@
 								'id'     => 'txt_loc1',
 								'value'    => $loc1,
 								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
 								'size'    => 8,
 								'tab_index' => 12,
 								'style' => 'filter'
@@ -579,6 +714,7 @@
 								'id'     => 'txt_voucher',
 								'value'    => $voucher_id,
 								'type' => 'text',
+								'onkeypress' => 'return pulsar(event)',
 								'size'    => 8,
 								'tab_index' => 14,
 								'style' => 'filter'
@@ -650,7 +786,7 @@
 								'cat_id'			=> $this->cat_id,
 								'user_lid'			=> $this->user_lid,
 								'sub'				=> $this->sub,
-							//	'query'				=> $this->query,
+								'query'				=> $this->query,
 							//	'start'				=> $this->start,
 								'paid'				=> $paid,
 								'vendor_id'			=> $vendor_id,
@@ -1521,7 +1657,7 @@ JS;
 		{
 			$paid 		= phpgw::get_var('paid', 'bool');
 			$values		= phpgw::get_var('values');
-			$voucher_id = phpgw::get_var('voucher_id', 'int');
+			$voucher_id = phpgw::get_var('voucher_id');
 
 			$datatable = array();
 
@@ -1576,7 +1712,7 @@ JS;
 					array
 					( // boton exportar
 						'type'	=> 'button',
-						'id'	=> 'btn_done',
+						'id'	=> 'done',
 						'tab_index' => 2,
 						'value'	=> lang('done')
 					),

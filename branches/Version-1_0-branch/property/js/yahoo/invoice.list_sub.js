@@ -10,7 +10,7 @@
 		var oNormalButton_0,oNormalButton_1,oNormalButton_2;
 		var normalButtons = [
 			{order:0, name:'btn_save',	funct:"onSave"},
-			{order:1, name:'btn_done',	funct:"onDoneClick"},
+			{order:1, name:'btn_done',	funct:"_onDoneClick"},
 			{order:2, name:'btn_export',funct:"onDownloadClick"}
 		]
 
@@ -27,10 +27,34 @@
 
 		var config_values = {
 			PanelLoading : 1,
-			particular_download : "property.uiinvoice.download_sub"
+			particular_download : "property.uiinvoice.download_sub",
+			particular_done : "property.uiinvoice.index"
 		}
 
 		var tableYUI;
+
+	this._onDoneClick = function()
+	{
+		//save initial value
+		path_values_menuaction_original = path_values.menuaction;
+
+		// if exist "particular_done" in particular.js
+		if(config_values.particular_done)
+		{
+			path_values.menuaction = config_values.particular_done;
+		}
+		else
+		{
+			tmp_array = path_values.menuaction.split(".")
+			tmp_array[2] = "index"; //set function INDEX
+			path_values.menuaction = tmp_array.join('.');
+		}
+		
+		path_values.voucher_id = '';
+		window.open(phpGWLink('index.php',path_values),'_self');
+		//come back to initial values
+		path_values.menuaction = path_values_menuaction_original;
+	}
 
 
 	this.showlightbox = function(sUrl)
