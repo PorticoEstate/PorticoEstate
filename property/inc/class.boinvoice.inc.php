@@ -75,9 +75,9 @@
 
 			if(!phpgw::get_var('paid', 'bool'))
 			{
-				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
+	//			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
 			}
-			else
+	//		else
 			{
 				$user_lid = isset($_REQUEST['user_lid']) ? $user_lid : 'all';
 			}
@@ -127,11 +127,11 @@
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
-		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id=0, $invoice_id = '')
+		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='', $invoice_id = '')
 		{
 			if(!phpgw::get_var('paid', 'bool'))
 			{
-				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
+//				$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : 0;
 			}
 
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);

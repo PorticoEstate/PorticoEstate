@@ -174,7 +174,7 @@
 			$no_q = false;
 			if ($voucher_id)
 			{
-				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}' OR spvend_code = ". (int)$query;
+				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";// OR spvend_code = ". (int)$query;
 				$no_q = true;
 			}
 
@@ -190,17 +190,28 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
+
 			$sql = "SELECT bilagsnr, bilagsnr_ut, count(bilagsnr) as invoice_count, sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,bilagsnr_ut,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
-//_debug_array($sql);
-			$this->db->query($sql2,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
 
-			$sql3 = "SELECT sum(godkjentbelop) as sum_amount FROM  $table $join_tables $filtermethod $querymethod";
-			$this->db->query($sql3,__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->sum_amount		= $this->db->f('sum_amount');
+			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
+			{
+				$sql_count = 'SELECT count(bilagsnr) as cnt, sum(godkjentbelop) AS sum_amount FROM (SELECT DISTINCT bilagsnr, sum(godkjentbelop) as godkjentbelop '. substr($sql2,strripos($sql2,'FROM')) .' GROUP BY bilagsnr) AS t';
+				$this->db->query($sql_count,__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records 		= $this->db->f('cnt');
+				$this->sum_amount			= $this->db->f('sum_amount');
+			}
+			else
+			{
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->total_records = $this->db->num_rows();
 
+				$sql3 = "SELECT sum(godkjentbelop) as sum_amount FROM $table $join_tables $filtermethod $querymethod";
+				$this->db->query($sql3,__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->sum_amount		= $this->db->f('sum_amount');
+			}
 
 			if(!$allrows)
 			{
