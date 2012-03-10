@@ -617,7 +617,7 @@ $(document).ready(function(){
 		
 		$(clickRow).attr("id", "case_" + case_id);
 		
-		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><h3>Hurtigendring</h3><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
+		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><fieldset><h3>Hurtigendring</h3><hr><form class='frm_update_case' action='" + requestUrl + "'>";
 			
 		if(case_type == "control_item_type_2")
 			quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
