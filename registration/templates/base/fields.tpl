@@ -6,10 +6,10 @@
 
 <!-- BEGIN list -->
 <table border="0" align="center" width="75%">
-  <tr bgcolor="{row_on}">
+  <tr class="{row_on}">
    <td colspan="7">{lang_current_fields}</td>
   </tr>
-  <tr bgcolor="{row_off}">
+  <tr class="{row_off}">
    <td width=5%>{lang_name_and_shortdesc}</td>
    <td>{lang_text}</td>
    <td>{lang_type}</td>
@@ -20,7 +20,7 @@
   </tr>
 
 <!-- BEGIN info -->
-  <tr bgcolor="{row_off}">
+  <tr class="{row_off}">
    <td><input type="text" name="{field_short_name}_name" size="10" value="{field_name}"></td>
    <td><input type="text" name="{field_short_name}_text" value="{field_text}"></td>
    <td><select name="{field_short_name}_type">

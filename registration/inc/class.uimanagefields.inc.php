@@ -38,18 +38,20 @@
 			unset ($GLOBALS['phpgw_info']['flags']['noheader']);
 			unset ($GLOBALS['phpgw_info']['flags']['nonavbar']);
 			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
-			$GLOBALS['phpgw']->common->phpgw_header ();
+			$GLOBALS['phpgw']->common->phpgw_header();
+			echo parse_navbar();
 
 			$p = $GLOBALS['phpgw']->template;
+			$p->set_root(PHPGW_APP_TPL);
 			$p->set_file(Array('fields'=>'fields.tpl'));
 
 			if (!isset ($message))
 			{
-				$message = get_var('messages',Array('GET'));
+				$message     = phpgw::get_var('message', 'string', 'GET');
 			}
 
 			$var = array (
-				'action_url' => $GLOBALS['phpgw']->link ($this->base_url, 'menuaction=registration.uimanagefields.submit'),
+				'action_url' => $GLOBALS['phpgw']->link ($this->base_url, array('menuaction' => 'registration.uimanagefields.submit')),
 				'message'    => $message,
 				'lang_current_fields' => lang ('Current fields:'),
 				'lang_name_and_shortdesc' => lang ('Name (blank unless Text, Textarea, Dropdown, Checkbox; else alphanumeric only)'),
@@ -129,7 +131,7 @@
 				);
 
 				$p->set_var ($var);
-				$p->parse ('info_list', 'info', True);
+				$p->parse('info_list', 'info', True);
 			}
 
 			/* Add an empty entry line */
@@ -169,7 +171,7 @@
 		{
 			$this->bo->check_admin ();
 
-			$post_vars = $GLOBALS['HTTP_POST_VARS'];
+			$post_vars = $_POST;
 
 			unset($GLOBALS['phpgw_info']['flags']['noheader']);
 			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
@@ -177,7 +179,6 @@
 
 			$this->bo->submit ($post_vars);
 
-			Header ('Location: ' . $GLOBALS['phpgw']->link ($this->base_url, 'menuaction=registration.uimanagefields.admin&message=Updated'));
+			$GLOBALS['phpgw']->redirect_link($this->base_url, array('menuaction'=>'registration.uimanagefields.admin', 'message'=>'Updated'));
 		}
 	}
-?>
