@@ -28,8 +28,13 @@
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['registration']['hooks'][]	= 'admin';
-	$setup_info['registration']['hooks'][]	= 'logout';
+	$setup_info['registration']['hooks'] = array
+	(
+		'menu'		=> 'registration.menu.get_menu',
+		'config',
+		'logout'
+	);
+
 
 	/* Dependencies for this app to work */
 	$setup_info['registration']['depends'][] = array
@@ -37,4 +42,3 @@
 		'appname'  => 'phpgwapi',
 		'versions' => Array('0.9.16', '0.9.17', '0.9.18')
 	);
-?>

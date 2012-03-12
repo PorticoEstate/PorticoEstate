@@ -37,6 +37,14 @@
     </td>
    </tr>
    <tr>
+	<tr class="row_on">
+		<td>{lang_default_group}:</td>
+		<td>
+			<select name="newsettings[default_group_id]">
+				{hook_default_group}
+			</select>
+		</td>
+	</tr>
    <tr bgcolor="{row_off}">
     <td>{lang_Activate_account}:</td>
     <td>

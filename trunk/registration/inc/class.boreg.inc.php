@@ -20,8 +20,9 @@
 	{
 		var $template;
 		var $bomanagefields;
-		var $fields;
+		var $fields = array();
 		var $so;
+		var $config;
 		var $public_functions = array(
 			'step1' => True,
 			'step2' => True,
@@ -35,12 +36,16 @@
 		{
 			$this->so = createobject ('registration.soreg');
 			$this->bomanagefields = createobject ('registration.bomanagefields');
-			$this->fields = $this->bomanagefields->get_field_list ();
+			$this->fields = $this->bomanagefields->get_field_list();
+			$c = createobject('phpgwapi.config','registration');
+			$c->read();
+			$this->config = $c->config_data;
 		}
 
 		function step1()
 		{
-			global $config, $r_reg;
+			$r_reg = phpgw::get_var('r_reg');
+			$o_reg = phpgw::get_var('o_reg');
 
 			$so = createobject('registration.soreg');
 
@@ -68,20 +73,29 @@
 
 		function step2()
 		{
-			global $config, $r_reg, $o_reg, $PHP_AUTH_USER, $PHP_AUTH_PW;
+			if(!$r_reg = phpgw::get_var('r_reg'))
+			{
+				$r_reg = array();
+			}
+			if(!$o_reg = phpgw::get_var('o_reg'))
+			{
+				$o_reg = array();
+			}
+			$fields = array();
+
 			//echo '<pre>'; print_r($r_reg); echo '</pre>';
 
-			if ($config['password_is'] == 'http')
+			if ($this->config['password_is'] == 'http')
 			{
-				$r_reg['passwd'] = $r_reg['passwd_confirm'] = $PHP_AUTH_PW;
+				$r_reg['passwd'] = $r_reg['passwd_confirm'] = $_SERVER['PHP_AUTH_PW'];
 			}
 
-			if (($config['display_tos']) && ! $r_reg['tos_agree'])
+			if (($this->config['display_tos']) && ! $r_reg['tos_agree'])
 			{
 				$missing_fields[] = 'tos_agree';
 			}
 
-			while (list($name,$value) = each($r_reg))
+			foreach ( $r_reg as $name => $value )
 			{
 				if (! $value)
 				{
@@ -104,7 +118,8 @@
 			}
 
 			reset ($this->fields);
-			while (list (,$field_info) = each ($this->fields))
+
+			foreach ( $this->fields as $field_name => $field_info )
 			{
 				$name = $field_info['field_name'];
 				$text = $field_info['field_text'];
@@ -208,8 +223,8 @@
 
 		function step4()
 		{
-			global $reg_id;
-
+//			global $reg_id;
+			$reg_id = phpgw::get_var('reg_id');
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');
 			$reg_info = $so->valid_reg($reg_id);
@@ -233,8 +248,7 @@
 		//
 		function lostpw1()
 		{
-			global $r_reg;
-
+			$r_reg = phpgw::get_var('r_reg');
 			$so = createobject('registration.soreg');
 
 			if (! $r_reg['loginid'])
@@ -249,7 +263,7 @@
 
 			if(! is_array($errors))
 			{
-			        $error = $so->lostpw1($r_reg['loginid']);
+				$error = $so->lostpw1($r_reg['loginid']);
 				if($error)
 				{
 				  $errors[] = $error;
@@ -273,7 +287,8 @@
 		//
 		function lostpw2()
 		{
-			global $reg_id;
+//			global $reg_id;
+			$reg_id = phpgw::get_var('reg_id');
 
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');
@@ -296,19 +311,20 @@
 		//
 		function lostpw3()
 		{
-			global $r_reg;
+//			global $r_reg;
+			$r_reg = phpgw::get_var('r_reg');
 
 			$lid = $GLOBALS['phpgw']->session->appsession('loginid','registration');
 			if(!$lid) {
 			  $error[] = lang('Wrong session');
 			}
 
-			if ($r_reg[passwd] != $r_reg[passwd_2])
+			if ($r_reg['passwd'] != $r_reg['passwd_2'])
 			{
 			    $errors[] = lang('The two passwords are not the same');
 			}
 
-			if (! $r_reg[passwd])
+			if (! $r_reg['passwd'])
 			{
 			    $errors[] = lang('You must enter a password');
 			}
@@ -316,7 +332,7 @@
 			if(! is_array($errors))
 			{
 			  $so = createobject('registration.soreg');
-			  $so->lostpw3($lid, $r_reg[passwd]);
+			  $so->lostpw3($lid, $r_reg['passwd']);
 			}
 
 			$ui = createobject('registration.uireg');
@@ -333,40 +349,36 @@
 			return True;
 		}
 
-		function check_select_username ()
+		function check_select_username()
 		{
-			global $config, $PHP_AUTH_USER;
-
-			if ($config['username_is'] == 'choice')
+			if ($this->config['username_is'] == 'choice')
 			{
 				return True;
 			}
-			elseif ($config['username_is'] == 'http')
+			elseif ($this->config['username_is'] == 'http')
 			{
-				if (!$PHP_AUTH_USER)
+				if (!$_SERVER['PHP_AUTH_USER'])
 				{
 					return "HTTP username is not set";
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', 'menuaction=registration.boreg.step1&r_reg[loginid]=' . $PHP_AUTH_USER));
+					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', 'menuaction=registration.boreg.step1&r_reg[loginid]=' . $_SERVER['PHP_AUTH_USER']));
 				}
 			}
 
 			return True;
 		}
 
-		function check_select_password ()
+		function check_select_password()
 		{
-			global $config, $PHP_AUTH_PW;
-
-			if ($config['password_is'] == 'choice')
+			if ($this->config['password_is'] == 'choice')
 			{
 				return True;
 			}
-			elseif ($config['password_is'] == 'http')
+			elseif ($this->config['password_is'] == 'http')
 			{
-				if (!$PHP_AUTH_PW)
+				if (!$_SERVER['PHP_AUTH_PW'])
 				{
 					return "HTTP password is not set";
 				}
