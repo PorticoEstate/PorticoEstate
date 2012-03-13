@@ -225,7 +225,7 @@
 		function create_account($account_lid,$_reg_info)
 		{
 			$fields             = unserialize(base64_decode($_reg_info));
-
+//_debug_array($fields);
 			$fields['lid'] 		= "*$account_lid*";
 
 			$default_group_id = $this->config['default_group_id'];
@@ -266,36 +266,72 @@
 
 			$GLOBALS['phpgw']->db->transaction_begin();
 
-			$contact_fields = $fields;
+			$primary = array
+			(
+	//			'per_prefix'		=> 'Mr',
+	//			'per_title'			=> 'FDV-Rådgiver',
+	//			'per_department'	=> 'Utbygging',
+				'per_first_name'	=> $account->firstname,
+				'per_last_name'		=> $account->lastname,
+				'access'			=> 'public',
+				'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
+			);
 
-			if ($contact_fields['bday_day'])
+			if ($fields['bday_day'])
 			{
-				$contact_fields['bday'] = $contact_fields['bday_month'] . '/' . $contact_fields['bday_day'] . '/' . $contact_fields['bday_year'];
+				$primary['per_birthday'] = "{$fields['bday_year']}-{$fields['bday_month']}-{$fields['bday_day']}"; //date('Y-m-d',time()),
 			}
 
-			/* There are certain things we don't want stored in contacts */
-			unset ($contact_fields['passwd']);
-			unset ($contact_fields['passwd_confirm']);
-			unset ($contact_fields['bday_day']);
-			unset ($contact_fields['bday_month']);
-			unset ($contact_fields['bday_year']);
+			$location = array
+			(
+		//		'addr_type',
+				'addr_add1' 		=> $fields['adr_one_street'],
+		//		'addr_add2',
+				'addr_city' 		=> $fields['adr_one_locality'],
+		//		'addr_state',
+				'addr_postal_code'	=> $fields['adr_one_postalcode'],
+				'addr_country'		=> $fields['adr_one_countryname'],
+				'addr_preferred'	=> 'Y',
+		//		'addr_description'	=> 'Heime'
+			);
+				
+			$locations = array($location);
 
-			/* Don't store blank values either */
-			reset ($contact_fields);
-			while (list ($num, $field) = each ($contact_fields))
-			{
-				if (!$contact_fields[$num])
-				{
-					unset ($contact_fields[$num]);
-				}
-			}
 
-			$contact_fields['work email'] = $contact_fields['email'];
-			$contact_fields['mobile (cell) phone'] = $contact_fields['tel_work'];
-			
-			$contacts->add($account_id,$contact_fields,0,'P');
-			//$contacts->add_person($contact_fieldl, $account_id);
+			$type = $contacts->search_contact_type('Persons');
+
+			$comm1 = array
+			(
+				'comm_descr'		=> $contacts->search_comm_descr('work email'),
+				'comm_data'			=> $fields['email'],
+				'comm_preferred'	=> 'Y'
+			);
+
+			$comm2 = array
+			(
+				'comm_descr'		=> $contacts->search_comm_descr('work phone'),
+				'comm_data'			=> $fields['tel_work'],
+				'comm_preferred'	=> 'N'
+			);
+
+			$comms = array($comm1,$comm2);
+/*
+_debug_array($type);
+_debug_array($primary);
+_debug_array($comms);
+_debug_array($locations);
+*/
+			$person_id = $contacts->add_contact($type, $primary, $comms, $locations);
+
 			$GLOBALS['phpgw']->db->transaction_commit();
+			$GLOBALS['phpgw']->accounts->set_account($account_id);
+			$GLOBALS['phpgw']->accounts->read_repository();
+
+			$account = $GLOBALS['phpgw']->accounts->get($account_id);
+			$account->person_id = $person_id;
+			
+			$GLOBALS['phpgw']->accounts->account = $account;
+			$GLOBALS['phpgw']->accounts->save_repository();
 
 			if(@stat(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php'))
 			{
