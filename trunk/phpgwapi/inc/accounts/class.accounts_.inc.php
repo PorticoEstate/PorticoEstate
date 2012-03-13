@@ -45,7 +45,7 @@
 		/**
 		 * @var object $account the currently selected user object
 		 */
-		protected $account;
+		public $account;
 
 		/**
 		 * @var integer $account_id track the current account_id - which may not match the this->account->id
@@ -231,7 +231,7 @@
 		 *
 		 * @return void
 		 */
-		abstract protected function read_repository();
+		abstract public function read_repository();
 
 		/**
 		 * Save/update account information to database
@@ -263,7 +263,7 @@
 		{
 			if ($expiredate)
 			{
-				$expires = (int) $expiry;
+				$expires = (int) $expiredate;
 			}
 			else if ( isset($GLOBALS['phpgw_info']['server']['auto_create_expire']) )
 			{
