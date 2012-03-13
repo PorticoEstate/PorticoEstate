@@ -1389,23 +1389,19 @@ class uiaddressbook
 	 */
 	function address_form($fields)
 	{
+		$this->form_start();
+
+		$addresstype='<select name="entry[tmp_data][addr][addr_type]">'
+			. $this->get_addr_type($fields['tmp_data']['addr']['addr_type']) . '</select>';
+		$addr_preferred = '<input type="hidden" name="entry[tmp_data][addr][addr_preferred]" value="'
+			.$fields['tmp_data']['addr']['addr_preferred'].'">';
+
+
 		if ( isset($fields['tmp_data']['addr']) 
 			&& is_array($fields['tmp_data']['addr'])  
 			&& isset($fields['tmp_data']['addr']['addr_add1']) )
 		{
-			echo '<pre>' . print_r($fields['tmp_data']['addr'], true) . '</pre>';
-			$this->set_form_fields(array
-			(
-				 1 => array('Address 1', 'entry[tmp_data][addr][addr_add1]', $fields['tmp_data']['addr']['addr_add1']),
-				 2 => array('Address 2', 'entry[tmp_data][addr][addr_add2]', $fields['tmp_data']['addr']['addr_add2']),
-				 3 => array('City', 'entry[tmp_data][addr][addr_city]', $fields['tmp_data']['addr']['addr_city']),
-				 4 => array('State', 'entry[tmp_data][addr][addr_state]', $fields['tmp_data']['addr']['addr_state']),
-				 5 => array('Postal Code', 'entry[tmp_data][addr][addr_postal_code]', $fields['tmp_data']['addr']['addr_postal_code']),
-				 6 => array('Country', 'entry[tmp_data][addr][addr_country]', $fields['tmp_data']['addr']['addr_country']),
-				 7 => array(lang('Type'), $addresstype, 'special'),
-				 8 => array('', $addr_preferred, 'special')
-			));
-
+//			echo '<pre>' . print_r($fields['tmp_data']['addr'], true) . '</pre>';
 			if ( isset($fields['addr_preferred']) && isset($this->array_data[$fields['addr_preferred']]) )
 			{
 				$this->array_data[$fields['addr_preferred']]['addr_preferred'] = 'Y';
@@ -1428,16 +1424,22 @@ class uiaddressbook
 			);
 		}
 
-		$addresstype='<select name="entry[tmp_data][addr][addr_type]">'
-			. $this->get_addr_type($fields['tmp_data']['addr']['addr_type']) . '</select>';
-		$addr_preferred = '<input type="hidden" name="entry[tmp_data][addr][addr_preferred]" value="'
-			.$fields['tmp_data']['addr']['addr_preferred'].'">';
+		$this->set_form_fields(array
+		(
+			 1 => array('Address 1', 'entry[tmp_data][addr][addr_add1]', $fields['tmp_data']['addr']['addr_add1']),
+			 2 => array('Address 2', 'entry[tmp_data][addr][addr_add2]', $fields['tmp_data']['addr']['addr_add2']),
+			 3 => array('City', 'entry[tmp_data][addr][addr_city]', $fields['tmp_data']['addr']['addr_city']),
+			 4 => array('State', 'entry[tmp_data][addr][addr_state]', $fields['tmp_data']['addr']['addr_state']),
+			 5 => array('Postal Code', 'entry[tmp_data][addr][addr_postal_code]', $fields['tmp_data']['addr']['addr_postal_code']),
+			 6 => array('Country', 'entry[tmp_data][addr][addr_country]', $fields['tmp_data']['addr']['addr_country']),
+			 7 => array('Type', $addresstype, 'special'),
+			 8 => array('', $addr_preferred, 'special')
+		));
 
 
 		$key_addr_id_name = 'entry[tmp_data][addr][key_addr_id]';
 		$key_addr_id = $fields['tmp_data']['addr']['key_addr_id'];
 
-		$this->form_start();
 
 		$this->template->set_var('lang_general_data', lang('Address Data for').' '.$this->record_name);
 
@@ -1454,12 +1456,12 @@ class uiaddressbook
 			'link1' => array('type'  => 'link', 'mode'  => 'edit', 'key'   => 'key_addr_id', 'action'=> 'addr_edit_row', 'extra' => array('owner' => $this->owner, 'ab_id' => $this->contact_id, 'record_name' => $this->record_name) ),
 			'link2' => array('type'  => 'link', 'mode'  => 'delete', 'key'   => 'key_addr_id', 'action'=> 'addr_del_row', 'extra' => array('owner' => $this->owner, 'ab_id' => $this->contact_id, 'record_name' => $this->record_name))
 		);
-		$this->array_data = $this->read_tab_session('addr_data');
+//		$this->array_data = $this->read_tab_session('addr_data');
 		//var_export($fields);
 		//var_export($this->array_data);
 
-		$this->template->set_var('detail_fields', 
-			$this->get_detail_form('address', array('Type', 'Address', 'Preferred', 'Edit','Delete'), 'array_data', $types_data, 'key_addr_id'));
+//		$this->template->set_var('detail_fields', 
+//			$this->get_detail_form('address', array('Type', 'Address', 'Preferred', 'Edit','Delete'), 'array_data', $types_data, 'key_addr_id'));
 		return $this->template->fp('out', 'tab_body_general_data');
 	}
 
@@ -3232,13 +3234,13 @@ class uiaddressbook
 	{
 		if ($col==1)
 		{
-			$this->template->set_var('field_name_one', lang($field_name));
+			$this->template->set_var('field_name_one', $field_name ? lang($field_name) : '');
 			$this->template->set_var('input_name_one', $input_name);
 			$this->template->set_var('input_value_one', $input_value);
 		}
 		else
 		{
-			$this->template->set_var('field_name_two', lang($field_name));
+			$this->template->set_var('field_name_two',  $field_name ? lang($field_name) : '');
 			$this->template->set_var('input_name_two', $input_name);
 			$this->template->set_var('input_value_two', $input_value);
 		}
@@ -3248,12 +3250,12 @@ class uiaddressbook
 	{
 		if ($col==1)
 		{
-			$this->template->set_var('field_other_name1', lang($field_name));
+			$this->template->set_var('field_other_name1',  $field_name ? lang($field_name) : '');
 			$this->template->set_var('value_other_name1', $field_value);
 		}
 		else
 		{
-			$this->template->set_var('field_other_name2', lang($field_name));
+			$this->template->set_var('field_other_name2',  $field_name ? lang($field_name) : '');
 			$this->template->set_var('value_other_name2', $field_value);
 		}
 	}

@@ -304,7 +304,7 @@
 					{
 						$translated = $name;
 					}
-					$translated_list[$code] = $translated;
+					$translated_list[$code] = ltrim($translated,'!');
 				 }
 				 asort($translated_list);
 			}
