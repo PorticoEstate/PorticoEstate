@@ -186,11 +186,17 @@
 			{
 				if(isset($procedure)) // Edit procedure
 				{
+					$description_txt = phpgw::get_var('description','html');
+					$description_txt = str_replace("&nbsp;", " ", $description_txt);
+					$purpose_txt = phpgw::get_var('purpose','html');
+					$purpose_txt = str_replace("&nbsp;", " ", $purpose_txt);
+					$reference_txt = phpgw::get_var('reference','html');
+					$reference_txt = str_replace("&nbsp;", " ", $reference_txt);
 					$procedure->set_title(phpgw::get_var('title'));
-					$procedure->set_purpose(phpgw::get_var('purpose','html'));
+					$procedure->set_purpose($purpose_txt);
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference','html'));
+					$procedure->set_description($description_txt);
+					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -249,11 +255,18 @@
 					{
 						$procedure->set_revision_no(2);
 					}
+					
+					$description_txt = phpgw::get_var('description','html');
+					$description_txt = str_replace("&nbsp;", " ", $description_txt);
+					$purpose_txt = phpgw::get_var('purpose','html');
+					$purpose_txt = str_replace("&nbsp;", " ", $purpose_txt);
+					$reference_txt = phpgw::get_var('reference','html');
+					$reference_txt = str_replace("&nbsp;", " ", $reference_txt);
 					$procedure->set_title(phpgw::get_var('title'));
-					$procedure->set_purpose(phpgw::get_var('purpose','html'));
+					$procedure->set_purpose($purpose_txt);
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-					$procedure->set_description(phpgw::get_var('description','html'));
-					$procedure->set_reference(phpgw::get_var('reference','html'));
+					$procedure->set_description($description_txt);
+					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
@@ -307,6 +320,7 @@
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $procedure->get_control_area_id(),'globals' => true,'use_acl' => $this->_category_acl));
 				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
 				$control_areas_array2 = array();
+				//_debug_array($control_areas);
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
 					if($cat_list['cat_id'] == $procedure->get_control_area_id())
@@ -350,6 +364,14 @@
 					}
 				}
 */
+				
+				/*
+				 * hack to fix display of &nbsp; char 
+				 */
+				$procedure->set_description(str_replace("&nbsp;", " ",$procedure->get_description()));
+				$procedure->set_responsibility(str_replace('&nbsp;', ' ', $procedure->get_responsibility()));
+				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
+				
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
 				
@@ -440,6 +462,13 @@
 				
 				$category    = execMethod('phpgwapi.categories.return_single', $procedure->get_control_area_id());
 				$procedure->set_control_area_name($category[0]['name']);
+				
+				/*
+				 * hack to fix display of &nbsp; char 
+				 */
+				$procedure->set_description(str_replace("&nbsp;", " ",$procedure->get_description()));
+				$procedure->set_responsibility(str_replace('&nbsp;', ' ', $procedure->get_responsibility()));
+				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
 				
 
 				$procedure_array = $procedure->toArray();
