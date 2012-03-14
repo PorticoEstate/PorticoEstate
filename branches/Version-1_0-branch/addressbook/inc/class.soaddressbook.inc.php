@@ -402,6 +402,8 @@
 
 		function edit_person($person_id, $fields)
 		{
+			$fields['tab_address'] = isset($fields['tab_address']['tmp_data']['addr']) ? $fields['tab_address']['tmp_data']['addr'] : array();
+
 			$principal['owner'] = $fields['owner'];
 			$principal['access'] = $fields['tab_person_data']['ispublic'];
 			$preferred_force_addr = isset($fields['tab_address']['addr_preferred']) ? $fields['tab_address']['addr_preferred'] : 0;
@@ -420,6 +422,10 @@
 
 			$principal['cat_id'] = $cats;
 			$person = array_merge($fields['tab_person_data'], $fields['tab_extra']);
+//			$person = array_merge($person, $fields['tab_address']);
+//_debug_array($person);
+//_debug_array($fields);die();
+			
 			$orgs = $fields['edit_orgs'];
 			$orgs['preferred_org'] = isset($fields['tab_orgs']['preferred_org']) ? $fields['tab_orgs']['preferred_org'] : 0;
 			$queries = $fields['transactions'];
@@ -430,17 +436,17 @@
 			unset($fields['edit_orgs']);
 			unset($fields['tab_cats']);
 			unset($fields['old_my_orgs']);
-			unset($fields['tab_address']);
+//			unset($fields['tab_address']);
 			unset($fields['addr_data']);
 			unset($fields['transactions']);
 			//unset($fields['tab_comms']);
 			unset($fields['old_comm']);
 
-			$this->contacts->edit_contact($person_id, $principal, PHPGW_SQL_RUN_SQL);
-			$this->contacts->edit_person($person_id, $person, PHPGW_SQL_RUN_SQL);
+			$queries[] = $this->contacts->edit_contact($person_id, $principal, PHPGW_SQL_RETURN_SQL);
+			$queries[] = $this->contacts->edit_person($person_id, $person, PHPGW_SQL_RETURN_SQL);
 			foreach($orgs['delete'] as $org_id)
 			{
-				$this->contacts->delete_org_person_relation($org_id, $person_id, PHPGW_SQL_RUN_SQL);
+				$queries[] = $this->contacts->delete_org_person_relation($org_id, $person_id, PHPGW_SQL_RETURN_SQL);
 			}
 
 			if($orgs['preferred_org'])
@@ -463,10 +469,10 @@
 				}
 
 				$data =  array('my_preferred' => 'N');
-				$this->contacts->edit_org_person_relation('', $person_id, $data, PHPGW_SQL_RUN_SQL);
+				$queries[] = $this->contacts->edit_org_person_relation('', $person_id, $data, PHPGW_SQL_RETURN_SQL);
 				$data = array('my_preferred' => 'Y',
 					      'my_addr_id' => $fields['preferred_address']);
-				$this->contacts->edit_org_person_relation($orgs['preferred_org'], $person_id, $data, PHPGW_SQL_RUN_SQL);
+				$queries[] = $this->contacts->edit_org_person_relation($orgs['preferred_org'], $person_id, $data, PHPGW_SQL_RETURN_SQL);
 			}
 			
 			$comm_preferred = $fields['tab_comms']['preferred'];
@@ -482,24 +488,30 @@
 					      $fields['edit_others']['delete'],
 					      $fields['edit_others']['edit'],
 					      $fields['tab_others']['other_value'], $person_id);
-			
-			$this->execute_queries($queries);
-			
+
 			if($preferred_force_addr && $preferred_force_addr!='')
-                        {
-                                $preferred_force_addr = $this->get_preferred_location($person_id, $preferred_force_addr);
+			{
+				$preferred_force_addr = $this->get_preferred_location($person_id, $preferred_force_addr);
 
-                                $this->contacts->edit_location_by_contact(
-					$person_id,
-					array('addr_preferred' => 'N'),
-					PHPGW_SQL_RUN_SQL);
+				$queries[] = $this->contacts->edit_location_by_contact(
+						$person_id,
+						array('addr_preferred' => 'N'),
+						PHPGW_SQL_RETURN_SQL);
 
-                                $this->contacts->edit_location(
+
+				$queries[] = $this->contacts->edit_location(
 					$preferred_force_addr,
-					array('addr_preferred' => 'Y'),
-					PHPGW_SQL_RUN_SQL);
-                        }
-
+					$fields['tab_address'],
+					//array('addr_preferred' => 'Y'),
+					PHPGW_SQL_RETURN_SQL);
+			}
+			else
+			{
+//_debug_array($fields['tab_address']);die();
+				$queries[] = $this->add_location($fields['tab_address'], $person_id, PHPGW_SQL_RETURN_SQL);
+			}
+//_debug_array($queries);die();
+			$this->execute_queries($queries);
 			/* Update the first and last name in accounts */
 			if($fields['tab_person_data'])
 			{
@@ -516,6 +528,8 @@
 			}
 			
 			$this->contacts->finalize_edit($person_id);
+
+
 		}
 		
 		function edit_org($org_id, $fields)
@@ -566,27 +580,27 @@
  			$this->execute_queries($queries);
 
 			if($preferred_force_addr && $preferred_force_addr!='')
-                        {
-                                $preferred_force_addr = $this->get_preferred_location($org_id, $preferred_force_addr);
+			{
+				$preferred_force_addr = $this->get_preferred_location($org_id, $preferred_force_addr);
 
-                                $this->contacts->edit_location_by_contact(
+				$this->contacts->edit_location_by_contact(
 					$org_id,
 					array('addr_preferred' => 'N'),
 					PHPGW_SQL_RUN_SQL);
 
-                                $this->contacts->edit_location(
+				$this->contacts->edit_location(
 					$preferred_force_addr,
 					array('addr_preferred' => 'Y'),
 					PHPGW_SQL_RUN_SQL);
-                        }
+			}
 		}
 
 		function get_preferred_location($contact_id, $preferred_forced)
-                {
-                        $addr_tmp = $this->contacts->get_addr_contact_data($contact_id);
-                        if(is_array($addr_tmp))
-                        {
-                                foreach($addr_tmp as $data)
+		{
+			$addr_tmp = $this->contacts->get_addr_contact_data($contact_id);
+			if(is_array($addr_tmp))
+			{
+				foreach($addr_tmp as $data)
 				{
 					if($preferred_forced==$data['key_addr_id'])
 					{
@@ -597,11 +611,11 @@
 						$locations[$data['key_addr_id']] = $data;
 					}
 				}
-                        }
-                        ksort($locations);
-                        end($locations);
-                        return key($locations);
-                }
+			}
+			ksort($locations);
+			end($locations);
+			return key($locations);
+		}
 
 		/**
 		* This function call to edit_location from contact object
@@ -934,7 +948,7 @@
 				
 				$this->add_communication_media($fields, $contact_id, PHPGW_SQL_RUN_SQL);
 			}
-			$this->unlock();
+//			$this->unlock();
 		}
 
 		function upgrade_others($add_others=array(), $del_others=array(), $edit_others=array(), $data=array(), $contact_id)
@@ -967,7 +981,7 @@
 				$this->add_others($fields, $contact_id, PHPGW_SQL_RUN_SQL);
 			}
 			
-			$this->unlock();
+//			$this->unlock();
 		}
 
 		/**

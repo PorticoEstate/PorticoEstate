@@ -11,6 +11,7 @@
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');
+	phpgw::import_class('phpgwapi.country');
 
 	/**
 	* Class for creating predefines select boxes
@@ -420,7 +421,7 @@ HTML;
 			}
 			$selected = trim($selected);
 
-			$slctd = !$selected ? '' : ' selected';
+			$slctd = $selected ? '' : ' selected';
 			$lang_select1 = lang('Select One');
 			$select = <<<HTML
 				<select name="{$name}">
@@ -429,7 +430,7 @@ HTML;
 HTML;
 			foreach ( phpgwapi_country::get_translated_list() as $code => $country )
 			{
-				$slctd = $code == $selected ? '' : ' selected';
+				$slctd = $code == $selected ? ' selected' : '' ;
 				$select .= <<<HTML
 					<option value="{$code}"{$slctd}>{$country}</option>
 

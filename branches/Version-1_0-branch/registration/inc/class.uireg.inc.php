@@ -22,6 +22,7 @@
 		var $bomanagefields;
 		var $fields;
 		var $bo;
+		var $config;
 		var $public_functions = array(
 			'step1'   => True,
 			'step2'   => True,
@@ -38,7 +39,8 @@
 			$this->template = $GLOBALS['phpgw']->template;
 			$this->bo = createobject ('registration.boreg');
 			$this->bomanagefields = createobject ('registration.bomanagefields');
-			$this->fields = $this->bomanagefields->get_field_list ();
+			$this->fields = $this->bomanagefields->get_field_list();
+			$this->config = $this->bo->config;
 		}
 
 		function set_header_footer_blocks()
@@ -53,7 +55,7 @@
 		function header()
 		{
 			$this->set_header_footer_blocks();
-			$this->template->set_var('lang_header',lang('phpGroupWare - Account registration'));
+			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' - ' . lang('Account registration'));
 			$this->template->pfp('out','header');
 		}
 
@@ -64,16 +66,14 @@
 
 		function step1($errors = '',$r_reg = '',$o_reg = '')
 		{
-			global $config;
-
-			if ($errors && $config['username_is'] == 'http')
+			if ($errors && $this->config['username_is'] == 'http')
 			{
 				$this->simple_screen ('error_general.tpl', $GLOBALS['phpgw']->common->error_list ($errors));
 			}
 
 			$show_username_prompt = True;
-			/* Note that check_select_username () may not return */
-			$select_username = $this->bo->check_select_username ();
+			/* Note that check_select_username() may not return */
+			$select_username = $this->bo->check_select_username();
 			if (!$select_username || is_string ($select_username))
 			{
 				$this->simple_screen ('error_general.tpl', $GLOBALS['phpgw']->common->error_list (array ($select_username)));
@@ -90,7 +90,7 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.boreg.step1'));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step1')));
 			$this->template->set_var('lang_username',lang('Username'));
 			$this->template->set_var('lang_submit',lang('Submit'));
 
@@ -101,10 +101,8 @@
 
 		function step2($errors = '',$r_reg = '',$o_reg = '',$missing_fields='')
 		{
-			global $config;
-
 			$show_password_prompt = True;
-			$select_password = $this->bo->check_select_password ();
+			$select_password = $this->bo->check_select_password();
 			if (is_string ($select_password))
 			{
 				$this->simple_screen ('error_general.tpl', $select_password);
@@ -152,7 +150,7 @@
 				}
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.boreg.step2'));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step2')));
 			$this->template->set_var('lang_password',lang('Password'));
 			$this->template->set_var('lang_reenter_password',lang('Re-enter password'));
 			$this->template->set_var('lang_submit',lang('Submit'));
@@ -181,7 +179,7 @@
 				$this->template->parse ('other_fields_list', 'other_fields_proto', True);
 			}
 
-			if ($config['display_tos'])
+			if ($this->config['display_tos'])
 			{
 			$this->template->set_var('tos_link',$GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.tos')));
 			$this->template->set_var('lang_tos_agree',lang('I have read the terms and conditions and agree by them.'));
@@ -215,7 +213,7 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.boreg.lostpw1'));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw1')));
 			$this->template->set_var('lang_explain',lang('After you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.'));
 			$this->template->set_var('lang_username',lang('Username'));
 			$this->template->set_var('lang_submit',lang('Submit'));
@@ -240,7 +238,7 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.boreg.lostpw3'));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw3')));
 			$this->template->set_var('value_username', $lid);
 			$this->template->set_var('lang_changepassword',lang("Change password for user"));
 			$this->template->set_var('lang_enter_password',lang('Enter your new password'));
@@ -268,7 +266,7 @@
 
 		function get_input_field ($field_info, $post_values)
 		{
-			global $r_regs, $o_regs;
+//			global $r_regs, $o_regs;
 
 			$post_value = $post_values[$field_info['field_name']];
 
@@ -355,12 +353,12 @@
 
 			if ($type == 'state')
 			{
-				$rstring = $sbox->list_states ($a . '[' . $name . ']', $post_value);
+//				$rstring = $sbox->list_states ($a . '[' . $name . ']', $post_value);
 			}
 
 			if ($type == 'country')
 			{
-				$rstring = $sbox->form_select ($post_value, $a . '[' . $name . ']');
+				$rstring = $sbox->country_select($post_value, $a . '[' . $name . ']');
 			}
 
 			if ($type == 'birthday')
@@ -392,16 +390,17 @@
 
 		function ready_to_activate()
 		{
-			global $config, $reg_id;
+//			global $reg_id;
+			$reg_id = phpgw::get_var('reg_id');
 
-			if ($config['activate_account'] == 'email')
+			if ($this->config['activate_account'] == 'email')
 			{
 				$this->simple_screen('confirm_email_sent.tpl');
 			}
 			else
 			{
-				/* ($config['activate_account'] == 'immediately') */
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.boreg.step4&reg_id=' . $reg_id));
+				/* ($this->config['activate_account'] == 'immediately') */
+				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step4', 'reg_id' => $reg_id)));
 			}
 		}
 
