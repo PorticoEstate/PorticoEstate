@@ -242,11 +242,15 @@
 			{
 				if(isset($control_item)) // Add new values to the control item
 				{
+					$what_to_do_txt = phpgw::get_var('what_to_do','html');
+					$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
+					$how_to_do_txt = phpgw::get_var('how_to_do','html');
+					$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
 					$control_item->set_title(phpgw::get_var('title'));
 					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
 					$control_item->set_type(phpgw::get_var('measurement') == 'on' ? 'control_item_type_2' : 'control_item_type_1');
-					$control_item->set_what_to_do( phpgw::get_var('what_to_do','html') );
-					$control_item->set_how_to_do( phpgw::get_var('how_to_do','html') );
+					$control_item->set_what_to_do( $what_to_do_txt );
+					$control_item->set_how_to_do( $how_to_do_txt );
 					$control_item->set_control_group_id( phpgw::get_var('control_group') );
 					$control_item->set_control_area_id( phpgw::get_var('control_area') );
 
@@ -362,6 +366,12 @@
 						);
 					}
 				}
+				
+				/*
+				 * hack to fix display of &nbsp; char 
+				 */
+				$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
+				$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
 
 				$control_item_array = $control_item->toArray();
 
@@ -507,6 +517,12 @@
 				
 				$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
 				$control_item->set_control_area_name($category[0]['name']);
+				
+				/*
+				 * hack to fix display of &nbsp; char 
+				 */
+				$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
+				$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
 				
 				$control_item_array = $control_item->toArray();
 
