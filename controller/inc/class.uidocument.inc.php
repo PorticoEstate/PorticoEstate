@@ -220,6 +220,7 @@
 				$document->set_name($_FILES["file_path"]["name"]);
 				$document->set_type_id(phpgw::get_var('document_type'));
 				$desc = phpgw::get_var('document_description','html');
+				$desc = str_replace("&nbsp;", " ", $desc);
 				//var_dump($desc);
 				$document->set_description($desc);
 				$document->set_procedure_id($procedure_id);
@@ -435,6 +436,10 @@
 				
 				foreach($documents as $document)
 				{
+					/*
+					 * hack to fix display of &nbsp; char 
+					 */
+					$document->set_description(str_replace("&nbsp;", " ",$document->get_description()));
 					$doc_array = $document->toArray();
 					$doc_array['link'] = self::link(array('menuaction' => 'controller.uidocument.view', 'id' => $doc_array['id']));
 					$table_values[] = array('document' => $doc_array);
