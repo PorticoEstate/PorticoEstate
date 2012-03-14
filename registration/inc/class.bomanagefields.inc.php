@@ -28,12 +28,12 @@
 		function bomanagefields()
 		{
 			$this->so = CreateObject ('registration.somanagefields');
-			$this->fields = $this->get_field_list ();
+			$this->fields = $this->get_field_list();
 		}
 
 		function save_fields ($fields)
 		{
-			$current_fields = $this->get_field_list ();
+			$current_fields = $this->get_field_list();
 
 			$name_transforms = array (
 				'email'      => 'email',
@@ -120,11 +120,11 @@
 			}
 		}
 
-		function get_field_list ()
+		function get_field_list()
 		{
-			$fields = $this->so->get_field_list ();
+			$fields = $this->so->get_field_list();
 
-			$rarray = array ();
+			$rarray = array();
 			if (is_array ($fields))
 			{
 				reset ($fields);

@@ -477,7 +477,8 @@
 		public function toArray()
 		{
 			$array = $this->_data;
-			unset($array['passwd'], $array['passwd_hash']);
+	//		unset($array['passwd'], $array['passwd_hash']);
+			unset($array['passwd']);
 			return $array;
 		}
 

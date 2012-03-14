@@ -21,7 +21,7 @@
 
 		function somanagefields()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
+			$this->db = & $GLOBALS['phpgw']->db;
 
 			$this->db_fields = array ('field_name', 'field_text', 'field_type', 'field_values', 'field_required', 'field_order');
 		}
@@ -36,7 +36,7 @@
 			$sql = "UPDATE phpgw_reg_fields SET ";
 
 			reset ($this->db_fields);
-			while (list ($num, $field) = each ($this->db_fields))
+			foreach ( $this->db_fields as $num => $field )
 			{
 				if ($num)
 				{
@@ -92,6 +92,7 @@
 
 		function get_field_list ()
 		{
+			$rarray = array();
 			$sql = "SELECT ";
 
 			reset ($this->db_fields);
@@ -114,4 +115,3 @@
 			return $rarray;
 		}
 	}
-?>

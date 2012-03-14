@@ -1293,10 +1293,28 @@ li.check_item_case h4 {
 li.check_item_case ul{
     margin-bottom: 20px;
 }
-li.check_item_case ul li, li.quick_edit fieldset {
-    border: 1px solid #AAAAAA;
+li.check_item_case ul li {
+    border: 1px solid #DDDDDD;
     margin: 5px 0 0;
     padding: 5px;
+}
+
+#main_content .quick_edit fieldset {
+	padding: 10px;
+	border: 1px solid #DDDDDD;
+}
+.frm_update_case label {
+	display: block;	
+}
+.frm_update_case textarea {
+	width: 500px;
+	display: block;
+}
+.quick_edit hr {
+	color:#fafafa;
+}
+.frm_update_case input[type=submit]{
+	float:right;	
 }
 a.view_check_list{
  	color: #FFFFFF;
@@ -1307,11 +1325,14 @@ a.view_check_list{
     text-decoration: none;
     width: 24px;	
 }
-li.quick_edit label{
+.quick_edit label{
 	font-weight:bold;
 	vertical-align:top;
 }
-li.quick_edit textarea, li.quick_edit select{
+.quick_edit h3{
+	margin:0;
+}
+.quick_edit select{
 	display: inline-block;
 	vertical-align:top;
 }
