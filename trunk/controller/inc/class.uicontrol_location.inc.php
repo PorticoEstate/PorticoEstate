@@ -251,7 +251,7 @@
 				$_role_criteria = array
 						(
 							'type'		=> 'responsibility_role',
-							'filter'	=> array('location' => ".location.{$type_id}"),
+							'filter'	=> array('location_level' => (int)$type_id),
 							'order'		=> 'name'
 						);
 	
