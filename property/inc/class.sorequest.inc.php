@@ -567,7 +567,7 @@
 			array_unshift($this->uicols['exchange'],'');
 			array_unshift($this->uicols['align'],'');
 			array_unshift($this->uicols['datatype'],'');
-			array_unshift($this->uicols['formatter'],'');
+			array_unshift($this->uicols['formatter'],'linktToRequest');
 			array_unshift($this->uicols['classname'],'');
 			array_unshift($this->uicols['sortable'],true);
 

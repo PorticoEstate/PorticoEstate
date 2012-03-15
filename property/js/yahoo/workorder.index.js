@@ -1,6 +1,7 @@
 //--------------------------------------------------------
 // Declaration of workorder.index vars
-//--------------------------------------------------------	//define SelectButton
+//--------------------------------------------------------
+	//define SelectButton
  	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
  	var selectsButtons = [
 	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
@@ -40,6 +41,23 @@
 	var config_values = {
 	 date_search : 1 //if search has link "Data search"
 	};
+
+	var oArgs_project = {menuaction:'property.uiproject.edit'};
+	var sUrl_project = phpGWLink('index.php', oArgs_project);
+	
+	var linktToProject = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+sUrl_project+"&id="+oData+">" + oData + "</a>";
+	};
+
+	var oArgs_order = {menuaction:'property.uiworkorder.edit'};
+	var sUrl_order = phpGWLink('index.php', oArgs_order);
+	
+	var linktToOrder = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+sUrl_order+"&id="+oData+">" + oData + "</a>";
+	};
+
 
 	/********************************************************************************/
 	this.myFormatNum2 = function(Data)

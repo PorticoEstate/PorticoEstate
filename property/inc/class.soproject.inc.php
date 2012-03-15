@@ -136,7 +136,7 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
+				$uicols['formatter'][]		= 'linktToProject';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= true;
 

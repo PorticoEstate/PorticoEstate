@@ -158,7 +158,10 @@
 				$uicols['name'][]			= 'project_id';
 				$uicols['descr'][]			= lang('Project');
 				$uicols['statustext'][]		= lang('Project ID');
-				$uicols['formatter'][]		= '';
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'linktToProject';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= true;
 
@@ -168,7 +171,10 @@
 				$uicols['name'][]			= 'workorder_id';
 				$uicols['descr'][]			= lang('Workorder');
 				$uicols['statustext'][]		= lang('Workorder ID');
-				$uicols['formatter'][]		= '';
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'linktToOrder';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= true;
 
@@ -178,6 +184,9 @@
 				$uicols['name'][]			= 'title';
 				$uicols['descr'][]			= lang('Title');
 				$uicols['statustext'][]		= lang('Workorder title');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -188,6 +197,9 @@
 				$uicols['name'][]			= 'status';
 				$uicols['descr'][]			= lang('Status');
 				$uicols['statustext'][]		= lang('Workorder status');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -207,6 +219,9 @@
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('Entry date');
 				$uicols['statustext'][]		= lang('Workorder entry date');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 */
@@ -216,6 +231,9 @@
 				$uicols['name'][]			= 'user_lid';
 				$uicols['descr'][]			= lang('User');
 				$uicols['statustext'][]		= lang('Workorder User');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -226,6 +244,9 @@
 				$uicols['name'][]			= 'vendor_id';
 				$uicols['descr'][]			= lang('Vendor ID');
 				$uicols['statustext'][]		= lang('Vendor ID');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -237,6 +258,9 @@
 				$uicols['name'][]			= 'loc1_name';
 				$uicols['descr'][]			= '';
 				$uicols['statustext'][]		= '';
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -255,6 +279,9 @@
 				$uicols['name'][]			= 'org_name';
 				$uicols['descr'][]			= lang('Vendor name');
 				$uicols['statustext'][]		= lang('Vendor name');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
@@ -265,6 +292,9 @@
 				$uicols['name'][]			= 'combined_cost';
 				$uicols['descr'][]			= lang('Cost');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= true;
@@ -275,6 +305,9 @@
 				$uicols['name'][]			= 'actual_cost';
 				$uicols['descr'][]			= lang('Actual cost');
 				$uicols['statustext'][]		= lang('Actual cost - paid so far');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= true;
