@@ -43,6 +43,15 @@
 		date_search : 1 //if search has link "Data search"
 	}
 
+	var oArgs_project = {menuaction:'property.uiproject.edit'};
+	var sUrl_project = phpGWLink('index.php', oArgs_project);
+	
+	var linktToProject = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+sUrl_project+"&id="+oData+">" + oData + "</a>";
+	};
+
+
 	/********************************************************************************/
 	this.myFormatNum2 = function(Data)
 	{
