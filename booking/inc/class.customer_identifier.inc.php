@@ -116,6 +116,14 @@
 			$identifier_field = $this->field_prefix.$identifier_field;
 			$identifier_value = isset($data[$identifier_field]) ? trim($data[$identifier_field]) : null;
 
+			if ($identifier_field == 'customer_organization_number' and (strlen($identifier_value) != 5 and strlen($identifier_value) != 9)){
+				return null;
+			}
+
+			if ($identifier_field == 'customer_ssn' and strlen($identifier_value) != 11){
+				return null;
+			}
+
 			return (empty($identifier_value) ? null : $identifier_value);
 		}
 		
