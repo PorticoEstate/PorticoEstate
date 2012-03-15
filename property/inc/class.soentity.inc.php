@@ -310,6 +310,39 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'entity_id';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'cat_id';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= '_type';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
 				if($lookup)
 				{
 					$cols .= ',num as entity_num_' . $entity_id;
@@ -762,6 +795,26 @@
 
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
+				$dataset[$j]['entity_id'] = array
+					(
+						'value'		=> $entity_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+				$dataset[$j]['cat_id'] = array
+					(
+						'value'		=> $cat_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+				$dataset[$j]['_type'] = array
+					(
+						'value'		=> $this->type,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+
+
 				if($lookup)
 				{
 					$dataset[$j]["entity_cat_name_{$entity_id}"] = array
@@ -877,7 +930,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= true;
 				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
+				$uicols['formatter'][]		= 'linktToEntity';
 				$uicols['classname'][]		= '';
 
 				$cols_return[] 				= 'id';
@@ -891,6 +944,40 @@
 				$uicols['exchange'][]		= false;
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'entity_id';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'cat_id';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= '_type';
+				$uicols['descr'][]			= false;
+				$uicols['statustext'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
 
 				if($lookup)
 				{
@@ -1304,6 +1391,25 @@
 							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
 						);
 				}
+				$dataset[$j]['entity_id'] = array
+					(
+						'value'		=> $entity_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+				$dataset[$j]['cat_id'] = array
+					(
+						'value'		=> $cat_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+				$dataset[$j]['_type'] = array
+					(
+						'value'		=> $this->type,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+
 				if($lookup)
 				{
 					$dataset[$j]["entity_cat_name_{$entity_id}"] = array

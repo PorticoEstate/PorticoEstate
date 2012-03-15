@@ -44,6 +44,15 @@
 	};
 /****************************************************************************************/
 
+	var oArgs_request = {menuaction:'property.uirequest.edit'};
+	var sUrl_request = phpGWLink('index.php', oArgs_request);
+	
+	var linktToRequest = function(elCell, oRecord, oColumn, oData)
+	{
+	  	elCell.innerHTML = "<a href="+sUrl_request+"&id="+oData+">" + oData + "</a>";
+	};
+
+
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<div align=\"right\">"+YAHOO.util.Number.format(oData, {thousandsSeparator:" "})+"</div>";
