@@ -3,13 +3,13 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
+	 	var oMenuButton_0, oMenuButton_1;//, oMenuButton_2, oMenuButton_3, oMenuButton_4;
 	 	var selectsButtons = [
 		{order:0, var_URL:'year',		name:'btn_year',		style:'',dependiente:[]},
-		{order:1, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]},
-		{order:2, var_URL:'cat_id',		name:'btn_cat_id',		style:'',dependiente:[]},
-		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]},
-		{order:4, var_URL:'dimb_id',	name:'btn_dimb_id',		style:'',dependiente:[]}
+		{order:1, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]}
+//		{order:2, var_URL:'cat_id',		name:'btn_cat_id',		style:'',dependiente:[]},
+//		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]},
+//		{order:4, var_URL:'dimb_id',	name:'btn_dimb_id',		style:'',dependiente:[]}
 		]
 
 		// define buttons
@@ -39,6 +39,21 @@
 
 		var tableYUI;
 	/********************************************************************************/		
+
+		this.onChangeSelect = function(type)
+		{
+			var myselect=document.getElementById("sel_"+ type);
+			for (var i=0; i<myselect.options.length; i++)
+			{
+				if (myselect.options[i].selected==true)
+				{
+					break;
+				}
+			}
+			eval("path_values." +type +"='"+myselect.options[i].value+"'");
+			execute_ds();
+		}
+
 		this.filter_grouping = function(year,district_id,param,details)
 		{
 			if(details)
@@ -103,12 +118,13 @@
 					oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 				}
 				//dimb
+/*
 				index = locate_in_array_options(4,"value",path_values.dimb_id);
 				if(index)
 				{
 					oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
 				}
-
+*/
 
 
 				//locate (asign ID) to datatable
