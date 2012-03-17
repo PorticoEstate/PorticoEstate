@@ -591,10 +591,12 @@
 
 		function read_single_mini($project_id)
 		{
-			$project						= $this->so->read_single($project_id);
-			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$project['start_date']			= $GLOBALS['phpgw']->common->show_date($project['start_date'],$dateformat);
-			$project['end_date']			= isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'],$dateformat) : '';
+			if($project	= $this->so->read_single($project_id))
+			{
+				$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$project['start_date']			= $GLOBALS['phpgw']->common->show_date($project['start_date'],$dateformat);
+				$project['end_date']			= isset($project['end_date']) && $project['end_date'] ? $GLOBALS['phpgw']->common->show_date($project['end_date'],$dateformat) : '';
+			}
 
 			if($project['location_code'])
 			{

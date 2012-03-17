@@ -166,6 +166,22 @@
 								</td>
 							</tr>
 							<xsl:choose>
+								<xsl:when test="value_workorder_id!='' and mode='edit'">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'move to another project')"/>
+										</td>
+										<td>
+											<input type="text" name="values[new_project_id]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'move to another project')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
 								<xsl:when test="location_template_type='form'">
 									<xsl:call-template name="location_form"/>
 								</xsl:when>
@@ -294,7 +310,7 @@
 								<td>
 									<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
 									<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
-									<input type="text" name="values[title]" value="{value_title}" onMouseout="window.status='';return true;">
+									<input type="text" name="values[title]" value="{value_title}" size="60">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_title_statustext"/>
 										</xsl:attribute>

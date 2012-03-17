@@ -1131,6 +1131,16 @@
 						}
 					}
 
+					if(isset($values['new_project_id']) && $values['new_project_id'] && !$this->bo->read_single_mini($values['new_project_id']))
+					{
+						$receipt['error'][]=array('msg'=>lang('the project %1 does not exist', $values['new_project_id']));
+					}
+
+					if(isset($values['new_project_id']) && $values['new_project_id'] && $values['new_project_id'] == $id)
+					{
+						unset($values['new_project_id']);
+					}
+
 					if(!isset($values['end_date']) || !$values['end_date'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
