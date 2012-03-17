@@ -263,7 +263,7 @@
 					'spbudact_code'			=> $this->db->f('spbudact_code'),
 					'regtid'				=> $this->db->f('regtid'),
 					'artid'					=> $this->db->f('artid'),
-					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
+					'godkjentbelop'			=> (int) $this->db->f('godkjentbelop') == 0 ? $this->db->f('belop') :  $this->db->f('godkjentbelop'),//restore original amount
 					'spvend_code'			=> $this->db->f('spvend_code'),
 					'dima'					=> $this->db->f('dima'),
 					'loc1'					=> $this->db->f('loc1'),
@@ -638,11 +638,11 @@
 
 			$accountline = array();
 
-			if($oRsBilag[0]['periode'])
+			if ( $oRsBilag[0]['periode'] )
 			{
 				$periode = $oRsBilag[0]['periode'];
 			}
-			else if (isset($this->config->config_data['export']['dato_aarsavslutning']) && time() < $this->config->config_data['export']['dato_aarsavslutning'])
+			else if (isset($this->config->config_data['export']['dato_aarsavslutning']) && time() < $this->config->config_data['export']['dato_aarsavslutning'] )
 			{
 				if(date('Y',time()) == date('Y', $this->config->config_data['export']['dato_aarsavslutning']))
 				{
@@ -655,7 +655,14 @@
 			}
 			else
 			{
-				$periode = date('Ym',time());
+				$time = time();
+
+				if ( date('j',$time) < 7 ) //Day of the month without leading zeros
+				{
+					$time = $time - (7 * 24 * 3600);
+				}
+				
+				$periode = date('Ym',$time);
 			}
 
 			$comment = array();
