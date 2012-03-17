@@ -295,7 +295,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= true;
 				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
+				$uicols['formatter'][]		= $lookup ? '' : 'linktToEntity';
 				$uicols['classname'][]		= '';
 
 				$cols_return[] 				= 'id';
@@ -930,7 +930,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= true;
 				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= 'linktToEntity';
+				$uicols['formatter'][]		= $lookup ? '' : 'linktToEntity';
 				$uicols['classname'][]		= '';
 
 				$cols_return[] 				= 'id';

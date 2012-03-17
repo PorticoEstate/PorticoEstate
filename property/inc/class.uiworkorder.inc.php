@@ -959,6 +959,16 @@
 					$values = $this->bocommon->collect_locationdata($values,$insert_record);
 				}
 
+				if(isset($values['new_project_id']) && $values['new_project_id'] && !$boproject->read_single_mini($values['new_project_id']))
+				{
+					$receipt['error'][]=array('msg'=>lang('the project %1 does not exist', $values['new_project_id']));
+				}
+
+				if(isset($values['new_project_id']) && $values['new_project_id'] && $values['new_project_id'] == $values['project_id'])
+				{
+					unset($values['new_project_id']);
+				}
+
 				if(!$values['title'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a workorder title !'));

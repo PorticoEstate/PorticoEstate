@@ -1050,6 +1050,10 @@ missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)
 Monthly (by date)	property	no	Månedlig (dato)
+move	property	no	Flytt
+move budget and orders to another project	property	no	Flytt budsjett og bestillinger til et annet prosjekt
+move to another project	property	no	Flytt til et annet prosjekt
+moved to another project	property	no	Flyttet til et annet prosjekt
 muliple checkbox	property	no	Flervalgs avkrysningsknapp
 muliple radio	property	no	Flervalgs radioknapp
 multiple checkbox	property	no	Flervalgs avkrysningsknapp
@@ -1694,6 +1698,7 @@ the file is already imported !	property	no	Fila er allerede importert
 the mail server returned	property	no	E-post serveren returnerte
 the number of %1 hour is added!	property	no	%1 poster er lagt til
 The order will also be sent to this one	property	no	Bestillinga blir også sendt til denne
+the project %1 does not exist	property	no	Prosjekt %1 finnes ikke
 the project has not been saved	property	no	Prosjektet er ikke lagret
 the property is private. if the property should be public, uncheck this box	property	no	Eiendommen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
 the property is public. if the property should be private, check this box	property	no	Eiendommen er merket public. Dersom den skulle være privat - kryss av denne boksen

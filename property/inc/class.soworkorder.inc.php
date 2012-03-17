@@ -1256,6 +1256,13 @@
 				$historylog->add('B', $workorder['id'], $workorder['budget'], $old_budget);
 			}
 
+			if (isset($workorder['new_project_id']) && $workorder['new_project_id'] && ($workorder['new_project_id'] != $workorder['project_id']))
+			{
+				$new_project_id = (int) $workorder['new_project_id'];
+				$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id} WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+				$historylog->add('NP',$workorder['id'],$new_project_id, $workorder['project_id']);
+			}
+
 			if ($workorder['remark'])
 			{
 				$historylog->add('RM', $workorder['id'], $workorder['remark']);
