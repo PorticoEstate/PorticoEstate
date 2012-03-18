@@ -526,6 +526,8 @@
 				'event_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
 				'contract_sum' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'approved'	=> array('type' => 'int','precision' => 2, 'nullable' => True),
+				'mail_recipients' => array('type' => 'varchar','precision' => 255, 'nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),

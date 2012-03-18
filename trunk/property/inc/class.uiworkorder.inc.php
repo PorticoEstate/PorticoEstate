@@ -1616,6 +1616,44 @@
 				$myButtons[]	= $notify_info['buttons'];
 			}
 
+
+
+			$myColumnDefs[] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
+				);	
+
+
+			$content_email =  execMethod('property.uitts.get_vendor_email', isset($values['vendor_id']) ? $values['vendor_id'] : 0 );
+			
+			if(isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+				$_recipients_found = array();
+				foreach($content_email as &$vendor_email)
+				{
+					if(in_array($vendor_email['value_email'], $values['mail_recipients']))
+					{
+						 $vendor_email['value_select'] = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
+						 $_recipients_found[] = $vendor_email['value_email'];
+					}
+				}
+				$value_extra_mail_address = implode(',', array_diff($values['mail_recipients'], $_recipients_found));
+			}
+
+			$datavalues[] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($content_email),
+					'total_records'			=> count($content_email),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
+					'footer'				=> 0
+				);
+
+
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
 			{
@@ -1795,6 +1833,7 @@
 					'lang_key_deliver'						=> lang('key deliver location'),
 					'lang_key_deliver_statustext'			=> lang('Select where to deliver the key'),
 
+					'value_approved'						=> isset($values['approved']) ? $values['approved'] : '',
 					'need_approval'							=> $need_approval,
 					'lang_ask_approval'						=> lang('Ask for approval'),
 					'lang_ask_approval_statustext'			=> lang('Check this to send a mail to your supervisor for approval'),
@@ -1811,10 +1850,12 @@
 					'lang_upload_file'						=> lang('Upload file'),
 					'lang_file_statustext'					=> lang('Select file to upload'),
 					'value_billable_hours'					=> $values['billable_hours'],
-					'base_java_notify_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
+					'base_java_url'							=> "{menuaction:'property.uitts.get_vendor_email',phpgw_return_as:'json'}",
+					'base_java_notify_url'					=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
 					'lang_edit_statustext'					=> lang('Edit this entry '),
 					'lang_edit'								=> lang('Edit'),
+					'value_extra_mail_address'				=> $value_extra_mail_address
 				);
 
 			$appname						= lang('Workorder');

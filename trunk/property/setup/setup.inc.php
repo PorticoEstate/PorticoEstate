@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
