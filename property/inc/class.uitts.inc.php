@@ -51,6 +51,7 @@
 			'edit_status'		=> true,
 			'edit_priority'		=> true,
 			'update_data'		=> true,
+			'get_vendor_email'	=> true,
 			'_print'			=> true,
 			'columns'			=> true
 		);
@@ -2288,13 +2289,14 @@
 			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
 
 			$content_email = array();
+			$title =  lang('The address to which this order will be sendt');
 			foreach($vendor_email as $_entry )
 			{				
 				$content_email[] = array
 					(
 
 						'value_email'		=> $_entry['email'],
-						'value_select'		=> '<input type="checkbox" name="values[vendor_email][]" value="'.$_entry['email'].'" title="'.lang('The address to which this order will be sendt').'">'
+						'value_select'		=> "<input type='checkbox' name='values[vendor_email][]' value='{$_entry['email']}' title='{$title}'>"
 					);
 			}
 

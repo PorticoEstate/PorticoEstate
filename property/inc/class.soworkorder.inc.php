@@ -752,6 +752,8 @@
 						'grants'				=> (int)$this->grants[$this->db->f('user_id')],
 						'billable_hours'		=> $this->db->f('billable_hours'),
 						'contract_sum'			=> $this->db->f('contract_sum'),
+						'approved'				=> $this->db->f('approved'),
+						'mail_recipients'		=> explode(',', $this->db->f('mail_recipients')),
 					);
 			}
 
@@ -1013,13 +1015,15 @@
 					$workorder['ecodimb'],
 					$workorder['cat_id'],
 					$workorder['billable_hours'],
-					$workorder['contract_sum']
+					$workorder['contract_sum'],
+					$workorder['approved'],
+					isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : ''
 				);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours,contract_sum $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours,contract_sum,approved,'mail_recipients  $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -1075,12 +1079,13 @@
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
-			$this->db->query("SELECT status,budget,calculation,billable_hours FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT status,budget,calculation,billable_hours,approved FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			$old_status			= $this->db->f('status');
 			$old_budget			= $this->db->f('budget');
 			$old_billable_hours	= $this->db->f('billable_hours');
+			$old_approved		= $this->db->f('approved');
 
 			if ($this->db->f('calculation') > 0)
 			{
@@ -1119,24 +1124,26 @@
 
 			$value_set = array
 				(
-					'title'			=> $workorder['title'],
-					'status'		=> $workorder['status'],
-					'start_date'	=> $workorder['start_date'],
-					'end_date'		=> $workorder['end_date'],
-					'descr'			=> $workorder['descr'],
-					'budget'		=> (int)$workorder['budget'],
-					'combined_cost'	=> $combined_cost,
-					'key_deliver'	=> $workorder['key_deliver'],
-					'key_fetch'		=> $workorder['key_fetch'],
-					'account_id'	=> $workorder['b_account_id'],
-					'rig_addition'	=> $workorder['addition_rs'],
-					'addition'		=> $workorder['addition_percentage'],
-					'charge_tenant'	=> $workorder['charge_tenant'],
-					'vendor_id'		=> $workorder['vendor_id'],
-					'ecodimb'		=> $workorder['ecodimb'],
-					'category'		=> $workorder['cat_id'],
-					'billable_hours'=> $workorder['billable_hours'],
-					'contract_sum'	=> $workorder['contract_sum'],
+					'title'				=> $workorder['title'],
+					'status'			=> $workorder['status'],
+					'start_date'		=> $workorder['start_date'],
+					'end_date'			=> $workorder['end_date'],
+					'descr'				=> $workorder['descr'],
+					'budget'			=> (int)$workorder['budget'],
+					'combined_cost'		=> $combined_cost,
+					'key_deliver'		=> $workorder['key_deliver'],
+					'key_fetch'			=> $workorder['key_fetch'],
+					'account_id'		=> $workorder['b_account_id'],
+					'rig_addition'		=> $workorder['addition_rs'],
+					'addition'			=> $workorder['addition_percentage'],
+					'charge_tenant'		=> $workorder['charge_tenant'],
+					'vendor_id'			=> $workorder['vendor_id'],
+					'ecodimb'			=> $workorder['ecodimb'],
+					'category'			=> $workorder['cat_id'],
+					'billable_hours'	=> $workorder['billable_hours'],
+					'contract_sum'		=> $workorder['contract_sum'],
+					'approved'			=> $workorder['approved'],
+					'mail_recipients'	=> isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 				);
 
 			if($workorder['status'] == 'closed')
@@ -1185,6 +1192,20 @@
  */
 //			$this->update_planned_cost($workorder['project_id']); // at project
 
+
+			if ($old_approved != $workorder['approved'])
+			{
+				if($workorder['approved'])
+				{
+					$historylog->add('OA',$workorder['id'],$workorder['approved'], $old_approved);
+				}
+				else//revoked
+				{
+					$historylog->add('OB',$workorder['id'],$workorder['approved'], $old_approved);				
+				}
+				$check_pending_action = true;
+			}
+
 			$check_pending_action = false;
 			if ((float)$old_billable_hours != (float)$workorder['billable_hours'])
 			{
@@ -1210,7 +1231,7 @@
 			{
 				$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
 				$this->db->next_record();
-				if ($this->db->f('approved') )
+				if ($this->db->f('approved') || $workorder['approved'] )
 				{
 					$action_params = array
 						(

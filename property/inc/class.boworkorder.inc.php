@@ -625,6 +625,8 @@
 					case 'ON': $type = lang('Owner notified'); break;
 					case 'H': $type = lang('Billable hours changed'); break;
 					case 'NP': $type = lang('moved to another project'); break;
+					case 'OA': $type = lang('order approved'); break;
+					case 'OB': $type = lang('order approval revoked'); break;
 					default:
 				}
 
