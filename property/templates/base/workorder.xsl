@@ -217,22 +217,24 @@
 								<td>
 									<xsl:value-of select="lang_coordinator"/>
 								</td>
-								<xsl:for-each select="user_list">
-									<xsl:choose>
-										<xsl:when test="selected">
-											<td>
-												<xsl:value-of select="name"/>
-											</td>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:for-each>
-							</tr>
+								<td>
+									<xsl:value-of select="value_coordinator"/>
+								</td>
+								</tr>
 							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'janitor')"/>
 								</td>
 								<td>
-									<xsl:value-of select="value_user"/>
+									<select name="values[user_id]" class="forms" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'janitor')"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="user_list/options"/>
+									</select>
 								</td>
 							</tr>
 							<tr>
