@@ -199,7 +199,7 @@
 		}
 
 
-		protected function select_invoice_rollback($date, $Filnavn,$rollback_voucher)
+		protected function select_invoice_rollback($date, $Filnavn,$rollback_voucher,$rollback_internal_voucher)
 		{
 			$date_array = phpgwapi_datetime::date_array($date);
 	 		$day = $date_array['day'];
@@ -234,6 +234,11 @@
 			{
 				$rollback_voucher = (int)$rollback_voucher;
 				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher} AND manual_record IS NULL";
+			}
+			else if($rollback_internal_voucher)
+			{
+				$rollback_internal_voucher = (int)$rollback_internal_voucher;
+				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
 			}
 			else
 			{
@@ -416,9 +421,9 @@
 			$this->log_error($batchid,$error_desr);
 		}
 
-		public function RullTilbake($Filnavn, $date,$rollback_voucher)
+		public function RullTilbake($Filnavn, $date,$rollback_voucher,$rollback_internal_voucher)
 		{
-			$voucher = $this->select_invoice_rollback($date, $Filnavn,$rollback_voucher);
+			$voucher = $this->select_invoice_rollback($date, $Filnavn,$rollback_voucher,$rollback_internal_voucher);
 
 			if ( $this->db->get_transaction() )
 			{
@@ -464,7 +469,7 @@
 			{
 				$fil_katalog = $this->config->config_data['export']['path'];
 
-				if($rollback_voucher)
+				if($rollback_voucher || $rollback_internal_voucher)
 				{
 					if ( !$this->global_lock )
 					{
