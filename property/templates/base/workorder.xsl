@@ -166,6 +166,22 @@
 								</td>
 							</tr>
 							<xsl:choose>
+								<xsl:when test="value_workorder_id!='' and mode='edit'">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'move to another project')"/>
+										</td>
+										<td>
+											<input type="text" name="values[new_project_id]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'move to another project')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
 								<xsl:when test="location_template_type='form'">
 									<xsl:call-template name="location_form"/>
 								</xsl:when>
@@ -201,22 +217,24 @@
 								<td>
 									<xsl:value-of select="lang_coordinator"/>
 								</td>
-								<xsl:for-each select="user_list">
-									<xsl:choose>
-										<xsl:when test="selected">
-											<td>
-												<xsl:value-of select="name"/>
-											</td>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:for-each>
-							</tr>
+								<td>
+									<xsl:value-of select="value_coordinator"/>
+								</td>
+								</tr>
 							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'janitor')"/>
 								</td>
 								<td>
-									<xsl:value-of select="value_user"/>
+									<select name="values[user_id]" class="forms" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'janitor')"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="user_list/options"/>
+									</select>
 								</td>
 							</tr>
 							<tr>
@@ -294,7 +312,7 @@
 								<td>
 									<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
 									<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
-									<input type="text" name="values[title]" value="{value_title}" onMouseout="window.status='';return true;">
+									<input type="text" name="values[title]" value="{value_title}" size="60">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_title_statustext"/>
 										</xsl:attribute>
@@ -323,22 +341,6 @@
 								</td>
 							</tr>
 							<xsl:choose>
-								<xsl:when test="value_workorder_id!='' and mode='edit'">
-									<tr>
-										<td>
-											<xsl:value-of select="lang_confirm_status"/>
-										</td>
-										<td>
-											<input type="checkbox" name="values[confirm_status]" value="True" onMouseout="window.status='';return true;">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_confirm_statustext"/>
-												</xsl:attribute>
-											</input>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
 								<xsl:when test="need_approval='1' and mode='edit'">
 									<tr>
 										<td valign="top">
@@ -365,6 +367,32 @@
 													</tr>
 												</xsl:for-each>
 											</table>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="value_workorder_id!=''">
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'approved')"/>
+										</td>
+										<td>
+											<input type="checkbox" name="values[approved]" value="1">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'approved')"/>
+												</xsl:attribute>
+												<xsl:if test="value_approved = '1'">
+													<xsl:attribute name="checked">
+														<xsl:text>checked</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
+												<xsl:if test="mode != 'edit'">
+													<xsl:attribute name="disabled">
+														<xsl:text>disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
+											</input>
 										</td>
 									</tr>
 								</xsl:when>
@@ -417,6 +445,35 @@
 								<xsl:when test="mode='edit'">
 									<xsl:call-template name="event_form"/>
 									<xsl:call-template name="vendor_form"/>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'send order')"/>
+										</td>
+										<td>
+											<div id="paging_4"/>
+											<div id="datatable-container_4"/>
+										</td>
+										<tr>
+											<td valign="top">
+												<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+											</td>
+											<td>
+												<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
+													</xsl:attribute>
+												</input>
+											</td>
+										</tr>
+										<tr>
+											<td valign="top">
+												<xsl:value-of select="php:function('lang', 'selected mail addresses')"/>
+											</td>
+											<td>
+												<xsl:value-of select="mail_recipients"/>
+											</td>
+										</tr>
+									</tr>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="event_view"/>
@@ -696,6 +753,7 @@
 					</xsl:choose>
 					<script type="text/javascript">
 						var property_js = <xsl:value-of select="property_js"/>;
+						var base_java_url = <xsl:value-of select="base_java_url"/>;
 						var base_java_notify_url = <xsl:value-of select="base_java_notify_url"/>;
 						var datatable = new Array();
 						var myColumnDefs = new Array();

@@ -735,6 +735,7 @@
 		function read_single($project_id, $values = array())
 		{
 			$project_id = (int) $project_id;
+			$project = array();
 			$sql = "SELECT * from fm_project WHERE id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1160,8 +1161,12 @@
 
 			if($project['budget'])
 			{
-				$new_budget = $this->updat_budget($project['id'], $project['budget_year'], $project['budget']);
+				$this->updat_budget($project['id'], $project['budget_year'], $project['budget']);
 			}
+
+			$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = " . (int)$project['id'],__LINE__,__FILE__);
+			$this->db->next_record();
+			$new_budget =(int)$this->db->f('sum_budget');
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
 			{
@@ -1190,11 +1195,16 @@
 			}
 
 			$this->update_request_status($project['id'],$project['status'],$project['cat_id'],$project['coordinator']);
-			$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
 			$workorders = array();
 			while ($this->db->next_record())
 			{
 				$workorders[] = $this->db->f('id');
+			}
+
+			if ($workorders)
+			{
+				$historylog_workorder	= CreateObject('property.historylog','workorder');
 			}
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
@@ -1229,10 +1239,6 @@
 					unset($action_params);
 				}
 
-				if ($workorders)
-				{
-					$historylog_workorder	= CreateObject('property.historylog','workorder');
-				}
 
 				if($old_status != $project['status'])
 				{
@@ -1325,6 +1331,88 @@
 			}
 
 //			execMethod('property.soworkorder.update_planned_cost', $project['id']);
+
+			if (isset($project['new_project_id']) && $project['new_project_id'] && ($project['new_project_id'] != $project['id']))
+			{
+				$new_project_id = (int) $project['new_project_id'];
+				reset($workorders);
+				foreach($workorders as $workorder_id)
+				{
+					$historylog_workorder->add('NP',$workorder_id,$new_project_id, $project['id']);
+				}
+
+				$sql = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_budget_new_project	= (int)$this->db->f('sum_budget');
+
+				$sql = "SELECT * FROM fm_project_budget WHERE project_id = " . (int)$project['id'];
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				$budget = array();
+				while ($this->db->next_record())
+				{
+					$budget[] = array
+					(
+						'project_id'		=> (int)$project['id'],
+						'year'				=> $this->db->f('year'),
+						'budget'			=> (int)$this->db->f('budget'),
+						'user_id'			=> $this->db->f('user_id'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'modified_date'		=> $this->db->f('modified_date')
+					);
+				}
+				
+				foreach($budget as $entry)
+				{
+					$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$new_project_id} AND year = {$entry['year']}";
+					$this->db->query($sql,__LINE__,__FILE__);
+					if($this->db->next_record())
+					{
+						$sql = "UPDATE fm_project_budget SET budget = budget + {$entry['budget']} WHERE project_id = {$new_project_id} AND year = {$entry['year']}";
+					}
+					else
+					{
+						$value_set = array
+						(
+							'project_id'		=> $new_project_id,
+							'year'				=> $entry['year'],
+							'budget'			=> $entry['budget'],
+							'user_id'			=> $entry['user_id'],
+							'entry_date'		=> $entry['entry_date'],
+							'modified_date'		=> $entry['modified_date']
+						);
+						$cols = implode(',', array_keys($value_set));
+						$values	= $this->db->validate_insert(array_values($value_set));
+						$this->db->query("INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+					}
+				}
+
+				if ($old_budget)
+				{
+					$historylog->add('B',$project['id'],0, $old_budget);
+				}
+
+				$sql = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$new_budget_new_project	= (int)$this->db->f('sum_budget');
+
+				$sql = "SELECT reserve FROM fm_project WHERE id = " . (int)$project['id'];
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$reserve_old_project	= (int)$this->db->f('reserve');
+
+				if ($new_budget_new_project != $old_budget_new_project)
+				{
+					$historylog->add('B',$new_project_id, $new_budget_new_project, $old_budget_new_project);
+				}
+				$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id} WHERE project_id = {$project['id']}",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_project SET reserve = 0 WHERE reserve IS NULL AND id = {$new_project_id}" ,__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_project SET budget = {$new_budget_new_project}, reserve = reserve + {$reserve_old_project} WHERE id = {$new_project_id}" ,__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_project SET budget = 0, reserve = 0 WHERE id =  " . (int)$project['id'] ,__LINE__,__FILE__);
+				$this->db->query("DELETE FROM fm_project_budget WHERE project_id =  " . (int)$project['id'] ,__LINE__,__FILE__);
+			}
 
 			$receipt['id'] = $project['id'];
 			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));

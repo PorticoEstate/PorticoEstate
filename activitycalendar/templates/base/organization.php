@@ -5,6 +5,8 @@
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('organization') ?></h1>
 </div>
+<?php echo activitycalendar_uicommon::get_page_message($message) ?>
+<?php echo activitycalendar_uicommon::get_page_error($error) ?>
 <div class="yui-content">
 	<div id="details">
 		<form action="#" method="post">
@@ -136,6 +138,15 @@
 						{
 							echo '<input type="submit" name="store_organization" value="' . lang('store') . '"/>';
 						}
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
+					}
+					else
+					{
+						if(!$organization->get_transferred())
+						{
+							echo '<input type="submit" name="edit_organization" value="' . lang('edit') . '"/>';
+						}
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
 					}
 				?>
 			</div>

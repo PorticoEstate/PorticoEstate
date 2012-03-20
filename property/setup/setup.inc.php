@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.636';
+	$setup_info['property']['version']		= '0.9.17.637';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';

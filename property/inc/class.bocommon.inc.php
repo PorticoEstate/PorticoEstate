@@ -48,6 +48,7 @@
 		var $public_functions = array
 			(
 				'confirm_session'	=> true,
+				'get_vendor_email'	=> true
 			);
 
 		function __construct()
@@ -2126,4 +2127,40 @@
 			}
 			return $ret;
 		}
+
+		public function get_vendor_email($vendor_id = 0)
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int', 'GET', 0);
+			}
+			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
+
+			$content_email = array();
+			$title =  lang('The address to which this order will be sendt');
+			foreach($vendor_email as $_entry )
+			{				
+				$content_email[] = array
+					(
+
+						'value_email'		=> $_entry['email'],
+						'value_select'		=> "<input type='checkbox' name='values[vendor_email][]' value='{$_entry['email']}' title='{$title}'>"
+					);
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content_email))
+				{
+					return json_encode($content_email);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content_email;
+		}
+
 	}

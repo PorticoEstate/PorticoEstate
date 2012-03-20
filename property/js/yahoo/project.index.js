@@ -2,14 +2,14 @@
 // Declaration of location.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
  	var selectsButtons = [
 	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
 	{order:1, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
 	{order:2, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
 	{order:3, var_URL:'wo_hour_cat_id',name:'btn_hour_category_id',style:'partOFTownbutton',dependiente:''},
-	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''},
-	{order:5, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
+//	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''},
+	{order:4, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
 	];
 
 	// define buttons
@@ -41,6 +41,20 @@
 	var config_values =
 	{
 		date_search : 1 //if search has link "Data search"
+	}
+
+	this.onChangeSelect = function(type)
+	{
+		var myselect=document.getElementById("sel_"+ type);
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values." +type +"='"+myselect.options[i].value+"'");
+		execute_ds();
 	}
 
 	var oArgs_project = {menuaction:'property.uiproject.edit'};
@@ -95,19 +109,21 @@
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
 			}
 
+			//criteria
+			index = locate_in_array_options(4,"value",path_values.criteria_id);
+			if(index)
+			{
+				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+			}
+
+/*
 			//user
 			index = locate_in_array_options(4,"value",path_values.user_id);
 			if(index)
 			{
 				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
 			}
-
-			//criteria
-			index = locate_in_array_options(5,"value",path_values.criteria_id);
-			if(index)
-			{
-				oMenuButton_5.set("label", ("<em>" + array_options[5][index][1] + "</em>"));
-			}
+*/
 
 			//focus initial
 			//--focus for txt_query---

@@ -1200,12 +1200,12 @@
 			$send_as_pdf	= phpgw::get_var('send_as_pdf', 'bool');
 			$email_receipt	= phpgw::get_var('email_receipt', 'bool');
 			
-
+/*
 			if($update_email)
 			{
 				$this->bo->update_email($to_email,$workorder_id);
 			}
-
+*/
 			$workorder = $this->boworkorder->read_single($workorder_id);
 			$workorder_history = $this->boworkorder->read_record_history($workorder_id);
 
@@ -1288,8 +1288,11 @@
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date					= $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
-			$from_name =	$GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email =	"{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+
+			$GLOBALS['phpgw']->preferences->set_account_id($workorder['user_id'], true);
+
+			$from_name =	$GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
+			$from_email =	"{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
 
 			if($this->config->config_data['wo_status_sms'])
 			{
@@ -1381,10 +1384,10 @@
 					'lang_from'						=> lang('From'),
 					'from_name'						=> $from_name,
 					'from_email'					=> $from_email,
-					'from_phone'					=> $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'],
+					'from_phone'					=> $GLOBALS['phpgw']->preferences->data['property']['cellphone'],
 					'lang_district'					=> lang('District'),
 					'district'						=> $project['location_data']['district_id'],
-					'ressursnr'						=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'] : '',
+					'ressursnr'						=> isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? $GLOBALS['phpgw']->preferences->data['property']['ressursnr'] : '',
 
 					'lang_to'						=> lang('To'),
 					'to_name'						=> $workorder['vendor_name'],
@@ -1432,13 +1435,15 @@
 					'order_footer'					=> $this->config->config_data['order_footer']
 				);
 
-			if($send_order && !$to_email)
+			if($send_order && !$to_email && !$workorder['mail_recipients'])
 			{
 				$receipt['error'][]=array('msg'=>lang('No mailaddress is selected'));
 			}
 
-			if($to_email || $print)
+			if($to_email || $print || ($workorder['mail_recipients'] && $_POST['send_order']))
 			{
+				$_to = $workorder['mail_recipients'] ? implode(';', $workorder['mail_recipients']) : $to_email;
+				
 				$email_data['use_yui_table'] = false;
 
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
@@ -1494,7 +1499,7 @@ HTML;
 					exit;
 				}
 
-				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
+				if($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt']==1)
 				{
 					$bcc = $from_email;
 				}
@@ -1547,7 +1552,7 @@ HTML;
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
 				}
 				else
 				{
@@ -1558,7 +1563,7 @@ HTML;
 				{
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
 					$historylog	= CreateObject('property.historylog','workorder');
-					$historylog->add('M',$workorder_id,"{$to_email}{$_attachment_log}");
+					$historylog->add('M',$workorder_id,"{$_to}{$_attachment_log}");
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 					if($attachment_log)
 					{
@@ -1602,7 +1607,7 @@ HTML;
 				{
 					$receipt['error'][]=array('msg'=>lang('The recipient did not get the email:'));
 					$receipt['error'][]=array('msg'=>lang('From') . ' ' . $from_email);
-					$receipt['error'][]=array('msg'=>lang('To') . ' ' . $to_email);
+					$receipt['error'][]=array('msg'=>lang('To') . ' ' . $_to);
 				}
 			}
 
@@ -1701,7 +1706,7 @@ HTML;
 					'lang_to_email_address_statustext'	=> lang('The address to which this order will be sendt'),
 					'to_email'							=> $to_email,
 					'email_list'						=> $email_list,
-					'requst_email_receipt'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_order_email_rcpt']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_order_email_rcpt']==1 ? 1 : 0,
+					'requst_email_receipt'				=> isset($GLOBALS['phpgw']->preferences->data['request_order_email_rcpt']) && $GLOBALS['phpgw']->preferences->data['property']['request_order_email_rcpt']==1 ? 1 : 0,
 					'lang_select_email'					=> lang('Select email'),
 					'send_order_action'					=> $GLOBALS['phpgw']->link('/index.php',array(
 																'menuaction'	=> 'property.uiwo_hour.view',
@@ -1745,7 +1750,8 @@ HTML;
 																	'show_cost'		=> $show_cost,
 																	'show_details'	=> $show_details,
 																	'preview'		=> true,
-																	)) . "','100','100')"
+																	)) . "','100','100')",
+					'mail_recipients' 					=> isset($workorder['mail_recipients']) && is_array($workorder['mail_recipients']) ? implode(';', $workorder['mail_recipients']) : ''
 				);
 
 
@@ -1772,9 +1778,6 @@ HTML;
 			$function_msg	= $this->boworkorder->order_sent_adress ? lang('ReSend order') :lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-			//$GLOBALS['phpgw']->xslttpl->pp();
-			//$this->save_sessiondata();
-
 		}
 
 

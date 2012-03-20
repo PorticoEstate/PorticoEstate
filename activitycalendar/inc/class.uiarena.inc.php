@@ -71,6 +71,11 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		$arena = activitycalendar_soarena::get_instance()->get_single((int)phpgw::get_var('id'));
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
 		
+		if(isset($_POST['edit_arena'])) // The user has pressed the save button
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.edit','id' => phpgw::get_var('id')));
+		}
+		
 		if($arena == null) // Not found
 		{
 			$errorMsgs[] = lang('Could not find specified arena.');

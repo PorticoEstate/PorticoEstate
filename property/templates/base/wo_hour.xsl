@@ -428,21 +428,13 @@
 										</xsl:when>
 									</xsl:choose>
 									<xsl:choose>
-										<xsl:when test="email_list !=''">
+										<xsl:when test="mail_recipients !=''">
 											<tr>
 												<td class="th_text" align="left">
 													<xsl:value-of select="lang_mail"/>
 												</td>
 												<td align="left">
-													<xsl:variable name="lang_to_email_address_statustext">
-														<xsl:value-of select="lang_to_email_address_statustext"/>
-													</xsl:variable>
-													<select name="to_email" class="forms" title="{$lang_to_email_address_statustext}">
-														<option value="">
-															<xsl:value-of select="lang_select_email"/>
-														</option>
-														<xsl:apply-templates select="email_list"/>
-													</select>
+													<xsl:value-of select="mail_recipients"/>
 												</td>
 											</tr>
 										</xsl:when>
@@ -455,18 +447,6 @@
 													<input type="text" name="to_email" value="{to_email}">
 														<xsl:attribute name="title">
 															<xsl:value-of select="lang_to_email_address_statustext"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td class="th_text" align="left">
-													<xsl:value-of select="lang_update_email"/>
-												</td>
-												<td align="left">
-													<input type="checkbox" name="update_email" value="true" onMouseout="window.status='';return true;">
-														<xsl:attribute name="title">
-															<xsl:value-of select="lang_update_email_statustext"/>
 														</xsl:attribute>
 													</input>
 												</td>

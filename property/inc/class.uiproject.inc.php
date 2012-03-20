@@ -263,14 +263,15 @@
 				$default_value = array ('id'=>'','name'=>lang('no hour category'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bo->get_user_list();
-				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
+				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				$values_combo_box[5]  = $this->bo->get_user_list();
+				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
+				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
+
 
 				$datatable['actions']['form'] = array
 					(
@@ -327,6 +328,15 @@
 									'tab_index' => 4
 								),
 								array
+								( //boton 	search criteria
+									'id' => 'btn_criteria_id',
+									'name' => 'criteria_id',
+									'value'	=> lang('search criteria'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 5
+								),/*
+								array
 								( //boton 	USER
 									'id' => 'btn_user_id',
 									'name' => 'user_id',
@@ -334,16 +344,19 @@
 									'type' => 'button',
 									'style' => 'filter',
 									'tab_index' => 5
-								),
-								array
-								( //boton 	search criteria
-									'id' => 'btn_criteria_id',
-									'name' => 'criteria_id',
-									'value'	=> lang('search criteria'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 6
-								),
+								),*/
+									array
+									( //boton 	USER
+										//	'id' => 'btn_user_id',
+										'id' => 'sel_filter', // testing traditional listbox for long list
+										'name' => 'filter',
+										'value'	=> lang('User'),
+										'type' => 'select',
+										'style' => 'filter',
+										'values' => $values_combo_box[5],
+										'onchange'=> 'onChangeSelect("filter");',
+										'tab_index' => 6
+									),
 								//for link "columns", next to Export button
 								array
 								(
@@ -455,12 +468,12 @@
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
 									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								),
+								)/*,
 								array
 								( //div values  combo_box_5
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)
+								)*/
 							)
 						)
 					)
@@ -1116,6 +1129,16 @@
 								$error_id=true;
 							}
 						}
+					}
+
+					if(isset($values['new_project_id']) && $values['new_project_id'] && !$this->bo->read_single_mini($values['new_project_id']))
+					{
+						$receipt['error'][]=array('msg'=>lang('the project %1 does not exist', $values['new_project_id']));
+					}
+
+					if(isset($values['new_project_id']) && $values['new_project_id'] && $values['new_project_id'] == $id)
+					{
+						unset($values['new_project_id']);
 					}
 
 					if(!isset($values['end_date']) || !$values['end_date'])

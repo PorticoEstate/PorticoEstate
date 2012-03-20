@@ -2222,7 +2222,7 @@
 			switch($action)
 			{
 				case 'get_vendor':
-					return $this->get_vendor_email();
+					return $this->bocommon->get_vendor_email();
 					break;
 				case 'get_files':
 					return $this->get_files();
@@ -2279,39 +2279,6 @@
 		}
 
 
-		function get_vendor_email($vendor_id = 0)
-		{
-			if(!$vendor_id)
-			{
-				$vendor_id = phpgw::get_var('vendor_id', 'int', 'GET', 0);
-			}
-			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
-
-			$content_email = array();
-			foreach($vendor_email as $_entry )
-			{				
-				$content_email[] = array
-					(
-
-						'value_email'		=> $_entry['email'],
-						'value_select'		=> '<input type="checkbox" name="values[vendor_email][]" value="'.$_entry['email'].'" title="'.lang('The address to which this order will be sendt').'">'
-					);
-			}
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-
-				if(count($content_email))
-				{
-					return json_encode($content_email);
-				}
-				else
-				{
-					return "";
-				}
-			}
-			return $content_email;
-		}
 
 		function view()
 		{
@@ -3075,7 +3042,7 @@
 				);	
 
 
-			$content_email = $this->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
+			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
 
 			$datavalues[3] = array
 				(
