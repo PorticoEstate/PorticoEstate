@@ -598,33 +598,36 @@
 
 				switch ($value['status'])
 				{
-				case 'R': $type = lang('Re-opened'); break;
-				case 'RM': $type = lang('remark'); break;
-				case 'X': $type = lang('Closed');    break;
-				case 'O': $type = lang('Opened');    break;
-				case 'A': $type = lang('Re-assigned'); break;
-				case 'P': $type = lang('Priority changed'); break;
-				case 'M':
-					$type = lang('Sent by email to');
-					$_order_sent_adress = explode('::',$value['new_value']);
-					$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
-					unset($_order_sent_adress);
-					break;
-				case 'MS':
-					$type = lang('Sent by sms');
-					break;
-				case 'B': $type = lang('Budget changed'); break;
-				case 'CO': $type = lang('Initial Coordinator'); break;
-				case 'C': $type = lang('Coordinator changed'); break;
-				case 'TO': $type = lang('Initial Category'); break;
-				case 'T': $type = lang('Category changed'); break;
-				case 'SO': $type = lang('Initial Status'); break;
-				case 'S': $type = lang('Status changed'); break;
-				case 'SC': $type = lang('Status confirmed'); break;
-				case 'AP': $type = lang('Ask for approval'); break;
-				case 'ON': $type = lang('Owner notified'); break;
-				case 'H': $type = lang('Billable hours changed'); break;
-				default: break;
+					case 'R': $type = lang('Re-opened'); break;
+					case 'RM': $type = lang('remark'); break;
+					case 'X': $type = lang('Closed');    break;
+					case 'O': $type = lang('Opened');    break;
+					case 'A': $type = lang('Re-assigned'); break;
+					case 'P': $type = lang('Priority changed'); break;
+					case 'M':
+						$type = lang('Sent by email to');
+						$_order_sent_adress = explode('::',$value['new_value']);
+						$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
+						unset($_order_sent_adress);
+						break;
+					case 'MS':
+						$type = lang('Sent by sms');
+						break;
+					case 'B': $type = lang('Budget changed'); break;
+					case 'CO': $type = lang('Initial Coordinator'); break;
+					case 'C': $type = lang('Coordinator changed'); break;
+					case 'TO': $type = lang('Initial Category'); break;
+						case 'T': $type = lang('Category changed'); break;
+					case 'SO': $type = lang('Initial Status'); break;
+					case 'S': $type = lang('Status changed'); break;
+					case 'SC': $type = lang('Status confirmed'); break;
+					case 'AP': $type = lang('Ask for approval'); break;
+					case 'ON': $type = lang('Owner notified'); break;
+					case 'H': $type = lang('Billable hours changed'); break;
+					case 'NP': $type = lang('moved to another project'); break;
+					case 'OA': $type = lang('order approved'); break;
+					case 'OB': $type = lang('order approval revoked'); break;
+					default:
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}

@@ -356,6 +356,23 @@ Returns mixed
 									</xsl:choose>
 								</xsl:when>
 							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="value_project_id!='' and mode='edit'">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'move')"/>
+										</td>
+										<td>
+											<input type="text" name="values[new_project_id]" value="">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
+
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="php:function('lang', 'budget')"/>

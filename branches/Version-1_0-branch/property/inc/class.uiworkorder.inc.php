@@ -270,14 +270,15 @@
 				$default_value = array ('id'=>'','name'=> lang('no hour category'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bo->get_user_list();
-				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
+				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				$values_combo_box[5]  = $this->bo->get_user_list();
+				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
+				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
+
 
 				$datatable['actions']['form'] = array
 					(
@@ -340,6 +341,15 @@
 									'tab_index' => 4
 								),
 								array
+								( //boton 	search criteria
+									'id' => 'btn_criteria_id',
+									'name' => 'criteria_id',
+									'value'	=> lang('search criteria'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 5
+								),
+							/*	array
 								( //boton 	USER
 									'id' => 'btn_user_id',
 									'name' => 'filter',
@@ -348,15 +358,19 @@
 									'style' => 'filter',
 									'tab_index' => 5
 								),
-								array
-								( //boton 	search criteria
-									'id' => 'btn_criteria_id',
-									'name' => 'criteria_id',
-									'value'	=> lang('search criteria'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 6
-								),
+							*/
+									array
+									( //boton 	USER
+										//	'id' => 'btn_user_id',
+										'id' => 'sel_filter', // testing traditional listbox for long list
+										'name' => 'filter',
+										'value'	=> lang('User'),
+										'type' => 'select',
+										'style' => 'filter',
+										'values' => $values_combo_box[5],
+										'onchange'=> 'onChangeSelect("filter");',
+										'tab_index' => 6
+									),
 								//for link "columns", next to Export button
 								array
 								(
@@ -457,12 +471,12 @@
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
 									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								),
+								)/*,
 								array
 								( //div values  combo_box_5
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)
+								)*/
 
 							)
 						)
@@ -943,6 +957,16 @@
 				if(is_array($insert_record))
 				{
 					$values = $this->bocommon->collect_locationdata($values,$insert_record);
+				}
+
+				if(isset($values['new_project_id']) && $values['new_project_id'] && !$boproject->read_single_mini($values['new_project_id']))
+				{
+					$receipt['error'][]=array('msg'=>lang('the project %1 does not exist', $values['new_project_id']));
+				}
+
+				if(isset($values['new_project_id']) && $values['new_project_id'] && $values['new_project_id'] == $values['project_id'])
+				{
+					unset($values['new_project_id']);
 				}
 
 				if(!$values['title'])
@@ -1592,6 +1616,44 @@
 				$myButtons[]	= $notify_info['buttons'];
 			}
 
+
+
+			$myColumnDefs[] = array
+				(
+					'name'		=> "4",
+					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
+				);	
+
+
+			$content_email =  execMethod('property.bocommon.get_vendor_email', isset($values['vendor_id']) ? $values['vendor_id'] : 0 );
+			
+			if(isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+				$_recipients_found = array();
+				foreach($content_email as &$vendor_email)
+				{
+					if(in_array($vendor_email['value_email'], $values['mail_recipients']))
+					{
+						 $vendor_email['value_select'] = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
+						 $_recipients_found[] = $vendor_email['value_email'];
+					}
+				}
+				$value_extra_mail_address = implode(',', array_diff($values['mail_recipients'], $_recipients_found));
+			}
+
+			$datavalues[] = array
+				(
+					'name'					=> "4",
+					'values' 				=> json_encode($content_email),
+					'total_records'			=> count($content_email),
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'edit_action'			=> "''",
+					'footer'				=> 0
+				);
+
+
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
 			{
@@ -1612,12 +1674,18 @@
 			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+			$user_list = $this->bocommon->get_user_list('select', isset($values['user_id']) && $values['user_id'] ? $values['user_id'] : $this->account ,false,false,-1,false,false,'',-1);
+			foreach ($user_list as &$user)
+			{
+				$user['id'] = $user['user_id'];
+			}
+			
+			$value_coordinator = isset($project['coordinator']) ? $GLOBALS['phpgw']->accounts->get($project['coordinator'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 
-			$value_user = isset($values['user_id']) ? $GLOBALS['phpgw']->accounts->get($values['user_id'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 			$data = array
 				(
 					'mode'									=> $mode,
-					'value_user'							=> $value_user,
+					'value_coordinator'						=> $value_coordinator,
 					'event_data'							=> $event_data,
 					'link_claim'							=> $link_claim,
 					'lang_claim'							=> lang('claim'),
@@ -1744,8 +1812,7 @@
 					'lang_coordinator'						=> lang('Coordinator'),
 					'lang_sum'								=> lang('Sum'),
 					'select_user_name'						=> 'values[coordinator]',
-					'user_list'								=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
-
+					'user_list'								=> array('options' => $user_list),
 					'status_list'							=> $this->bo->select_status_list('select',$values['status']),
 					'status_name'							=> 'values[status]',
 					'lang_no_status'						=> lang('Select status'),
@@ -1771,6 +1838,7 @@
 					'lang_key_deliver'						=> lang('key deliver location'),
 					'lang_key_deliver_statustext'			=> lang('Select where to deliver the key'),
 
+					'value_approved'						=> isset($values['approved']) ? $values['approved'] : '',
 					'need_approval'							=> $need_approval,
 					'lang_ask_approval'						=> lang('Ask for approval'),
 					'lang_ask_approval_statustext'			=> lang('Check this to send a mail to your supervisor for approval'),
@@ -1787,10 +1855,12 @@
 					'lang_upload_file'						=> lang('Upload file'),
 					'lang_file_statustext'					=> lang('Select file to upload'),
 					'value_billable_hours'					=> $values['billable_hours'],
-					'base_java_notify_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
+					'base_java_url'							=> "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
+					'base_java_notify_url'					=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
 					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
 					'lang_edit_statustext'					=> lang('Edit this entry '),
 					'lang_edit'								=> lang('Edit'),
+					'value_extra_mail_address'				=> $value_extra_mail_address
 				);
 
 			$appname						= lang('Workorder');
