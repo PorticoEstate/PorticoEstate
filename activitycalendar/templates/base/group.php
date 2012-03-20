@@ -5,6 +5,8 @@
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('group') ?></h1>
 </div>
+<?php echo activitycalendar_uicommon::get_page_message($message) ?>
+<?php echo activitycalendar_uicommon::get_page_error($error) ?>
 <div class="yui-content">
 	<div id="details">
 		<form action="#" method="post">
@@ -58,6 +60,15 @@
 					if ($editable) {
 						echo '<input type="submit" name="save_group" value="' . lang('save') . '"/>';
 						echo '<input type="submit" name="store_group" value="' . lang('store') . '"/>';
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
+					}
+					else
+					{
+						if(!$group->get_transferred())
+						{
+							echo '<input type="submit" name="edit_group" value="' . lang('edit') . '"/>';
+						}
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
 					}
 				?>
 			</div>
