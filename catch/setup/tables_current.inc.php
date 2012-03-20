@@ -86,6 +86,7 @@
 				'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
 				'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
+				'history_old_value' => array('type' => 'text','nullable' => true),
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
 			),
 			'pk' => array('history_id'),
