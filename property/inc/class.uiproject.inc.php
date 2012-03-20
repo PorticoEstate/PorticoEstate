@@ -1385,7 +1385,7 @@
 
 				if(!isset($values['workorder_budget']) && $save)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
+//					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
 				}
 
 				if (!$this->bocommon->check_perms($values['grants'],PHPGW_ACL_EDIT))
