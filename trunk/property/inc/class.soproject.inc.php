@@ -671,9 +671,11 @@
 				$this->db->query($sql_workder);
 				while ($this->db->next_record())
 				{
+					$closed = false;
 					if($this->db->f('closed'))
 					{
 						$_sum = 0;
+						$closed = true;
 					}
 					else if($this->db->f('contract_sum') > 0)
 					{
@@ -693,7 +695,17 @@
 					}
 
 					$_actual_cost = (int)$this->db->f('actual_cost');
-					$project['combined_cost']	+= ($_sum - $_actual_cost);
+
+					if($closed)
+					{
+						$__actual_cost = 0;
+					}
+					else
+					{
+						$__actual_cost = $_actual_cost;
+					}
+					
+					$project['combined_cost']	+= ($_sum - $__actual_cost);
 					$project['actual_cost']		+= $_actual_cost;
 					$project['billable_hours']	+= (int)$this->db->f('billable_hours');
 				}
