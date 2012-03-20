@@ -77,6 +77,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
 		unset($org_info);
 		unset($contact1);
 		unset($contact2);
@@ -121,7 +122,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
-				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $group->get_id(), 'type' => 'group', 'saved_ok' => 'yes'));
 			}
 			else if(isset($_POST['store_group'])) // The user has pressed the store button
 			{
@@ -179,11 +180,13 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$group->set_change_type('added');
 					$group->set_transferred(true);
 					$sogroup->update_local($group);
+					$message = lang('messages_saved_form');
 				}
 				else
 				{
 					$error = lang('messages_form_error');
 				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $group->get_id(), 'type' => 'group', 'saved_ok' => 'yes'));
 			}
 			
 			$contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
@@ -196,10 +199,12 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				'contactperson1' => $cp1,
 				'contactperson2' => $cp2,
 				'editable' => true,
+				'cancel_link' => $cancel_link,
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
 			);
 			return $this->render('group.php', $data);
+			
 		}
 		else
 		{
@@ -251,6 +256,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
 			}
 			else if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
@@ -334,7 +340,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
-				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
 			}
 			else if(isset($_POST['update_organization'])) // The user has pressed the store button
 			{
@@ -404,6 +410,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org->set_change_type("added");
 				$org->set_transferred(true);
 				$so_org->update_local($org);
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
 			}
 			
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
@@ -416,6 +424,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				'districts'	=>	$districts,
 				'contactperson1' => $cp1,
 				'contactperson2' => $cp2,
+				'cancel_link' => $cancel_link,
 				'editable' => true,
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
@@ -430,19 +439,33 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
 		if($type)
 		{
+			if(isset($_POST['edit_group'])) // The user has pressed the save button
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', (array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => phpgw::get_var('id'), 'type' => phpgw::get_var('type'))));
+			}
+			$saved_OK = phpgw::get_var('saved_ok');
+			if($saved_OK)
+			{
+				$message = lang('group_saved_form');
+			}
 			//var_dump($type);
+			//$edit_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations', 'id' => $id, 'type' => $type));
 			$so = activitycalendar_sogroup::get_instance();
-			$group_array = $so->get(null, null, null, null, null, null, array('id' => $id));
+			$group_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
 			if(count($group_array) > 0){
 				$keys = array_keys($group_array);
 				$group = $group_array[$keys[0]];
+				_debug_array($group);
 			}
 			
 			$data = array
 			(
 				'group' 	=> $group,
+				'cancel_link' => $cancel_link,
+				'message' => $message,
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
 			);
@@ -451,6 +474,16 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		else
 		{
 			//var_dump('org');
+			if(isset($_POST['edit_organization'])) // The user has pressed the save button
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => phpgw::get_var('id')));
+			}
+			$saved_OK = phpgw::get_var('saved_ok');
+			if($saved_OK)
+			{
+				$message = lang('organization_saved_form');
+			}
+			//$edit_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations', 'id' => $id));
 			$so = activitycalendar_soorganization::get_instance();
 			$org_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
 			if(count($org_array)>0){
@@ -463,6 +496,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			$data = array
 			(
 				'organization' 	=> $org,
+				'cancel_link' => $cancel_link,
+				'message' => $message,
 				'errorMsgs' => $errorMsgs,
 				'infoMsgs' => $infoMsgs
 			);

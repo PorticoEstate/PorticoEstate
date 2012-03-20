@@ -105,6 +105,7 @@ var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo la
 					}
 					else
 					{
+						echo '<input type="submit" name="edit_arena" value="' . lang('edit') . '"/>';
 						echo '<a href="'.$cancel_link.'">' . lang('back') . '</a>';
 					}
 				?>
