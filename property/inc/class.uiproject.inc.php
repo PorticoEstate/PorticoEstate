@@ -485,7 +485,7 @@
 			$project_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'dry_run' => $dry_run));
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
-
+_debug_array($project_list);
 			$content = array();
 			$j = 0;
 			if (isset($project_list) AND is_array($project_list))
@@ -699,7 +699,7 @@
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= '""';//isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
+					$datatable['headers']['header'][$i]['formatter'] 		= isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
 
 					$datatable['headers']['header'][$i]['className']		= isset($uicols['classname'][$i]) && $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -822,7 +822,7 @@
 			);
 
 			// values for datatable
-_debug_array($datatable);
+
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
 				foreach( $datatable['rows']['row'] as $row )
