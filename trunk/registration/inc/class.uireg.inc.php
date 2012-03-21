@@ -90,9 +90,57 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step1')));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step1', 'logindomain' => $_REQUEST['logindomain'] )));
 			$this->template->set_var('lang_username',lang('Username'));
 			$this->template->set_var('lang_submit',lang('Submit'));
+
+			if( $GLOBALS['phpgw_info']['server']['domain_from_host'] 
+				&& !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
+			{
+				$this->template->set_var(
+						array(
+							'domain_selects'	=> '',
+							'logindomain'		=> $_SERVER['SERVER_NAME']
+						)
+					);
+				$this->template->parse('domain_from_hosts', 'domain_from_host');
+			}
+			elseif( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
+			{
+				$options = '';
+				foreach($GLOBALS['_phpgw_domain'] as $domain_name => $domain_vars)
+				{
+					$selected = '';
+					if (isset($_REQUEST['logindomain']) && $_REQUEST['logindomain'] == $domain_name)
+					{
+						$selected = 'selected =  "selected"';
+					}
+
+					$domain_display_name = str_replace('_', ' ', $domain_name);
+					$options .=  <<<HTML
+					<option value='{$domain_name}'{$selected}>{$domain_display_name}</option>
+HTML;
+				}
+
+				$this->template->set_var('domain_options', $options);
+
+				$this->template->set_var(
+						array(
+							'domain_from_hosts'	=> '',
+							'lang_domain'		=> lang('domain')
+						)
+					);
+			}
+			else
+			{
+				$this->template->set_var(
+						array(
+							'domain_selects'		=> '',
+							'domain_from_hosts'	=> ''
+						)
+					);
+
+			}
 
 			$this->template->pfp('out','form');
 
@@ -150,7 +198,7 @@
 				}
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step2')));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step2','logindomain' => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_password',lang('Password'));
 			$this->template->set_var('lang_reenter_password',lang('Re-enter password'));
 			$this->template->set_var('lang_submit',lang('Submit'));
@@ -181,7 +229,7 @@
 
 			if ($this->config['display_tos'])
 			{
-			$this->template->set_var('tos_link',$GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.tos')));
+			$this->template->set_var('tos_link',$GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.tos','logindomain' => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_tos_agree',lang('I have read the terms and conditions and agree by them.'));
 				if ($r_reg['tos_agree'])
 				{
@@ -213,7 +261,7 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw1')));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw1','logindomain' => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_explain',lang('After you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.'));
 			$this->template->set_var('lang_username',lang('Username'));
 			$this->template->set_var('lang_submit',lang('Submit'));
@@ -238,7 +286,7 @@
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw3')));
+			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.lostpw3','logindomain' => $_REQUEST['logindomain'])));
 			$this->template->set_var('value_username', $lid);
 			$this->template->set_var('lang_changepassword',lang("Change password for user"));
 			$this->template->set_var('lang_enter_password',lang('Enter your new password'));
@@ -400,7 +448,7 @@
 			else
 			{
 				/* ($this->config['activate_account'] == 'immediately') */
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step4', 'reg_id' => $reg_id)));
+				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step4', 'reg_id' => $reg_id,'logindomain' => $_REQUEST['logindomain'])));
 			}
 		}
 

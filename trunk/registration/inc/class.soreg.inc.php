@@ -78,7 +78,7 @@
 			}
 
 
-			$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.step4', 'reg_id'=> $this->reg_id),false,true);
+			$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.step4', 'reg_id'=> $this->reg_id, 'logindomain' => $_REQUEST['logindomain']),false,true);
 			$GLOBALS['phpgw']->template->set_var('activate_url',"</br><a href='$url'>Link.</a></br>");
 
 			if ($this->config['support_email'])
@@ -155,7 +155,7 @@
 					'message' => 'lostpw_email.tpl'
 				));
 
-				$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.lostpw2', 'reg_id'=> $reg_id),false,true);
+				$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.lostpw2', 'reg_id'=> $reg_id,'logindomain' => $_REQUEST['logindomain']),false,true);
 				$GLOBALS['phpgw']->template->set_var('firstname',$info['firstname']);
 				$GLOBALS['phpgw']->template->set_var('lastname',$info['lastname']);
 				$GLOBALS['phpgw']->template->set_var('activate_url',"</br><a href='$url'>Link.</a></br>");
