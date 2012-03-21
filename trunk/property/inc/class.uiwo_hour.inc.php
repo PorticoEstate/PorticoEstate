@@ -1440,10 +1440,9 @@
 				$receipt['error'][]=array('msg'=>lang('No mailaddress is selected'));
 			}
 
-			if($to_email || $print || ($workorder['mail_recipients'] && $_POST['send_order']))
+			if($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
 			{
-				$_to = $workorder['mail_recipients'] ? implode(';', $workorder['mail_recipients']) : $to_email;
-				
+				$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : $to_email;
 				$email_data['use_yui_table'] = false;
 
 				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/wo_hour'));
