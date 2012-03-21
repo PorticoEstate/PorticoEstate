@@ -485,7 +485,7 @@
 			$project_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'dry_run' => $dry_run));
 			$uicols	= $this->bo->uicols;
 			$count_uicols_name=count($uicols['name']);
-_debug_array($project_list);
+
 			$content = array();
 			$j = 0;
 			if (isset($project_list) AND is_array($project_list))

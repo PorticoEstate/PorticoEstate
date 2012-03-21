@@ -657,7 +657,7 @@
 					$project['loc' . ($m+1)] = $location[$m];
 					$project['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
-
+_debug_array($project);
 				$project['combined_cost']	= 0;
 				$project['actual_cost']		= 0;
 				$project['billable_hours']	= 0;
