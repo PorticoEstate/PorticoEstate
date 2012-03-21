@@ -2407,7 +2407,8 @@ JS;
 									$_values[] = urlencode($values[$__substitute]);									
 								}
 							}
-							$integration_src .= '&' . str_replace($matches[0], $_values, $_config_section_data['location_data']);
+							//FIXME
+							$integration_src .= $_config_section_data['url_separator'] . str_replace($matches[0], $_values, $_config_section_data['location_data']);
 						}
 
 						if(isset($_config_section_data['auth_key_name']) && $_config_section_data['auth_key_name'])
