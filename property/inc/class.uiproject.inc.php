@@ -699,7 +699,7 @@
 
 				if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';//($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['formatter'] 		= '""';//isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
 
 					$datatable['headers']['header'][$i]['className']		= isset($uicols['classname'][$i]) && $uicols['classname'][$i] ? $uicols['classname'][$i] : '';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -812,17 +812,18 @@
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
 			//values for Pagination
 			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
+			(
+				'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+				'startIndex' 		=> $datatable['pagination']['records_start'],
+				'sort'				=> $datatable['sorting']['order'],
+				'dir'				=> $datatable['sorting']['sort'],
+				'records'			=> array()
+			);
 
 			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
 				foreach( $datatable['rows']['row'] as $row )
 				{
 					$json_row = array();
@@ -830,12 +831,13 @@
 					{
 						if(isset($column['format']) && $column['format']== "link" && isset($column['java_link']) && $column['java_link']==true)
 						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 						}
 						else if(isset($column['format']) && $column['format']== "link")
 						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' title='{$column['statustext']}'>" .$column['value']."</a>";
-						}else
+							$json_row[$column['name']] = "<a href='{$column['link']}' title='{$column['statustext']}'>{$column['value']}</a>";
+						}
+						else
 						{
 							$json_row[$column['name']] = $column['value'];
 						}
