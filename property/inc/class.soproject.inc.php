@@ -723,7 +723,7 @@
 
 			$dataset = array();
 			$j=0;
-_debug_array($project_list);
+
 			foreach($project_list as $project)
 			{
 				foreach ($project as $field => $value)
@@ -731,8 +731,8 @@ _debug_array($project_list);
 					$dataset[$j][$field] = array
 					(
 						'value'		=> $value,
-						'datatype'	=> $_datatype[$field],
-						'attrib_id'	=> $_attrib[$field]
+						'datatype'	=> isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
+						'attrib_id'	=> isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
 					);
 				}
 				$j++;
