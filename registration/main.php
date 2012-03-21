@@ -22,7 +22,7 @@
 
 	// Note: This is current not a drop in install, it requires some manual installation
 	//       Take a look at the README file
-	$domain         = 'default';
+	$domain         = isset($_REQUEST['logindomain']) && $_REQUEST['logindomain'] ? $_REQUEST['logindomain'] : 'default';
 	$template_set   = 'checkwithmom';
 
 
@@ -42,6 +42,7 @@
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
 	$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+	$GLOBALS['_phpgw_domain'] = $GLOBALS['phpgw_domain'];
 
 	if(!$_domain_info)
 	{
