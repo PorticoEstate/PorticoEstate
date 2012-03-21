@@ -520,7 +520,16 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			}
 			catch (phpmailerException $e)
 			{
-				//var_dump($e);
+				if($e)
+				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text'	=> 'uiactivities::send_mailnotification_to_organization() : error when trying to execute %1. Error: %2',
+						'p1'	=> 'send()',
+						'p2'	=> $e->getMessage(),
+						'line'	=> __LINE__,
+						'file'	=> __FILE__
+					));
+				}
 			}
 		}
 	}
@@ -555,6 +564,16 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			}
 			catch (phpmailerException $e)
 			{
+				if($e)
+				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text'	=> 'uiactivities::send_mailnotification_to_group() : error when trying to execute %1. Error: %2',
+						'p1'	=> 'send()',
+						'p2'	=> $e->getMessage(),
+						'line'	=> __LINE__,
+						'file'	=> __FILE__
+					));
+				}
 			}
 		}
 	}
