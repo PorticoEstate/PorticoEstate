@@ -364,3 +364,23 @@
 		}
 	}
 
+	/**
+	* Update catch version from 0.9.17.512 to 0.9.17.513
+	* Add history_old_value
+	*/
+
+	$test[] = '0.9.17.512';
+	function catch_upgrade0_9_17_512()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_history','history_old_value',array('type' => 'text','nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.513';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+
+
