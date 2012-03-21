@@ -738,8 +738,8 @@
 				$j++;
 			}
 
-_debug_array($dataset);
 			$values = $this->custom->translate_value($dataset, $location_id);
+_debug_array($values);
 			return $values;
 		}
 
