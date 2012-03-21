@@ -509,7 +509,14 @@ JS;
 								$ret[$j][$field] =   lang('yes');
 								break;
 							default:
-								$ret[$j][$field] =  stripslashes($data['value']);
+								if(is_array($data['value']))
+								{
+									$ret[$j][$field] =  $data['value'];								
+								}
+								else
+								{
+									$ret[$j][$field] =  stripslashes($data['value']);
+								}
 						}
 					}
 
