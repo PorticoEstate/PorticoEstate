@@ -822,6 +822,7 @@
 			);
 
 			// values for datatable
+_debug_array($datatable);
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
 				foreach( $datatable['rows']['row'] as $row )
