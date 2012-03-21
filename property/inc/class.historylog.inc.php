@@ -63,6 +63,10 @@
 			{
 				$selector = 'entity';
 			}
+			else if(substr($appname,0,5)=='catch')
+			{
+				$selector = 'catch';
+			}
 			else
 			{
 				$selector = $appname;
@@ -70,29 +74,30 @@
 
 			switch($selector)
 			{
-			case 'request':
-				$this->table='fm_request_history';
-				break;
-			case 'workorder':
-				$this->table='fm_workorder_history';
-				break;
-			case 'project':
-				$this->table='fm_project_history';
-				break;
-			case 'tts':
-				$this->table='fm_tts_history';
-				break;
-			case 'document':
-				$this->table='fm_document_history';
-				break;
-			case 'entity':
-				$this->table='fm_entity_history';
-				$this->attrib_id_field = ',history_attrib_id';
-				break;
-			case 's_agreement':
-				$this->table='fm_s_agreement_history';
-				$this->attrib_id_field = ',history_attrib_id';
-				$this->detail_id_field = ',history_detail_id';
+				case 'request':
+					$this->table='fm_request_history';
+					break;
+				case 'workorder':
+					$this->table='fm_workorder_history';
+					break;
+				case 'project':
+					$this->table='fm_project_history';
+					break;
+				case 'tts':
+					$this->table='fm_tts_history';
+					break;
+				case 'document':
+					$this->table='fm_document_history';
+					break;
+				case 'entity':
+				case 'catch':
+					$this->table ="fm_{$selector}_history";
+					$this->attrib_id_field = ',history_attrib_id';
+					break;
+				case 's_agreement':
+					$this->table='fm_s_agreement_history';
+					$this->attrib_id_field = ',history_attrib_id';
+					$this->detail_id_field = ',history_detail_id';
 				break;
 			}
 

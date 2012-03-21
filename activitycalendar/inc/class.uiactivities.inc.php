@@ -467,9 +467,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		$body = "testmelding fra Aktivitetsoversikt";
     	}
     	
-    	var_dump($subject);
-    	var_dump($body);
-    	var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
+//    	var_dump($subject);
+//    	var_dump($body);
+//    	var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
     	
     	if($activity->get_group_id() && $activity->get_group_id() > 0)
     	{

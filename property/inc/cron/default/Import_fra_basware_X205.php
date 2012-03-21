@@ -579,15 +579,24 @@
 					$duplicate = true;
 					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
-					$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
-
-					if( isset($receipt['message']) )
+					$__bilagsnr = $_bilagsnr_ut ? $_bilagsnr_ut : $bilagsnr;
+					
+					if($_bilagsnr_ut)
 					{
-						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$_bilagsnr_ut}");
+						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
 					}
 					else
 					{
-						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$_bilagsnr_ut}, extern ref: {$_data['SCANNINGNO']}");
+						$receipt = $this->export->RullTilbake(false,false,false,$bilagsnr);
+					}
+
+					if( isset($receipt['message']) )
+					{
+						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$__bilagsnr}");
+					}
+					else
+					{
+						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$__bilagsnr}, extern ref: {$_data['SCANNINGNO']}");
 					}
 					unset($_bilagsnr_ut);
 				}
