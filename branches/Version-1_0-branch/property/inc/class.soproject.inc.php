@@ -731,13 +731,15 @@
 					$dataset[$j][$field] = array
 					(
 						'value'		=> $value,
-						'datatype'	=> $_datatype[$field],
-						'attrib_id'	=> $_attrib[$field]
+						'datatype'	=> isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
+						'attrib_id'	=> isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
 					);
 				}
 				$j++;
 			}
+
 			$values = $this->custom->translate_value($dataset, $location_id);
+
 			return $values;
 		}
 
