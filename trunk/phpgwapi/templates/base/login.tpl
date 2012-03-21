@@ -150,6 +150,12 @@
 					</div>
 
 					<p>{instruction}</p>
+					<p >
+						<a href="registration/main.php" target="_blank">{lang_new_user}</a>
+					</p>
+					</p>
+						<a href="registration/main.php?menuaction=registration.boreg.lostpw1" target="_blank">{lang_forgotten_password}</a>.
+					 </p>
 
 					<div id="lock"></div>
 
@@ -172,12 +178,12 @@
 		</div>
 	</div>
 </div>
-<div id="footer">
-	<p class="copyright">
-		<a href="http://www.porticoestate.no" target="_blank">{system} {version}</a> is Free Software released under the <a href=
-		"http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
-	 </p>
-	</div>
+<div id="footer"> 
+	<p class="copyright"> 
+		<a href="http://www.porticoestate.no" target="_blank">{system} {version}</a> is Free Software released under the <a href= 
+			"http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>. 
+	</p> 
+</div>
 </body>
 <!-- END login_form -->
 </html>
