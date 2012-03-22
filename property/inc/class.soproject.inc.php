@@ -706,12 +706,25 @@
 					}
 					
 					$project['combined_cost']	+= ($_sum - $__actual_cost);
-					if($project['combined_cost'] < 0)
-					{
-						$project['combined_cost'] = 0;
-					}
 					$project['actual_cost']		+= $_actual_cost;
 					$project['billable_hours']	+= (int)$this->db->f('billable_hours');
+				}
+
+				$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
+				. " FROM fm_ecobilag {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code  = fm_workorder.id"
+				. " WHERE fm_workorder.project_id = '{$project['project_id']}'";
+
+				$this->db->query($sql_workder);
+				while ($this->db->next_record())
+				{
+					$_actual_cost = (int)$this->db->f('actual_cost');
+					$project['combined_cost']	+= ($_sum - $_actual_cost);
+					$project['actual_cost']		+= $_actual_cost;
+				}
+
+				if($project['combined_cost'] < 0)
+				{
+					$project['combined_cost'] = 0;
 				}
 			}
 
@@ -1513,6 +1526,15 @@
 					$year = substr( $this->db->f('periode'), 0, 4 );
 					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
 				}
+
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilag WHERE pmwrkord_code = '{$order}' GROUP BY periode ORDER BY periode ASC ";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$year = substr( $this->db->f('periode'), 0, 4 );
+					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
+				}
+
 			}
 
 			$config = CreateObject('phpgwapi.config','property');
@@ -1561,6 +1583,13 @@
 			{
 				$cost_info[$year]['sum_orders'] += $order['amount'];
 				$sql = "SELECT godkjentbelop as amount FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$order['order_id']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$cost_info[$year]['sum_orders'] -= $this->db->f('amount');
+				}
+
+				$sql = "SELECT godkjentbelop as amount FROM fm_ecobilag WHERE pmwrkord_code = '{$order['order_id']}'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
