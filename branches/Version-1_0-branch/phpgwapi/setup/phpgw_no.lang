@@ -125,6 +125,8 @@ sorry, your login has expired	login	no	Beklager, din login er utgått
 todays date, eg. %1	common	no	Dagens dato, %1
 use cookies	login	no	use cookies
 username	login	no	Brukernavn
+new user	login	no	Ny bruker
+forgotten password	login	no	Glemt passord eller Brukernavn
 use a valid username and password to gain access to %1	login	no	Angi et gyldig brukernavn og passord for få tilgang til %1
 version	common	no	versjon
 you have been successfully logged out	login	no	Du har nå logget ut
