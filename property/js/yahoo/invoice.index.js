@@ -24,7 +24,7 @@
 		{order:1, name:'vendor_id',		id:'txt_vendor'},
 		{order:2, name:'invoice_id',	id:'txt_invoice'},
 		{order:3, name:'loc1',			id:'txt_loc1'},
-		{order:4, name:'voucher_id',	id:'txt_voucher'},
+		{order:4, name:'voucher_id',	id:'txt_voucher'}
 	]
 
 	// define Link Buttons
