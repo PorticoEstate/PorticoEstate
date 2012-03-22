@@ -505,6 +505,8 @@ use button to search for address	common	en	use Button to search for Address
 use button to search for calendarevent	common	en	use Button to search for Calendarevent
 use button to search for project	common	en	use Button to search for Project
 user	common	en	User
+new user	login	en	New User
+forgotten password	login	en	Forgotten Password or Username
 user accounts	common	en	user accounts
 user groups	common	en	user groups
 username	common	en	Username

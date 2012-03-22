@@ -217,7 +217,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php','menuaction=registration.uireg.ready_to_activate&reg_id=' . $reg_id));
+				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain'])));
 			}
 		}
 
@@ -278,7 +278,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw')));
+				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw','logindomain' => $_REQUEST['logindomain'])));
 			}
 		}
 
@@ -363,7 +363,7 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', 'menuaction=registration.boreg.step1&r_reg[loginid]=' . $_SERVER['PHP_AUTH_USER']));
+					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', array('menuaction' => 'registration.boreg.step1', 'r_reg[loginid]'=> $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain'])));
 				}
 			}
 
