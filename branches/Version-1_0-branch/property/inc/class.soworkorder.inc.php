@@ -687,6 +687,22 @@
 					$workorder['loc' . ($m+1)] = $location[$m];
 					$workorder['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
+
+				$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
+				. " FROM fm_ecobilag  WHERE pmwrkord_code = '{$workorder['workorder_id']}'";
+
+				$this->db->query($sql_workder);
+				while ($this->db->next_record())
+				{
+					$_actual_cost = (int)$this->db->f('actual_cost');
+					$workorder['combined_cost']	-= $_actual_cost;
+					$workorder['actual_cost']	+= $_actual_cost;
+				}
+
+				if($workorder['combined_cost'] < 0)
+				{
+					$workorder['combined_cost'] = 0;
+				}
 			}
 
 			return $workorder_list;
@@ -1087,7 +1103,18 @@
 			$old_billable_hours	= $this->db->f('billable_hours');
 			$old_approved		= $this->db->f('approved');
 
-			if ($this->db->f('calculation') > 0)
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
+			{
+				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
+			}
+
+			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
+
+			if ( abs((int)$workorder['contract_sum']) > 0)
+			{
+				$combined_cost = (int)$workorder['contract_sum'];
+			}
+			else if ($this->db->f('calculation') > 0)
 			{
 				$calculation = $this->db->f('calculation');
 				$config	= CreateObject('phpgwapi.config','property');
@@ -1114,13 +1141,6 @@
 			{
 				$paid = 2;
 			}
-
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
-			{
-				$workorder['contract_sum'] 		= str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],'',$workorder['contract_sum']);
-			}
-			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
-
 
 			$value_set = array
 				(
