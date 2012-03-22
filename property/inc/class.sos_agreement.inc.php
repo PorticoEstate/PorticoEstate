@@ -392,11 +392,15 @@
 					{
 						if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH')
 						{
-							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
+							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+						}
+						else if($this->db->f('datatype')=='I')
+						{
+							$query_arr[]= "$entity_table." . $this->db->f('column_name') . ' = ' . (int)$query;
 						}
 						else
 						{
-							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
+							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
 						}
 					}
 
