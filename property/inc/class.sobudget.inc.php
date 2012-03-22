@@ -803,6 +803,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 			
+//-------start check paid-----------
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
 				. " FROM fm_ecobilagoverf"
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
@@ -826,6 +827,34 @@
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
 		
+//-------end check paid-----------
+
+//-------start check active invoices-----------
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
+				. " FROM fm_ecobilag"
+				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
+				. " {$this->join} fm_location1 ON fm_ecobilag.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code = fm_workorder.id"
+				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " WHERE (periode >= 0 AND periode <= $end_periode OR periode IS NULL) {$filtermethod}"
+				. " GROUP BY fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
+				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
+				$sum_actual_cost += $_actual_cost;
+				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
+				$accout_info[$this->db->f($b_account_field)] = true;
+				$district[(int)$this->db->f('district_id')] = true;
+				$ecodimb[(int)$this->db->f('dimb')] = true;
+			}
+
+//-------end check active invoices-----------
+
 // start service agreements
 
 			$filtermethod = " fm_s_agreement_budget.year = $year";
@@ -848,8 +877,6 @@
 				$filtermethod .= " $where fm_s_agreement_budget.ecodimb={$dimb_id}";
 				$where = 'AND';
 			}
-
-
 
 			$sql = "SELECT sum(budget) as budget, count(fm_s_agreement.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, fm_s_agreement_budget.ecodimb"
 				. " FROM fm_s_agreement"
@@ -876,6 +903,7 @@
 			}
 
 
+//-------start check paid-----------
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilagoverf.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
 				. " FROM fm_ecobilagoverf"
@@ -901,7 +929,59 @@
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
 
+//-------end check paid-----------
 
+//-------start check active invoices-----------
+
+			$filtermethod = '';
+			$where = 'WHERE';
+
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " $where fm_s_agreement.category = " . (int)$cat_id;
+				$where = 'AND';
+			}
+
+			if ($grouping > 0)
+			{
+				$filtermethod .= " $where fm_b_account.category='$grouping' ";
+				$where = 'AND';
+			}
+
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
+
+
+			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilag.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
+				. " FROM fm_ecobilag"
+				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
+				. " {$this->join} fm_s_agreement ON fm_ecobilag.pmwrkord_code = fm_s_agreement.id"
+				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
+				. " {$filtermethod}"
+				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb";
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$_actual_cost = round($this->db->f('actual_cost'));
+				$_account_value = $this->db->f($b_account_field);
+				$_dimb = (int)$this->db->f('ecodimb');
+				
+				$sum_actual_cost += $_actual_cost;
+				$actual_cost[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
+				$obligations[$_account_value][$_dummy_district][$_dimb] -= $_actual_cost;
+				$accout_info[$_account_value] = true;
+				$district[$_dummy_district] = true;
+				$ecodimb[(int)$this->db->f('dimb')] = true;
+			}
+
+
+//-------end check active invoices-----------
 // end service agreements
 			$this->sum_budget_cost		= $sum_budget_cost;
 			$this->sum_obligation_cost	= $sum_obligation_cost;
