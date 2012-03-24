@@ -2,8 +2,11 @@ account password retrieval	registration	no	Bruker passord re-set
 account registration	registration	no	Ny bruker
 address	registration	no	Adresse
 after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	no	Etter at du angir ditt brukernavn, vil du få en e-post til den adressen du oppga ved registrering for å resette passordet
+Birthday	registration	no	Fødselsdag
 change password for user	registration	no	Bytt passord for user
 checkbox	registration	no	Checkbox
+City	registration	no	Poststed
+Country	registration	no	Land
 current fields:	registration	no	Gjeldende felt:
 dropdown	registration	no	Dropdown
 enter your new password	registration	no	Skriv inn ditt nye passord
@@ -24,8 +27,9 @@ sorry, that username is already taken.	registration	no	Beklager, det brukernavne
 textarea	registration	no	Tekstfelt
 the passwords you entered don't match	registration	no	Passordene du anga er ikke like
 the two passwords are not the same	registration	no	Passordene er ikke de samme
+Select One	registration	no	Velg fra liste
 type	registration	no	Type
-update/add	registration	no	Update/Add
+update/add	registration	no	Oppdater/Legg til
 Username	registration	no	Brukernavn
 values (for dropdown only; comma separated)	registration	no	Verdi (bare for Dropdown; comma separert)
 wrong session	registration	no	Feil session
