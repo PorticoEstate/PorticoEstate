@@ -117,6 +117,19 @@
 				$missing_fields[] = 'passwd_confirm';
 			}
 
+			if($r_reg['passwd'])
+			{
+				$account	= new phpgwapi_user();
+				try
+				{
+					$account->validate_password($r_reg['passwd']);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
+				}
+			}
+
 			reset ($this->fields);
 
 			foreach ( $this->fields as $field_name => $field_info )

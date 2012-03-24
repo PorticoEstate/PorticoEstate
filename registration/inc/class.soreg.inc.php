@@ -34,13 +34,16 @@
 		function account_exists($account_lid)
 		{
 			$this->db->transaction_begin();
-			$this->db->query("SELECT count(*) as cnt FROM phpgw_reg_accounts WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
-			$this->db->next_record();
+			$this->db->query("SELECT reg_lid FROM phpgw_reg_accounts WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				return true;
+			}
 
 			if ($GLOBALS['phpgw']->accounts->exists($account_lid) || $this->db->f('cnt'))
 			{
 				$this->db->transaction_commit();
-				return True;
+				return true;
 			}
 			else
 			{
@@ -48,7 +51,7 @@
 				$this->db->query("insert into phpgw_reg_accounts values ('','$account_lid','','" . time() . "')",__LINE__,__FILE__);
 				$this->db->transaction_commit();
 				$GLOBALS['phpgw']->session->appsession('loginid','registration',$account_lid);
-				return False;
+				return false;
 			}
 		}
 
@@ -90,7 +93,15 @@
 			$subject = $this->config['subject_confirm'] ? lang($this->config['subject_confirm']) : lang('Account registration');
 			$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
 
-			$smtp->msg('email',$fields['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'','html');
+			try
+			{
+				$smtp->msg('email',$fields['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'','html');
+			}
+			catch(Exception $e)
+			{
+				 //won't show because of redirect...
+				 //_debug_array($e->getMessage());
+			}
 
 			return $this->reg_id;
 		}
