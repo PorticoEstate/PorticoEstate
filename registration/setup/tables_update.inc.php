@@ -14,8 +14,6 @@
 	$test[] = '0.8.1';
 	function registration_upgrade0_8_1()
 	{
-		global $setup_info, $phpgw_setup;
-
 		$phpgw_setup->oProc->CreateTable('phpgw_reg_fields', array(
 			'fd' => array(
 				'field_name' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
@@ -31,8 +29,20 @@
 			'uc' => array()
 		));
 
-		$setup_info['registration']['currentver'] = '0.8.2';
-		return $setup_info['registration']['currentver'];
+		$GLOBALS['setup_info']['registration']['currentver'] = '0.8.2';
+		return $GLOBALS['setup_info']['registration']['currentver'];
 	}
 
-?>
+	$test[] = '0.8.2';
+	function registration_upgrade0_8_2()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_reg_accounts','reg_approved',array('type' => 'int','precision' => 2, 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['registration']['currentver'] = '0.8.3';
+			return $GLOBALS['setup_info']['registration']['currentver'];
+		}
+	}
