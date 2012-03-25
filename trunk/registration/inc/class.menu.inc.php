@@ -25,10 +25,26 @@
 		 */
 		public function get_menu()
 		{
+			$menus = array();
+
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'registration';
 
 			$menus['toolbar'] = array();
+
+
+			$menus['navbar'] = array
+				(
+					'registration' => array
+					(
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'registration.uipending.index')),
+						'text'	=> lang('registration'),
+						'image'	=> array('admin', 'navbar'),
+						'order'	=> -6,
+						'group'	=> 'systools'
+					),
+				);
+
 
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'registration'))
@@ -47,6 +63,15 @@
 					)
 				);
 			}
+
+
+//			$menus['navigation'] = array();
+			$menus['navigation']['pending'] = array
+				(
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'registration.uipending.index')),
+					'text'	=> lang('Pending for approval'),
+					'image'	=> array('property', 'location'),
+				);
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
