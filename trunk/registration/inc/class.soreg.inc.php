@@ -17,7 +17,7 @@
 
 	/* $Id$ */
 
-	class soreg
+	class registration_soreg
 	{
 		var $reg_id;
 		var $db;
@@ -216,10 +216,11 @@
 			if ($this->db->f('reg_id'))
 			{
 				return array(
-					'reg_id'   => $this->db->f('reg_id'),
-					'reg_lid'  => $this->db->f('reg_lid'),
-					'reg_info' => $this->db->f('reg_info'),
-					'reg_dla'  => $this->db->f('reg_dla')
+					'reg_id'   		=> $this->db->f('reg_id'),
+					'reg_lid'  		=> $this->db->f('reg_lid'),
+					'reg_info' 		=> $this->db->f('reg_info'),
+					'reg_dla'  		=> $this->db->f('reg_dla'),
+					'reg_approved'  => $this->db->f('reg_approved')
 				);
 			}
 			else

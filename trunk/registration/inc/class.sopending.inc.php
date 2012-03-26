@@ -38,29 +38,16 @@
 		var $total_records;
 		protected $global_lock = false;
 
-		function __construct($bocommon = '')
+		function __construct()
 		{
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->soadmin_location	= CreateObject('property.soadmin_location');
-			if(!$bocommon || !is_object($bocommon))
-			{
-				$this->bocommon			= CreateObject('property.bocommon');
-			}
-			else
-			{
-				$this->bocommon = $bocommon;
-			}
-			$this->custom 		= createObject('property.custom_fields');
-
 			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->socommon		= & $this->bocommon->socommon;
-
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 		}
 
-		function read($data)
+		public function read($data)
 		{
 			$start					= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter					= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
@@ -138,5 +125,39 @@
 
 			}
 			return $values;
+		}
+
+		public function approve_users($data)
+		{
+			$delete_approval = array();
+			$add_approval = array();
+			foreach($data['pending_users_orig'] as $id)
+			{
+				if(!in_array($id, $data['pending_users']))
+				{
+					$delete_approval[] = $id;
+				}
+			}
+
+			foreach($data['pending_users'] as $id)
+			{
+				if(!in_array($id, $data['pending_users_orig']))
+				{
+					$add_approval[] = $id;
+				}
+			}
+
+			$this->db->transaction_begin();
+			foreach ($delete_approval as $reg_id)
+			{
+				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = NULL WHERE reg_id = '{$reg_id}'",__LINE__,__FILE__);			
+			}
+
+			foreach ($add_approval as $reg_id)
+			{
+				$this->db->query("UPDATE phpgw_reg_accounts SET reg_approved = 1 WHERE reg_id = '{$reg_id}'",__LINE__,__FILE__);			
+			}
+
+			return $this->db->transaction_commit();
 		}
 	}

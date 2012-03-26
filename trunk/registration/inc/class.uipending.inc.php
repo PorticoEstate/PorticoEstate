@@ -2,8 +2,7 @@
 	/**
 	* phpGroupWare - registration
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
-	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
@@ -29,8 +28,6 @@
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('registration.uicommon');
-//	phpgw::import_class('registration.socontrol_area');
-
 /*
 	include_class('registration', 'check_list', 'inc/model/');
 	include_class('registration', 'date_generator', 'inc/component/');
@@ -60,12 +57,7 @@
 		(
 			'index'								=> true,
 			'query'								=> true,
-			'view_locations_for_control' 		=> true,
-			'register_control_to_location'		=> true,
-			'register_control_to_location_2'	=> true,
-			'get_locations_for_control'			=> true,
-			'get_location_category'				=> true,
-			'get_district_part_of_town'			=> true
+			'edit'						 		=> true
 		);
 
 		function __construct()
@@ -73,63 +65,26 @@
 			parent::__construct();
 		
 			$this->bo					= CreateObject('registration.bopending',true);
-			$this->bocommon				= & $this->bo->bocommon;
-
-			$this->type_id				= $this->bo->type_id;
-		
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
-			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
+			$this->status_id			= $this->bo->status_id;
 			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
-			$this->location_code		= $this->bo->location_code;
 		
 			self::set_active_menu('registration::pending');
 		}
 
 		function index()
 		{
-			if(phpgw::get_var('save_location'))
+			if($values = phpgw::get_var('values'))
 			{
-				//add component to control using component item ID
-				$items_checked = array();
-				$items = phpgw::get_var('values_assign');
-				$item_arr = explode('|',$items);
-				foreach($item_arr as $item)
-				{
-					$items_checked[] = explode(';',$item);
-				}
-				//var_dump($items_checked);
-
-				$control_id = phpgw::get_var('control_id');
-				//$location_code = phpgw::get_var('location_code');
-			
-				$control_location  = null;
-				$control_location_id = 0;
-			
-				foreach($items_checked as $location_code)
-				{
-					$control_location = $this->so_control->get_control_location($control_id, $location_code[0]);
+				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
+				$values['pending_users_orig'] = isset($values['pending_users_orig']) && $values['pending_users_orig'] ? array_unique($values['pending_users_orig']) : array();
 				
-					if($control_location == null )
-					{				
-						$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code[0]);
-					}
-				}
-			
-/*				if($control_location_id > 0)
-					return json_encode( array( "status" => "saved" ) );
-				else
-					return json_encode( array( "status" => "not_saved" ) );
-*/
+				$receipt = $this->bo->approve_users($values);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
-
 			}
 			else
 			{
@@ -165,6 +120,10 @@
 						'source' => self::link(array('menuaction' => 'registration.uipending.query', 'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
+								'key' => 'id',
+								'hidden' => true
+							),
+							array(
 								'key' => 'reg_id',
 								'label' => lang('id'),
 								'sortable'	=> true,
@@ -183,13 +142,14 @@
 							array(
 								'key' => 'reg_approved',
 								'label' => lang('approved'),
-								'sortable'	=> true
+								'sortable'	=> true,
+								'formatter' => 'FormatterCenter'
 							),
 							array(
 									'key' => 'checked',
 									'label' => lang('approve'),
 									'sortable' => false,
-									'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
+									'formatter' => 'formatterCheckPending',
 									'className' => 'mychecks'
 							),
 							array(
@@ -221,122 +181,116 @@
 			}	
 		}
 	
-		// Returns locations for a control
-		public function get_locations_for_control()
+
+		public function edit()
 		{
-			$control_id = phpgw::get_var('control_id');
-		
-			if(is_numeric($control_id) & $control_id > 0)
+			$id = phpgw::get_var('id', 'string');
+			$bo = createobject('registration.boreg');
+
+			if(isset($_POST['save']) && $id) // The user has pressed the save button
 			{
-				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
-		
-				foreach($locations_for_control_array as $location)
+				if(isset($control_item)) // Add new values to the control item
 				{
-					$results['results'][]= $location;
+					$values = phpgw::get_var('values');
+					$values['id'] = $id;
+
+					$this->bo->update_pending_user($values);
+
+					if($this->bo->update_pending_user($values))
+					{
+						$message = lang('messages_saved_form');
+					}
+					else
+					{
+						$error = lang('messages_form_error');
+					}
+
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 				}
-			
-				$results['total_records'] = count( $locations_for_control_array );
-				$results['start'] = 1;
-				$results['sort'] = 'location_code';
+			}
+			else if(isset($_POST['cancel'])) // The user has pressed the cancel button
+			{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 			}
 			else
 			{
-				$results['total_records'] = 0;
-			}			
-		
-			return $this->yui_results($results);
+				if($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+
+
+				if($id)
+				{
+					$user = $bo->get_pending_user($id);
+				}
+				
+				$fields = $bo->fields;
+				
+				$user_data = array();
+				$user_data[] = array
+				(
+					'text'	=> 'username',
+					'value' => $user['reg_lid']
+				);
+				
+				foreach ($fields as $key => $field_info)
+				{
+					if($user['reg_info'][$field_info['field_name']])
+					{
+						$user_data[] = array
+						(
+							'text'	=> $field_info['field_text'],
+							'value' => $user['reg_info'][$field_info['field_name']]
+						);
+					}
+				}
+_debug_array($user_data);
+_debug_array($fields);
+die();
+
+
+				$data = array
+				(
+					'value_id'				=> $id,
+					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+					'editable' 				=> true,
+					'user'					=> $user_data
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('registration') . '::' . lang('edit user');
+
+//				$this->use_yui_editor(array('what_to_do','how_to_do'));
+				
+				self::add_javascript('controller', 'controller', 'jquery.js');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+
+				self::render_template_xsl('user_edit', $data);
+			}
 		}
 	
 		public function query()
 		{
 			$status_id = phpgw::get_var('status_id');
 
-			$this->bo->sort = "ASC";
 			$this->bo->start = phpgw::get_var('startIndex');
 		
 			$user_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
 												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
-		
+			
 			foreach($user_list as $user)
 			{
 				$results['results'][]= $user;
 			}
-		
 			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
 			$results['sort'] = 'location_code';
-			$results['dir'] = "ASC";
+			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
 			array_walk($results['results'], array($this, 'add_links'), array($type));
 						
 			return $this->yui_results($results);
-		}
-
-		public function register_control_to_location_2()
-		{
-			$control_id = phpgw::get_var('control_id');
-			$location_code = phpgw::get_var('location_code');
-		
-			$control_location  = null;
-			$control_location_id = 0;
-		
-			$control_location = $this->so_control->get_control_location($control_id, $location_code);
-		
-			if($control_location == null ){
-			
-				$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code);
-			}
-		
-			if($control_location_id > 0)
-				return json_encode( array( "status" => "saved" ) );
-			else
-				return json_encode( array( "status" => "not_saved" ) );
-		}
-	
-		public function add_actions(&$value, $key, $params)
-		{
-			unset($value['query_location']);
-		
-			$value['ajax'] = array();
-			$value['actions'] = array();
-			$value['labels'] = array();
-			$value['parameters'] = array();
-/*		
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'registration.uipending.register_control_to_location_2','location_code' => $value['location_code'], 'phpgw_return_as' => 'json')));
-			$value['labels'][] = lang('add_location');
-			$value['parameters'][] = "control_id";
-			*/
-		}
-	
-		/*
-		 * Return categories based on chosen location
-		 */
-		public function get_location_category()
-		{
-			$type_id = phpgw::get_var('type_id');
-		 	$category_types = $this->bocommon->select_category_list(array(
-																		'format'=>'filter',
-																		'selected' => 0,
-																		'type' =>'location',
-																		'type_id' =>$type_id,
-																		'order'=>'descr'
-																	));
-			$default_value = array ('id'=>'','name'=>lang('no category selected'));
-			array_unshift($category_types,$default_value);
-			return json_encode( $category_types );
-		}
-	
-		/*
-		 * Return parts of town based on chosen district
-		 */
-		public function get_district_part_of_town()
-		{
-			$district_id = phpgw::get_var('district_id');
-			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',null,$district_id);
-			$default_value = array ('id'=>'','name'=>lang('no part of town'));
-			array_unshift($part_of_town_list,$default_value);
-
-			return json_encode( $part_of_town_list );
 		}
 	}
