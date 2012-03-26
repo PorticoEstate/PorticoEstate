@@ -67,8 +67,8 @@
 
 			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query					= phpgw::get_var('query');
-			$sort					= phpgw::get_var('sort');
-			$order					= phpgw::get_var('order');
+			$sort					= phpgw::get_var('dir');
+			$order					= phpgw::get_var('sort');
 			$filter					= phpgw::get_var('filter', 'int');
 			$status_id				= phpgw::get_var('status_id', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
@@ -87,7 +87,7 @@
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data','pending_user');
 
 			$this->start			= isset($data['start'])?$data['start']:'';
 			$this->filter			= isset($data['filter'])?$data['filter']:'';
@@ -102,7 +102,7 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','location',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data','pending_user',$data);
 			}
 		}
 
@@ -183,47 +183,61 @@
 			return $values;
 		}
 
-
 		/**
-		 * Arrange attributes within groups
+		 * Approve a list of pending users
 		 *
-		 * @param string  $location    the name of the location of the attribute
-		 * @param array   $attributes  the array of the attributes to be grouped
+		 * @param array   $values  the array users to change status
 		 *
-		 * @return array the grouped attributes
+		 * @return array receipt
 		 */
 
-
-		function save($location,$values_attribute,$action='',$type_id='',$location_code_parent='')
+		function approve_users($values)
 		{
-			if(is_array($values_attribute))
-			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
-			}
-
-			if ($action=='edit')
-			{
-				if ($this->so->check_location($location['location_code'],$type_id))
-				{
-					$receipt = $this->so->edit($location,$values_attribute,$type_id);
-				}
-				else
-				{
-					$receipt['error'][]=array('msg'=>lang('This location ID does not exist!'));
-				}
-			}
-			else
-			{
-				if(!$receipt['error'])
-				{
-					$receipt = $this->so->add($location,$values_attribute,$type_id);
-				}
-			}
+			$receipt = $this->so->approve_users($values);
 
 			$criteria = array
 				(
-					'appname'	=> 'property',
-					'location'	=> ".location.{$type_id}",
+					'appname'	=> 'registration',
+					'location'	=> ".pending.approve",
+					'allrows'	=> true
+				);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file) )
+				{
+					require_once $file;
+				}
+			}
+
+			return $receipt;
+		}
+		/**
+		 * Edit single user
+		 *
+		 * @param array   $values  the array of values to edit
+		 *
+		 * @return array receipt
+		 */
+
+
+		function edit($values)
+		{
+			$receipt = $this->so->edit($values);
+
+			$criteria = array
+				(
+					'appname'	=> 'registration',
+					'location'	=> ".pending.edit",
 					'allrows'	=> true
 				);
 

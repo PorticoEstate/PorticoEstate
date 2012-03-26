@@ -82,20 +82,17 @@
 </xsl:template>
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<script type="text/javascript">
-	<![CDATA[
-	]]>
-	</script>
 	<div id="data_paginator"/>
-	<div class="error_msg" style="margin-left:20px;">Du må velge bygg før du kan legge til en kontroll</div>
+	<div class="error_msg" style="margin-left:20px;">Du må velge bruker for godkjenning</div>
 	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
   	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
   	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
-  	<form action="#" name="location_form" id="location_form" method="post">
-  		<div class="location_submit"><input type="submit" name="save_location" id="save_location" value="{$label_submit}" onclick="return saveLocationToControl()"/></div>
+  	
+  	<form action="#" name="user_form" id="user_form" method="post">
+  		<div class="user_submit"><input type="submit" name="values[save_user]" id="save_user" value="{$label_submit}" onclick="return onSave()"/></div>
   	</form>
 </xsl:template>
 
@@ -130,7 +127,7 @@
 		var main_container = 'datatable-container';
 		var main_table_id = 'datatable';
 		var main_pag = 'data_paginator';
-		var related_table = new Array('locations_table');
+		var related_table = new Array('users_table');
 	
 		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
 		

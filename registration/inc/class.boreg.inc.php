@@ -256,6 +256,20 @@
 			$ui->welcome_screen();
 		}
 
+		public function get_pending_user($reg_id)
+		{
+			$so = createobject('registration.soreg');
+			$reg_info = $so->valid_reg($reg_id);
+			if($reg_info['reg_info'])
+			{
+				$reg_info['reg_info'] = unserialize(base64_decode($reg_info['reg_info']));
+				unset($reg_info['reg_info']['passwd']);
+				unset($reg_info['reg_info']['passwd_confirm']);
+			}
+			
+			return $reg_info;
+		}
+
 		//
 		// username
 		//
