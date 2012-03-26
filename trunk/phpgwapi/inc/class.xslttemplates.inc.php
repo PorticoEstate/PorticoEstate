@@ -84,7 +84,7 @@
 		*/
 		function halt($msg)
 		{
-			die($msg);
+			throw new Exception($msg);
 		}
 
 		 /**
