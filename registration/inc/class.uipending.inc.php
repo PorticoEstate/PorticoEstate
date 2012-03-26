@@ -65,6 +65,7 @@
 			parent::__construct();
 		
 			$this->bo					= CreateObject('registration.bopending',true);
+			$this->bocommon				= CreateObject('property.bocommon');
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
@@ -146,6 +147,12 @@
 								'formatter' => 'FormatterCenter'
 							),
 							array(
+								'key' => 'location_code',
+								'label' => lang('location'),
+								'sortable'	=> false
+							),
+
+							array(
 									'key' => 'checked',
 									'label' => lang('approve'),
 									'sortable' => false,
@@ -187,88 +194,103 @@
 			$id = phpgw::get_var('id', 'string');
 			$bo = createobject('registration.boreg');
 
-			if(isset($_POST['save']) && $id) // The user has pressed the save button
+			if(isset($_POST['save']) && $id)
 			{
-				if(isset($control_item)) // Add new values to the control item
+				$values = phpgw::get_var('values');
+
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+
+				if(isset($insert_record_entity) && is_array($insert_record_entity))
 				{
-					$values = phpgw::get_var('values');
-					$values['id'] = $id;
-
-					$this->bo->update_pending_user($values);
-
-					if($this->bo->update_pending_user($values))
+					for ($j=0;$j<count($insert_record_entity);$j++)
 					{
-						$message = lang('messages_saved_form');
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
 					}
-					else
-					{
-						$error = lang('messages_form_error');
-					}
+				}
 
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				$values['id'] = $id;
+
+				if($this->bo->update_pending_user($values))
+				{
+					$message = lang('messages_saved_form');
+					phpgwapi_cache::message_set($message, 'message');
+				}
+				else
+				{
+					$error = lang('messages_form_error');
+					phpgwapi_cache::message_set($message, 'error');
+				}
+
+			}
+
+			if (isset($_POST['cancel'])) // The user has pressed the cancel button
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
+			}
+
+			if($id)
+			{
+				$user = $bo->get_pending_user($id);
+			}
+				
+			$fields = $bo->fields;
+				
+			$user_data = array();
+			$user_data[] = array
+			(
+				'text'	=> 'username',
+				'value' => $user['reg_lid']
+			);
+				
+			foreach ($fields as $key => $field_info)
+			{
+				if($user['reg_info'][$field_info['field_name']])
+				{
+					$user_data[] = array
+					(
+						'text'	=> $field_info['field_text'],
+						'value' => $user['reg_info'][$field_info['field_name']]
+					);
 				}
 			}
-			else if(isset($_POST['cancel'])) // The user has pressed the cancel button
-			{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
-			}
-			else
-			{
-				if($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
 
+			$bolocation	= CreateObject('property.bolocation');
+			$user['location_data'] = isset($user['reg_info']['location_code']) && $user['reg_info']['location_code'] ? $bolocation->read_single($user['reg_info']['location_code'],array('view' => true)) : '';
+				
 
-				if($id)
-				{
-					$user = $bo->get_pending_user($id);
-				}
-				
-				$fields = $bo->fields;
-				
-				$user_data = array();
-				$user_data[] = array
-				(
-					'text'	=> 'username',
-					'value' => $user['reg_lid']
-				);
-				
-				foreach ($fields as $key => $field_info)
-				{
-					if($user['reg_info'][$field_info['field_name']])
-					{
-						$user_data[] = array
-						(
-							'text'	=> $field_info['field_text'],
-							'value' => $user['reg_info'][$field_info['field_name']]
-						);
-					}
-				}
+/*
+_debug_array($user);
 _debug_array($user_data);
 _debug_array($fields);
 die();
+*/
+
+			$location_data=$bolocation->initiate_ui_location(array(
+				'values'	=> $user['location_data'],
+				'type_id'	=> -1,
+				'no_link'	=> false, // disable lookup links for location type less than type_id
+				'tenant'	=> false,
+				'lookup_type'	=> 'form',
+				'lookup_entity'	=> false,
+				'entity_data'	=> false
+				));
 
 
-				$data = array
-				(
-					'value_id'				=> $id,
-					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
-					'editable' 				=> true,
-					'user'					=> $user_data
-				);
+			$data = array
+			(
+				'value_id'				=> $id,
+				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'editable' 				=> true,
+				'user_data'				=> $user_data,
+				'location_data'			=> $location_data
+			);
 
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('registration') . '::' . lang('edit user');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('registration') . '::' . lang('edit user');
 
-//				$this->use_yui_editor(array('what_to_do','how_to_do'));
-				
-				self::add_javascript('controller', 'controller', 'jquery.js');
-				self::add_javascript('controller', 'controller', 'ajax.js');
-				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-
-				self::render_template_xsl('user_edit', $data);
-			}
+			self::render_template_xsl('user_edit', $data);
 		}
 	
 		public function query()
@@ -280,8 +302,10 @@ die();
 			$user_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
 												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 			
-			foreach($user_list as $user)
+			foreach($user_list as &$user)
 			{
+				$reg_info = unserialize(base64_decode($user['reg_info']));
+				$user['location_code'] = $reg_info['location_code'];
 				$results['results'][]= $user;
 			}
 			$results['total_records'] = $this->bo->total_records;

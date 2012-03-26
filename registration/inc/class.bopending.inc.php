@@ -183,6 +183,12 @@
 			return $values;
 		}
 
+
+		public function update_pending_user($values)
+		{
+			return $this->so->update_pending_user($values);		
+		}
+
 		/**
 		 * Approve a list of pending users
 		 *
