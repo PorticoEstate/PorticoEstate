@@ -650,7 +650,7 @@ class rental_socontract extends rental_socommon
 	 */
 	public function last_updated($contract_id){
 		$ts_now = strtotime('now');
-		$sql = "UPDATE rental_contract SET last_updated=$ts_now";
+		$sql = "UPDATE rental_contract SET last_updated=$ts_now where id=$contract_id";
 		$result = $this->db->query($sql);
 		if(isset($result))
 		{
