@@ -72,6 +72,22 @@
 		$bcc ='';
 		$subject = "{$schema_text}::{$id}";
 
+		// Include something in subject
+		if(isset($config_data['email_include_in_subject']) && $config_data['email_include_in_subject'])
+		{
+			$params = explode('=&gt;', $config_data['email_include_in_subject']);
+			$_metadata = $this->db->metadata($target_table);
+			if ( isset( $_metadata[$params[1]] ) )
+			{
+				$this->db->query("SELECT {$params[1]} FROM $target_table WHERE id = {$id}",__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$subject .= "::{$params[0]} " . $this->db->f($params[1]);
+				}
+			}
+			unset($_metadata);
+		}
+
 		unset($_link_to_item);
 
 		if(isset($config_data['email_message']) && $config_data['email_message'])
