@@ -210,6 +210,20 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_group_name_local($group_id)
+	{
+		$result = "Ingen";
+    	if(isset($group_id)){
+	    	$q1="SELECT name FROM activity_group WHERE id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		
+		return $result;
+	}
+	
 	function get_orgid_from_group($group_id)
 	{
 		$result = 0;
@@ -300,6 +314,18 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	{
     	if(isset($group_id)){
 	    	$q1="SELECT description FROM bb_group WHERE id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$desc = $this->db->f('description');
+			}
+    	}
+		return $desc;
+	}
+	
+	function get_description_local($group_id)
+	{
+    	if(isset($group_id)){
+	    	$q1="SELECT description FROM activity_group WHERE id={$group_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$desc = $this->db->f('description');

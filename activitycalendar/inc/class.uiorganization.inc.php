@@ -167,10 +167,14 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					
 					$message = lang('messages_saved_form');	
 					
+					//get organization_id for the group:
+					$group_org_id = $sogroup->get_orgid_from_group($new_group_id);
+					
 					//get affected activities and update with new org id
 					$update_activities = $soactivity->get_activities_for_update($new_group_id, true);
 					foreach($update_activities as $act)
 					{
+						$act->set_organization_id($group_org_id);
 						$act->set_group_id($new_group_id);
 						$act->set_new_org(false);
 						$soactivity->store($act);
