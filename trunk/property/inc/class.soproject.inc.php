@@ -1443,7 +1443,8 @@
 				$this->db->query("UPDATE fm_project SET budget = {$new_budget_new_project}, reserve = reserve + {$reserve_old_project} WHERE id = {$new_project_id}" ,__LINE__,__FILE__);
 				$this->db->query("UPDATE fm_project SET budget = 0, reserve = 0 WHERE id =  " . (int)$project['id'] ,__LINE__,__FILE__);
 				$this->db->query("DELETE FROM fm_project_budget WHERE project_id =  " . (int)$project['id'] ,__LINE__,__FILE__);
-				$historylog->add('RM',(int)$project['id'],"Budsjett og alle bestillinger er flyttet fra prosjekt {$project['id']} til prosjekt {$new_project_id}");
+				$historylog->add('RM',(int)$project['id'],"Budsjett og alle bestillinger er overført fra prosjekt {$project['id']} til prosjekt {$new_project_id}");
+				$historylog->add('RM',$new_project_id,"Budsjett og alle bestillinger er overført fra prosjekt {$project['id']} til prosjekt {$new_project_id}");
 			}
 
 			$receipt['id'] = $project['id'];

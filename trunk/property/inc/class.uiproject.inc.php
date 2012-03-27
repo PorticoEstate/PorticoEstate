@@ -1379,6 +1379,8 @@
 			$record_history = array();
 			if(isset($bypass_error) || ((!isset($receipt['error']) || $add_request) && !$bypass) && $id)
 			{
+				$_transfer_new_project = isset($values['new_project_id']) && $values['new_project_id'] ? true : false;
+				
 				$values	= $this->bo->read_single($id);
 
 				if(!isset($values['origin']))
@@ -1386,7 +1388,7 @@
 					$values['origin'] = '';
 				}
 
-				if(!isset($values['workorder_budget']) && $save && !$values['new_project_id'])
+				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
 				}
