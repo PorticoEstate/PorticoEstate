@@ -127,6 +127,7 @@
 				//$organization = $this->so_organization->get_single($o_id);
 				
 				$get_org_from_local = false;
+				$new_org_group = false;
 				$new_org = phpgw::get_var('new_org');
 				if($new_org != null && $new_org == 'yes')
 				{
@@ -178,6 +179,7 @@
 					$desc = phpgw::get_var('org_description');
 					$organization = $this->so_organization->get_organization_local($o_id);
 					$new_org = true;
+					$new_org_group = true;
 					//var_dump($organization);
 				}
 				else if(is_numeric($o_id) && $o_id > 0)
@@ -218,6 +220,7 @@
 						$group = $this->so_group->get_group_local($g_id);
 						$person_ids = $this->so_group->get_contacts_local($g_id);
 						$organization = $this->so_organization->get_single($o_id);
+						$new_org_group = true;
 					}
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
@@ -301,6 +304,7 @@
 				$activity->set_contact_persons($person_ids);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				$activity->set_frontend(true);
+				$activity->set_new_org($new_org_group);
 				
 				$target_ok = false;
 				$district_ok = false;
