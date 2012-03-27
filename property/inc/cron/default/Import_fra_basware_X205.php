@@ -507,7 +507,6 @@
 
 				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-				$order_id 		= $_data['PURCHASEORDERNO'];
 				$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
 				$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 				$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
@@ -523,11 +522,28 @@
 					$buffer[$i]['artid'] = 1;
 				}
 
-				$kidnr 	= $_data['KIDNO'];
+				$kidnr 						= $_data['KIDNO'];
+				$_order_id					= $_data['PURCHASEORDERNO'];
+				$merknad					= '';
+				$order_id					= '';
+				$buffer[$i]['project_id']	= '';
 
-				if($order_id)
+				if(!$_order_id)
 				{
-					$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);
+					$merknad = 'Mangler bestillingsnummer';
+				}
+				else if (!ctype_digit($_order_id))
+				{
+					$merknad = 'bestillingsnummeret er på feil format: ' . $_order_id;				
+				}
+				else if (!$order_info = $this->get_order_info($_order_id))
+				{
+					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
+				}
+				else
+				{
+					$buffer[$i]['project_id'] = $this->soXport->get_project($_order_id);
+					$order_id = $_order_id;
 				}
 
 				$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
@@ -544,7 +560,7 @@
 				$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
 				$buffer[$i]['referanse']		= "ordre: {$order_id}";
 
-				$order_info = $this->get_order_info($order_id);
+
 
 				$buffer[$i]['dimb'] = $order_info['dimb'];
 				$buffer[$i]['dima'] = $order_info['dima'];
@@ -652,8 +668,6 @@
 				}
 
 				$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
-
-				$merknad = '';
 
 				$buffer[$i]['merknad'] = $merknad;
 				$buffer[$i]['splitt'] = $this->splitt;
