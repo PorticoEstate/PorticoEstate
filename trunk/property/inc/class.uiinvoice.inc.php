@@ -1712,7 +1712,7 @@ JS;
 					array
 					( // boton exportar
 						'type'	=> 'button',
-						'id'	=> 'done',
+						'id'	=> 'btn_done',
 						'tab_index' => 2,
 						'value'	=> lang('done')
 					),
