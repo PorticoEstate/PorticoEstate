@@ -528,6 +528,8 @@
 				$order_id					= '';
 				$buffer[$i]['project_id']	= '';
 
+				$order_info = $this->get_order_info($_order_id); // henter default verdier selv om  $_order_id ikke er gyldig.
+
 				if(!$_order_id)
 				{
 					$merknad = 'Mangler bestillingsnummer';
@@ -536,7 +538,7 @@
 				{
 					$merknad = 'bestillingsnummeret er på feil format: ' . $_order_id;				
 				}
-				else if (!$order_info = $this->get_order_info($_order_id))
+				else if (!$order_info['order_exist'])
 				{
 					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
 				}
@@ -778,7 +780,10 @@
 			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
+			if(	$this->db->next_record())
+			{
+				$order_info['order_exist'] = true;
+			}
 			if ($this->db->f('location_code'))
 			{ 
 				$parts = explode('-',$this->db->f('location_code'));
