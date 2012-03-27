@@ -452,15 +452,33 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			
 			if($activity->get_group_id() && $activity->get_group_id() > 0)
 			{
-				$contacts = activitycalendar_sogroup::get_instance()->get_contacts($activity->get_group_id());
-				$activity->set_contact_persons($contacts);
-				$org_tmp = activitycalendar_sogroup::get_instance()->get_orgid_from_group($activity->get_group_id());
-				$activity->set_organization_id($org_tmp);
+				if($activity->get_new_org())
+				{
+					$contacts = activitycalendar_sogroup::get_instance()->get_contacts_local($activity->get_group_id());
+					$activity->set_contact_persons($contacts);
+					//$org_tmp = activitycalendar_sogroup::get_instance()->get_orgid_from_group($activity->get_group_id());
+					//$activity->set_organization_id($org_tmp);
+				}
+				else
+				{
+					$contacts = activitycalendar_sogroup::get_instance()->get_contacts($activity->get_group_id());
+					$activity->set_contact_persons($contacts);
+					$org_tmp = activitycalendar_sogroup::get_instance()->get_orgid_from_group($activity->get_group_id());
+					$activity->set_organization_id($org_tmp);
+				}
 			}
 			else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 			{
-				$contacts = activitycalendar_soorganization::get_instance()->get_contacts($activity->get_organization_id());
-				$activity->set_contact_persons($contacts);
+				if($activity->get_new_org())
+				{
+					$contacts = activitycalendar_soorganization::get_instance()->get_contacts($activity->get_organization_id());
+					$activity->set_contact_persons($contacts);
+				}
+				else
+				{
+					$contacts = activitycalendar_soorganization::get_instance()->get_contacts_local($activity->get_organization_id());
+					$activity->set_contact_persons($contacts);
+				}
 			}
 			
 		}
