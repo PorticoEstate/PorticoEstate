@@ -64,6 +64,7 @@
 		function property_botts($session=false)
 		{
 			$this->so 					= CreateObject('property.sotts');
+			$this->custom 				= & $this->so->custom;
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config','property');
@@ -454,11 +455,13 @@
 			return $tickets;
 		}
 
-		function read_single($id)
+		function read_single($id, $values = array(), $view = false)
 		{
 			$this->so->update_view($id);
 
-			$ticket = $this->so->read_single($id);
+			$values['attributes'] = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			$ticket = $this->so->read_single($id, $values);
+			$ticket = $this->custom->prepare($ticket, 'property', '.ticket', $view);
 
 			$ticket['user_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			$ticket['group_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
@@ -775,7 +778,7 @@
 			return (int)$result['id'];	
 		}
 
-		function add($ticket)
+		function add($ticket, $values_attribute = array())
 		{
 			if((!isset($ticket['location_code']) || ! $ticket['location_code']) && isset($ticket['location']) && is_array($ticket['location']))
 			{
@@ -791,7 +794,12 @@
 
 			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
 
-			$receipt = $this->so->add($ticket);
+			if($values_attribute && is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
+
+			$receipt = $this->so->add($ticket, $values_attribute);
 
 			$this->config->read();
 
@@ -1147,9 +1155,14 @@
 			return $receipt;
 		}
 
-		public function update_ticket($data, $id,$receipt = array())
+		public function update_ticket($data, $id,$receipt = array(),$values_attribute = array())
 		{
-			$receipt = $this->so->update_ticket($data, $id, $receipt);
+			if($values_attribute && is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
+
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute);
 			$this->fields_updated = $this->so->fields_updated;
 
 			$criteria = array
@@ -1345,5 +1358,12 @@
 			{
 				$fileuploader->upload("fmticket/{$id}");
 			}
+		}
+
+		public function get_attributes($values)
+		{
+			$values['attributes'] = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values = $this->custom->prepare($values, 'property', '.ticket', false);
+			return $values;
 		}
 	}

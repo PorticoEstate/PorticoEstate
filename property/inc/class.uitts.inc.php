@@ -1767,6 +1767,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 			}
 
+			$values_attribute			= phpgw::get_var('values_attribute');
+
 			//------------------- start ticket from other location
 			$bypass 		= phpgw::get_var('bypass', 'bool');
 //			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
@@ -1883,9 +1885,20 @@
 					unset($_priority);
 				}
 
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+					}
+				}
+
 				if(!isset($receipt['error']))
 				{
-					$receipt = $this->bo->add($values);
+					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
 					$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
@@ -1948,6 +1961,33 @@
 				}
 			}
 
+			/* Preserve attribute values from post */
+			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			{
+				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
+			}
+
+			$values	= $this->bo->get_attributes($values);
+
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+							(
+								'menuaction'	=> 'property.uiproject.attrib_history',
+								'attrib_id'	=> $attribute['id'],
+								'id'		=> $id,
+								'edit'		=> true
+							);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
 				'values'	=> isset($values['location_data'])?$values['location_data']:'',
 				'type_id'	=> -1, // calculated from location_types
@@ -2001,6 +2041,7 @@
 
 			$data = array
 				(
+					'custom_attributes'				=> array('attributes' => $values['attributes']),
 					'contact_data'					=> $contact_data,
 					'simple'						=> $this->_simple,
 					'show_finnish_date'				=> $this->_show_finnish_date,
@@ -2058,7 +2099,7 @@
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files','attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -2304,6 +2345,8 @@
 			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 
+			$values_attribute			= phpgw::get_var('values_attribute');
+
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 			if(!$receipt)
@@ -2311,7 +2354,7 @@
 				$receipt = array();
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 
 			$historylog	= CreateObject('property.historylog','tts');
 
@@ -2379,7 +2422,19 @@
 				{
 					$values['assignedto'] = $this->account;
 				}
-				$receipt = $this->bo->update_ticket($values,$id, $receipt);
+
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+					}
+				}
+
+				$receipt = $this->bo->update_ticket($values,$id, $receipt, $values_attribute);
 
 				if ( (isset($values['send_mail']) && $values['send_mail']) 
 					|| (isset($this->bo->config->config_data['mailnotification'])
@@ -2443,8 +2498,34 @@
 
 
 			}
+
+			/* Preserve attribute values from post */
+			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			{
+				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
+			}
+
 			//---------end files
-			$ticket = $this->bo->read_single($id);
+			$ticket = $this->bo->read_single($id, $values);
+
+			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
+			{
+				foreach ($ticket['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+							(
+								'menuaction'	=> 'property.uiproject.attrib_history',
+								'attrib_id'	=> $attribute['id'],
+								'id'		=> $id,
+								'edit'		=> true
+							);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+			}
 
 			$order_link				= '';
 			$add_to_project_link	= '';
@@ -3085,6 +3166,7 @@
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 			$data = array
 				(
+					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
 					'send_response'					=> isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
 					'value_sms_phone'				=> $ticket['contact_phone'],
 					'access_order'					=> $access_order,

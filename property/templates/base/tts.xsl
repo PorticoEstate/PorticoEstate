@@ -641,6 +641,7 @@
 								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
+						<xsl:apply-templates select="custom_attributes/attributes"/>
 						<tr>
 							<td valign="top">
 								<xsl:value-of select="php:function('lang', 'subject')"/>
@@ -1103,6 +1104,7 @@
 									<input type="hidden" name="values[billable_hour]" value="{value_billable_hours}"/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:apply-templates select="custom_attributes/attributes"/>
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="php:function('lang', 'new note')"/>
