@@ -267,8 +267,8 @@
 		{
 			if(isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
 			{
-				$this->check_archive();			
-			}		
+				$this->check_archive();
+			}
 
 			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
@@ -329,7 +329,7 @@
 					}
 					else
 					{
-						$this->db->transaction_abort();					
+						$this->db->transaction_abort();
 					}
 				}
 			}
@@ -445,7 +445,7 @@
 									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
 									if( ssh2_sftp_unlink ($sftp, "{$directory_remote}/archive/{$file_name}" ))
 									{
-										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";									
+										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
 									}
 									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
 									{
@@ -507,7 +507,6 @@
 
 				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-				$order_id 		= $_data['PURCHASEORDERNO'];
 				$fakturanr		= $_data['SUPPLIERREF'];//$_data['KEY'];
 				$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 				$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
@@ -523,11 +522,33 @@
 					$buffer[$i]['artid'] = 1;
 				}
 
-				$kidnr 	= $_data['KIDNO'];
+				$kidnr 						= $_data['KIDNO'];
+				$_order_id					= $_data['PURCHASEORDERNO'];
+				$merknad					= '';
+				$order_id					= '';
+				$buffer[$i]['project_id']	= '';
 
-				if($order_id)
+				$order_info = $this->get_order_info($_order_id); // henter default verdier selv om  $_order_id ikke er gyldig.
+
+				if(!$_order_id)
 				{
-					$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);
+					$merknad = 'Mangler bestillingsnummer';
+					$this->receipt['error'][] = array('msg' => $merknad);
+				}
+				else if (!ctype_digit($_order_id))
+				{
+					$merknad = "bestillingsnummeret er på feil format: '{$_order_id}'";
+					$this->receipt['error'][] = array('msg' => $merknad);
+				}
+				else if (!$order_info['order_exist'])
+				{
+					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
+					$this->receipt['error'][] = array('msg' => $merknad);
+				}
+				else
+				{
+					$buffer[$i]['project_id'] = $this->soXport->get_project($_order_id);
+					$order_id = $_order_id;
 				}
 
 				$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
@@ -544,7 +565,7 @@
 				$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
 				$buffer[$i]['referanse']		= "ordre: {$order_id}";
 
-				$order_info = $this->get_order_info($order_id);
+
 
 				$buffer[$i]['dimb'] = $order_info['dimb'];
 				$buffer[$i]['dima'] = $order_info['dima'];
@@ -580,7 +601,7 @@
 					$_bilagsnr_ut = $this->db->f('bilagsnr_ut');
 					$bilagsnr = $this->db->f('bilagsnr');
 					$__bilagsnr = $_bilagsnr_ut ? $_bilagsnr_ut : $bilagsnr;
-					
+
 					if($_bilagsnr_ut)
 					{
 						$receipt = $this->export->RullTilbake(false,false,$_bilagsnr_ut);
@@ -605,7 +626,7 @@
 
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $vendor_id;
 				$this->db->query($sql,__LINE__,__FILE__);
-					
+
 				if(!$_data['SUPPLIER.CODE'])
 				{
 					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
@@ -628,7 +649,7 @@
 							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '','','','html');
 							if($rc)
 							{
-								$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");							
+								$this->receipt['message'][] = array('msg'=> "epost sendt til {$to}");
 							}
 						}
 						catch (phpmailerException $e)
@@ -652,8 +673,6 @@
 				}
 
 				$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
-
-				$merknad = '';
 
 				$buffer[$i]['merknad'] = $merknad;
 				$buffer[$i]['splitt'] = $this->splitt;
@@ -742,7 +761,7 @@
 						}
 						return false;
 					}
-					
+
 					$GLOBALS['phpgw']->db->Exception_On_Error = false;
 					return $bilagsnr;
 				}
@@ -764,7 +783,10 @@
 			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
+			if(	$this->db->next_record())
+			{
+				$order_info['order_exist'] = true;
+			}
 			if ($this->db->f('location_code'))
 			{ 
 				$parts = explode('-',$this->db->f('location_code'));

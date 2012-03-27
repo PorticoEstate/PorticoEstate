@@ -28,27 +28,15 @@
 
 		function update_field ($field_info)
 		{
+
 			if ($field_info['field_values'])
 			{
 				$field_info['field_values'] = base64_encode (serialize ($field_info['field_values']));
 			}
 
-			$sql = "UPDATE phpgw_reg_fields SET ";
+			$value_set	= $this->db->validate_update($field_info);
 
-			reset ($this->db_fields);
-			foreach ( $this->db_fields as $num => $field )
-			{
-				if ($num)
-				{
-					$sql .= ", ";
-				}
-				$sql .= "$field='$field_info[$field]'";
-			}
-
-			$sql .= " WHERE field_name='$field_info[field_name]'";
-			$rv = $this->db->query ($sql);
-
-			return $rv;
+			return $this->db->query("UPDATE phpgw_reg_fields SET {$value_set} WHERE field_name='{$field_info[field_name]}'",__LINE__,__FILE__);
 		}
 
 		function insert_field ($field_info)
@@ -58,34 +46,15 @@
 				$field_info['field_values'] = base64_encode (serialize ($field_info['field_values']));
 			}
 
-			$sql = "INSERT INTO phpgw_reg_fields (";
-			$sql2 = "(";
-
-			reset ($this->db_fields);
-			while (list ($num, $field) = each ($this->db_fields))
-			{
-				if ($num)
-				{
-					$sql .= ', ';
-					$sql2 .= ', ';
-				}
-				$sql .= $field;
-				$sql2 .= "'$field_info[$field]'";
-			}
-
-			$sql  .= ') VALUES ';
-			$sql2 .= ')';
-
-			$sql .= $sql2;
-
-			$rv = $this->db->query ($sql);
+			$sql = "INSERT INTO phpgw_reg_fields (" . implode(', ', array_keys($field_info)) .  ') VALUES (' . $this->db->validate_insert(array_values($field_info)) . ')';
+			$rv = $this->db->query($sql,__LINE__,__FILE__);
 
 			return $rv;
 		}
 
 		function remove_field ($field_info)
 		{
-			$rv = $this->db->query ("DELETE FROM phpgw_reg_fields WHERE field_name='$field_info[field_name]'");
+			$rv = $this->db->query ("DELETE FROM phpgw_reg_fields WHERE field_name='{$field_info[field_name]}'");
 
 			return $rv;
 		}
@@ -93,19 +62,7 @@
 		function get_field_list ()
 		{
 			$rarray = array();
-			$sql = "SELECT ";
-
-			reset ($this->db_fields);
-			while (list ($num, $db_field_name) = each ($this->db_fields))
-			{
-				if ($num)
-				{
-					$sql .= ', ';
-				}
-				$sql .= $db_field_name;
-			}
-
-			$sql .= " FROM phpgw_reg_fields ORDER BY field_order";
+			$sql = 'SELECT  ' . implode(', ', $this->db_fields) . ' FROM phpgw_reg_fields ORDER BY field_order';
 			$this->db->query ($sql);
 			while ($this->db->next_record ())
 			{

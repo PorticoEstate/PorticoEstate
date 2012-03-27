@@ -117,6 +117,19 @@
 				$missing_fields[] = 'passwd_confirm';
 			}
 
+			if($r_reg['passwd'])
+			{
+				$account	= new phpgwapi_user();
+				try
+				{
+					$account->validate_password($r_reg['passwd']);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
+				}
+			}
+
 			reset ($this->fields);
 
 			foreach ( $this->fields as $field_name => $field_info )
@@ -241,6 +254,20 @@
 			setcookie('kp3');
 			setcookie('domain');
 			$ui->welcome_screen();
+		}
+
+		public function get_pending_user($reg_id)
+		{
+			$so = createobject('registration.soreg');
+			$reg_info = $so->valid_reg($reg_id);
+			if($reg_info['reg_info'])
+			{
+				$reg_info['reg_info'] = unserialize(base64_decode($reg_info['reg_info']));
+				unset($reg_info['reg_info']['passwd']);
+				unset($reg_info['reg_info']['passwd_confirm']);
+			}
+			
+			return $reg_info;
 		}
 
 		//

@@ -27,5 +27,6 @@
  	$list_form = true;
 	$list_id = 'new_activities';
 	$url_add_on = '&amp;type=new_activities';
+	$nofilter=true;
 	include('activity_list_partial.php');
 ?>
