@@ -398,7 +398,7 @@
 			$this->bo->start = phpgw::get_var('startIndex');
 			
 			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
-												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run, 'results' => $return_results));
 //_debug_array($location_list);
 			$rows_total = $this->bo->read(array('type_id' => $type_id, 'allrows' => true));
 			

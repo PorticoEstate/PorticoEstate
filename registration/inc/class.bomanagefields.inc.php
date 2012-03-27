@@ -125,18 +125,14 @@
 			$fields = $this->so->get_field_list();
 
 			$rarray = array();
-			if (is_array ($fields))
+			foreach ($fields as $num => $field_info)
 			{
-				reset ($fields);
-				while (list ($num, $field_info) = each ($fields))
-				{
-					/* Convert the stored database values into comma delimited form */
+				/* Convert the stored database values into comma delimited form */
 
-					$field_values = unserialize (base64_decode ($field_info['field_values']));
-					$fields[$num]['field_values'] = $field_values;
+				$field_values = unserialize (base64_decode ($field_info['field_values']));
+				$fields[$num]['field_values'] = $field_values;
 
-					$rarray[$field_info['field_name']] = $fields[$num];
-				}
+				$rarray[$field_info['field_name']] = $fields[$num];
 			}
 
 			return $rarray;

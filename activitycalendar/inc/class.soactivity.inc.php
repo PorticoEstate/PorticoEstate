@@ -161,39 +161,76 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		if(isset($filters['new_activities']))
 		{
-			$filter_clauses[] = "activity.state=1 OR activity.state=2";
-		}
-		if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
-			$activity_state = $this->marshal($filters['activity_state'],'int');
-			$filter_clauses[] = "activity.state = {$activity_state}";
-		}
-		if(isset($filters['activity_org']) && $filters['activity_org'] != '0'){
-			$activity_org = $this->marshal($filters['activity_org'],'int');
-			$filter_clauses[] = "activity.organization_id = {$activity_org}";
-		}
-		if(isset($filters['activity_category']) && $filters['activity_category'] != 'all'){
-			$activity_category = $this->marshal($filters['activity_category'],'int');
-			$filter_clauses[] = "activity.category = {$activity_category}";
-		}
-		if(isset($filters['activity_district'])){
-			if($filters['activity_district'] != 'all')
+			if(!isset($filters['activity_state']) || (isset($filters['activity_state']) && $filters['activity_state'] == 'all')){
+				$filter_clauses[] = "activity.state=1 OR activity.state=2";
+			}
+			if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
+				$activity_state = $this->marshal($filters['activity_state'],'int');
+				$filter_clauses[] = "activity.state = {$activity_state}";
+			}
+			if(isset($filters['activity_org']) && $filters['activity_org'] != '0'){
+				$activity_org = $this->marshal($filters['activity_org'],'int');
+				$filter_clauses[] = "activity.organization_id = {$activity_org}";
+			}
+			if(isset($filters['activity_category']) && $filters['activity_category'] != 'all'){
+				$activity_category = $this->marshal($filters['activity_category'],'int');
+				$filter_clauses[] = "activity.category = {$activity_category}";
+			}
+			if(isset($filters['activity_district'])){
+				if($filters['activity_district'] != 'all')
+				{
+					$activity_district = $this->marshal($filters['activity_district'],'int');
+					$filter_clauses[] = "activity.office = '{$activity_district}'";
+				}
+			}
+			else
 			{
-				$activity_district = $this->marshal($filters['activity_district'],'int');
-				$filter_clauses[] = "activity.office = '{$activity_district}'";
+				$activity_district = $this->get_office_from_user($filters['user_id']);
+				if($activity_district && $activity_district != '')
+				{
+					$filter_clauses[] = "activity.office = '{$activity_district}'";
+				}
+			}
+			if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
+			{
+				$ts_query = strtotime($filters['updated_date_hidden']); // target timestamp specified by user
+				$filter_clauses[] = "activity.last_change_date < {$ts_query}";
 			}
 		}
 		else
 		{
-			$activity_district = $this->get_office_from_user($filters['user_id']);
-			if($activity_district && $activity_district != '')
-			{
-				$filter_clauses[] = "activity.office = '{$activity_district}'";
+			if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
+				$activity_state = $this->marshal($filters['activity_state'],'int');
+				$filter_clauses[] = "activity.state = {$activity_state}";
 			}
-		}
-		if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
-		{
-			$ts_query = strtotime($filters['updated_date_hidden']); // target timestamp specified by user
-			$filter_clauses[] = "activity.last_change_date < {$ts_query}";
+			if(isset($filters['activity_org']) && $filters['activity_org'] != '0'){
+				$activity_org = $this->marshal($filters['activity_org'],'int');
+				$filter_clauses[] = "activity.organization_id = {$activity_org}";
+			}
+			if(isset($filters['activity_category']) && $filters['activity_category'] != 'all'){
+				$activity_category = $this->marshal($filters['activity_category'],'int');
+				$filter_clauses[] = "activity.category = {$activity_category}";
+			}
+			if(isset($filters['activity_district'])){
+				if($filters['activity_district'] != 'all')
+				{
+					$activity_district = $this->marshal($filters['activity_district'],'int');
+					$filter_clauses[] = "activity.office = '{$activity_district}'";
+				}
+			}
+			else
+			{
+				$activity_district = $this->get_office_from_user($filters['user_id']);
+				if($activity_district && $activity_district != '')
+				{
+					$filter_clauses[] = "activity.office = '{$activity_district}'";
+				}
+			}
+			if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
+			{
+				$ts_query = strtotime($filters['updated_date_hidden']); // target timestamp specified by user
+				$filter_clauses[] = "activity.last_change_date < {$ts_query}";
+			}
 		}
 		
 		if(count($filter_clauses))

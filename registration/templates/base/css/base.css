@@ -1,0 +1,1398 @@
+#invoice_details { float: left; width: 30%; }
+#list_navigation { float: left; width: 30%; }
+#user_messages { float: right; width: 40%;}
+#contract_lists {width: 100%; float: left; background-color: #EFEFEF; border: 1px solid #ABABAB; padding-left: 1em; margin-top: 1em;}
+form#invoice_run {margin: 2em;}
+form#invoice_run th { 
+	background-color: #CDCDCD;
+	padding: 5px;
+	border: 1px solid #ABABAB;
+	 font-weight: bolder;
+	}
+
+div#contract_lists td {
+	margin:0;
+	padding:4px 10px;
+}
+form#invoice_run td { 
+	border: 1px solid #CDCDCD;
+	}
+
+
+div#invoice_details dt{
+	float:left;
+	 font-weight: bolder;
+	 margin-right: 1em;
+}
+div.content {
+	margin: 2em;	
+}
+
+.hd {
+	margin-bottom: 0;
+	text-align: center;
+	}
+	
+.hd img {
+	vertical-align: middle;
+	}
+
+fieldset {
+	margin-top: 0.5em;	
+}
+
+legend {
+	font-weight: bolder;
+	margin-bottom: 0.2em;	
+}
+
+label {
+	margin-left: 0.3em;
+	margin-right: 0,3em;
+	font-style: normal;
+	font-size: 13px;
+}
+
+#content {
+    margin: 2em 1em;
+}
+.clr { clear: both;}
+
+#dashboard {padding: 1em;}
+#dashborad_column_1 { float:left; width:50%;}
+#dashboard_column_2 { margin-left:50%; width:50%;}
+
+#inactive {
+				background-color: #ff5555;
+				width: 10em;
+				padding: 1em;
+				border: 0.2em dotted #000000;
+				letter-spacing: 2px;
+}
+#active {
+				background-color: #ffffff;
+				width: 10em;
+				padding: 1em;
+				border: 0em dotted #000000;
+				letter-spacing: 2px;
+}
+
+#inactivate-button {
+				border: 1px solid #000000;
+				margin-top: 1em;
+				padding: 0.1em;
+				background-color: #ffffff;
+				}
+
+#activate-button {
+				border: 1px solid #000000;
+				margin-top: 1em;
+				padding: 0.1em;
+				background-color: #ffffff;
+				}
+
+.breadcrumbs{
+	margin-left: 20px;	
+}
+
+ul.pathway {
+    font-weight: bolder;
+    margin: 1em 0;
+    font-size: 110%;
+}
+ul.pathway li a { color: #000; text-decoration: none;}
+ul.pathway li a:hover { color: #008; }
+ul.pathway li { 
+    display: inline;
+    background: url(../images/pathwaysep.png) no-repeat 0% 50%;
+    padding-left: 16px;
+}
+ul.pathway li:first-child { background: none; padding-left: 0;}
+
+dl.form, dl.form-col {
+    margin: 1em 1em 1em 0;
+}
+
+dl.form dt, dl.form-col dt {
+    font-style: italic;
+    font-weight: bolder;
+    margin: .5em 0 .1em 0;
+    color: #002;
+}
+dl.form dd textarea,
+dl.form-col dd textarea {
+    width: 15em;
+    height: 6em;
+}
+dl.form dd textarea.full-width,
+dl.form-col dd textarea.full-width {
+    width: 33em;
+    height: 10em;
+}
+dl.form dd input[type="text"],  dl.form dd .autocomplete,
+dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
+    width: 15em;
+}
+dl.form dd .autocomplete,
+dl.form-col dd .autocomplete {
+    padding-bottom: 2em;
+}
+
+dl.form dt.heading, dl.form-col dt.heading {
+    color: #448;
+    font-weight: normal;
+    font-size: 110%;
+    margin-top: 1.4em;
+    margin-bottom: .6em;
+    border-bottom: 1px solid #aaa;
+}
+
+dl.proplist,
+dl.proplist-col {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+dl.proplist dt,
+dl.proplist-col dt { 
+    font-style: italic; 
+    font-weight: bolder; 
+    font-size: 90%; 
+    margin: .8em 0 .1em 0;
+}
+
+dl.proplist-col,
+dl.form-col {
+/*    width: 18em; */
+    float: left;
+}
+
+div.identifier-header {
+	padding-left: 2em;
+	margin-bottom: 1em;	
+}
+
+div.identifier-header label {
+	font-weight: bold;
+}
+
+.form-buttons {
+    clear: both;
+    padding-top: 2em;
+}
+.form-buttons button {
+    margin-right: .5em;
+}
+.form-buttons .cancel {
+    margin-left: .6em;
+}
+
+.date-picker .container,
+.datetime-picker .container { 
+    display:none; 
+    position:absolute; z-index:1;
+}
+#toolbar {
+    width: 100%;
+    background-color: #eee;
+    border: 1px solid #bbb;
+    margin-bottom: 0em;
+    padding: 10px 30px;
+}
+
+#datatableToolbar {
+	background-color: white;
+    margin-bottom: 0em;
+    padding: .3em;
+}
+
+table.datatableToolbar {
+	padding: .3em;
+	}
+
+
+#controller_user_error {
+    width: 100%;
+    background-color: #eee;
+    border: 0px none #bbb;
+    margin-bottom: 0em;
+    padding-left: .3em;
+    color: red;
+    font-size: larger;
+}
+
+#controller_user_message {
+    width: 100%;
+    background-color: #eee;
+    border: 0px none #bbb;
+    margin-bottom: 0em;
+    padding-left: .3em;
+    color: green;
+    font-size: larger;
+}
+
+.toolbarelement {
+	vertical-align:middle;
+	}
+td.toolbarlabel {
+	width: 10em;
+	font-weight: bold;	
+	}
+td.toolbarcol {
+	padding-left: 1em;
+	}
+	
+div.calendarButtons {
+		vertical-align:middle;
+		background-color: grey;
+	}
+	
+label.toolbar_element_label {
+	padding-left: .25em;
+	padding-right: .50em;
+	vertical-align: middle;
+	}
+#toolbar input[type="text"] {
+    font-size: 120%;
+    margin: auto .25em;
+}
+
+dl.proplist dd.address,
+dl.proplist-col dd.address {
+    white-space: pre;
+}
+#week-selector { margin: 1em 0;}
+#week-selector li { display: inline; padding-right: .5em;}
+
+#schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
+#schedule_container tr td:first-child { background: #eee; }
+#schedule_container tr.time td { border-top: 1px solid #444;}
+#schedule_container .color1 { background: #ccf;}
+#schedule_container .color2 { background: #cfc;}
+#schedule_container .color3 { background: #fcc;}
+#schedule_container .color4 { background: #ffb;}
+#schedule_container .color5 { background: #bff;}
+#schedule_container .color6 { background: #fbf;}
+
+#boundary-table td, #boundary-table th { 
+    padding: .1em .2em;
+}
+
+.date-container {
+    margin-bottom: .8em;
+    white-space: nowrap;
+}
+
+.date-container .close-btn {
+    display: block;
+    float: right;
+    border: none;
+    text-decoration: none;
+    background:transparent url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px;
+    width: 25px;
+    height: 15px;
+    cursor: pointer;
+    color: white;
+}
+
+div.allocation-list
+{
+    width: 30em;
+    height: 10em;
+    border: 1px solid #555;
+    padding: .4em;
+    overflow: auto;
+}
+
+.showit {
+	visibility: visible;
+}
+.hideit {
+	visibility: hidden;
+}
+.datatable{
+	margin-left: 20px;
+	margin-top: 10px;
+}
+
+/* Styles for this the column selector */
+#dt-columnselector {width:45em;margin:0 auto;}
+#dt-options {margin-left:5px;}
+#dt-dlg {visibility:hidden;border:1px solid #808080;background-color:#E3E3E3;}
+#dt-dlg .hd {font-weight:bold;padding:1em;background:none;background-color:#E3E3E3;border-bottom:0;}
+#dt-dlg .ft {text-align:right;padding:.5em;background-color:#E3E3E3;}
+#dt-dlg .bd {height:15em;margin:0 1em;overflow:auto;border:1px solid black;background-color:white;}
+#dt-dlg .dt-dlg-pickercol {clear:both;padding:.5em 1em 3em;border-bottom:1px solid gray;}
+#dt-dlg .dt-dlg-pickerkey {float:left;}
+#dt-dlg .dt-dlg-pickerbtns {float:right;}
+/* Container workarounds for Mac Gecko scrollbar issues */
+.yui-panel-container.hide-scrollbars #dt-dlg .bd {
+    /* Hide scrollbars by default for Gecko on OS X */
+    overflow: hidden;
+}
+.yui-panel-container.show-scrollbars #dt-dlg .bd {
+    /* Show scrollbars for Gecko on OS X when the Panel is visible  */
+    overflow: auto;
+}
+#dt-dlg_c .underlay {overflow:hidden;}
+.inprogress {position:absolute;} /* transitional progressive enhancement state */
+}
+
+dl.controller-description {
+	width: 70%;
+}
+dl.controller-description dt, dl.controller-description-edit {
+	width: 100%;
+	float:left;
+	font-weight:bold;
+}
+dl.controller-description dd {
+	width: 100%;
+	border: 1px solid #ccc;
+	float: left;
+	background-color: white;
+	height: 100px;
+	overflow-y: scroll;
+}
+dl.controller-description-edit textarea {
+	width: 100%;
+	height: 100px;
+	border: 1px solid #ccc;
+	float: left;
+}
+
+input#place {
+	width:60%;
+}
+
+input#address_1 {
+	width: 60%;
+	float:left;
+}
+
+input#house_number {
+	width: 20%;
+	float: left;
+}
+
+input.postcode {
+	width: 50px;
+	float: left;
+}
+
+.yui-navset {
+	clear: both;
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+h1 img, li img {
+	vertical-align: middle;
+}
+/*
+fieldset h3 {
+	display:block;
+	float:left;
+	line-height:1.3em;
+	margin:0;
+	width:120px;
+}
+*/
+/* Set up common form styles.  TODO: needs refinement. */
+legend, label, input, select {
+    margin: 0 13px 0 0;
+    padding: 2px;
+}
+	
+label {
+	line-height:1.5em;
+}
+
+
+	
+fieldset {
+	border-bottom:0px solid #ccc;
+	padding:5px 0px 5px 10px;
+}
+
+h1 em {
+	font-style:italic;
+}
+
+div.info, div.error, div.warning {
+	font-weight: normal;
+	margin:20px;
+	padding:5px;
+	font-size:1.1em;
+	text-align: left;
+}
+p.message {
+	margin: 5px;
+}
+.info {
+	background-color:#CCFFCC;
+	border:1px solid #00FF00;
+	color:black;
+}
+.warning {
+	background-color: #FEEFB3;
+	border:1px solid #9F6000;
+	color:#9F6000;
+}
+.yui-calendar td.calcell {
+	border:0px !important;
+}
+.yui-skin-sam .yui-dt TABLE TH{
+	border: none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD{
+	border: none !important;
+}
+
+.datatable_container {
+	margin-left: 1em;
+	margin-top: 1em;
+}
+
+.paginator {
+	margin-left: 1em !important;
+}
+
+th.yui-dt-sortable div{
+	background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
+}
+
+dd ol li {
+	list-style: decimal;
+	list-style-position: inside;
+}
+
+dd ul li {
+	list-style: disc;
+	list-style-position: inside;
+}
+
+
+/* =======================================  ITEM LIST  ========================================= */
+
+ul.itemlist {
+    position: relative;
+}
+ul.itemlist li {
+    padding: 3px 0;
+}
+
+ul.itemlist li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+
+ul.itemlist h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+ul.groups {
+    position: relative;
+}
+ul.groups li {
+    padding: 3px 0;
+}
+
+ul.groups li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+
+ul.groups h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+.drag_group {
+	width: 650px;
+}
+
+/* =======================================  EXPAND LIST  ========================================= */
+
+ul.expand_list h4 {
+    cursor: pointer;
+    font-size: 17px;
+    margin-bottom: 6px;
+    margin-top: 0;
+}
+
+ul.expand_list li ul {
+    display:none;
+    margin-left:21px;
+}
+
+ul.expand_list li ul li {
+    margin-bottom: 3px;
+    padding: 3px;
+}
+
+ul.expand_list input {
+    margin: 0 8px 0 5px;
+}
+
+ul.expand_list h4 span {
+    padding-left: 5px;
+    vertical-align: middle;
+}
+
+.yui-content input[type="submit"] {
+    margin: 15px 0 0;
+    padding: 1px 15px;
+}
+h1 img{
+ 	margin-right:5px;
+ }
+ 
+#control_tabview .yui-navset, #control_location_tabview .yui-navset{
+	margin:0;
+}
+
+#control_tabview .identifier-header, #control_location_tabview .identifier-header {
+	padding-left:0;
+}
+
+#control_tabview .yui-content{
+	padding:20px;
+}
+
+.yui-content h2{
+    margin:0 0 10px;
+}
+
+#frm_control_items{
+	clear:left;
+	margin-top:10px;	
+}
+
+dl.proplist, dl.proplist-col {
+    margin: 0;
+    padding-left: 0;
+}
+
+.drag_elem{
+  z-index: 100;
+  position:absolute;
+  opacity: .50;
+  filter: alpha(opacity=50);
+}
+
+#list{
+  width: 650px;
+  position:relative;
+}
+
+.list_item{
+  position:relative;
+  z-index: 1;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  top: 0px;
+  left: 0px;
+}
+
+.list_item:hover, .drag_group:hover{
+  cursor: move;
+}
+
+.frm_save_order input[type='submit']{
+	margin: 10px 0 15px 0;
+    width: 120px;
+}
+.delete {
+    cursor: pointer;
+    margin-left: 5px;
+}
+.yui-navset .yui-content.tab_content {
+	padding: 20px;
+}
+
+#datatable-container {
+    margin: 20px;
+}
+
+#paginator {
+	margin: 20px;
+}
+
+#paginator.top {
+	 margin: 20px 0 0 20px;
+}
+
+.yui-skin-sam .yui-button button, .yui-skin-sam .yui-button a, .yui-skin-sam .yui-button a:visited {
+ 	height: 24px;
+}
+
+#toolbar {
+    padding: 10px;
+}
+
+#toolbar input[type="text"] {
+    font-size: 100%;
+    padding: 3px;
+}
+
+#toolbar input[type="submit"] {
+    padding:0 8px;
+    margin-top:0;
+}
+
+#innertoolbar-button{
+	/*background: none repeat scroll 0 0 #CCCCCC;*/
+    color: #111111;
+}
+
+.yui-button.yui-link-button.new_button{
+	margin-left:30px;	
+}
+
+#view_check_lists {
+    padding: 30px;
+    width: 600px;
+}
+
+ul.th {
+	font-weight: bold;
+	overflow:hidden;	
+}
+
+ul.th li {
+    float: left;
+    margin-right: 20px;
+    padding: 3px 6px;
+    width: 100px;
+}
+
+ul.row{
+	overflow: hidden;	
+}
+
+ul.row li{
+	float:left;	
+	margin-right: 20px;
+    padding: 3px 6px;
+    width: 100px;
+}
+
+#main_content {
+    padding: 20px;
+    width: 1150px;
+}
+
+#main_content.groups{
+	cursor: default;	
+}
+#main_content fieldset{
+	padding:0;
+	margin:0;	
+}
+
+#main_content h1{
+	margin-top:0;
+}
+
+.check_list li div {
+    float: left;
+    margin: 5px;
+    padding: 2px;
+    text-align: center;
+    width: 190px;
+}
+#main_content fieldset.check_list_details {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #A3A3A3;
+    padding: 15px;
+}
+#main_content fieldset.check_item_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    padding: 15px;
+}
+
+.check_list li.heading {
+    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #D8D8D8;
+    height: 20px;
+    padding-left: 25px;
+}
+.check_list li.heading div {
+    margin: 0 5px;
+    padding: 2px;
+}
+.check_list li div.order_nr{
+	width:15px;
+}
+.check_list li div.status {
+    padding-left: 10px;
+    width: 50px;
+}
+.check_list li div.title{
+    width: 600px;
+    text-align:left;
+}
+.check_list li.heading div.title{
+    text-align:center;
+}
+.check_list li{
+	overflow:hidden;
+}
+fieldset.check_list_details{
+	clear: both;
+}
+fieldset.check_list_details label{
+	font-weight:bold;
+	width:150px;
+}
+fieldset.check_list_details div{
+	clear:left;
+	margin:5px 0;
+}
+
+fieldset.tab_check_list_details label {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
+fieldset.tab_check_list_details {
+    padding: 0 0 10px 0;
+}
+
+
+fieldset.check_list_details textarea{
+	width:400px;
+	height:100px;
+}
+fieldset.check_item_details label{
+	font-weight:normal;
+	vertical-align:top;
+	float:left;
+}
+fieldset.check_item_details h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+fieldset.check_list_details label{
+	display: inline-block;
+    font-weight: bold;
+    width: 150px;
+}
+.check_item{
+    margin: 25px 0;
+}
+.check_item div{
+    margin: 5px 0;
+    clear:left;
+}
+h3.check_item_details{
+	margin-bottom:0;	
+}
+.check_item textarea{
+	width:400px;
+	height:100px;	
+}
+.check_item label{
+	width:150px;	
+}
+.new_item a#innertoolbar-button{
+	background: grey;
+	font-weight: bold;
+}
+#frm_save_check_items input[type="submit"]{
+	padding: 3px 30px;	
+}
+.form-buttons-top{
+	float: right;
+	margin-bottom:5px;
+}
+.form-buttons-top input[type="submit"]{
+	margin:0;
+}
+#frm_save_check_items h1 {
+    float: left;
+    margin: 5px;
+}
+ul.check_list {
+	width: 925px;	
+}
+
+/* ======================  CALENDAR ========================== */
+
+#control_plan .col_1 {
+    float: left;
+    height: 240px;
+    width: 600px;
+}
+
+#control_plan .col_2 {
+    float: right;
+    margin-top: 40px;
+    width: 330px;
+}
+
+ul.calendar li{
+	clear:left;	
+}
+ul.calendar li.heading div {
+    font-weight: bold;
+    font-size:16px;
+}
+ul.calendar {
+    clear: both;
+    float: left;
+    margin-top: 30px;
+    width: 100%;
+}
+ul.calendar.month {
+    margin-top: 0;
+    width: 60%;
+}
+ul.calendar li div {
+    float: left;
+    width: 30px;
+    padding: 3px;
+    text-align: center;
+}
+#cal_wrp {
+    clear: both;
+    float: left;
+    margin-top: 30px;
+    width: 100%;
+}
+#cal_wrp .nav{
+	padding: 1% 0;	
+}
+a.move_left{
+	float: right;
+}
+a.move_right {
+    float: right;
+    margin-right: 34%;
+}
+#days_wrp {
+    float: right;
+    height: 800px;
+    overflow-x: hidden;
+    position: relative;
+    width: 37%;
+}
+ul.calendar.days li div.cell {
+    height: 17px;
+    width: 24px;
+}
+ul.calendar.days {
+   	position: absolute;
+    width: 1120px;
+    margin-top:0;
+}
+ul.calendar li div.date, ul.calendar.info div.date {
+    width: 80px;
+}
+ul.calendar div.title, ul.calendar.info div.title {
+	width: 200px;
+}
+ul.calendar div.title {
+	width: 150px;
+}
+ul.calendar div.location {
+	width: 150px;
+	text-align: left;
+}
+ul.calendar div.assigned {
+	width: 80px;
+	text-align: left;
+}
+ul.calendar div.id, ul.calendar.info div.id {
+	width: 50px;
+}
+ul.calendar div.title{
+	text-align: left;
+}
+ul.calendar .heading div.title{
+	text-align: center;
+}
+ul.calendar div.frequency, ul.calendar.info div.frequency {
+	width: 100px;	
+}
+.months a.view_check_list {
+    width: 30px;
+}
+.cal_info_msg{
+	font-size: 16px;
+    padding: 40px 20px;	
+}
+
+#info_box {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    left: 40px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    top: 3px;
+    width: 350px;
+    z-index: 1;
+    font-size:12px;
+    position:absolute;
+    display:none;
+}
+
+#info_box label{
+	font-weight:bold;
+	margin-right:2px;
+	font-size:12px;
+	display: inline-block;
+	width: 70px;
+}
+
+#info_box ul li ul label{
+	display: inline;
+}
+
+#info_box ul li ul {
+    margin: 5px 0;
+    padding-left: 5px;
+}
+#info_box h5 {
+ 	font-size: 15px;
+    font-weight: bold;
+    padding: 0 0 8px;
+    text-align: center;
+}
+.empty_list{
+	font-size: 16px;
+    font-weight: bold;
+    padding: 0 0 5px;
+}
+.yui-pg-first{
+  	margin-left: 14px;
+    margin-top: 5px;	
+}
+#data_paginator, #loc_paginator{
+	margin:8px;	
+	clear:left;
+}
+ul#filters li, ul#search_list li{
+	float:left;	
+}
+ul#filters input[type='text'], ul#filters select{
+	padding:3px;
+}
+ul#search_list input[type="submit"] {
+    margin: 0;
+    padding: 0 10px;
+}
+ul#search_list input[type="text"] {
+    margin: 0 5px 0 0;
+    padding: 3px;
+}
+#queryForm{
+	overflow:hidden;
+	margin: 20px;
+}
+fieldset.add_check_list div{
+	padding:2px; 
+}
+fieldset.add_check_list label{
+	display:inline-table;
+	width:120px;
+}
+#calendar_dates{
+	margin:25px 0;	
+}
+#calendar_dates p{
+	font-weight: bold;
+	margin: 5px 0;	
+}
+#calendar_dates span {
+    border: 2px solid black;
+    margin-right: 10px;
+    padding: 1px 4px;
+    cursor: pointer;
+}
+textarea{
+	padding: 4px;	
+}
+
+/*==================================  EXPAND MENU  ======================================== */
+
+.expand_menu div.focus{
+	background: url('../../../images/bg_expand_active.png') no-repeat;
+	color: #FFF;
+}
+.expand_menu {
+    margin: 15px 0 20px;
+    overflow: hidden;
+}
+.expand_menu div {
+    background: url("../../../images/bg_expand_not_active.png") no-repeat scroll 0 0 transparent;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    height: 22px;
+    margin-right: 10px;
+    padding-top: 4px;
+    text-align: center;
+    width: 66px;
+}
+
+label.comment{
+	vertical-align:top;	
+}
+.check_item {
+	display: none;	
+}
+.check_item label{
+	width: 150px;
+	display: inline-block;	
+}
+
+.check_items h4 img{
+	padding-bottom:2px;	
+}
+.check_items.expand_list h4{
+	font-size: 15px;	
+}
+#days_view div{
+	font-weight:bold;
+}
+.calendar .months {
+    margin-left: 20px;
+    width: 440px;
+    padding:0;
+}
+.calendar .heading a{
+    text-decoration: none;
+    color:#000;
+}
+.not_active{
+	opacity:0.5;
+}
+ul.check_items li.hidden{
+	display: none;	
+}
+
+.frm_save_check_item input[type='submit']{
+	width: 165px;
+}
+ul.check_items h5{
+	margin:10px;
+	font-size: 13px;
+}
+.tab_menu {
+    overflow: hidden;
+}
+.tab_menu a, .hor_menu a {
+    background: none repeat scroll 0 0 #FAFAFA;
+    border-left: 1px solid #A3A3A3;
+    border-right: 1px solid #A3A3A3;
+    border-top: 1px solid #A3A3A3;
+    color: #000000;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    margin-right: 3px;
+    padding: 7px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 150px;
+}
+.hor_menu a {
+	border:1px solid #d0d9f1;
+	background: #ecf1ff;
+}
+.tab_menu a.active, .hor_menu a.active {
+	background: #2647A0;
+	border-left: 1px solid #173073;
+	border-right: 1px solid #173073;
+	border-top: 1px solid #173073;
+	color: #FFF;
+}
+.hor_menu a.active {
+	border-bottom: 1px solid #173073;
+}
+.tab_item {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #A3A3A3;
+    margin: 0 318px 0 0;
+    padding: 15px;
+    width: 800px;
+}
+.tab_item h2{
+	margin:0 0 10px;
+	font-size: 17px;	
+}
+.tab_item h2.last{
+	margin:20px 0 10px;	
+}
+.tab_item.active {
+	display:block;	
+}
+fieldset.check_list_details{
+	width: 800px;	
+}
+#main_content fieldset.location_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #CCCCCC;
+    padding: 15px;
+    float:left;	
+    border: 1px solid #ddd;
+}
+fieldset.location_details div{
+	margin:10px 0;
+}
+ul#icon_color_map {
+    border: 1px solid #DDDDDD;
+    padding: 5px;
+    margin-top: 40px;
+}
+ul#icon_color_map li {
+    font-size: 12px;
+    padding: 3px 10px;
+}
+ul#icon_color_map span{
+	margin-left: 10px;
+}
+#create_message_dialog{
+	display:none;
+	position:absolute;
+	width: 600px;
+    z-index: 2;
+    background:#aaa;	
+}
+#curtain{
+	display:none;
+	position:absolute;
+    z-index: 1;
+}
+#main_content #case_details {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DDDDDD;
+    margin-bottom: 20px;
+    padding: 15px;
+    width: 800px;
+}
+#case_details label{
+	display: inline-block;
+	width: 130px;
+	font-weight: normal;
+	font-size: 15px;	
+}
+#case_details h3 {
+    font-size: 15px;
+    font-weight: normal;
+    margin: 10px 0;
+}
+#case_details h3.first {
+    margin-top:0;
+}
+#case_details h3.last {
+    margin-bottom:0;
+}
+.btn{
+	background: none repeat scroll 0 0 #2647A0;
+    color: #FFFFFF;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #173073;
+    cursor: pointer;
+}
+
+.btn.focus{
+	background: none repeat scroll 0 0 #DD624B;
+    border-bottom: 1px solid #CB563F;
+    border-top: 1px solid #EE836F;
+    border-left:0;
+    border-right:0;
+    box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;
+    color: #FFFFFF;
+    margin-top: 1px;	
+}
+
+#edit_check_list_menu div{
+	float:left;
+	margin-left: 75px;
+}
+
+#edit_check_list_menu a.focus {
+    float: none;
+    font-size: 11px;
+    margin-top: 3px;
+    padding: 3px 0;
+}
+
+#edit_check_list_menu a.focus.first{
+    margin-top: 0;
+}
+
+#frm_update_check_list input[type="submit"]{
+	width: 140px;	
+}
+#error_message_menu {
+    float: left;
+    margin-top: 50px;
+}
+#error_message_menu a {
+    text-align: center;
+    width: 140px;
+    margin: 2px 0;  
+    display:block;
+}
+
+#view_cases {
+    float: left;
+    margin: 20px 0 0 0;
+}
+#register_errors_content {
+    float: right;
+    margin-top: 20px;   
+}
+#edit_check_list_menu a {
+    float: left;
+    padding: 14px 0;
+    text-align: center;
+    width: 185px;
+}
+#edit_check_list_menu {
+    margin: 0 0 20px;
+    overflow: hidden;
+}
+.content_wrp {
+ 	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DDDDDD;
+    margin-bottom: 20px;
+    padding: 15px;
+    width: 800px;
+}
+.box_header {
+    background: none repeat scroll 0 0 #2647A0;
+    border-left: 1px solid #173073;
+    border-right: 1px solid #173073;
+    border-top: 1px solid #173073;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: normal;
+    margin: 0;
+    padding: 3px 0 3px 15px;
+    text-align: left;
+    width: 815px;
+}
+
+/* ======================== VIEW CASES ============================= */
+
+li.check_item_case h4 {
+    margin: 5px 0;
+}
+li.check_item_case ul{
+    margin-bottom: 20px;
+}
+li.check_item_case ul li {
+    border: 1px solid #DDDDDD;
+    margin: 5px 0 0;
+    padding: 5px;
+}
+
+#main_content .quick_edit fieldset {
+	padding: 10px;
+	border: 1px solid #DDDDDD;
+}
+.frm_update_case label {
+	display: block;	
+}
+.frm_update_case textarea {
+	width: 500px;
+	display: block;
+}
+.quick_edit hr {
+	color:#fafafa;
+}
+.frm_update_case input[type=submit]{
+	float:right;	
+}
+a.view_check_list{
+ 	color: #FFFFFF;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    height: 13px;
+    text-decoration: none;
+    width: 24px;	
+}
+.quick_edit label{
+	font-weight:bold;
+	vertical-align:top;
+}
+.quick_edit h3{
+	margin:0;
+}
+.quick_edit select{
+	display: inline-block;
+	vertical-align:top;
+}
+.quick_menu {
+    font-size: 12px;
+    margin-left: 10px;
+    padding: 2px;
+    text-decoration: underline;
+}
+.quick_menu a{
+	margin: 0 5px;	
+}
+ul#groups {
+    margin-left: 10px;
+    margin-top: 5px;
+}
+ul#groups h4{
+    margin: 4px 0;
+}
+.input_error_msg{
+ 	background:#FBE3E4;
+ 	border-bottom-right-radius: 4px;
+ 	color: #D12F19;
+ 	display: block;
+ 	padding: 4px 5px;
+ 	width: 150px;
+}
+
+input.focus, select.focus{
+	border: 2px solid #dae6f4;
+}
+
+div.controller_checklist {
+	padding: 20px;
+	border: 1px solid #ABABAB;
+}
+
+/* ======================== REGISTER CONTROL FOR LOCATION ============================== */
+#choose_control{
+	margin: 10px;
+	padding: 10px; 
+	width: 25%;
+}
+.error_msg {
+  	color: red;
+    display: none;
+    font-size: 14px;
+    padding: 7px 0;
+}
+
+#control_details #select_all{
+	margin-left: 660px;	
+}
+#control_details #location_form{
+	margin-left: 20px;
+	margin-bottom: 20px;	
+}
+
+.help_text {
+    background: none repeat scroll 0 0 #DDDDDD;
+    padding: 3px 6px;
+    display: none;
+}

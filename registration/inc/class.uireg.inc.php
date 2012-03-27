@@ -209,16 +209,15 @@ HTML;
 			}
 
 			$this->template->set_block ('form', 'other_fields_proto', 'other_fields_list');
-
 			reset ($this->fields);
-			while (list ($num, $field_info) = each ($this->fields))
+			foreach ($this->fields as $num => $field_info)
 			{
 				$input_field = $this->get_input_field ($field_info, $post_values);
 				$var = array (
 					'missing_indicator' => $missing[$field_info['field_name']] ? '<font color="#CC0000">*</font>' : '',
 					'bold_start'  => $field_info['field_required'] == 'Y' ? '<b>' : '',
 					'bold_end'    => $field_info['field_required'] == 'Y' ? '</b>' : '',
-					'lang_displayed_text' => lang ($field_info['field_text']),
+					'lang_displayed_text' => ltrim(lang ($field_info['field_text']),'!'),
 					'input_field' => $input_field
 				);
 
@@ -314,8 +313,6 @@ HTML;
 
 		function get_input_field ($field_info, $post_values)
 		{
-//			global $r_regs, $o_regs;
-
 			$post_value = $post_values[$field_info['field_name']];
 
 			$name = $field_info['field_name'];
@@ -368,11 +365,11 @@ HTML;
 				else
 				{
 					$rstring = '<select name="' . $a . '[' . $name . ']"><option value=""> </option>';
-					while (list (,$value) = each ($values))
+					foreach ($values as $value)
 					{
 						$value = trim ($value);
 
-						unset ($selected);
+						$selected = '';
 						if ($value == $post_value)
 						{
 							$selected = "selected";
