@@ -198,14 +198,14 @@
 
 	<fieldset>
 		<!-- Filters -->
-		<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
-		<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
-			<option value="all"><?php echo lang('all') ?></option>
-			<option value="1" <?php if($list_id == 'new_activities'){ echo 'selected="selected"';}?>><?php echo lang('new') ?></option>
-			<option value="2" ><?php echo lang('change') ?></option>
-			<option value="3" ><?php echo lang('published') ?></option>
-			<option value="5" ><?php echo lang('rejected') ?></option>
-		</select>
+			<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
+			<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
+				<option value="all"><?php echo lang('all') ?></option>
+				<option value="1"><?php echo lang('new') ?></option>
+				<option value="2"><?php echo lang('change') ?></option>
+			<?php if(!$nofilter){ //remove state if on dashboard ?><option value="3" ><?php echo lang('published') ?></option><?php }?>
+			<?php if(!$nofilter){ //remove state if on dashboard ?><option value="5" ><?php echo lang('rejected') ?></option><?php }?>
+			</select>
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('office') ?></label>
 		<?php
 			$districts = activitycalendar_soactivity::get_instance()->select_district_list(); 
