@@ -473,7 +473,7 @@ dd ul li {
 
 
 /* =======================================  ITEM LIST  ========================================= */
-
+/*
 ul.itemlist {
     position: relative;
 }
@@ -508,6 +508,62 @@ ul.groups h3 {
 
 .drag_group {
 	width: 650px;
+}
+*/
+
+/* =======================================  ITEM LIST  ========================================= */
+ul.groups {
+    padding: 0;
+	margin:0;
+    position: relative;
+}
+ul.groups li {
+    padding: 3px 0;
+}
+ul.groups li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+ul.groups h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+ul.groups a{
+	text-decoration:none;
+	color:#000;
+}
+ul.groups a:visited{
+	color:#000;
+}
+
+.drag_group a:hover{
+  cursor: move;
+}
+
+.drag_elem{
+  z-index: 100;
+  position:absolute;
+  opacity: .50;
+  filter: alpha(opacity=50);
+  margin-left:0;
+  padding-left:0;
+  background: #dedede;
+}
+
+ul.items {
+    list-style: none outside none;
+    margin: 0 20px;
+    padding: 0;
+    position: relative;
+}
+
+ul.items li.list_item{
+  position:relative;
+  z-index: 1;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  top: 0px;
+  left: 0px;
 }
 
 /* =======================================  EXPAND LIST  ========================================= */
