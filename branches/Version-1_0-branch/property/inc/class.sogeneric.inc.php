@@ -1679,7 +1679,7 @@
 						'name'				=> lang('event action'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
-						'menu_selection'	=> 'admin::property::ticket_status'
+						'menu_selection'	=> 'admin::property::ticket::ticket_status'
 					);
 				break;
 

@@ -149,6 +149,31 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.vendor', 'menu_selection' => 'admin::property::vendor::vendor_attribs') )
 						)
 					);
+
+				$admin_children_ticket = array
+					(
+						'ticket_cats'	=> array
+						(
+							'text'	=> lang('Ticket Categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket::ticket_cats') )
+						),
+						'ticket_status'	=> array
+						(
+							'text'	=> lang('Ticket status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_status') )
+						),
+						'ticket_config'	=> array
+						(
+							'text'	=> lang('ticket config'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')) )
+						),
+						'ticket_attribs'	=> array
+						(
+							'text'	=> lang('ticket Attributes'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' => '.ticket', 'menu_selection' => 'admin::property::ticket::ticket_attribs') )
+						)
+					);
+
 				$admin_children_owner = array
 					(
 						'owner_cats'	=> array
@@ -347,20 +372,11 @@
 							'text'	=> lang('Workorder Detail Categories'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'wo_hours') )
 						),
-						'ticket_cats'	=> array
+						'ticket'	=> array
 						(
-							'text'	=> lang('Ticket Categories'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
-						),
-						'ticket_status'	=> array
-						(
-							'text'	=> lang('Ticket status'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'ticket_status') )
-						),
-						'ticket_config'	=> array
-						(
-							'text'	=> lang('ticket config'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')) )
+							'text'	=> lang('helpdesk'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket::ticket_cats') ),
+							'children' => $admin_children_ticket
 						),
 						'tenant'	=> array
 						(
