@@ -86,7 +86,7 @@
 			{
 				$attributes['datatype_text']	= $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url']			= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
-				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
+				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
 					if(!$view_only)
 					{
