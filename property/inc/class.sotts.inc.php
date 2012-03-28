@@ -65,6 +65,7 @@
 		{
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('property.historylog','tts');
+			$this->custom 		= createObject('property.custom_fields');
 			$this->db 			= & $GLOBALS['phpgw']->db;
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
@@ -566,7 +567,7 @@
 			return $entity;
 		}
 
-		function read_single($id)
+		function read_single($id, $values = array())
 		{
 			$id = (int) $id;
 			$sql = "SELECT * FROM fm_tts_tickets WHERE id = {$id}";
@@ -615,6 +616,15 @@
 				{
 					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 				}
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					$ticket['attributes'] = $values['attributes'];
+					foreach ( $ticket['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
+				}
 			}
 
 			return $ticket;
@@ -635,11 +645,25 @@
 			}
 		}
 
-		function add(&$ticket)
+		function add(&$ticket , $values_attribute = array())
 		{
+			$table = 'fm_tts_tickets';
+
 			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
 				foreach ($ticket['location'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+			}
+
+			$data_attribute = $this->custom->prepare_for_db($table, $values_attribute);
+			if(isset($data_attribute['value_set']))
+			{
+				foreach($data_attribute['value_set'] as $input_name => $value)
 				{
 					if(isset($value) && $value)
 					{
@@ -716,7 +740,6 @@
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-			$table = 'fm_tts_tickets';
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
 			$id = $this->db->get_last_insert_id($table,'id');
@@ -887,7 +910,7 @@
 			return $receipt;
 		}
 
-		function update_ticket(&$ticket,$id = 0, $receipt = array())
+		function update_ticket(&$ticket,$id = 0, $receipt = array(), $values_attribute = array())
 		{
 			$this->fields_updated = array();
 			$id = (int) $id;
@@ -1267,6 +1290,19 @@
 			}
 
 			$value_set					= array();
+
+			$data_attribute = $this->custom->prepare_for_db('fm_tts_tickets', $values_attribute);
+			if(isset($data_attribute['value_set']))
+			{
+				foreach($data_attribute['value_set'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+			}
+
 			$value_set['vendor_id']		= $ticket['vendor_id'];
 			$value_set['b_account_id']	= $ticket['b_account_id'];
 			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
