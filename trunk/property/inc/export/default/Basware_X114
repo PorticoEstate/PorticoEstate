@@ -712,7 +712,8 @@
 					return $message;
 				}
 */
-				$amount =  $line[$BelopFelt] * 100; 
+				$amount =  $line[$BelopFelt] * 100;
+				$amount =  number_format($amount,0,'','');
 
 				if($line['order_id'])
 				{
