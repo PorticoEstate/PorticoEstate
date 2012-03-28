@@ -109,7 +109,21 @@
 							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
 							$attributes['value']['hour'] = date('H', $timestamp);
 							$attributes['value']['min'] = date('i', $timestamp);
-//							_debug_array($attributes);die();
+							$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
+							$confirm_msg = lang('delete') . '?';
+							$clear_functions[$m]['action']	= <<<JS
+							if(confirm("{$confirm_msg}"))
+							{
+								var attribute_{$i}_date = document.getElementById('values_attribute_{$i}');
+								var attribute_{$i}_hour = document.getElementById('values_attribute_{$i}_hour');
+								var attribute_{$i}_min = document.getElementById('values_attribute_{$i}_min');
+								attribute_{$i}_date.value = '';
+								attribute_{$i}_hour.value = '';
+								attribute_{$i}_min.value = '';								
+							}
+JS;
+							$m++;
+
 						}
 						else
 						{
@@ -370,7 +384,7 @@ JS;
 					$values['lookup_functions'] .= '}'."\r\n";
 				}
 			}
-
+//_debug_array($values);die();
 			if(isset($lookup_functions) && $lookup_functions)
 			{
 				$GLOBALS['phpgw']->session->appsession('insert_record_values' . $location,$appname,$insert_record_values);

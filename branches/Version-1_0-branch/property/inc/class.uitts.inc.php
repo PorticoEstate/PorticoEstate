@@ -2042,6 +2042,7 @@
 			$data = array
 				(
 					'custom_attributes'				=> array('attributes' => $values['attributes']),
+					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'contact_data'					=> $contact_data,
 					'simple'						=> $this->_simple,
 					'show_finnish_date'				=> $this->_show_finnish_date,
@@ -3167,6 +3168,7 @@
 			$data = array
 				(
 					'custom_attributes'				=> array('attributes' => $ticket['attributes']),
+					'lookup_functions'				=> isset($ticket['lookup_functions'])?$ticket['lookup_functions']:'',
 					'send_response'					=> isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
 					'value_sms_phone'				=> $ticket['contact_phone'],
 					'access_order'					=> $access_order,
