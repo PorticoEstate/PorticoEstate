@@ -358,6 +358,12 @@
 								<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 							</xsl:when>
 							<xsl:when test="datatype='DT'">
+											<xsl:variable name="clear_function">
+												<xsl:text>clear_</xsl:text>
+												<xsl:value-of select="name"/>
+												<xsl:text>();</xsl:text>
+											</xsl:variable>
+
 								<table>
 									<tr>
 										<td>
@@ -399,6 +405,17 @@
 													</xsl:when>
 												</xsl:choose>
 											</input>
+										</td>
+										<td>
+											<input type="checkbox" name="clear_{name}_box" onClick="{$clear_function}">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'delete')"/>
+												</xsl:attribute>
+												<xsl:attribute name="readonly">
+													<xsl:text>readonly</xsl:text>
+												</xsl:attribute>
+											</input>
+
 										</td>
 									</tr>
 								</table>
