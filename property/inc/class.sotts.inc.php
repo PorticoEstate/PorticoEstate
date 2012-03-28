@@ -1292,14 +1292,12 @@
 			$value_set					= array();
 
 			$data_attribute = $this->custom->prepare_for_db('fm_tts_tickets', $values_attribute);
+
 			if(isset($data_attribute['value_set']))
 			{
 				foreach($data_attribute['value_set'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
+					$value_set[$input_name] = $value;
 				}
 			}
 
@@ -1309,6 +1307,7 @@
 			$value_set['ecodimb']		= $ticket['ecodimb'];
 			$value_set['budget']		= $ticket['budget'];
 			$value_set['branch_id']		= $ticket['branch_id'];
+
 			$value_set					= $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 

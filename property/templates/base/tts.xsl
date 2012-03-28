@@ -508,6 +508,11 @@
 
 	<!-- add -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="add">
+		<script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+		</script>
+
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<tr>
@@ -830,6 +835,7 @@
 	<xsl:template xmlns:php="http://php.net/xsl" match="view">
 		<script type="text/javascript">
 			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
 			function generate_order()
 			{
 				Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
