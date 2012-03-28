@@ -16,6 +16,8 @@
 
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" match="attributes">
+	  	<xsl:variable name="lang_hour"><xsl:value-of select="php:function('lang', 'hour')" /></xsl:variable>
+	  	<xsl:variable name="lang_min"><xsl:value-of select="php:function('lang', 'minute')" /></xsl:variable>
 		<xsl:variable name="statustext">
 			<xsl:value-of select="statustext"/>
 		</xsl:variable>
@@ -354,6 +356,52 @@
 									</xsl:choose>
 								</input>
 								<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
+							</xsl:when>
+							<xsl:when test="datatype='DT'">
+								<table>
+									<tr>
+										<td>
+											<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value][date]" value="{value/date}" size="12" maxlength="12">
+												<xsl:attribute name="readonly">
+													<xsl:text> readonly</xsl:text>
+												</xsl:attribute>
+												<xsl:choose>
+													<xsl:when test="disabled!=''">
+														<xsl:attribute name="disabled">
+															<xsl:text> disabled</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+											</input>
+											<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
+										</td>
+										<td>
+											<input type="text" id="values_attribute_{counter}_hour" name="values_attribute[{counter}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">
+												<xsl:choose>
+													<xsl:when test="disabled!=''">
+														<xsl:attribute name="disabled">
+															<xsl:text> disabled</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+											</input>
+										</td>
+										<td>
+											<xsl:text> : </xsl:text>
+										</td>
+										<td>
+											<input type="text" id="values_attribute_{counter}_min" name="values_attribute[{counter}][value][min]" value="{value/min}" size="2" maxlength="2" title="{$lang_min}">
+												<xsl:choose>
+													<xsl:when test="disabled!=''">
+														<xsl:attribute name="disabled">
+															<xsl:text> disabled</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+											</input>
+										</td>
+									</tr>
+								</table>
 							</xsl:when>
 							<xsl:when test="datatype='T'">
 								<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]">

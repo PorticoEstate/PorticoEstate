@@ -471,6 +471,13 @@
 						$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']);
 						$attrib['value'] = date($this->_dateformat, $ts);
 						break;
+
+					case 'DT':
+						
+						$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
+						$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']);
+						$attrib['value'] = date($this->_datetimeformat, $ts);
+						break;
 				}
 			}
 			return $values_attribute;
