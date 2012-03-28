@@ -86,7 +86,7 @@
 			{
 				$attributes['datatype_text']	= $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url']			= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
-				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
+				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
 					if(!$view_only)
 					{
@@ -102,8 +102,20 @@
 
 					if(isset($attributes['value']) && $attributes['value'])
 					{
-						$timestamp_date= mktime(0,0,0,date('m',strtotime($attributes['value'])),date('d',strtotime($attributes['value'])),date('y',strtotime($attributes['value'])));
-						$attributes['value']		= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+						if($attributes['datatype'] == 'DT')
+						{
+							$timestamp= strtotime($attributes['value']);
+							$attributes['value'] = array();
+							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
+							$attributes['value']['hour'] = date('H', $timestamp);
+							$attributes['value']['min'] = date('i', $timestamp);
+//							_debug_array($attributes);die();
+						}
+						else
+						{
+							$timestamp_date= mktime(0,0,0,date('m',strtotime($attributes['value'])),date('d',strtotime($attributes['value'])),date('y',strtotime($attributes['value'])));
+							$attributes['value']		= $GLOBALS['phpgw']->common->show_date($timestamp_date,$dateformat);
+						}
 					}
 				}
 				else if($attributes['datatype'] == 'AB')
