@@ -105,27 +105,8 @@
 			$this->end_date				= $this->bo->end_date;
 			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
-			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
-			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
-			foreach ( $user_groups as $group => $dummy)
-			{
-				if ( in_array($group, $simple_group))
-				{
-					$this->_simple = true;
-					break;
-				}
-			}
-
-			reset($user_groups);
-			$group_finnish_date = isset($this->bo->config->config_data['fmtts_group_finnish_date']) ? $this->bo->config->config_data['fmtts_group_finnish_date'] : array();
-			foreach ( $user_groups as $group => $dummy)
-			{
-				if ( in_array($group, $group_finnish_date))
-				{
-					$this->_show_finnish_date = true;
-					break;
-				}
-			}
+			$this->simple				= $this->bo->simple;
+			$this->show_finnish_date	= $this->bo->show_finnish_date;
 
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
 		}
@@ -531,7 +512,7 @@
 				$default_value = array ('id'=>'','name'=>lang('Open'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				if(!$this->_simple)
+				if(!$this->simple)
 				{
 					$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => $this->_category_acl));
 					$default_value = array ('cat_id'=>'','name'=> lang('no category'));
@@ -945,18 +926,17 @@
 				}
 			}
 
-//			$uicols['name'][] = 'loc1_name';
-
-			$uicols['name'][] = 'address';
-			$uicols['descr'][]	= lang('address');
-//			$uicols['name'][] = 'user';
-//			$uicols['descr'][]	= lang('user');
-			$uicols['name'][] = 'assignedto';
-			$uicols['descr'][]	= lang('assignedto');
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][]	= lang('entry date');
-			$uicols['name'][] = 'status';
-			$uicols['descr'][]	= lang('status');
+
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+
+			foreach ($custom_cols as $col)
+			{
+				$uicols['name'][]		= $col;
+				$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+			}
+
 
 			if( $order_read )
 			{
@@ -974,20 +954,15 @@
 				$uicols['descr'][]	= lang('actual cost');
 			}
 
-			foreach($uicols_related as $related)
-			{
-				$uicols['name'][] = $related;			
-				$uicols['descr'][]	= lang(str_replace('_', ' ', $related));
-			}
-
-			if( $this->_show_finnish_date )
+/*
+			if( $this->show_finnish_date )
 			{
 				$uicols['name'][] = 'finnish_date';
 				$uicols['descr'][]	= lang('finnish date');
 				$uicols['name'][] = 'delay';
 				$uicols['descr'][]	= lang('delay');
 			}
-
+*/
 			$uicols['name'][] = 'child_date';
 			$uicols['descr'][]	= lang('child date');
 			$uicols['name'][] = 'link_view';
@@ -996,17 +971,6 @@
 			$uicols['descr'][]	= lang('lang view statustext');
 			$uicols['name'][] = 'text_view';
 			$uicols['descr'][]	= lang('text view');
-
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
-
-			foreach ($custom_cols as $col)
-			{
-	//			$uicols['input_type'][]	= 'text';
-				$uicols['name'][]		= $col;
-				$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
-	//			$uicols['statustext'][]	= $col;
-			}
-
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -1257,7 +1221,9 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
 //					$datatable['headers']['header'][$i]['width']			= (int)$uicols['width'][$i];
-					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto'
+					 || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date'
+					 || $uicols['name'][$i]=='order_id'|| $uicols['name'][$i]=='modified_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
@@ -1412,7 +1378,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', $this->_simple ? 'tts.index.simple' : 'tts.index' , 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', $this->simple ? 'tts.index.simple' : 'tts.index' , 'property' );
 		}
 
 		function index2()
@@ -2033,7 +1999,7 @@
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
 
-			if(!$this->_simple && $this->_show_finnish_date)
+			if(!$this->simple && $this->show_finnish_date)
 			{
 				$jscal = CreateObject('phpgwapi.jscalendar');
 				$jscal->add_listener('values_finnish_date');
@@ -2044,8 +2010,8 @@
 					'custom_attributes'				=> array('attributes' => $values['attributes']),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'contact_data'					=> $contact_data,
-					'simple'						=> $this->_simple,
-					'show_finnish_date'				=> $this->_show_finnish_date,
+					'simple'						=> $this->simple,
+					'show_finnish_date'				=> $this->show_finnish_date,
 					'value_origin'					=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'				=> (isset($origin)?$origin:''),
 					'value_origin_id'				=> (isset($origin_id)?$origin_id:''),
@@ -2672,7 +2638,7 @@
 					'id'		=> $id
 				);
 
-			if(!$this->_simple && $this->_show_finnish_date)
+			if(!$this->simple && $this->show_finnish_date)
 			{
 				$jscal = CreateObject('phpgwapi.jscalendar');
 				$jscal->add_listener('values_finnish_date');
@@ -3186,8 +3152,8 @@
 
 					'contact_data'					=> $contact_data,
 					'lookup_type'					=> $lookup_type,
-					'simple'						=> $this->_simple,
-					'show_finnish_date'				=> $this->_show_finnish_date,
+					'simple'						=> $this->simple,
+					'show_finnish_date'				=> $this->show_finnish_date,
 					'tabs'							=> self::_generate_tabs(true),
 					'td_count'						=> '""',
 					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
