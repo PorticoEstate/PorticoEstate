@@ -436,7 +436,7 @@
 
 			$return_fields = "fm_tts_tickets.id,fm_tts_tickets.assignedto,fm_tts_tickets.status,fm_tts_tickets.user_id,"
 			. "fm_tts_tickets.subject,fm_tts_tickets.address,fm_tts_tickets.location_code,fm_tts_tickets.priority,fm_tts_tickets.cat_id,fm_tts_tickets.group_id,"
-			. "fm_tts_tickets.entry_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
+			. "fm_tts_tickets.entry_date,fm_tts_tickets.modified_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
 			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name {$result_order_field}";
 
 			//fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district
@@ -525,6 +525,7 @@
 							'cat_id'			=> $this->db->f('cat_id'),
 							'group_id'			=> $this->db->f('group_id'),
 							'entry_date'		=> $this->db->f('entry_date'),
+							'modified_date'		=> $this->db->f('modified_date'),
 							'finnish_date'		=> $this->db->f('finnish_date'),
 							'finnish_date2'		=> $this->db->f('finnish_date2'),
 							'order_id'			=> $this->db->f('order_id'),
@@ -609,6 +610,8 @@
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
 				$ticket['branch_id']		= $this->db->f('branch_id');
 				$ticket['entry_date']		= $this->db->f('entry_date');
+				$ticket['modified_date']	= $this->db->f('modified_date');
+
 				$user_id=(int)$this->db->f('user_id');
 
 				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
@@ -731,6 +734,7 @@
 			$value_set['location_code']	= $ticket['location_code'];
 			$value_set['address']		= $address;
 			$value_set['entry_date']	= time();
+			$value_set['modified_date']	= time();
 			$value_set['finnish_date']	= $ticket['finnish_date'];
 			$value_set['contact_id']	= $ticket['contact_id'];
 			$value_set['publish_note']	= 1;
@@ -872,12 +876,13 @@
 				}
 			}
 
-			$this->db->transaction_commit();
-
 			if ($this->fields_updated)
 			{
+				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}",__LINE__,__FILE__);
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
+
+			$this->db->transaction_commit();
 
 			return $receipt;
 
@@ -901,14 +906,17 @@
 				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
 			}
 
-			$this->db->transaction_commit();
-
 			if ($this->fields_updated)
 			{
+				$this->db->query('UPDATE fm_tts_tickets SET modified_date= ' . time() . " WHERE id={$id}",__LINE__,__FILE__);
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
+
+			$this->db->transaction_commit();
+
 			return $receipt;
 		}
+
 
 		function update_ticket(&$ticket,$id = 0, $receipt = array(), $values_attribute = array())
 		{
@@ -1301,6 +1309,7 @@
 				}
 			}
 
+			$value_set['modified_date']	= time();
 			$value_set['vendor_id']		= $ticket['vendor_id'];
 			$value_set['b_account_id']	= $ticket['b_account_id'];
 			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
@@ -1313,35 +1322,9 @@
 
 			$this->db->transaction_commit();
 
-			if (isset($this->fields_updated))
+			if (isset($this->fields_updated) && $this->fields_updated)
 			{
 				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
-
-/*
-				$criteria = array
-					(
-						'appname'	=> 'property',
-						'location'	=> $this->acl_location,
-						'allrows'	=> true
-					);
-
-				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
-
-				foreach ( $custom_functions as $entry )
-				{
-					// prevent path traversal
-					if ( preg_match('/\.\./', $entry['file_name']) )
-					{
-						continue;
-					}
-
-					$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-					if ( $entry['active'] && is_file($file) )
-					{
-						require_once $file;
-					}
-				}
-*/
 			}
 			return $receipt;
 		}
