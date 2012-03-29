@@ -824,9 +824,14 @@
 			return $this->so->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
 		}
 
-		public function get_user_list()
+		public function get_user_list($selected = 0)
 		{
-			return $this->so->get_user_list();
+			$ser_list = $this->so->get_user_list();
+			foreach($ser_list as &$user)
+			{
+				$user['selected'] = $user['id'] == $selected ? true : false;
+			}
+			return $ser_list;
 		}
 
 		public function get_budget($project_id)
