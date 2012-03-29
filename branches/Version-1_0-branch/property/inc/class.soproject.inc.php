@@ -377,11 +377,6 @@
 
 			$this->uicols = $uicols;
 
-			if($dry_run)
-			{
-				return array();
-			}
-
 			$order_field = '';
 			if ($order)
 			{
@@ -610,150 +605,157 @@
 			$sql_end =   str_replace('SELECT DISTINCT fm_project.id',"SELECT DISTINCT fm_project.id {$order_field}", $sql_minimized) . " GROUP BY fm_project.id {$ordermethod}";
 
 			$project_list = array();
-			if(!$allrows)
+
+			if(!$dry_run)
 			{
-				$this->db->limit_query($sql_end,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				if($this->total_records > 200)
+				if(!$allrows)
 				{
-					$_fetch_single = true;
+					$this->db->limit_query($sql_end,$start,__LINE__,__FILE__);
 				}
 				else
 				{
-					$_fetch_single = false;
-				}
-				$this->db->query($sql_end,__LINE__,__FILE__, false, $_fetch_single );
-				unset($_fetch_single);
-			}
-
-			$project_list = array();
-
-			$count_cols_return=count($cols_return);
-
-			while ($this->db->next_record())
-			{
-				$project_list[] = array('project_id' => $this->db->f('id'));
-			}
-
-			foreach($project_list as &$project)
-			{
-				$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
-				$this->db->next_record();
-
-				for ($i=0;$i<$count_cols_return;$i++)
-				{
-					$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
-				}
-				$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
-
-				$location_code=	$this->db->f('location_code');
-				$location = explode('-',$location_code);
-				$count_location =count($location);
-
-				for ($m=0;$m<$count_location;$m++)
-				{
-					$project['loc' . ($m+1)] = $location[$m];
-					$project['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
-				}
-
-				$project['combined_cost']	= 0;
-				$project['actual_cost']		= 0;
-				$project['billable_hours']	= 0;
-
-				$sql_workder  = 'SELECT contract_sum, calculation, budget,'
-				. ' (fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost) as actual_cost,'
-				. ' billable_hours,closed'
-				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-				. " WHERE project_id = '{$project['project_id']}'";
-
-				$this->db->query($sql_workder);
-				while ($this->db->next_record())
-				{
-					$closed = false;
-					if($this->db->f('closed'))
+					if($this->total_records > 200)
 					{
-						$_sum = 0;
-						$closed = true;
-					}
-					else if($this->db->f('contract_sum') > 0)
-					{
-						$_sum = $this->db->f('contract_sum');
-					}
-					else if($this->db->f('calculation') > 0)
-					{
-						$_sum = $this->db->f('calculation');
-					}
-					else if($this->db->f('budget') > 0)
-					{
-						$_sum = $this->db->f('budget');
+						$_fetch_single = true;
 					}
 					else
 					{
-						$_sum = 0;
+						$_fetch_single = false;
 					}
-
-					$_actual_cost = (int)$this->db->f('actual_cost');
-
-					if($closed)
-					{
-						$__actual_cost = 0;
-					}
-					else
-					{
-						$__actual_cost = $_actual_cost;
-					}
-					
-					$project['combined_cost']	+= ($_sum - $__actual_cost);
-					$project['actual_cost']		+= $_actual_cost;
-					$project['billable_hours']	+= (int)$this->db->f('billable_hours');
+					$this->db->query($sql_end,__LINE__,__FILE__, false, $_fetch_single );
+					unset($_fetch_single);
 				}
 
-				$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
-				. " FROM fm_ecobilag {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code  = fm_workorder.id"
-				. " WHERE fm_workorder.project_id = '{$project['project_id']}'";
+				$project_list = array();
 
-				$this->db->query($sql_workder);
+				$count_cols_return=count($cols_return);
+
 				while ($this->db->next_record())
 				{
-					$_actual_cost = (int)$this->db->f('actual_cost');
-					$project['combined_cost']	+= ($_sum - $_actual_cost);
-					$project['actual_cost']		+= $_actual_cost;
+					$project_list[] = array('project_id' => $this->db->f('id'));
 				}
 
-				if($project['combined_cost'] < 0)
+				foreach($project_list as &$project)
 				{
-					$project['combined_cost'] = 0;
+					$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
+					$this->db->next_record();
+
+					for ($i=0;$i<$count_cols_return;$i++)
+					{
+						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
+					}
+					$project['grants'] = (int)$this->grants[$this->db->f('user_id')];
+
+					$location_code=	$this->db->f('location_code');
+					$location = explode('-',$location_code);
+					$count_location =count($location);
+
+					for ($m=0;$m<$count_location;$m++)
+					{
+						$project['loc' . ($m+1)] = $location[$m];
+						$project['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
+					}
+
+					$project['combined_cost']	= 0;
+					$project['actual_cost']		= 0;
+					$project['billable_hours']	= 0;
+
+					$sql_workder  = 'SELECT contract_sum, calculation, budget,'
+					. ' (fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost) as actual_cost,'
+					. ' billable_hours,closed'
+					. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+					. " WHERE project_id = '{$project['project_id']}'";
+
+					$this->db->query($sql_workder);
+					while ($this->db->next_record())
+					{
+						$closed = false;
+						if($this->db->f('closed'))
+						{
+							$_sum = 0;
+							$closed = true;
+						}
+						else if($this->db->f('contract_sum') > 0)
+						{
+							$_sum = $this->db->f('contract_sum');
+						}
+						else if($this->db->f('calculation') > 0)
+						{
+							$_sum = $this->db->f('calculation');
+						}
+						else if($this->db->f('budget') > 0)
+						{
+							$_sum = $this->db->f('budget');
+						}
+						else
+						{
+							$_sum = 0;
+						}
+
+						$_actual_cost = (int)$this->db->f('actual_cost');
+
+						if($closed)
+						{
+							$__actual_cost = 0;
+						}
+						else
+						{
+							$__actual_cost = $_actual_cost;
+						}
+
+						$project['combined_cost']	+= ($_sum - $__actual_cost);
+						$project['actual_cost']		+= $_actual_cost;
+						$project['billable_hours']	+= (int)$this->db->f('billable_hours');
+					}
+
+					$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
+					. " FROM fm_ecobilag {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code  = fm_workorder.id"
+					. " WHERE fm_workorder.project_id = '{$project['project_id']}'";
+
+					$this->db->query($sql_workder);
+					while ($this->db->next_record())
+					{
+						$_actual_cost = (int)$this->db->f('actual_cost');
+						$project['combined_cost']	+= ($_sum - $_actual_cost);
+						$project['actual_cost']		+= $_actual_cost;
+					}
+
+					if($project['combined_cost'] < 0)
+					{
+						$project['combined_cost'] = 0;
+					}
 				}
-			}
+				unset($project);
 
-			$_datatype = array();
-			foreach($this->uicols['name'] as $key => $_name)
-			{
-				$_datatype[$_name] =  $this->uicols['datatype'][$key];
-			}
-
-			$dataset = array();
-			$j=0;
-
-			foreach($project_list as $project)
-			{
-				foreach ($project as $field => $value)
+				$_datatype = array();
+				foreach($this->uicols['name'] as $key => $_name)
 				{
-					$dataset[$j][$field] = array
-					(
-						'value'		=> $value,
-						'datatype'	=> isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
-						'attrib_id'	=> isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
-					);
+					$_datatype[$_name] =  $this->uicols['datatype'][$key];
 				}
-				$j++;
+
+				$dataset = array();
+				$j=0;
+
+				foreach($project_list as $project)
+				{
+					foreach ($project as $field => $value)
+					{
+						$dataset[$j][$field] = array
+						(
+							'value'		=> $value,
+							'datatype'	=> isset($_datatype[$field]) && $_datatype[$field] ? $_datatype[$field] : false,
+							'attrib_id'	=> isset($_attrib[$field]) && $_attrib[$field] ? $_attrib[$field] : false
+						);
+					}
+					$j++;
+				}
+
+				$values = $this->custom->translate_value($dataset, $location_id);
+
+				return $values;
 			}
 
-			$values = $this->custom->translate_value($dataset, $location_id);
-
-			return $values;
+			return array();
 		}
 
 		function get_meter_table()
@@ -1393,7 +1395,7 @@
 						'modified_date'		=> $this->db->f('modified_date')
 					);
 				}
-				
+
 				foreach($budget as $entry)
 				{
 					$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$new_project_id} AND year = {$entry['year']}";
