@@ -1941,11 +1941,15 @@ HTML;
 
 			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
 
+			$GLOBALS['phpgw']->preferences->set_account_id($common_data['workorder']['user_id'], true);
+
+			$from_name =	$GLOBALS['phpgw']->accounts->get($common_data['workorder']['user_id'])->__toString();
+
 			$from = lang('date') . ": {$date}\n";
 			$from .= lang('dimb') .": {$common_data['workorder']['ecodimb']}\n";
-			$from .= lang('from') . ":\n   {$GLOBALS['phpgw_info']['user']['fullname']}";
-			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
-			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone']}";
+			$from .= lang('from') . ":\n   {$from_name}";
+			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
+			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
 
 			$data = array
 				(
