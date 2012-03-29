@@ -30,31 +30,31 @@ $(document).ready(function(){
 	$("#frmSaveOrder").submit(function(e){
 		e.preventDefault();
 
-		var group_order_str = "";
-		var item_order_str = "";
+		var control_id = $("#control_id").val();
+		
+		var group_order_arr = new Array();
+		var item_order_arr = new Array();
 		$('ul.groups li.drag_group').each(function(){
 			
 			var group_order_nr = $(this).find("span.group_order_nr").text();
 			var group_id = $(this).find("input[name=group_id]").val();
 			
-			group_order_str += group_id + ":" + group_order_nr + ",";
-			//alert("Group id: " + group_id  + ", " + "Order nr: " + group_order_nr);
+			group_order_arr.push( group_id + ":" + group_order_nr );
 			
 			$(this).find("ul.items li").each(function(){
 				var item_order_nr = $(this).find("span.item_order_nr").text();
 				var item_id = $(this).find("input[name=item_id]").val();
 				
-				item_order_str += item_id + ":" + item_order_nr + ",";
-				
-				//alert("Item id: " + item_id  + ", " + "Item nr: " + item_order_nr);
+				item_order_arr.push( item_id + ":" + item_order_nr );
 			});
 		});
-		
+	
 		var requestUrl = "index.php?menuaction=controller.uicontrol_group.save_group_and_item_order";
-			
+		
+		// Saves order for groups and items to db
 		$.ajax({
 			  type: 'POST',
-			  url: requestUrl + "&group_order=" + group_order_str + "&item_order=" + item_order_str,
+			  url: requestUrl + "&control_id=" + control_id + "&group_order=" + group_order_arr.toString() + "&item_order=" + item_order_arr.toString(),
 			  success: function() {
 				  alert("Lagret");
 			  }
@@ -62,6 +62,7 @@ $(document).ready(function(){
 	});
 });
 
+// Initialises drag. Sets placeholder, next, previous and cloned drag row. 
 function init_drag(placeholder, e){
 		adj_y = e.pageY - $(placeholder).position().top;
 		
