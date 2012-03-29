@@ -1917,6 +1917,7 @@ medium symptoms	property	no	Middels Symptomer
 serious symptoms	property	no	Kraftige Symptomer
 low probability	property	no	Liten sannsynlighet
 medium probability	property	no	Middels sannsynlighet
+modified date	property	no	Oppdatert dato
 high probability	property	no	Stor sannsynlighet
 weight	property	no	Vekt
 risk	property	no	Risiko
