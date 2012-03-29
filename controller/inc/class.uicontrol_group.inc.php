@@ -49,13 +49,13 @@
 
 		public $public_functions = array
 		(
-			'index'	=>	true,
-			'query'	=>	true,
-			'edit'	=>	true,
-			'view'	=>	true,
-			'add'	=>	true,
-			'save_group_order'	=>	true,
-			'get_control_groups_by_control_area' => true
+			'index'									=>	true,
+			'query'									=>	true,
+			'edit'									=>	true,
+			'view'									=>	true,
+			'add'									=>	true,
+			'save_group_and_item_order'				=>	true,
+			'get_control_groups_by_control_area' 	=> true
 		);
 
 		public function __construct()
@@ -530,29 +530,79 @@
 			}
 		}
 
-		public function save_group_order(){
-			$control_group_id = phpgw::get_var('control_group_id');
+		public function save_group_and_item_order(){
 			$control_id = phpgw::get_var('control_id');
-			$group_order_nr = phpgw::get_var('group_order_nr');
-
-			$status = true;
-
-			$control_group_list = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $control_group_id);
-
-			if( $control_group_list == null ){
-				$control_group_list = new controller_control_group_list();
-				$control_group_list->set_control_id($control_id);
-				$control_group_list->set_control_group_id($control_group_id);
-				$control_group_list->set_order_nr( $group_order_nr );
-				$this->so_control_group_list->add( $control_group_list );
-			}else{
-				$control_group_list->set_order_nr( $group_order_nr );
-				$this->so_control_group_list->update( $control_group_list );
+			$item_order_str = phpgw::get_var('item_order');
+			$group_order_str = phpgw::get_var('group_order');
+			
+			$status = 1;
+			
+			$group_order_arr = explode(",", $group_order_str);
+			$item_order_arr = explode(",", $item_order_str);
+			
+			$db_control_group_list = $this->so_control_group_list->get_db();
+					
+			// Saves order for control groups
+			foreach($group_order_arr as $group_id_order){
+				$group_id_order_arr = explode(":", $group_id_order);
+				$group_id = $group_id_order_arr[0];
+				$group_order_nr = $group_id_order_arr[1];
+				
+				// Gets control_group_list object from db if it exists
+				$control_group_list = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $group_id);
+				
+				$db_control_group_list->transaction_begin();
+				
+				// Updates group order if control_group_list object exists	
+				if( $control_group_list != null ){
+					
+					$control_group_list->set_order_nr( $group_order_nr );
+					$id = $this->so_control_group_list->update( $control_group_list );
+					
+					if($id > 0)
+						$db_control_group_list->transaction_commit();
+					else
+						$db_control_group_list->transaction_abort();
+				}
+				// If group is not in db, report error
+				else{
+					echo "Error: group not found";
+					$status  = 0;
+				}
+			}			
+			
+			$db_control_item_list = $this->so_control_item_list->get_db();
+		
+			// Saves order for control items	
+			foreach($item_order_arr as $item_id_order){
+				$item_id_order_arr = explode(":", $item_id_order);
+				$control_item_id = $item_id_order_arr[0];
+				$item_order_nr = $item_id_order_arr[1];
+				
+				$control_item_list = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
+				
+				$db_control_item_list->transaction_begin();
+				$status = 0;
+				
+				// Updates item order if control_item_list object exists	
+				if( $control_item_list != null ){
+					$control_item_list->set_order_nr( $item_order_nr );
+					$id = $this->so_control_item_list->update( $control_item_list );
+					
+					if($id > 0)
+						$db_control_item_list->transaction_commit();
+					else
+						$db_control_item_list->transaction_abort();
+				}
+				// if item does not exists report error
+				else{
+					echo "Error: item not found";
+					$status  = 0;					
+				}
 			}
-
-			return status;
+			
+			return $status;
 		}
-
 
 		public function query()
 		{
