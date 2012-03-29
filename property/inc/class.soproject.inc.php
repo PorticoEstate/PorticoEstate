@@ -380,43 +380,51 @@
 			$order_field = '';
 			if ($order)
 			{
-				$ordermethod = " ORDER BY $order $sort";
+				$ordermethod = "ORDER BY $order $sort";
 				switch($order)
 				{
 					case 'project_id':
-						$ordermethod = " ORDER BY fm_project.id {$sort}";
+						$ordermethod = "ORDER BY fm_project.id {$sort}";
 						break;
 					case 'actual_cost':
 						$order_field = ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
 						break;
 					case 'combined_cost':
-							$order_field = ',sum(fm_workorder.combined_cost) as combined_cost';
+						$order_field = ',sum(fm_workorder.combined_cost) as combined_cost';
 						break;
 					case 'address':
-							$order_field = ", fm_project.address";
+						$order_field = ", fm_project.address";
+						$group_field = $order_field;
 						break;
 					case 'status':
 							$order_field = ", fm_project_status.descr as status";
+							$group_field = ', fm_project_status.descr';
+							$ordermethod = "ORDER BY fm_project_status.descr {$sort}";
 						break;
 					case 'entry_date':
 						$order_field = ", fm_project.entry_date";
+						$group_field = $order_field;
 						break;
 					case 'start_date':
 						$order_field = ", fm_project.start_date";
+						$group_field = $order_field;
 						break;
 					case 'end_date':
 						$order_field = ", fm_project.end_date";
+						$group_field = $order_field;
 						break;
 					case 'ecodimb':
 						$order_field = ", fm_project.ecodimb";
+						$group_field = $order_field;
 						break;
 					case 'location_code':
 						$order_field = ", fm_project.location_code";
+						$group_field = $order_field;
 						break;
-
 
 					default:
 						$order_field = ", {$order}";
+						$group_field = $order_field;
 				}
 			}
 			else
@@ -602,7 +610,7 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			$sql_end =   str_replace('SELECT DISTINCT fm_project.id',"SELECT DISTINCT fm_project.id {$order_field}", $sql_minimized) . " GROUP BY fm_project.id {$ordermethod}";
+			$sql_end =   str_replace('SELECT DISTINCT fm_project.id',"SELECT DISTINCT fm_project.id {$order_field}", $sql_minimized) . " GROUP BY fm_project.id {$group_field} {$ordermethod}";
 
 			$project_list = array();
 
