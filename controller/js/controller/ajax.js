@@ -12,16 +12,14 @@ $(document).ready(function(){
 		 if(period_type == 'view_month')
 		 {
 			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
-			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
 			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
-	         //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
 		 }
 		 else
 		 {
 			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
-			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
 			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
-			 //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
 		 }
 		
 		 window.location.href = requestUrl;
@@ -33,7 +31,6 @@ $(document).ready(function(){
 		var location_type_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
