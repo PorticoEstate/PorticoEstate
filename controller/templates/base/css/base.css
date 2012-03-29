@@ -16,9 +16,7 @@ div#contract_lists td {
 }
 form#invoice_run td { 
 	border: 1px solid #CDCDCD;
-	}
-
-
+}
 div#invoice_details dt{
 	float:left;
 	 font-weight: bolder;
@@ -27,16 +25,13 @@ div#invoice_details dt{
 div.content {
 	margin: 2em;	
 }
-
 .hd {
 	margin-bottom: 0;
 	text-align: center;
-	}
-	
+}	
 .hd img {
 	vertical-align: middle;
-	}
-
+}
 fieldset {
 	margin-top: 0.5em;	
 }
@@ -207,7 +202,7 @@ div.identifier-header label {
 
 table.datatableToolbar {
 	padding: .3em;
-	}
+}
 
 
 #controller_user_error {
@@ -406,8 +401,6 @@ legend, label, input, select {
 label {
 	line-height:1.5em;
 }
-
-
 	
 fieldset {
 	border-bottom:0px solid #ccc;
@@ -417,7 +410,9 @@ fieldset {
 h1 em {
 	font-style:italic;
 }
-
+a{
+	color: #0066CC;
+}
 div.info, div.error, div.warning {
 	font-weight: normal;
 	margin:20px;
@@ -472,44 +467,31 @@ dd ul li {
 }
 
 
-/* =======================================  ITEM LIST  ========================================= */
-/*
-ul.itemlist {
-    position: relative;
+.yui-content input[type="submit"] {
+    margin: 15px 0 0;
+    padding: 1px 15px;
 }
-ul.itemlist li {
-    padding: 3px 0;
+h1 img{
+ 	margin-right:5px;
+ }
+
+.yui-content h2{
+    margin:0 0 10px;
 }
 
-ul.itemlist li.odd{
-    background: none repeat scroll 0 0 #DBE7F5;
+/* =======================================  CONTROL TAB VIEW  ========================================= */
+#control_tabview .yui-navset, #control_location_tabview .yui-navset{
+	margin:0;
 }
 
-ul.itemlist h3 {
-    font-size: 18px;
-    margin: 0 0 5px;
+#control_tabview .identifier-header, #control_location_tabview .identifier-header {
+	padding-left:0;
 }
 
-ul.groups {
-    position: relative;
-}
-ul.groups li {
-    padding: 3px 0;
+#control_tabview .yui-content{
+	padding:20px;
 }
 
-ul.groups li.odd{
-    background: none repeat scroll 0 0 #DBE7F5;
-}
-
-ul.groups h3 {
-    font-size: 18px;
-    margin: 0 0 5px;
-}
-
-.drag_group {
-	width: 650px;
-}
-*/
 
 /* =======================================  ITEM LIST  ========================================= */
 ul.groups {
@@ -517,29 +499,28 @@ ul.groups {
 	margin:0;
     position: relative;
 }
-ul.groups li {
-    padding: 3px 0;
-}
 ul.groups li.odd{
     background: none repeat scroll 0 0 #DBE7F5;
 }
 ul.groups h3 {
     font-size: 18px;
-    margin: 0 0 5px;
+    margin: 0;
 }
-
-ul.groups a{
-	text-decoration:none;
-	color:#000;
+ul.groups a {
+    color: #000000;
+    display: block;
+    padding: 3px 0;
+    text-decoration: none;
 }
 ul.groups a:visited{
 	color:#000;
 }
-
+.drag_group{
+  margin-bottom: 10px;
+}
 .drag_group a:hover{
   cursor: move;
 }
-
 .drag_elem{
   z-index: 100;
   position:absolute;
@@ -549,14 +530,12 @@ ul.groups a:visited{
   padding-left:0;
   background: #dedede;
 }
-
 ul.items {
     list-style: none outside none;
     margin: 0 20px;
     padding: 0;
     position: relative;
 }
-
 ul.items li.list_item{
   position:relative;
   z-index: 1;
@@ -594,30 +573,6 @@ ul.expand_list h4 span {
     vertical-align: middle;
 }
 
-.yui-content input[type="submit"] {
-    margin: 15px 0 0;
-    padding: 1px 15px;
-}
-h1 img{
- 	margin-right:5px;
- }
- 
-#control_tabview .yui-navset, #control_location_tabview .yui-navset{
-	margin:0;
-}
-
-#control_tabview .identifier-header, #control_location_tabview .identifier-header {
-	padding-left:0;
-}
-
-#control_tabview .yui-content{
-	padding:20px;
-}
-
-.yui-content h2{
-    margin:0 0 10px;
-}
-
 #frm_control_items{
 	clear:left;
 	margin-top:10px;	
@@ -626,31 +581,6 @@ h1 img{
 dl.proplist, dl.proplist-col {
     margin: 0;
     padding-left: 0;
-}
-
-.drag_elem{
-  z-index: 100;
-  position:absolute;
-  opacity: .50;
-  filter: alpha(opacity=50);
-}
-
-#list{
-  width: 650px;
-  position:relative;
-}
-
-.list_item{
-  position:relative;
-  z-index: 1;
-  opacity: 1;
-  filter: alpha(opacity=100);
-  top: 0px;
-  left: 0px;
-}
-
-.list_item:hover, .drag_group:hover{
-  cursor: move;
 }
 
 .frm_save_order input[type='submit']{
@@ -732,6 +662,8 @@ ul.row li{
     width: 100px;
 }
 
+/* =======================================  MAIN CONTENT  ========================================= */
+
 #main_content {
     padding: 20px;
     width: 1150px;
@@ -749,13 +681,6 @@ ul.row li{
 	margin-top:0;
 }
 
-.check_list li div {
-    float: left;
-    margin: 5px;
-    padding: 2px;
-    text-align: center;
-    width: 190px;
-}
 #main_content fieldset.check_list_details {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #A3A3A3;
@@ -765,6 +690,16 @@ ul.row li{
 	background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #243356;
     padding: 15px;
+}
+
+/* =======================================  CHECK LIST  ========================================= */
+
+.check_list li div {
+    float: left;
+    margin: 5px;
+    padding: 2px;
+    text-align: center;
+    width: 190px;
 }
 
 .check_list li.heading {
@@ -793,6 +728,9 @@ ul.row li{
 .check_list li{
 	overflow:hidden;
 }
+
+/* =======================================  CHECK LIST DETAILS ========================================= */
+
 fieldset.check_list_details{
 	clear: both;
 }
@@ -804,7 +742,6 @@ fieldset.check_list_details div{
 	clear:left;
 	margin:5px 0;
 }
-
 fieldset.tab_check_list_details label {
     display: inline-block;
     font-weight: bold;
@@ -813,8 +750,6 @@ fieldset.tab_check_list_details label {
 fieldset.tab_check_list_details {
     padding: 0 0 10px 0;
 }
-
-
 fieldset.check_list_details textarea{
 	width:400px;
 	height:100px;
@@ -834,6 +769,9 @@ fieldset.check_list_details label{
     font-weight: bold;
     width: 150px;
 }
+
+/* =======================================  CHECK ITEM  ========================================= */
+
 .check_item{
     margin: 25px 0;
 }
@@ -851,6 +789,7 @@ h3.check_item_details{
 .check_item label{
 	width:150px;	
 }
+
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
@@ -979,6 +918,24 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     padding: 40px 20px;	
 }
 
+/* ======================  CALENDAR  DATES ========================== */
+
+#calendar_dates{
+	margin:25px 0;	
+}
+#calendar_dates p{
+	font-weight: bold;
+	margin: 5px 0;	
+}
+#calendar_dates span {
+    border: 2px solid black;
+    margin-right: 10px;
+    padding: 1px 4px;
+    cursor: pointer;
+}
+
+/* ======================  CALENDAR INFO BOX ========================== */
+
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #243356;
@@ -1021,6 +978,7 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     font-weight: bold;
     padding: 0 0 5px;
 }
+
 .yui-pg-first{
   	margin-left: 14px;
     margin-top: 5px;	
@@ -1054,19 +1012,7 @@ fieldset.add_check_list label{
 	display:inline-table;
 	width:120px;
 }
-#calendar_dates{
-	margin:25px 0;	
-}
-#calendar_dates p{
-	font-weight: bold;
-	margin: 5px 0;	
-}
-#calendar_dates span {
-    border: 2px solid black;
-    margin-right: 10px;
-    padding: 1px 4px;
-    cursor: pointer;
-}
+
 textarea{
 	padding: 4px;	
 }
@@ -1226,6 +1172,9 @@ ul#icon_color_map span{
 	position:absolute;
     z-index: 1;
 }
+
+/* ======================  CASE DETAILS ========================== */
+
 #main_content #case_details {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
@@ -1250,7 +1199,7 @@ ul#icon_color_map span{
 #case_details h3.last {
     margin-bottom:0;
 }
-.btn{
+.btn, .btn_m, .btn_sm{
 	background: none repeat scroll 0 0 #2647A0;
     color: #FFFFFF;
     display: inline-block;
@@ -1260,8 +1209,20 @@ ul#icon_color_map span{
     border: 1px solid #173073;
     cursor: pointer;
 }
-
-.btn.focus{
+.btn_m{
+    padding: 2px 10px;
+    font-size: 12px;
+}
+.btn_sm{
+    font-size: 11px;
+    padding: 1px 4px;
+}
+.btn.cancel{
+	background: none repeat scroll 0 0 #DDDDDD;
+    border: 1px solid #AAAAAA;
+    color: #333333;
+}
+.btn.focus, .btn_m.focus{
 	background: none repeat scroll 0 0 #DD624B;
     border-bottom: 1px solid #CB563F;
     border-top: 1px solid #EE836F;
@@ -1350,14 +1311,24 @@ li.check_item_case ul{
     margin-bottom: 20px;
 }
 li.check_item_case ul li {
+    background: none repeat scroll 0 0 #E7EFF8;
     border: 1px solid #DDDDDD;
-    margin: 5px 0 0;
+    margin: 10px 0 0;
     padding: 5px;
+}
+li.check_item_case ul li.quick_edit {
+    padding: 0;
+}
+
+li.check_item_case .quick_edit h4 {
+    background: none repeat scroll 0 0 #CCCCCC;
+    color: #000000;
+    margin: 0;
+    padding: 2px 10px;
 }
 
 #main_content .quick_edit fieldset {
-	padding: 10px;
-	border: 1px solid #DDDDDD;
+    padding: 5px;
 }
 .frm_update_case label {
 	display: block;	
@@ -1369,8 +1340,9 @@ li.check_item_case ul li {
 .quick_edit hr {
 	color:#fafafa;
 }
-.frm_update_case input[type=submit]{
-	float:right;	
+.frm_update_case input[type="submit"], .frm_update_case input[type="button"] {
+    float: left;
+    margin-top: 10px;
 }
 a.view_check_list{
  	color: #FFFFFF;
@@ -1395,11 +1367,15 @@ a.view_check_list{
 .quick_menu {
     font-size: 12px;
     margin-left: 10px;
-    padding: 2px;
-    text-decoration: underline;
+    padding: 10px 2px 0;
 }
 .quick_menu a{
-	margin: 0 5px;	
+	margin: 0 5px;
+	text-decoration: underline;	
+}
+.quick_menu .message {
+    color: #333333;
+    margin-left: 30px;
 }
 ul#groups {
     margin-left: 10px;
@@ -1451,4 +1427,12 @@ div.controller_checklist {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px 6px;
     display: none;
+}
+
+/* ======================== CONTROL DETAILS ============================== */
+
+#control_details label {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
 }
