@@ -782,8 +782,13 @@
 			$this->so->delete($workorder_id);
 		}
 
-		public function get_user_list()
+		public function get_user_list($selected = 0)
 		{
-			return $this->so->get_user_list();
+			$ser_list = $this->so->get_user_list();
+			foreach($ser_list as &$user)
+			{
+				$user['selected'] = $user['id'] == $selected ? true : false;
+			}
+			return $ser_list;
 		}
 	}
