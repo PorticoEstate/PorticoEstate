@@ -68,7 +68,7 @@
 			{
 				$smtp->From = $from_array[0];
 			}
-			
+/*			
 			if(strpos($to,','))
 			{
 				$delimiter = ',';
@@ -77,6 +77,8 @@
 			{
 				$delimiter = ';';
 			}
+*/
+			$delimiter = ';';
 			$to = explode($delimiter, $to);
 			
 			foreach ($to as $entry)
@@ -95,6 +97,7 @@
 
 			if($cc)
 			{
+/*
 				if(strpos($cc,','))
 				{
 					$delimiter = ',';
@@ -103,6 +106,8 @@
 				{
 					$delimiter = ';';
 				}
+*/
+				$delimiter = ';';
 				$cc = explode($delimiter, $cc);
 			
 				foreach ($cc as $entry)
@@ -121,6 +126,7 @@
 			}
 			if($bcc)
 			{
+/*
 				if(strpos($bcc,','))
 				{
 					$delimiter = ',';
@@ -129,6 +135,8 @@
 				{
 					$delimiter = ';';
 				}
+*/
+				$delimiter = ';';
 				$bcc = explode($delimiter, $bcc);
 			
 				foreach ($bcc as $entry)
