@@ -6,9 +6,8 @@
 <div class="yui-content tab_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
-		<input type="hidden" id="control_id" name="control_id" value="{$control_id}" />
-		
-		<form action="#" id="frmSaveOrder"> 
+		<form action="#" id="frmSaveOrder">
+			<input type="hidden" id="control_id" name="control_id" value="{$control_id}" /> 
 			<ul class="groups">
 				<xsl:for-each select="saved_groups_with_items_array">
 				<xsl:choose>
