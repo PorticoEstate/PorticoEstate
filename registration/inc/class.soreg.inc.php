@@ -57,14 +57,20 @@
 
 		function step2($fields)
 		{
-			$smtp = createobject('phpgwapi.send');
-
 			$this->reg_id = md5(time() . $account_lid . $GLOBALS['phpgw']->common->randomstring(32));
 			$account_lid  = $GLOBALS['phpgw']->session->appsession('loginid','registration');
 
 			$this->db->query("UPDATE phpgw_reg_accounts SET reg_id='" . $this->reg_id . "', reg_dla='"
 				. time() . "', reg_info='" . base64_encode(serialize($fields))
 				. "' WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
+
+
+			if ($this->config['activate_account'] == 'pending_approval')
+			{
+				return $this->reg_id;
+			}
+
+			$smtp = createobject('phpgwapi.send');
 
 			$GLOBALS['phpgw']->template->set_file(array(
 				'message' => 'confirm_email.tpl'
@@ -345,9 +351,12 @@ _debug_array($locations);
 			$GLOBALS['phpgw']->accounts->account = $account;
 			$GLOBALS['phpgw']->accounts->save_repository();
 
-			if(@stat(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php'))
+			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'] && isset($GLOBALS['phpgw_info']['apps']['messenger']))
 			{
-				include(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php');
+				if(@stat(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php'))
+				{
+					include(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php');
+				}
 			}
 		}
 	}

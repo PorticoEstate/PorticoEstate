@@ -227,6 +227,19 @@
 
 			return $receipt;
 		}
+
+		/**
+		 * Process a list of pending and approved users
+		 *
+		 * @param array   $values  the array users to process
+		 *
+		 * @return array receipt
+		 */
+
+		function process_users($values)
+		{
+		}
+
 		/**
 		 * Edit single user
 		 *
