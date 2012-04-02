@@ -3,7 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
+<xsl:call-template name="yui_phpgw_i18n"/>
 <div class="identifier-header">
 <h1><img src="{img_go_home}" /> 
 		<xsl:value-of select="php:function('lang', 'edit user')" />
