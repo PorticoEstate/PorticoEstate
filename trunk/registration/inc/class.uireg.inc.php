@@ -435,12 +435,15 @@ HTML;
 
 		function ready_to_activate()
 		{
-//			global $reg_id;
 			$reg_id = phpgw::get_var('reg_id');
 
 			if ($this->config['activate_account'] == 'email')
 			{
 				$this->simple_screen('confirm_email_sent.tpl');
+			}
+			else if ($this->config['activate_account'] == 'pending_approval')
+			{
+				$this->simple_screen('confirm_pending_approval.tpl');
 			}
 			else
 			{

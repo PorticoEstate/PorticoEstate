@@ -84,7 +84,11 @@
 				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
 				$values['pending_users_orig'] = isset($values['pending_users_orig']) && $values['pending_users_orig'] ? array_unique($values['pending_users_orig']) : array();
 				
-				$receipt = $this->bo->approve_users($values);
+				$this->bo->approve_users($values);
+				if(isset($values['process_user']) && $values['process_user'])
+				{
+					$this->bo->process_users($values);
+				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 			}
 			else
@@ -212,7 +216,7 @@
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$values['id'] = $id;
-
+//_debug_array($values);die();
 				if($this->bo->update_pending_user($values))
 				{
 					$message = lang('messages_saved_form');
@@ -260,14 +264,6 @@
 			$bolocation	= CreateObject('property.bolocation');
 			$user['location_data'] = isset($user['reg_info']['location_code']) && $user['reg_info']['location_code'] ? $bolocation->read_single($user['reg_info']['location_code'],array('view' => true)) : '';
 				
-
-/*
-_debug_array($user);
-_debug_array($user_data);
-_debug_array($fields);
-die();
-*/
-
 			$location_data=$bolocation->initiate_ui_location(array(
 				'values'	=> $user['location_data'],
 				'type_id'	=> -1,
@@ -282,10 +278,9 @@ die();
 			$data = array
 			(
 				'value_id'				=> $id,
-				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
-				'editable' 				=> true,
 				'user_data'				=> $user_data,
-				'location_data'			=> $location_data
+				'location_data'			=> $location_data,
+				'value_approved'		=> $user['reg_approved']
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('registration') . '::' . lang('edit user');
