@@ -35,7 +35,7 @@
 
 	<div class="yui-content">
 		<div id="control_details">
-			<xsl:call-template name="yui_booking_i18n"/>
+			<xsl:call-template name="yui_phpgw_i18n"/>
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="paging"/>
 			<xsl:apply-templates select="datatable"/>
