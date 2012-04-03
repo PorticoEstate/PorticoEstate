@@ -221,7 +221,8 @@
 		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
 		'addgroup'		=> 'property.hook_helper.clear_userlist',
 		'deletegroup'	=> 'property.hook_helper.clear_userlist',
-		'editgroup'		=> 'property.hook_helper.clear_userlist'
+		'editgroup'		=> 'property.hook_helper.clear_userlist',
+		'registration'	=> 'property.hook_helper.add_location_contact'
 	);
 
 	/* Dependencies for this app to work */
