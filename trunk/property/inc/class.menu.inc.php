@@ -328,6 +328,11 @@
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.update_location') ),
 							'text'	=> lang('update location')
+						),
+						'location_contact'	=> array
+						(
+							'text'	=> lang('location contact'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'location_contact') )
 						)
 					);
 
@@ -806,6 +811,14 @@
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.add')),
 							'text'	=>	lang('Add')
+						);
+				}
+				if ( $acl->check('.invoice', PHPGW_ACL_ADD, 'property') )
+				{
+					$children['invoice2'] = array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice2.index')),
+							'text'	=>	'Faktura2'
 						);
 				}
 
