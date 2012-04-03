@@ -49,6 +49,7 @@
     <td>{lang_Activate_account}:</td>
     <td>
      <select name="newsettings[activate_account]">
+      <option value="pending_approval"{selected_activate_account_pending_approval}>{lang_pending_approval}</option>
       <option value="email"{selected_activate_account_email}>{lang_Send_Email}</option>
       <option value="immediately"{selected_activate_account_immediately}>{lang_Immediately}</option>
      </select>
@@ -92,7 +93,13 @@
    <td>{lang_Subject_for_confirmation_email}:</td>
    <td><input name="newsettings[subject_confirm]" value="{value_subject_confirm}"></td>
   </tr>
-  <tr bgcolor="{row_off}">
+	<tr class="row_off">
+		<td>{lang_messenger_welcome_message}</td>
+		<td>
+			<textarea cols="40" rows="4" name="newsettings[messenger_welcome_message]" wrap="virtual">{value_messenger_welcome_message}</textarea>
+		</td>
+	</tr>
+  <tr bgcolor="{row_on}">
 
 <!-- END body -->
 

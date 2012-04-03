@@ -52,6 +52,8 @@
 		public $total_records	= 0;
 		public $sum_budget		= 0;
 		public $sum_actual_cost	= 0;
+		public $show_finnish_date = false;
+		public $simple = false;
 
 		var $public_functions = array
 		(
@@ -63,6 +65,7 @@
 
 		function property_botts($session=false)
 		{
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->so 					= CreateObject('property.sotts');
 			$this->custom 				= & $this->so->custom;
 			$this->bocommon 			= CreateObject('property.bocommon');
@@ -74,6 +77,29 @@
 			$this->acl_location			= $this->so->acl_location;
 
 			$this->config->read();
+
+
+			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $simple_group))
+				{
+					$this->simple = true;
+					break;
+				}
+			}
+
+			reset($user_groups);
+			$group_finnish_date = isset($this->config->config_data['fmtts_group_finnish_date']) ? $this->config->config_data['fmtts_group_finnish_date'] : array();
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $group_finnish_date))
+				{
+					$this->show_finnish_date = true;
+					break;
+				}
+			}
 
 			if ($session)
 			{
@@ -163,6 +189,35 @@
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
 
+
+			$columns[] = array
+				(
+					'id'		=> 'modified_date',
+					'name'		=> lang('modified date'),
+//					'sortable'	=> true
+				);
+
+			$columns[] = array
+				(
+					'id' => 'status',
+					'name'=> lang('status')
+				);
+			$columns[] = array
+				(
+					'id' => 'address',
+					'name'=> lang('address')
+				);
+			$columns[] = array
+				(
+					'id' => 'user',
+					'name'=> lang('user')
+				);
+			$columns[] = array
+				(
+					'id' => 'assignedto',
+					'name'=> lang('assignedto')
+				);
+
 			$columns[] = array
 				(
 					'id' => 'vendor',
@@ -178,6 +233,32 @@
 					'id' => 'district',
 					'name'=> lang('district')
 				);
+
+			$this->get_origin_entity_type();
+
+			foreach($this->uicols_related as $related)
+			{
+				$columns[] = array
+				(
+						'id' => $related,
+						'name'=> ltrim(lang(str_replace('_', ' ', $related)),'!')
+				);
+			}
+
+			if( $this->show_finnish_date )
+			{
+				$columns[] = array
+					(
+						'id' => 'finnish_date',
+						'name'=> lang('finnish_date')
+					);
+				$columns[] = array
+					(
+						'id' => 'delay',
+						'name'=> lang('delay')
+					);
+			}
+
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -399,7 +480,7 @@
 				}
 
 				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
-
+				$ticket['modified_date'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'],$this->dateformat);
 				if($ticket['finnish_date2'])
 				{
 					$ticket['delay'] = round(($ticket['finnish_date2']-$ticket['finnish_date'])/(24*3600));

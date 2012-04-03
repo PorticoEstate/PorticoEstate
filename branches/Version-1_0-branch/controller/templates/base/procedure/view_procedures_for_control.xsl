@@ -1,10 +1,10 @@
 <!-- $Id: procedure_item.xsl 8485 2012-01-05 08:21:03Z erikhl $ -->
 
 <xsl:template match="data">
-	<h3 style="margin:5px 0;">Prosedyre for kontroll</h3>
+	<h3 style="margin:5px 0;">Prosedyre for <xsl:value-of select="control_procedure/title"/></h3>
 	
-	<div><span>Tittel: </span><xsl:value-of select="control_procedure/title"/>
-		<a style="margin-left:5px;" id="print_control_items" target="_blank">
+	<div>
+		<a class="btn_m" id="print_control_items" target="_blank">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 				<xsl:text>&amp;procedure_id=</xsl:text>
@@ -15,7 +15,7 @@
 				<xsl:value-of select="location/location_code"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
 			</xsl:attribute>
-			Skriv ut
+			Skriv ut prosedyre
 		</a>
 	</div>
 	<xsl:if test="control_procedure/documents/child::node()">
@@ -37,7 +37,7 @@
 				<h4 style="margin:2px 0;"><xsl:value-of select="procedure/title"/></h4>
 				<div style="margin-bottom:10px;">
 					<span>Gruppe: </span><xsl:value-of select="control_group/group_name"/>
-					<a style="margin-left:5px;" id="print_control_items" target="_blank">
+					<a class="btn_sm" style="margin-left:5px;" id="print_control_items" target="_blank">
 						<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 							<xsl:text>&amp;procedure_id=</xsl:text>

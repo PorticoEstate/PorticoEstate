@@ -3,14 +3,10 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
-
-	<fieldset>
-		<dl class="proplist-col">
-		<dt>
+	<fieldset id="control_details">
+		<div>
 			<label>Kontrollområde</label>
-		</dt>
-		<dd>
-		<xsl:choose>
+			<xsl:choose>
 			<xsl:when test="editable">
 				<select id="control_area_id" name="control_area_id">
 					<xsl:apply-templates select="control_areas_array2/options"/>
@@ -20,17 +16,13 @@
 				<xsl:value-of select="control/control_area_name" />
 			</xsl:otherwise>
 		</xsl:choose>
-		</dd>
-		<dt>
+		</div>
+		<div>
 			<label>Prosedyre</label>
-		</dt>
-		<dd>
-			<xsl:value-of select="control/procedure_name" />	
-		</dd>
-		<dt>
+			<xsl:value-of select="control/procedure_name" />
+		</div>
+		<div>
 			<label for="title">Tittel</label>
-		</dt>
-		<dd>
 			<xsl:choose>
 				<xsl:when test="editable">
 					<input type="text" name="title" id="title" value="{control/title}" size="80"/>
@@ -39,11 +31,9 @@
 					<xsl:value-of select="control/title" />
 				</xsl:otherwise>
 			</xsl:choose>
-		</dd>
-		<dt>
+		</div>
+		<div>
 			<label for="start_date">Startdato</label>
-		</dt>
-		<dd>
 			<xsl:choose>
 		      <xsl:when test="not(control/start_date = '0') or not(control/start_date = '')">
 		      	<xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/>
@@ -52,12 +42,10 @@
 		      	Dato ikke angitt
 		      </xsl:otherwise>
 	      </xsl:choose>
-		</dd>
-		<dt>
+		</div>
+		<div>
 			<label for="end_date">Sluttdato</label>
-		</dt>
-		<dd>
-	      <xsl:choose>
+			<xsl:choose>
 		      <xsl:when test="not(control/end_date = '0') or not(control/end_date = '')">
 		      	Løpende
 		      </xsl:when>
@@ -65,65 +53,55 @@
 		      	<xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/>
 		      </xsl:otherwise>
 	      </xsl:choose>
-		</dd>
-		<dt>
+		</div>
+		<div>
 			<label>Frekvenstype</label>
-		</dt>
-		<dd>
-		
 			<xsl:choose>
 		      <xsl:when test="control/repeat_type = 0">Dag</xsl:when>
 		      <xsl:when test="control/repeat_type = 1">Uke</xsl:when>
 		      <xsl:when test="control/repeat_type = 2">Måned</xsl:when>
 		      <xsl:when test="control/repeat_type = 3">År</xsl:when>
 	      </xsl:choose>
-		</dd>
-		<dt>
+		</div>
+		<div>
 			<label>Frekvens</label>
-		</dt>
-		<dd>
-		<xsl:choose>
-			<xsl:when test="editable">
-				<input size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="control/repeat_interval" />
-			</xsl:otherwise>
-		</xsl:choose>
-		</dd>
-		<dt>
+			<xsl:choose>
+				<xsl:when test="editable">
+					<input size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="control/repeat_interval" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		<div>
 			<label>Rolle</label>
-		</dt>
-		<dd>
-		<xsl:choose>
-			<xsl:when test="editable">
-				<select id="responsibility_id" name="responsibility_id">
-					<xsl:for-each select="role_array">
-						<option value="{id}">
-							<xsl:value-of disable-output-escaping="yes" select="name"/>
-						</option>
-					</xsl:for-each>
-				</select>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="control/role_name" />
-			</xsl:otherwise>
-		</xsl:choose>
-		</dd>
-		<dt>
+			<xsl:choose>
+				<xsl:when test="editable">
+					<select id="responsibility_id" name="responsibility_id">
+						<xsl:for-each select="role_array">
+							<option value="{id}">
+								<xsl:value-of disable-output-escaping="yes" select="name"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="control/role_name" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		<div>
 			<label for="description">Beskrivelse</label>
-		</dt>
-		<dd>
-		<xsl:choose>
-			<xsl:when test="editable">
-				<textarea cols="70" rows="5" name="description" id="description"><xsl:value-of select="control/description" /></textarea>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="control/description" disable-output-escaping="yes"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		</dd>
-	</dl>
+			<xsl:choose>
+				<xsl:when test="editable">
+					<textarea cols="70" rows="5" name="description" id="description"><xsl:value-of select="control/description" /></textarea>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="control/description" disable-output-escaping="yes"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</fieldset>
 	
 </xsl:template>
