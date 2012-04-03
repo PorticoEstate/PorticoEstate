@@ -216,12 +216,13 @@
 
 		function valid_reg($reg_id)
 		{
+			$values = array();
 			$this->db->query("SELECT * FROM phpgw_reg_accounts WHERE reg_id='$reg_id'",__LINE__,__FILE__);
 			$this->db->next_record();
-
 			if ($this->db->f('reg_id'))
 			{
-				return array(
+				$values =  array
+				(
 					'reg_id'   		=> $this->db->f('reg_id'),
 					'reg_lid'  		=> $this->db->f('reg_lid'),
 					'reg_info' 		=> $this->db->f('reg_info'),
@@ -229,10 +230,7 @@
 					'reg_approved'  => $this->db->f('reg_approved')
 				);
 			}
-			else
-			{
-				echo False;
-			}
+			return $values;
 		}
 
 		function delete_reg_info($reg_id)
@@ -243,7 +241,7 @@
 		function create_account($account_lid,$_reg_info)
 		{
 			$fields             = unserialize(base64_decode($_reg_info));
-//_debug_array($fields);
+
 			$fields['lid'] 		= "*$account_lid*";
 
 			$default_group_id = $this->config['default_group_id'];
@@ -277,7 +275,7 @@
 
 			if (!$account_id)
 			{
-				return False;
+				return false;
 			}
 
 			$contacts   = createobject('phpgwapi.contacts');
@@ -351,12 +349,31 @@ _debug_array($locations);
 			$GLOBALS['phpgw']->accounts->account = $account;
 			$GLOBALS['phpgw']->accounts->save_repository();
 
-			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'] && isset($GLOBALS['phpgw_info']['apps']['messenger']))
+			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'])
 			{
-				if(@stat(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php'))
-				{
-					include(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php');
-				}
+				$args = array
+				(
+					'location'		=> 'registration',
+					'message'		=> $this->config['messenger_welcome_message'],
+					'account_lid'	=> $account_lid
+				);
+
+				$GLOBALS['phpgw']->hooks->single($args, 'registration');
 			}
+
+			if(isset($fields['location_code']) && $fields['location_code'])
+			{
+				$args = array
+				(
+					'location'	=> 'add_location_contact',
+					'location_code' => $fields['location_code'],
+					'contact_id'	=> $person_id,
+					'account_lid'	=> $account_lid
+				);
+
+				$GLOBALS['phpgw']->hooks->single($args, 'property');
+			}
+
+			return $account_id;
 		}
 	}

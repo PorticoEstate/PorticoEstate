@@ -241,7 +241,7 @@
 			$ui = createobject('registration.uireg');
 			$reg_info = $so->valid_reg($reg_id);
 
-			if (! is_array($reg_info))
+			if (!$reg_info)
 			{
 				$ui->simple_screen('error_confirm.tpl');
 				return False;
@@ -259,7 +259,7 @@
 		{
 			$so = createobject('registration.soreg');
 			$reg_info = $so->valid_reg($reg_id);
-			if($reg_info['reg_info'])
+			if(isset($reg_info['reg_info']) && $reg_info['reg_info'])
 			{
 				$reg_info['reg_info'] = unserialize(base64_decode($reg_info['reg_info']));
 				unset($reg_info['reg_info']['passwd']);
@@ -320,7 +320,7 @@
 			$ui = createobject('registration.uireg');
 			$reg_info = $so->valid_reg($reg_id);
 
-			if (! is_array($reg_info))
+			if (!$reg_info)
 			{
 				$ui->simple_screen('error_confirm.tpl');
 				return False;
