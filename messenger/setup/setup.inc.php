@@ -34,7 +34,8 @@
 		'home',
 		'after_navbar',
 		'config',
-		'menu'	=> 'messenger.menu.get_menu'
+		'menu'	=> 'messenger.menu.get_menu',
+		'registration'	=> 'messenger.hook_helper.add_welkome_message'
 	);
 
 	/* Dependencies for this app to work */

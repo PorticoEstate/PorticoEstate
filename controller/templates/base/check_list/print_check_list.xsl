@@ -7,7 +7,6 @@
 		<li class="drag_group list_item">
 			<h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
 	
-			<form action="index.php?menuaction=controller.uicontrol_item.save_item_order" class="frm_save_order">
 			   	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 				<input type="hidden" name="control_group_id" value="{$control_group_id}" />
 		
@@ -32,7 +31,6 @@
 			 			</li>
 					</xsl:for-each>
 				</ul>
-			</form>
 		</li>
 	</xsl:for-each>
 </ul>

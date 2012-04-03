@@ -53,7 +53,6 @@
 			'view'	=>	true,
 			'add'	=>	true,
 			'display_control_items'	=> true,
-			'save_item_order'	=> true,
 			'delete_item_list'	=> true
 		);
 
@@ -182,38 +181,6 @@
 		public function add()
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.edit'));
-		}
-
-		public function save_item_order(){
-
-			$control_id = phpgw::get_var('control_id');
-			$control_group_id = phpgw::get_var('control_group_id');
-			$order_tags = phpgw::get_var('order_tags');
-
-						
-			$status = true;
-			foreach($order_tags as $order_tag){
-				$control_item_id = 	substr($order_tag, strpos($order_tag, ":")+1, strlen($order_tag));
-				$order_nr = substr($order_tag, 0, strpos($order_tag, ":"));
-
-				$control_item_list = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
-	
-				if($order_nr != $control_item_list->get_order_nr() ){
-					$control_item_list->set_order_nr($order_nr);
-
-					if( !$this->so_control_item_list->update( $control_item_list )){
-						$status = false;
-					}
-				}
-			}
-
-			return $status;
-			
-			if($status)
-				return json_encode( array( "status" => "order_updated" ) );
-			else
-				return json_encode( array( "status" => "order_not_updated" ) );
-			
 		}
 
 		public function delete_item_list(){

@@ -929,7 +929,7 @@
 				'loc3' => array('type' => 'varchar','precision' => '4','nullable' => True),
 				'loc4' => array('type' => 'varchar','precision' => '4','nullable' => True),
 				'floor' => array('type' => 'varchar','precision' => '6','nullable' => True),
-				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
+				'address' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'contact_email' => array('type' => 'varchar','precision' => '64','nullable' => True),
 				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -948,7 +948,8 @@
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
 				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True),
 				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True),
-				'branch_id' => array('type' => 'int','precision' => '4','nullable' => True)
+				'branch_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

@@ -6022,11 +6022,9 @@
 		}
 	}
 
-
-
 	/**
-	* Update property version from 0.9.17.635 to 0.9.17.636
-	* Add percent value to tax-code
+	* Update property version from 0.9.17.636 to 0.9.17.637
+	* Add approve tag and mail recipients to workorders
 	* 
 	*/
 	$test[] = '0.9.17.636';
@@ -6044,26 +6042,54 @@
 		}
 	}
 
-
-
 	/**
-	* Update property version from 0.9.17.607 to 0.9.17.608
-	* Add more room for address at tickets
+	* Update property version from 0.9.17.637 to 0.9.17.638
+	* Modified timestamp til tickets
 	* 
 	*/
-
-/*
-	$test[] = '0.9.17.607';
-	function property_upgrade0_9_17_608()
+	$test[] = '0.9.17.637';
+	function property_upgrade0_9_17_637()
 	{
+		date_default_timezone_set('UTC');
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','modified_date',array('type' => 'int','precision' => 4, 'nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets','address',array('type' => 'varchar','precision' => '255','nullable' => True));
+		
+		$sql = 'SELECT id, entry_date FROM fm_tts_tickets';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$tickets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$tickets[] = array
+			(
+				'id'			=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'entry_date'	=> $GLOBALS['phpgw_setup']->oProc->f('entry_date')
+			);
+		}
+
+		foreach ($tickets as $ticket)
+		{
+			$sql = "SELECT history_timestamp FROM fm_tts_history WHERE history_record_id = {$ticket['id']} ORDER BY history_timestamp DESC";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			if($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$modified_date = (int)strtotime($GLOBALS['phpgw_setup']->oProc->f('history_timestamp'));
+			}
+			else
+			{
+				$modified_date = (int)$ticket['entry_date'];
+			}
+			$sql = "UPDATE fm_tts_tickets SET modified_date = {$modified_date} WHERE id = {$ticket['id']}";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.608';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.638';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-*/
-

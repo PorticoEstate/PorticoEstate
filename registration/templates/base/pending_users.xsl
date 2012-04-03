@@ -35,7 +35,7 @@
 
 	<div class="yui-content">
 		<div id="control_details">
-			<xsl:call-template name="yui_booking_i18n"/>
+			<xsl:call-template name="yui_phpgw_i18n"/>
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="paging"/>
 			<xsl:apply-templates select="datatable"/>
@@ -88,11 +88,15 @@
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+  	<xsl:variable name="label_process"><xsl:value-of select="php:function('lang', 'process')" /></xsl:variable>
   	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
   	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
   	
   	<form action="#" name="user_form" id="user_form" method="post">
-  		<div class="user_submit"><input type="submit" name="values[save_user]" id="save_user" value="{$label_submit}" onclick="return onSave()"/></div>
+  		<div class="user_submit">
+  			<input type="submit" name="values[save_user]" id="save_user" value="{$label_submit}" onclick="return onSave()"/>
+  			<input type="submit" name="values[process_user]" id="process_user" value="{$label_process}" onclick="return onSave()"/>
+  		</div>
   	</form>
 </xsl:template>
 

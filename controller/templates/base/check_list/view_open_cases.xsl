@@ -28,25 +28,6 @@
 												<xsl:when test="status = 1">Utført</xsl:when>
 												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
 											</xsl:choose>
-											
-											<xsl:choose>
-												<xsl:when test="location_item_id > 0">
-													<div style="float:right;">
-														<a target="_blank">
-															<xsl:attribute name="href">
-																<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
-																<xsl:text>&amp;id=</xsl:text>
-																<xsl:value-of select="location_item_id"/>
-															</xsl:attribute>
-															Vis melding
-														</a>
-													</div>
-												</xsl:when>
-												<xsl:otherwise>
-													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
-												</xsl:otherwise>
-											</xsl:choose>
-											
 											<div class="quick_menu">
 												<a class="quick_edit">
 													<xsl:attribute name="href">
@@ -85,6 +66,21 @@
 														</a>
 													</xsl:when>
 												</xsl:choose>
+												<xsl:choose>
+													<xsl:when test="location_item_id > 0">
+														<a target="_blank">
+																<xsl:attribute name="href">
+																	<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
+																	<xsl:text>&amp;id=</xsl:text>
+																	<xsl:value-of select="location_item_id"/>
+																</xsl:attribute>
+																Vis melding
+															</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<span class="message">Ingen melding</span>
+													</xsl:otherwise>
+												</xsl:choose>
 											</div>
 											<div style="display:none;" class="case_info">
 												<div class="case_id"><xsl:value-of select="id"/></div>
@@ -121,23 +117,6 @@
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
 										<li><span class="order_nr"><xsl:number /></span>. <span class="case_descr"><xsl:value-of select="descr"/></span>
-											<xsl:choose>
-												<xsl:when test="location_item_id > 0">
-													<div style="float:right;">
-														<a target="_blank">
-															<xsl:attribute name="href">
-																<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
-																<xsl:text>&amp;id=</xsl:text>
-																<xsl:value-of select="location_item_id"/>
-															</xsl:attribute>
-															Vis melding
-														</a>
-													</div>
-												</xsl:when>
-												<xsl:otherwise>
-													<div style="float:right;"><span style="color:red">Ingen melding registrert</span></div>
-												</xsl:otherwise>
-											</xsl:choose>
 											<div class="quick_menu">
 												<a class="quick_edit">
 													<xsl:attribute name="href">
@@ -175,6 +154,21 @@
 															slett
 														</a>
 													</xsl:when>
+												</xsl:choose>
+												<xsl:choose>
+													<xsl:when test="location_item_id > 0">
+														<a target="_blank">
+																<xsl:attribute name="href">
+																	<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
+																	<xsl:text>&amp;id=</xsl:text>
+																	<xsl:value-of select="location_item_id"/>
+																</xsl:attribute>
+																Vis melding
+															</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<span class="message">Ingen melding</span>
+													</xsl:otherwise>
 												</xsl:choose>
 											</div>
 											<div style="display:none;" class="case_info">

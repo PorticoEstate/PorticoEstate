@@ -769,7 +769,7 @@
 						'billable_hours'		=> $this->db->f('billable_hours'),
 						'contract_sum'			=> $this->db->f('contract_sum'),
 						'approved'				=> $this->db->f('approved'),
-						'mail_recipients'		=> explode(',', $this->db->f('mail_recipients')),
+						'mail_recipients'		=> explode(',', trim($this->db->f('mail_recipients'),',')),
 					);
 			}
 

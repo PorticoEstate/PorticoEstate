@@ -12,16 +12,14 @@ $(document).ready(function(){
 		 if(period_type == 'view_month')
 		 {
 			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
-			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
 			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
-	         //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_month&location_code=" + location_code + "&year=" + year + "&month=" + month;
 		 }
 		 else
 		 {
 			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
-			 var baseUrl = phpGWLink('index.php', oArgs, true);
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
 			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
-			 //var requestUrl = "index.php?menuaction=controller.uicalendar.view_calendar_for_year&location_code=" + location_code + "&year=" + year;
 		 }
 		
 		 window.location.href = requestUrl;
@@ -33,7 +31,6 @@ $(document).ready(function(){
 		var location_type_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -87,8 +84,7 @@ $(document).ready(function(){
          		  		$("#part_of_town_id").html( htmlString );
          		  	}
 			  }  
-			});
-			
+         });
     });
 	
 	// file: uicheck_list.xsl
@@ -603,7 +599,8 @@ $(document).ready(function(){
 	
 	$("a.quick_edit").live("click", function(e){
 		var clickElem = $(this);
-		var clickRow = $(this).parents("li.check_item_case");
+		var clickRow = $(this).closest("li");
+		var order_nr = $(clickRow).find("span.order_nr").text();
 				
 		var case_info = $(clickRow).find(".case_info");
 		var case_id = $(case_info).find(".case_id").text();
@@ -617,7 +614,7 @@ $(document).ready(function(){
 		
 		$(clickRow).attr("id", "case_" + case_id);
 		
-		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><fieldset><h3>Hurtigendring</h3><hr><form class='frm_update_case' action='" + requestUrl + "'>";
+		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><h4>" + order_nr + ": " + "Hurtigendring</h4><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
 			
 		if(case_type == "control_item_type_2")
 			quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
@@ -630,7 +627,7 @@ $(document).ready(function(){
 		quickEditRowTagStr += "<label>Beskrivelse</label><textarea name='case_descr'>" + case_descr + "</textarea>";
 		
 		
-		quickEditRowTagStr += "<input type='submit' value='Oppdater' />";
+		quickEditRowTagStr += "<input class='btn_m focus' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />";
 		
 		quickEditRowTagStr += "</fieldset></form></li>";
 		

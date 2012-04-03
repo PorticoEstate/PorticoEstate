@@ -236,7 +236,6 @@
 
 		function step4()
 		{
-//			global $reg_id;
 			$reg_id = phpgw::get_var('reg_id');
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');

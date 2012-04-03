@@ -163,9 +163,14 @@
 
 		public function update_pending_user($values)
 		{
+			if(!isset($values['id']) || !$values['id'])
+			{
+				throw new Exception("registration_sopending::update_pending_user() - missing 'id' in valueset");
+			}
+
 			$ret = false;
 			$this->db->transaction_begin();
-			if (isset($values['location']) && $values['location'] && $values['id'])
+			if (isset($values['location']) && $values['location'])
 			{
 				$this->db->query("SELECT reg_info FROM phpgw_reg_accounts WHERE reg_id = '{$values['id']}'",__LINE__,__FILE__);
 				if ($this->db->next_record())
@@ -173,10 +178,14 @@
 					$reg_info = unserialize(base64_decode($this->db->f('reg_info')));
 					$reg_info['location_code'] = implode('-', $values['location']);
 				}
-				$ret = $this->db->query("UPDATE phpgw_reg_accounts SET  reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
+				$this->db->query("UPDATE phpgw_reg_accounts SET  reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
 			}
+
+			$value_set['reg_approved']	= $values['approve'];
+			$value_set					= $this->db->validate_update($value_set);
+			$ret = $this->db->query("UPDATE phpgw_reg_accounts SET $value_set WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
+
 			$this->db->transaction_commit();
 			return $ret;
 		}
-
 	}
