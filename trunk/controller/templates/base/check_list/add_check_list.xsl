@@ -27,7 +27,7 @@
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 
-	<div id="edit_check_list_menu" class="hor_menu">
+	<div id="check_list_menu">
 		<a href="#" class="active">
 			Vis detaljer for sjekkliste
 		</a>

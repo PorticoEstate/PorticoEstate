@@ -42,9 +42,18 @@ legend {
 }
 
 label {
-	margin-right: 0,3em;
-	font-style: normal;
 	font-size: 13px;
+    font-weight: bold;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+a{
+	cursor: pointer;	
+}
+
+.row{
+	padding: 0.3em 0;
 }
 
 #content {
@@ -400,15 +409,13 @@ select{
 	padding: 3px 1px 3px 4px;
 }
 	
-label {
-	line-height:1.5em;
-}
-	
 fieldset {
 	border-bottom:0px solid #ccc;
 	padding:5px 0px 5px 10px;
 }
-
+textarea{
+	padding: 4px;	
+}
 h1 em {
 	font-style:italic;
 }
@@ -658,6 +665,64 @@ ul.row li{
 	margin-right: 20px;
     padding: 3px 6px;
     width: 100px;
+}
+
+/* =======================================  GENERAL CLASSES  ========================================= */
+.content_wrp {
+ 	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+    padding: 15px;
+    width: 800px;
+}
+.box {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+.box_header {
+    background: none repeat scroll 0 0 #DAE8F7;
+    border-color: #C9DBEE;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    color: #333333;
+    font-size: 13px;
+    font-weight: bolder;
+    margin: 0;
+    padding: 5px 0 5px 15px;
+    text-align: left;
+}
+.btn, .btn_m, .btn_sm {
+    background: none repeat scroll 0 0 #4F9AEA;
+    border: 1px solid #658CB5;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+.btn_m{
+    padding: 2px 10px;
+    font-size: 12px;
+}
+.btn_sm{
+    font-size: 11px;
+    padding: 1px 4px;
+}
+.btn.cancel, .btn_m.cancel {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #CCCCCC;
+    color: #333333;
+}
+.btn.focus, .btn_m.focus {
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EE836F -moz-use-text-color #CB563F;
+    border-style: solid none;
+    border-width: 1px 0;
+    color: #FFFFFF;
+    margin-top: 1px;
 }
 
 /* =======================================  MAIN CONTENT  ========================================= */
@@ -925,6 +990,22 @@ ul.calendar div.frequency, ul.calendar.info div.frequency {
     padding: 40px 20px;	
 }
 
+/* ======================  CALENDAR COLOR MAP ========================== */
+
+ul#icon_color_map {
+    border: 1px solid #DDDDDD;
+    padding: 5px;
+    margin-top: 40px;
+}
+ul#icon_color_map li {
+    font-size: 12px;
+    padding: 3px 10px;
+}
+ul#icon_color_map span{
+	margin-left: 10px;
+}
+
+
 /* ======================  CALENDAR  DATES ========================== */
 
 #calendar_dates{
@@ -1020,10 +1101,6 @@ fieldset.add_check_list label{
 	width:120px;
 }
 
-textarea{
-	padding: 4px;	
-}
-
 /*==================================  EXPAND MENU  ======================================== */
 
 .expand_menu div.focus{
@@ -1091,28 +1168,20 @@ ul.check_items h5{
 	margin:10px;
 	font-size: 13px;
 }
-.tab_menu {
-    overflow: hidden;
-}
-.tab_menu a, .hor_menu a {
-    background: none repeat scroll 0 0 #CAE3FB;
+
+.tab_menu a{
+	background: none repeat scroll 0 0 #CAE3FB;
     border: 1px solid #D0D9F1;
-    color: #333333;
-    cursor: pointer;
-    display: block;
-    float: left;
+    display: inline-block;
     font-weight: bold;
     margin-right: 3px;
     padding: 7px 0;
     text-align: center;
     text-decoration: none;
     width: 150px;
+    color: #333;
 }
-.hor_menu a {
-    background: none repeat scroll 0 0 #CAE3FB;
-    border: 1px solid #D0D9F1;
-}
-.tab_menu a.active, .hor_menu a.active {
+.tab_menu a.active {
     background: none repeat scroll 0 0 #FAFAFA;
     border: 1px solid #EEEEEE;
     color: #000000;
@@ -1121,12 +1190,45 @@ ul.check_items h5{
 .tab_menu a, .tab_menu a.active{
 	border-bottom: 0;	
 }
+
+/* ======================== CHECK LIST MENU ========================== */
+#check_list_menu {
+    margin: 0 0 20px;
+    overflow: hidden;
+}
+#check_list_menu a {
+    background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #D0D9F1;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 3px;
+    padding: 17px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 185px;
+}
+#check_list_menu div.right_btns {
+    float: right;
+}
+#check_list_menu div.right_btns a{
+    display: block;
+    padding: 4px 0;
+    color:#fff;
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EE836F -moz-use-text-color #CB563F;
+    border-style: solid none;
+    border-width: 1px 0;
+    color: #FFFFFF;
+}
+
+/* ======================== TAB ITEM ========================== */
+
 .tab_item {
     background: none repeat scroll 0 0 #F7FAFF;
     border: 1px solid #DAE2EE;
-    margin: 0 318px 0 0;
     padding: 15px;
-    width: 800px;
 }
 .tab_item h2 {
     background: none repeat scroll 0 0 #E7EFF8;
@@ -1137,12 +1239,7 @@ ul.check_items h5{
 .tab_item h2.last{
 	margin:20px 0 10px;	
 }
-.tab_item.active {
-	display:block;	
-}
-fieldset.check_list_details{
-	width: 800px;	
-}
+
 #main_content fieldset.location_details{
 	background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #CCCCCC;
@@ -1153,18 +1250,7 @@ fieldset.check_list_details{
 fieldset.location_details div{
 	margin:10px 0;
 }
-ul#icon_color_map {
-    border: 1px solid #DDDDDD;
-    padding: 5px;
-    margin-top: 40px;
-}
-ul#icon_color_map li {
-    font-size: 12px;
-    padding: 3px 10px;
-}
-ul#icon_color_map span{
-	margin-left: 10px;
-}
+
 #create_message_dialog{
 	display:none;
 	position:absolute;
@@ -1181,84 +1267,19 @@ ul#icon_color_map span{
 /* ======================  CHECK LIST ========================== */
 
 #main_content.medium {
+    overflow: hidden;
     padding: 20px;
     width: 900px;
 }
+.col_1, .col_2{
+	display:inline-block;
+	vertical-align: top;	
+}
+.col_2{
+	padding-left: 17%;
+}
 
 /* ======================  CASE DETAILS ========================== */
-
-#case_details {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #DDDDDD;
-    margin-bottom: 20px;
-    padding: 15px;
-}
-#case_details label{
-	display: inline-block;
-	width: 130px;
-	font-weight: normal;
-	font-size: 15px;	
-}
-#case_details h3 {
-    font-size: 15px;
-    font-weight: normal;
-    margin: 10px 0;
-}
-#case_details h3.first {
-    margin-top:0;
-}
-#case_details h3.last {
-    margin-bottom:0;
-}
-.btn, .btn_m, .btn_sm {
-    background: none repeat scroll 0 0 #4F9AEA;
-    border: 1px solid #658CB5;
-    color: #FFFFFF;
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 5px;
-    padding: 5px 10px;
-    text-decoration: none;
-}
-.btn_m{
-    padding: 2px 10px;
-    font-size: 12px;
-}
-.btn_sm{
-    font-size: 11px;
-    padding: 1px 4px;
-}
-.btn.cancel, .btn_m.cancel {
-    background: none repeat scroll 0 0 #EEEEEE;
-    border: 1px solid #CCCCCC;
-    color: #333333;
-}
-.btn.focus, .btn_m.focus {
-    background: none repeat scroll 0 0 #F57056;
-    border-color: #EE836F -moz-use-text-color #CB563F;
-    border-style: solid none;
-    border-width: 1px 0;
-    color: #FFFFFF;
-    margin-top: 1px;
-}
-
-#edit_check_list_menu div {
-    float: right;
-}
-
-#edit_check_list_menu a.focus {
-    float: none;
-    font-size: 12px;
-    margin-top: 1px;
-    padding: 5px 0 4px;
-}
-
-#edit_check_list_menu a.focus.first {
-    margin-top: 0;
-    padding-left: 42px;
-    text-align: left;
-    width: 143px;
-}
 
 #frm_update_check_list input[type="submit"]{
 	width: 140px;	
@@ -1273,42 +1294,9 @@ ul#icon_color_map span{
     margin: 2px 0;  
     display:block;
 }
-#view_cases {
-    float: left;
-    margin: 20px 0 0 0;
-}
 #register_errors_content {
     float: right;
     margin-top: 20px;   
-}
-#edit_check_list_menu a {
-    float: left;
-    padding: 17px 0;
-    text-align: center;
-    width: 185px;
-}
-#edit_check_list_menu {
-    margin: 0 0 20px;
-    overflow: hidden;
-}
-.content_wrp {
- 	background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #DDDDDD;
-    margin-bottom: 20px;
-    padding: 15px;
-    width: 800px;
-}
-.box_header {
-    background: none repeat scroll 0 0 #E7EFF8;
-    border-color: #DDDDDD;
-    border-style: solid;
-    border-width: 1px 1px 0;
-    color: #333333;
-    font-size: 13px;
-    font-weight: bolder;
-    margin: 0;
-    padding: 5px 0 5px 15px;
-    text-align: left;
 }
 
 /* ======================== VIEW CASES ============================= */
@@ -1363,12 +1351,6 @@ li.check_item_case .col_3 {
     display: block;
     width: 98%;
 }
-.frm_update_case .row, .case_info .row{
-	margin: 5px 0;	
-}
-.frm_update_case .row.first, .case_info .row.first{
-	margin-top:0;	
-}
 .frm_update_case input[type="submit"], .frm_update_case input[type="button"] {
     float: left;
     margin-top: 10px;
@@ -1402,6 +1384,25 @@ a.view_check_list{
     height: 13px;
     text-decoration: none;
     width: 24px;	
+}
+
+/* ======================== CASE MESSAGE ============================= */
+#frmRegCaseMessage label {
+    width: 13%;
+}
+#frmRegCaseMessage h3 {
+    font-size: 1.15em;
+    margin: 1.5em 0 0.5em;
+}
+#frmRegCaseMessage ul.cases {
+    border: 1px solid #ddd;
+    padding: 0.5em 1%;
+}
+#frmRegCaseMessage ul.cases h4{
+	margin-top:0
+}
+#frmRegCaseMessage ul li ul li{
+	padding: 0 0 1em 1em;
 }
 
 /* ======================== QUICK MENU ============================= */

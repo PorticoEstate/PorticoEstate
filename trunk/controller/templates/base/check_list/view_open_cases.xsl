@@ -84,7 +84,7 @@
 										<div class="case_info">
 											<!-- STATUS -->
 											<div class="row first">
-												<label style="font-weight:bold; margin-right: 5px;">Status:</label> 
+												<label>Status:</label> 
 												<xsl:choose>
 													<xsl:when test="status = 0">Åpen</xsl:when>
 													<xsl:when test="status = 1">Lukket</xsl:when>
@@ -93,12 +93,12 @@
 											</div>
 											<!--  MEASUREMENT -->
 											<div class="row">
-												<label style="font-weight:bold; margin-right: 5px;">Måleverdi:</label> 
+												<label>Måleverdi:</label> 
 												<span class="measurement"><xsl:value-of select="measurement"/></span>
 											</div>
 											<!--  DESCRIPTION -->
 											<div class="row">
-												<label style="font-weight:bold">Beskrivelse:</label> 
+												<label>Beskrivelse:</label> 
 											</div>
 											<div class="case_descr"><xsl:value-of select="descr"/></div>
 											

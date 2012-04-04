@@ -2,7 +2,7 @@
 
 <xsl:param name="active_tab" />
 
-<div id="edit_check_list_menu" class="hor_menu">
+<div id="check_list_menu">
 		<a>
 			<xsl:if test="$active_tab = 'view_details'">
 				<xsl:attribute name="class">active</xsl:attribute>
@@ -36,7 +36,7 @@
 			</xsl:attribute>
 			Vis info om kontroll
 		</a>
-		<div>
+		<div class="right_btns">
 			<a class="btn focus first">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.register_case</xsl:text>
