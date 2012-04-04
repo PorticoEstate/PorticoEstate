@@ -248,45 +248,13 @@
 			
 			$group_id =  $default_group_id ? $default_group_id : $GLOBALS['phpgw']->accounts->name2id('default');
 
-			if (!$GLOBALS['phpgw']->accounts->exists($account_lid) )
-			{	
-				$account			= new phpgwapi_user();
-				$account->lid		= $account_lid;
-				$account->firstname	= $fields['n_given'];
-				$account->lastname	= $fields['n_family'];
-				$account->passwd	= $fields['passwd'];
-				$account->enabled	= true;
-
-				if ($this->config['trial_accounts'])
-				{
-					$account->expires = time() + ((60 * 60) * ($this->config['days_until_trial_account_expires'] * 24));
-				}
-				else
-				{
-					$account->expires = -1;
-				}
-
-				$account_id =  $GLOBALS['phpgw']->accounts->create($account, array($group_id), array(), array());
-				if($account_id)
-				{
-					$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $account_lid));
-				}
-			}
-
-			if (!$account_id)
-			{
-				return false;
-			}
-
 			$contacts   = createobject('phpgwapi.contacts');
-
-			$GLOBALS['phpgw']->db->transaction_begin();
 
 			$primary = array
 			(
-	//			'per_prefix'		=> 'Mr',
-	//			'per_title'			=> 'FDV-Rådgiver',
-	//			'per_department'	=> 'Utbygging',
+	//			'per_prefix'		=> '',
+	//			'per_title'			=> '',
+	//			'per_department'	=> '',
 				'per_first_name'	=> $account->firstname,
 				'per_last_name'		=> $account->lastname,
 				'access'			=> 'public',
@@ -308,11 +276,10 @@
 				'addr_postal_code'	=> $fields['adr_one_postalcode'],
 				'addr_country'		=> $fields['adr_one_countryname'],
 				'addr_preferred'	=> 'Y',
-		//		'addr_description'	=> 'Heime'
+		//		'addr_description'	=> 'office'
 			);
 				
 			$locations = array($location);
-
 
 			$type = $contacts->search_contact_type('Persons');
 
@@ -331,23 +298,48 @@
 			);
 
 			$comms = array($comm1,$comm2);
-/*
-_debug_array($type);
-_debug_array($primary);
-_debug_array($comms);
-_debug_array($locations);
-*/
-			$person_id = $contacts->add_contact($type, $primary, $comms, $locations);
 
-			$GLOBALS['phpgw']->db->transaction_commit();
-			$GLOBALS['phpgw']->accounts->set_account($account_id);
-			$GLOBALS['phpgw']->accounts->read_repository();
 
-			$account = $GLOBALS['phpgw']->accounts->get($account_id);
-			$account->person_id = $person_id;
-			
-			$GLOBALS['phpgw']->accounts->account = $account;
-			$GLOBALS['phpgw']->accounts->save_repository();
+			$contact_data = array
+			(
+				'type'		=> $type,
+				'primary'	=> $primary,
+				'comms'		=> $comms,
+				'locations'	=> $locations	
+			);
+
+			if (!$GLOBALS['phpgw']->accounts->exists($account_lid) )
+			{	
+				$GLOBALS['phpgw']->db->transaction_begin();
+
+				$account			= new phpgwapi_user();
+				$account->lid		= $account_lid;
+				$account->firstname	= $fields['n_given'];
+				$account->lastname	= $fields['n_family'];
+				$account->passwd	= $fields['passwd'];
+				$account->enabled	= true;
+
+				if ($this->config['trial_accounts'])
+				{
+					$account->expires = time() + ((60 * 60) * ($this->config['days_until_trial_account_expires'] * 24));
+				}
+				else
+				{
+					$account->expires = -1;
+				}
+
+				$account_id =  $GLOBALS['phpgw']->accounts->create($account, array($group_id), array(), array(), $contact_data);
+				if($account_id)
+				{
+					$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $account_lid));
+				}
+			}
+
+			if (!$account_id)
+			{
+				phpgwapi_cache::message_set("User {$account_lid} already exist", 'error');
+				return false;
+			}
 
 			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'])
 			{
@@ -365,14 +357,15 @@ _debug_array($locations);
 			{
 				$args = array
 				(
-					'location'	=> 'add_location_contact',
+					'location'	=> 'registration',
 					'location_code' => $fields['location_code'],
-					'contact_id'	=> $person_id,
+					'contact_id'	=> $GLOBALS['phpgw']->accounts->get($account_id)->person_id,
 					'account_lid'	=> $account_lid
 				);
 
 				$GLOBALS['phpgw']->hooks->single($args, 'property');
 			}
+			$GLOBALS['phpgw']->db->transaction_commit();
 
 			return $account_id;
 		}
