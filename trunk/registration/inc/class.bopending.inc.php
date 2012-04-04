@@ -238,6 +238,7 @@
 
 		function process_users($data)
 		{
+
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');
 
@@ -249,7 +250,7 @@
 					$process_approval[] = $reg_id;
 				}
 			}
-
+//_debug_array($process_approval);die();
 			unset($reg_id);
 			
 			$url = $GLOBALS['phpgw']->link('/login.php',array( 'logindomain' => $GLOBALS['phpgw_info']['user']['domain']),false,true);
@@ -306,7 +307,7 @@ HTML;
 					{
 						phpgwapi_cache::message_set("Confirmation sent to {$info['email']}", 'message');
 					}
-			//		$so->delete_reg_info($reg_id);
+					$so->delete_reg_info($reg_id);
 				}
 			}
 		}

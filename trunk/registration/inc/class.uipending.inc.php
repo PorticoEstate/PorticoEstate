@@ -219,6 +219,7 @@
 //_debug_array($values);die();
 				if($this->bo->update_pending_user($values))
 				{
+					$this->bo->process_users($values);
 					$message = lang('messages_saved_form');
 					phpgwapi_cache::message_set($message, 'message');
 				}

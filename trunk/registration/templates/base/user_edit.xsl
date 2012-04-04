@@ -48,7 +48,7 @@
 							<xsl:value-of select="php:function('lang', 'process')" />
 						</td>
 						<td>
-							<input type="checkbox" name="values[process]" value="1">
+							<input type="checkbox" name="values[pending_users][]" value="{value_id}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'process approved')"/>
 								</xsl:attribute>

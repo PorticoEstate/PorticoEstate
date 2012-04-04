@@ -52,6 +52,12 @@
 		 */
 		public function add_location_contact($data)
 		{
+			if(!isset($data['location_code']) || !$data['location_code'])
+			{
+				phpgwapi_cache::message_set("location_code not set", 'error');
+				return false;
+			}
+
 			$value_set = array();
 			$value_set['location_code'] = $data['location_code'];
 			$value_set['contact_id'] = $data['contact_id'];
@@ -60,7 +66,7 @@
 			$value_set['modified_date'] = time();
 			
 			$cols = implode(',', array_keys($value_set));
-			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
 			$sql = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 
