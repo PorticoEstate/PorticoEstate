@@ -33,11 +33,11 @@
 	class controller_check_list extends controller_model
 	{
 		public static $so;
-		/*
+		
 		const STATUS_OPEN = 0;
 		const STATUS_CLOSED = 1;
-		const STATUS_PENDING = 2;
-		*/
+		const STATUS_CANCELED = 3;
+		
 		protected $id;
 		protected $control_id;
 		protected $status;
