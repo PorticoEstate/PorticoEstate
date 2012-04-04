@@ -309,10 +309,11 @@
 		 *	- memberships for users / members for groups
 		 * @param array  $acls    list of access controls to set for the user
 		 * @param array  $modules the list of modules to enable for the user
+		 * @param array  $contact_data for related contact in the addressbook
 		 *
 		 * @return integer the new account id
 		 */
-		public function create($account, $group, $acls = array(), $modules = array())
+		public function create($account, $group, $acls = array(), $modules = array(),$contact_data = array())
 		{
 		// FIXME: Conflicting transactions - there is a transaction in acl::save_repository()
 		//	$this->db->transaction_begin();
@@ -322,7 +323,7 @@
 				switch( $class )
 				{
 					case phpgwapi_account::CLASS_TYPE_USER:
-						$this->_create_user($account, $group);
+						$this->_create_user($account, $group, $contact_data);
 						break;
 
 					case phpgwapi_account::CLASS_TYPE_GROUP:
@@ -860,9 +861,9 @@
 		 *
 		 * @return integer the id of the new user account
 		 */
-		protected function _create_user($user, $groups)
+		protected function _create_user($user, $groups, $contact_data = array())
 		{
-			$this->_save_contact_for_user($user);
+			$this->_save_contact_for_user($user, $contact_data);
 			if ( !$this->create_user_account($user) )
 			{
 				return false;
@@ -987,15 +988,22 @@
 		 *
 		 * @return boolean was the contact created/edited?
 		 */
-		protected function _save_contact_for_user(&$user)
+		protected function _save_contact_for_user(&$user,$contact_data)
 		{
-			$primary = array
-			(
-				'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster'],
-				'access'			=> 'public',
-				'per_first_name'	=> $user->firstname,
-				'per_last_name'		=> $user->lastname,
-			);
+			if(isset($contact_data['primary']) && $contact_data['primary'])
+			{
+				$primary = $contact_data['primary'];
+			}
+			else
+			{
+				$primary = array
+				(
+					'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster'],
+					'access'			=> 'public',
+					'per_first_name'	=> $user->firstname,
+					'per_last_name'		=> $user->lastname,
+				);
+			}
 
 			$contacts = createObject('phpgwapi.contacts');
 
@@ -1007,25 +1015,36 @@
 
 			$type = $contacts->search_contact_type('Persons');
 
-			$comms = array();
-			$domain = '';
-			if ( isset($GLOBALS['phpgw_info']['server']['mail_server']) )
+			if(isset($contact_data['comms']) && $contact_data['comms'])
 			{
-				$domain = $GLOBALS['phpgw_info']['server']['mail_server'];
+				$comms = $contact_data['comms'];
+			}
+			else
+			{
+
+				$comms = array();
+				$domain = '';
+				if ( isset($GLOBALS['phpgw_info']['server']['mail_server']) )
+				{
+					$domain = $GLOBALS['phpgw_info']['server']['mail_server'];
+				}
+
+				if ( $domain )
+				{
+					$comm = array
+					(
+						'comm_descr'		=> $contacts->search_comm_descr('work email'),
+						'comm_data'			=> "{$user->lid}@{$domain}",
+						'comm_preferred'	=> 'Y'
+					);
+					$comms = array($comm);
+				}
 			}
 
-			if ( $domain )
-			{
-				$comm = array
-				(
-					'comm_descr'		=> $contacts->search_comm_descr('work email'),
-					'comm_data'			=> "{$user->lid}@{$domain}",
-					'comm_preferred'	=> 'Y'
-				);
-				$comms = array($comm);
-			}
+			$locations = isset($contact_data['locations']) && $contact_data['locations'] ? $contact_data['locations'] : array();
 
-			$user->person_id = $contacts->add_contact($type, $primary, $comms);
+			$user->person_id = $contacts->add_contact($type, $primary, $comms, $locations);
+
 			return !!$user->person_id;
 		}
 	}
