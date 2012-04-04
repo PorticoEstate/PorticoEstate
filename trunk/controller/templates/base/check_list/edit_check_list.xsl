@@ -2,7 +2,7 @@
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<div id="main_content">
+<div id="main_content" class="medium">
 		
 	<script>
 		$(function() {
@@ -47,7 +47,7 @@
 				
 			<div>
 				<label>ID</label>
-				<input>
+				<input class="id" disabled="disabled">
 			     <xsl:attribute name="name">check_list_id</xsl:attribute>
 			     <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
 			    </input>
@@ -78,7 +78,7 @@
 		    </div>
 			<div>
 				<label>Skal utføres innen</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">deadline_date</xsl:attribute>
 			      <xsl:attribute name="name">deadline_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
@@ -89,7 +89,7 @@
 			</div>
 			<div>
 				<label>Planlagt dato</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">planned_date</xsl:attribute>
 			      <xsl:attribute name="name">planned_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
@@ -100,7 +100,7 @@
 		    </div>
 		    <div>
 				<label>Utført dato</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">completed_date</xsl:attribute>
 			      <xsl:attribute name="name">completed_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
