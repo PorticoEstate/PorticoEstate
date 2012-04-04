@@ -4,7 +4,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
 	<fieldset id="control_details">
-		<div>
+		<div class="row">
 			<label>Kontrollområde</label>
 			<xsl:choose>
 			<xsl:when test="editable">
@@ -17,11 +17,11 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label>Prosedyre</label>
 			<xsl:value-of select="control/procedure_name" />
 		</div>
-		<div>
+		<div class="row">
 			<label for="title">Tittel</label>
 			<xsl:choose>
 				<xsl:when test="editable">
@@ -32,7 +32,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label for="start_date">Startdato</label>
 			<xsl:choose>
 		      <xsl:when test="not(control/start_date = '0') or not(control/start_date = '')">
@@ -43,7 +43,7 @@
 		      </xsl:otherwise>
 	      </xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label for="end_date">Sluttdato</label>
 			<xsl:choose>
 		      <xsl:when test="not(control/end_date = '0') or not(control/end_date = '')">
@@ -54,7 +54,7 @@
 		      </xsl:otherwise>
 	      </xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label>Frekvenstype</label>
 			<xsl:choose>
 		      <xsl:when test="control/repeat_type = 0">Dag</xsl:when>
@@ -63,7 +63,7 @@
 		      <xsl:when test="control/repeat_type = 3">År</xsl:when>
 	      </xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label>Frekvens</label>
 			<xsl:choose>
 				<xsl:when test="editable">
@@ -74,7 +74,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label>Rolle</label>
 			<xsl:choose>
 				<xsl:when test="editable">
@@ -91,7 +91,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		<div>
+		<div class="row">
 			<label for="description">Beskrivelse</label>
 			<xsl:choose>
 				<xsl:when test="editable">

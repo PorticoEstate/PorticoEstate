@@ -40,11 +40,11 @@
 	
 		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
-			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
-				
+			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
-				
+			
+			<div class="col_1">
 			<div>
 				<label>ID</label>
 				<input class="id" disabled="disabled">
@@ -68,14 +68,6 @@
 					</xsl:choose>
 				</select>
 			</div>
-			<div>
-				<label>Antall åpne saker</label>
-			     <xsl:value-of select="check_list/num_open_cases"/>
-		    </div>
-		    <div>
-				<label>Antall ventende saker</label>
-			     <xsl:value-of select="check_list/num_pending_cases"/>
-		    </div>
 			<div>
 				<label>Skal utføres innen</label>
 				<input class="date">
@@ -109,6 +101,18 @@
 			      </xsl:if>
 			    </input>
 		    </div>
+		    </div>
+		    <div class="col_2">
+			    <div>
+					<label>Antall åpne saker</label>
+				     <xsl:value-of select="check_list/num_open_cases"/>
+			    </div>
+			    <div>
+					<label>Antall ventende saker</label>
+				     <xsl:value-of select="check_list/num_pending_cases"/>
+			    </div>
+		    </div>
+		    
 			<div>
 				<label class="comment">Kommentar</label>
 				<textarea>
