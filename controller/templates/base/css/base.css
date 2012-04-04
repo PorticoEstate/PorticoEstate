@@ -42,7 +42,6 @@ legend {
 }
 
 label {
-	margin-left: 0.3em;
 	margin-right: 0,3em;
 	font-style: normal;
 	font-size: 13px;
@@ -393,9 +392,12 @@ fieldset h3 {
 }
 */
 /* Set up common form styles.  TODO: needs refinement. */
-legend, label, input, select {
+input{
     margin: 0 13px 0 0;
-    padding: 2px;
+    padding: 3px 6px;
+}
+select{
+	padding: 3px 1px 3px 4px;
 }
 	
 label {
@@ -564,10 +566,6 @@ ul.expand_list li ul li {
     padding: 3px;
 }
 
-ul.expand_list input {
-    margin: 0 8px 0 5px;
-}
-
 ul.expand_list h4 span {
     padding-left: 5px;
     vertical-align: middle;
@@ -681,15 +679,23 @@ ul.row li{
 	margin-top:0;
 }
 
+/* =======================================  CHECK LIST DETAILS ========================================= */
+
 #main_content fieldset.check_list_details {
     background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #A3A3A3;
+    border: 1px solid #DBE5EF;
     padding: 15px;
 }
-#main_content fieldset.check_item_details{
-	background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #243356;
-    padding: 15px;
+
+input.id {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    text-align: right;
+    width: 50px;
+}
+input.date {
+    width: 65px;
+    text-align: right;
 }
 
 /* =======================================  CHECK LIST  ========================================= */
@@ -782,11 +788,12 @@ fieldset.check_list_details label{
 h3.check_item_details{
 	margin-bottom:0;	
 }
-.check_item textarea{
-	width:400px;
-	height:100px;	
-}
-.check_item label{
+.check_item textarea {
+    display: block;
+    height: 100px;
+    margin-top: 6px;
+    width: 63%;
+}.check_item label{
 	width:150px;	
 }
 
@@ -1088,16 +1095,13 @@ ul.check_items h5{
     overflow: hidden;
 }
 .tab_menu a, .hor_menu a {
-    background: none repeat scroll 0 0 #FAFAFA;
-    border-left: 1px solid #A3A3A3;
-    border-right: 1px solid #A3A3A3;
-    border-top: 1px solid #A3A3A3;
-    color: #000000;
+    background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #D0D9F1;
+    color: #333333;
     cursor: pointer;
     display: block;
     float: left;
-    font-size: 12px;
-    font-weight: normal;
+    font-weight: bold;
     margin-right: 3px;
     padding: 7px 0;
     text-align: center;
@@ -1105,29 +1109,30 @@ ul.check_items h5{
     width: 150px;
 }
 .hor_menu a {
-	border:1px solid #d0d9f1;
-	background: #ecf1ff;
+    background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #D0D9F1;
 }
 .tab_menu a.active, .hor_menu a.active {
-	background: #2647A0;
-	border-left: 1px solid #173073;
-	border-right: 1px solid #173073;
-	border-top: 1px solid #173073;
-	color: #FFF;
+    background: none repeat scroll 0 0 #FAFAFA;
+    border: 1px solid #EEEEEE;
+    color: #000000;
+    font-weight: bold;
 }
-.hor_menu a.active {
-	border-bottom: 1px solid #173073;
+.tab_menu a, .tab_menu a.active{
+	border-bottom: 0;	
 }
 .tab_item {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #A3A3A3;
+    background: none repeat scroll 0 0 #F7FAFF;
+    border: 1px solid #DAE2EE;
     margin: 0 318px 0 0;
     padding: 15px;
     width: 800px;
 }
-.tab_item h2{
-	margin:0 0 10px;
-	font-size: 17px;	
+.tab_item h2 {
+    background: none repeat scroll 0 0 #E7EFF8;
+    font-size: 14px;
+    margin: 0 0 10px;
+    padding: 3px 6px;
 }
 .tab_item h2.last{
 	margin:20px 0 10px;	
@@ -1173,14 +1178,20 @@ ul#icon_color_map span{
     z-index: 1;
 }
 
+/* ======================  CHECK LIST ========================== */
+
+#main_content.medium {
+    padding: 20px;
+    width: 900px;
+}
+
 /* ======================  CASE DETAILS ========================== */
 
-#main_content #case_details {
+#case_details {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #DDDDDD;
     margin-bottom: 20px;
     padding: 15px;
-    width: 800px;
 }
 #case_details label{
 	display: inline-block;
@@ -1199,15 +1210,15 @@ ul#icon_color_map span{
 #case_details h3.last {
     margin-bottom:0;
 }
-.btn, .btn_m, .btn_sm{
-	background: none repeat scroll 0 0 #2647A0;
+.btn, .btn_m, .btn_sm {
+    background: none repeat scroll 0 0 #4F9AEA;
+    border: 1px solid #658CB5;
     color: #FFFFFF;
+    cursor: pointer;
     display: inline-block;
     margin-right: 5px;
     padding: 5px 10px;
     text-decoration: none;
-    border: 1px solid #173073;
-    cursor: pointer;
 }
 .btn_m{
     padding: 2px 10px;
@@ -1217,36 +1228,36 @@ ul#icon_color_map span{
     font-size: 11px;
     padding: 1px 4px;
 }
-.btn.cancel{
-	background: none repeat scroll 0 0 #DDDDDD;
-    border: 1px solid #AAAAAA;
+.btn.cancel, .btn_m.cancel {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #CCCCCC;
     color: #333333;
 }
-.btn.focus, .btn_m.focus{
-	background: none repeat scroll 0 0 #DD624B;
-    border-bottom: 1px solid #CB563F;
-    border-top: 1px solid #EE836F;
-    border-left:0;
-    border-right:0;
-    box-shadow: 0 1px 0 #A9422E, 0 -1px 0 #A9422E;
+.btn.focus, .btn_m.focus {
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EE836F -moz-use-text-color #CB563F;
+    border-style: solid none;
+    border-width: 1px 0;
     color: #FFFFFF;
-    margin-top: 1px;	
+    margin-top: 1px;
 }
 
-#edit_check_list_menu div{
-	float:left;
-	margin-left: 75px;
+#edit_check_list_menu div {
+    float: right;
 }
 
 #edit_check_list_menu a.focus {
     float: none;
-    font-size: 11px;
-    margin-top: 3px;
-    padding: 3px 0;
+    font-size: 12px;
+    margin-top: 1px;
+    padding: 5px 0 4px;
 }
 
-#edit_check_list_menu a.focus.first{
+#edit_check_list_menu a.focus.first {
     margin-top: 0;
+    padding-left: 42px;
+    text-align: left;
+    width: 143px;
 }
 
 #frm_update_check_list input[type="submit"]{
@@ -1262,7 +1273,6 @@ ul#icon_color_map span{
     margin: 2px 0;  
     display:block;
 }
-
 #view_cases {
     float: left;
     margin: 20px 0 0 0;
@@ -1273,7 +1283,7 @@ ul#icon_color_map span{
 }
 #edit_check_list_menu a {
     float: left;
-    padding: 14px 0;
+    padding: 17px 0;
     text-align: center;
     width: 185px;
 }
@@ -1289,17 +1299,16 @@ ul#icon_color_map span{
     width: 800px;
 }
 .box_header {
-    background: none repeat scroll 0 0 #2647A0;
-    border-left: 1px solid #173073;
-    border-right: 1px solid #173073;
-    border-top: 1px solid #173073;
-    color: #FFFFFF;
+    background: none repeat scroll 0 0 #E7EFF8;
+    border-color: #DDDDDD;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    color: #333333;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: bolder;
     margin: 0;
-    padding: 3px 0 3px 15px;
+    padding: 5px 0 5px 15px;
     text-align: left;
-    width: 815px;
 }
 
 /* ======================== VIEW CASES ============================= */
@@ -1313,36 +1322,77 @@ li.check_item_case ul{
 li.check_item_case ul li {
     background: none repeat scroll 0 0 #E7EFF8;
     border: 1px solid #DDDDDD;
-    margin: 10px 0 0;
-    padding: 5px;
+    margin: 10px 0 0 20px;
 }
 li.check_item_case ul li.quick_edit {
     padding: 0;
 }
-
 li.check_item_case .quick_edit h4 {
-    background: none repeat scroll 0 0 #CCCCCC;
     color: #000000;
     margin: 0;
     padding: 2px 10px;
 }
 
+li.check_item_case .col_1 {
+	display: inline-block;
+	padding: 2em 2%;
+	vertical-align: top;
+}
+li.check_item_case .col_2 {
+	border-left: 1px solid #DDDDDD;
+	border-right: 1px solid #DDDDDD;
+	display: inline-block;
+	padding: 1em 2%;
+	width: 73%;
+}
+li.check_item_case .col_3 {
+	display: inline-block;
+	padding: 3%;
+	vertical-align: top;
+}
 #main_content .quick_edit fieldset {
     padding: 5px;
 }
+
+/* ======================== FORM UPDATE CASE ============================= */
+
 .frm_update_case label {
 	display: block;	
 }
 .frm_update_case textarea {
-	width: 500px;
-	display: block;
+    display: block;
+    width: 98%;
 }
-.quick_edit hr {
-	color:#fafafa;
+.frm_update_case .row, .case_info .row{
+	margin: 5px 0;	
+}
+.frm_update_case .row.first, .case_info .row.first{
+	margin-top:0;	
 }
 .frm_update_case input[type="submit"], .frm_update_case input[type="button"] {
     float: left;
     margin-top: 10px;
+}
+.frm_update_case input[type="text"]{
+ 	width: 170px;  
+}
+.frm_update_case select {
+    width: 184px;
+}
+.frm_update_case label {
+ 	width: 70px;
+ 	display:inline-block;
+ 	font-weight:bold;
+ 	margin-right: 5px;   
+}
+
+/* ======================== FORM REGISTER CASE ============================= */
+
+.frm_register_case input[type="text"]{
+ 	width: 170px;  
+}
+.frm_register_case select {
+    width: 184px;
 }
 a.view_check_list{
  	color: #FFFFFF;
@@ -1353,30 +1403,18 @@ a.view_check_list{
     text-decoration: none;
     width: 24px;	
 }
-.quick_edit label{
-	font-weight:bold;
-	vertical-align:top;
-}
-.quick_edit h3{
-	margin:0;
-}
-.quick_edit select{
-	display: inline-block;
-	vertical-align:top;
-}
+
+/* ======================== QUICK MENU ============================= */
+
 .quick_menu {
     font-size: 12px;
-    margin-left: 10px;
-    padding: 10px 2px 0;
+    padding: 10px 0 0;
 }
-.quick_menu a{
-	margin: 0 5px;
-	text-decoration: underline;	
+.quick_menu a {
+    margin-right: 5px;
+    text-decoration: underline;
 }
-.quick_menu .message {
-    color: #333333;
-    margin-left: 30px;
-}
+
 ul#groups {
     margin-left: 10px;
     margin-top: 5px;
@@ -1415,9 +1453,18 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
+/* ======================== CONTROL DETAILS ============================== */
+
+#control_details label {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
+
 #control_details #select_all{
 	margin-left: 660px;	
 }
+
 #control_details #location_form{
 	margin-left: 20px;
 	margin-bottom: 20px;	
@@ -1427,12 +1474,4 @@ div.controller_checklist {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px 6px;
     display: none;
-}
-
-/* ======================== CONTROL DETAILS ============================== */
-
-#control_details label {
-    display: inline-block;
-    font-weight: bold;
-    width: 100px;
 }

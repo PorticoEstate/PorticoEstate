@@ -23,7 +23,7 @@
 </script>
 		
 
-<div id="main_content">
+<div id="main_content" class="medium">
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
 
@@ -68,7 +68,7 @@
 				</div>
 				<div>
 					<label>Fristdato</label>
-					<input>
+					<input class="date">
 				      <xsl:attribute name="id">deadline_date</xsl:attribute>
 				      <xsl:attribute name="name">deadline_date</xsl:attribute>
 				      <xsl:attribute name="type">text</xsl:attribute>
@@ -77,7 +77,7 @@
 			    </div>
 				<div>
 					<label>Planlagt dato</label>
-					<input>
+					<input class="date">
 				      <xsl:attribute name="id">planned_date</xsl:attribute>
 				      <xsl:attribute name="name">planned_date</xsl:attribute>
 				      <xsl:attribute name="type">text</xsl:attribute>
@@ -86,7 +86,7 @@
 			    </div>
 			    <div>
 					<label>Utført dato</label>
-					<input>
+					<input class="date">
 				      <xsl:attribute name="id">completed_date</xsl:attribute>
 				      <xsl:attribute name="name">completed_date</xsl:attribute>
 				      <xsl:attribute name="type">text</xsl:attribute>
@@ -95,7 +95,9 @@
 				      </xsl:if>
 				    </input>
 			    </div>
-				<div><label>Utstyr</label><input name="equipment_id" /></div>
+				<!-- 
+					div><label>Utstyr</label><input name="equipment_id" /></div>
+				 -->
 				<div>
 					<label class="comment">Kommentar</label>
 					<textarea>

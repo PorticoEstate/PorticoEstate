@@ -2,7 +2,7 @@
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<div id="main_content">
+<div id="main_content" class="medium">
 	
 		<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
 		<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
