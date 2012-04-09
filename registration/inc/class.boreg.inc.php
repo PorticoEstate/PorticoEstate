@@ -313,7 +313,6 @@
 		//
 		function lostpw2()
 		{
-//			global $reg_id;
 			$reg_id = phpgw::get_var('reg_id');
 
 			$so = createobject('registration.soreg');
@@ -337,11 +336,11 @@
 		//
 		function lostpw3()
 		{
-//			global $r_reg;
 			$r_reg = phpgw::get_var('r_reg');
 
 			$lid = $GLOBALS['phpgw']->session->appsession('loginid','registration');
-			if(!$lid) {
+			if(!$lid)
+			{
 			  $error[] = lang('Wrong session');
 			}
 
@@ -353,6 +352,18 @@
 			if (! $r_reg['passwd'])
 			{
 			    $errors[] = lang('You must enter a password');
+			}
+			else
+			{
+				$account	= new phpgwapi_user();
+				try
+				{
+					$account->validate_password($r_reg['passwd']);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
+				}
 			}
 
 			if(! is_array($errors))

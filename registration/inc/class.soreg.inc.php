@@ -48,7 +48,7 @@
 			else
 			{
 				// To prevent race conditions, reserve the account_lid
-				$this->db->query("insert into phpgw_reg_accounts values ('','$account_lid','','" . time() . "')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO phpgw_reg_accounts (reg_id, reg_lid, reg_info, reg_dla) VALUES ('','$account_lid', NULL,'" . time() . "')",__LINE__,__FILE__);
 				$this->db->transaction_commit();
 				$GLOBALS['phpgw']->session->appsession('loginid','registration',$account_lid);
 				return false;
@@ -122,13 +122,14 @@
 			// Remember md5 string sent by mail
 			//
 			$reg_id = md5(time() . $account_lid . $GLOBALS['phpgw']->common->randomstring(32));
-			$this->db->query("INSERT INTO phpgw_reg_accounts VALUES ('$reg_id','$account_lid','','" . time() . "')",__LINE__,__FILE__);
+			$this->db->query("INSERT INTO phpgw_reg_accounts (reg_id, reg_lid, reg_info, reg_dla) VALUES ('$reg_id','$account_lid',NULL,'" . time() . "')",__LINE__,__FILE__);
 
 			//
 			// Send the mail that will allow to change the password
 			//
 
 			$user_id = $GLOBALS['phpgw']->accounts->name2id($account_lid);
+
 			$account_info = $GLOBALS['phpgw']->accounts->get($user_id);
 
 			$contacts = CreateObject('phpgwapi.contacts');
@@ -164,6 +165,12 @@
 				'email' => $comms[$account_info->person_id]['work email']
 			);
 
+			if(!$info['email'])
+			{
+				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
+				$info['email'] = isset($GLOBALS['phpgw']->preferences->data['property']['email']) && $GLOBALS['phpgw']->preferences->data['property']['email'] ? $GLOBALS['phpgw']->preferences->data['property']['email'] : '';
+			}
+
 			if ($info['email'])
 			{
 				$smtp = createobject('phpgwapi.send');
@@ -180,7 +187,15 @@
 				$subject = $this->config['subject_lostpw'] ? lang($this->config['subject_lostpw']) : lang('Account password retrieval');
 				$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
 
-				$smtp->msg('email',$info['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'', 'html');
+				try
+				{
+					$smtp->msg('email',$info['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'', 'html');
+				}
+				catch(Exception $e)
+				{
+					 $error = $e->getMessage();
+				//	 $error = $GLOBALS['phpgw']->template->fp('out','message');
+				}
 			}
 			else
 			{
@@ -247,6 +262,35 @@
 			$default_group_id = $this->config['default_group_id'];
 			
 			$group_id =  $default_group_id ? $default_group_id : $GLOBALS['phpgw']->accounts->name2id('default');
+
+			$groups = isset($fields['account_groups']) && $fields['account_groups'] ? $fields['account_groups'] : array();
+			if($group_id && !in_array($group_id , $groups))
+			{
+				$groups = array_merge ($groups, array($group_id));
+			}
+
+
+			$apps_admin = $fields['account_permissions_admin'] ? $fields['account_permissions_admin'] : array();
+			$acls = array();
+
+			$acls[] = array
+			(
+				'appname' 	=> 'preferences',
+				'location'	=> 'changepassword',
+				'rights'	=> 1
+			);
+
+			foreach ($apps_admin as $app_admin)
+			{
+				$acls[] = array
+				(
+					'appname' 	=> $app_admin,
+					'location'	=> 'admin',
+					'rights'	=> phpgwapi_acl::ADD
+				);			
+			}
+
+			$apps = $fields['account_permissions'] ? $fields['account_permissions'] : array();
 
 			$contacts   = createobject('phpgwapi.contacts');
 
@@ -328,7 +372,7 @@
 					$account->expires = -1;
 				}
 
-				$account_id =  $GLOBALS['phpgw']->accounts->create($account, array($group_id), array(), array(), $contact_data);
+				$account_id =  $GLOBALS['phpgw']->accounts->create($account, $groups, $acls, $apps, $contact_data);
 				if($account_id)
 				{
 					$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $account_lid));
