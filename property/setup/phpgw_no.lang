@@ -1163,6 +1163,7 @@ owner categories	property	no	Eier kategorier
 owner type	property	no	Eiertype
 paid	property	no	Betalt
 paid percent	property	no	Prosentvis betalt
+park invoice	property	no	Parker faktura
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
 payment date	property	no	Forfallsdato

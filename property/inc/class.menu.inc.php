@@ -813,7 +813,7 @@
 							'text'	=>	lang('Add')
 						);
 				}
-				if ( $acl->check('.invoice', PHPGW_ACL_ADD, 'property') )
+//				if ( $acl->check('.invoice', PHPGW_ACL_ADD, 'property') )
 				{
 					$children['invoice2'] = array
 						(
