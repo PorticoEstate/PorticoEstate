@@ -30,6 +30,9 @@
 </xsl:template>
 
 <xsl:template name="pending_users" xmlns:php="http://php.net/xsl">
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
+	</script>
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
@@ -103,9 +106,9 @@
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
 	<script>
-		YAHOO.namespace('controller');
+		YAHOO.namespace('portico');
 	 
- 		YAHOO.controller.columnDefs = [
+ 		YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{
 						key: "<xsl:value-of select="key"/>",
@@ -125,7 +128,7 @@
 			];
 
 		var main_source = '<xsl:value-of select="source"/>';
-		var main_columnDefs = YAHOO.controller.columnDefs;
+		var main_columnDefs = YAHOO.portico.columnDefs;
 		var main_form = 'queryForm';
 		var main_filters = ['status_id', 'responsibility_roles_list'];
 		var main_container = 'datatable-container';

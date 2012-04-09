@@ -35,6 +35,31 @@
  		'noapi'      	=> true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
     );
     
+
+	$legal_anonymous_access = array
+	(
+		'registration' => array
+		(
+			'uireg'	=> array
+			(
+				'step1'				=> true,
+				'tos'				=> true,
+				'ready_to_activate'	=> true,
+				'email_sent_lostpw'	=> true
+			),
+			'boreg'	=> array
+			(
+				'step1'				=> true,
+				'step2'				=> true,
+				'step4'				=> true,
+				'lostpw1'			=> true,
+				'lostpw2'			=> true,
+				'lostpw3'			=> true
+			)
+		)
+	);
+
+
     $GLOBALS['phpgw_info']['flags']['session_name'] = 'registration_session';
 	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
 	include_once('../header.inc.php');
@@ -208,7 +233,22 @@ HTML;
 	}
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
-	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
+	$invalid_data = false;
+
+	if(!isset($legal_anonymous_access[$app][$class][$method]))
+	{
+		$invalid_data = true;
+
+		$GLOBALS['phpgw']->log->message(array(
+			'text' => "W-BadmenuactionVariable, attempted to access private method as anonymous: {$app}.{$class}.{$method}",
+			'line' => __LINE__,
+			'file' => __FILE__
+		));
+		$GLOBALS['phpgw']->log->commit();
+		echo "This method is not alloved from this application as anonymous: {$app}.{$class}.{$method}";
+
+	}
+
 	if ( !$invalid_data 
 		&& is_object($GLOBALS[$class])
 		&& isset($GLOBALS[$class]->public_functions) 
@@ -234,4 +274,4 @@ HTML;
 			$GLOBALS['phpgw']->common->phpgw_footer();
 		}
 	}
-
+	$GLOBALS['phpgw']->common->phpgw_footer();

@@ -60,9 +60,9 @@
 
 			$ordermethod = " ORDER BY {$order} {$sort}";
 
-			$where= 'WHERE';
-			$filtermethod = '';
 
+			$filtermethod = 'WHERE reg_info IS NOT NULL';
+			$where= 'AND';
 			switch ($status_id)
 			{
 				case '1':
@@ -167,18 +167,47 @@
 			{
 				throw new Exception("registration_sopending::update_pending_user() - missing 'id' in valueset");
 			}
-
 			$ret = false;
 			$this->db->transaction_begin();
-			if (isset($values['location']) && $values['location'])
+//			if (isset($values['location']) && $values['location'])
 			{
 				$this->db->query("SELECT reg_info FROM phpgw_reg_accounts WHERE reg_id = '{$values['id']}'",__LINE__,__FILE__);
 				if ($this->db->next_record())
 				{
 					$reg_info = unserialize(base64_decode($this->db->f('reg_info')));
 					$reg_info['location_code'] = implode('-', $values['location']);
+					
+					if($values['account_permissions'] && is_array($values['account_permissions']))
+					{
+						foreach ($values['account_permissions'] as $_app => $_selected)
+						{
+							if($_selected)
+							{
+								$reg_info['account_permissions'][] =  $_app;
+							}
+						
+						}
+						unset($_app);
+						unset($_selected);
+					}
+					if($values['account_permissions_admin'] && is_array($values['account_permissions_admin']))
+					{
+						foreach ($values['account_permissions_admin'] as $_app => $_selected)
+						{
+							if($_selected)
+							{
+								$reg_info['account_permissions_admin'][] =  $_app;
+							}
+						
+						}
+						unset($_app);
+						unset($_selected);
+					}
+					
+					$reg_info['account_groups'] = $values['account_groups'] ? $values['account_groups'] : array();
+
+					$this->db->query("UPDATE phpgw_reg_accounts SET reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
 				}
-				$this->db->query("UPDATE phpgw_reg_accounts SET  reg_info='" . base64_encode(serialize($reg_info)) . "' WHERE reg_id='{$values['id']}'",__LINE__,__FILE__);
 			}
 
 			$value_set['reg_approved']	= $values['approve'];
@@ -187,5 +216,10 @@
 
 			$this->db->transaction_commit();
 			return $ret;
+		}
+
+		public function delete($id)
+		{
+			$this->db->query("DELETE FROM phpgw_reg_accounts WHERE reg_id = '{$id}'",__LINE__,__FILE__);
 		}
 	}

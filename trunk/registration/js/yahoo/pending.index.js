@@ -4,7 +4,7 @@
 	formatLinkPending = function(elCell, oRecord, oColumn, oData)
 	{
 		var id = oRecord.getData(oColumn.key);
-		elCell.innerHTML = '<a href="' + edit_Url + '&id=' + id + '">Link</a>'; 
+		elCell.innerHTML = '<a href="' + edit_Url + '&id=' + id + '">' + lang['edit'] + '</a>'; 
 	};
 
 

@@ -295,7 +295,7 @@
 HTML;
 					try
 					{
-						$info['email'] = 'sigurd.nes@bergen.kommune.no';
+//						$info['email'] = 'sigurd.nes@bergen.kommune.no';
 						$rcpt = $smtp->msg('email',$info['email'],$subject,nl2br($body),'','','',$noreply,'','html');
 					}
 					catch(Exception $e)
@@ -306,8 +306,12 @@ HTML;
 					if($rcpt)
 					{
 						phpgwapi_cache::message_set("Confirmation sent to {$info['email']}", 'message');
+						$so->delete_reg_info($reg_id);
 					}
-					$so->delete_reg_info($reg_id);
+					else
+					{
+						phpgwapi_cache::message_set("Confirmation NOT sent to {$info['email']}", 'error');
+					}
 				}
 			}
 		}
@@ -351,9 +355,8 @@ HTML;
 			return $receipt;
 		}
 
-		function delete()
+		function delete($id)
 		{
-			//$location_code = phpgw::get_var('location_code','string','GET');
-			//$this->so->delete($location_code);
+			$this->so->delete($id);
 		}
 	}
