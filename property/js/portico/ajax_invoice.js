@@ -169,7 +169,14 @@ $(document).ready(function(){
 				{
 					$("#voucher_id").val( voucher_id );
 		
-					$("#voucher_id_text").html( voucher_id );
+					if( voucher[0].voucher_out_id )
+					{
+						$("#voucher_id_text").html( voucher[0].voucher_out_id );					
+					}
+					else
+					{
+						$("#voucher_id_text").html( voucher_id );
+					}
 					$("#order_id").val( voucher[0].order_id );
 
 					if(voucher[0].order_id)
