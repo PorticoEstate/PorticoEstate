@@ -1816,9 +1816,9 @@
 
 			while($this->db->next_record())
 			{
-				$id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
+				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
 				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s",
-							$id,
+							$voucher_id,
 							trim(strtoupper($this->db->f('org_name',true))),
 							$this->db->f('currency'),
 							$this->db->f('kreditnota') ? 'X' : '',
@@ -1828,7 +1828,7 @@
 
 				$values[] = array
 				(
-					'id'	=> $id,
+					'id'	=> $this->db->f('bilagsnr'),
 					'name'	=> $name
 				);
 			}
