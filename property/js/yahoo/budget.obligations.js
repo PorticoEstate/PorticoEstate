@@ -59,15 +59,15 @@
 			if(details)
 			{
 				//look for  "grouping" column
-				oMenuButton_3.set("label", ("<em>" + param + "</em>"));
-				oMenuButton_3.set("value", param);
+		//		oMenuButton_3.set("label", ("<em>" + param + "</em>"));
+		//		oMenuButton_3.set("value", param);
 				path_values.grouping = param;
 			}
 			else
 			{
 				//reset GROUPING filter
-				oMenuButton_3.set("label", ("<em>" + array_options[3][0][1] + "</em>"));
-				path_values.grouping =  array_options[3][0][0];
+		//		oMenuButton_3.set("label", ("<em>" + array_options[3][0][1] + "</em>"));
+		//		path_values.grouping =  array_options[3][0][0];
 				path_values.b_account = param;
 			}
 
