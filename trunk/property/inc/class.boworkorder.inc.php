@@ -417,7 +417,7 @@
 				);
 			$criteria[10] = array
 				(
-					'field'	=> 'fm_project.account_group',
+					'field'	=> 'fm_b_account.category',
 					'type'	=> 'int',
 					'matchtype' => 'exact',
 					'front' => '',

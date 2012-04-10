@@ -331,7 +331,7 @@
 
 				//----- b_group
 
-				if($b_group)
+//				if($b_group)
 				{
 					$joinmethod .= " {$this->join} fm_b_account ON (fm_workorder.account_id =fm_b_account.id))";
 					$paranthesis .='(';
@@ -479,14 +479,17 @@
 
 				if($status_id == 'open')
 				{
-					$_status_filter = array();
+					$filtermethod .= " $where fm_workorder_status.closed IS NULL"; 
+
+/*					$_status_filter = array();
 					$this->db->query("SELECT * FROM fm_workorder_status WHERE closed IS NULL");
-	//				$this->db->query("SELECT * FROM fm_workorder_status WHERE delivered IS NULL AND closed IS NULL");
+					$this->db->query("SELECT * FROM fm_workorder_status WHERE delivered IS NULL AND closed IS NULL");
 					while($this->db->next_record())
 					{
 						$_status_filter[] = $this->db->f('id');
 					}
 					$filtermethod .= " $where fm_workorder.status IN ('" . implode("','", $_status_filter) . "')"; 
+*/
 				}
 				else
 				{
