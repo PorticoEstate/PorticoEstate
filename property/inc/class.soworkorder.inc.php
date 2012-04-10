@@ -480,7 +480,8 @@
 				if($status_id == 'open')
 				{
 					$_status_filter = array();
-					$this->db->query("SELECT * FROM fm_workorder_status WHERE delivered IS NULL AND closed IS NULL");
+					$this->db->query("SELECT * FROM fm_workorder_status WHERE closed IS NULL");
+	//				$this->db->query("SELECT * FROM fm_workorder_status WHERE delivered IS NULL AND closed IS NULL");
 					while($this->db->next_record())
 					{
 						$_status_filter[] = $this->db->f('id');

@@ -540,7 +540,8 @@
 			//_debug_array($allrows);
 			$ordermethod = '';
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
-			$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
+			//$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
+			$filtermethod = "WHERE fm_workorder.vendor_id > 0";
 
 			$start_date = mktime(1, 1, 1, 1, 1, $year);
 			$end_date = mktime  (23, 59, 59, 12, 31, $year);
