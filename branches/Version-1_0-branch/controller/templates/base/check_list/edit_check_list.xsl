@@ -2,7 +2,7 @@
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<div id="main_content">
+<div id="main_content" class="medium">
 		
 	<script>
 		$(function() {
@@ -40,14 +40,14 @@
 	
 		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
-			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">
-				
+			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
-				
+			
+			<div class="col_1">
 			<div>
 				<label>ID</label>
-				<input>
+				<input class="id" disabled="disabled">
 			     <xsl:attribute name="name">check_list_id</xsl:attribute>
 			     <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
 			    </input>
@@ -69,16 +69,8 @@
 				</select>
 			</div>
 			<div>
-				<label>Antall åpne saker</label>
-			     <xsl:value-of select="check_list/num_open_cases"/>
-		    </div>
-		    <div>
-				<label>Antall ventende saker</label>
-			     <xsl:value-of select="check_list/num_pending_cases"/>
-		    </div>
-			<div>
 				<label>Skal utføres innen</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">deadline_date</xsl:attribute>
 			      <xsl:attribute name="name">deadline_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
@@ -89,7 +81,7 @@
 			</div>
 			<div>
 				<label>Planlagt dato</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">planned_date</xsl:attribute>
 			      <xsl:attribute name="name">planned_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
@@ -100,7 +92,7 @@
 		    </div>
 		    <div>
 				<label>Utført dato</label>
-				<input>
+				<input class="date">
 			      <xsl:attribute name="id">completed_date</xsl:attribute>
 			      <xsl:attribute name="name">completed_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
@@ -109,6 +101,18 @@
 			      </xsl:if>
 			    </input>
 		    </div>
+		    </div>
+		    <div class="col_2">
+			    <div>
+					<label>Antall åpne saker</label>
+				     <xsl:value-of select="check_list/num_open_cases"/>
+			    </div>
+			    <div>
+					<label>Antall ventende saker</label>
+				     <xsl:value-of select="check_list/num_pending_cases"/>
+			    </div>
+		    </div>
+		    
 			<div>
 				<label class="comment">Kommentar</label>
 				<textarea>

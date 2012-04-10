@@ -48,7 +48,7 @@
 			else
 			{
 				// To prevent race conditions, reserve the account_lid
-				$this->db->query("insert into phpgw_reg_accounts values ('','$account_lid','','" . time() . "')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO phpgw_reg_accounts (reg_id, reg_lid, reg_info, reg_dla) VALUES ('','$account_lid', NULL,'" . time() . "')",__LINE__,__FILE__);
 				$this->db->transaction_commit();
 				$GLOBALS['phpgw']->session->appsession('loginid','registration',$account_lid);
 				return false;
@@ -122,13 +122,14 @@
 			// Remember md5 string sent by mail
 			//
 			$reg_id = md5(time() . $account_lid . $GLOBALS['phpgw']->common->randomstring(32));
-			$this->db->query("INSERT INTO phpgw_reg_accounts VALUES ('$reg_id','$account_lid','','" . time() . "')",__LINE__,__FILE__);
+			$this->db->query("INSERT INTO phpgw_reg_accounts (reg_id, reg_lid, reg_info, reg_dla) VALUES ('$reg_id','$account_lid',NULL,'" . time() . "')",__LINE__,__FILE__);
 
 			//
 			// Send the mail that will allow to change the password
 			//
 
 			$user_id = $GLOBALS['phpgw']->accounts->name2id($account_lid);
+
 			$account_info = $GLOBALS['phpgw']->accounts->get($user_id);
 
 			$contacts = CreateObject('phpgwapi.contacts');
@@ -164,6 +165,12 @@
 				'email' => $comms[$account_info->person_id]['work email']
 			);
 
+			if(!$info['email'])
+			{
+				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
+				$info['email'] = isset($GLOBALS['phpgw']->preferences->data['property']['email']) && $GLOBALS['phpgw']->preferences->data['property']['email'] ? $GLOBALS['phpgw']->preferences->data['property']['email'] : '';
+			}
+
 			if ($info['email'])
 			{
 				$smtp = createobject('phpgwapi.send');
@@ -180,7 +187,15 @@
 				$subject = $this->config['subject_lostpw'] ? lang($this->config['subject_lostpw']) : lang('Account password retrieval');
 				$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
 
-				$smtp->msg('email',$info['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'', 'html');
+				try
+				{
+					$smtp->msg('email',$info['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'', 'html');
+				}
+				catch(Exception $e)
+				{
+					 $error = $e->getMessage();
+				//	 $error = $GLOBALS['phpgw']->template->fp('out','message');
+				}
 			}
 			else
 			{
@@ -216,12 +231,13 @@
 
 		function valid_reg($reg_id)
 		{
+			$values = array();
 			$this->db->query("SELECT * FROM phpgw_reg_accounts WHERE reg_id='$reg_id'",__LINE__,__FILE__);
 			$this->db->next_record();
-
 			if ($this->db->f('reg_id'))
 			{
-				return array(
+				$values =  array
+				(
 					'reg_id'   		=> $this->db->f('reg_id'),
 					'reg_lid'  		=> $this->db->f('reg_lid'),
 					'reg_info' 		=> $this->db->f('reg_info'),
@@ -229,10 +245,7 @@
 					'reg_approved'  => $this->db->f('reg_approved')
 				);
 			}
-			else
-			{
-				echo False;
-			}
+			return $values;
 		}
 
 		function delete_reg_info($reg_id)
@@ -243,52 +256,49 @@
 		function create_account($account_lid,$_reg_info)
 		{
 			$fields             = unserialize(base64_decode($_reg_info));
-//_debug_array($fields);
+
 			$fields['lid'] 		= "*$account_lid*";
 
 			$default_group_id = $this->config['default_group_id'];
 			
 			$group_id =  $default_group_id ? $default_group_id : $GLOBALS['phpgw']->accounts->name2id('default');
 
-			if (!$GLOBALS['phpgw']->accounts->exists($account_lid) )
-			{	
-				$account			= new phpgwapi_user();
-				$account->lid		= $account_lid;
-				$account->firstname	= $fields['n_given'];
-				$account->lastname	= $fields['n_family'];
-				$account->passwd	= $fields['passwd'];
-				$account->enabled	= true;
-
-				if ($this->config['trial_accounts'])
-				{
-					$account->expires = time() + ((60 * 60) * ($this->config['days_until_trial_account_expires'] * 24));
-				}
-				else
-				{
-					$account->expires = -1;
-				}
-
-				$account_id =  $GLOBALS['phpgw']->accounts->create($account, array($group_id), array(), array());
-				if($account_id)
-				{
-					$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $account_lid));
-				}
-			}
-
-			if (!$account_id)
+			$groups = isset($fields['account_groups']) && $fields['account_groups'] ? $fields['account_groups'] : array();
+			if($group_id && !in_array($group_id , $groups))
 			{
-				return False;
+				$groups = array_merge ($groups, array($group_id));
 			}
+
+
+			$apps_admin = $fields['account_permissions_admin'] ? $fields['account_permissions_admin'] : array();
+			$acls = array();
+
+			$acls[] = array
+			(
+				'appname' 	=> 'preferences',
+				'location'	=> 'changepassword',
+				'rights'	=> 1
+			);
+
+			foreach ($apps_admin as $app_admin)
+			{
+				$acls[] = array
+				(
+					'appname' 	=> $app_admin,
+					'location'	=> 'admin',
+					'rights'	=> phpgwapi_acl::ADD
+				);			
+			}
+
+			$apps = $fields['account_permissions'] ? $fields['account_permissions'] : array();
 
 			$contacts   = createobject('phpgwapi.contacts');
 
-			$GLOBALS['phpgw']->db->transaction_begin();
-
 			$primary = array
 			(
-	//			'per_prefix'		=> 'Mr',
-	//			'per_title'			=> 'FDV-Rådgiver',
-	//			'per_department'	=> 'Utbygging',
+	//			'per_prefix'		=> '',
+	//			'per_title'			=> '',
+	//			'per_department'	=> '',
 				'per_first_name'	=> $account->firstname,
 				'per_last_name'		=> $account->lastname,
 				'access'			=> 'public',
@@ -310,11 +320,10 @@
 				'addr_postal_code'	=> $fields['adr_one_postalcode'],
 				'addr_country'		=> $fields['adr_one_countryname'],
 				'addr_preferred'	=> 'Y',
-		//		'addr_description'	=> 'Heime'
+		//		'addr_description'	=> 'office'
 			);
 				
 			$locations = array($location);
-
 
 			$type = $contacts->search_contact_type('Persons');
 
@@ -333,30 +342,75 @@
 			);
 
 			$comms = array($comm1,$comm2);
-/*
-_debug_array($type);
-_debug_array($primary);
-_debug_array($comms);
-_debug_array($locations);
-*/
-			$person_id = $contacts->add_contact($type, $primary, $comms, $locations);
 
-			$GLOBALS['phpgw']->db->transaction_commit();
-			$GLOBALS['phpgw']->accounts->set_account($account_id);
-			$GLOBALS['phpgw']->accounts->read_repository();
 
-			$account = $GLOBALS['phpgw']->accounts->get($account_id);
-			$account->person_id = $person_id;
-			
-			$GLOBALS['phpgw']->accounts->account = $account;
-			$GLOBALS['phpgw']->accounts->save_repository();
+			$contact_data = array
+			(
+				'type'		=> $type,
+				'primary'	=> $primary,
+				'comms'		=> $comms,
+				'locations'	=> $locations	
+			);
 
-			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'] && isset($GLOBALS['phpgw_info']['apps']['messenger']))
-			{
-				if(@stat(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php'))
+			if (!$GLOBALS['phpgw']->accounts->exists($account_lid) )
+			{	
+				$GLOBALS['phpgw']->db->transaction_begin();
+
+				$account			= new phpgwapi_user();
+				$account->lid		= $account_lid;
+				$account->firstname	= $fields['n_given'];
+				$account->lastname	= $fields['n_family'];
+				$account->passwd	= $fields['passwd'];
+				$account->enabled	= true;
+
+				if ($this->config['trial_accounts'])
 				{
-					include(PHPGW_SERVER_ROOT . '/messenger/inc/hook_registration.inc.php');
+					$account->expires = time() + ((60 * 60) * ($this->config['days_until_trial_account_expires'] * 24));
+				}
+				else
+				{
+					$account->expires = -1;
+				}
+
+				$account_id =  $GLOBALS['phpgw']->accounts->create($account, $groups, $acls, $apps, $contact_data);
+				if($account_id)
+				{
+					$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $account_lid));
 				}
 			}
+
+			if (!$account_id)
+			{
+				phpgwapi_cache::message_set("User {$account_lid} already exist", 'error');
+				return false;
+			}
+
+			if(isset($this->config['messenger_welcome_message']) && $this->config['messenger_welcome_message'])
+			{
+				$args = array
+				(
+					'location'		=> 'registration',
+					'message'		=> $this->config['messenger_welcome_message'],
+					'account_lid'	=> $account_lid
+				);
+
+				$GLOBALS['phpgw']->hooks->single($args, 'registration');
+			}
+
+			if(isset($fields['location_code']) && $fields['location_code'])
+			{
+				$args = array
+				(
+					'location'	=> 'registration',
+					'location_code' => $fields['location_code'],
+					'contact_id'	=> $GLOBALS['phpgw']->accounts->get($account_id)->person_id,
+					'account_lid'	=> $account_lid
+				);
+
+				$GLOBALS['phpgw']->hooks->single($args, 'property');
+			}
+			$GLOBALS['phpgw']->db->transaction_commit();
+
+			return $account_id;
 		}
 	}

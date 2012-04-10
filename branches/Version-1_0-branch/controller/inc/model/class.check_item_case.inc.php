@@ -34,6 +34,10 @@
 	{
 		public static $so;
 
+		const STATUS_OPEN = 0;
+		const STATUS_CLOSED = 1;
+		const STATUS_PENDING = 2;
+				
 		protected $id;
 		protected $check_item_id;
 		protected $status;

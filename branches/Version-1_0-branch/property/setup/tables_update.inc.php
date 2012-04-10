@@ -6093,3 +6093,38 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+
+	/**
+	* Update property version from 0.9.17.638 to 0.9.17.639
+	* Add relation contact-location
+	* 
+	*/
+	$test[] = '0.9.17.638';
+	function property_upgrade0_9_17_638()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_location_contact', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_locations' => array('location_code' => 'location_code'),'phpgw_contact' => array('contact_id' => 'contact_id')),
+				'ix' => array(),
+				'uc' => array('contact_id', 'location_code')
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.639';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -1,4 +1,10 @@
+<!-- $Id: common.xsl 8307 2011-12-15 08:59:28Z vator $ -->
+<xsl:template name="common" xmlns:php="http://php.net/xsl">
 
+
+<script type="text/javascript">
+
+<![CDATA[
 
 /**
  * Javascript for the controller module.  Holds datasource init functions and form helpers.
@@ -98,6 +104,8 @@
 	
 		//... set up a new data table
 		
+		]]>
+		
 		this.table = new YAHOO.widget.DataTable(
 			this.properties.container,
 			this.properties.columns,
@@ -105,12 +113,14 @@
 			{
 				paginator: this.paginator,
 				dynamicData: true,
-				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
-				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
-				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
+				MSG_EMPTY: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_EMPTY')"/>',
+				MSG_ERROR: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_ERROR')"/>',
+				MSG_LOADING: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_LOADING')"/>'
 			}
 		);
-	
+		
+		<![CDATA[
+
 		//... set table properties
 		this.table.related = this.properties.related_datatable;
 		this.table.tid = this.properties.tid;
@@ -212,15 +222,23 @@
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-												
+				var requestUrl = "";
+
+				if(record.getData().parameters[task.index]){
+				 	var parameter_id = record.getData().parameters[0];
+					 
+					var parameter_value = YAHOO.util.Dom.get(parameter_id).value;				
+					requestUrl = record.getData().actions[ task.index ] + "&" + parameter_id + "=" + parameter_value;
+				}
+
 				//... check whether this action should be an AJAX call
 				if( record.getData().ajax[task.index] ) {
-									
+					
 					var alertStatus = false;
 
 					// Check if confirm box should be displayed before request is executed
 					if( record.getData().alert != null )
-					    alertStatus = record.getData().alert[0];
+						alertStatus = record.getData().alert[0];
 
 					if( alertStatus ){
 						// Display confirm box with message
@@ -232,17 +250,20 @@
 							return false;
 						}
 					}
-				
-					var request = YAHOO.util.Connect.asyncRequest(
-						'GET',
-						record.getData().actions[ task.index ],
-						{
-							success: ajaxResponseSuccess,
-							success: ajaxResponseFailure,
-							args: table
-						});
+					
+					if(requestUrl){
+						var request = YAHOO.util.Connect.asyncRequest(
+							'GET',
+							requestUrl,
+							{
+								success: ajaxResponseSuccess,
+								success: ajaxResponseFailure,
+								args: table
+							});
+					}	
 				} else {
-					window.location = record.getData().actions[task.index];
+					
+					window.location = requestUrl;
 				}
 			}
 		};
@@ -353,31 +374,24 @@
 			variableName = "YAHOO.controller.datasource" + i;
 			eval(variableName + " = YAHOO.controller.setupDatasource.shift()");
 			var source_properties = eval("new " + variableName + "()");
-/*
-<?php
-	if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-	{
-		$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-	}
-	else {
-		$user_rows_per_page = 10;
-	}
-?>
-*/
+
+]]>
 			// ... create a paginator for this datasource
 
 			var pag = new YAHOO.widget.Paginator({
 				rowsPerPage: 10,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: "<<asdasd <?php echo lang('first') ?>",
-				previousPageLinkLabel: "< <?php echo lang('previous') ?>",
-				nextPageLinkLabel: "<?php echo lang('next') ?> >",
-				lastPageLinkLabel: "<?php echo lang('last') ?> >>",
-				template			: "{RowsPerPageDropdown}<?php echo lang('elements_pr_page') ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?php echo lang('shows_from') ?> {startRecord} <?php echo lang('to') ?> {endRecord} <?php echo lang('of_total') ?> {totalRecords}.",
+				firstPageLinkLabel: "&lt;&lt; <xsl:value-of select="php:function('lang', 'first')"/>",
+				previousPageLinkLabel: "&lt; <xsl:value-of select="php:function('lang', 'previous')"/>",
+				nextPageLinkLabel: "<xsl:value-of select="php:function('lang', 'next')"/> &gt;",
+				lastPageLinkLabel: "<xsl:value-of select="php:function('lang', 'last')"/> &gt;&gt;",
+				template			: "{RowsPerPageDropdown}<xsl:value-of select="php:function('lang', 'elements_pr_page')"/>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<xsl:value-of select="php:function('lang', 'shows_from')"/> {startRecord} <xsl:value-of select="php:function('lang', 'to')"/> {endRecord} <xsl:value-of select="php:function('lang', 'of_total')"/> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
+			
+<![CDATA[
 			
 			pag.render();
 
@@ -389,10 +403,10 @@
 				$populate = phpgw::get_var('populate_form');
 				if(isset($populate)){?>
 					var qs = YAHOO.controller.serializeForm(source_properties.form);
-				    this.wrapper.source.liveData = this.wrapper.url + qs + '&';
-				    this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-				    	this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
-				    }, scope: this});
+					this.wrapper.source.liveData = this.wrapper.url + qs + '&';
+					this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+						this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
+					}, scope: this});
 			<?php }
 			?>
 */
@@ -509,8 +523,13 @@
 	function formListener(event){
 		YAHOO.util.Event.stopEvent(event);
 		var qs = YAHOO.portico.serializeForm(this.properties.form);
-	    this.source.liveData = this.url + qs + '&';
-	    this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-	    	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
-	    }, scope: this});
+		this.source.liveData = this.url + qs + '&';
+		this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+			this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
+		}, scope: this});
 	}
+
+]]>
+
+</script>
+</xsl:template>

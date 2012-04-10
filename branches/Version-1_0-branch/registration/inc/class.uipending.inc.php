@@ -28,12 +28,7 @@
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('registration.uicommon');
-/*
-	include_class('registration', 'check_list', 'inc/model/');
-	include_class('registration', 'date_generator', 'inc/component/');
-	include_class('registration', 'status_checker', 'inc/helper/');
-	include_class('registration', 'date_helper', 'inc/helper/');
-*/	
+
 	class registration_uipending extends registration_uicommon
 	{
 		var $cat_id;
@@ -45,6 +40,7 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
+		var $config;
 	
 		private $so_control_area;
 		private $so_control;
@@ -66,6 +62,10 @@
 		
 			$this->bo					= CreateObject('registration.bopending',true);
 			$this->bocommon				= CreateObject('property.bocommon');
+			$c = createobject('phpgwapi.config','registration');
+			$c->read();
+			$this->config = $c->config_data;
+
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
 			$this->sort					= $this->bo->sort;
@@ -185,9 +185,6 @@
 				phpgwapi_yui::load_widget('paginator');
 
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-//				self::add_javascript('registration', 'registration', 'jquery.js');
-//				self::add_javascript('registration', 'registration', 'ajax.js');
-
 				self::render_template_xsl(array('pending_users', 'common'), $data);
 			}	
 		}
@@ -213,12 +210,21 @@
 					}
 				}
 
+
+				$values['account_permissions']			= phpgw::get_var('account_permissions');
+				$values['account_permissions_admin']	= phpgw::get_var('account_permissions_admin');
+				$values['account_groups']				= phpgw::get_var('account_groups');
+
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
 				$values['id'] = $id;
+
+//_debug_array($account_permissions);
+//_debug_array($account_permissions_admin);
 //_debug_array($values);die();
 				if($this->bo->update_pending_user($values))
 				{
+					$this->bo->process_users($values);
 					$message = lang('messages_saved_form');
 					phpgwapi_cache::message_set($message, 'message');
 				}
@@ -232,6 +238,12 @@
 
 			if (isset($_POST['cancel'])) // The user has pressed the cancel button
 			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
+			}
+
+			if (isset($_POST['delete']) && $id) // The user has pressed the delete button
+			{
+				$this->bo->delete($id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
 			}
 
@@ -274,13 +286,115 @@
 				'entity_data'	=> false
 				));
 
+			/* groups */
+			$group_list = array();
+
+			$all_groups =$GLOBALS['phpgw']->accounts->get_list('groups');
+
+			//FIXME!!
+			/*
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_groups = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_groups	= array_merge($valid_groups,$GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_groups = array_unique($valid_groups);
+			}
+			else
+			{
+				$valid_groups = array_keys($all_groups);
+			}
+			*/
+
+			$valid_groups = array_keys($all_groups);
+
+			$user['reg_info']['account_groups'] = isset($user['reg_info']['account_groups']) && $user['reg_info']['account_groups'] ? $user['reg_info']['account_groups'] : array();
+			if($this->config['default_group_id'] && !in_array($this->config['default_group_id'] , $user['reg_info']['account_groups']))
+			{
+				$user['reg_info']['account_groups'] = array_merge ($user['reg_info']['account_groups'], array($this->config['default_group_id']));
+			}
+
+			foreach ( $all_groups as $group )
+			{
+				$group_list[] = array
+				(
+					'account_id'	=> $group->id,
+					'account_lid'	=> $group->__toString(),
+					'i_am_admin'	=> in_array($group->id, $valid_groups) ? 1 : 0,
+					'checked'	 	=> in_array($group->id, $user['reg_info']['account_groups']) ? 1 : 0
+				);
+			}
+
+
+			/* create list of available apps */
+
+			$available_apps = $GLOBALS['phpgw_info']['apps'];
+			asort($available_apps);
+
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
+			else
+			{
+				$valid_apps = array_keys($available_apps);
+			}
+
+			foreach ( $available_apps as $key => $application )
+			{
+				if ($application['enabled'] && $application['status'] != 3)
+				{
+					$perm_display[] = array
+					(
+						'app_name'			=> $key,
+						'translated_name'	=> lang($key)
+					);
+				}
+			}
+			asort($perm_display);
+
+			$app_list = array();
+			foreach ( $perm_display as $perm )
+			{
+				$app_list[] = array
+				(
+					'app_title'				=> $perm['translated_name'],
+					'checkbox_name'			=> "account_permissions[{$perm['app_name']}]",
+					'checked'				=> in_array($perm['app_name'], $user['reg_info']['account_permissions']) ? 1 : 0,
+					'checkbox_name_admin'	=> "account_permissions_admin[{$perm['app_name']}]",
+					'checked_admin'			=> in_array($perm['app_name'], $user['reg_info']['account_permissions_admin']) ? 1 : 0,
+					'i_am_admin'			=> in_array($perm['app_name'], $valid_apps) ? 1 : 0,
+				);
+			}
+
+//_debug_array($app_list);die();
+
+			$tabs = array
+			(
+				'main'		=> array('label' => lang('user'), 'link' => '#main'),
+				'groups'	=> array('label' => lang('groups'), 'link' => '#groups'),
+				'apps'		=> array('label' => lang('applications'), 'link' => '#apps'),
+			);
+			$active_tab = 'main';
+
+			phpgwapi_yui::tabview_setup('edit_user_tabview');
 
 			$data = array
 			(
+				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'value_id'				=> $id,
 				'user_data'				=> $user_data,
 				'location_data'			=> $location_data,
-				'value_approved'		=> $user['reg_approved']
+				'value_approved'		=> $user['reg_approved'],
+				'app_list'				=> $app_list,
+				'group_list'			=> $group_list,
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('registration') . '::' . lang('edit user');
@@ -308,7 +422,7 @@
 			$results['sort'] = 'location_code';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
-			array_walk($results['results'], array($this, 'add_links'), array($type));
+//			array_walk($results['results'], array($this, 'add_links'), array($type));
 						
 			return $this->yui_results($results);
 		}

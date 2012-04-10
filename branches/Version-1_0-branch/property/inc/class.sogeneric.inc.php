@@ -1568,7 +1568,6 @@
 				break;
 
 			case 'event_action':
-
 				$info = array
 					(
 						'table' 			=> 'fm_event_action',
@@ -2067,6 +2066,43 @@
 							'modified_date'	=> array('edit'	=> 'time()'),
 						),
 						'check_grant'		=> false
+					);
+
+				break;
+			case 'location_contact':
+				$info = array
+					(
+						'table' 			=> 'fm_location_contact',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'contact_id',
+								'descr' => lang('contact'),
+								'type' => 'int',//contact
+								'nullable'	=> false,
+							),
+							array
+							(
+								'name' => 'location_code',
+								'descr' => lang('location_code'),
+								'type' => 'varchar',//location
+								'nullable'	=> false,
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('location contact'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::location::location_contact',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
 					);
 
 				break;

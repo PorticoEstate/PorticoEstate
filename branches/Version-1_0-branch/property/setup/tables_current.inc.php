@@ -2326,5 +2326,19 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'fm_location_contact' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'contact_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'location_code' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_locations' => array('location_code' => 'location_code'),'phpgw_contact' => array('contact_id' => 'contact_id')),
+			'ix' => array(),
+			'uc' => array('contact_id', 'location_code')
 		)
 	);

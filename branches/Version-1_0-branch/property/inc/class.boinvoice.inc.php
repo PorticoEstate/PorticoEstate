@@ -240,14 +240,20 @@
 
 		function period_list($selected='')
 		{
+			$year = date('Y');
+			$period_list = array();
 			for ($i=1; $i<=12; $i++)
 			{
-				$period_list[$i]['id'] = $i;
-				$period_list[$i]['name'] = $i;
-				if($i==$selected)
-				{
-					$period_list[$i]['selected'] = 'selected';
-				}
+				$period = sprintf("%s%02d",$year,$i);
+				$period_list[] = array
+				(
+					'id'	=> $period,
+					'name'	=> $period
+				);
+			}
+			foreach ($period_list as &$_period)
+			{
+				$_period['selected'] = $_period['id'] == $selected ? 1 : 0;
 			}
 			return $period_list;
 		}
@@ -789,6 +795,11 @@
 
 		public function forward($data)
 		{
-			return $this->so->forward($data);		
+			return $this->so->forward($data);
+		}
+
+		public function get_vouchers($data)
+		{
+			return $this->so->get_vouchers($data);
 		}
 	}

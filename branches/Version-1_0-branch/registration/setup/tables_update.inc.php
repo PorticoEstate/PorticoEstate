@@ -46,3 +46,17 @@
 			return $GLOBALS['setup_info']['registration']['currentver'];
 		}
 	}
+
+	$test[] = '0.8.3';
+	function registration_upgrade0_8_3()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_reg_accounts','reg_info',array('type' => 'text','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['registration']['currentver'] = '0.8.4';
+			return $GLOBALS['setup_info']['registration']['currentver'];
+		}
+	}	

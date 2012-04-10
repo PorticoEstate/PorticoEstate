@@ -236,8 +236,84 @@
 		 * @return array receipt
 		 */
 
-		function process_users($values)
+		function process_users($data)
 		{
+
+			$so = createobject('registration.soreg');
+			$ui = createobject('registration.uireg');
+
+			$process_approval = array();
+			if(isset($data['pending_users']) && is_array($data['pending_users']))
+			{
+				foreach($data['pending_users'] as $reg_id)
+				{
+					$process_approval[] = $reg_id;
+				}
+			}
+//_debug_array($process_approval);die();
+			unset($reg_id);
+			
+			$url = $GLOBALS['phpgw']->link('/login.php',array( 'logindomain' => $GLOBALS['phpgw_info']['user']['domain']),false,true);
+
+			if ($this->config['support_email'])
+			{
+				$support_email_text = lang ('Report all problems and abuse to');
+				$support_email =  $this->config['support_email'];
+			}
+
+			$smtp = createobject('phpgwapi.send');
+			$subject = $this->config['subject_confirm'] ? lang($this->config['subject_confirm']) : lang('Account registration');
+			$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
+
+			foreach ($process_approval as $reg_id)
+			{
+				$reg_info = $so->valid_reg($reg_id);			
+
+				if (!$reg_info || ! $reg_info['reg_approved'])
+				{
+					continue;
+				}
+
+				if($so->create_account($reg_info['reg_lid'],$reg_info['reg_info']))
+				{
+					$info = unserialize(base64_decode($reg_info['reg_info']));
+					unset($info['passwd']);
+					unset($info['passwd_confirm']);
+
+					$body = <<<HTML
+
+	Hi {$info['n_given']} {$info['n_family']},
+
+	This is a confirmation email for your new account on {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
+	Click on the following link to log into your account. 
+	
+	<a href='$url'>Login.</a>
+	
+	If you did not request this account, simply ignore this message.
+	{$support_email_text} {$support_email}
+	
+HTML;
+					try
+					{
+//						$info['email'] = 'sigurd.nes@bergen.kommune.no';
+						$rcpt = $smtp->msg('email',$info['email'],$subject,nl2br($body),'','','',$noreply,'','html');
+					}
+					catch(Exception $e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+					}
+					
+					if($rcpt)
+					{
+						phpgwapi_cache::message_set("Confirmation sent to {$info['email']}", 'message');
+						$so->delete_reg_info($reg_id);
+					}
+					else
+					{
+						phpgwapi_cache::message_set("Confirmation NOT sent to {$info['email']}", 'error');
+					}
+				}
+			}
 		}
 
 		/**
@@ -247,7 +323,6 @@
 		 *
 		 * @return array receipt
 		 */
-
 
 		function edit($values)
 		{
@@ -280,9 +355,8 @@
 			return $receipt;
 		}
 
-		function delete()
+		function delete($id)
 		{
-			//$location_code = phpgw::get_var('location_code','string','GET');
-			//$this->so->delete($location_code);
+			$this->so->delete($id);
 		}
 	}

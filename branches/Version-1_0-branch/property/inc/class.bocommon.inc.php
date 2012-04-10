@@ -428,6 +428,13 @@
 						);
 				}
 			}
+
+			foreach ($user_list as &$user)
+			{
+				$user['id'] = $user['lid'];
+				$user['name'] = ltrim("{$user['lastname']}, {$user['firstname']}",', ');
+			}
+
 			return $user_list;
 		}
 

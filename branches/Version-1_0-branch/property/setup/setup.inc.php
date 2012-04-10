@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.638';
+	$setup_info['property']['version']		= '0.9.17.639';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -94,6 +94,7 @@
 		'fm_location4_history',
 		'fm_location_type',
 		'fm_location_config',
+		'fm_location_contact',
 		'fm_building_part',
 		'fm_b_account',
 		'fm_b_account_category',
@@ -220,7 +221,8 @@
 		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
 		'addgroup'		=> 'property.hook_helper.clear_userlist',
 		'deletegroup'	=> 'property.hook_helper.clear_userlist',
-		'editgroup'		=> 'property.hook_helper.clear_userlist'
+		'editgroup'		=> 'property.hook_helper.clear_userlist',
+		'registration'	=> 'property.hook_helper.add_location_contact'
 	);
 
 	/* Dependencies for this app to work */

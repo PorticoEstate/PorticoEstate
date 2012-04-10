@@ -4,7 +4,7 @@ include_class('controller', 'date_generator', 'inc/component/');
 include_class('controller', 'check_list_status_info', 'inc/helper/');
 include_class('controller', 'check_list_status_manager', 'inc/helper/');
 		
-/* This class transforms controls with checklists or controls with aggregated values for number of open cases, 
+/* This class transforms controls with checklists or controls with aggregated number of open cases, 
 *  and puts these values in a calendar array for each control
 */  
 

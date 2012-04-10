@@ -295,6 +295,9 @@ $(document).ready(function(){
 			
 	// file: sort_check_list.xsl
 	// Saves order of control items for a group
+	/*
+	 * ERSTATTET AV FUNKSJONALITET SOM SORTERER GRUPPER OG ITEMS
+	 * 
 	$(".frm_save_order").submit(function(e){
 		e.preventDefault();
 		var thisForm = $(this);
@@ -327,7 +330,7 @@ $(document).ready(function(){
 				}
 			});	
 	});
-	
+	*/
 	$("#frm_save_control_groups").submit(function(e){
 		var thisForm = $(this);
 		var num_checked = $(this).find("input:checked").length;
@@ -575,8 +578,10 @@ $(document).ready(function(){
 		e.preventDefault();
 
 		var thisForm = $(this);
+		var clickRow = $(this).closest("li");
+		var checkItemRow = $(this).closest("li.check_item_case");
 		var requestUrl = $(thisForm).attr("action");
-		
+				
 		$.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&" + $(thisForm).serialize(),
@@ -585,53 +590,45 @@ $(document).ready(function(){
 	    			  var jsonObj = jQuery.parseJSON(data);
 		 
 	    			  if(jsonObj.status == "saved"){
-	    				  var case_id = "#case_" + jsonObj.caseObj.id; 
-	    				  var case_descr = jsonObj.caseObj.descr;
-	    				  
-	    				  $(case_id).show();
-	    				  $(case_id).find(".case_descr").text(case_descr);
-	    				  $(thisForm).parents("li.quick_edit").remove();	  
+	    				var type = $(checkItemRow).find(".control_item_type").text();
+	    				
+		    			if(type == "control_item_type_1"){
+	    					
+	    				}else if(type == "control_item_type_2"){
+	    					var measurement_text = $(thisForm).find("input[name='measurement']").val();
+		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
+	    				}
+		    			
+		    			// Text from forms textarea
+	    				var desc_text = $(thisForm).find("textarea").val();
+	    				// Puts new text into description tag in case_info	    				   				
+	    				$(clickRow).find(".case_info .case_descr").text(desc_text);
+	    					    				
+	    				$(clickRow).find(".case_info").show();
+	    				$(clickRow).find(".frm_update_case").hide();
 					  }
 				  }
 			  }
-		});	
+		});
 	});
 	
 	$("a.quick_edit").live("click", function(e){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
-		var order_nr = $(clickRow).find("span.order_nr").text();
+									
+		$(clickRow).find(".case_info").hide();
+		$(clickRow).find(".frm_update_case").show();
+		
+		return false;	
+	});
+	
+	$(".frm_update_case .cancel").live("click", function(e){
+		var clickElem = $(this);
+		var clickRow = $(this).closest("li");
 				
-		var case_info = $(clickRow).find(".case_info");
-		var case_id = $(case_info).find(".case_id").text();
-		var case_descr = $(case_info).find(".case_descr").text();
-		var case_status = $(case_info).find(".case_status").text();
-		var case_measurement = $(case_info).find(".case_measurement").text();
-		var case_type = $(case_info).find(".case_type").text();
-		var requestUrl = $(clickElem).attr('href');
 		
-		$(clickRow).hide();
-		
-		$(clickRow).attr("id", "case_" + case_id);
-		
-		var quickEditRowTagStr = "<li class='quick_edit check_item_case'><h4>" + order_nr + ": " + "Hurtigendring</h4><fieldset><form class='frm_update_case' action='" + requestUrl + "'>";
-			
-		if(case_type == "control_item_type_2")
-			quickEditRowTagStr += "<label>Måleverdi</label><input type='text' name='case_measurement'>" + case_measurement + "</input>";
-		
-		if(case_status == 1)
-			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option SELECTED='SELECTED' value='1'>Utført</option><option value='2'>Venter på tilbakemelding</option></select>";
-		else if(case_status == 2)
-			quickEditRowTagStr += "<label>Status</label><select name='case_status'><option value='1'>Utført</option><option SELECTED='SELECTED' value='2'>Venter på tilbakemelding</option></select>";
-		
-		quickEditRowTagStr += "<label>Beskrivelse</label><textarea name='case_descr'>" + case_descr + "</textarea>";
-		
-		
-		quickEditRowTagStr += "<input class='btn_m focus' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />";
-		
-		quickEditRowTagStr += "</fieldset></form></li>";
-		
-		$quickEditRow = $(clickRow).before(quickEditRowTagStr);
+		$(clickRow).find(".case_info").show();
+		$(clickRow).find(".frm_update_case").hide();
 		
 		return false;	
 	});

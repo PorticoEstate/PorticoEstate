@@ -17,7 +17,12 @@
 	$c = createobject('phpgwapi.config','registration');
 	$c->read();
 
-	if(!$c->config_data['activate_account'] == 'pending_approval')
+	if($c->config_data['activate_account'] == 'pending_approval')
+	{
+		$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_reg_accounts WHERE reg_dla <= '"
+		. (time() - 7200) . "' AND reg_info IS NULL",__LINE__,__FILE__);	
+	}
+	else
 	{
 		$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_reg_accounts WHERE reg_dla <= '"
 		. (time() - 7200) . "'",__LINE__,__FILE__);

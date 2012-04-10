@@ -9,6 +9,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 {
 	protected static $so;
 
+	var $public_functions = array
+	(
+		'fix_duplicates'  		=> true,
+	);
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
@@ -219,6 +224,117 @@ class activitycalendar_soorganization extends activitycalendar_socommon
     	}
 		
 		return $result;
+	}
+	
+	function get_duplicates()
+	{
+		$result = array();
+		//$q1= "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city, cp.* from bb_organization bb, bb_organization_contact cp where cp.organization_id=bb.id and bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
+		$q1= "select bb.id as orgid, bb.name as orgname, bb.organization_number as orgno, bb.street as orgstreet, bb.zip_code as zip, bb.city from bb_organization bb where bb.show_in_portal=1 and bb.active=1 order by bb.name, bb.id";
+//	    	$q1="SELECT name FROM bb_organization WHERE id={$org_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			//if($org->get_name() != $this->db->f('orgname')) //new organization
+			//{
+/*				$org = new activitycalendar_organization();
+				$org->set_id($this->db->f('orgid'));
+				$org->set_name($this->db->f('orgname'));
+				$org->set_address($this->db->f('orgstreet').', '.$this->db->f('zip').' '.$this->db->f('city'));
+				$org->set_organization_number($this->db->f('orgno'));
+*/
+				$result[$this->db->f('orgid')] = array(
+					'orgid' => $this->db->f('orgid'),
+					'orgname' => $this->db->f('orgname'),
+					'orgstreet' =>  $this->db->f('orgstreet'),
+					'zip' => $this->db->f('zip'),
+					'city' => $this->db->f('city'),
+					'orgno' => $this->db->f('orgno')
+				);
+			//}
+			//else if (isset($this->db->f('orgstreet')) && $this->db->f('orgstreet') != '')
+			//{
+			//	$org->set_address($this->db->f('orgstreet').', '.$this->db->f('zip').' '.$this->db->f('city'));
+			//}
+			//$result[] = $org;
+		}
+		//_debug_array($result);
+		return $result;
+	}
+	
+	function fix_duplicates()
+	{
+		$so_activity = CreateObject('activitycalendar.soactivity');
+		$orgs1 = $this->get_duplicates();
+		$orgs2 = $this->get_duplicates();
+		$new_orgs = array();
+		$removed_orgs = array();
+		$orgmappings = array();
+		foreach($orgs1 as $org)
+		{
+			$tmpName = $org['orgname'];
+			$curr_id = $org['orgid'];
+			if(!in_array($curr_id, $removed_orgs))
+			{
+				foreach($orgs2 as $o2)
+				{
+					$removeId = $o2['orgid'];
+					//var_dump($removeId .':'.$curr_id . '<br/>'); 
+					if($removeId != $curr_id && $o2['orgname'] == $tmpName)
+					{
+						//var_dump($removeId.'-' . $o2['orgname'].' skal fjernes <br/>');
+						//update previous instance
+						$org['orgstreet'] = $o2['orgstreet'];
+						$org['zip'] = $o2['zip'];
+						$org['city'] = $o2['city'];
+						$org['removed_org'] = $removeId;
+						$removed_orgs[] = $removeId;
+						$orgmappings[$curr_id][] = $removeId;
+						
+						//unset($orgs1[$removeId]);
+					}
+				}
+				$new_orgs[] = $org;
+			}
+		}
+//		_debug_array($new_orgs);
+//		_debug_array($orgmappings);
+		
+		//loop through activities and update organization-connection
+		foreach($orgmappings as $key => $value)
+		{
+			foreach($value as $orgmapping)
+			{
+//				var_dump($orgmapping.' skal flyttes til '.$key.'<br/>');
+				//get activity connected to current orgid
+				$activities = $so_activity->get_connected_activities($orgmapping);
+				foreach($activities as $activity)
+				{
+					var_dump($activity->get_title().' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					$so_activity->update_organization_connection($activity->get_id(), $key);
+				}
+				var_dump("Oppdaterer organisasjon ".$orgmapping.', settes til inaktiv.<br/>');
+				$this->set_organization_inactive($orgmapping);
+				//get affected stuff from booking
+				$alloc = $this->get_affected_allocations($orgmapping);
+				//if($alloc)
+					var_dump("allocation: ". $alloc."</br>");
+				$res = $this->get_affected_reservations($orgmapping);
+				//if($res)
+					var_dump("reservation: ". $res."</br>");
+				$event = $this->get_affected_events($orgmapping);
+				//if($event)
+					var_dump("event: ". $event."</br>");
+			}
+		}
+		
+		//loop through organizations and update them.
+		foreach($new_orgs as $no)
+		{
+			//update organization with new information
+			//_debug_array($no);
+			var_dump("Oppdaterer organisasjon ".$no['orgid'].','.$no['orgname'].' med ny adresse.<br/>');
+			$this->update_organization_with_new_info($no);
+		}
 	}
 	
 	function get_organization_name_local($org_id)
@@ -661,6 +777,76 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		);
 		
 		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
+	}
+	
+	function update_organization_with_new_info($organization)
+	{
+		$name = $organization['orgname'];
+		$orgid = (int)$organization['orgid'];
+		$street = $organization['orgstreet'];
+		if(!$street)
+		{
+			$street = '';
+		}
+		$zip = $organization['zip'];
+		if(!$zip)
+		{
+			$zip = '';
+		}
+		$city = $organization['city'];
+		if(!$city)
+		{
+			$city = '';
+		} 
+		
+		$values = array(
+			'street = ' . $this->marshal($street, 'string'),
+			'zip_code = ' . $this->marshal($zip, 'string'),
+			'city = ' . $this->marshal($city, 'string')
+		);
+		//var_dump("UPDATE bb_organization SET " . join(',', $values) . " WHERE id=$orgid");
+		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
+	}
+	
+	function set_organization_inactive($org_id)
+	{
+		$orgid = (int)$org_id;
+
+		//var_dump("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}");
+		$result = $this->db->query("UPDATE bb_organization SET active=0, show_in_portal=0 WHERE id={$orgid}", __LINE__,__FILE__);
+	}
+	
+	function get_affected_allocations($org_id)
+	{
+		$sql = "select id from bb_allocation where organization_id={$org_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('id');
+		}
+		
+		return $result;
+	}
+	
+	function get_affected_reservations($org_id)
+	{
+		$sql = "select id from bb_completed_reservation where organization_id={$org_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('id');
+		}
+		
+		return $result;
+	}
+	
+	function get_affected_events($org_id)
+	{
+		$sql = "select id from bb_event where customer_organization_id={$org_id}";
+		$this->db->query($q1, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('id');
+		}
+		
+		return $result;
 	}
 	
 	function update($organization)
