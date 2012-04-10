@@ -1258,6 +1258,7 @@
 				$values[] = array
 					(
 						'voucher_id'			=> $this->db->f('bilagsnr'),
+						'voucher_out_id'		=> $this->db->f('bilagsnr_ut'),
 						'id'					=> $this->db->f('id'),
 						'art'					=> $this->db->f('artid'),
 						'type'					=> $this->db->f('typeid'),
