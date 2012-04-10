@@ -44,4 +44,33 @@
 			$message =lang('%1 userlists cleared from cache',$cleared);
 			phpgwapi_cache::message_set($message, 'message');
 		}
+
+		/**
+		 * Add a contact to a location
+		 *
+		 * @return void
+		 */
+		public function add_location_contact($data)
+		{
+			if(!isset($data['location_code']) || !$data['location_code'])
+			{
+				phpgwapi_cache::message_set("location_code not set", 'error');
+				return false;
+			}
+
+			$value_set = array();
+			$value_set['location_code'] = $data['location_code'];
+			$value_set['contact_id'] = $data['contact_id'];
+			$value_set['user_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['entry_date'] = time();
+			$value_set['modified_date'] = time();
+			
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+
+			$message =lang('user %1 added to %2',$data['account_lid'],$data['location_code']);
+			phpgwapi_cache::message_set($message, 'message');
+		}
 	}

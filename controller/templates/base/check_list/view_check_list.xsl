@@ -2,18 +2,19 @@
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<div id="main_content">
+<div id="main_content" class="medium">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
 		
 		<h1>Sjekkliste</h1>
 		<fieldset class="control_details">
-			<label>Tittel</label><xsl:value-of select="check_list/status"/><br/>
-			<label>Kommentar</label><xsl:value-of select="check_list/comment"/><br/>
-			<label>Skal utføres innen</label>
-			<xsl:if test="check_list/deadline != ''">
-				<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/><br/>
-			</xsl:if>
+			<div class="row"><label>Tittel</label><xsl:value-of select="check_list/status"/></div>
+			<div class="row"><label>Kommentar</label><xsl:value-of select="check_list/comment"/></div>
+			<div class="row"><label>Skal utføres innen</label>
+				<xsl:if test="check_list/deadline != ''">
+					<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/><br/>
+				</xsl:if>
+			</div>
 		</fieldset>
 				
 		<h2>Sjekkpunkter</h2>

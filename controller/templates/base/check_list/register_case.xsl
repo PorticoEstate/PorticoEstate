@@ -2,7 +2,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div id="main_content">
+<div id="main_content" class="medium">
 	
 	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
 	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>

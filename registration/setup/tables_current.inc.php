@@ -21,7 +21,7 @@
 			'fd' => array(
 				'reg_id' => array('type' => 'varchar', 'precision' => 32,'nullable' => False),
 				'reg_lid' => array('type' => 'varchar', 'precision' => 255,'nullable' => False),
-				'reg_info' => array('type' => 'text','nullable' => False),
+				'reg_info' => array('type' => 'text','nullable' => true),
 				'reg_dla' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'reg_approved' => array('type' => 'int', 'precision' => 2,'nullable' => true)
 			),

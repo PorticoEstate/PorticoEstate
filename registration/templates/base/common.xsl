@@ -7,23 +7,23 @@
 <![CDATA[
 
 /**
- * Javascript for the controller module.  Holds datasource init functions and form helpers.
+ * Javascript for the regitration module.  Holds datasource init functions and form helpers.
  *
- * Functions and objects within this file are kept in the YAHOO.controller namespace.
+ * Functions and objects within this file are kept in the YAHOO.portico namespace.
  */
 
-	YAHOO.namespace('controller');
+	YAHOO.namespace('portico');
 
 	// Holds data source setup funtions
-	YAHOO.controller.setupDatasource = new Array();
+	YAHOO.portico.setupDatasource = new Array();
 
 	//Holds all data sources
-	YAHOO.controller.datatables = new Array();
+	YAHOO.portico.datatables = new Array();
 
 	counter = 0;
 	// Adds data source setup funtions
 	function setDataSource(source_url, column_defs, form_id, filter_ids, container_id, paginator_id, datatable_id,rel_id, editor_action, disable_left_click) {
-		YAHOO.controller.setupDatasource.push(
+		YAHOO.portico.setupDatasource.push(
 			function() {
 				this.url = source_url;
 				this.columns = column_defs;
@@ -56,8 +56,8 @@
 		selected_datatable.getDataSource().sendRequest('',{success:loaded, scope:selected_datatable});
 		
 		//... traverse all datatables and refresh related (to the selected) data tables
-		for(var i=0; i<YAHOO.controller.datatables.length; i++){
-			var datatable = YAHOO.controller.datatables[i];
+		for(var i=0; i<YAHOO.portico.datatables.length; i++){
+			var datatable = YAHOO.portico.datatables[i];
 
 			for(var j=0;j<selected_datatable.related.length;j++){
 				var curr_related = selected_datatable.related[j];
@@ -128,7 +128,7 @@
 		this.table.editor_action = this.properties.editor_action;
 
 		//... push the data table on a stack
-		YAHOO.controller.datatables.push(this.table);
+		YAHOO.portico.datatables.push(this.table);
 
 		//... ?
 		this.table.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
@@ -369,10 +369,10 @@
 	// Set up data sources when the document has loaded
 	YAHOO.util.Event.addListener(window, "load", function() {
 		var i = 0; 
-		while(YAHOO.controller.setupDatasource.length > 0){
+		while(YAHOO.portico.setupDatasource.length > 0){
 			//... create a variable name, assign set up function to that variable and instantiate properties
-			variableName = "YAHOO.controller.datasource" + i;
-			eval(variableName + " = YAHOO.controller.setupDatasource.shift()");
+			variableName = "YAHOO.portico.datasource" + i;
+			eval(variableName + " = YAHOO.portico.setupDatasource.shift()");
 			var source_properties = eval("new " + variableName + "()");
 
 ]]>
@@ -402,7 +402,7 @@
 			<?php
 				$populate = phpgw::get_var('populate_form');
 				if(isset($populate)){?>
-					var qs = YAHOO.controller.serializeForm(source_properties.form);
+					var qs = YAHOO.portico.serializeForm(source_properties.form);
 					this.wrapper.source.liveData = this.wrapper.url + qs + '&';
 					this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
 						this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
@@ -464,7 +464,7 @@
 				myDlg.show();
 			};
 
-			var storeColumnsUrl = YAHOO.controller.storeColumnsUrl;
+			var storeColumnsUrl = YAHOO.portico.storeColumnsUrl;
 			var hideDlg = function(e) {
 				this.hide();
 				// After we've hidden the dialog we send a post call to store the columns the user has selected

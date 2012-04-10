@@ -159,7 +159,7 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('registration/templates/base/css/base.css');
-			self::add_javascript('controller', 'yahoo', 'common.js');//Use this one for now
+			self::add_javascript('registration', 'yahoo', 'common.js');//Use this one for now
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);

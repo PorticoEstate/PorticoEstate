@@ -1225,20 +1225,30 @@
 
 		function read_single_voucher($bilagsnr = 0, $id = 0)
 		{
+			$table = 'fm_ecobilag';
+
 			$bilagsnr =(int)$bilagsnr;
 			$id = (int)$id;
+
 			if($bilagsnr)
 			{
-				$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";
+				$filtermethod= "WHERE bilagsnr ='$bilagsnr'";
 			}
 			else if ($id)
 			{
-				$sql = "SELECT * from fm_ecobilag WHERE id ='$id'";
+				$filtermethod= " WHERE {$table}.id ='{$id}'";
 			}
 			else
 			{
 				return array();
 			}			
+
+			$sql = "SELECT {$table}.*,fm_workorder_status.descr as status, fm_workorder.charge_tenant,org_name,"
+				. "fm_workorder.claim_issued, fm_workorder_status.closed FROM {$table}"
+				. " {$this->left_join} fm_workorder ON fm_workorder.id = {$table}.pmwrkord_code"
+				. " {$this->left_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -1247,16 +1257,19 @@
 			{
 				$values[] = array
 					(
+						'voucher_id'			=> $this->db->f('bilagsnr'),
+						'voucher_out_id'		=> $this->db->f('bilagsnr_ut'),
 						'id'					=> $this->db->f('id'),
 						'art'					=> $this->db->f('artid'),
 						'type'					=> $this->db->f('typeid'),
 						'dim_a'					=> $this->db->f('dima'),
 						'dim_b'					=> $this->db->f('dimb'),
 						'dim_d'					=> $this->db->f('dimd'),
-						'tax'					=> $this->db->f('mvakode'),
+						'tax_code'				=> $this->db->f('mvakode'),
 						'invoice_id'			=> $this->db->f('fakturanr'),
 						'kid_nr'				=> $this->db->f('kidnr'),
 						'vendor_id'				=> $this->db->f('spvend_code'),
+						'vendor'				=> $this->db->f('org_name', true),
 						'janitor'				=> $this->db->f('oppsynsmannid'),
 						'supervisor'			=> $this->db->f('saksbehandlerid'),
 						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
@@ -1277,6 +1290,14 @@
 						'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 						'saksigndato'			=> $this->db->f('saksigndato'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
+						'charge_tenant'			=> $this->db->f('charge_tenant'),
+						'external_ref'			=> $this->db->f('external_ref'),
+						'status'				=> $this->db->f('status'),
+						'closed'				=> $this->db->f('closed'),
+						'parked'				=> $this->db->f('kreditnota'),
+						'period'				=> $this->db->f('periode'),
+						'periodization'			=> $this->db->f('periodization'),
+						'periodization_start'	=> $this->db->f('periodization_start'),
 					);
 			}
 
@@ -1732,4 +1753,87 @@
 
 			return false;
 		}
+
+		public function get_vouchers($data)
+		{
+			$filtermethod = '';
+			$querymethod = '';
+			$where = 'WHERE';
+
+			if($data['janitor_lid'])
+			{
+				$data['janitor_lid'] = ltrim($data['janitor_lid'],'*');
+				$filtermethod = "$where oppsynsmannid = '{$data['janitor_lid']}'";
+				$where = 'AND';
+			}
+
+			if($data['supervisor_lid'])
+			{
+				if( stripos($data['supervisor_lid'],'*') === 0)
+				{
+					$data['supervisor_lid'] = ltrim($data['supervisor_lid'],'*');
+					$filtermethod .= " $where oppsynsigndato IS NOT NULL";
+					$where = 'AND';
+				}
+
+				$filtermethod .= " $where saksbehandlerid = '{$data['supervisor_lid']}'";
+				$where = 'AND';
+			}
+
+			if($data['budget_responsible_lid'])
+			{
+				if( stripos($data['budget_responsible_lid'],'*') === 0)
+				{
+					$data['budget_responsible_lid'] = ltrim($data['budget_responsible_lid'],'*');
+					$filtermethod .= " $where saksigndato IS NOT NULL";
+					$where = 'AND';
+				}
+				$filtermethod .= " $where budsjettansvarligid = '{$data['budget_responsible_lid']}'";
+				$where = 'AND';
+			}
+
+			if($data['query'])
+			{
+				$query = (int) $data['query'];
+				$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
+				$where = 'AND';
+			}
+
+			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop FROM fm_ecobilag"
+			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
+			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
+			." $filtermethod $querymethod"
+			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr";
+
+			$lang_voucer = lang('voucher id');
+			$lang_vendor = lang('vendor');
+			$lang_currency = lang('currency');
+			$lang_parked = lang('parked');
+			$lang_type = lang('type');
+			$lang_approved_amount = lang('approved amount');
+			
+			$this->db->query($sql,__LINE__,__FILE__);
+			$values = array();
+
+			while($this->db->next_record())
+			{
+				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
+				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s",
+							$voucher_id,
+							trim(strtoupper($this->db->f('org_name',true))),
+							$this->db->f('currency'),
+							$this->db->f('kreditnota') ? 'X' : '',
+							$this->db->f('type'),
+							number_format($this->db->f('godkjentbelop'), 2, ',', ' ')
+						);
+
+				$values[] = array
+				(
+					'id'	=> $this->db->f('bilagsnr'),
+					'name'	=> $name
+				);
+			}
+			return $values;
+		}
+
 	}

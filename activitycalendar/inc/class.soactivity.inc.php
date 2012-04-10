@@ -1388,4 +1388,50 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		
 		return $activities;
 	}
+	
+	function get_connected_activities($org_id)
+	{
+		$activities = array();
+		$sql = "SELECT * FROM activity_activity WHERE organization_id={$org_id}";
+
+		$this->db->query($sql, __LINE__, __FILE__);
+		while ($this->db->next_record())
+		{			
+			$activity = new activitycalendar_activity((int) $this->db->f('id'));
+
+			$activity->set_title($this->unmarshal($this->db->f('title'), 'string'));
+			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
+			$activity->set_office($this->unmarshal($this->db->f('office'), 'int'));
+			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
+			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
+			$activity->set_target($this->unmarshal($this->db->f('target'), 'string'));
+			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
+			$activity->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
+			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
+			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
+			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
+			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
+			$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
+			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
+			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
+			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
+			
+			$activities[] = $activity;
+		}
+		
+		return $activities;
+	}
+	
+	function update_organization_connection($activity_id, $organization_id)
+	{
+		$id = intval($activity_id);
+		$org_id = intval($organization_id);
+		
+		$result = $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__,__FILE__);
+
+		return isset($result);
+	}
 }

@@ -241,7 +241,7 @@
 			$ui = createobject('registration.uireg');
 			$reg_info = $so->valid_reg($reg_id);
 
-			if (! is_array($reg_info))
+			if (!$reg_info)
 			{
 				$ui->simple_screen('error_confirm.tpl');
 				return False;
@@ -259,7 +259,7 @@
 		{
 			$so = createobject('registration.soreg');
 			$reg_info = $so->valid_reg($reg_id);
-			if($reg_info['reg_info'])
+			if(isset($reg_info['reg_info']) && $reg_info['reg_info'])
 			{
 				$reg_info['reg_info'] = unserialize(base64_decode($reg_info['reg_info']));
 				unset($reg_info['reg_info']['passwd']);
@@ -313,14 +313,13 @@
 		//
 		function lostpw2()
 		{
-//			global $reg_id;
 			$reg_id = phpgw::get_var('reg_id');
 
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');
 			$reg_info = $so->valid_reg($reg_id);
 
-			if (! is_array($reg_info))
+			if (!$reg_info)
 			{
 				$ui->simple_screen('error_confirm.tpl');
 				return False;
@@ -337,11 +336,11 @@
 		//
 		function lostpw3()
 		{
-//			global $r_reg;
 			$r_reg = phpgw::get_var('r_reg');
 
 			$lid = $GLOBALS['phpgw']->session->appsession('loginid','registration');
-			if(!$lid) {
+			if(!$lid)
+			{
 			  $error[] = lang('Wrong session');
 			}
 
@@ -353,6 +352,18 @@
 			if (! $r_reg['passwd'])
 			{
 			    $errors[] = lang('You must enter a password');
+			}
+			else
+			{
+				$account	= new phpgwapi_user();
+				try
+				{
+					$account->validate_password($r_reg['passwd']);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
+				}
 			}
 
 			if(! is_array($errors))

@@ -109,13 +109,23 @@
 			// comply with RFC 4627
 			header('Content-Type: application/json'); 
 			$return_data = $GLOBALS[$class]->$method();
-			echo json_encode($return_data);
+			/*
+			* JSON Serializer produces invalid JSON if a value ends with quote
+			*/
+			$v = json_encode($return_data);
+			if(preg_match('/^"(.*)"$/', $v, $matches))
+			{
+	        	$v = $matches[1];
+	        }
+			echo $v;
+//			echo json_encode($return_data);
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			//If debug info is not triggered elsewhere.
 			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && DEBUG_TIMER && !phpgwapi_cache::session_get($app,'id_debug'))
 			{
 				$debug_timer_stop = perfgetmicrotime();
+				//BTW: wil not destroy the json output - click on the 'Debug-link' to view message
 				_debug_array(lang('page prepared in %1 seconds.', $debug_timer_stop - $GLOBALS['debug_timer_start'] ));
 			}
 
