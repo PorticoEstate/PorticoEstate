@@ -625,9 +625,11 @@
 
 			$sql_full = "{$sql} {$filtermethod} {$querymethod}";
 
+			$sql_base = substr($sql_full,strripos($sql_full,'FROM'));
+
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{				
-				$sql_minimized = 'SELECT DISTINCT fm_workorder.id '  . substr($sql_full,strripos($sql_full,'FROM'));
+				$sql_minimized = "SELECT DISTINCT fm_workorder.id {$sql_base}";
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
 
 				$this->db->query($sql_count,__LINE__,__FILE__);
