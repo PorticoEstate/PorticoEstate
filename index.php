@@ -109,16 +109,7 @@
 			// comply with RFC 4627
 			header('Content-Type: application/json'); 
 			$return_data = $GLOBALS[$class]->$method();
-			/*
-			* JSON Serializer produces invalid JSON if a value ends with quote
-			*/
-			$v = json_encode($return_data);
-			if(preg_match('/^"(.*)"$/', $v, $matches))
-			{
-	        	$v = $matches[1];
-	        }
-			echo $v;
-//			echo json_encode($return_data);
+			echo json_encode($return_data);
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			//If debug info is not triggered elsewhere.
