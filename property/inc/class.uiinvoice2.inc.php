@@ -281,9 +281,100 @@
 
 			$voucher_info['generic']['period_list']['options'] = $period_list;
 			$voucher_info['generic']['periodization_start_list']['options'] = $periodization_start_list;
-			
+
+			$approved_list = array();
+
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
 			if(count($voucher))
 			{
+
+//---------start forward
+				$approve = execMethod('property.uiinvoice.get_approve_role');
+ 
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_janitor'],
+					'role_sign'	=> 'oppsynsmannid',
+					'initials'	=> $voucher[0]['janitor'] ? $voucher[0]['janitor'] : '',
+					'date'		=> $voucher[0]['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['oppsynsigndato'] ) ) :'',
+					'user_list'	=> !$voucher[0]['oppsynsigndato'] ? array('options' => $this->bocommon->get_user_list_right(32,isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'','.invoice')) : ''
+				);
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_supervisor'],
+					'role_sign'	=> 'saksbehandlerid',
+					'initials'	=> $voucher[0]['supervisor'] ? $voucher[0]['supervisor'] : '',
+					'date'		=> $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['saksigndato'] ) ) :'',
+					'user_list'	=> !$voucher[0]['saksigndato'] ? array('options' => $this->bocommon->get_user_list_right(64,isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'','.invoice')) : ''
+				);
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_budget_responsible'],
+					'role_sign'	=> 'budsjettansvarligid',
+					'initials'	=> $voucher[0]['budget_responsible'] ? $voucher[0]['budget_responsible'] : '',
+					'date'		=> $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['budsjettsigndato'] ) ) :'',
+					'user_list'	=> !$voucher[0]['budsjettsigndato'] ? array('options' => $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice')) : ''
+				);
+
+				$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
+
+				foreach($approve as &$_approve)
+				{
+					if($_approve['id'] == 'is_janitor' && $my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato'])
+					{
+						$_approve['selected'] = 1;
+						$sign_orig = 'is_janitor';
+					}
+					else if($_approve['id'] == 'is_supervisor' && $my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato'])
+					{
+						$_approve['selected'] = 1;
+						$sign_orig = 'is_supervisor';
+					}
+					else if($_approve['id'] == 'is_budget_responsible' && $my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato'])
+					{
+						$_approve['selected'] = 1;
+						$sign_orig = 'is_budget_responsible';
+					}
+				}
+
+				unset($_approve);
+
+				$approve_list = array();
+				foreach($approve as $_approve)
+				{
+					if($_approve['id'] == 'is_janitor')
+					{
+						if(($my_initials == $voucher[0]['janitor'] && $voucher[0]['oppsynsigndato']) || !$voucher[0]['oppsynsigndato'])
+						{
+							$approve_list[] = $_approve;
+						}
+					}
+					if($_approve['id'] == 'is_supervisor')
+					{
+						if(($my_initials == $voucher[0]['supervisor'] && $voucher[0]['saksigndato']) || !$voucher[0]['saksigndato'])
+						{
+							$approve_list[] = $_approve;
+						}
+					}
+					if($_approve['id'] == 'is_budget_responsible')
+					{
+						if(($my_initials == $voucher[0]['budget_responsible'] && $voucher[0]['budsjettsigndato']) || !$voucher[0]['budsjettsigndato'])
+						{
+							$approve_list[] = $_approve;
+						}
+					}
+				}
+
+				$voucher_info['generic']['approve_list'] = array('options' => $approve_list);
+				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('select')));
+//---------end forward
+
 				$voucher_info['generic']['approved_amount'] = 0;
 				$voucher_info['generic']['amount'] = 0;
 				foreach ($voucher as $line)
@@ -333,12 +424,35 @@
 				$voucher_info['generic']['dimb_list']['options']		= $this->bo->select_dimb_list();
 				$voucher_info['generic']['tax_code_list']['options']	= $this->bo->tax_code_list();
 				$voucher_info['generic']['periodization_list']['options'] = execMethod('property.bogeneric.get_list', array('type'=>'periodization'));
+
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_janitor'],
+					'role_sign'	=> 'oppsynsmannid',
+				);
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_supervisor'],
+					'role_sign'	=> 'saksbehandlerid',
+				);
+				$approved_list[] = array
+				(
+					'role'		=> $role_check['is_budget_responsible'],
+					'role_sign'	=> 'budsjettansvarligid',
+				);
 			}
+
+			$voucher_info['generic']['approved_list'] = $approved_list;
+			$voucher_info['generic']['process_code_list'] = array('options' => execMethod('property.bogeneric.get_list', array(
+				'type'		=> 'voucher_process_code',
+				'selected'	=> isset($voucher[0]['process_code']) ? $voucher[0]['process_code'] : '')));
+
+			array_unshift ($voucher_info['generic']['process_code_list']['options'],array ('id'=>'','name'=>lang('select')));
 			array_unshift ($voucher_info['generic']['dimb_list']['options'],array ('id'=>'','name'=>lang('select')));
 			array_unshift ($voucher_info['generic']['periodization_list']['options'],array('id' => '0', 'name' => lang('none')));
 
 			$voucher_info['voucher'] = $voucher;
-//_debug_array($voucher_info);
+//_debug_array($voucher_info);die();
 
 			return $voucher_info;
 		}

@@ -45,6 +45,7 @@
 				<xsl:apply-templates select="filter_form" />
 				<xsl:apply-templates select="filter_invoice" />
 				<xsl:call-template name="voucher_fields" />
+				<xsl:call-template name="approve"/>
 				<tr>
 					<td colspan = '6'>
 						<xsl:apply-templates select="paging"/>
@@ -229,6 +230,7 @@
 
 			</td>
 		</tr>
+<!--
 		<tr>
 			<td>
 				<xsl:value-of select="php:function('lang', 'janitor')" />
@@ -260,6 +262,7 @@
 
 			</td>
 		</tr>
+-->
 		<tr>
 			<td>
 				<div id = 'order_text'>
@@ -399,7 +402,7 @@
 		  		</select>
 			</td>
 		</tr>
-
+<!--
 		<tr>
 			<td>
 				<xsl:value-of select="php:function('lang', 'oppsynsigndato')" />
@@ -442,26 +445,89 @@
 			  	</div>
 			</td>
 		</tr>
-
-<!--
-            merknad
-                    [art] => 1
-                    [type] => 1
-                    [dim_a] => 
-                    [dim_b] => 0
-                    [dim_d] => 441
-                    [tax] => 
-
-                    [project_id] => 
-                    [merknad] => 
-                    [b_account_id] => 12304262
-                    [kostra_id] => 
-
-                    [process_code] => 
-                    [process_log] => 
- 
 -->
 </xsl:template>
+
+
+	<!-- approve voucher  -->
+	<xsl:template xmlns:php="http://php.net/xsl" name="approve">
+		<xsl:apply-templates select="voucher_info/generic/approved_list"/>
+		<tr>
+			<td>
+				<xsl:value-of select="php:function('lang', 'voucher process code')" />
+			</td>
+			<td>
+				<select id="process_code" name="process_code">
+					<xsl:apply-templates select="voucher_info/generic/process_code_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+				<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+			</td>
+			<td align="left">
+				<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+					</xsl:attribute>
+					<xsl:value-of select="value_process_log"/>
+				</textarea>
+			</td>
+		</tr>
+		<tr>
+			<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
+			<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+				<xsl:value-of select="php:function('lang', 'approve as')"/>
+			</td>
+			<td class="th_text" valign="top" align="left">
+				<select id = "approve_as" name="values[approve]">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'approve as')"/>
+					</xsl:attribute>
+					<option value="">
+						<xsl:value-of select="php:function('lang', 'select')"/>
+					</option>
+					<xsl:apply-templates select="voucher_info/generic/approve_list/options"/>
+				</select>
+			</td>
+		</tr>
+
+	</xsl:template>
+
+
+	<!-- New template-->
+	<xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
+		<tr>
+			<td align="left" style="white-space: nowrap;">
+				<xsl:value-of select="role"/>
+			</td>
+			<td align="left" style="white-space: nowrap;">
+				<div id = "{role_sign}">
+					<xsl:choose>
+						<xsl:when test="date != ''">
+							<xsl:value-of select="initials"/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="date"/>
+						</xsl:when>
+						<xsl:otherwise>
+								<select name="values[forward][{role_sign}]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="role"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'forward')"/>
+									</option>
+									<xsl:apply-templates select="user_list/options"/>
+								</select>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</td>
+		</tr>
+	</xsl:template>
+
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<div id="data_paginator"/>

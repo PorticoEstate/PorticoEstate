@@ -205,9 +205,9 @@ $(document).ready(function(){
 					$("#invoice_id").html( voucher[0].invoice_id );
 					$("#kid_nr").html( voucher[0].kid_nr );
 					$("#vendor").html( voucher[0].vendor );
-					$("#janitor").html( voucher[0].janitor );
-					$("#supervisor").html( voucher[0].supervisor );
-					$("#budget_responsible").html( voucher[0].budget_responsible );
+//					$("#janitor").html( voucher[0].janitor );
+//					$("#supervisor").html( voucher[0].supervisor );
+//					$("#budget_responsible").html( voucher[0].budget_responsible );
 					$("#invoice_date").html( voucher[0].invoice_date );
 					$("#payment_date").html( voucher[0].payment_date );
 					$("#b_account_id").val( voucher[0].b_account_id );
@@ -215,9 +215,9 @@ $(document).ready(function(){
 					$("#amount").html( data['generic'].amount );
 					$("#approved_amount").html( data['generic'].approved_amount );
 					$("#currency").html( voucher[0].currency );
-					$("#oppsynsigndato").html( voucher[0].oppsynsigndato );
-					$("#saksigndato").html( voucher[0].saksigndato );
-					$("#budsjettsigndato").html( voucher[0].budsjettsigndato );
+		//			$("#oppsynsigndato").html( voucher[0].oppsynsigndato );
+		//			$("#saksigndato").html( voucher[0].saksigndato );
+		//			$("#budsjettsigndato").html( voucher[0].budsjettsigndato );
 					if(voucher[0].merknad)
 					{
 						var oArgs_remark = {menuaction:'property.uiinvoice.remark', id: voucher[0].id};
@@ -336,6 +336,73 @@ $(document).ready(function(){
 
 						$("#periodization_start").html( htmlString );
 					}
+
+					if(data['generic']['process_code_list']['options'] != 'undefined')
+					{
+						var htmlString = "";
+
+						var obj = data['generic']['process_code_list']['options'];
+
+						$.each(obj, function(i) {
+							var selected = '';
+							if(obj[i].id == voucher[0].periodization)
+							{
+								selected = ' selected';
+							}
+							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+			    			});
+
+						$("#process_code").html( htmlString );
+					}
+
+					if(data['generic']['approved_list'] != 'undefined')
+					{
+						for ( var i = 0; i < data['generic']['approved_list'].length; ++i )
+						{
+							var role_sign = data['generic']['approved_list'][i].role_sign;
+							var role_initials = data['generic']['approved_list'][i].initials;
+
+							if( data['generic']['approved_list'][i].date )
+							{
+								var htmlString = role_initials + ": " + data['generic']['approved_list'][i].date;
+							}
+							else
+							{
+								var htmlString = "<select name=\"values[forward][" + role_sign + "]\">";
+								var obj = data['generic']['approved_list'][i]['user_list'].options;
+								$.each(obj, function(i) {
+									var selected = '';
+									if(obj[i].id == role_initials)
+									{
+										selected = ' selected';
+									}
+									htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+					    			});
+
+								htmlString  += "</select>";
+							}
+							$("#" + role_sign).html( htmlString );
+						}
+					}
+
+					if(data['generic']['approve_list']['options'] != 'undefined')
+					{
+						var htmlString = "";
+
+						var obj = data['generic']['approve_list']['options'];
+
+						$.each(obj, function(i) {
+							var selected = '';
+							if(obj[i].id == voucher[0].period)
+
+							{
+								selected = ' selected';
+							}
+							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+			    			});
+
+						$("#approve_as").html( htmlString );
+					}
 				}
 				else
 				{
@@ -346,25 +413,27 @@ $(document).ready(function(){
 					$("#invoice_id").html( '' );
 					$("#kid_nr").html( '' );
 					$("#vendor").html('' );
-					$("#janitor").html( '' );
-					$("#supervisor").html( '' );
-					$("#budget_responsible").html( '' );
+//					$("#janitor").html( '' );
+//					$("#supervisor").html( '' );
+//					$("#budget_responsible").html( '' );
 					$("#invoice_date").html( '' );
 					$("#payment_date").html( '' );
 					$("#b_account_id").val( '' );
 					$("#amount").html( '' );
 					$("#approved_amount").html( '' );
 					$("#currency").html( '' );
-					$("#oppsynsigndato").html( '' );
-					$("#saksigndato").html( '' );
-					$("#budsjettsigndato").html( '' );
+					$("#oppsynsmannid").html( '' );
+					$("#saksbehandlerid").html( '' );
+					$("#budsjettansvarligid").html( '' );
 					$("#remark").html( '' );
 					$("#dim_a").val('' );
 					$("#dim_b").html( "<option>Velg</option>" );
 					$("#period").html( "<option>Velg</option>" );
 					$("#periodization").html( "<option>Velg</option>" );
 					$("#periodization_start").html( "<option>Velg</option>" );
+					$("#process_code").html( "<option>Velg</option>" );
 					$("#tax_code").html( "<option>0</option>" );
+					$("#approve_as").html( "<option>Velg</option>" );
 					$("#order_text").html( 'Bestilling' );
 					$("#invoice_id_text").html('FakturaNr');
 				}
