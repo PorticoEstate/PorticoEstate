@@ -435,10 +435,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	    	
 	    	if($activity->get_group_id() && $activity->get_group_id() > 0)
 	    	{
+	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
 	    		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
 	    	}
 	    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 	    	{
+	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
 	    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
 	    	}
 	    }
@@ -474,11 +476,13 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	if($activity->get_group_id() && $activity->get_group_id() > 0)
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
+    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
     		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
     	}
     	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
+    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
     		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
     	}
     	
@@ -486,7 +490,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	
     }
     
-	function send_mailnotification_to_organization($contact_person_id, $subject, $body)
+	function send_mailnotification_to_organization($contact_person, $subject, $body)
 	{
 		
 		//var_dump($contact_person_id . ',' . $subject . ',' . $body);
@@ -505,7 +509,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			return false;
 		}
 		
-		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person_id);
+		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person->get_id());
 		//$mailtoAddress = "erik.holm-larsen@bouvet.no";
 		
 		//var_dump($mailtoAddress);
@@ -534,7 +538,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		}
 	}
     
-	function send_mailnotification_to_group($contact_person_id, $subject, $body)
+	function send_mailnotification_to_group($contact_person, $subject, $body)
 	{
 		if (!is_object($GLOBALS['phpgw']->send))
 		{
@@ -551,7 +555,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			return false;
 		}
 		
-		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person_id);
+		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person->get_id());
 		//$mailtoaddress = "erik.holm-larsen@bouvet.no";
 //var_dump($mailtoAddress.';'.$from.';'.$subject);
 		if (strlen($mailtoAddress) > 0) 
