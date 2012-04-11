@@ -368,7 +368,7 @@ $(document).ready(function(){
 							}
 							else
 							{
-								var htmlString = "<select name=\"values[forward][" + role_sign + "]\">";
+								var htmlString = "<select id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
 								var obj = data['generic']['approved_list'][i]['user_list'].options;
 								$.each(obj, function(i) {
 									var selected = '';
