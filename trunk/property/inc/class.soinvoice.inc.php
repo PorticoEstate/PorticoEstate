@@ -1762,8 +1762,13 @@
 
 			if($data['janitor_lid'])
 			{
-				$data['janitor_lid'] = ltrim($data['janitor_lid'],'*');
-				$filtermethod = "$where oppsynsmannid = '{$data['janitor_lid']}'";
+				if( stripos($data['janitor_lid'],'*') === 0)
+				{
+					$data['janitor_lid'] = ltrim($data['janitor_lid'],'*');
+					$filtermethod .= " $where oppsynsigndato IS NULL";
+					$where = 'AND';
+				}
+				$filtermethod .= " $where oppsynsmannid = '{$data['janitor_lid']}'";
 				$where = 'AND';
 			}
 
@@ -1772,7 +1777,7 @@
 				if( stripos($data['supervisor_lid'],'*') === 0)
 				{
 					$data['supervisor_lid'] = ltrim($data['supervisor_lid'],'*');
-					$filtermethod .= " $where oppsynsigndato IS NOT NULL";
+					$filtermethod .= " $where oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
 					$where = 'AND';
 				}
 
@@ -1785,7 +1790,7 @@
 				if( stripos($data['budget_responsible_lid'],'*') === 0)
 				{
 					$data['budget_responsible_lid'] = ltrim($data['budget_responsible_lid'],'*');
-					$filtermethod .= " $where saksigndato IS NOT NULL";
+					$filtermethod .= " $where saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
 					$where = 'AND';
 				}
 				$filtermethod .= " $where budsjettansvarligid = '{$data['budget_responsible_lid']}'";

@@ -20,6 +20,22 @@
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+<style type="text/css">
+#box { width: 200px; height: 5px; background: blue; }
+//select { width: 200px; }
+#voucher_id_filter { width: 800px; }
+#dim_b { width: 200px; }
+#period { width: 200px; }
+#periodization { width: 200px; }
+#periodization_start { width: 200px; }
+#process_code { width: 200px; }
+#tax_code { width: 200px; }
+#approve_as { width: 200px; }
+#_oppsynsmannid { width: 200px; }
+#_saksbehandlerid { width: 200px; }
+#_budsjettansvarligid { width: 200px; }
+
+</style>
 <div class="yui-navset yui-navset-top" id="pending_for_approval_tabview">
 	<div class="identifier-header">
 		<h1><xsl:value-of select="php:function('lang', 'invoice')"/></h1>
@@ -482,13 +498,10 @@
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
 			<td class="th_text" valign="top" align="left">
-				<select id = "approve_as" name="values[approve]">
+				<select id = "approve_as" name="values[approve]" with="40">
 					<xsl:attribute name="title">
 						<xsl:value-of select="php:function('lang', 'approve as')"/>
 					</xsl:attribute>
-					<option value="">
-						<xsl:value-of select="php:function('lang', 'select')"/>
-					</option>
 					<xsl:apply-templates select="voucher_info/generic/approve_list/options"/>
 				</select>
 			</td>
@@ -512,7 +525,7 @@
 							<xsl:value-of select="date"/>
 						</xsl:when>
 						<xsl:otherwise>
-								<select name="values[forward][{role_sign}]">
+								<select id ="_{role_sign}" name="values[forward][{role_sign}]">
 									<xsl:attribute name="title">
 										<xsl:value-of select="role"/>
 									</xsl:attribute>
