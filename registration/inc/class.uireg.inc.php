@@ -178,7 +178,7 @@ HTML;
 			(
 				'css'			=> $GLOBALS['phpgw']->common->get_css(),
 				'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-				'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
+				'str_base_url'	=> $GLOBALS['phpgw']->link('/', array('logindomain' => $_REQUEST['logindomain']), true),
 			);
 
 			$this->template->set_var($tpl_vars);
