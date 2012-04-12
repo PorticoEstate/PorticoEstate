@@ -1,4 +1,8 @@
 <!-- BEGIN form -->
+<style type="text/css">
+select { width: 300px; }
+</style>
+
 <script language="JavaScript" type="text/javascript">
 	var tos;
 
@@ -19,6 +23,17 @@
 		}
 	}
 </script>
+
+{css}
+
+<script type="text/javascript">
+<!--
+	var strBaseURL = '{str_base_url}';
+	{win_on_events}
+//-->
+</script>
+{javascript}
+
 
 <center>{errors}</center>
 <form action="{form_action}" method="POST">

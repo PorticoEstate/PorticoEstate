@@ -149,6 +149,9 @@ HTML;
 
 		function step2($errors = '',$r_reg = '',$o_reg = '',$missing_fields='')
 		{
+			$GLOBALS['phpgw']->js->validate_file('controller', 'jquery', 'controller');
+			$GLOBALS['phpgw']->js->validate_file('portico', 'ajax', 'registration');
+
 			$show_password_prompt = True;
 			$select_password = $this->bo->check_select_password();
 			if (is_string ($select_password))
@@ -170,6 +173,15 @@ HTML;
 			{
 				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
+
+			$tpl_vars = array
+			(
+				'css'			=> $GLOBALS['phpgw']->common->get_css(),
+				'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
+				'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
+			);
+
+			$this->template->set_var($tpl_vars);
 
 			if ($missing_fields)
 			{
@@ -210,9 +222,63 @@ HTML;
 
 			$this->template->set_block ('form', 'other_fields_proto', 'other_fields_list');
 			reset ($this->fields);
+			
+
+			$this->fields['loc1'] = array
+			(
+				'field_name' => 'loc1',
+				'field_text' => 'Eiendom',
+				'field_type' => 'location',
+				'field_values' => '',
+				'field_required' => 'Y',
+				'field_order' => 0
+        	);
+
+			$this->fields['loc2'] = array
+			(
+				'field_name' => 'loc2',
+				'field_text' => 'Bygning',
+				'field_type' => 'location',
+				'field_values' => '',
+				'field_required' => 'Y',
+				'field_order' => 0
+        	);
+
+			$this->fields['loc3'] = array
+			(
+				'field_name' => 'loc3',
+				'field_text' => 'Etasje',
+				'field_type' => 'location',
+				'field_values' => '',
+				'field_required' => 'Y',
+				'field_order' => 0
+        	);
+
+			$this->fields['loc4'] = array
+			(
+				'field_name' => 'loc4',
+				'field_text' => 'Sone',
+				'field_type' => 'location',
+				'field_values' => '',
+				'field_required' => 'Y',
+				'field_order' => 0
+        	);
+
+			$this->fields['loc5'] = array
+			(
+				'field_name' => 'loc5',
+				'field_text' => 'Rom',
+				'field_type' => 'location',
+				'field_values' => '',
+				'field_required' => 'Y',
+				'field_order' => 0
+        	);
+
+//_debug_array($this->fields);
 			foreach ($this->fields as $num => $field_info)
 			{
 				$input_field = $this->get_input_field ($field_info, $post_values);
+
 				$var = array (
 					'missing_indicator' => $missing[$field_info['field_name']] ? '<font color="#CC0000">*</font>' : '',
 					'bold_start'  => $field_info['field_required'] == 'Y' ? '<b>' : '',
@@ -411,6 +477,29 @@ HTML;
 				$rstring = $sbox->getmonthtext ($a . '[' . $name . '_month]', $post_values[$name . '_month']);
 				$rstring .= $sbox->getdays ($a . '[' . $name . '_day]', $post_values[$name . '_day']);
 				$rstring .= $sbox->getyears ($a . '[' . $name . '_year]', $post_values[$name . '_year'], 1900, date ('Y') + 1);
+			}
+
+			if ($type == 'location')
+			{
+				$rstring = <<<HTML
+				<select id="{$name}" name="{$a}[{$name}]">
+HTML;
+				if($name == 'loc1')
+				{
+					$locations = execMethod('property.solocation.get_children');
+					foreach ($locations as $location)
+					{
+						$selected = $location['id'] == $post_value ? ' selected = "selected"' : '';
+						$rstring .= <<<HTML
+						<option value ="{$location['id']}" $selected>{$location['name']}</option>
+HTML;
+					}
+				}
+
+				$rstring .= <<<HTML
+				</select>
+HTML;
+
 			}
 
 			return $rstring;

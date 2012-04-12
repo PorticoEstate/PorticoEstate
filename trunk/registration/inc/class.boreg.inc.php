@@ -29,7 +29,8 @@
 			'step4' => True,
 			'lostpw1' => True,
 			'lostpw2' => True,
-			'lostpw3' => True
+			'lostpw3' => True,
+			'get_locations'=> true
 		);
 
 		function boreg()
@@ -56,7 +57,7 @@
 
 			if (! is_array($errors) && $so->account_exists($r_reg['loginid']))
 			{
-				$errors[] = lang('Sorry, that username is already taken.');
+//				$errors[] = lang('Sorry, that username is already taken.');
 			}
 
 			$ui = createobject('registration.uireg');
@@ -426,5 +427,10 @@
 			}
 
 			return True;
+		}
+
+		function get_locations()
+		{
+			return execMethod('property.solocation.get_children', phpgw::get_var('location_code'));
 		}
 	}
