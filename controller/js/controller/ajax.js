@@ -293,44 +293,6 @@ $(document).ready(function(){
 			});	
     });
 			
-	// file: sort_check_list.xsl
-	// Saves order of control items for a group
-	/*
-	 * ERSTATTET AV FUNKSJONALITET SOM SORTERER GRUPPER OG ITEMS
-	 * 
-	$(".frm_save_order").submit(function(e){
-		e.preventDefault();
-		var thisForm = $(this);
-		
-		var control_id = $("#control_id").val();
-		var control_group_id = $(this).find("input[name='control_group_id']").val();
-		var order_nr_array;
-		var requestUrl = $(thisForm).attr("action"); 
-		
-		$(this).find("input[name='order_tags[]']").each(function() {
-			order_nr_array += $(this).val() + ",";
-		});
-
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&control_id=" + control_id + "&" + $(this).serialize(),
-			  success: function() {
-				  
-				  // Changes text on save button
-				  var this_submit_btn = $(thisForm).find("input[type='submit']");
-				  $(this_submit_btn).val("Lagret");
-				  
-				  // Changes text on save button back to original
-				  window.setTimeout(function() {
-					  $(this_submit_btn).val('Lagre rekkefølge');
-					 }, 1000);
-				  
-				  $(this_submit_btn).css({opacity: 0.5 });
-				  $(this_submit_btn).attr('disabled', 'disabled');
-				}
-			});	
-	});
-	*/
 	$("#frm_save_control_groups").submit(function(e){
 		var thisForm = $(this);
 		var num_checked = $(this).find("input:checked").length;
@@ -675,7 +637,7 @@ $(document).ready(function(){
 	});
 	
 	// Closes a case
-	$(".close_case").live("click", function(){
+	$("a.close_case").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 		var clickItem = $(this).closest("ul");
@@ -690,7 +652,48 @@ $(document).ready(function(){
 			success: function(data) {
 				var obj = jQuery.parseJSON(data);
 		    		
-   			  	if(obj.status == "closed"){
+   			  	if(obj.status == "true"){
+	   			  	if( $(clickItem).children("li").length > 1){
+	   			  		$(clickRow).fadeOut(300, function(){
+	   			  			$(clickRow).remove();
+	   			  		});
+	   			  		
+		   			  	var next_row = $(clickRow).next();
+						
+						// Updating order numbers for rows below deleted row  
+						while( $(next_row).length > 0){
+							update_order_nr_for_row(next_row, "-");
+							next_row = $(next_row).next();
+						}
+	   			  	}else{
+		   			  	$(checkItemRow).fadeOut(300, function(){
+	   			  			$(checkItemRow).remove();
+	   			  		});
+	   			  	}
+   			  	}
+			}
+		});
+
+		return false;
+	});
+	
+	// Open case
+	$("a.open_case").live("click", function(){
+		var clickElem = $(this);
+		var clickRow = $(this).closest("li");
+		var clickItem = $(this).closest("ul");
+		var checkItemRow = $(this).parents("li.check_item_case");
+		
+		var url = $(clickElem).attr("href");
+	
+		// Sending request for deleting a control item list
+		$.ajax({
+			type: 'POST',
+			url: url,
+			success: function(data) {
+				var obj = jQuery.parseJSON(data);
+		    		
+   			  	if(obj.status == "true"){
 	   			  	if( $(clickItem).children("li").length > 1){
 	   			  		$(clickRow).fadeOut(300, function(){
 	   			  			$(clickRow).remove();
@@ -757,6 +760,24 @@ $(document).ready(function(){
 	$("#control_details select").focusout(function(e){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
+	/* ============================ PUTS BORDER AROUND DATE WHEN ITS CLICKED  ========================================== */
+	
+	$("#calendar_dates span").click(function(){
+		var thisSpan = $(this);
+		
+		$("#calendar_dates span").css("border", "2px solid black");
+		$(thisSpan).css("border", "2px solid red");
+		
+		var date = $(thisSpan).text();
+		var day = date.substring(0, date.indexOf("/"));
+		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
+		var year = date.substring(date.indexOf("-")+1, date.length);
+		
+		var valid_save_date = year + "-" + month + "-" + day;  
+		
+		$("#deadline_date").val(valid_save_date);
 	});
 	
 });

@@ -548,21 +548,37 @@
 			self::render_template_xsl('check_list/view_control_details', $data);
 		}
 						
-		// Function that displays control items 
+		// Function that displays control groups and control items for a check list
 		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
-			$control = $this->so_control->get_single($check_list->get_control_id());
-								
+			$control = $this->so_control->get_single($check_list->get_control_id());			
+			
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+		
+			$control_groups_with_items_array = array();
+			
+			//Populating array with saved control items for each group
+			foreach ($saved_control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
+				
+				if(count($saved_control_items) > 0)				
+					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+			}
+			
+			
+			
 			$control_items_for_check_list = array();
-			$remove_control_item_ids_array = array();
+			//	$remove_control_item_ids_array = array();
 			
 			// Fetches all control items for a check list
 			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
 			
 			// Fetches all check items for a check list as objects
 			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
+			
 			
 			// Puts closed check items of type measurement into array  
 			foreach($check_items as $check_item){
@@ -574,11 +590,14 @@
 			//get control items based on control group/component connection
 			$control_groups_for_control = $this->so_control_group->get_control_group_ids_for_control($control->get_id());
 			//_debug_array($control_groups_for_control);
+
 			foreach($control_groups_for_control as $cg)
 			{
 				$components_for_control_group[] = array($cg => $this->so_control_group->get_components_for_control_group($cg));
 			}
+			
 			//_debug_array($components_for_control_group);
+			
 			$control_group_check_items = array();
 			foreach($components_for_control_group as $cg_components)
 			{
@@ -603,7 +622,9 @@
 					}
 				}
 			}
+			
 			//_debug_array($control_group_check_items);
+			
 			
 			// Makes control items list stripped for closed check items of type measurement			
 			foreach($control_items as $control_item){
@@ -612,14 +633,16 @@
 				}
 			}
 			
+			
 			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
 			
 			$data = array
 			(
-				'control' 						=> $control->toArray(),
-				'check_list' 					=> $check_list->toArray(),
-				'location_array'				=> $location_array,
-				'control_items_for_check_list' 	=> $control_items_for_check_list,
+				'control' 							=> $control->toArray(),
+				'check_list' 						=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'control_items_for_check_list' 		=> $control_items_for_check_list,
+				'control_groups_with_items_array' 	=> $control_groups_with_items_array
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -652,12 +675,17 @@
 			
 			$check_list = $this->so->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, 'return_array');
-							
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_1", 'closed', null, 'return_array');
+			$closed_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_2", 'closed', null, 'return_array');
+
+			//echo "SKRIVER UT LUKKEDE SAKER";
+			//print_r($closed_check_items_and_cases);
+			
 			$data = array
 			(
-				'closed_check_items_and_cases'	=> $closed_check_items_and_cases,
-				'check_list' 					=> $check_list->toArray()
+				'closed_check_items_and_cases'			=> $closed_check_items_and_cases,
+				'closed_check_items_and_measurements'	=> $closed_check_items_and_measurements,
+				'check_list' 							=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );

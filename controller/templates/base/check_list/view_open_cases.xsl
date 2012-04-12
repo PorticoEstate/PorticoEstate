@@ -9,8 +9,8 @@
 	</xsl:call-template>
 	
 	<div class="tab_item active">
-	<h2>Målinger</h2>
-	<xsl:choose>
+		<h2>Målinger</h2>
+		<xsl:choose>
 			<xsl:when test="open_check_items_and_measurements/child::node()">
 			
 			<ul class="check_items">
@@ -32,55 +32,8 @@
 										
 										<!--  ==================== COL2: CASE CONTENT ===================== -->
 										<div class="col_2">
-										<!--  === FORM: UPDATE CASE === -->
-										<form style="display:none;" class="frm_update_case">
-											<xsl:attribute name="action">
-												<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
-												<xsl:text>&amp;case_id=</xsl:text>
-												<xsl:value-of select="id"/>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="//check_list/id"/>
-												<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-											</xsl:attribute>
-																						
-											<!--  STATUS -->
-											<div class="row first">
-												<label>Status:</label> 
-												<select name="status">
-													<xsl:choose>
-														<xsl:when test="status = 0">
-															<option value="0" SELECTED="SELECTED">Åpen</option>
-															<option value="2">Venter på tilbakemelding</option>	
-														</xsl:when>
-														<xsl:when test="status = 1">
-															<option value="0">Åpen</option>
-															<option value="2">Venter på tilbakemelding</option>	
-														</xsl:when>
-														<xsl:when test="status = 2">
-															<option value="0">Åpen</option>
-															<option value="2" SELECTED="SELECTED">Venter på tilbakemelding</option>
-														</xsl:when>
-													</xsl:choose>
-												</select>
-											</div>
-											<!--  MEASUREMENT -->
-											<div class="row">
-												<label>Måleverdi:</label> 
-												<input type="text" name="measurement">
-												<xsl:attribute name="value"><xsl:value-of select="measurement"/></xsl:attribute>
-												</input>
-											</div>
-											<!--  DESCRIPTION -->
-											<label style="font-weight: bold;">Beskrivelse:</label>
-											<div class="row"> 
-												<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
-											</div>
-											<div>
-												<input class='btn_m' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />
-											</div>
-										</form>
 										
-										<!--  === CASE INFO === -->
+										<!--  =============== SHOW CASE INFO ==================== -->
 										<div class="case_info">
 											<!-- STATUS -->
 											<div class="row first">
@@ -135,6 +88,53 @@
 													</xsl:choose>
 												</div>
 											</div>
+											<!--  =================== UPDATE CASE FORM =================== -->
+										<form style="display:none;" class="frm_update_case">
+											<xsl:attribute name="action">
+												<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
+												<xsl:text>&amp;case_id=</xsl:text>
+												<xsl:value-of select="id"/>
+												<xsl:text>&amp;check_list_id=</xsl:text>
+												<xsl:value-of select="//check_list/id"/>
+												<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+											</xsl:attribute>
+																						
+											<!--  STATUS -->
+											<div class="row first">
+												<label>Status:</label> 
+												<select name="status">
+													<xsl:choose>
+														<xsl:when test="status = 0">
+															<option value="0" SELECTED="SELECTED">Åpen</option>
+															<option value="2">Venter på tilbakemelding</option>	
+														</xsl:when>
+														<xsl:when test="status = 1">
+															<option value="0">Åpen</option>
+															<option value="2">Venter på tilbakemelding</option>	
+														</xsl:when>
+														<xsl:when test="status = 2">
+															<option value="0">Åpen</option>
+															<option value="2" SELECTED="SELECTED">Venter på tilbakemelding</option>
+														</xsl:when>
+													</xsl:choose>
+												</select>
+											</div>
+											<!--  MEASUREMENT -->
+											<div class="row">
+												<label>Måleverdi:</label> 
+												<input type="text" name="measurement">
+												<xsl:attribute name="value"><xsl:value-of select="measurement"/></xsl:attribute>
+												</input>
+											</div>
+											<!--  DESCRIPTION -->
+											<label style="font-weight: bold;">Beskrivelse:</label>
+											<div class="row"> 
+												<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
+											</div>
+											<div>
+												<input class='btn_m' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />
+											</div>
+										</form>
 										</div>
 											
 										<!--  ==================== COL3: MESSAGE LINK ===================== -->
