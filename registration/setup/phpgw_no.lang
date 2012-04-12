@@ -28,6 +28,7 @@ textarea	registration	no	Tekstfelt
 the passwords you entered don't match	registration	no	Passordene du anga er ikke like
 the two passwords are not the same	registration	no	Passordene er ikke de samme
 Select One	registration	no	Velg fra liste
+select	registration	no	Velg
 type	registration	no	Type
 update/add	registration	no	Oppdater/Legg til
 Username	registration	no	Brukernavn
