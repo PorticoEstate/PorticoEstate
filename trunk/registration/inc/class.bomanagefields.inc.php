@@ -79,9 +79,13 @@
 
 						unset($current_field);
 
-						if($suffix && $field_info['field_type'] == 'location')
+						if($suffix && $field_info['field_type'] == 'location' && !is_array ($current_fields[$field_info['field_name']]))
 						{
 							$field_info['field_name'] = rtrim($transform_name,'1') . $suffix;
+						}
+						else if($suffix && $field_info['field_type'] == 'location' && is_array ($current_fields[$field_info['field_name']]))
+						{
+							//nothing
 						}
 						else
 						{
