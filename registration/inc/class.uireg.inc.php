@@ -223,7 +223,7 @@ HTML;
 			$this->template->set_block ('form', 'other_fields_proto', 'other_fields_list');
 			reset ($this->fields);
 			
-
+/*
 			$this->fields['loc1'] = array
 			(
 				'field_name' => 'loc1',
@@ -240,7 +240,7 @@ HTML;
 				'field_text' => 'Bygning',
 				'field_type' => 'location',
 				'field_values' => '',
-				'field_required' => 'Y',
+				'field_required' => 'N',
 				'field_order' => 0
         	);
 
@@ -250,7 +250,7 @@ HTML;
 				'field_text' => 'Etasje',
 				'field_type' => 'location',
 				'field_values' => '',
-				'field_required' => 'Y',
+				'field_required' => 'N',
 				'field_order' => 0
         	);
 
@@ -260,7 +260,7 @@ HTML;
 				'field_text' => 'Sone',
 				'field_type' => 'location',
 				'field_values' => '',
-				'field_required' => 'Y',
+				'field_required' => 'N',
 				'field_order' => 0
         	);
 
@@ -270,10 +270,10 @@ HTML;
 				'field_text' => 'Rom',
 				'field_type' => 'location',
 				'field_values' => '',
-				'field_required' => 'Y',
+				'field_required' => 'N',
 				'field_order' => 0
         	);
-
+*/
 //_debug_array($this->fields);
 			foreach ($this->fields as $num => $field_info)
 			{
@@ -296,10 +296,10 @@ HTML;
 			{
 			$this->template->set_var('tos_link',$GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.tos','logindomain' => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_tos_agree',lang('I have read the terms and conditions and agree by them.'));
-				if ($r_reg['tos_agree'])
-				{
-					$this->template->set_var('value_tos_agree', 'checked');
-				}
+			if ($r_reg['tos_agree'])
+			{
+				$this->template->set_var('value_tos_agree', 'checked');
+			}
 			}
 			else
 			{
@@ -430,7 +430,7 @@ HTML;
 				}
 				else
 				{
-					$rstring = '<select name="' . $a . '[' . $name . ']"><option value=""> </option>';
+					$rstring = "<select id=\"{$name}\" name=\"{$a}[{$name}]\"><option value=\"\"> </option>";
 					foreach ($values as $value)
 					{
 						$value = trim ($value);
@@ -470,6 +470,8 @@ HTML;
 			if ($type == 'country')
 			{
 				$rstring = $sbox->country_select($post_value, $a . '[' . $name . ']');
+				
+				$rstring = str_replace('<select', '<select id = "country"', $rstring);
 			}
 
 			if ($type == 'birthday')
@@ -481,12 +483,21 @@ HTML;
 
 			if ($type == 'location')
 			{
+				if($post_value)
+				{
+					$rstring = "<input id=\"{$name}\" type=\"text\" name=\"{$a}[{$name}]\" value=\"{$post_value}\">";
+				}
+				else
+				{
+				
 				$rstring = <<<HTML
 				<select id="{$name}" name="{$a}[{$name}]">
 HTML;
 				if($name == 'loc1')
 				{
 					$locations = execMethod('property.solocation.get_children');
+					array_unshift($locations, array('id' => '', 'name' => lang('select')));
+
 					foreach ($locations as $location)
 					{
 						$selected = $location['id'] == $post_value ? ' selected = "selected"' : '';
@@ -499,7 +510,7 @@ HTML;
 				$rstring .= <<<HTML
 				</select>
 HTML;
-
+				}
 			}
 
 			return $rstring;
@@ -537,7 +548,7 @@ HTML;
 			else
 			{
 				/* ($this->config['activate_account'] == 'immediately') */
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step4', 'reg_id' => $reg_id,'logindomain' => $_REQUEST['logindomain'])));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php',array('menuaction'=>'registration.boreg.step4', 'reg_id' => $reg_id,'logindomain' => $_REQUEST['logindomain']));
 			}
 		}
 
