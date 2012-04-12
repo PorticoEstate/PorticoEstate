@@ -313,8 +313,8 @@
 	//			'per_prefix'		=> '',
 	//			'per_title'			=> '',
 	//			'per_department'	=> '',
-				'per_first_name'	=> $account->firstname,
-				'per_last_name'		=> $account->lastname,
+				'per_first_name'	=> $fields['n_given'],
+				'per_last_name'		=> $fields['n_family'],
 				'access'			=> 'public',
 				'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
 			);
