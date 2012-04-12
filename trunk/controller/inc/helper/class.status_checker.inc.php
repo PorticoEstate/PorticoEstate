@@ -18,7 +18,7 @@
 			$check_list = $this->so_check_list->get_single( $check_list_id );
 		
 			$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null, "return_object");
-			
+		
 			$num_open_cases = 0;
 			$num_pending_cases = 0;
 					
@@ -38,9 +38,6 @@
 			
 			$check_list->set_num_open_cases($num_open_cases);
 			$check_list->set_num_pending_cases($num_pending_cases);
-			
-			if($num_open_cases > 0)
-				$check_list->set_status(controller_check_list::STATUS_OPEN);
 			
 			$this->so_check_list->store($check_list);
 		}

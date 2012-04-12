@@ -5,7 +5,7 @@
 <div id="main_content" class="medium">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
-		
+				
 		<h1>Sjekkliste</h1>
 		<fieldset class="control_details">
 			<div class="row"><label>Tittel</label><xsl:value-of select="check_list/status"/></div>

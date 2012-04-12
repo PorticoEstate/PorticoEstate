@@ -55,7 +55,11 @@ a{
 .row{
 	padding: 0.3em 0;
 }
-
+h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 1em 0;
+}
 #content {
     margin: 2em 1em;
 }
@@ -391,15 +395,6 @@ input.postcode {
 h1 img, li img {
 	vertical-align: middle;
 }
-/*
-fieldset h3 {
-	display:block;
-	float:left;
-	line-height:1.3em;
-	margin:0;
-	width:120px;
-}
-*/
 /* Set up common form styles.  TODO: needs refinement. */
 input{
     margin: 0 13px 0 0;
@@ -577,6 +572,9 @@ ul.expand_list h4 span {
     padding-left: 5px;
     vertical-align: middle;
 }
+ul.expand_list .expand_item {
+    display: none;
+}
 
 #frm_control_items{
 	clear:left;
@@ -673,7 +671,6 @@ ul.row li{
     border: 1px solid #eee;
     margin-bottom: 20px;
     padding: 15px;
-    width: 800px;
 }
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -681,9 +678,13 @@ ul.row li{
     margin-bottom: 20px;
     padding: 15px;
 }
+.box.ext {
+    background: none repeat scroll 0 0 #FEFBF7;
+    border: 1px solid #FEEDEA;
+}
 .box_header {
-    background: none repeat scroll 0 0 #DAE8F7;
-    border-color: #C9DBEE;
+    background: none repeat scroll 0 0 #CFE6FF;
+    border-color: #C7DCF2;
     border-style: solid;
     border-width: 1px 1px 0;
     color: #333333;
@@ -693,9 +694,21 @@ ul.row li{
     padding: 5px 0 5px 15px;
     text-align: left;
 }
+.box_header.ext {
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EB9685;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: bolder;
+    margin: 0;
+    padding: 5px 0 5px 15px;
+    text-align: left;
+}
 .btn, .btn_m, .btn_sm {
     background: none repeat scroll 0 0 #4F9AEA;
-    border: 1px solid #658CB5;
+    border: 1px solid #428AD7;
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
@@ -843,9 +856,6 @@ fieldset.check_list_details label{
 
 /* =======================================  CHECK ITEM  ========================================= */
 
-.check_item{
-    margin: 25px 0;
-}
 .check_item div{
     margin: 5px 0;
     clear:left;
@@ -1128,9 +1138,6 @@ fieldset.add_check_list label{
 label.comment{
 	vertical-align:top;	
 }
-.check_item {
-	display: none;	
-}
 .check_item label{
 	width: 150px;
 	display: inline-block;	
@@ -1169,9 +1176,10 @@ ul.check_items h5{
 	font-size: 13px;
 }
 
-.tab_menu a{
-	background: none repeat scroll 0 0 #CAE3FB;
-    border: 1px solid #D0D9F1;
+.tab_menu a {
+    background: none repeat scroll 0 0 #F9F5F0;
+    border: 1px solid #F0F0F0;
+    color: #444;
     display: inline-block;
     font-weight: bold;
     margin-right: 3px;
@@ -1179,12 +1187,10 @@ ul.check_items h5{
     text-align: center;
     text-decoration: none;
     width: 150px;
-    color: #333;
 }
 .tab_menu a.active {
-    background: none repeat scroll 0 0 #FAFAFA;
-    border: 1px solid #EEEEEE;
-    color: #000000;
+    background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #CAE3FB;
     font-weight: bold;
 }
 .tab_menu a, .tab_menu a.active{
@@ -1197,9 +1203,9 @@ ul.check_items h5{
     overflow: hidden;
 }
 #check_list_menu a {
-    background: none repeat scroll 0 0 #CAE3FB;
-    border: 1px solid #D0D9F1;
-    color: #333333;
+    background: none repeat scroll 0 0 #F4EDE3;
+    border: 1px solid #EDE4D8;
+    color: #444444;
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
@@ -1209,10 +1215,15 @@ ul.check_items h5{
     text-decoration: none;
     width: 185px;
 }
+#check_list_menu a.active {
+ 	background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #CAE3FB;
+}
+
 #check_list_menu div.right_btns {
     float: right;
 }
-#check_list_menu div.right_btns a{
+#check_list_menu .right_btns a{
     display: block;
     padding: 4px 0;
     color:#fff;
@@ -1230,8 +1241,12 @@ ul.check_items h5{
     border: 1px solid #DAE2EE;
     padding: 15px;
 }
+.tab_item.ext {
+    background: none repeat scroll 0 0 #FEFBF7;
+    border: 1px solid #FEEDEA;
+}
 .tab_item h2 {
-    background: none repeat scroll 0 0 #E7EFF8;
+    background: none repeat scroll 0 0 #DAE3EB;
     font-size: 14px;
     margin: 0 0 10px;
     padding: 3px 6px;
@@ -1268,7 +1283,6 @@ fieldset.location_details div{
 
 #main_content.medium {
     overflow: hidden;
-    padding: 20px;
     width: 900px;
 }
 .col_1, .col_2{
@@ -1369,6 +1383,9 @@ li.check_item_case .col_3 {
 }
 
 /* ======================== FORM REGISTER CASE ============================= */
+.frm_register_case {
+	margin-bottom: 1em;
+}
 
 .frm_register_case input[type="text"]{
  	width: 170px;  
@@ -1376,6 +1393,14 @@ li.check_item_case .col_3 {
 .frm_register_case select {
     width: 184px;
 }
+.frm_register_case textarea {
+    display: block;
+    height: 100px;
+    margin-top: 6px;
+    margin-bottom: 1em;
+    width: 63%;
+}
+
 a.view_check_list{
  	color: #FFFFFF;
     display: block;
@@ -1391,13 +1416,15 @@ a.view_check_list{
     width: 13%;
 }
 #frmRegCaseMessage h3 {
-    font-size: 1.15em;
+    font-size: 1.2em;
     margin: 1.5em 0 0.5em;
 }
 #frmRegCaseMessage ul.cases {
-    border: 1px solid #ddd;
+    background: none repeat scroll 0 0 #FEFCF9;
+    border: 1px solid #EBE5DD;
     padding: 0.5em 1%;
 }
+
 #frmRegCaseMessage ul.cases h4{
 	margin-top:0
 }

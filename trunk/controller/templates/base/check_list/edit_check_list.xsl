@@ -4,6 +4,7 @@
 
 <div id="main_content" class="medium">
 		
+	<!--  =======================  CALENDAR  ================================== -->
 	<script>
 		$(function() {
 			$( "#planned_date" ).datepicker({ 
@@ -31,13 +32,18 @@
 		});
 	</script>
 	
+	<!-- ==================  EDIT CHECKLIST  ========================= -->
+	
+	<div>
 		<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
 		<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
 		
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 		<xsl:call-template name="check_list_tab_menu">
 	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
 		</xsl:call-template>
-	
+	</div>
+		<!-- ==================  CHECKLIST DETAILS  ===================== -->
 		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<fieldset class="check_list_details">
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">	
@@ -58,12 +64,12 @@
 				<select name="status">
 					<xsl:choose>
 						<xsl:when test="check_list/status = 0">
-							<option value="0" SELECTED="SELECTED">Ikke utført</option>
-							<option value="1" >Utført</option>
+							<option value="0" SELECTED="SELECTED">Utført</option>
+							<option value="1" >Ikke utført</option>
 						</xsl:when>
 						<xsl:when test="check_list/status = 1">
-							<option value="0">Ikke utført</option>
-							<option value="1" SELECTED="SELECTED">Utført</option>
+							<option value="0" SELECTED="SELECTED">Ikke utført</option>
+							<option value="1">Utført</option>
 						</xsl:when>
 					</xsl:choose>
 				</select>
