@@ -57,7 +57,7 @@
 
 			if (! is_array($errors) && $so->account_exists($r_reg['loginid']))
 			{
-//				$errors[] = lang('Sorry, that username is already taken.');
+				$errors[] = lang('Sorry, that username is already taken.');
 			}
 
 			$ui = createobject('registration.uireg');
@@ -231,7 +231,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain'])));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain']));
 			}
 		}
 
@@ -305,7 +305,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw','logindomain' => $_REQUEST['logindomain'])));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw','logindomain' => $_REQUEST['logindomain']));
 			}
 		}
 
@@ -401,7 +401,7 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', array('menuaction' => 'registration.boreg.step1', 'r_reg[loginid]'=> $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain'])));
+					$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.boreg.step1', 'r_reg[loginid]'=> $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain']));
 				}
 			}
 
@@ -431,6 +431,15 @@
 
 		function get_locations()
 		{
-			return execMethod('property.solocation.get_children', phpgw::get_var('location_code'));
+			$location_code = phpgw::get_var('location_code');
+
+			$locations = execMethod('property.solocation.get_children', $location_code);
+
+			if(!$location_code)
+			{
+				array_push($locations, array('id' => '', 'name' => lang('select')));
+			}
+
+			return $locations;
 		}
 	}

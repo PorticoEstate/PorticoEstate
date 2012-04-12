@@ -33,6 +33,7 @@
 
 		function save_fields ($fields)
 		{
+
 			$current_fields = $this->get_field_list();
 
 			$name_transforms = array (
@@ -46,7 +47,8 @@
 				'country'    => 'adr_one_countryname',
 				'gender'     => 'gender',
 				'phone'      => 'tel_work',
-				'birthday'  => 'bday'
+				'birthday'  => 'bday',
+				'location'  => 'loc1'
 			);
 
 			reset ($fields);
@@ -61,11 +63,30 @@
 				}
 
 				reset ($name_transforms);
-				while (list ($type, $transform_name) = each ($name_transforms))
+				foreach ($name_transforms as $type => $transform_name)
 				{
 					if ($field_info['field_type'] == $type)
 					{
-						$field_info['field_name'] = $transform_name;
+						reset($this->fields);
+						$suffix = 0;
+						foreach($this->fields as $current_field)
+						{
+							if($current_field['field_type'] == 'location')
+							{
+								$suffix++;
+							}
+						}
+
+						unset($current_field);
+
+						if($suffix && $field_info['field_type'] == 'location')
+						{
+							$field_info['field_name'] = rtrim($transform_name,'1') . $suffix;
+						}
+						else
+						{
+							$field_info['field_name'] = $transform_name;
+						}
 						$changed = 1;
 						break;
 					}
@@ -215,4 +236,3 @@
 			}
 		}
 	}
-?>
