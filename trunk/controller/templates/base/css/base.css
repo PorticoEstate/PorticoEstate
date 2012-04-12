@@ -690,24 +690,17 @@ ul.row li{
     border-color: #C7DCF2;
     border-style: solid;
     border-width: 1px 1px 0;
-    color: #333333;
+    color: #444444;
     font-size: 13px;
-    font-weight: bolder;
+    font-weight: bold;
     margin: 0;
-    padding: 5px 0 5px 15px;
+    padding: 7px 0 7px 15px;
     text-align: left;
 }
 .box_header.ext {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EB9685;
-    border-style: solid;
-    border-width: 1px 1px 0;
     color: #FFFFFF;
-    font-size: 13px;
-    font-weight: bolder;
-    margin: 0;
-    padding: 5px 0 5px 15px;
-    text-align: left;
 }
 .btn, .btn_m, .btn_sm {
     background: none repeat scroll 0 0 #4F9AEA;
@@ -1214,7 +1207,7 @@ ul.check_items h5{
     display: inline-block;
     font-weight: bold;
     margin-right: 3px;
-    padding: 17px 0;
+    padding: 18px 0;
     text-align: center;
     text-decoration: none;
     width: 185px;

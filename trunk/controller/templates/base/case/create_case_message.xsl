@@ -12,19 +12,6 @@
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
 		<h3 class="box_header ext">Registrer melding</h3>
 		<div class="box ext">
-			<div style="border-bottom: 1px solid #DCD3C1;margin-bottom: 1em;padding-bottom: 1em;">
-				<div class="row"><h3 style="margin:0 0 5px;"><xsl:value-of select="control/title"/></h3></div>
-				<div class="row"><label>Utført dato:</label>
-					<xsl:choose>
-						<xsl:when test="check_list/completed_date != 0">
-							<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
-						</xsl:when>
-						<xsl:otherwise>
-							 Ikke utført
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</div>
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				

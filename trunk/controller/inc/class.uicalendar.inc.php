@@ -233,7 +233,7 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-			print_r($controls_calendar_array);
+			
 			$data = array
 			(
 				'my_locations'	  		  => $my_locations,
