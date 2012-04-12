@@ -568,8 +568,6 @@
 					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
 			
-			
-			
 			$control_items_for_check_list = array();
 			//	$remove_control_item_ids_array = array();
 			
@@ -633,8 +631,9 @@
 				}
 			}
 			
-			
 			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
+			
+			print_r($control_groups_with_items_array);
 			
 			$data = array
 			(

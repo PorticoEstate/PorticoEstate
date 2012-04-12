@@ -709,6 +709,7 @@ ul.row li{
 .btn, .btn_m, .btn_sm {
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #428AD7;
+    border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
@@ -1223,15 +1224,15 @@ ul.check_items h5{
 #check_list_menu div.right_btns {
     float: right;
 }
-#check_list_menu .right_btns a{
-    display: block;
-    padding: 4px 0;
-    color:#fff;
+#check_list_menu .right_btns a {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;
+    border-radius: 4px 4px 4px 4px;
     border-style: solid none;
     border-width: 1px 0;
     color: #FFFFFF;
+    display: block;
+    padding: 4px 0;
 }
 
 /* ======================== TAB ITEM ========================== */
