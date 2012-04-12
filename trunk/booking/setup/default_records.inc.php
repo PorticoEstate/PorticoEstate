@@ -22,3 +22,7 @@
 		default:
 			//do nothing for now
 	}
+
+	// Insert start values for billing sequential numbers
+	$oProc->query( "INSERT INTO bb_billing_sequential_number_generator ( name, value ) VALUES ( 'internal', 1 ), ( 'external', 1 )" );
+
