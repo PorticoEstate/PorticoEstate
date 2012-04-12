@@ -2,12 +2,13 @@ $(document).ready(function(){
 	
 	$("#loc1").change(function () {
 		var loc1 = $(this).val();
+		$("#loc2").html( "<option></option>" );
+		$("#loc3").html( "<option></option>" );
+		$("#loc4").html( "<option></option>" );
+		$("#loc5").html( "<option></option>" );
+
 		if(!loc1)
 		{
-			$("#loc2").html( "<option></option>" );
-			$("#loc3").html( "<option></option>" );
-			$("#loc4").html( "<option></option>" );
-			$("#loc5").html( "<option></option>" );
 			return false;
 		}
 		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:loc1};
@@ -43,11 +44,12 @@ $(document).ready(function(){
 	$("#loc2").change(function () {
 		var loc1 = $("#loc1").val();
 		var loc2 = $(this).val();
+		$("#loc3").html( "<option></option>" );
+		$("#loc4").html( "<option></option>" );
+		$("#loc5").html( "<option></option>" );
+
 		if(!loc2)
 		{
-			$("#loc3").html( "<option></option>" );
-			$("#loc4").html( "<option></option>" );
-			$("#loc5").html( "<option></option>" );
 			return false;
 		}
 
@@ -84,15 +86,13 @@ $(document).ready(function(){
 		var loc1 = $("#loc1").val();
 		var loc2 = $("#loc2").val();
 		var loc3 = $(this).val();
+		$("#loc4").html( "<option></option>" );
+		$("#loc5").html( "<option></option>" );
 
 		if(!loc3)
 		{
-			$("#loc4").html( "<option></option>" );
-			$("#loc5").html( "<option></option>" );
 			return false;
 		}
-
-
 		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:loc1 + "-" + loc2 + "-" + loc3};
 		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
       
@@ -127,9 +127,9 @@ $(document).ready(function(){
 		var loc2 = $("#loc2").val();
 		var loc3 = $("#loc3").val();
 		var loc4 = $(this).val();
+		$("#loc5").html( "<option></option>" );
 		if(!loc4)
 		{
-			$("#loc5").html( "<option></option>" );
 			return false;
 		}
 
@@ -161,6 +161,5 @@ $(document).ready(function(){
 			} 
 		});	
     });
-
 });
 
