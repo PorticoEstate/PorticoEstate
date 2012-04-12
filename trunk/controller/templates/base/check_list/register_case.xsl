@@ -14,48 +14,20 @@
 		<h3 class="box_header ext">Registrer sak/måling</h3>
 		<div class="tab_item active ext">
 		
+		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
+		
 		<ul>
 			<xsl:for-each select="control_groups_with_items_array">
 			<xsl:choose>
 				<xsl:when test="control_items/child::node()">
 					<li class="list_item">
-						<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
-						<input type="hidden" name="control_group_id" value="{$control_group_id}" />
-						
-						<h3><a href="#"><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/><input type="hidden" name="group_id" value="{$control_group_id}" /></a></h3>				
-						<ul class="items">
+											
+						<h3><xsl:value-of select="control_group/group_name"/></h3>				
+						<ul class="expand_list">
 							<xsl:for-each select="control_items">
-								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-																							
 								<li class="list_item">
-									<a href="#"><span class="item_order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="item_id" value="{$control_item_id}" /></a>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</li>
-				</xsl:when>
-				<xsl:otherwise>
-					<li class="list_item">
-						<h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
-						<div>Ingen kontrollpunkt for denne gruppen</div>
-					</li>
-				</xsl:otherwise>
-			</xsl:choose>
-			</xsl:for-each>
-		</ul>
-		
-		
-		
-		
-		<xsl:choose>
-			<xsl:when test="control_items_for_check_list/child::node()">
-			
-				<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-			
-				<ul id="control_items_list" class="check_items expand_list">
-					<xsl:for-each select="control_items_for_check_list">
-						<li>
-		    				<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>	
+								
+									<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="title"/></span></h4>	
 							<xsl:choose>
 								<xsl:when test="type = 'control_item_type_1'">
 									<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
@@ -109,15 +81,22 @@
 									   <input type="submit" name="save_control" value="Registrer måling" class="not_active" title="{$lang_save}" />
 									</form>
 								</xsl:when>
-							</xsl:choose>														
-					    </li>
-					</xsl:for-each>
-				</ul>			
+							</xsl:choose>	
+									
+								</li>
+							</xsl:for-each>
+						</ul>
+					</li>
 				</xsl:when>
 				<xsl:otherwise>
-					Alle sjekkpunkter for kontroll er registert som åpne/håndterte saker 
+					<li class="list_item">
+						<h3><xsl:value-of select="control_group/group_name"/></h3>
+						<div>Ingen kontrollpunkt for denne gruppen</div>
+					</li>
 				</xsl:otherwise>
-		</xsl:choose>
+			</xsl:choose>
+			</xsl:for-each>
+		</ul>
 	</div>
 </div>
 </div>
