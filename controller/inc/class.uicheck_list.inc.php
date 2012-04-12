@@ -568,22 +568,7 @@
 					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
 			
-			$control_items_for_check_list = array();
-			//	$remove_control_item_ids_array = array();
-			
-			// Fetches all control items for a check list
-			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
-			
-			// Fetches all check items for a check list as objects
-			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
-			
-			
-			// Puts closed check items of type measurement into array  
-			foreach($check_items as $check_item){
-				if($check_item->get_control_item()->get_type() == "control_item_type_2" & $check_item->get_status() == 1){
-					$remove_control_item_ids_array[] = $check_item->get_control_item_id();
-				}
-			}
+			/* ================  Ikke slett!!! Kode som henter ut  utstyr basert på lokasjon  ==================       
 			
 			//get control items based on control group/component connection
 			$control_groups_for_control = $this->so_control_group->get_control_group_ids_for_control($control->get_id());
@@ -620,27 +605,16 @@
 					}
 				}
 			}
-			
+			=====================================================================*/
 			//_debug_array($control_group_check_items);
-			
-			
-			// Makes control items list stripped for closed check items of type measurement			
-			foreach($control_items as $control_item){
-				if( !in_array($control_item->get_id(), $remove_control_item_ids_array) ){
-					$control_items_for_check_list[] = $control_item->toArray();
-				}
-			}
-			
+					
 			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
-			
-			print_r($control_groups_with_items_array);
 			
 			$data = array
 			(
 				'control' 							=> $control->toArray(),
 				'check_list' 						=> $check_list->toArray(),
 				'location_array'					=> $location_array,
-				'control_items_for_check_list' 		=> $control_items_for_check_list,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array
 			);
 			

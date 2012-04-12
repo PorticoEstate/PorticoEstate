@@ -553,9 +553,12 @@ ul.items li.list_item{
 
 ul.expand_list h4 {
     cursor: pointer;
-    font-size: 17px;
+    font-size: 1.1em;
     margin-bottom: 6px;
     margin-top: 0;
+}
+ul.expand_list h4 img {
+    height: 12px;
 }
 
 ul.expand_list li ul {
