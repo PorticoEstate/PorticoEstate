@@ -45,27 +45,27 @@
 	
 			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 	
-			if( $this->check_list->get_status() == controller_check_list::STATUS_OPEN & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() > $todays_date_ts)
+			if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() > $todays_date_ts)
 			{
 				$status = "control_planned";
 			}
-			else if( $this->check_list->get_status() == controller_check_list::STATUS_OPEN & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts )
+			else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts )
 			{
 				$status = "control_not_accomplished_with_info";
 			}
-			else if( $this->check_list->get_status() == controller_check_list::STATUS_OPEN & $this->check_list->get_deadline() < $todays_date_ts )
+			else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() < $todays_date_ts )
 			{
 				$status = "control_not_accomplished";
 			}
-			else if( $this->check_list->get_status() == controller_check_list::STATUS_CLOSED & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
+			else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 			{
 				$status = "control_accomplished_over_time_without_errors";
 			}
-			else if( $this->check_list->get_status() == controller_check_list::STATUS_CLOSED & $this->check_list->get_completed_date() < $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
+			else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() < $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 			{
 				$status = "control_accomplished_in_time_without_errors";
 			}
-			else if( $this->check_list->get_status() == controller_check_list::STATUS_CLOSED & $this->check_list->get_num_open_cases() > 0){
+			else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_num_open_cases() > 0){
 				$status = "control_accomplished_with_errors";
 				$check_list_status_info->set_num_open_cases($this->check_list->get_num_open_cases());
 			}
