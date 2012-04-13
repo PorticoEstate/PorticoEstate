@@ -183,62 +183,66 @@
 									<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
 										<li>
-										<div style="display: inline-block;padding: 2em 2%;vertical-align: top;">
+										
+										<!--  ==================== COL1: ORDERNR ===================== -->
+										<div class="col_1">
 											<span class="order_nr"><xsl:number /></span>.
 										</div>
-										<div style="border-left: 1px solid #DDDDDD;border-right: 1px solid #DDDDDD;display: inline-block;padding: 1em 2%;width: 73%;">
-										
-										<form style="display:none;" class="frm_update_case">
-											<xsl:attribute name="action">
-												<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
-												<xsl:text>&amp;case_id=</xsl:text>
-												<xsl:value-of select="id"/>
-												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="//check_list/id"/>
-												<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-											</xsl:attribute>
-										
-											<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
-											<div>
-												<input class='btn_m' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />
-											</div>
-										</form>
-										<div class="case_info">
-										<div class="case_descr"><xsl:value-of select="descr"/></div>
-										<div class="quick_menu">
-												<a class="quick_edit first" href="">
-													endre
-												</a>
-												<a class="close_case">
-													<xsl:attribute name="href">
-														<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
-														<xsl:text>&amp;case_id=</xsl:text>
-														<xsl:value-of select="id"/>
-														<xsl:text>&amp;check_list_id=</xsl:text>
-														<xsl:value-of select="//check_list/id"/>
-														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-													</xsl:attribute>
-													lukk
-												</a>
-												<xsl:choose>
-													<xsl:when test="location_item_id = 0">
-														<a class="delete_case">
+										<!--  ==================== COL2: CASE CONTENT ===================== -->
+										<div class="col_2">
+											<form style="display:none;" class="frm_update_case">
+												<xsl:attribute name="action">
+													<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
+													<xsl:text>&amp;case_id=</xsl:text>
+													<xsl:value-of select="id"/>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="//check_list/id"/>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+												</xsl:attribute>
+											
+												<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
+												<div>
+													<input class='btn_m' type='submit' value='Oppdater' /><input class='btn_m cancel' type='button' value='Avbryt' />
+												</div>
+											</form>
+											<div class="case_info">
+												<div class="case_descr"><xsl:value-of select="descr"/></div>
+												<div class="quick_menu">
+														<a class="quick_edit first" href="">
+															endre
+														</a>
+														<a class="close_case">
 															<xsl:attribute name="href">
-																<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
+																<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
 																<xsl:text>&amp;case_id=</xsl:text>
 																<xsl:value-of select="id"/>
 																<xsl:text>&amp;check_list_id=</xsl:text>
 																<xsl:value-of select="//check_list/id"/>
 																<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 															</xsl:attribute>
-															slett
+															lukk
 														</a>
-													</xsl:when>
-												</xsl:choose>
+														<xsl:choose>
+															<xsl:when test="location_item_id = 0">
+																<a class="delete_case">
+																	<xsl:attribute name="href">
+																		<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
+																		<xsl:text>&amp;case_id=</xsl:text>
+																		<xsl:value-of select="id"/>
+																		<xsl:text>&amp;check_list_id=</xsl:text>
+																		<xsl:value-of select="//check_list/id"/>
+																		<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+																	</xsl:attribute>
+																	slett
+																</a>
+															</xsl:when>
+														</xsl:choose>
+													</div>
+												</div>
 											</div>
-											</div>
-											</div>
-											<div style="display: inline-block;padding: 3%;vertical-align: top;">
+												<!--  ==================== COL3: MESSAGE LINK ===================== -->
+												<div class="col_3">
+											
 												<xsl:choose>
 													<xsl:when test="location_item_id > 0">
 														<a target="_blank">

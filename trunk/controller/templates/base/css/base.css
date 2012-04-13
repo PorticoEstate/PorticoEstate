@@ -400,6 +400,16 @@ input{
     margin: 0 13px 0 0;
     padding: 3px 6px;
 }
+input[type="submit"] {
+	background: none repeat scroll 0 0 #4F9AEA;
+    border: 1px solid #428AD7;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 3px 20px;
+    border: 0;
+    margin-top: 20px;
+}
 select{
 	padding: 3px 1px 3px 4px;
 }
@@ -469,11 +479,6 @@ dd ul li {
 	list-style-position: inside;
 }
 
-
-.yui-content input[type="submit"] {
-    margin: 15px 0 0;
-    padding: 1px 15px;
-}
 h1 img{
  	margin-right:5px;
  }
@@ -838,9 +843,6 @@ input.date {
 #frm_update_check_list .col_2 {
     margin-left: 15%;
     width: 19%;
-}
-#frm_update_check_list input[type="submit"]{
-	width: 140px;	
 }
 
 /* =======================================  TAB CHECK LIST DETAILS ========================================= */
@@ -1233,8 +1235,10 @@ ul.check_items h5{
  	background: none repeat scroll 0 0 #CAE3FB;
     border: 1px solid #CAE3FB;
 }
-
-#check_list_menu div.right_btns {
+#check_list_menu .left_btns {
+    float: left;
+}
+#check_list_menu .right_btns {
     float: right;
 }
 #check_list_menu .right_btns a {
@@ -1327,8 +1331,28 @@ li.check_item_case ul{
 li.check_item_case ul li {
     background: none repeat scroll 0 0 #E7EFF8;
     border: 1px solid #DDDDDD;
+    clear: both;
     margin: 10px 0 0 20px;
+    overflow: hidden;
 }
+li.check_item_case ul li .col_1 {
+    float: left;
+    padding: 2em 2%;
+    vertical-align: top;
+}
+li.check_item_case ul li .col_2 {
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    float: left;
+    padding: 1em 2%;
+    width: 73%;
+}
+li.check_item_case ul li .col_3 {
+    float: left;
+    padding: 3%;
+    vertical-align: top;
+}
+
 li.check_item_case ul li.quick_edit {
     padding: 0;
 }
