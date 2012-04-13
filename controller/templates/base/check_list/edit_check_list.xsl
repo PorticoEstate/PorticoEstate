@@ -130,7 +130,7 @@
 			
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
-				<input style="width: 170px;" class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
+				<input class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
 			</div>
 			</form>
 		</div>
