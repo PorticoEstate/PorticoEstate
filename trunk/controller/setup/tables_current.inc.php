@@ -4,7 +4,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'title' => array('type' => 'varchar','precision' => '100', 'nullable' => False),
-				'description' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'description' => array('type' => 'text', 'nullable' => True),
 				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
