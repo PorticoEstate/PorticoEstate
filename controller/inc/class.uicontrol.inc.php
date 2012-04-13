@@ -492,41 +492,47 @@
 		 * 
 		 * @param HTTP::id	the control_id
 		 * @return redirect to function view_control_items
-		 */
+		*/
 		public function view_control_items(){
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so->get_single($control_id);
-			
-			// Fetches saved control items from db
-			$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id);
-			$saved_control_item_ids = array();
-			
-			foreach($saved_control_items as $control_item){
-				$saved_control_item_ids[] = $control_item->get_id();
-			}
 			
 			// Array with selected control groups and items
 			$groups_with_control_items = array();
 			
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
-				
+			
 			// Fetches control items for control group and populates groups_with_control_items with groups and chosen control items
 			foreach ($saved_control_groups as $control_group)
 			{	
-				$group_control_items_array = $this->so_control_item_list->get_control_items($control_group->get_id(), "return_array");
+				// Fetches control items for group
+				$control_items_for_group = $this->so_control_item_list->get_control_items($control_group->get_id());
 				
+				// Fetches saved, ordered control items for group
+				$saved_control_items_for_group = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id(), "return_object");
+				
+				// Array that contains saved and unsaved control items for the group 
 				$control_items_for_group_array = array();
 				
-				foreach($group_control_items_array as $control_item){
-					$control_item_id = $control_item['id'];
+				foreach($saved_control_items_for_group as $saved_control_item){
+					$control_items_for_group_array[] = array("checked" => 1, "control_item" => $saved_control_item->toArray()); 
+				}
+				
+				// Loops through all control items for the group and add those control items that is not saved 
+				foreach($control_items_for_group as $control_item){
+					$status_control_item_saved = false; 
 					
-					if( in_array($control_item_id, $saved_control_item_ids )){
-						$control_items_for_group_array[] = array("checked" => 1, "control_item" => $control_item);
+					foreach($saved_control_items_for_group as $saved_control_item){
+						if( $control_item->get_id() == $saved_control_item->get_id()){
+							$status_control_item_saved = true;
+						} 
 					}
-					else
-					{
-						$control_items_for_group_array[] = array("checked" => 0, "control_item" => $control_item);
+					
+					// Adds control item to saved 
+					if(!$status_control_item_saved){
+						$control_items_for_group_array[] = array("checked" => 0, "control_item" => $control_item->toArray());
 					}
+						
 				}
 				
 				$groups_with_control_items[] = array("control_group" => $control_group->toArray(), "group_control_items" => $control_items_for_group_array);

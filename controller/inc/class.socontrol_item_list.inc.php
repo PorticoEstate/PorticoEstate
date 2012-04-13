@@ -189,7 +189,7 @@
 			return $results;
 		}
 
-		function get_control_items_by_control_and_group($control_id, $control_group_id)
+		function get_control_items_by_control_and_group($control_id, $control_group_id, $returnType = "return_array")
 		{
 			$results = array();
 
@@ -212,7 +212,10 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
-				$results[] = $control_item->toArray();
+				if($returnType == "return_array")
+					$results[] = $control_item->toArray();
+				else
+					$results[] = $control_item;
 			}
 
 			return $results;
