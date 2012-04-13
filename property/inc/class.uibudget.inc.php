@@ -1464,12 +1464,12 @@
 
 				if(!$values['district_id'] && !$budget_id > 0)
 				{
-					//			$receipt['error'][]=array('msg'=>lang('Please select a district !'));
+		//			$receipt['error'][]=array('msg'=>lang('Please select a district !'));
 				}
 
 				if(!$values['budget_cost'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please enter a budget cost !'));
+//					$receipt['error'][]=array('msg'=>lang('Please enter a budget cost !'));
 				}
 
 				if(!isset($receipt['error']) || !$receipt['error'])
