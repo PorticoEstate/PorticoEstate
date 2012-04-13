@@ -245,9 +245,8 @@
 				'period' 			  	  => $year,
 				'year' 			  	  	  => $year
 			);
-			print_r( $controls_calendar_array );
-			self::render_template_xsl('calendar/view_calendar_year', $data);
 			
+			self::render_template_xsl('calendar/view_calendar_year', $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}

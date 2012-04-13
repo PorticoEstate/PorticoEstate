@@ -406,7 +406,6 @@ select{
 	
 fieldset {
 	border-bottom:0px solid #ccc;
-	padding:5px 0px 5px 10px;
 }
 textarea{
 	padding: 4px;	
@@ -745,22 +744,11 @@ ul.row li{
 #main_content.groups{
 	cursor: default;	
 }
-#main_content fieldset{
-	padding:0;
-	margin:0;	
-}
-
 #main_content h1{
 	margin-top:0;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
-
-#main_content fieldset.check_list_details {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #DBE5EF;
-    padding: 15px;
-}
 
 input.id {
     background: none repeat scroll 0 0 #FFFFFF;
@@ -812,18 +800,51 @@ input.date {
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
 
-fieldset.check_list_details{
-	clear: both;
+#check_list_details form{
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DBE5EF;
+    padding: 15px;
+    clear: both;
+    margin:0;
 }
-fieldset.check_list_details label{
+#check_list_details form .row {
+    padding: 0.1em 0;
+}
+
+#check_list_details label{
 	font-weight:bold;
 	width:150px;
+	display: inline-block;
 }
-fieldset.check_list_details div{
-	clear:left;
-	margin:5px 0;
+#check_list_details .comment {
+    clear: both;
+    float: left;
+    margin-top: 20px;
 }
-fieldset.tab_check_list_details label {
+#check_list_details .comment label {
+    vertical-align: top;
+}
+#check_list_details textarea{
+	width:400px;
+	height:100px;
+}
+
+/* =======================================  FORM UPDATE CHECK LIST  ========================================= */
+
+#frm_update_check_list .col_1, #frm_update_check_list .col_2 {
+    float: left;
+    vertical-align: top;
+}
+#frm_update_check_list .col_2 {
+    margin-left: 15%;
+    width: 19%;
+}
+#frm_update_check_list input[type="submit"]{
+	width: 140px;	
+}
+
+/* =======================================  TAB CHECK LIST DETAILS ========================================= */
+.tab_check_list_details label {
     display: inline-block;
     font-weight: bold;
     width: 100px;
@@ -831,10 +852,9 @@ fieldset.tab_check_list_details label {
 fieldset.tab_check_list_details {
     padding: 0 0 10px 0;
 }
-fieldset.check_list_details textarea{
-	width:400px;
-	height:100px;
-}
+
+/* =======================================  CHECK ITEM DETAILS ========================================= */
+
 fieldset.check_item_details label{
 	font-weight:normal;
 	vertical-align:top;
@@ -845,11 +865,11 @@ fieldset.check_item_details h3 {
     font-weight: bold;
     margin: 10px 0;
 }
-fieldset.check_list_details label{
-	display: inline-block;
-    font-weight: bold;
-    width: 150px;
+h3.check_item_details{
+	margin-bottom:0;	
 }
+
+
 
 /* =======================================  CHECK ITEM  ========================================= */
 
@@ -857,9 +877,7 @@ fieldset.check_list_details label{
     margin: 5px 0;
     clear:left;
 }
-h3.check_item_details{
-	margin-bottom:0;	
-}
+
 .check_item textarea {
     display: block;
     height: 100px;
@@ -868,7 +886,6 @@ h3.check_item_details{
 }.check_item label{
 	width:150px;	
 }
-
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
@@ -1282,19 +1299,8 @@ fieldset.location_details div{
     overflow: hidden;
     width: 900px;
 }
-.col_1, .col_2{
-	display:inline-block;
-	vertical-align: top;	
-}
-.col_2{
-	padding-left: 17%;
-}
 
 /* ======================  CASE DETAILS ========================== */
-
-#frm_update_check_list input[type="submit"]{
-	width: 140px;	
-}
 #error_message_menu {
     float: left;
     margin-top: 50px;

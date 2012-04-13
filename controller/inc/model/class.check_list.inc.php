@@ -34,8 +34,8 @@
 	{
 		public static $so;
 		
-		const STATUS_OPEN = 0;
-		const STATUS_CLOSED = 1;
+		const STATUS_UNDONE = 0;
+		const STATUS_DONE = 1;
 		const STATUS_CANCELED = 3;
 		
 		protected $id;

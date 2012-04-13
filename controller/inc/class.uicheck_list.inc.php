@@ -246,6 +246,46 @@
 		}
 		
 		/**
+		 * Public function for saving a check list
+		 * 
+		 * @param HTTP:: location code, control id, status etc.. (check list details) 
+		 * @return data array
+		*/
+		function save_check_list(){
+			$location_code = phpgw::get_var('location_code');
+			$control_id = phpgw::get_var('control_id');
+			$status = (int)phpgw::get_var('status');
+
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
+			$planned_date = phpgw::get_var('planned_date', 'string');
+			$completed_date = phpgw::get_var('completed_date', 'string');
+			
+			$comment = phpgw::get_var('comment', 'string');
+							
+			if($planned_date != '')
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
+
+			if($deadline_date != '')
+				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			
+			if($completed_date != '')
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+			
+			$check_list = new controller_check_list();
+			$check_list->set_location_code($location_code);
+			$check_list->set_control_id($control_id);
+			$check_list->set_status($status);
+			$check_list->set_comment($comment);
+			$check_list->set_deadline( $deadline_date_ts );
+			$check_list->set_planned_date($planned_date_ts);
+			$check_list->set_completed_date($completed_date_ts);
+			
+			$check_list_id = $this->so->store($check_list);
+			
+			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
+		}
+		
+		/**
 		 * Public function for displaying the edit check list form  
 		 * 
 		 * @param HTTP:: check list id
@@ -319,45 +359,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-		/**
-		 * Public function for saving a check list
-		 * 
-		 * @param HTTP:: location code, control id, status etc.. (check list details) 
-		 * @return data array
-		*/
-		function save_check_list(){
-			$location_code = phpgw::get_var('location_code');
-			$control_id = phpgw::get_var('control_id');
-			$status = (int)phpgw::get_var('status');
-
-			$deadline_date = phpgw::get_var('deadline_date', 'string');
-			$planned_date = phpgw::get_var('planned_date', 'string');
-			$completed_date = phpgw::get_var('completed_date', 'string');
-			
-			$comment = phpgw::get_var('comment', 'string');
-							
-			if($planned_date != '')
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-
-			if($deadline_date != '')
-				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
-			
-			if($completed_date != '')
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-			
-			$check_list = new controller_check_list();
-			$check_list->set_location_code($location_code);
-			$check_list->set_control_id($control_id);
-			$check_list->set_status($status);
-			$check_list->set_comment($comment);
-			$check_list->set_deadline( $deadline_date_ts );
-			$check_list->set_planned_date($planned_date_ts);
-			$check_list->set_completed_date($completed_date_ts);
-			
-			$check_list_id = $this->so->store($check_list);
-			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
-		}
+	
 		
 		/**
 		 * Public function for displaying the create message form
@@ -450,6 +452,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
+		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
 		public function update_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$status = (int)phpgw::get_var('status');
