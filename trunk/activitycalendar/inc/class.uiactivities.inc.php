@@ -223,10 +223,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						
 						if(isset($g_id) && $g_id > 0)
 						{
+							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
 							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
 						}
 						else if (isset($o_id) && $o_id > 0)
 						{
+							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
 							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
 						}
 					}
