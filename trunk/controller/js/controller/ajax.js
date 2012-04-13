@@ -25,8 +25,7 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
-	//update location category based on location type
-	//file: 
+	// Update location category based on location type
 	$("#type_id").change(function () {
 		var location_type_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};

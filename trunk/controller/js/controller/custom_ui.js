@@ -40,42 +40,6 @@ $(document).ready(function() {
 		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_right.png");
 	});
 	
-	/* ==========================  EXPANDING/COLLAPSING CHECK ITEM WHEN TITLE IS CLICKED  ====================== */
-	
-	/*
-	$("ul.check_items.expand_list h4").live("click", function(){ 
-		
-		if( $(this).parent().hasClass('expanded')){
-			$(this).parent().find(".check_item").slideUp("slow");
-			$(this).find("img").attr("src", "controller/images/arrow_right.png");
-			$(this).parent().removeClass('expanded');
-		}else{
-			$(this).parent().find(".check_item").slideDown("slow");
-			$(this).find("img").attr("src", "controller/images/arrow_down.png");
-			$(this).parent().addClass('expanded');
-		}
-	});
-	*/
-	/*
-	$(".expand_all").live("click", function(){
-		$(this).addClass("focus");
-		$(".collapse_all").removeClass("focus");
-			
-		$("ul.check_items.expand_list").find("div.check_item").slideDown("slow");
-		$("ul.check_items.expand_list").find("div.check_item").addClass("expanded");
-		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_down.png");
-	});
-	
-	$(".collapse_all").live("click", function(){
-		$(this).addClass("focus");
-		$(".expand_all").removeClass("focus");
-		
-		$("ul.check_items.expand_list").find("div.check_item").slideUp("slow");
-		$("ul.check_items.expand_list").find("div.check_item").removeClass("expanded");
-		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_right.png");
-	});
-	*/
-	
 	/* ============================================================================== */
 	
 	if( $("#frm_control_items").length > 0 ){
