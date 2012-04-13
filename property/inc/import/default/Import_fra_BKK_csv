@@ -36,7 +36,7 @@
 	{
 		var $currentrecord = array(); //used for buffering to allow uid lines to go first
 		var $id = -1;
-		var $spbudact_code='12304321';
+		var $spbudact_code='12304121';
 		var $mvakode=0;
 		var $kildeid=1;
 		var $splitt=0;
