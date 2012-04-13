@@ -595,13 +595,15 @@
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);
 			
+			// Fetches saved control groups from DB for this control 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 		
 			$saved_groups_with_items_array = array();
 			
-			//Populating array with saved control items for each group
+			// Populating array with saved control items for each group
 			foreach ($saved_control_groups as $control_group)
 			{	
+				// Fetches saved control items for group
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id());
 				
 				if(count($saved_control_items) > 0)				
