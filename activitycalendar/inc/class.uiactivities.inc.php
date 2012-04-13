@@ -420,7 +420,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	{
 	    	//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
     		$subject = lang('mail_subject_update');
-    		$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
+    		//$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
+    		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/registreringsskjema/endre/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
     		if($activity->get_state() == 2)
     		{
@@ -461,7 +462,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	{
     		//$subject = lang('mail_subject_update', $avtivity->get_id() . '-' . $activity->get_title(), $activity->get_link());
     		$subject = lang('mail_subject_update');
-    		$link_text = "http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
+    		//$link_text = "http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
+    		$link_text = "http://www.bergen.kommune.no/aktivitetsoversikt/registreringsskjema/endre/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
     		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
     		$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);
     	}
