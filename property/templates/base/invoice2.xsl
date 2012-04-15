@@ -177,7 +177,14 @@
 		<tr>
 			<td>
 			  	<div id="invoice_id_text">
-					<xsl:value-of select="php:function('lang', 'invoice number')" />
+					<xsl:choose>
+						<xsl:when test="voucher_info/voucher/external_ref  != ''">
+					  		<xsl:value-of disable-output-escaping="yes" select="voucher_info/voucher/external_ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="php:function('lang', 'invoice number')" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</td>
 			<td>
@@ -401,7 +408,7 @@
 				<xsl:value-of select="php:function('lang', 'voucher process code')" />
 			</td>
 			<td>
-				<select id="process_code" name="process_code">
+				<select id="process_code" name="values[process_code]">
 					<xsl:apply-templates select="voucher_info/generic/process_code_list/options"/>
 		  		</select>
 			</td>
@@ -469,12 +476,11 @@
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<div id="data_paginator"/>
-	<div class="error_msg" style="margin-left:20px;">Du må velge bruker for godkjenning</div>
 	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="voucher_submit"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}" onclick="return onSave()"/></div>
+	<div class="voucher_submit"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}"/></div>
 </xsl:template>
 
 
