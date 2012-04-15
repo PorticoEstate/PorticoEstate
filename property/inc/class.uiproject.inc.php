@@ -1716,11 +1716,14 @@
 					'footer'				=> 0
 				);
 
+
+			$_formatter_voucher_link			= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink_voucher';
+
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
+														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
 														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
