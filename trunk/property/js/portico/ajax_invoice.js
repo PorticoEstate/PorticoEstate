@@ -347,10 +347,9 @@ $(document).ready(function(){
 						var htmlString = "";
 
 						var obj = data['generic']['process_code_list']['options'];
-
 						$.each(obj, function(i) {
 							var selected = '';
-							if(obj[i].id == voucher[0].periodization)
+							if(obj[i].id == voucher[0].process_code)
 							{
 								selected = ' selected';
 							}
