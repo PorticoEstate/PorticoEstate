@@ -82,15 +82,28 @@
 
 		function index()
 		{
+			$receipt = array();
 			$voucher_id	= phpgw::get_var('voucher_id', 'int');
 			
 			if($values = phpgw::get_var('values'))
 			{
-				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
-				$values['pending_users_orig'] = isset($values['pending_users_orig']) && $values['pending_users_orig'] ? array_unique($values['pending_users_orig']) : array();
-				
-				$receipt = $this->bo->approve_users($values);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'registration.uipending.index'));
+				$approve = execMethod('property.uiinvoice.get_approve_role');
+
+				if(!$approve)
+				{
+					$receipt['error'][]=true;
+					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
+				}
+
+				$values['voucher_id'] = $voucher_id;
+				if(!$receipt['error'])
+				{
+					$receipt = $this->bo->update_voucher2($values);
+				}
+
+				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id));
 			}
 			else
 			{
@@ -98,27 +111,6 @@
 				{
 					return $this->query();
 				}
-
-				$status_list = array
-				(
-					array
-					(
-						'id'	=> 0,
-						'name'	=> lang('Select status')
-					),
-					array
-					(
-						'id'	=> 1,
-						'name'	=> lang('approved')
-					),
-					array
-					(
-						'id'	=> 2,
-						'name'	=> lang('pending')
-					),
-				);
-
-
 
 				$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
 				$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
@@ -150,46 +142,28 @@
 					),
 					'voucher_info'					=> $this->get_single_voucher($voucher_id),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'registration.uipending.query', 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id, 'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
 								'key' => 'id',
 								'hidden' => true
 							),
 							array(
-								'key' => 'reg_id',
-								'label' => lang('id'),
-								'sortable'	=> true,
-								'formatter' => 'formatLinkPending'
-							),
-							array(
-								'key'	=>	'reg_lid',
-								'label'	=>	lang('user'),
+								'key'	=>	'amount',
+								'label'	=>	lang('amount'),
 								'sortable'	=>	true
 							),
 							array(
-								'key' => 'reg_dla',
-								'label' => lang('time'),
-								'sortable'	=> true
-							),
-							array(
-								'key' => 'reg_approved',
-								'label' => lang('approved'),
+								'key' => 'approved_amount',
+								'label' => lang('approved amount'),
 								'sortable'	=> true,
-								'formatter' => 'FormatterCenter'
+		//						'formatter' => 'FormatterRight',
 							),
 							array(
-								'key' => 'location_code',
-								'label' => lang('location'),
-								'sortable'	=> false
-							),
-
-							array(
-									'key' => 'checked',
-									'label' => lang('approve'),
+									'key' => 'split',
+									'label' => lang('split line'),
 									'sortable' => false,
-									'formatter' => 'formatterCheckPending',
-									'className' => 'mychecks'
+									'formatter' => 'FormatterCenter',
 							),
 							array(
 								'key' => 'actions',
@@ -223,25 +197,31 @@
 
 		public function query()
 		{
-			$status_id = phpgw::get_var('status_id');
-
 			$this->bo->start = phpgw::get_var('startIndex');
-		
-			$user_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
-												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
-			
-			foreach($user_list as &$user)
+			$this->bo->order = phpgw::get_var('sort');
+			$this->bo->sort = phpgw::get_var('dir');
+			$this->bo->results = phpgw::get_var('results');
+
+			if ( ! $voucher_id = phpgw::get_var('voucher_id_filter') )
 			{
-				$reg_info = unserialize(base64_decode($user['reg_info']));
-				$user['location_code'] = $reg_info['location_code'];
-				$results['results'][]= $user;
+				$voucher_id = phpgw::get_var('voucher_id');
+			}
+
+			$values = $this->bo->read_invoice_sub($voucher_id);
+	
+			foreach($values as &$entry)
+			{
+	//			$entry['split'] = "<input type =\"radio\" name=\"values[split]\" value=\"{$entry['id']}\">";
+				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\">";
+				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\">";
+				$results['results'][]= $entry;
 			}
 			$results['total_records'] = $this->bo->total_records;
-			$results['start'] = $this->start;
-			$results['sort'] = 'location_code';
+			$results['start'] = $this->bo->start;
+			$results['sort'] = 'id';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
-			array_walk($results['results'], array($this, 'add_links'), array($type));
+//			array_walk($results['results'], array($this, 'add_links'), array($type));
 						
 			return $this->yui_results($results);
 		}
@@ -276,8 +256,8 @@
 			$period_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $period_list);
 			$periodization_start_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $periodization_start_list);
 
-			array_unshift($period_list,array ('id'=> 0,'name'=> lang('select')));
-			array_unshift($periodization_start_list,array ('id'=> 0,'name'=> lang('select')));
+			array_unshift($period_list,array ('id'=> '','name'=> lang('select')));
+			array_unshift($periodization_start_list,array ('id'=> '','name'=> lang('select')));
 
 			$voucher_info['generic']['period_list']['options'] = $period_list;
 			$voucher_info['generic']['periodization_start_list']['options'] = $periodization_start_list;
@@ -290,7 +270,9 @@
 				'is_supervisor' 			=> lang('supervisor'),
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
-
+			
+			$sign_orig = '';
+			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
 			if(count($voucher))
 			{
 
@@ -322,7 +304,13 @@
 					'user_list'	=> !$voucher[0]['budsjettsigndato'] ? array('options' => $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice')) : ''
 				);
 
-				$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
+				foreach($approved_list as &$_approved_list)
+				{
+					if(isset($_approved_list['user_list']['options']))
+					{
+						array_unshift ($_approved_list['user_list']['options'], array('id' => '', 'name' => lang('forward')));
+					}
+				}
 
 				foreach($approve as &$_approve)
 				{
@@ -418,6 +406,7 @@
 					$voucher[0]['external_ref'] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$voucher[0]['external_ref']}','640','800')\" >" . lang('invoice id') . '</a>';
 				}
 
+				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
 			}
 			else
 			{
@@ -449,9 +438,11 @@
 
 			array_unshift ($voucher_info['generic']['process_code_list']['options'],array ('id'=>'','name'=>lang('select')));
 			array_unshift ($voucher_info['generic']['dimb_list']['options'],array ('id'=>'','name'=>lang('select')));
-			array_unshift ($voucher_info['generic']['periodization_list']['options'],array('id' => '0', 'name' => lang('none')));
+			array_unshift ($voucher_info['generic']['periodization_list']['options'],array('id' => '', 'name' => lang('none')));
 
 			$voucher_info['voucher'] = $voucher;
+			$voucher_info['generic']['sign_orig'] = $sign_orig;
+			$voucher_info['generic']['my_initials'] = $my_initials;
 //_debug_array($voucher_info);die();
 
 			return $voucher_info;

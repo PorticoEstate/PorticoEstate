@@ -37,6 +37,8 @@
 	{
 		public $total_records = 0;
 		public $sum_amount = 0;
+		public $results = 0;
+		public $allrows = false;
 
 		function property_boinvoice($session=false)
 		{
@@ -184,7 +186,7 @@
 		function read_invoice_sub($voucher_id='',$paid='')
 		{
 			$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid));
+				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $invoice;
 		}
@@ -801,5 +803,23 @@
 		public function get_vouchers($data)
 		{
 			return $this->so->get_vouchers($data);
+		}
+
+		public function update_voucher2($data)
+		{
+			$receipt = $this->so->update_voucher2($data);
+			$receipt = $this->so->forward($data);
+			
+			if( isset($data['order_id']) && $data['order_id'])
+			{
+				if(isset($data['close_order']) && $data['close_order'])
+				{
+					execMethod('property.soworkorder.close_orders',array($data['order_id']));
+				}
+				if(isset($data['close_order_orig']) && $data['close_order_orig'] && !$data['close_order'])
+				{
+					execMethod('property.soworkorder.reopen_orders',array($data['order_id']));
+				}
+			}
 		}
 	}

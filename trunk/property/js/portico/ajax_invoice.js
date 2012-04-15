@@ -215,6 +215,10 @@ $(document).ready(function(){
 					$("#amount").html( data['generic'].amount );
 					$("#approved_amount").html( data['generic'].approved_amount );
 					$("#currency").html( voucher[0].currency );
+					$("#process_log").html( data['generic'].process_log );
+					$("#my_initials").val( data['generic'].my_initials );
+					$("#sign_orig").val( data['generic'].sign_orig );
+
 		//			$("#oppsynsigndato").html( voucher[0].oppsynsigndato );
 		//			$("#saksigndato").html( voucher[0].saksigndato );
 		//			$("#budsjettsigndato").html( voucher[0].budsjettsigndato );
@@ -246,6 +250,7 @@ $(document).ready(function(){
 					}
 					var htmlString_close_order = "<input type=\"checkbox\" name=\"values[close_order]\" value=\"1\" title=\"close order\"" + checked_close_order + "></input>" + close_order_status;
 					$("#close_order").html( htmlString_close_order );
+					$("#close_order_orig").val( voucher[0].closed );
 //---------
 
 					if(data['generic']['dimb_list']['options'] != 'undefined')
@@ -393,8 +398,7 @@ $(document).ready(function(){
 
 						$.each(obj, function(i) {
 							var selected = '';
-							if(obj[i].id == voucher[0].period)
-
+							if(obj[i].selected != 'undefined' && obj[i].selected == 1)
 							{
 								selected = ' selected';
 							}
@@ -416,6 +420,9 @@ $(document).ready(function(){
 //					$("#janitor").html( '' );
 //					$("#supervisor").html( '' );
 //					$("#budget_responsible").html( '' );
+					$("#close_order_orig").val( '' );
+					$("#my_initials").val( '' );
+					$("#sign_orig").val( '' );
 					$("#invoice_date").html( '' );
 					$("#payment_date").html( '' );
 					$("#b_account_id").val( '' );
@@ -426,6 +433,7 @@ $(document).ready(function(){
 					$("#saksbehandlerid").html( '' );
 					$("#budsjettansvarligid").html( '' );
 					$("#remark").html( '' );
+					$("#process_log").html( '' );
 					$("#dim_a").val('' );
 					$("#dim_b").html( "<option>Velg</option>" );
 					$("#period").html( "<option>Velg</option>" );

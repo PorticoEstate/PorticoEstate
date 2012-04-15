@@ -60,6 +60,9 @@
 			<table>
 				<xsl:apply-templates select="filter_form" />
 				<xsl:apply-templates select="filter_invoice" />
+			</table>
+		  	<form action="#" name="voucher_form" id="voucher_form" method="post">
+			<table>
 				<xsl:call-template name="voucher_fields" />
 				<xsl:call-template name="approve"/>
 				<tr>
@@ -68,8 +71,8 @@
 						<xsl:apply-templates select="datatable"/>
 					</td>
 				</tr>
-				<xsl:apply-templates select="form/list_actions"/>
 			</table>
+			</form>
 		</div>
 	</div>
 </xsl:template>
@@ -200,7 +203,7 @@
 			</td>
 			<td>
 			  	<div id="amount">
-			  		<xsl:value-of select="voucher_info/voucher/amount"/>
+			  		<xsl:value-of select="voucher_info/generic/amount"/>
 			  	</div>
 			</td>
 		</tr>
@@ -210,7 +213,7 @@
 			</td>
 			<td>
 			  	<div id="approved_amount">
-			  		<xsl:value-of select="voucher_info/voucher/approved_amount"/>
+			  		<xsl:value-of select="voucher_info/generic/approved_amount"/>
 			  	</div>
 			</td>
 		</tr>
@@ -246,39 +249,6 @@
 
 			</td>
 		</tr>
-<!--
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'janitor')" />
-			</td>
-			<td>
-			  	<div id="janitor">
-			  		<xsl:value-of select="voucher_info/voucher/janitor"/>
-			  	</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'supervisor')" />
-			</td>
-			<td>
-			  	<div id="supervisor">
-			  		<xsl:value-of select="voucher_info/voucher/supervisor"/>
-			  	</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'budget responsible')" />
-			</td>
-			<td>
-			  	<div id="budget_responsible">
-			  		<xsl:value-of select="voucher_info/voucher/budget_responsible"/>
-			  	</div>
-
-			</td>
-		</tr>
--->
 		<tr>
 			<td>
 				<div id = 'order_text'>
@@ -296,7 +266,7 @@
 				</div>
 			</td>
 			<td>
-			  	<input type="text" name="order_id" id="order_id" value="{voucher_info/voucher/order_id}"/>
+			  	<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
 			</td>
 		</tr>
 		<tr>
@@ -304,6 +274,8 @@
 				<xsl:value-of select="php:function('lang', 'close order')" />
 			</td>
 			<td>
+				<input type="hidden" id ="close_order_orig" name="values[close_order_orig]" value="{voucher_info/voucher/closed}"/>
+				
 				<div id="close_order">
 					<input type="checkbox" name="values[close_order]" value="1">
 						<xsl:attribute name="title">
@@ -347,7 +319,7 @@
 				<xsl:value-of select="php:function('lang', 'dim b')" />
 			</td>
 			<td>
-				<select id="dim_b" name="dim_b">
+				<select id="dim_b" name="values[dim_b]">
 					<xsl:apply-templates select="voucher_info/generic/dimb_list/options"/>
 		  		</select>
 			</td>
@@ -357,7 +329,7 @@
 					<xsl:value-of select="php:function('lang', 'dim a')" />
 			</td>
 			<td>
-			  	<input type="text" name="dim_a" id="dim_a" value="{voucher_info/voucher/dim_a}"/>
+			  	<input type="text" name="values[dim_a]" id="dim_a" value="{voucher_info/voucher/dim_a}"/>
 			</td>
 		</tr>
 		<tr>
@@ -365,7 +337,7 @@
 				<xsl:value-of select="php:function('lang', 'tax code')" />
 			</td>
 			<td>
-				<select id="tax_code" name="tax_code">
+				<select id="tax_code" name="values[tax_code]">
 					<xsl:apply-templates select="voucher_info/generic/tax_code_list/options"/>
 		  		</select>
 			</td>
@@ -375,7 +347,7 @@
 				<xsl:value-of select="php:function('lang', 'project group')" />
 			</td>
 			<td>
-			  	<input type="text" name="project_group" id="project_group" value="{voucher_info/voucher/project_group}"/>
+			  	<input type="text" name="values[project_group]" id="project_group" value="{voucher_info/voucher/project_group}"/>
 			</td>
 		</tr>
 		<tr>
@@ -383,7 +355,7 @@
 				<xsl:value-of select="php:function('lang', 'budget account')" />
 			</td>
 			<td>
-			  	<input type="text" name="b_account_id" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
+			  	<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
 			</td>
 		</tr>
 
@@ -392,7 +364,7 @@
 				<xsl:value-of select="php:function('lang', 'period')" />
 			</td>
 			<td>
-				<select id="period" name="period">
+				<select id="period" name="values[period]">
 					<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
 		  		</select>
 			</td>
@@ -402,7 +374,7 @@
 				<xsl:value-of select="php:function('lang', 'periodization')" />
 			</td>
 			<td>
-				<select id="periodization" name="periodization">
+				<select id="periodization" name="values[periodization]">
 					<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
 		  		</select>
 			</td>
@@ -413,55 +385,11 @@
 				<xsl:value-of select="php:function('lang', 'periodization start')" />
 			</td>
 			<td>
-				<select id="periodization_start" name="periodization_start">
+				<select id="periodization_start" name="values[periodization_start]">
 					<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
 		  		</select>
 			</td>
 		</tr>
-<!--
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'oppsynsigndato')" />
-			</td>
-			<td>
-			  	<div id="oppsynsigndato">
-			  		<xsl:value-of select="voucher_info/voucher/oppsynsigndato"/>
-			  	</div>
-
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'saksigndato')" />
-			</td>
-			<td>
-			  	<div id="saksigndato">
-			  		<xsl:value-of select="voucher_info/voucher/saksigndato"/>
-			  	</div>
-
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'budsjettsigndato')" />
-			</td>
-			<td>
-			  	<div id="budsjettsigndato">
-			  		<xsl:value-of select="voucher_info/voucher/budsjettsigndato"/>
-			  	</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'remark')" />
-			</td>
-			<td>
-			  	<div id="remark">
-			  		<xsl:value-of select="voucher_info/voucher/remark_link"/>
-			  	</div>
-			</td>
-		</tr>
--->
 </xsl:template>
 
 
@@ -483,17 +411,17 @@
 				<xsl:value-of select="php:function('lang', 'voucher process log')"/>
 			</td>
 			<td align="left">
-				<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
+				<textarea id="process_log" cols="60" rows="10" name="values[process_log]" wrap="virtual">
 					<xsl:attribute name="title">
 						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
 					</xsl:attribute>
-					<xsl:value-of select="value_process_log"/>
+					<xsl:value-of select="voucher_info/generic/process_log"/>
 				</textarea>
 			</td>
 		</tr>
 		<tr>
-			<input type="hidden" name="values[sign_orig]" value="{sign_orig}"/>
-			<input type="hidden" name="values[my_initials]" value="{my_initials}"/>
+			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
+			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
 			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
@@ -529,9 +457,6 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="role"/>
 									</xsl:attribute>
-									<option value="">
-										<xsl:value-of select="php:function('lang', 'forward')"/>
-									</option>
 									<xsl:apply-templates select="user_list/options"/>
 								</select>
 						</xsl:otherwise>
@@ -549,12 +474,7 @@
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-  	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
-  	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
-  	
-  	<form action="#" name="voucher_form" id="voucher_form" method="post">
-  		<div class="voucher_submit"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}" onclick="return onSave()"/></div>
-  	</form>
+	<div class="voucher_submit"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}" onclick="return onSave()"/></div>
 </xsl:template>
 
 
