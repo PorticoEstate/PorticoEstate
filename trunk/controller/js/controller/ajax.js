@@ -327,6 +327,7 @@ $(document).ready(function(){
 		$(this).addClass("focus");
 	});
 	
+	// =================  SAVE CONTROL DETAILS - FORM SUBMIT  ==================
 	$("#frm_save_control_details").submit(function(e){
 		
 		var thisForm = $(this);
@@ -369,7 +370,6 @@ $(document).ready(function(){
 	    	
 	});
 	
-	// file: view_check_lists_for_location.xsl
 	// Fetches info about a check list on hover status image icon
 	$('a.view_check_list').bind('contextmenu', function(){
 		var thisA = $(this);
@@ -475,6 +475,9 @@ $(document).ready(function(){
 			});
 	});
 	
+	//===========================  CHECKLIST  ================================
+	
+	// UPDATE CHECKLIST DETAILS	
 	$("#frm_update_check_list").live("submit", function(e){
 		e.preventDefault();
 
@@ -482,26 +485,71 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
 		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		
-	    			  if(obj.status == "updated"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");	
-		    				  
-		    			  // Changes text on save button back to original
-		    			  window.setTimeout(function() {
-							$(submitBnt).val('Lagre sjekkpunkt');
-							$(submitBnt).addClass("not_active");
-		    			  }, 1000);
+		var statusFieldVal = $("#status").val();
+		var completedDateVal = $("#completed_date").val();
+		var completedDateRow = $("#completed_date").closest(".row");
+		
+		// Checks that COMPLETE DATE is set if status is set to DONE 
+		if(statusFieldVal == 1 & completedDateVal == ''){
+			// Displays error message above completed date
+			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+    	}else{
+    		
+    		$(".input_error_msg").hide();
+    		
+			$.ajax({
+				  type: 'POST',
+				  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
+				  success: function(data) {
+					  if(data){
+		    			  var obj = jQuery.parseJSON(data);
+			    		
+		    			  if(obj.status == "updated"){
+			    			  var submitBnt = $(thisForm).find("input[type='submit']");
+			    			  $(submitBnt).val("Lagret");	
+			    				  
+			    			  // Changes text on save button back to original
+			    			  window.setTimeout(function() {
+								$(submitBnt).val('Lagre sjekkpunkt');
+								$(submitBnt).addClass("not_active");
+			    			  }, 1000);
+						  }
 					  }
-				  }
-				}
-		});
+					}
+			});
+    	}
+	});
+	
+	// Display submit button on click
+	$("#frm_update_check_list").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+
+	//=============================  ADD CHECKLIST  ===========================
+
+	// ADD CHECKLIST
+	$("#frm_add_check_list").live("submit", function(e){
+		
+		var thisForm = $(this);
+		var statusFieldVal = $("#status").val();
+		var completedDateVal = $("#completed_date").val();
+		var completedDateRow = $("#completed_date").closest(".row");
+		
+		// Checks that COMPLETE DATE is set if status is set to DONE 
+		if(statusFieldVal == 1 & completedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+		}		
+	});	
+	
+	// Display submit button on click
+	$("#frm_add_check_list").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
 	});
 	
 	$(".frm_register_case").live("submit", function(e){
@@ -715,18 +763,6 @@ $(document).ready(function(){
 		});
 
 		return false;
-	});
-	
-	$("#frm_update_check_list").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	
-	$("#frm_add_check_list").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
 	});
 	
 	$(".frm_save_check_item").live("click", function(e){

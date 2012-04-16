@@ -36,6 +36,9 @@
 				}	
 			}
 			
+			if($num_open_cases > 0)
+				$check_list->set_status(controller_check_list::STATUS_DONE);
+				
 			$check_list->set_num_open_cases($num_open_cases);
 			$check_list->set_num_pending_cases($num_pending_cases);
 			
