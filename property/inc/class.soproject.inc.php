@@ -724,7 +724,7 @@
 					while ($this->db->next_record())
 					{
 						$_actual_cost = (int)$this->db->f('actual_cost');
-						$project['combined_cost']	+= ($_sum - $_actual_cost);
+						$project['combined_cost']	-= $_actual_cost;
 						$project['actual_cost']		+= $_actual_cost;
 					}
 
