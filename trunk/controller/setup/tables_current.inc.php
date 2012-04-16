@@ -56,7 +56,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'status' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'status' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 				'comment' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'measurement'         => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
