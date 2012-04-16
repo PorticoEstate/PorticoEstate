@@ -55,25 +55,43 @@
 	<xsl:call-template name="common"/>
 
 	<div class="yui-content">
-		<div id="voucher_details">
-			<xsl:call-template name="yui_phpgw_i18n"/>
-			<table>
-				<xsl:apply-templates select="filter_form" />
-				<xsl:apply-templates select="filter_invoice" />
-			</table>
-		  	<form action="#" name="voucher_form" id="voucher_form" method="post">
-			<table>
-				<xsl:call-template name="voucher_fields" />
-				<xsl:call-template name="approve"/>
-				<tr>
-					<td colspan = '6'>
-						<xsl:apply-templates select="paging"/>
-						<xsl:apply-templates select="datatable"/>
-					</td>
-				</tr>
-			</table>
-			</form>
-		</div>
+		<table>
+			<tr>
+				<td>
+					<div id="voucher_details">
+						<xsl:call-template name="yui_phpgw_i18n"/>
+						<table>
+							<xsl:apply-templates select="filter_form" />
+							<xsl:apply-templates select="filter_invoice" />
+						</table>
+					  	<form action="#" name="voucher_form" id="voucher_form" method="post">
+							<table>
+								<xsl:call-template name="voucher_fields" />
+								<xsl:call-template name="approve"/>
+								<tr>
+									<td colspan = '6'>
+										<xsl:apply-templates select="paging"/>
+										<xsl:apply-templates select="datatable"/>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</td>
+				<td>
+				  	<div id="image">
+						<xsl:choose>
+							<xsl:when test="voucher_info/voucher/image_url  != ''">
+								<iframe id="image_content" width="400" height="500" src = "{voucher_info/voucher/image_url}" ><p>Your browser does not support iframes.</p></iframe>
+							</xsl:when>
+							<xsl:otherwise>
+								<iframe id="image_content" width="400" height="500" ><p>Your browser does not support iframes.</p></iframe>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 </xsl:template>
 

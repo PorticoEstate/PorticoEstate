@@ -403,9 +403,10 @@
 
 				if($voucher[0]['external_ref'])
 				{
-					$voucher[0]['external_ref'] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$voucher[0]['external_ref']}','640','800')\" >" . lang('invoice number') . '</a>';
+					$_image_url = "{$baseurl_invoice}{$voucher[0]['external_ref']}";
+					$voucher[0]['external_ref'] = " <a href=\"javascript:openwindow('{$_image_url}','640','800')\" >" . lang('invoice number') . '</a>';
+					$voucher[0]['image_url']	= $_image_url;
 				}
-
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
 			}
 			else

@@ -1977,11 +1977,12 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop FROM fm_ecobilag"
+			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
+			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
 			." $filtermethod $querymethod"
-			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr";
+			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr, oppsynsigndato, saksigndato,budsjettsigndato";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');
@@ -1995,14 +1996,29 @@
 
 			while($this->db->next_record())
 			{
+				$status = 'O';
+				if($this->db->f('budsjettsigndato'))
+				{
+					$status = 'C';
+				}
+				else if($this->db->f('saksigndato'))
+				{
+					$status = 'B';
+				}
+				else if($this->db->f('oppsynsigndato'))
+				{
+					$status = 'A';
+				}
+				
 				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
-				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s",
+				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
 							$voucher_id,
 							trim(strtoupper($this->db->f('org_name',true))),
 							$this->db->f('currency'),
 							$this->db->f('kreditnota') ? 'X' : '',
 							$this->db->f('type'),
-							number_format($this->db->f('godkjentbelop'), 2, ',', ' ')
+							number_format($this->db->f('godkjentbelop'), 2, ',', ' '),
+							$status
 						);
 
 				$values[] = array

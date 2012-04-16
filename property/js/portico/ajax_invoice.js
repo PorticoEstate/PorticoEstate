@@ -196,10 +196,12 @@ $(document).ready(function(){
 					if(voucher[0].external_ref)
 					{
 						$("#invoice_id_text").html(voucher[0].external_ref );
+						document.getElementById('image_content').src = voucher[0].image_url;
 					}
 					else
 					{
 						$("#invoice_id_text").html('FakturaNr');
+						document.getElementById('image_content').src = '';
 					}
 
 					$("#invoice_id").html( voucher[0].invoice_id );
@@ -443,6 +445,7 @@ $(document).ready(function(){
 					$("#approve_as").html( "<option>Velg</option>" );
 					$("#order_text").html( 'Bestilling' );
 					$("#invoice_id_text").html('FakturaNr');
+					document.getElementById('image_content').src = '';
 				}
 			}
 			});
