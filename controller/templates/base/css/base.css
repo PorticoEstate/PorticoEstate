@@ -697,7 +697,7 @@ ul.row li{
     font-size: 13px;
     font-weight: bold;
     margin: 0;
-    padding: 7px 0 7px 15px;
+    padding: 6px 0 6px 15px;
     text-align: left;
 }
 .box_header.ext {
@@ -1192,11 +1192,11 @@ ul.check_items h5{
 .tab_menu a {
     background: none repeat scroll 0 0 #F9F5F0;
     border: 1px solid #F0F0F0;
-    color: #444;
+    color: #444444;
     display: inline-block;
     font-weight: bold;
     margin-right: 3px;
-    padding: 7px 0;
+    padding: 6px 0;
     text-align: center;
     text-decoration: none;
     width: 150px;
@@ -1526,4 +1526,14 @@ div.controller_checklist {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px 6px;
     display: none;
+}
+
+/* =======================================  CONTROL GROUP AND ITEMS  ========================================= */
+
+ul.control_groups li ul {
+    margin-left: 1em;
+}
+
+ul.control_groups h3 {
+    margin-bottom: 0.5em;
 }
