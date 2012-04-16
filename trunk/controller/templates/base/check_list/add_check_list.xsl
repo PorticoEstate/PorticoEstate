@@ -21,12 +21,14 @@
 		});
 	});
 </script>
-		
+
+<!-- ==================  ADD CHECKLIST  ========================= -->
 
 <div id="main_content" class="medium">
 	
-	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
-
+	<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+	<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
+		
 	<div id="check_list_menu">
 		<a href="#" class="active">
 			Vis detaljer for sjekkliste
@@ -39,11 +41,17 @@
 		</a>
 	</div>
 	
-	
-	<h3 class="box_header">Sjekklistedetaljer</h3>
-	<fieldset class="check_list_details">
+	<!-- ==================  CHECKLIST DETAILS  ===================== -->
+	<div id="check_list_details">
+		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list.save_check_list" method="post">
-					
+			<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
+			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+		
+			<input type="hidden" name="control_id" value="{$control_id}" />
+			<input type="hidden" name="location_code" value="{$location_code}" />
+			
+			<!-- Shows dates that can be picked for setting a deadline date 		
 			<div id="calendar_dates">
 				<xsl:for-each select="calendar_array">
 					<xsl:variable name="cal_date"><xsl:value-of select="."/></xsl:variable>
@@ -51,45 +59,29 @@
 					<span><xsl:value-of select="php:function('date', $date_format, number( $cal_date ) )"/></span>
 				</xsl:for-each>
 			</div>
-		
-			<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
-			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-		
-			<input type="hidden" name="control_id" value="{$control_id}" />
-			<input type="hidden" name="location_code" value="{$location_code}" />
-
-			<fieldset class="add_check_list">
-				<div>
+ 			-->
+ 
+			<fieldset>
+				<div class="row">
 					<label>Status</label>
-					<select name="status">
+					<select id="status" name="status">
 						<option value="0" SELECTED="SELECTED">Ikke utført</option>
 						<option value="1" >Utført</option>
 					</select>
 				</div>
-				<div>
+				<div class="row">
 					<label>Fristdato</label>
-					<input class="date">
-				      <xsl:attribute name="id">deadline_date</xsl:attribute>
-				      <xsl:attribute name="name">deadline_date</xsl:attribute>
-				      <xsl:attribute name="type">text</xsl:attribute>
+					<input type="text" id="deadline_date" name="deadline_date" class="date">
 				      <xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(deadline))"/></xsl:attribute>
 				    </input>
 			    </div>
-				<div>
+				<div class="row">
 					<label>Planlagt dato</label>
-					<input class="date">
-				      <xsl:attribute name="id">planned_date</xsl:attribute>
-				      <xsl:attribute name="name">planned_date</xsl:attribute>
-				      <xsl:attribute name="type">text</xsl:attribute>
-				      <xsl:attribute name="value"></xsl:attribute>
-				    </input>
+					<input type="text" id="planned_date" name="planned_date" class="date" value="" />
 			    </div>
-			    <div>
+			    <div class="row">
 					<label>Utført dato</label>
-					<input class="date">
-				      <xsl:attribute name="id">completed_date</xsl:attribute>
-				      <xsl:attribute name="name">completed_date</xsl:attribute>
-				      <xsl:attribute name="type">text</xsl:attribute>
+					<input type="text" id="completed_date" name="completed_date" class="date">
 					  <xsl:if test="check_list/completed_date != ''">
 				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></xsl:attribute>
 				      </xsl:if>
@@ -98,20 +90,20 @@
 				<!-- 
 					div><label>Utstyr</label><input name="equipment_id" /></div>
 				 -->
-				<div>
-					<label class="comment">Kommentar</label>
-					<textarea>
-					  <xsl:attribute name="name">comment</xsl:attribute>
-					  <xsl:value-of select="check_list/comment"/>
-					</textarea>
-				</div>
 			</fieldset>
+			<div class="comment">
+				<label>Kommentar</label>
+				<textarea>
+				  <xsl:attribute name="name">comment</xsl:attribute>
+				  <xsl:value-of select="check_list/comment"/>
+				</textarea>
+			</div>
+			
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
-				<input style="width: 170px;" class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
+				<input class="btn not_active" type="submit" value="Lagre detaljer" />
 			</div>
-		</form>
-	</fieldset>
-	
+		</form>	
 	 </div>
+</div>
 </xsl:template>
