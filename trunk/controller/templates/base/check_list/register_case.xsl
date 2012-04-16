@@ -16,17 +16,15 @@
 		
 		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
 		
-		<ul>
+		<ul class="control_groups">
 			<xsl:for-each select="control_groups_with_items_array">
 			<xsl:choose>
 				<xsl:when test="control_items/child::node()">
-					<li class="list_item">
-											
+					<li>
 						<h3><xsl:value-of select="control_group/group_name"/></h3>				
 						<ul class="expand_list">
 							<xsl:for-each select="control_items">
-								<li class="list_item">
-								
+								<li>
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
