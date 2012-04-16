@@ -53,16 +53,9 @@
 			
 			<fieldset class="col_1">
 			<div class="row">
-				<label>ID</label>
-				<input class="id" disabled="disabled">
-			     <xsl:attribute name="name">check_list_id</xsl:attribute>
-			     <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
-			    </input>
-		    </div>
-			<div class="row">
 				<label>Status</label>
 				<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
-				<select name="status">
+				<select id="status" name="status">
 					<xsl:choose>
 						<xsl:when test="check_list/status = 0">
 							<option value="1">Utført</option>
