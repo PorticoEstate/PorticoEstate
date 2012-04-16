@@ -1249,7 +1249,7 @@ ul.check_items h5{
     padding: 4px 0;
 }
 
-/* ======================== TAB ITEM ========================== */
+/* ===================================  TAB ITEM  ================================= */
 
 .tab_item {
     background: none repeat scroll 0 0 #F7FAFF;
@@ -1294,14 +1294,14 @@ fieldset.location_details div{
     z-index: 1;
 }
 
-/* ======================  CHECK LIST ========================== */
+/* ==================================  CHECK LIST  ================================== */
 
 #main_content.medium {
     overflow: hidden;
     width: 900px;
 }
 
-/* ======================  CASE DETAILS ========================== */
+/* ====================================  CASE DETAILS  ============================== */
 #error_message_menu {
     float: left;
     margin-top: 50px;
@@ -1317,7 +1317,7 @@ fieldset.location_details div{
     margin-top: 20px;   
 }
 
-/* ======================== VIEW CASES ============================= */
+/* ===================================== VIEW CASES ================================ */
 
 li.check_item_case h4 {
     margin: 5px 0;
@@ -1380,7 +1380,7 @@ li.check_item_case .col_3 {
     padding: 5px;
 }
 
-/* ======================== FORM UPDATE CASE ============================= */
+/* ================================  FORM UPDATE CASE  ============================= */
 
 .frm_update_case label {
 	display: block;	
@@ -1406,7 +1406,7 @@ li.check_item_case .col_3 {
  	margin-right: 5px;   
 }
 
-/* ======================== FORM REGISTER CASE ============================= */
+/* ===============================  FORM REGISTER CASE  ============================= */
 .frm_register_case {
 	margin-bottom: 1em;
 }
@@ -1435,7 +1435,7 @@ a.view_check_list{
     width: 24px;	
 }
 
-/* ======================== CASE MESSAGE ============================= */
+/* ================================ CASE MESSAGE ============================= */
 #frmRegCaseMessage label {
     width: 13%;
 }
@@ -1456,7 +1456,7 @@ a.view_check_list{
 	padding: 0 0 1em 1em;
 }
 
-/* ======================== QUICK MENU ============================= */
+/* ==============================  QUICK MENU  ============================= */
 
 .quick_menu {
     font-size: 12px;
@@ -1492,7 +1492,7 @@ div.controller_checklist {
 	border: 1px solid #ABABAB;
 }
 
-/* ======================== REGISTER CONTROL FOR LOCATION ============================== */
+/* ======================== REGISTER CONTROL FOR LOCATION ===================== */
 #choose_control{
 	margin: 10px;
 	padding: 10px; 
@@ -1505,7 +1505,7 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
-/* ======================== CONTROL DETAILS ============================== */
+/* ======================== CONTROL DETAILS =================================== */
 
 #control_details label {
     display: inline-block;
@@ -1528,7 +1528,7 @@ div.controller_checklist {
     display: none;
 }
 
-/* =======================================  CONTROL GROUP AND ITEMS  ========================================= */
+/* =============================  CONTROL GROUP AND ITEMS  ======================= */
 
 ul.control_groups li ul {
     margin-left: 1em;

@@ -37,12 +37,14 @@
 										<div class="case_info">
 											<!-- STATUS -->
 											<div class="row first">
-												<label>Status:</label> 
-												<xsl:choose>
-													<xsl:when test="status = 0">Åpen</xsl:when>
-													<xsl:when test="status = 1">Lukket</xsl:when>
-													<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
-												</xsl:choose>
+												<label>Status:</label>
+												<span class="case_status">
+													<xsl:choose>
+														<xsl:when test="status = 0">Åpen</xsl:when>
+														<xsl:when test="status = 1">Lukket</xsl:when>
+														<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
+													</xsl:choose>
+												</span>
 											</div>
 											<!--  MEASUREMENT -->
 											<div class="row">
@@ -102,7 +104,7 @@
 											<!--  STATUS -->
 											<div class="row first">
 												<label>Status:</label> 
-												<select name="status">
+												<select name="case_status">
 													<xsl:choose>
 														<xsl:when test="status = 0">
 															<option value="0" SELECTED="SELECTED">Åpen</option>

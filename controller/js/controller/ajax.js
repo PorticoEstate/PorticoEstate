@@ -551,7 +551,11 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
+
 	
+	//=============================  CASE  ===========================
+	
+	// REGISTER CASE
 	$(".frm_register_case").live("submit", function(e){
 		e.preventDefault();
 
@@ -582,7 +586,8 @@ $(document).ready(function(){
 				}
 		});
 	});
-	
+
+	// UPDATE CASE
 	$(".frm_update_case").live("submit", function(e){
 		e.preventDefault();
 
@@ -604,6 +609,10 @@ $(document).ready(function(){
 		    			if(type == "control_item_type_1"){
 	    					
 	    				}else if(type == "control_item_type_2"){
+	    					var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
+	    					
+	    					$(clickRow).find(".case_info .case_status").empty().text( case_status );
+	    					
 	    					var measurement_text = $(thisForm).find("input[name='measurement']").val();
 		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
 	    				}
