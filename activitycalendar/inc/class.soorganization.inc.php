@@ -299,6 +299,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 //		_debug_array($new_orgs);
 //		_debug_array($orgmappings);
 		
+		$this->db->transaction_begin();
 		//loop through activities and update organization-connection
 		foreach($orgmappings as $key => $value)
 		{
@@ -316,14 +317,24 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$this->set_organization_inactive($orgmapping);
 				//get affected stuff from booking
 				$alloc = $this->get_affected_allocations($orgmapping);
-				//if($alloc)
-					var_dump("allocation: ". $alloc."</br>");
+				foreach($alloc as $a)
+				{
+					var_dump('Allocation id: '.$a.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					$this->update_affected_allocations($a, $key);
+				}
+
 				$res = $this->get_affected_reservations($orgmapping);
-				//if($res)
-					var_dump("reservation: ". $res."</br>");
+				foreach($res as $r)
+				{
+					var_dump('Reservation id: '.$r.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					$this->update_affected_reservations($r, $key);
+				}
 				$event = $this->get_affected_events($orgmapping);
-				//if($event)
-					var_dump("event: ". $event."</br>");
+				foreach($event as $e)
+				{
+					var_dump('Event id: '.$e.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					$this->update_affected_events($e, $key);
+				}
 			}
 		}
 		
@@ -335,6 +346,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			var_dump("Oppdaterer organisasjon ".$no['orgid'].','.$no['orgname'].' med ny adresse.<br/>');
 			$this->update_organization_with_new_info($no);
 		}
+		
+		$this->db->transaction_commit();
 	}
 	
 	function get_organization_name_local($org_id)
@@ -818,35 +831,53 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	
 	function get_affected_allocations($org_id)
 	{
+		$result = array();
 		$sql = "select id from bb_allocation where organization_id={$org_id}";
-		$this->db->query($q1, __LINE__, __FILE__);
+		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
-			$result = $this->db->f('id');
+			$result[] = $this->db->f('id');
 		}
 		
 		return $result;
+	}
+	
+	function update_affected_allocations($id, $org_id)
+	{
+		$result = $this->db->query("update bb_allocation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 	}
 	
 	function get_affected_reservations($org_id)
 	{
+		$result = array();
 		$sql = "select id from bb_completed_reservation where organization_id={$org_id}";
-		$this->db->query($q1, __LINE__, __FILE__);
+		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
-			$result = $this->db->f('id');
+			$result[] = $this->db->f('id');
 		}
 		
 		return $result;
 	}
 	
+	function update_affected_reservations($id, $org_id)
+	{
+		$result = $this->db->query("update bb_completed_reservation set organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
+	}
+	
 	function get_affected_events($org_id)
 	{
+		$result = array();
 		$sql = "select id from bb_event where customer_organization_id={$org_id}";
-		$this->db->query($q1, __LINE__, __FILE__);
+		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
-			$result = $this->db->f('id');
+			$result[] = $this->db->f('id');
 		}
 		
 		return $result;
+	}
+	
+	function update_affected_events($id, $org_id)
+	{
+		$result = $this->db->query("update bb_event set customer_organization_id={$org_id} where id={$id}", __LINE__, __FILE__);
 	}
 	
 	function update($organization)
