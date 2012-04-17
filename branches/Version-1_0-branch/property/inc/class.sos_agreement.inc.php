@@ -372,6 +372,11 @@
 			}
 
 
+			$_querymethod = array();
+			$__querymethod = array();
+			$_joinmethod_datatype = array();
+			$_joinmethod_datatype_custom = array();
+
 			$querymethod = '';
 			if($query)
 			{
@@ -390,29 +395,91 @@
 
 					while ($this->db->next_record())
 					{
-						if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH')
+						switch ($this->db->f('datatype'))
 						{
-							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+							case 'V':
+							case 'email':
+							case 'T':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'CH':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'R':
+							case 'LB':
+								if(!$criteria_id)
+								{
+									if(!$_joinmethod_datatype_custom)//only join once
+									{
+										$_joinmethod_datatype_custom[] = "{$this->join} phpgw_cust_choice ON phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id');
+									}
+	
+									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+	
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'I':
+								if(ctype_digit($query) && !$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'VENDOR':
+								if($criteria_id == 'vendor')
+								{
+									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'AB':
+								if($criteria_id == 'ab')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'ABO':
+								if($criteria_id == 'abo')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							default:
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod = array(); // remove block
+								}
 						}
-						else if($this->db->f('datatype')=='I')
-						{
-							$query_arr[]= "$entity_table." . $this->db->f('column_name') . ' = ' . (int)$query;
-						}
-						else
-						{
-							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
-						}
-					}
-
-					$query_arr[]= "location_code {$this->like} '$query%'";
-					$query_arr[]= "org_name {$this->like} '%$query%'";
-
-					if (isset($query_arr[0]))
-					{
-						$querymethod = " $where (" . implode (' OR ',$query_arr) . ')';
-						$where = 'AND';
 					}
 				}
+			}
+
+
+			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
+			foreach($_joinmethod_datatype as $_joinmethod)
+			{
+				$sql .= $_joinmethod;
+			}
+
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				unset($_querymethod);
 			}
 
 			$sql .= " $filtermethod $querymethod";
