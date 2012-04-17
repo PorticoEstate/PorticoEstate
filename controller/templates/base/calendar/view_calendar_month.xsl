@@ -57,11 +57,11 @@
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
 	  				if(leftNumVal == -417){
-						$("#days_view").animate({
+						$("#days_view").stop().animate({
 		                    left: '-=93' 
 		                    }, 800);
 					}else if(leftNumVal > -417){
-						$("#days_view").animate({
+						$("#days_view").stop().animate({
 		                    left: '-=417' 
 		                    }, 800);
 					}
@@ -73,11 +73,11 @@
 	  			  	
 	  			  	if( leftNumVal != 0 ){
 		  				if(leftNumVal == -93){
-							$("#days_view").animate({
+							$("#days_view").stop().animate({
 			                    left: '+=93' 
 			                    }, 800);
 						}else if( leftNumVal >= -510 ){
-							$("#days_view").animate({
+							$("#days_view").stop().animate({
 			                    left: '+=417' 
 			                    }, 800);
 						}

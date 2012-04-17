@@ -1440,24 +1440,27 @@ a.view_check_list{
 }
 
 /* ================================ CASE MESSAGE ============================= */
-#frmRegCaseMessage label {
+#caseMessage label {
     width: 13%;
 }
-#frmRegCaseMessage h3 {
+#caseMessage h3 {
     font-size: 1.2em;
     margin: 1.5em 0 0.5em;
 }
-#frmRegCaseMessage ul.cases {
+#caseMessage ul.cases {
     background: none repeat scroll 0 0 #FEFCF9;
     border: 1px solid #EBE5DD;
     padding: 0.5em 1%;
 }
 
-#frmRegCaseMessage ul.cases h4{
+#caseMessage ul.cases h4{
 	margin-top:0
 }
-#frmRegCaseMessage ul li ul li{
+#caseMessage ul li ul li{
 	padding: 0 0 1em 1em;
+}
+#caseMessage a.btn{
+	margin-top:20px;
 }
 
 /* ==============================  QUICK MENU  ============================= */
