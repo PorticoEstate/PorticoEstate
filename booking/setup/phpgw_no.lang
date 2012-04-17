@@ -544,4 +544,8 @@ Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velg
 There is a cost of %1 assosiated with the allocation you are useing	booking	no	Det er en kostnad på %1kr knyttet til den tildelingen du bruker.
 Export	booking	no	Eksport
 Upload	booking	no	Last opp
-Get all contact and invoice information from organization	booking	no	Hent all kontakt/faktura informasjon fra Organisasjon 
+Get all contact and invoice information from organization	booking	no	Hent all kontakt/faktura informasjon fra Organisasjon
+Current internal billing sequence number	booking	no	Nåværende sekvensnummer for intern fakturering 
+Current external billing sequence number	booking	no	Nåværende sekvensnummer for ekstern fakturering 
+Billing sequence numbers	booking	no	Sekvensnummer for fakturering
+Do not change these values unless you know what they are.	booking	no	Ikke endre disse verdiene med mindre du vet hva de er.

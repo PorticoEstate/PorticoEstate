@@ -27,6 +27,32 @@ var vendor_id;
 	  	}
 	};
 
+
+	var oArgs_invoicehandler_2 = {menuaction:'property.uiinvoice2.index'};
+	var sUrl_invoicehandler_2 = phpGWLink('index.php', oArgs_invoicehandler_2);
+
+	YAHOO.widget.DataTable.formatLink_invoicehandler_2 = function(elCell, oRecord, oColumn, oData)
+	{
+	  	var voucher_out_id = oRecord.getData('voucher_out_id');
+	  	if(voucher_out_id)
+	  	{
+	  		var voucher_id = voucher_out_id;
+	  	}
+	  	else
+	  	{
+	  		var voucher_id = Math.abs(oData);
+	  	}
+	  	if(oData > 0)
+	  	{
+	  		elCell.innerHTML = "<a href="+sUrl_invoicehandler_2 + "&voucher_id="+oData+">" + voucher_id + "</a>";
+	  	}
+	  	else
+	  	{
+	  		oData = -1*oData;
+	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&voucher_id="+oData+"&user_lid=all&paid=true>" + voucher_id + "</a>";
+	  	}
+	};
+
 /********************************************************************************/
 
 	this.myParticularRenderEvent = function()

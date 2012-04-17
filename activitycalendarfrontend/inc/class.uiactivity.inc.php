@@ -154,7 +154,7 @@
 					$contact1 = array();
 					$contact1['name'] = phpgw::get_var('org_contact1_name');
 					$contact1['phone'] = phpgw::get_var('org_contact1_phone');
-					$contact1['mail'] = phpgw::get_var('org_contact1_email');
+					$contact1['mail'] = phpgw::get_var('org_contact1_mail');
 					$contact1['org_id'] = $o_id;
 					$contact1['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact1);
@@ -162,7 +162,7 @@
 					$contact2 = array();
 					$contact2['name'] = phpgw::get_var('org_contact2_name');
 					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
-					$contact2['mail'] = phpgw::get_var('org_contact2_email');
+					$contact2['mail'] = phpgw::get_var('org_contact2_mail');
 					$contact2['org_id'] = $o_id;
 					$contact2['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact2);
@@ -196,7 +196,7 @@
 						$contact1 = array();
 						$contact1['name'] = phpgw::get_var('group_contact1_name');
 						$contact1['phone'] = phpgw::get_var('group_contact1_phone');
-						$contact1['mail'] = phpgw::get_var('group_contact1_email');
+						$contact1['mail'] = phpgw::get_var('group_contact1_mail');
 						$contact1['org_id'] = 0;
 						$contact1['group_id'] = $g_id;
 						$this->so_activity->add_contact_person_local($contact1);
@@ -204,7 +204,7 @@
 						$contact2 = array();
 						$contact2['name'] = phpgw::get_var('group_contact2_name');
 						$contact2['phone'] = phpgw::get_var('group_contact2_phone');
-						$contact2['mail'] = phpgw::get_var('group_contact2_email');
+						$contact2['mail'] = phpgw::get_var('group_contact2_mail');
 						$contact2['org_id'] = 0;
 						$contact2['group_id'] = $g_id;
 						$this->so_activity->add_contact_person_local($contact2);

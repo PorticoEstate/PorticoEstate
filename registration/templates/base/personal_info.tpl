@@ -1,4 +1,15 @@
 <!-- BEGIN form -->
+<style type="text/css">
+#country { width: 300px; }
+#gender { width: 300px; }
+#loc1 { width: 300px; }
+#loc2 { width: 300px; }
+#loc3 { width: 300px; }
+#loc4 { width: 300px; }
+#loc5 { width: 300px; }
+#loc6 { width: 300px; }
+</style>
+
 <script language="JavaScript" type="text/javascript">
 	var tos;
 
@@ -19,6 +30,17 @@
 		}
 	}
 </script>
+
+{css}
+
+<script type="text/javascript">
+<!--
+	var strBaseURL = '{str_base_url}';
+	{win_on_events}
+//-->
+</script>
+{javascript}
+
 
 <center>{errors}</center>
 <form action="{form_action}" method="POST">

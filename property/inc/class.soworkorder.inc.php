@@ -1210,7 +1210,9 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_workorder set $value_set WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_workorder SET $value_set WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+
+			$this->db->query("UPDATE fm_ecobilag SET spbudact_code = '{$workorder['b_account_id']}' WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
 
 /*			if($workorder['charge_tenant'])
 			{
@@ -1406,5 +1408,29 @@
 			$GLOBALS['phpgw']->db->transaction_commit();
 
 			return $receipt;
+		}
+
+		public function reopen_orders($orders)
+		{
+			$config		= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$reopen = isset($config->config_data['workorder_reopen_status']) && $config->config_data['workorder_reopen_status'] ? $config->config_data['workorder_reopen_status'] : 're_opened';
+			$status_code=array('X' => $closed,'R' => $reopen);
+
+			$historylog_workorder	= CreateObject('property.historylog','workorder');
+
+			foreach ($orders as $id)
+			{
+				$id = (int) $id;
+				$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				switch ( $this->db->f('type') )
+				{
+					case 'workorder':
+						$historylog_workorder->add('R', $id, $reopen);
+						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$reopen}' WHERE id = {$id}");
+						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+				}
+			}
 		}
 	}

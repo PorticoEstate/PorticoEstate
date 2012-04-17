@@ -1543,8 +1543,8 @@
 			$invoices = array();
 			if ($id)
 			{
-				$active_invoices = execMethod('property.soinvoice.read_invoice_sub', array('order_id' => $id));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub', array('order_id' => $id, 'paid' => true));
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('order_id' => $id));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('order_id' => $id, 'paid' => true));
 				$invoices = array_merge($active_invoices,$historical_invoices);
 			}
 
@@ -1584,10 +1584,12 @@
 				);
 
 
+			$_formatter_voucher_link			= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+					'values'	=>	json_encode(array(	array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=> $_formatter_voucher_link),
 														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),

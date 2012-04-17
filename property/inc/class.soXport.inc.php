@@ -345,8 +345,6 @@
 				$data['item_id'],
 				$data['external_ref'],
 				$data['currency'],
-				$this->db->db_addslashes($data['process_log']),
-				$data['process_code'],
 				$data['manual_record']
 			);
 
@@ -356,13 +354,32 @@
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " currency,process_log,process_code,manual_record,belop,godkjentbelop,ordrebelop)"
+				. " currency,manual_record,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
 				. $this->db->money_format($data['ordrebelop']) . ")";
 
-			return $this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
+			
+			if($data['manual_record'] && ($data['process_log'] || $data['process_code']))
+			{
+				$valueset_log = array
+				(
+					$data['bilagsnr'],
+					$data['process_code'],
+					$this->db->db_addslashes($data['process_log']),
+					$this->account_id,
+					time()
+				); 
+
+				$values	= $this->db->validate_insert($valueset_log);
+				
+				$sql = "INSERT INTO fm_ecobilag_process_log (bilagsnr,process_code,process_log,user_id,entry_date) VALUES ({$values})";
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			return true;
 		}
 
 
@@ -415,10 +432,26 @@
 					'external_ref'			=> $this->db->f('external_ref'),
 					'kostra_id'				=> $this->db->f('kostra_id'),
 					'currency'				=> $this->db->f('currency'),
-					'process_log'			=> $this->db->f('process_log',true),
-					'process_code'			=> $this->db->f('process_code'),
+	 	  			'process_log'			=> '', //Fetched below
+	 	  			'process_code'			=> ''
+
 				);
 			}
+
+ 	  		if($voucher)
+ 	  		{
+ 		  		$sql= "SELECT * FROM fm_ecobilag_process_log WHERE bilagsnr = {$bilagsnr}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+ 				$process_log	= $this->db->f('process_log',true);
+				$process_code	= $this->db->f('process_code');
+
+	 	  		foreach ($voucher as &$line)
+	 	  		{
+	 	  			$line['process_log'] = $process_log;
+	 	  			$line['process_code'] = $process_code;
+	 	  		}
+ 	  		}
 
 			return $voucher;
     	}

@@ -79,6 +79,15 @@
 		</td>
 	</tr>
 	<tr class="row_off">
+		<td>{lang_invoicehandler}:</td>
+		<td>
+			<select name="newsettings[invoicehandler]">
+				<option value="1" {selected_invoicehandler_1}>Default</option>
+				<option value="2" {selected_invoicehandler_2}>Alternative</option>
+			</select>
+		</td>
+	</tr>
+	<tr class="row_off">
 		<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 		<td>
 			<select name="newsettings[workorder_closed_status]">

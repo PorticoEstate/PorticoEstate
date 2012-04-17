@@ -1773,6 +1773,7 @@ JS;
 
 			if ($voucher_id)
 			{
+				$this->bo->allrows = true;
 				$content = $this->bo->read_invoice_sub($voucher_id,$paid);
 			}
 

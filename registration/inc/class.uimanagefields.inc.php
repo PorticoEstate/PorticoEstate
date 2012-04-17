@@ -75,6 +75,7 @@
 				'lang_gender'   => lang ('Gender'),
 				'lang_phone'    => lang ('Phone'),
 				'lang_birthday' => lang ('Birthday'),
+				'lang_location' => lang ('location'),
 				'lang_cancel'   => lang ('Cancel'),
 				'lang_update_add' => lang ('Update/Add')
 			);
@@ -95,7 +96,7 @@
 			$p->set_block ('fields', 'info', 'info_list');
 
 			$fields = $this->bo->fields;
-			while (list ($num, $field_info) = each ($fields))
+			foreach ($fields as $num => $field_info)
 			{
 				unset ($field_required);
 
@@ -124,6 +125,7 @@
 					'field_type_selected_gender' => '',
 					'field_type_selected_phone' => '',
 					'field_type_selected_birthday' => '',
+					'field_type_selected_location' => '',
 					'field_type_selected_' . $field_info['field_type'] => 'selected',
 					'field_values' => $field_info['field_values'],
 					'field_required' => $field_required,
@@ -155,6 +157,7 @@
 				'field_type_selected_gender'     => '',
 				'field_type_selected_phone'      => '',
 				'field_type_selected_birthday'   => '',
+				'field_type_selected_location'   => '',
 				'field_values'   => '',
 				'field_required' => '',
 				'field_remove'   => '',

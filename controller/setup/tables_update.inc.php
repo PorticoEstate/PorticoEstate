@@ -622,3 +622,15 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.30';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.30';
+	function controller_upgrade0_1_30()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_control','description',array(
+			'type' => 'text', 
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.31';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

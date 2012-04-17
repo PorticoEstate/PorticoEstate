@@ -24,7 +24,7 @@
 						 	<xsl:when test="group_control_items/child::node()">
 						 		<h4><img src="controller/images/arrow_right.png" width="14"/><span><xsl:value-of select="control_group/group_name"/></span></h4>
 						 		<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
-							 	<ul>		
+							 	<ul class="expand_item">		
 									<xsl:for-each select="group_control_items">
 										<xsl:variable name="control_item_id"><xsl:value-of select="control_item/id"/></xsl:variable>
 										<xsl:choose>

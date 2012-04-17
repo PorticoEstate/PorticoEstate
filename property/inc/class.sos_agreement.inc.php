@@ -472,8 +472,7 @@
 						}
 						else if($return_extra['datatype']=='CH' && $value)
 						{
-//							$ch= unserialize($value);
-							$ch = explode(',', trim($data['value'], ','));
+							$ch = explode(',', trim($value, ','));
 							if (isset($ch) AND is_array($ch))
 							{
 								for ($k=0;$k<count($ch);$k++)

@@ -4,6 +4,7 @@
 
 <div id="main_content" class="medium">
 		
+	<!--  =======================  CALENDAR  ================================== -->
 	<script>
 		$(function() {
 			$( "#planned_date" ).datepicker({ 
@@ -31,44 +32,43 @@
 		});
 	</script>
 	
+	<!-- ==================  EDIT CHECKLIST  ========================= -->
+	
+	<div>
 		<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
 		<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
 		
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 		<xsl:call-template name="check_list_tab_menu">
 	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
 		</xsl:call-template>
+	</div>
 	
+	<!-- ==================  CHECKLIST DETAILS  ===================== -->
+	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
-		<fieldset class="check_list_details">
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.update_check_list" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
 			
-			<div class="col_1">
-			<div>
-				<label>ID</label>
-				<input class="id" disabled="disabled">
-			     <xsl:attribute name="name">check_list_id</xsl:attribute>
-			     <xsl:attribute name="value"><xsl:value-of select="check_list/id"/></xsl:attribute>
-			    </input>
-		    </div>
-			<div>
+			<fieldset class="col_1">
+			<div class="row">
 				<label>Status</label>
 				<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
-				<select name="status">
+				<select id="status" name="status">
 					<xsl:choose>
 						<xsl:when test="check_list/status = 0">
-							<option value="0" SELECTED="SELECTED">Ikke utført</option>
-							<option value="1" >Utført</option>
+							<option value="1">Utført</option>
+							<option value="0" SELECTED="SELECTED" >Ikke utført</option>
 						</xsl:when>
 						<xsl:when test="check_list/status = 1">
-							<option value="0">Ikke utført</option>
 							<option value="1" SELECTED="SELECTED">Utført</option>
+							<option value="0">Ikke utført</option>
 						</xsl:when>
 					</xsl:choose>
 				</select>
 			</div>
-			<div>
+			<div class="row">
 				<label>Skal utføres innen</label>
 				<input class="date">
 			      <xsl:attribute name="id">deadline_date</xsl:attribute>
@@ -79,7 +79,7 @@
 				  </xsl:if>
 			    </input>
 			</div>
-			<div>
+			<div class="row">
 				<label>Planlagt dato</label>
 				<input class="date">
 			      <xsl:attribute name="id">planned_date</xsl:attribute>
@@ -90,7 +90,7 @@
 			      </xsl:if>
 			    </input>
 		    </div>
-		    <div>
+		    <div class="row">
 				<label>Utført dato</label>
 				<input class="date">
 			      <xsl:attribute name="id">completed_date</xsl:attribute>
@@ -101,20 +101,20 @@
 			      </xsl:if>
 			    </input>
 		    </div>
-		    </div>
-		    <div class="col_2">
-			    <div>
+		    </fieldset>
+		    <fieldset class="col_2">
+			    <div class="row">
 					<label>Antall åpne saker</label>
 				     <xsl:value-of select="check_list/num_open_cases"/>
 			    </div>
-			    <div>
+			    <div class="row">
 					<label>Antall ventende saker</label>
 				     <xsl:value-of select="check_list/num_pending_cases"/>
 			    </div>
-		    </div>
+		    </fieldset>
 		    
-			<div>
-				<label class="comment">Kommentar</label>
+			<div class="comment">
+				<label>Kommentar</label>
 				<textarea>
 				  <xsl:attribute name="name">comment</xsl:attribute>
 				  <xsl:value-of select="check_list/comment"/>
@@ -123,9 +123,9 @@
 			
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
-				<input style="width: 170px;" class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
+				<input class="btn not_active" type="submit" name="save_control" value="Lagre detaljer" />
 			</div>
 			</form>
-		</fieldset>		
-</div>
+		</div>
+	</div>
 </xsl:template>

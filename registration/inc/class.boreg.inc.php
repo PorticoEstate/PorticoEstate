@@ -29,7 +29,8 @@
 			'step4' => True,
 			'lostpw1' => True,
 			'lostpw2' => True,
-			'lostpw3' => True
+			'lostpw3' => True,
+			'get_locations'=> true
 		);
 
 		function boreg()
@@ -230,7 +231,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain'])));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain']));
 			}
 		}
 
@@ -304,7 +305,7 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect($GLOBALS['phpgw']->link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw','logindomain' => $_REQUEST['logindomain'])));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw','logindomain' => $_REQUEST['logindomain']));
 			}
 		}
 
@@ -400,7 +401,7 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect ($GLOBALS['phpgw']->link ('/registration/main.php', array('menuaction' => 'registration.boreg.step1', 'r_reg[loginid]'=> $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain'])));
+					$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.boreg.step1', 'r_reg[loginid]'=> $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain']));
 				}
 			}
 
@@ -426,5 +427,19 @@
 			}
 
 			return True;
+		}
+
+		function get_locations()
+		{
+			$location_code = phpgw::get_var('location_code');
+
+			$locations = execMethod('property.solocation.get_children', $location_code);
+
+			if(!$location_code)
+			{
+				array_push($locations, array('id' => '', 'name' => lang('select')));
+			}
+
+			return $locations;
 		}
 	}

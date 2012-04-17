@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.639';
+	$setup_info['property']['version']		= '0.9.17.640';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -136,6 +136,7 @@
 		'fm_ecoart',
 		'fm_ecoavvik',
 		'fm_ecobilag_process_code',
+		'fm_ecobilag_process_log',
 		'fm_ecobilag',
 		'fm_ecobilagkilde',
 		'fm_ecobilagoverf',

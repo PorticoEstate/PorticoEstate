@@ -466,7 +466,7 @@
 					$budget['revision'],
 					$budget['district_id'],
 					$budget['b_account_id'],
-					$budget['budget_cost'],
+					(int)$budget['budget_cost'],
 					$budget['ecodimb'],
 					$budget['cat_id']
 				);
@@ -496,7 +496,7 @@
 				(
 					'remark'		=> $budget['remark'],
 					'entry_date'	=> time(),
-					'budget_cost'	=> $budget['budget_cost'],
+					'budget_cost'	=> (int)$budget['budget_cost'],
 					'year'			=> $budget['year'],
 					'revision'		=> $budget['revision'],
 					'district_id'	=> $budget['district_id'],
