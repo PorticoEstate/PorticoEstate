@@ -6128,3 +6128,78 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.638 to 0.9.17.639
+	* Add fm_ecobilag_process_log
+	* 
+	*/
+	$test[] = '0.9.17.639';
+	function property_upgrade0_9_17_639()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_ecobilag_process_log', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'bilagsnr' => array('type' => 'int','precision' => '4','nullable' => False),
+					'process_code' => array('type' => 'varchar', 'precision' => 10,'nullable' => true),
+					'process_log' => array('type' => 'text','nullable' => true),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$sql = 'SELECT bilagsnr, process_code, process_log FROM fm_ecobilag WHERE process_code IS NOT NULL OR process_log IS NOT NULL';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$logs = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$logs[] = array
+			(
+				'bilagsnr'		=> $GLOBALS['phpgw_setup']->oProc->f('bilagsnr'),
+				'process_code'	=> $GLOBALS['phpgw_setup']->oProc->f('process_code'),
+				'process_log'	=> $GLOBALS['phpgw_setup']->oProc->f('process_log')
+			);
+		}
+
+		$sql = 'SELECT bilagsnr, process_code, process_log FROM fm_ecobilagoverf WHERE process_code IS NOT NULL OR process_log IS NOT NULL';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$logs[] = array
+			(
+				'bilagsnr'		=> $GLOBALS['phpgw_setup']->oProc->f('bilagsnr'),
+				'process_code'	=> $GLOBALS['phpgw_setup']->oProc->f('process_code'),
+				'process_log'	=> $GLOBALS['phpgw_setup']->oProc->f('process_log')
+			);
+		}
+
+		foreach ($logs as $log)
+		{
+			$cols = implode(',', array_keys($log));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($log));
+			$sql = "INSERT INTO fm_ecobilag_process_log ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilag',array(),'process_code');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilag',array(),'process_log');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilagoverf',array(),'process_code');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilagoverf',array(),'process_log');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.640';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

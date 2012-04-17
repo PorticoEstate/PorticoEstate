@@ -60,12 +60,26 @@
 			$this->reg_id = md5(time() . $account_lid . $GLOBALS['phpgw']->common->randomstring(32));
 			$account_lid  = $GLOBALS['phpgw']->session->appsession('loginid','registration');
 
+			$location = array();
+
+			for ($i=1; $i<=6; $i++)
+			{
+				if (isset($fields["loc{$i}"]) && $fields["loc{$i}"])
+				{
+					$location[] = $fields["loc{$i}"];
+				}
+			}
+
+			if($location)
+			{
+				$fields['location_code'] = implode('-', $location);
+			}
+
 			$this->db->query("UPDATE phpgw_reg_accounts SET reg_id='" . $this->reg_id . "', reg_dla='"
 				. time() . "', reg_info='" . base64_encode(serialize($fields))
 				. "' WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
 
-
-			if ($this->config['activate_account'] == 'pending_approval')
+			if ($this->config['activate_account'] == 'pending_approval' || $this->config['activate_account'] =='immediately')
 			{
 				return $this->reg_id;
 			}
@@ -299,8 +313,8 @@
 	//			'per_prefix'		=> '',
 	//			'per_title'			=> '',
 	//			'per_department'	=> '',
-				'per_first_name'	=> $account->firstname,
-				'per_last_name'		=> $account->lastname,
+				'per_first_name'	=> $fields['n_given'],
+				'per_last_name'		=> $fields['n_family'],
 				'access'			=> 'public',
 				'owner'				=> $GLOBALS['phpgw_info']['server']['addressmaster']
 			);

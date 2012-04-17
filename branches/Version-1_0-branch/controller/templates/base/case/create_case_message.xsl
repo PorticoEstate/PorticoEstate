@@ -9,55 +9,44 @@
 		
 		<xsl:call-template name="check_list_tab_menu" />
 	
-		<!-- =======================  MESSAGE DETAILS  ========================= -->
-		<h3 class="box_header">Meldingen gjelder</h3>
-		<div class="box">
-			<div class="row"><label>Kontroll:</label> <xsl:value-of select="control/title"/></div>
-			<div class="row"><label>Utført dato:</label>
-				<xsl:choose>
-					<xsl:when test="check_list/completed_date != 0">
-						<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
-					</xsl:when>
-					<xsl:otherwise>
-						 Ikke utført
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-			<div class="row">
-			<xsl:choose>
-				<xsl:when test="buildings_array/child::node()">
-					<select id="building_id" name="building_id">
-							<option value="0">
-								Velg bygning
-							</option>
-							<xsl:for-each select="buildings_array">
-								<option value="{id}">
-									<xsl:value-of disable-output-escaping="yes" select="name"/>
-								</option>
-							</xsl:for-each>
-						</select>
-				</xsl:when>
-				<xsl:otherwise>
-					<label>Bygg:</label> <xsl:value-of select="building/loc1_name"/>	
-				</xsl:otherwise>
-			</xsl:choose>
-			</div>
-		</div>
-		
-		<!-- =======================  MESSAGE DETAILS  ========================= -->
-		<h3 class="box_header">Detaljer for meldingen</h3>
-		<div class="box">
+		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
+		<h3 class="box_header ext">Registrer melding</h3>
+		<div class="box ext">
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
-					
+				
 				<form id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.register_case_message" method="post">
 					<input>
-				      <xsl:attribute name="name">check_list_id</xsl:attribute>
-				      <xsl:attribute name="type">hidden</xsl:attribute>
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="check_list/id"/>
-				      </xsl:attribute>
-				    </input>
+						<xsl:attribute name="name">check_list_id</xsl:attribute>
+					    <xsl:attribute name="type">hidden</xsl:attribute>
+					    <xsl:attribute name="value">
+					    	<xsl:value-of select="check_list/id"/>
+					    </xsl:attribute>
+					</input>
+									
+					<!-- ==================  BYGG  ===================== -->
+					<div class="row">
+						<xsl:choose>
+							<xsl:when test="buildings_array/child::node()">
+								<label>Bygg:</label>
+								<select id="building_id" name="building_id">
+										<option value="0">
+											Velg bygning
+										</option>
+										<xsl:for-each select="buildings_array">
+											<option value="{id}">
+												<xsl:value-of disable-output-escaping="yes" select="name"/>
+											</option>
+										</xsl:for-each>
+									</select>
+							</xsl:when>
+							<xsl:otherwise>
+								<label>Bygg:</label> <xsl:value-of select="building/loc1_name"/>	
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+		
+					
 				    <!-- === TITLE === -->
 				    <div class="row">
 						<label>Tittel på melding:</label>
@@ -82,17 +71,17 @@
 						<input type="file" id="file" name="file" />
 					</div>
 			
-					<h3>Velg sjekkpunkter som skal være med i melding</h3>					
+					<h3>Velg hvilke saker meldingen gjelder</h3>					
 					<ul class="cases">
 						<xsl:for-each select="check_items_and_cases">
 							<xsl:choose>
 							 	<xsl:when test="cases_array/child::node()">
-							 		<li>
+							 		<li class="check_item">
 								 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
 								 		<ul>		
 											<xsl:for-each select="cases_array">
 												<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-												<li style="list-style:none;"><input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
+												<li><input type="checkbox"  name="case_ids[]" value="{$cases_id}" /><xsl:value-of select="descr"/></li>
 											</xsl:for-each>
 										</ul>
 							 		</li>
@@ -103,7 +92,7 @@
 					
 					<div class="form-buttons">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input class="btn focus" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+						<input class="btn" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 					</div>
 				</form>			
 				</xsl:when>

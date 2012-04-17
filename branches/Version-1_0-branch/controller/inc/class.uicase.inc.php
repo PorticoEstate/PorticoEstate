@@ -55,7 +55,8 @@
 									'register_measurement_case' => true,
 									'updateStatusForCases' 		=> true,
 									'delete_case' 				=> true,
-									'close_case' 				=> true
+									'close_case' 				=> true,
+									'open_case' 				=> true
 								);
 
 		function __construct()
@@ -414,7 +415,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 				
 			$case = $this->so->get_single($case_id);
-			$case->set_status(1);
+			$case->set_status(controller_check_item_case::STATUS_CLOSED);
 			
 			$case_id = $this->so->store($case);
 					
@@ -422,10 +423,30 @@
 				$status_checker = new status_checker();
 				$status_checker->update_check_list_status( $check_list_id );
 						
-				return json_encode( array( "status" => "closed" ) );
+				return json_encode( array( "status" => "true" ) );
 			}
 			else
-				return json_encode( array( "status" => "not_closed" ) );
+				return json_encode( array( "status" => "false" ) );
+		}
+		
+		public function open_case()
+		{
+			$case_id = phpgw::get_var('case_id');
+			$check_list_id = phpgw::get_var('check_list_id');
+				
+			$case = $this->so->get_single($case_id);
+			$case->set_status(controller_check_item_case::STATUS_OPEN);
+			
+			$case_id = $this->so->store($case);
+					
+			if($case_id > 0){
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );
+						
+				return json_encode( array( "status" => "true" ) );
+			}
+			else
+				return json_encode( array( "status" => "false" ) );
 		}
 		
 		public function query(){}

@@ -1789,10 +1789,19 @@
 			return $this->db->f('id');
 		}
 
-		function get_children($location_code)
+		function get_children($location_code = '')
 		{
-			$level = count(explode('-', $location_code));
+			if(!$location_code)
+			{
+				$level = 0;
+			}
+			else
+			{
+				$level = count(explode('-', $location_code));
+			}
+
 			$child_level = $level + 1;
+
 			$location_types	= $this->soadmin_location->select_location_type();
 
 			$values = array();
@@ -1805,10 +1814,11 @@
 			$this->db->query("SELECT loc{$child_level} AS id, loc{$child_level}_name AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%'",__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
+				$id = $this->db->f('id');
 				$values[] = array
 				(
-					'id'	=>  $this->db->f('id'),
-					'name'	=>  $this->db->f('name')
+					'id'	=>  $id,
+					'name'	=>  $id . ' :: ' .$this->db->f('name')
 				);
 			}
 			return $values;

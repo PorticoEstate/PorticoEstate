@@ -316,6 +316,8 @@
 				$sql .= "AND cic.location_item_id IS NULL ";
 			else if($messageStatus != null &  $messageStatus == 'message_registered')
 				$sql .= "AND cic.location_item_id > 0 ";
+			
+			$sql .= "ORDER BY ci.id";
 											
 			$this->db->query($sql);
 			

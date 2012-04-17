@@ -37,7 +37,7 @@ class calendar_builder {
 			if($date < $todays_date){
 				$status = "control_not_accomplished";
 			}else{
-				$status = "control_registered";
+				$status = "CONTROL_REGISTERED";
 			}
 			
 			if( $period_type == "view_months" )
@@ -55,13 +55,16 @@ class calendar_builder {
 		return $calendar_array; 
 	}
    	
+	// Function that puts checklists into a twelve months array for displaying a year or a days array for displaying a month
 	public function build_calendar_array( $controls_with_check_lists_array, $num, $period_type ){
 		
 		foreach($controls_with_check_lists_array as $control){
+			
+			// ========================  DISPLAY STATUS FOR A MONTH OR DAYS IN A MONTH  ==========================
 			if($period_type == "view_days" | ($period_type == "view_months" & $control->get_repeat_type() == 2 | $control->get_repeat_type() == 3))
 			{
 				$calendar_array = $this->init_calendar( $control, $num, $period_type );
-				
+								
 				foreach($control->get_check_lists_array() as $check_list)
 				{
 					$check_list_status_manager = new check_list_status_manager( $check_list );
@@ -82,9 +85,13 @@ class calendar_builder {
 				
 				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			}
+			// ========================  DISPLAY AGGREGATE STATUS FOR A MONTH  ==========================
 			else if($period_type == "view_months" & ($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1))
 			{
 				$calendar_array = array();
+				
+				for($i=1;$i<=12;$i++)
+					$calendar_array[$i] = "";
 				
 				foreach($control->get_agg_open_cases_pr_month_array() as $status_agg_month_info)
 				{

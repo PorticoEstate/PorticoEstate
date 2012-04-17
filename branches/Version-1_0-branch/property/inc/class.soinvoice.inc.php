@@ -361,7 +361,8 @@
 			$paid		= isset($data['paid']) ? $data['paid'] : '';
 			$project_id	= isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
 			$order_id 	= isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0 ;//might be bigint
-
+			$results	= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			if ($paid)
 			{
 				$table = 'fm_ecobilagoverf';
@@ -373,11 +374,17 @@
 
 			switch($order)
 			{
+				case 'id':
 				case 'dima':
-				case 'belop':
 				case 'spbudact_code':
 				case 'pmwrkord_code':
 					$ordermethod = " ORDER BY $order $sort";
+					break;
+				case 'amount':
+					$ordermethod = " ORDER BY belop $sort";
+					break;
+				case 'approved_amount':
+					$ordermethod = " ORDER BY godkjentbelop $sort";
 					break;
 				default:
 					$ordermethod = ' ORDER BY pmwrkord_code DESC, id DESC';					
@@ -390,6 +397,10 @@
 			{
 				$filtermethod .= " {$where} bilagsnr= '$voucher_id'";
 				$where = 'AND';
+			}
+			else if (!$order_id)
+			{
+				return array();
 			}
 
 			if ($order_id)
@@ -410,8 +421,19 @@
 				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
-			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' FROM')),__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records		= $this->db->f('cnt');
+
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
 
 			$i = 0;
 
@@ -1285,8 +1307,8 @@
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'kostra_id'				=> $this->db->f('kostra_id'),
 						'currency'				=> $this->db->f('currency'),
-						'process_code'			=> $this->db->f('process_code'),
-						'process_log'			=> $this->db->f('process_log',true),
+						'process_code'			=> '', //Fetched below
+						'process_log'			=> '',
 						'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 						'saksigndato'			=> $this->db->f('saksigndato'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
@@ -1301,7 +1323,21 @@
 					);
 			}
 
+ 	  		if($values)
+ 	  		{
+ 		  		$bilagsnr = (int)$values[0]['voucher_id'];
+ 		  		$sql= "SELECT * FROM fm_ecobilag_process_log WHERE bilagsnr = {$bilagsnr}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+ 				$process_log	= $this->db->f('process_log',true);
+				$process_code	= $this->db->f('process_code');
 
+	 	  		foreach ($values as &$line)
+	 	  		{
+	 	  			$line['process_log'] = $process_log;
+	 	  			$line['process_code'] = $process_code;
+	 	  		}
+ 	  		}
 
 			//_debug_array($values);
 			return $values;
@@ -1671,6 +1707,7 @@
 		*/
 		public function forward($data)
 		{
+
 			$receipt = array();
 			$local_error= false;
 			if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
@@ -1704,6 +1741,11 @@
 
 				if($local_error)
 				{
+					foreach ($receipt['error'] as $_error)
+					{
+						phpgwapi_cache::message_set($_error['msg'], 'error');
+					}
+
 					return $receipt;
 				}
 				// end check
@@ -1754,6 +1796,137 @@
 			return false;
 		}
 
+
+		public function update_voucher2($data)
+		{
+
+			$GLOBALS['phpgw']->db->transaction_begin();
+			$value_set = array();
+			
+			$value_set['pmwrkord_code'] = $data['order_id'];
+			$value_set['dimb'] = $data['dim_b'];
+			$value_set['dima'] = $data['dim_a'];
+			$value_set['mvakode'] = $data['tax_code'];
+			$value_set['project_id'] = $data['project_group'];
+			$value_set['spbudact_code'] = $data['b_account_id'];
+			$value_set['periode'] = $data['period'];
+			$value_set['periodization'] = $data['periodization'];
+			$value_set['periodization_start'] = $data['periodization_start'];
+			$value_set['kreditnota'] = !!$data['park_invoice'];
+
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+
+			if($data['order_id'] && $data['b_account_id'])
+			{
+				$this->db->query("UPDATE fm_workorder SET account_id = '{$data['b_account_id']}' WHERE id='{$data['order_id']}'");
+			}
+
+			foreach($data['approved_amount'] as $line_id => $approved_amount)
+			{
+				$approved_amount 		= str_replace(array(' ', ','),array('','.'),$approved_amount);
+				if(is_numeric($approved_amount))
+				{
+					$this->db->query("UPDATE fm_ecobilag SET godkjentbelop = '$approved_amount' WHERE id = '{$line_id}'",__LINE__,__FILE__);
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('Not a valid amount'), 'error');
+				}
+			}
+
+			if(isset($data['split_amount']) && $data['split_amount'] && is_array($data['split_amount']))
+			{
+				foreach($data['split_amount'] as $id => $split_amount)
+				{
+					if(!$split_amount)
+					{
+						continue;
+					}
+					
+					$split_amount 		= str_replace(array(' ', ','),array('','.'),$split_amount);
+
+					if(!is_numeric($split_amount ))
+					{
+						phpgwapi_cache::message_set(lang('Not a valid amount'), 'error');
+						continue;
+					}
+
+					$table = 'fm_ecobilag';
+					$metadata = $this->db->metadata($table);
+					$sql ="SELECT * FROM {$table} WHERE id= {$id}";
+					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->next_record();
+
+					$value_set = array();
+
+					foreach($metadata as $_field)
+					{
+						if($_field->name != 'id')
+						{
+							$value_set[$_field->name] = $this->db->f($_field->name,true);
+						}
+					}
+
+					$this->db->query( "INSERT INTO {$table} (" . implode( ',', array_keys($value_set) ) . ')'
+						. ' VALUES (' . $this->db->validate_insert( array_values($value_set) ) . ')',__LINE__,__FILE__);
+
+					$new_id = $this->db->get_last_insert_id($table,'id');
+
+					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$amount = $this->db->f('belop');
+					$new_amount = $amount - $split_amount;
+
+					$value_set= array
+					(
+						'belop'			=> $new_amount,
+						'godkjentbelop' => $new_amount,
+					);
+					$value_set	= $this->db->validate_update($value_set);
+					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+
+					$value_set= array
+					(
+						'belop'			=> $split_amount,
+						'godkjentbelop' => $split_amount,
+					);
+					$value_set	= $this->db->validate_update($value_set);
+					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$new_id}" ,__LINE__,__FILE__);
+				}
+			}
+
+
+			if($data['process_log'] || $data['process_code'])
+			{
+				$valueset_log = array
+				(
+					'bilagsnr'		=> $data['voucher_id'],
+					'process_code'	=> $data['process_code'],
+					'process_log'	=> $this->db->db_addslashes($data['process_log']),
+					'user_id'		=> $this->account_id,
+					'entry_date'	=> time(),
+					'modified_date'	=> time()
+				); 
+
+				$sql = "SELECT id FROM fm_ecobilag_process_log WHERE bilagsnr = '{$data['voucher_id']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if($this->db->next_record())
+				{
+					$process_log_id = (int)$this->db->f('id');
+					$valueset_log	= $this->db->validate_update($valueset_log);
+					$this->db->query("UPDATE fm_ecobilag_process_log SET $valueset_log WHERE id = $process_log_id",__LINE__,__FILE__);
+				}
+				else
+				{
+					$cols = implode(',', array_keys($valueset_log));
+					$values	= $this->db->validate_insert($valueset_log);
+					$this->db->query("INSERT INTO fm_ecobilag_process_log ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+				}
+			}
+			$GLOBALS['phpgw']->db->transaction_commit();
+		}
+
 		public function get_vouchers($data)
 		{
 			$filtermethod = '';
@@ -1762,8 +1935,13 @@
 
 			if($data['janitor_lid'])
 			{
-				$data['janitor_lid'] = ltrim($data['janitor_lid'],'*');
-				$filtermethod = "$where oppsynsmannid = '{$data['janitor_lid']}'";
+				if( stripos($data['janitor_lid'],'*') === 0)
+				{
+					$data['janitor_lid'] = ltrim($data['janitor_lid'],'*');
+					$filtermethod .= " $where oppsynsigndato IS NULL";
+					$where = 'AND';
+				}
+				$filtermethod .= " $where oppsynsmannid = '{$data['janitor_lid']}'";
 				$where = 'AND';
 			}
 
@@ -1772,7 +1950,7 @@
 				if( stripos($data['supervisor_lid'],'*') === 0)
 				{
 					$data['supervisor_lid'] = ltrim($data['supervisor_lid'],'*');
-					$filtermethod .= " $where oppsynsigndato IS NOT NULL";
+					$filtermethod .= " $where oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
 					$where = 'AND';
 				}
 
@@ -1785,7 +1963,7 @@
 				if( stripos($data['budget_responsible_lid'],'*') === 0)
 				{
 					$data['budget_responsible_lid'] = ltrim($data['budget_responsible_lid'],'*');
-					$filtermethod .= " $where saksigndato IS NOT NULL";
+					$filtermethod .= " $where saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
 					$where = 'AND';
 				}
 				$filtermethod .= " $where budsjettansvarligid = '{$data['budget_responsible_lid']}'";
@@ -1799,11 +1977,12 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop FROM fm_ecobilag"
+			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
+			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
 			." $filtermethod $querymethod"
-			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr";
+			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr, oppsynsigndato, saksigndato,budsjettsigndato";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');
@@ -1817,14 +1996,29 @@
 
 			while($this->db->next_record())
 			{
+				$status = 'O';
+				if($this->db->f('budsjettsigndato'))
+				{
+					$status = 'C';
+				}
+				else if($this->db->f('saksigndato'))
+				{
+					$status = 'B';
+				}
+				else if($this->db->f('oppsynsigndato'))
+				{
+					$status = 'A';
+				}
+				
 				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
-				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s",
+				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
 							$voucher_id,
 							trim(strtoupper($this->db->f('org_name',true))),
 							$this->db->f('currency'),
 							$this->db->f('kreditnota') ? 'X' : '',
 							$this->db->f('type'),
-							number_format($this->db->f('godkjentbelop'), 2, ',', ' ')
+							number_format($this->db->f('godkjentbelop'), 2, ',', ' '),
+							$status
 						);
 
 				$values[] = array

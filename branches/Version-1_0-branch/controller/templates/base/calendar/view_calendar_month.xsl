@@ -150,7 +150,7 @@
 						<li>
 							<xsl:for-each select="calendar_array">
 						    		<xsl:choose>
-										<xsl:when test="status = 'control_registered'">
+										<xsl:when test="status = 'CONTROL_REGISTERED'">
 											<div class="cell">
 											<a>
 												<xsl:attribute name="href">
@@ -166,7 +166,7 @@
 											</a>
 											</div>
 										</xsl:when>
-										<xsl:when test="status = 'control_planned'">
+										<xsl:when test="status = 'CONTROL_PLANNED'">
 											<div class="cell">
 											<a>
 												<xsl:attribute name="href">
@@ -178,7 +178,19 @@
 											</a>
 											</div>
 										</xsl:when>
-										<xsl:when test="status = 'control_accomplished_in_time_without_errors'">
+										<xsl:when test="status = 'CONTROL_NOT_DONE_WITH_PLANNED_DATE'">
+											<div class="cell">
+											<a>
+												<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/check_list_id"/>
+												</xsl:attribute>
+												<img height="15" src="controller/images/status_red_cross.png" />
+											</a>
+											</div>
+									</xsl:when>
+										<xsl:when test="status = 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS'">
 											<div class="cell">
 												<a>
 												<xsl:attribute name="href">
@@ -191,7 +203,7 @@
 												</a>
 											</div>
 										</xsl:when>
-										<xsl:when test="status = 'control_accomplished_over_time_without_errors'">
+										<xsl:when test="status = 'CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS'">
 											<div class="cell" style="position:relative;">
 						    					<div id="info_box"></div>
 												<a>

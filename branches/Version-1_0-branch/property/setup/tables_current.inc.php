@@ -1014,6 +1014,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_ecobilag_process_log' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+				'bilagsnr' => array('type' => 'int','precision' => '4','nullable' => False),
+				'process_code' => array('type' => 'varchar', 'precision' => 10,'nullable' => true),
+				'process_log' => array('type' => 'text','nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_ecobilag' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),

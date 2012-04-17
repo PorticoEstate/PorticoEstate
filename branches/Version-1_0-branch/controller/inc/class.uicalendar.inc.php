@@ -122,6 +122,9 @@
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_with_check_list_array, $num_days_in_month, "view_days" );
 			
+			//print_r($controls_calendar_array);
+			
+			
 			foreach($controls_calendar_array as &$inst)
 			{	
 				$curr_control = &$inst['control'];
@@ -202,7 +205,7 @@
 			// Creates a calendar object for time period
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
-			// Loops through controls with repeat type: day or week in controls_for_location_array 
+			// Loops through controls with repeat type: day or week in controls_for_location_array
 			// and populates array that contains aggregate open cases pr month.   		
 			foreach($controls_for_location_array as $control){
 				if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1){
@@ -233,7 +236,7 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-			print_r($controls_calendar_array);
+			
 			$data = array
 			(
 				'my_locations'	  		  => $my_locations,
@@ -245,9 +248,8 @@
 				'period' 			  	  => $year,
 				'year' 			  	  	  => $year
 			);
-			print_r( $controls_calendar_array );
-			self::render_template_xsl('calendar/view_calendar_year', $data);
 			
+			self::render_template_xsl('calendar/view_calendar_year', $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
@@ -354,14 +356,14 @@
 		// Generates array of aggregated number of open cases for each month in time period 
 		function build_agg_open_cases_pr_month_array($control, $location_code, $year){
 				
-			// Checks if control starts in the year that will be shown 
+			// Checks if control starts in the year that is displayed 
 			if( date("Y", $control->get_start_date()) == $year ){
 				$from_month = date("n", $control->get_start_date());	
 			}else{
 				$from_month = 1;
 			}
 			
-			// Checks if control ends in the year that will be shown
+			// Checks if control ends in the year that is displayed
 			if( date("Y", $control->get_end_date()) == $year ){
 				$to_month = date("n", $control->get_end_date());
 			}else{
@@ -372,24 +374,31 @@
 			
 			// Fetches aggregate value for open cases in each month in time period 			
 			for($from_month;$from_month<=$to_month;$from_month++){
-		
-				$trail_from_date_ts = strtotime("$from_month/01/$year");
-				$trail_to_date_ts = strtotime("$to_month/01/$year");
-									
+					
+				$month_start_ts = strtotime("$from_month/01/$year");
+				$end_month = $from_month + 1;
+				
+				if($end_month > 12){
+					$year = $year + 1;
+					$end_month = 1;
+				}
+				
+				$month_end_ts = strtotime("$end_month/01/$year");
+				
 				$num_open_cases_for_control_array = array();
 				
 				// Fetches aggregate value for open cases in a month from db 	
-				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $trail_from_date_ts, $trail_to_date_ts );	
-		
+				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $month_start_ts, $month_end_ts );	
+				
 				// If there is a aggregated value for the month, add aggregated status object to agg_open_cases_pr_month_array
 				if( !empty($num_open_cases_for_control_array) ){
 					$status_agg_month_info = new status_agg_month_info();
-					$status_agg_month_info->set_month_nr(date("n", $from_month));
+					$status_agg_month_info->set_month_nr($from_month);
 					$status_agg_month_info->set_agg_open_cases( $num_open_cases_for_control_array["count"] );
 					$agg_open_cases_pr_month_array[] = $status_agg_month_info;
 				} 
 			}
-			
+						
 			return $agg_open_cases_pr_month_array;
 		}
 		

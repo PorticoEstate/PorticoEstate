@@ -55,7 +55,11 @@ a{
 .row{
 	padding: 0.3em 0;
 }
-
+h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 1em 0;
+}
 #content {
     margin: 2em 1em;
 }
@@ -391,19 +395,19 @@ input.postcode {
 h1 img, li img {
 	vertical-align: middle;
 }
-/*
-fieldset h3 {
-	display:block;
-	float:left;
-	line-height:1.3em;
-	margin:0;
-	width:120px;
-}
-*/
 /* Set up common form styles.  TODO: needs refinement. */
 input{
     margin: 0 13px 0 0;
     padding: 3px 6px;
+}
+input[type="submit"] {
+    background: none repeat scroll 0 0 #4F9AEA;
+    border: 0 none;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 20px;
 }
 select{
 	padding: 3px 1px 3px 4px;
@@ -411,7 +415,6 @@ select{
 	
 fieldset {
 	border-bottom:0px solid #ccc;
-	padding:5px 0px 5px 10px;
 }
 textarea{
 	padding: 4px;	
@@ -475,11 +478,6 @@ dd ul li {
 	list-style-position: inside;
 }
 
-
-.yui-content input[type="submit"] {
-    margin: 15px 0 0;
-    padding: 1px 15px;
-}
 h1 img{
  	margin-right:5px;
  }
@@ -558,9 +556,12 @@ ul.items li.list_item{
 
 ul.expand_list h4 {
     cursor: pointer;
-    font-size: 17px;
+    font-size: 1.1em;
     margin-bottom: 6px;
     margin-top: 0;
+}
+ul.expand_list h4 img {
+    height: 12px;
 }
 
 ul.expand_list li ul {
@@ -576,6 +577,9 @@ ul.expand_list li ul li {
 ul.expand_list h4 span {
     padding-left: 5px;
     vertical-align: middle;
+}
+ul.expand_list .expand_item {
+    display: none;
 }
 
 #frm_control_items{
@@ -673,7 +677,6 @@ ul.row li{
     border: 1px solid #eee;
     margin-bottom: 20px;
     padding: 15px;
-    width: 800px;
 }
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -681,21 +684,31 @@ ul.row li{
     margin-bottom: 20px;
     padding: 15px;
 }
+.box.ext {
+    background: none repeat scroll 0 0 #FEFBF7;
+    border: 1px solid #FEEDEA;
+}
 .box_header {
-    background: none repeat scroll 0 0 #DAE8F7;
-    border-color: #C9DBEE;
+    background: none repeat scroll 0 0 #CFE6FF;
+    border-color: #C7DCF2;
     border-style: solid;
     border-width: 1px 1px 0;
-    color: #333333;
+    color: #444444;
     font-size: 13px;
-    font-weight: bolder;
+    font-weight: bold;
     margin: 0;
-    padding: 5px 0 5px 15px;
+    padding: 6px 0 6px 15px;
     text-align: left;
+}
+.box_header.ext {
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EB9685;
+    color: #FFFFFF;
 }
 .btn, .btn_m, .btn_sm {
     background: none repeat scroll 0 0 #4F9AEA;
-    border: 1px solid #658CB5;
+    border: 1px solid #428AD7;
+    border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
@@ -735,22 +748,11 @@ ul.row li{
 #main_content.groups{
 	cursor: default;	
 }
-#main_content fieldset{
-	padding:0;
-	margin:0;	
-}
-
 #main_content h1{
 	margin-top:0;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
-
-#main_content fieldset.check_list_details {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #DBE5EF;
-    padding: 15px;
-}
 
 input.id {
     background: none repeat scroll 0 0 #FFFFFF;
@@ -802,18 +804,46 @@ input.date {
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
 
-fieldset.check_list_details{
-	clear: both;
+#check_list_details form{
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DBE5EF;
+    padding: 15px;
+    clear: both;
+    margin:0;
 }
-fieldset.check_list_details label{
+#check_list_details form .row {
+    padding: 0.1em 0;
+}
+
+#check_list_details label{
 	font-weight:bold;
 	width:150px;
+	display: inline-block;
 }
-fieldset.check_list_details div{
-	clear:left;
-	margin:5px 0;
+#check_list_details .comment {
+    clear: both;
+    float: left;
+    margin-top: 20px;
 }
-fieldset.tab_check_list_details label {
+#check_list_details .comment label {
+    vertical-align: top;
+}
+#check_list_details textarea{
+	width:400px;
+	height:100px;
+}
+
+#check_list_details .col_1, #check_list_details .col_2 {
+    float: left;
+    vertical-align: top;
+}
+#check_list_details .col_2 {
+    margin-left: 15%;
+    width: 19%;
+}
+
+/* =======================================  TAB CHECK LIST DETAILS ========================================= */
+.tab_check_list_details label {
     display: inline-block;
     font-weight: bold;
     width: 100px;
@@ -821,10 +851,9 @@ fieldset.tab_check_list_details label {
 fieldset.tab_check_list_details {
     padding: 0 0 10px 0;
 }
-fieldset.check_list_details textarea{
-	width:400px;
-	height:100px;
-}
+
+/* =======================================  CHECK ITEM DETAILS ========================================= */
+
 fieldset.check_item_details label{
 	font-weight:normal;
 	vertical-align:top;
@@ -835,24 +864,19 @@ fieldset.check_item_details h3 {
     font-weight: bold;
     margin: 10px 0;
 }
-fieldset.check_list_details label{
-	display: inline-block;
-    font-weight: bold;
-    width: 150px;
+h3.check_item_details{
+	margin-bottom:0;	
 }
+
+
 
 /* =======================================  CHECK ITEM  ========================================= */
 
-.check_item{
-    margin: 25px 0;
-}
 .check_item div{
     margin: 5px 0;
     clear:left;
 }
-h3.check_item_details{
-	margin-bottom:0;	
-}
+
 .check_item textarea {
     display: block;
     height: 100px;
@@ -861,7 +885,6 @@ h3.check_item_details{
 }.check_item label{
 	width:150px;	
 }
-
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
@@ -971,7 +994,7 @@ ul.calendar div.assigned {
 	text-align: left;
 }
 ul.calendar div.id, ul.calendar.info div.id {
-	width: 50px;
+	width: 20px;
 }
 ul.calendar div.title{
 	text-align: left;
@@ -1128,9 +1151,6 @@ fieldset.add_check_list label{
 label.comment{
 	vertical-align:top;	
 }
-.check_item {
-	display: none;	
-}
 .check_item label{
 	width: 150px;
 	display: inline-block;	
@@ -1169,22 +1189,21 @@ ul.check_items h5{
 	font-size: 13px;
 }
 
-.tab_menu a{
-	background: none repeat scroll 0 0 #CAE3FB;
-    border: 1px solid #D0D9F1;
+.tab_menu a {
+    background: none repeat scroll 0 0 #F9F5F0;
+    border: 1px solid #F0F0F0;
+    color: #444444;
     display: inline-block;
     font-weight: bold;
     margin-right: 3px;
-    padding: 7px 0;
+    padding: 6px 0;
     text-align: center;
     text-decoration: none;
     width: 150px;
-    color: #333;
 }
 .tab_menu a.active {
-    background: none repeat scroll 0 0 #FAFAFA;
-    border: 1px solid #EEEEEE;
-    color: #000000;
+    background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #CAE3FB;
     font-weight: bold;
 }
 .tab_menu a, .tab_menu a.active{
@@ -1197,41 +1216,52 @@ ul.check_items h5{
     overflow: hidden;
 }
 #check_list_menu a {
-    background: none repeat scroll 0 0 #CAE3FB;
-    border: 1px solid #D0D9F1;
-    color: #333333;
+    background: none repeat scroll 0 0 #F4EDE3;
+    border: 1px solid #EDE4D8;
+    color: #444444;
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
     margin-right: 3px;
-    padding: 17px 0;
+    padding: 18px 0;
     text-align: center;
     text-decoration: none;
     width: 185px;
 }
-#check_list_menu div.right_btns {
+#check_list_menu a.active {
+ 	background: none repeat scroll 0 0 #CAE3FB;
+    border: 1px solid #CAE3FB;
+}
+#check_list_menu .left_btns {
+    float: left;
+}
+#check_list_menu .right_btns {
     float: right;
 }
-#check_list_menu div.right_btns a{
-    display: block;
-    padding: 4px 0;
-    color:#fff;
+#check_list_menu .right_btns a {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;
+    border-radius: 4px 4px 4px 4px;
     border-style: solid none;
     border-width: 1px 0;
     color: #FFFFFF;
+    display: block;
+    padding: 4px 0;
 }
 
-/* ======================== TAB ITEM ========================== */
+/* ===================================  TAB ITEM  ================================= */
 
 .tab_item {
     background: none repeat scroll 0 0 #F7FAFF;
     border: 1px solid #DAE2EE;
     padding: 15px;
 }
+.tab_item.ext {
+    background: none repeat scroll 0 0 #FEFBF7;
+    border: 1px solid #FEEDEA;
+}
 .tab_item h2 {
-    background: none repeat scroll 0 0 #E7EFF8;
+    background: none repeat scroll 0 0 #DAE3EB;
     font-size: 14px;
     margin: 0 0 10px;
     padding: 3px 6px;
@@ -1264,26 +1294,14 @@ fieldset.location_details div{
     z-index: 1;
 }
 
-/* ======================  CHECK LIST ========================== */
+/* ==================================  CHECK LIST  ================================== */
 
 #main_content.medium {
     overflow: hidden;
-    padding: 20px;
     width: 900px;
 }
-.col_1, .col_2{
-	display:inline-block;
-	vertical-align: top;	
-}
-.col_2{
-	padding-left: 17%;
-}
 
-/* ======================  CASE DETAILS ========================== */
-
-#frm_update_check_list input[type="submit"]{
-	width: 140px;	
-}
+/* ====================================  CASE DETAILS  ============================== */
 #error_message_menu {
     float: left;
     margin-top: 50px;
@@ -1299,7 +1317,7 @@ fieldset.location_details div{
     margin-top: 20px;   
 }
 
-/* ======================== VIEW CASES ============================= */
+/* ===================================== VIEW CASES ================================ */
 
 li.check_item_case h4 {
     margin: 5px 0;
@@ -1310,8 +1328,28 @@ li.check_item_case ul{
 li.check_item_case ul li {
     background: none repeat scroll 0 0 #E7EFF8;
     border: 1px solid #DDDDDD;
+    clear: both;
     margin: 10px 0 0 20px;
+    overflow: hidden;
 }
+li.check_item_case ul li .col_1 {
+    float: left;
+    padding: 2em 2%;
+    vertical-align: top;
+}
+li.check_item_case ul li .col_2 {
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    float: left;
+    padding: 1em 2%;
+    width: 73%;
+}
+li.check_item_case ul li .col_3 {
+    float: left;
+    padding: 3%;
+    vertical-align: top;
+}
+
 li.check_item_case ul li.quick_edit {
     padding: 0;
 }
@@ -1342,7 +1380,7 @@ li.check_item_case .col_3 {
     padding: 5px;
 }
 
-/* ======================== FORM UPDATE CASE ============================= */
+/* ================================  FORM UPDATE CASE  ============================= */
 
 .frm_update_case label {
 	display: block;	
@@ -1368,7 +1406,10 @@ li.check_item_case .col_3 {
  	margin-right: 5px;   
 }
 
-/* ======================== FORM REGISTER CASE ============================= */
+/* ===============================  FORM REGISTER CASE  ============================= */
+.frm_register_case {
+	margin-bottom: 1em;
+}
 
 .frm_register_case input[type="text"]{
  	width: 170px;  
@@ -1376,6 +1417,14 @@ li.check_item_case .col_3 {
 .frm_register_case select {
     width: 184px;
 }
+.frm_register_case textarea {
+    display: block;
+    height: 100px;
+    margin-top: 6px;
+    margin-bottom: 1em;
+    width: 63%;
+}
+
 a.view_check_list{
  	color: #FFFFFF;
     display: block;
@@ -1386,18 +1435,20 @@ a.view_check_list{
     width: 24px;	
 }
 
-/* ======================== CASE MESSAGE ============================= */
+/* ================================ CASE MESSAGE ============================= */
 #frmRegCaseMessage label {
     width: 13%;
 }
 #frmRegCaseMessage h3 {
-    font-size: 1.15em;
+    font-size: 1.2em;
     margin: 1.5em 0 0.5em;
 }
 #frmRegCaseMessage ul.cases {
-    border: 1px solid #ddd;
+    background: none repeat scroll 0 0 #FEFCF9;
+    border: 1px solid #EBE5DD;
     padding: 0.5em 1%;
 }
+
 #frmRegCaseMessage ul.cases h4{
 	margin-top:0
 }
@@ -1405,7 +1456,7 @@ a.view_check_list{
 	padding: 0 0 1em 1em;
 }
 
-/* ======================== QUICK MENU ============================= */
+/* ==============================  QUICK MENU  ============================= */
 
 .quick_menu {
     font-size: 12px;
@@ -1423,15 +1474,15 @@ ul#groups {
 ul#groups h4{
     margin: 4px 0;
 }
-.input_error_msg{
- 	background:#FBE3E4;
- 	border-bottom-right-radius: 4px;
- 	color: #D12F19;
- 	display: block;
- 	padding: 4px 5px;
- 	width: 150px;
+.input_error_msg {
+    background: none repeat scroll 0 0 #FBE3E4;
+    border-bottom-right-radius: 4px;
+    color: #D12F19;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 4px 5px;
 }
-
 input.focus, select.focus{
 	border: 2px solid #dae6f4;
 }
@@ -1441,7 +1492,7 @@ div.controller_checklist {
 	border: 1px solid #ABABAB;
 }
 
-/* ======================== REGISTER CONTROL FOR LOCATION ============================== */
+/* ======================== REGISTER CONTROL FOR LOCATION ===================== */
 #choose_control{
 	margin: 10px;
 	padding: 10px; 
@@ -1454,7 +1505,7 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
-/* ======================== CONTROL DETAILS ============================== */
+/* ======================== CONTROL DETAILS =================================== */
 
 #control_details label {
     display: inline-block;
@@ -1475,4 +1526,14 @@ div.controller_checklist {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px 6px;
     display: none;
+}
+
+/* =============================  CONTROL GROUP AND ITEMS  ======================= */
+
+ul.control_groups li ul {
+    margin-left: 1em;
+}
+
+ul.control_groups h3 {
+    margin-bottom: 0.5em;
 }

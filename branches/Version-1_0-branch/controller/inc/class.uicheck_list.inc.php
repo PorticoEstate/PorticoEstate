@@ -246,6 +246,46 @@
 		}
 		
 		/**
+		 * Public function for saving a check list
+		 * 
+		 * @param HTTP:: location code, control id, status etc.. (check list details) 
+		 * @return data array
+		*/
+		function save_check_list(){
+			$location_code = phpgw::get_var('location_code');
+			$control_id = phpgw::get_var('control_id');
+			$status = (int)phpgw::get_var('status');
+
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
+			$planned_date = phpgw::get_var('planned_date', 'string');
+			$completed_date = phpgw::get_var('completed_date', 'string');
+			
+			$comment = phpgw::get_var('comment', 'string');
+							
+			if($planned_date != '')
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
+
+			if($deadline_date != '')
+				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			
+			if($completed_date != '')
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+			
+			$check_list = new controller_check_list();
+			$check_list->set_location_code($location_code);
+			$check_list->set_control_id($control_id);
+			$check_list->set_status($status);
+			$check_list->set_comment($comment);
+			$check_list->set_deadline( $deadline_date_ts );
+			$check_list->set_planned_date($planned_date_ts);
+			$check_list->set_completed_date($completed_date_ts);
+			
+			$check_list_id = $this->so->store($check_list);
+			
+			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
+		}
+		
+		/**
 		 * Public function for displaying the edit check list form  
 		 * 
 		 * @param HTTP:: check list id
@@ -319,45 +359,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-		/**
-		 * Public function for saving a check list
-		 * 
-		 * @param HTTP:: location code, control id, status etc.. (check list details) 
-		 * @return data array
-		*/
-		function save_check_list(){
-			$location_code = phpgw::get_var('location_code');
-			$control_id = phpgw::get_var('control_id');
-			$status = (int)phpgw::get_var('status');
-
-			$deadline_date = phpgw::get_var('deadline_date', 'string');
-			$planned_date = phpgw::get_var('planned_date', 'string');
-			$completed_date = phpgw::get_var('completed_date', 'string');
-			
-			$comment = phpgw::get_var('comment', 'string');
-							
-			if($planned_date != '')
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-
-			if($deadline_date != '')
-				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
-			
-			if($completed_date != '')
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-			
-			$check_list = new controller_check_list();
-			$check_list->set_location_code($location_code);
-			$check_list->set_control_id($control_id);
-			$check_list->set_status($status);
-			$check_list->set_comment($comment);
-			$check_list->set_deadline( $deadline_date_ts );
-			$check_list->set_planned_date($planned_date_ts);
-			$check_list->set_completed_date($completed_date_ts);
-			
-			$check_list_id = $this->so->store($check_list);
-			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
-		}
+	
 		
 		/**
 		 * Public function for displaying the create message form
@@ -450,6 +452,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
+		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
 		public function update_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$status = (int)phpgw::get_var('status');
@@ -548,37 +551,39 @@
 			self::render_template_xsl('check_list/view_control_details', $data);
 		}
 						
-		// Function that displays control items 
+		// Function that displays control groups and control items for a check list
 		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
-			$control = $this->so_control->get_single($check_list->get_control_id());
-								
-			$control_items_for_check_list = array();
-			$remove_control_item_ids_array = array();
+			$control = $this->so_control->get_single($check_list->get_control_id());			
 			
-			// Fetches all control items for a check list
-			$control_items = $this->so_control_item_list->get_control_items_by_control($check_list->get_control_id());
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+		
+			$control_groups_with_items_array = array();
 			
-			// Fetches all check items for a check list as objects
-			$check_items = $this->so_check_item->get_check_items($check_list_id, null, null, "return_object");
-			
-			// Puts closed check items of type measurement into array  
-			foreach($check_items as $check_item){
-				if($check_item->get_control_item()->get_type() == "control_item_type_2" & $check_item->get_status() == 1){
-					$remove_control_item_ids_array[] = $check_item->get_control_item_id();
-				}
+			//Populating array with saved control items for each group
+			foreach ($saved_control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
+				
+				if(count($saved_control_items) > 0)				
+					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
+			
+			/* ================  Ikke slett!!! Kode som henter ut  utstyr basert på lokasjon  ==================       
 			
 			//get control items based on control group/component connection
 			$control_groups_for_control = $this->so_control_group->get_control_group_ids_for_control($control->get_id());
 			//_debug_array($control_groups_for_control);
+
 			foreach($control_groups_for_control as $cg)
 			{
 				$components_for_control_group[] = array($cg => $this->so_control_group->get_components_for_control_group($cg));
 			}
+			
 			//_debug_array($components_for_control_group);
+			
 			$control_group_check_items = array();
 			foreach($components_for_control_group as $cg_components)
 			{
@@ -603,23 +608,17 @@
 					}
 				}
 			}
+			=====================================================================*/
 			//_debug_array($control_group_check_items);
-			
-			// Makes control items list stripped for closed check items of type measurement			
-			foreach($control_items as $control_item){
-				if( !in_array($control_item->get_id(), $remove_control_item_ids_array) ){
-					$control_items_for_check_list[] = $control_item->toArray();
-				}
-			}
-			
+					
 			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
 			
 			$data = array
 			(
-				'control' 						=> $control->toArray(),
-				'check_list' 					=> $check_list->toArray(),
-				'location_array'				=> $location_array,
-				'control_items_for_check_list' 	=> $control_items_for_check_list,
+				'control' 							=> $control->toArray(),
+				'check_list' 						=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'control_groups_with_items_array' 	=> $control_groups_with_items_array
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -652,12 +651,17 @@
 			
 			$check_list = $this->so->get_single($check_list_id);
 			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, 'return_array');
-							
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_1", 'closed', null, 'return_array');
+			$closed_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_2", 'closed', null, 'return_array');
+
+			//echo "SKRIVER UT LUKKEDE SAKER";
+			//print_r($closed_check_items_and_cases);
+			
 			$data = array
 			(
-				'closed_check_items_and_cases'	=> $closed_check_items_and_cases,
-				'check_list' 					=> $check_list->toArray()
+				'closed_check_items_and_cases'			=> $closed_check_items_and_cases,
+				'closed_check_items_and_measurements'	=> $closed_check_items_and_measurements,
+				'check_list' 							=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );

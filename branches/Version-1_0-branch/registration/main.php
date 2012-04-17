@@ -54,7 +54,8 @@
 				'step4'				=> true,
 				'lostpw1'			=> true,
 				'lostpw2'			=> true,
-				'lostpw3'			=> true
+				'lostpw3'			=> true,
+				'get_locations'		=> true
 			)
 		)
 	);
