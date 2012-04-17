@@ -1101,12 +1101,16 @@ ul#icon_color_map span{
 ul#filters li, ul#search_list li{
 	float:left;	
 }
-ul#filters input[type='text'], ul#filters select{
-	padding:3px;
+ul#filters input[type="text"], ul#filters select {
+    margin-right: 5px;
+    padding: 3px;
+}
+#choose_control select {
+    margin-right: 5px;
 }
 ul#search_list input[type="submit"] {
     margin: 0;
-    padding: 0 10px;
+    padding: 3px 15px;
 }
 ul#search_list input[type="text"] {
     margin: 0 5px 0 0;
@@ -1124,7 +1128,7 @@ fieldset.add_check_list label{
 	width:120px;
 }
 
-/*==================================  EXPAND MENU  ======================================== */
+/* ==================================  EXPAND MENU  ======================================== */
 
 .expand_menu div.focus{
 	background: url('../../../images/bg_expand_active.png') no-repeat;
