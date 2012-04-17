@@ -1,6 +1,6 @@
 YAHOO.namespace ("PORTICO");
 
-YAHOO.PORTICO.DEBUG = true;
+YAHOO.PORTICO.DEBUG = false;
 YAHOO.PORTICO.LOG_ELEMENT = null;
 
 YAHOO.PORTICO.Log = function( html )
