@@ -97,7 +97,7 @@
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>
-					Ingen registrerte saker
+					Ingen registrerte saker eller det er blitt registrert en melding for alle registrerte saker
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>

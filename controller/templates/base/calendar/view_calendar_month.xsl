@@ -8,7 +8,7 @@
 	<div id="control_plan">
 		<div class="col_1">
 			<h1><xsl:value-of select="location_array/loc1_name"/></h1>
-			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
+			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/><span style="margin-left:5px;"><xsl:value-of select="year"/></span></h3>
 		</div>
 		
 		<div class="col_2">
@@ -86,6 +86,18 @@
 			});
 		</script>
 		
+			<a style="font-weight: bold;font-size: 14px;float:left;">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="year"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:value-of select="$location_code"/>
+				</xsl:attribute>
+				Årsoversikt
+			</a>
+
+			<!-- =========================  NAVIGATION BETWEEN FIRST AND LAST 14 DAYS IN DAYS CALENDAR  ============================================================= -->		
 			<div class="nav">
 				<a class="move_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a>
 				<a class="move_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a>
