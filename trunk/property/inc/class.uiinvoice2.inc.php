@@ -129,7 +129,22 @@
 					$budget_responsible_list = array_merge(array($default), $budget_responsible_list);
 				}
 
+
+				$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+
 				$data = array(
+					'invoice_layout_config'	=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
+					'preferences_url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
+					'preferences_text'	=> lang('preferences'),
+					'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
+					'home_text'		=> lang('home'),
+					'home_icon'		=> 'icon icon-home',
+					'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
+					'about_text'	=> lang('about'),
+					'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
+					'logout_text'	=> lang('logout'),
+					'user_fullname' => $user->__toString(),
+					'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 					'filter_form' 				=> array
 					(
 						'janitor_list' 				=> array('options' => $janitor_list),
@@ -184,13 +199,18 @@
 					)
 				);
 //_debug_array($data);die();			
+
+				$GLOBALS['phpgw']->css->add_external_file('/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
+				phpgwapi_yui::load_widget('layout');
 				phpgwapi_yui::load_widget('paginator');
 
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('property', 'portico', 'ajax_invoice.js');
+				self::add_javascript('property', 'yahoo', 'invoice2.index.js');
 
 				self::render_template_xsl(array('invoice2', 'common'), $data);
+				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 			}	
 		}
 	
@@ -408,6 +428,7 @@
 					$voucher[0]['image_url']	= $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
+		//		$voucher[0]['image_url']	= 'http://www.nettavisen.no/';
 			}
 			else
 			{

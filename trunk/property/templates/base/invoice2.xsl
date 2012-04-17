@@ -36,6 +36,8 @@
 #_budsjettansvarligid { width: 200px; }
 
 </style>
+
+
 <div class="yui-navset yui-navset-top" id="pending_for_approval_tabview">
 	<div class="identifier-header">
 		<h1><xsl:value-of select="php:function('lang', 'invoice')"/></h1>
@@ -50,14 +52,40 @@
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>
+		<script type="text/javascript">
+			var invoice_layout_config = <xsl:value-of select="invoice_layout_config"/>;
+		</script>
 
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
 	<div class="yui-content">
-		<table>
-			<tr>
-				<td>
+		<div id="invoice-layout">
+				<div class="layout-north">
+					<div class="body">
+						<h2 class="icon"><xsl:value-of select="site_title"/></h2>
+						<div class="button-bar">
+							<a href="{home_url}" class="icon icon-home">
+								<xsl:value-of select="home_text"/>
+							</a>
+							<a href="{about_url}" class="icon icon-about">
+								<xsl:value-of select="about_text"/>
+							</a>
+							<a href="{preferences_url}" class="icon icon-preferences">
+								<xsl:value-of select="preferences_text"/>
+							</a>
+							<a href="{logout_url}" class="icon icon-logout">
+								<xsl:value-of select="logout_text"/>
+							</a>
+						</div>
+					</div>
+				</div>
+
+			<div class="layout-west">
+				<div class="header">
+					<h2>faktura</h2>
+				</div>
+				<div class="body">
 					<div id="voucher_details">
 						<xsl:call-template name="yui_phpgw_i18n"/>
 						<table>
@@ -77,18 +105,32 @@
 							</table>
 						</form>
 					</div>
-				</td>
-				<td>
+				</div>
+			</div>
+			<div class="layout-center">
+				<div class="header">
+					<h2>Bilde</h2>
+				</div>
+				<div class="body">
 				  	<div id="image">
 						<xsl:choose>
 							<xsl:when test="voucher_info/voucher/image_url  != ''">
-								<iframe id="image_content" width="400" height="500" src = "{voucher_info/voucher/image_url}" ><p>Your browser does not support iframes.</p></iframe>
+								<iframe id="image_content" width="100%" height="1000" src = "{voucher_info/voucher/image_url}" ><p>Your browser does not support iframes.</p></iframe>
 							</xsl:when>
 							<xsl:otherwise>
-								<iframe id="image_content" width="400" height="500" ><p>Your browser does not support iframes.</p></iframe>
+								<iframe id="image_content" width="100%" height="1000" ><p>Your browser does not support iframes.</p></iframe>
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<table>
+			<tr>
+				<td>
+				</td>
+				<td>
 				</td>
 			</tr>
 		</table>
