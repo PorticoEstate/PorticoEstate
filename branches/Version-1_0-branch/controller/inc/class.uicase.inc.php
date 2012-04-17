@@ -349,47 +349,19 @@
 			
 			foreach($cases_array as $case){
 				$case->set_status( $updateStatus );
-				$this->so->update( $case );	
+				$this->so->update( $case );
 			}
 			
-			$check_items = $this->so_check_item->get_check_items_by_message($location_id, $location_item_id, "return_object");
+			$case = $cases_array[0];
 			
-			if($updateStatus == 0){
+			$check_item_id = $case->get_check_item_id();
 
-				foreach($check_items as $check_item){
-					$check_item->set_status(0);
-					$this->so_check_item->update($check_item);
-				}
-			}
-			else if($updateStatus == 1){
-				
-				foreach($check_items as $check_item){
-					$check_item = $this->so_check_item->get_single_with_cases($check_item->get_id());
-					
-					if($check_item->get_status() == 0){
-						
-						$cases_array = $check_item->get_cases_array();	
-						
-						if(count($cases_array) == 0){ 
-							$check_item->set_status(1);
-							$this->so_check_item->update($check_item);
-						}
-						else{
-						 	$all_cases_status = 1;
-						 	
-							foreach($cases_array as $case){
-								if($case->get_status() == 0)
-									$all_cases_status = 0;		
-							}
-							
-							if($all_cases_status == 1){
-								$check_item->set_status(1);
-								$this->so_check_item->update($check_item);
-							}
-						}
-					}
-				}
-			}
+			$check_item = $this->so_check_item->get_single( $check_item_id );
+			$check_list_id = $check_item->get_check_list_id(); 
+			
+			// Updates status for check list 
+			$status_checker = new status_checker();
+			$status_checker->update_check_list_status( $check_list_id );
 		}
 		
 		public function delete_case()

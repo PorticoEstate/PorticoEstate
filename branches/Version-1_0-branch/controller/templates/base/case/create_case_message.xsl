@@ -11,7 +11,7 @@
 	
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
 		<h3 class="box_header ext">Registrer melding</h3>
-		<div class="box ext">
+		<div id="caseMessage" class="box ext">
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				
