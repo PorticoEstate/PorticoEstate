@@ -346,7 +346,8 @@
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
 			
 			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
-			
+
+			// Updates status for cases related to message  
 			foreach($cases_array as $case){
 				$case->set_status( $updateStatus );
 				$this->so->update( $case );

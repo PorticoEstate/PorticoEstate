@@ -31,7 +31,9 @@
 		<!-- === UPLOAD FILE === -->
 		<div class="row">
 			<label>Filvedlegg:</label>
-			
+				<xsl:for-each select="message_ticket/files">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
 		</div>
 
 		<h3>Saker for meldingen</h3>					
