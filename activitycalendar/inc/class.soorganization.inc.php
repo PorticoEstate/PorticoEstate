@@ -319,20 +319,20 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$alloc = $this->get_affected_allocations($orgmapping);
 				foreach($alloc as $a)
 				{
-					var_dump($a.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					var_dump('Allocation id: '.$a.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
 					$this->update_affected_allocations($a, $key);
 				}
 
 				$res = $this->get_affected_reservations($orgmapping);
 				foreach($res as $r)
 				{
-					var_dump($r.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					var_dump('Reservation id: '.$r.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
 					$this->update_affected_reservations($r, $key);
 				}
 				$event = $this->get_affected_events($orgmapping);
 				foreach($event as $e)
 				{
-					var_dump($e.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
+					var_dump('Event id: '.$e.' flyttes fra '.$orgmapping.' til '.$key.'</br>');
 					$this->update_affected_events($e, $key);
 				}
 			}
