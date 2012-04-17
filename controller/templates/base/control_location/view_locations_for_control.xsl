@@ -23,7 +23,7 @@
 
 	<div class="yui-content">
 		<div id="control_details">
-			<div style="margin: 10px;padding: 10px; width: 25%;">
+			<div id="choose_control">
 				
 				<!-- When control area is chosen, an ajax request is executed. 
 					 The operation fetches controls from db and populates the control list.
