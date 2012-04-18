@@ -872,7 +872,7 @@
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 	 					$controller = CreateObject('controller.uicase'); 
-	 					$controller->updateStatusForCases($location_id, $id, 0);
+	 					$controller->updateStatusForCases($location_id, $id, 1);
 					}
 				}
 			}
@@ -1061,7 +1061,7 @@
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
  						$controller = CreateObject('controller.uicase'); 
- 						$controller->updateStatusForCases($location_id, $id, 0);
+ 						$controller->updateStatusForCases($location_id, $id, 1);
 					}
 				}
 			}
