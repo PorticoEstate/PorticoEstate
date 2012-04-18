@@ -831,7 +831,7 @@
 			{
 				$this->_delete_from_fm_ecobilag($voucher_id);
 				//Logg transaksjon
-				$this->soXport->log_transaction($batchid,$voucher_id,lang('Invoice tranferred'));
+				$this->soXport->log_transaction($batchid,$voucher_id,lang('Invoice transferred'));
 			}
 
 			//Fullfør transaksjon
