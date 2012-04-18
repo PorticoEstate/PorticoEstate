@@ -901,7 +901,8 @@ invoice id	property	no	Faktura ID
 invoice id already taken for this vendor	property	no	Fakturanummeret er allerede registrert for denne leverandøren 
 invoice is not added!	property	no	Fakturaen er IKKE lagt til!
 invoice number	property	no	FakturaNr
-invoice tranferred	property	no	bilag er overført
+invoice transferred	property	no	bilag er overført
+invoice line text	property	no	Posteringstekst
 is id	property	no	Er ID
 is registered	property	no	er registert
 is there a demand from the authorities to correct this condition?	property	no	Finnes det myndighetskrav for å rette opp tilstanden?
