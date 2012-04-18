@@ -106,6 +106,7 @@
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
+					<div class="assigned">Tildelt</div>
 					<div class="date">Startdato</div>
 					<div class="date">Sluttdato</div>
 					<div class="frequency">Frekvenstype</div>
@@ -120,6 +121,9 @@
 						</div>
 						<div class="title">
 			      			<xsl:value-of select="control/title"/>
+						</div>
+						<div class="assigned">
+			      			<xsl:value-of select="control/responsibility_name"/>
 						</div>
 						<div class="date">
 			      			<xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/>

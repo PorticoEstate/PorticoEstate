@@ -92,6 +92,7 @@
 			while ($this->db->next_record()) {
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
 				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));

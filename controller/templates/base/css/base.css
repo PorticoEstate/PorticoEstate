@@ -1414,7 +1414,6 @@ li.check_item_case .col_3 {
 .frm_register_case {
 	margin-bottom: 1em;
 }
-
 .frm_register_case input[type="text"]{
  	width: 170px;  
 }
@@ -1428,7 +1427,10 @@ li.check_item_case .col_3 {
     margin-bottom: 1em;
     width: 63%;
 }
-
+.frm_register_case label {
+    display: inline-block;
+    width: 18%;
+}
 a.view_check_list{
  	color: #FFFFFF;
     display: block;
@@ -1440,6 +1442,12 @@ a.view_check_list{
 }
 
 /* ================================ CASE MESSAGE ============================= */
+#caseMessage a#showMessage {
+    float: right;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+}
 #caseMessage label {
     width: 13%;
 }

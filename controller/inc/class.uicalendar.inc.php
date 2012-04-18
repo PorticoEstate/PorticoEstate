@@ -122,9 +122,6 @@
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_with_check_list_array, $num_days_in_month, "view_days" );
 			
-			//print_r($controls_calendar_array);
-			
-			
 			foreach($controls_calendar_array as &$inst)
 			{	
 				$curr_control = &$inst['control'];
