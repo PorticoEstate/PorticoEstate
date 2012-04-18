@@ -499,7 +499,7 @@
 					$voucher[0]['image_url']	= $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
-				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
+//				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
 			}
 			else
 			{
