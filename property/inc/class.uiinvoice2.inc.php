@@ -301,6 +301,7 @@
 				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				
+				$entry['line_text'] = "<input type =\"text\" name=\"values[line_text][{$entry['id']}]\" value=\"{$entry['line_text']}\" size=\"20\">";
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				$results['results'][]= $entry;
 			}
