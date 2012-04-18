@@ -59,7 +59,8 @@
 			'query'								=> true,
 			'edit'						 		=> true,
 			'get_vouchers'						=> true,
-			'get_single_voucher'				=> true
+			'get_single_voucher'				=> true,
+			'get_single_line'					=> true
 		);
 
 		function __construct()
@@ -84,6 +85,7 @@
 		{
 			$receipt = array();
 			$voucher_id	= phpgw::get_var('voucher_id', 'int');
+			$line_id	= phpgw::get_var('line_id', 'int');
 			
 			if($values = phpgw::get_var('values'))
 			{
@@ -96,6 +98,7 @@
 				}
 
 				$values['voucher_id'] = $voucher_id;
+				$values['line_id'] = $line_id;
 				if(!$receipt['error'])
 				{
 					$receipt = $this->bo->update_voucher2($values);
@@ -103,7 +106,7 @@
 
 				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
 			else
 			{
@@ -155,13 +158,19 @@
 					(
 						'voucher_list' 				=> array('options' => $voucher_list),
 					),
-					'voucher_info'					=> $this->get_single_voucher($voucher_id),
+					'voucher_info'					=> $this->get_single_line($line_id),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id, 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id,'line_id' => $line_id,'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
 								'key' => 'id',
 								'hidden' => true
+							),
+							array(
+									'key' => 'approve_line',
+									'label' => lang('select'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
 							),
 							array(
 								'key'	=>	'amount',
@@ -177,6 +186,46 @@
 							array(
 									'key' => 'split',
 									'label' => lang('split line'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+							array(
+									'key' => 'budget_account',
+									'label' => lang('budget account'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+
+							array(
+									'key' => 'dima',
+									'label' => lang('dim a'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+							array(
+									'key' => 'dimb',
+									'label' => lang('dim b'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+
+							array(
+									'key' => 'order_id',
+									'label' => lang('order'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+
+							array(
+									'key' => 'project_group',
+									'label' => lang('project group'),
+									'sortable' => false,
+									'formatter' => 'FormatterCenter',
+							),
+
+							array(
+									'key' => 'line_text',
+									'label' => lang('text'),
 									'sortable' => false,
 									'formatter' => 'FormatterCenter',
 							),
@@ -198,13 +247,24 @@
 						)
 					)
 				);
+/*
+    Art
+    Kategori
+    Koststed
+    Bestillingsnummer
+    Agressoprosjektnr
+    Postringstekst
+    Beløp
+*/
+
+
 //_debug_array($data);die();			
 
 				$GLOBALS['phpgw']->css->add_external_file('/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
 				phpgwapi_yui::load_widget('layout');
 				phpgwapi_yui::load_widget('paginator');
 
-				self::add_javascript('registration', 'yahoo', 'pending.index.js');
+//				self::add_javascript('registration', 'yahoo', 'pending.index.js');
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('property', 'portico', 'ajax_invoice.js');
 				self::add_javascript('property', 'yahoo', 'invoice2.index.js');
@@ -221,19 +281,27 @@
 			$this->bo->order = phpgw::get_var('sort');
 			$this->bo->sort = phpgw::get_var('dir');
 			$this->bo->results = phpgw::get_var('results');
-
+			$line_id =	phpgw::get_var('line_id', 'int');
+//_debug_array($_REQUEST); die();
 			if ( ! $voucher_id = phpgw::get_var('voucher_id_filter') )
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
 
 			$values = $this->bo->read_invoice_sub($voucher_id);
-	
+
 			foreach($values as &$entry)
 			{
-	//			$entry['split'] = "<input type =\"radio\" name=\"values[split]\" value=\"{$entry['id']}\">";
-				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\">";
-				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\">";
+				$_checked = '';
+				if($entry['id'] == $line_id)
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
+				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
+				
+				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				$results['results'][]= $entry;
 			}
 			$results['total_records'] = $this->bo->total_records;
@@ -241,8 +309,6 @@
 			$results['sort'] = 'id';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
-//			array_walk($results['results'], array($this, 'add_links'), array($type));
-						
 			return $this->yui_results($results);
 		}
 
@@ -257,12 +323,17 @@
 
 			return $vouchers;
 		}
+
 		public function get_single_voucher($voucher_id = 0)
 		{
-			$voucher_id	= $voucher_id ? $voucher_id : phpgw::get_var('voucher_id', 'int');
+			
+		}
+		public function get_single_line($line_id = 0)
+		{
+			$line_id	= $line_id ? $line_id : phpgw::get_var('line_id', 'int');
 			$voucher_info = array();
 			
-			$voucher = $this->bo->read_single_voucher($voucher_id);
+			$voucher = $this->bo->read_single_line($line_id);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
@@ -428,7 +499,7 @@
 					$voucher[0]['image_url']	= $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
-		//		$voucher[0]['image_url']	= 'http://www.nettavisen.no/';
+				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
 			}
 			else
 			{

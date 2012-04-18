@@ -447,6 +447,7 @@
 						'claim_issued'			=> $this->db->f('claim_issued'),
 				//		'project_id'			=> $this->db->f('project_id'),
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
+						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'status'				=> $this->db->f('status'),
 						'closed'				=> $this->db->f('status') == $closed,
 						'voucher_id'			=> $this->db->f('bilagsnr'),
@@ -470,6 +471,7 @@
 						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 						'transfer_time'			=> $this->db->f('overftid'),
+						'line_text'				=> 'FIX ME soinvoice::read_invoice_sub()'
 					);
 
 				$i++;
@@ -1707,10 +1709,20 @@
 		*/
 		public function forward($data)
 		{
+			$condition = '';
 
+			if(isset($data['forward']) && is_array($data['forward']) && isset($data['line_id']) && $data['line_id'])
+			{
+				$condition = 'WHERE id =' . (int) $data['line_id'];
+			}
+			else if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
+			{
+				$condition = 'WHERE bilagsnr =' . (int) $data['voucher_id'];
+			}
+			
 			$receipt = array();
 			$local_error= false;
-			if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
+			if($condition)
 			{
 				//start check
 				$check_count = $this->check_count($data['voucher_id']);
@@ -1790,7 +1802,7 @@
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
-				return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+				return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
 			}
 
 			return false;
@@ -1803,19 +1815,27 @@
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
 			
-			$value_set['pmwrkord_code'] = $data['order_id'];
-			$value_set['dimb'] = $data['dim_b'];
-			$value_set['dima'] = $data['dim_a'];
-			$value_set['mvakode'] = $data['tax_code'];
-			$value_set['project_id'] = $data['project_group'];
-			$value_set['spbudact_code'] = $data['b_account_id'];
 			$value_set['periode'] = $data['period'];
 			$value_set['periodization'] = $data['periodization'];
 			$value_set['periodization_start'] = $data['periodization_start'];
 			$value_set['kreditnota'] = !!$data['park_invoice'];
 
 			$value_set	= $this->db->validate_update($value_set);
-			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr =" . (int)$data['voucher_id'],__LINE__,__FILE__);
+			unset($value_set);
+
+			$value_set_line = array();
+
+			$value_set_line['pmwrkord_code'] = $data['order_id'];
+			$value_set_line['dimb'] = $data['dim_b'];
+			$value_set_line['dima'] = $data['dim_a'];
+			$value_set_line['mvakode'] = $data['tax_code'];
+			$value_set_line['project_id'] = $data['project_group'];
+			$value_set_line['spbudact_code'] = $data['b_account_id'];
+
+			$value_set_line	= $this->db->validate_update($value_set_line);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set_line WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
+			unset($value_set_line);
 
 			if($data['order_id'] && $data['b_account_id'])
 			{
@@ -1924,6 +1944,22 @@
 					$this->db->query("INSERT INTO fm_ecobilag_process_log ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 				}
 			}
+
+
+			if( isset($data['order_id']) && $data['order_id'])
+			{
+				if(isset($data['close_order']) && $data['close_order'])
+				{
+					execMethod('property.soworkorder.close_orders',array($data['order_id']));
+				}
+				if(isset($data['close_order_orig']) && $data['close_order_orig'] && !$data['close_order'])
+				{
+					execMethod('property.soworkorder.reopen_orders',array($data['order_id']));
+				}
+			}
+
+			$receipt = $this->forward($data);
+
 			$GLOBALS['phpgw']->db->transaction_commit();
 		}
 
