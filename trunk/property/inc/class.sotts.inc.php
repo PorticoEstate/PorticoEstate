@@ -577,6 +577,7 @@
 
 			if ($this->db->next_record())
 			{
+				$ticket['id']				= $id;
 				$ticket['assignedto']		= $this->db->f('assignedto');
 				$ticket['user_id']			= $this->db->f('user_id');
 				$ticket['group_id']			= $this->db->f('group_id');
