@@ -77,7 +77,7 @@ YAHOO.INVOICE.BorderLayout = function()
 	{
 		var DOM = YAHOO.util.Dom;
 //		var layouts = Array( 'north', 'west', 'center', 'south' );
-		var layouts = Array( 'north', 'west', 'center' );
+		var layouts = Array( 'north', 'center', 'east' );
 		var layout = Array();
 
 		// Collect layout units for border layout
@@ -94,7 +94,7 @@ YAHOO.INVOICE.BorderLayout = function()
 
 		if( typeof this.config.unitRightWidth == 'undefined' )
 		{
-			this.config.unitRightWidth = 6;
+			this.config.unitRightWidth = 600;
 		}	
 		
 		this.layout = new YAHOO.widget.Layout({
@@ -102,8 +102,8 @@ YAHOO.INVOICE.BorderLayout = function()
 			minHeight: 400,
             units: [
 				{ position: 'top', body: layout['north'], height: 26 },
-				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: true,  maxWidth: 1200, minWidth: 400 },
-                { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" }
+                { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
+				{ position: 'right', header: this.getHeader( layout['east'] ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: true,  maxWidth: 1200, minWidth: 400 },
             ]
         });
 

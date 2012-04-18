@@ -86,7 +86,7 @@
 			$receipt = array();
 			$voucher_id	= phpgw::get_var('voucher_id', 'int');
 			$line_id	= phpgw::get_var('line_id', 'int');
-			
+
 			if($values = phpgw::get_var('values'))
 			{
 				$approve = execMethod('property.uiinvoice.get_approve_role');
@@ -103,8 +103,6 @@
 				{
 					$receipt = $this->bo->update_voucher2($values);
 				}
-
-				phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
 			}
@@ -132,10 +130,18 @@
 					$budget_responsible_list = array_merge(array($default), $budget_responsible_list);
 				}
 
+				$msgbox_data = array();
+				if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
 
 				$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
 				$data = array(
+					'msgbox_data'			=> $msgbox_data,
 					'invoice_layout_config'	=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
 					'preferences_url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
 					'preferences_text'	=> lang('preferences'),
@@ -225,7 +231,7 @@
 
 							array(
 									'key' => 'line_text',
-									'label' => lang('text'),
+									'label' => lang('invoice line text'),
 									'sortable' => false,
 									'formatter' => 'FormatterCenter',
 							),
@@ -301,7 +307,7 @@
 				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				
-				$entry['line_text'] = "<input type =\"text\" name=\"values[line_text][{$entry['id']}]\" value=\"{$entry['line_text']}\" size=\"20\">";
+			//	$entry['line_text'] = "<input type =\"text\" name=\"values[line_text][{$entry['id']}]\" value=\"{$entry['line_text']}\" size=\"20\">";
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				$results['results'][]= $entry;
 			}
@@ -500,7 +506,7 @@
 					$voucher[0]['image_url']	= $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
-//				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
+	//			$voucher[0]['image_url']	= 'http://www.nettavisen.no/';
 			}
 			else
 			{
