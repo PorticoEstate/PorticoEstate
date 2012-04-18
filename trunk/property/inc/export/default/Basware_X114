@@ -286,6 +286,7 @@
 					'saksigndato'			=> $this->db->f('saksigndato'),
 					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 					'merknad'				=> $this->db->f('merknad',true),
+					'line_text'				=> $this->db->f('line_text',true),
 					'splitt'				=> $this->db->f('splitt'),
 					'ordrebelop'			=> $this->db->f('ordrebelop'),
 		//			'utbetalingid'			=> $this->db->f('utbetalingid'),
@@ -334,6 +335,7 @@
 				$BilagOverf['periodization'],
 				$BilagOverf['periodization_start'],
 				$this->db->db_addslashes($BilagOverf['merknad']),
+				$this->db->db_addslashes($BilagOverf['line_text']),
 				$BilagOverf['utbetalingid'],
 				$BilagOverf['oppsynsigndato'],
 				$BilagOverf['saksigndato'],
@@ -352,7 +354,7 @@
 			$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
-			. " periode,periodization,periodization_start,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
+			. " periode,periodization,periodization_start,merknad,line_text,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
 			. " item_type,item_id,external_ref,belop,godkjentbelop,currency)"
 			. " VALUES ({$values})";
 
@@ -755,9 +757,9 @@
 				}
 
 				$descr = '';
-				if($line['merknad'])
+				if($line['line_text'])
 				{
-					$descr = $line['merknad'];
+					$descr = $line['line_text'];
 				}
 				else if ($line['order_id'])
 				{

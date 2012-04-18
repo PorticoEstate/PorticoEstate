@@ -471,7 +471,7 @@
 						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 						'transfer_time'			=> $this->db->f('overftid'),
-						'line_text'				=> 'FIX ME soinvoice::read_invoice_sub()'
+						'line_text'				=> $this->db->f('line_text',true)
 					);
 
 				$i++;
@@ -1301,7 +1301,8 @@
 						'project_id'			=> $this->db->f('project_id'),
 						'project_group'			=> $this->db->f('project_id'),
 						'payment_date' 			=> $this->db->f('forfallsdato'),
-						'merknad'				=> $this->db->f('merknad'),
+						'merknad'				=> $this->db->f('merknad',true),
+						'line_text'				=> $this->db->f('line_text',true),
 						'b_account_id'			=> $this->db->f('spbudact_code'),
 						'amount'				=> $this->db->f('belop'),
 						'approved_amount'		=> $this->db->f('godkjentbelop'),
