@@ -13,30 +13,37 @@
 	<h3 class="box_header ext">Melding registrert</h3>
 	<div id="caseMessage" class="box ext">
 		
-		<!-- ==================  BYGG  ===================== -->
-		<div class="row">
-			<label>Bygg:</label> <xsl:value-of select="location_array/loc1_name"/>
-		</div>
-
+			<a id="showMessage">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
+					<xsl:text>&amp;id=</xsl:text>
+					<xsl:value-of select="message_ticket_id"/>
+				</xsl:attribute>
+		      	Vis melding
+	   		</a>
 		
-	    <!-- === TITLE === -->
-	    <div class="row">				
-			<label>Tittel på melding:</label>
-			<xsl:value-of select="message_ticket/subject"/>
-		</div>
-		<!-- === CATEGORY === -->
-		<div class="row">
-			<label>Kategori</label><span><xsl:value-of select="category"/></span>
-		</div>
-		<!-- === UPLOAD FILE === -->
-		<div class="row">
-			<label>Filvedlegg:</label>
-				<xsl:for-each select="message_ticket/files">
-					<li><xsl:value-of select="."/></li>
-				</xsl:for-each>
-		</div>
-
-		<h3>Saker for meldingen</h3>					
+			<!-- ===  BYGG  === -->
+			<div class="row">
+				<label>Bygg:</label><span><xsl:value-of select="location_array/loc1_name"/></span>
+			</div>
+			
+		    <!-- === TITLE === -->
+		    <div class="row">				
+				<label>Tittel på melding:</label><span><xsl:value-of select="message_ticket/subject"/></span>
+			</div>
+			<!-- === CATEGORY === -->
+			<div class="row">
+				<label>Kategori</label><span><xsl:value-of select="category"/></span>
+			</div>
+			<!-- === UPLOAD FILE === -->
+			<div class="row">
+				<label>Filvedlegg:</label>
+					<xsl:for-each select="message_ticket/files">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+			</div>
+		
+		<h3>Meldingen inneholder disse sakene</h3>					
 		<ul class="cases">
 			<xsl:for-each select="check_items_and_cases">
 				<xsl:choose>

@@ -103,6 +103,7 @@
 					$new_check_item->set_status( controller_check_item_case::STATUS_OPEN );
 				else
 					$new_check_item->set_status( controller_check_item_case::STATUS_CLOSED );
+					
 				$new_check_item->set_comment( null );
 				
 				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
@@ -266,7 +267,8 @@
 				$counter++;
 			}
 			
-			$location_id	= $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
+			// This value represents the type 
+			$location_id = $GLOBALS['phpgw']->locations->get_id("property", ".ticket");
 			
 			$ticket = array
 			(
@@ -290,6 +292,7 @@
 			// Registers message and updates check items with message ticket id
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
+				$case->set_location_id($location_id);
 				$case->set_location_item_id($message_ticket_id);
 				$this->so->store($case);
 			}			
@@ -316,7 +319,7 @@
 						
 			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
-			
+			print_r($message_ticket);
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
@@ -324,6 +327,8 @@
 			
 			$data = array
 			(
+				'control'							=> $control->toArray(),
+				'message_ticket_id'					=> $message_ticket_id,
 				'message_ticket'					=> $message_ticket,
 				'category'							=> $category[0]['name'],
 				'location_array'					=> $location_array,
@@ -345,24 +350,30 @@
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
 			
+			_debug_array(array($location_id, $location_item_id));
+			die();
+			
+			
 			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
 
-			// Updates status for cases related to message  
-			foreach($cases_array as $case){
-				$case->set_status( $updateStatus );
-				$this->so->update( $case );
+			if(!empty ( $cases_array ) ){
+				// Updates status for cases related to message  
+				foreach($cases_array as $case){
+					$case->set_status( $updateStatus );
+					$this->so->update( $case );
+				}
+				
+				$case = $cases_array[0];
+				
+				$check_item_id = $case->get_check_item_id();
+	
+				$check_item = $this->so_check_item->get_single( $check_item_id );
+				$check_list_id = $check_item->get_check_list_id(); 
+				
+				// Updates status for check list 
+				$status_checker = new status_checker();
+				$status_checker->update_check_list_status( $check_list_id );	
 			}
-			
-			$case = $cases_array[0];
-			
-			$check_item_id = $case->get_check_item_id();
-
-			$check_item = $this->so_check_item->get_single( $check_item_id );
-			$check_list_id = $check_item->get_check_list_id(); 
-			
-			// Updates status for check list 
-			$status_checker = new status_checker();
-			$status_checker->update_check_list_status( $check_list_id );
 		}
 		
 		public function delete_case()

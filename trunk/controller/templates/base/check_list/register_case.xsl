@@ -51,15 +51,15 @@
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 													<input name="type" type="hidden" value="control_item_type_2" />
 												
-													<div>
+													<div class="row">
 														<label>Status</label>
 														<select name="status">
-															<option value="0" SELECTED="SELECTED">Ikke utført</option>
-															<option value="1" >Utført</option>
+															<option value="0" SELECTED="SELECTED">Åpen</option>
+															<option value="1" >Lukket</option>
 															<option value="2" >Venter på tilbakemelding</option>
 												   		</select>
 												   </div>
-											       <div>
+											       <div class="row">
 											         <label class="comment">Registrer målingsverdi</label>
 											           <input>
 													      <xsl:attribute name="name">measurement</xsl:attribute>
@@ -69,7 +69,7 @@
 													      </xsl:attribute>
 													    </input>
 											       </div>
-											       <div>
+											       <div class="row">
 												         <label class="comment">Beskrivelse av sak</label>
 												         <textarea name="case_descr">
 															<xsl:value-of select="comment"/>

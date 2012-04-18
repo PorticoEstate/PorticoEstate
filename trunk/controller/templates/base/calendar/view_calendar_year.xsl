@@ -65,7 +65,7 @@
 		<ul class="calendar">
 				<li class="heading">
 					<xsl:if test="show_location">
-					<div class="location">Lokasjon</div>
+						<div class="location">Lokasjon</div>
 					</xsl:if>
 					<div class="title">Tittel</div>
 					<div class="assigned">Tildelt</div>

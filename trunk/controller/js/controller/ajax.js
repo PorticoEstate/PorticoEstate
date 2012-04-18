@@ -1,6 +1,6 @@
 $(document).ready(function(){
 		
-	// file: uicalendar.xsl
+	// 
 	$("#choose_my_location").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
@@ -56,7 +56,6 @@ $(document).ready(function(){
     });
 	
 	//update part of town category based on district
-	//file: 
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
@@ -334,7 +333,8 @@ $(document).ready(function(){
 
 		var $required_input_fields = $(this).find(".required");
 		var status = true;
-				
+	
+		// Checking that required fields (fields with class required) is not null
 	    $required_input_fields.each(function() {
 	    	
 	    	if($(this).val() == ''){
@@ -552,6 +552,61 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 
+	//=============================  MESSAGE  ===========================
+	
+	// REGISTER MESSAGE
+	$("#frmRegCaseMessage").submit(function(e){
+		
+		var thisForm = $(this);
+
+		var $required_input_fields = $(this).find(".required");
+		var status = true;
+	
+		// Checking that required fields (fields with class required) is not null
+	    $required_input_fields.each(function() {
+	    	
+	    	// User has selected a vlaue from select list
+	    	if( $(this).is("select") & $(this).val() == 0 ){
+	    		var nextElem = $(this).next();
+	    		
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Vennligst velg fra listen</div>");
+	    			    		
+	    		status = false;
+	    	}
+	    	// Input field is not empty
+	    	else if( $(this).is("input") & $(this).val() == '' ){
+	    		var nextElem = $(this).next();
+	    		
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Vennligst fyll ut dette feltet</div>");
+	    			    		
+	    		status = false;
+	    	}
+	    	else{
+	    		var nextElem = $(this).next();
+
+	    		if( $(nextElem).hasClass("input_error_msg") )
+	    			$(nextElem).remove();
+	    	}
+	    });	
+	    
+	    if( $(thisForm).find('input[type=checkbox]:checked').length == 0){
+	    	
+	    	if( !$(thisForm).find("ul.cases").prev().hasClass("input_error_msg") )
+	    		$(thisForm).find("ul.cases").before("<div class='input_error_msg'>Vennligst velg en sak som meldingen omfatter</div>");
+	    	
+	    	status = false;
+	    }
+	  
+	    if( !status ){
+	    	e.preventDefault();
+	    }
+	    	
+	});
+	
+	
+	
 	
 	//=============================  CASE  ===========================
 	
@@ -561,8 +616,9 @@ $(document).ready(function(){
 
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
+		var type = $(thisForm).find("input[name='type']").val();
 		var requestUrl = $(thisForm).attr("action");
-		
+
 		$.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&" + $(thisForm).serialize(),
@@ -578,7 +634,11 @@ $(document).ready(function(){
 			      				  
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
-							$(submitBnt).val('Registrer sak');
+		    				  if( type == "control_item_type_2")
+		    					  $(submitBnt).val('Registrer måling');
+		    				  else
+		    					  $(submitBnt).val('Registrer sak');
+		    				  
 							$(submitBnt).addClass("not_active");
 		    			  }, 1000);
 					  }
@@ -651,7 +711,7 @@ $(document).ready(function(){
 		return false;	
 	});
 	
-	// Delete a case item from list
+	// DELETE CASE
 	$(".delete_case").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
@@ -692,7 +752,7 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	// Closes a case
+	// CLOSE CASE
 	$("a.close_case").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
@@ -733,7 +793,7 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	// Open case
+	// OPEN CASE
 	$("a.open_case").live("click", function(){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
@@ -774,6 +834,24 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	/* ============================ PUTS BORDER AROUND DATE WHEN ITS CLICKED  ======================== */
+	
+	$("#calendar_dates span").click(function(){
+		var thisSpan = $(this);
+		
+		$("#calendar_dates span").css("border", "2px solid black");
+		$(thisSpan).css("border", "2px solid red");
+		
+		var date = $(thisSpan).text();
+		var day = date.substring(0, date.indexOf("/"));
+		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
+		var year = date.substring(date.indexOf("-")+1, date.length);
+		
+		var valid_save_date = year + "-" + month + "-" + day;  
+		
+		$("#deadline_date").val(valid_save_date);
+	});
+	
 	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -806,23 +884,20 @@ $(document).ready(function(){
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
 	
-	/* ============================ PUTS BORDER AROUND DATE WHEN ITS CLICKED  ========================================== */
-	
-	$("#calendar_dates span").click(function(){
-		var thisSpan = $(this);
+	$(".frm_save_check_item").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
 		
-		$("#calendar_dates span").css("border", "2px solid black");
-		$(thisSpan).css("border", "2px solid red");
-		
-		var date = $(thisSpan).text();
-		var day = date.substring(0, date.indexOf("/"));
-		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
-		var year = date.substring(date.indexOf("-")+1, date.length);
-		
-		var valid_save_date = year + "-" + month + "-" + day;  
-		
-		$("#deadline_date").val(valid_save_date);
+		$(submitBnt).removeClass("not_active");
 	});
+	
+	$(".frm_save_control_item").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		
+		$(submitBnt).removeClass("not_active");
+	});
+		
 	
 });
 

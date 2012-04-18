@@ -42,6 +42,7 @@ $(document).ready(function() {
 	
 	/* ============================================================================== */
 	
+
 	if( $("#frm_control_items").length > 0 ){
 		var check_box_arr = $("#frm_control_items").find("input[type='checkbox']");
 		
@@ -72,19 +73,5 @@ $(document).ready(function() {
 		}else{
 			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
 		}
-	});
-	
-	$(".frm_save_check_item").click(function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		
-		$(submitBnt).removeClass("not_active");
-	});
-	
-	$(".frm_save_control_item").click(function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		
-		$(submitBnt).removeClass("not_active");
 	});
 });
