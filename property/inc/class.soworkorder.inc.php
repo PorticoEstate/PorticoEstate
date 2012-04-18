@@ -37,6 +37,7 @@
 	class property_soworkorder
 	{
 		var $total_records = 0;
+		protected $global_lock = false;
 
 		function __construct()
 		{
@@ -1379,7 +1380,16 @@
 			$config		= CreateObject('phpgwapi.config','property');
 			$config->read();
 			$closed = isset($config->config_data['workorder_closed_status']) && $config->config_data['workorder_closed_status'] ? $config->config_data['workorder_closed_status'] : 'closed';
-			$this->db->transaction_begin();
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			if ($orders && is_array($orders))
 			{
@@ -1405,13 +1415,25 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 
 			return $receipt;
 		}
 
 		public function reopen_orders($orders)
 		{
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$config		= CreateObject('phpgwapi.config','property');
 			$config->read();
 			$reopen = isset($config->config_data['workorder_reopen_status']) && $config->config_data['workorder_reopen_status'] ? $config->config_data['workorder_reopen_status'] : 're_opened';
@@ -1431,6 +1453,11 @@
 						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status='{$reopen}' WHERE id = {$id}");
 						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
 				}
+			}
+
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
 			}
 		}
 	}

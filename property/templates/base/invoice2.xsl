@@ -34,6 +34,15 @@
 #_oppsynsmannid { width: 200px; }
 #_saksbehandlerid { width: 200px; }
 #_budsjettansvarligid { width: 200px; }
+.row_on,.th_bright
+{
+	background-color: #CCEEFF;
+}
+
+.row_off
+{
+	background-color: #DDF0FF;
+}
 
 </style>
 
@@ -94,14 +103,14 @@
 						</table>
 					  	<form action="#" name="voucher_form" id="voucher_form" method="post">
 							<table>
-								<xsl:call-template name="voucher_fields" />
-								<xsl:call-template name="approve"/>
 								<tr>
 									<td colspan = '6'>
 										<xsl:apply-templates select="paging"/>
 										<xsl:apply-templates select="datatable"/>
 									</td>
 								</tr>
+								<xsl:call-template name="voucher_fields" />
+								<xsl:call-template name="approve"/>
 							</table>
 						</form>
 					</div>
@@ -213,18 +222,19 @@
 </xsl:template>
 
 <xsl:template name="voucher_fields" xmlns:php="http://php.net/xsl">
-		<tr>
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'voucher')" />
 			</td>
 			<td>
 			  	<input type="hidden" name="voucher_id" id="voucher_id" value="{voucher_info/voucher/voucher_id}	"/>
+			  	<input type="hidden" name="line_id" id="line_id" value="{voucher_info/voucher/id}"/>
 			  	<div id= 'voucher_id_text'>
 				  <xsl:value-of select="voucher_info/voucher/voucher_id"/>		  	
 			  	</div>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'vendor')" />
 			</td>
@@ -234,7 +244,7 @@
 			  	</div>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
 			<td>
 			  	<div id="invoice_id_text">
 					<xsl:choose>
@@ -254,7 +264,7 @@
 
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'kid nr')" />
 			</td>
@@ -264,6 +274,7 @@
 			  	</div>
 			</td>
 		</tr>
+<!--
 		<tr>
 			<td>
 				<xsl:value-of select="php:function('lang', 'amount')" />
@@ -284,7 +295,8 @@
 			  	</div>
 			</td>
 		</tr>
-		<tr>
+-->
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'currency')" />
 			</td>
@@ -294,7 +306,7 @@
 			  	</div>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'invoice date')" />
 			</td>
@@ -305,7 +317,7 @@
 
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'payment date')" />
 			</td>
@@ -316,7 +328,59 @@
 
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_on'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'park invoice')" />
+			</td>
+			<td>
+				<div id="park_order">
+					<input type="checkbox" name="values[park_invoice]" value="1">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'park invoice')"/>
+						</xsl:attribute>
+						<xsl:if test="voucher_info/voucher/parked = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:if test="voucher_info/voucher/parked = '1'">
+						<xsl:text> X</xsl:text>
+					</xsl:if>
+				</div>
+			</td>
+		</tr>
+		<tr class ='row_on'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'period')" />
+			</td>
+			<td>
+				<select id="period" name="values[period]">
+					<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr class ='row_on'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'periodization')" />
+			</td>
+			<td>
+				<select id="periodization" name="values[periodization]">
+					<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr class ='row_on'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'periodization start')" />
+			</td>
+			<td>
+				<select id="periodization_start" name="values[periodization_start]">
+					<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr class ='row_off'>
 			<td>
 				<div id = 'order_text'>
 					<xsl:choose>
@@ -336,7 +400,7 @@
 			  	<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'close order')" />
 			</td>
@@ -359,29 +423,7 @@
 				</div>
 			</td>
 		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'park invoice')" />
-			</td>
-			<td>
-				<div id="park_order">
-					<input type="checkbox" name="values[park_invoice]" value="1">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'park invoice')"/>
-						</xsl:attribute>
-						<xsl:if test="voucher_info/voucher/parked = '1'">
-							<xsl:attribute name="checked">
-								<xsl:text>checked</xsl:text>
-							</xsl:attribute>
-						</xsl:if>
-					</input>
-					<xsl:if test="voucher_info/voucher/parked = '1'">
-						<xsl:text> X</xsl:text>
-					</xsl:if>
-				</div>
-			</td>
-		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'dim b')" />
 			</td>
@@ -391,7 +433,7 @@
 		  		</select>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 					<xsl:value-of select="php:function('lang', 'dim a')" />
 			</td>
@@ -399,7 +441,7 @@
 			  	<input type="text" name="values[dim_a]" id="dim_a" value="{voucher_info/voucher/dim_a}"/>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'tax code')" />
 			</td>
@@ -409,7 +451,7 @@
 		  		</select>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'project group')" />
 			</td>
@@ -417,44 +459,12 @@
 			  	<input type="text" name="values[project_group]" id="project_group" value="{voucher_info/voucher/project_group}"/>
 			</td>
 		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'budget account')" />
 			</td>
 			<td>
 			  	<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'period')" />
-			</td>
-			<td>
-				<select id="period" name="values[period]">
-					<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'periodization')" />
-			</td>
-			<td>
-				<select id="periodization" name="values[periodization]">
-					<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'periodization start')" />
-			</td>
-			<td>
-				<select id="periodization_start" name="values[periodization_start]">
-					<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
-		  		</select>
 			</td>
 		</tr>
 </xsl:template>
@@ -463,30 +473,7 @@
 	<!-- approve voucher  -->
 	<xsl:template xmlns:php="http://php.net/xsl" name="approve">
 		<xsl:apply-templates select="voucher_info/generic/approved_list"/>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'voucher process code')" />
-			</td>
-			<td>
-				<select id="process_code" name="values[process_code]">
-					<xsl:apply-templates select="voucher_info/generic/process_code_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-		<tr>
-			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
-				<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-			</td>
-			<td align="left">
-				<textarea id="process_log" cols="60" rows="10" name="values[process_log]" wrap="virtual">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
-					</xsl:attribute>
-					<xsl:value-of select="voucher_info/generic/process_log"/>
-				</textarea>
-			</td>
-		</tr>
-		<tr>
+		<tr class ='row_off'>
 			<input id="sign_orig" type="hidden" name="values[sign_orig]" value="{voucher_info/generic/sign_orig}"/>
 			<input id="my_initials" type="hidden" name="values[my_initials]" value="{voucher_info/generic/my_initials}"/>
 			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
@@ -501,13 +488,36 @@
 				</select>
 			</td>
 		</tr>
+		<tr class ='row_off'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'voucher process code')" />
+			</td>
+			<td>
+				<select id="process_code" name="values[process_code]">
+					<xsl:apply-templates select="voucher_info/generic/process_code_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td class="th_text" align="left" valign="top" style="white-space: nowrap;">
+				<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+			</td>
+			<td align="left">
+				<textarea id="process_log" cols="60" rows="10" name="values[process_log]" wrap="virtual">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'voucher process log')"/>
+					</xsl:attribute>
+					<xsl:value-of select="voucher_info/generic/process_log"/>
+				</textarea>
+			</td>
+		</tr>
 
 	</xsl:template>
 
 
 	<!-- New template-->
 	<xsl:template match="approved_list" xmlns:php="http://php.net/xsl">
-		<tr>
+		<tr class ='row_off'>
 			<td align="left" style="white-space: nowrap;">
 				<xsl:value-of select="role"/>
 			</td>
@@ -540,7 +550,7 @@
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="voucher_submit"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}"/></div>
+	<div class="row_on"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}"/></div>
 </xsl:template>
 
 

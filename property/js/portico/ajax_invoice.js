@@ -151,32 +151,74 @@ $(document).ready(function(){
 			});
 	});
 
-
-
-
 	$("#voucher_id_filter").change(function () {
-		var voucher_id = $(this).val();
-		var oArgs = {menuaction:'property.uiinvoice2.get_single_voucher'};
+
+		$("#voucher_id").val( '' );
+		$("#voucher_id_text").html( '' );
+		$("#line_id").val( '' );
+		$("#order_id").val( '' );
+		$("#project_group").val( '' );
+		$("#invoice_id").html( '' );
+		$("#kid_nr").html( '' );
+		$("#vendor").html('' );
+//		$("#janitor").html( '' );
+//		$("#supervisor").html( '' );
+//		$("#budget_responsible").html( '' );
+		$("#close_order_orig").val( '' );
+		$("#my_initials").val( '' );
+		$("#sign_orig").val( '' );
+		$("#invoice_date").html( '' );
+		$("#payment_date").html( '' );
+		$("#b_account_id").val( '' );
+//		$("#amount").html( '' );
+//		$("#approved_amount").html( '' );
+		$("#currency").html( '' );
+		$("#oppsynsmannid").html( '' );
+		$("#saksbehandlerid").html( '' );
+		$("#budsjettansvarligid").html( '' );
+		$("#remark").html( '' );
+		$("#process_log").html( '' );
+		$("#dim_a").val('' );
+		$("#dim_b").html( "<option>Velg</option>" );
+		$("#period").html( "<option>Velg</option>" );
+		$("#periodization").html( "<option>Velg</option>" );
+		$("#periodization_start").html( "<option>Velg</option>" );
+		$("#process_code").html( "<option>Velg</option>" );
+		$("#tax_code").html( "<option>0</option>" );
+		$("#approve_as").html( "<option>Velg</option>" );
+		$("#order_text").html( 'Bestilling' );
+		$("#invoice_id_text").html('FakturaNr');
+		$("#close_order").html( '' );
+		$("#close_order_orig").val( '' );
+		$("#park_order").html( '' );
+		document.getElementById('image_content').src = '';
+	});
+
+	$("#approve_line").live("click", function(e){
+		var line_id = $(this).val();
+		var oArgs = {menuaction:'property.uiinvoice2.get_single_line'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
-			url: requestUrl + "&voucher_id=" + voucher_id,
+			url: requestUrl + "&line_id=" + line_id,
 			success: function(data) {
 				var voucher = data['voucher'];
 				if( voucher != null && voucher.length > 0)
 				{
-					$("#voucher_id").val( voucher_id );
+					$("#line_id").val( line_id );
 		
+					$("#voucher_id").val( voucher[0].voucher_id );
 					if( voucher[0].voucher_out_id )
 					{
-						$("#voucher_id_text").html( voucher[0].voucher_out_id );					
+						$("#voucher_id_text").html( voucher[0].voucher_out_id );
 					}
 					else
 					{
-						$("#voucher_id_text").html( voucher_id );
+						$("#voucher_id_text").html( voucher[0].voucher_id );
 					}
+
 					$("#order_id").val( voucher[0].order_id );
 
 					if(voucher[0].order_id)
@@ -214,8 +256,8 @@ $(document).ready(function(){
 					$("#payment_date").html( voucher[0].payment_date );
 					$("#b_account_id").val( voucher[0].b_account_id );
 					$("#dim_a").val( voucher[0].dim_a );
-					$("#amount").html( data['generic'].amount );
-					$("#approved_amount").html( data['generic'].approved_amount );
+//					$("#amount").html( data['generic'].amount );
+//					$("#approved_amount").html( data['generic'].approved_amount );
 					$("#currency").html( voucher[0].currency );
 					$("#process_log").html( data['generic'].process_log );
 					$("#my_initials").val( data['generic'].my_initials );
@@ -427,8 +469,8 @@ $(document).ready(function(){
 					$("#invoice_date").html( '' );
 					$("#payment_date").html( '' );
 					$("#b_account_id").val( '' );
-					$("#amount").html( '' );
-					$("#approved_amount").html( '' );
+//					$("#amount").html( '' );
+//					$("#approved_amount").html( '' );
 					$("#currency").html( '' );
 					$("#oppsynsmannid").html( '' );
 					$("#saksbehandlerid").html( '' );

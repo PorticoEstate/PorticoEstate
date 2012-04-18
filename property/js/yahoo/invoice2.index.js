@@ -156,3 +156,9 @@ YAHOO.INVOICE.BorderLayout = function()
 
 YAHOO.util.Event.onDOMReady( YAHOO.INVOICE.BorderLayout );
 
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
+
+
