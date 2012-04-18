@@ -268,7 +268,7 @@
 			}
 			
 			// This value represents the type 
-			$location_id = $GLOBALS['phpgw']->locations->get_id("property", ".ticket");
+			$location_id = $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
 			
 			$ticket = array
 			(
@@ -352,7 +352,6 @@
 			
 			_debug_array(array($location_id, $location_item_id));
 			die();
-			
 			
 			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
 
