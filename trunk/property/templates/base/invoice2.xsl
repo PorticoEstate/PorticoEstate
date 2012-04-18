@@ -46,13 +46,7 @@
 
 </style>
 
-
-<div class="yui-navset yui-navset-top" id="pending_for_approval_tabview">
-	<div class="identifier-header">
-		<h1><xsl:value-of select="php:function('lang', 'invoice')"/></h1>
-	</div>
-	<xsl:call-template name="invoice" />
-</div>
+<xsl:call-template name="invoice" />
 	
 </xsl:template>
 
@@ -90,19 +84,25 @@
 					</div>
 				</div>
 
-			<div class="layout-west">
+			<div class="layout-center">
 				<div class="header">
-					<h2>faktura</h2>
+					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
 				</div>
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<xsl:call-template name="msgbox"/>
+				</xsl:when>
+			</xsl:choose>
+
 				<div class="body">
 					<div id="voucher_details">
 						<xsl:call-template name="yui_phpgw_i18n"/>
-						<table>
+						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
 						</table>
 					  	<form action="#" name="voucher_form" id="voucher_form" method="post">
-							<table>
+						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
 										<xsl:apply-templates select="paging"/>
@@ -116,7 +116,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="layout-center">
+			<div class="layout-east">
 				<div class="header">
 					<h2>Bilde</h2>
 				</div>
@@ -398,6 +398,14 @@
 			</td>
 			<td>
 			  	<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'invoice line text')" />
+			</td>
+			<td>
+			  	<input type="text" name="values[line_text]" id="line_text" value="{voucher_info/voucher/line_text}"/>
 			</td>
 		</tr>
 		<tr class ='row_off'>

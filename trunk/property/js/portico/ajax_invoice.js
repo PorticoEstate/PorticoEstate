@@ -156,6 +156,7 @@ $(document).ready(function(){
 		$("#voucher_id").val( '' );
 		$("#voucher_id_text").html( '' );
 		$("#line_id").val( '' );
+		$("#line_text").val( '' );
 		$("#order_id").val( '' );
 		$("#project_group").val( '' );
 		$("#invoice_id").html( '' );
@@ -262,6 +263,7 @@ $(document).ready(function(){
 					$("#process_log").html( data['generic'].process_log );
 					$("#my_initials").val( data['generic'].my_initials );
 					$("#sign_orig").val( data['generic'].sign_orig );
+					$("#line_text").val( voucher[0].line_text );
 
 		//			$("#oppsynsigndato").html( voucher[0].oppsynsigndato );
 		//			$("#saksigndato").html( voucher[0].saksigndato );
@@ -453,6 +455,7 @@ $(document).ready(function(){
 				}
 				else
 				{
+					$("#line_text").val( '' );
 					$("#voucher_id").val( '' );
 					$("#voucher_id_text").html( '' );
 					$("#order_id").val( '' );

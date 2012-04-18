@@ -1812,7 +1812,11 @@
 
 		public function update_voucher2($data)
 		{
-
+			if(!isset($data['line_id']) || !$data['line_id'])
+			{
+				phpgwapi_cache::message_set(lang('select invoice'), 'error');
+				return false;
+			}
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
 			
@@ -1827,12 +1831,13 @@
 
 			$value_set_line = array();
 
-			$value_set_line['pmwrkord_code'] = $data['order_id'];
-			$value_set_line['dimb'] = $data['dim_b'];
-			$value_set_line['dima'] = $data['dim_a'];
-			$value_set_line['mvakode'] = $data['tax_code'];
-			$value_set_line['project_id'] = $data['project_group'];
-			$value_set_line['spbudact_code'] = $data['b_account_id'];
+			$value_set_line['pmwrkord_code']	= $data['order_id'];
+			$value_set_line['dimb']				= $data['dim_b'];
+			$value_set_line['dima']				= $data['dim_a'];
+			$value_set_line['mvakode']			= $data['tax_code'];
+			$value_set_line['project_id']		= $data['project_group'];
+			$value_set_line['spbudact_code']	= $data['b_account_id'];
+			$value_set_line['line_text']		= $data['line_text'];
 
 			$value_set_line	= $this->db->validate_update($value_set_line);
 			$this->db->query("UPDATE fm_ecobilag SET $value_set_line WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
@@ -1960,6 +1965,7 @@
 			}
 
 			$receipt = $this->forward($data);
+			phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 
 			$GLOBALS['phpgw']->db->transaction_commit();
 		}
