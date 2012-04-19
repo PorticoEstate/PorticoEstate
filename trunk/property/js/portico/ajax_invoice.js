@@ -191,6 +191,10 @@ $(document).ready(function(){
 		$("#close_order").html( '' );
 		$("#close_order_orig").val( '' );
 		$("#park_order").html( '' );
+
+		base_java_url['voucher_id_filter'] = $(this).val();
+		execute_async(myDataTable_0);
+
 		document.getElementById('image_content').src = '';
 	});
 
@@ -203,8 +207,7 @@ $(document).ready(function(){
 
 
 	$("#voucher_form").live("submit", function(e){
-//		e.preventDefault();
-return;
+		e.preventDefault();
 		var line_id = $("#line_id").val();
 		var voucher_id_orig = $("#voucher_id").val();
 		if(!line_id)
@@ -230,12 +233,15 @@ return;
 	    			{
 		    			$(submitBnt).val("Lagret");
 				/*
-					var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-					var requestUrl = phpGWLink('index.php', oArgs, true);
-					requestUrl = requestUrl + "&voucher_id_filter=" + $("#voucher_id").val();
-					execute_async(datatable-container,requestUrl);
+						var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
+						var requestUrl = phpGWLink('index.php', oArgs, true);
+						requestUrl = requestUrl + "&voucher_id_filter=" + $("#voucher_id").val();
+						execute_async(myDataTable_0,requestUrl);
 				*/
 
+						base_java_url['voucher_id_filter'] = $("#voucher_id").val();
+						base_java_url['line_id'] = line_id;
+						execute_async(myDataTable_0);
 					}
 					else
 					{
@@ -248,15 +254,34 @@ return;
 						$(submitBnt).addClass("not_active");
 		    		}, 1000);
 
+					var htmlString = "";
+	   				if(typeof(data['receipt']['error']) != 'undefined')
+	   				{
+						for ( var i = 0; i < data['receipt']['error'].length; ++i )
+						{
+							htmlString += "<div class=\"error\">";
+							htmlString += data['receipt']['error'][i]['msg'];
+							htmlString += '</div>';
+						}
+	   				
+	   				}
+	   				if(typeof(data['receipt']['message']) != 'undefined')
+	   				{
+						for ( var i = 0; i < data['receipt']['message'].length; ++i )
+						{
+							htmlString += "<div class=\"msg_good\">";
+							htmlString += data['receipt']['message'][i]['msg'];
+							htmlString += '</div>';
+						}
+	   				
+	   				}
+	   				$("#receipt").html(htmlString);
+	   				
 	   				update_form_values(line_id, voucher_id_orig);
 				}
 			}
 		});
 	});
-
-
-
-
 
 //-------------
 
@@ -841,7 +866,7 @@ function update_form_values( line_id, voucher_id_orig ){
 					$("#close_order_orig").val( voucher[0].closed );
 //---------
 
-					if(data['generic']['dimb_list']['options'] != 'undefined')
+					if(typeof(data['generic']['dimb_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -858,7 +883,7 @@ function update_form_values( line_id, voucher_id_orig ){
 
 						$("#dim_b").html( htmlString );
 					}
-					if(data['generic']['tax_code_list']['options'] != 'undefined')
+					if(typeof(data['generic']['tax_code_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -878,7 +903,7 @@ function update_form_values( line_id, voucher_id_orig ){
 						$("#tax_code").html( htmlString );
 					}
 
-					if(data['generic']['period_list']['options'] != 'undefined')
+					if(typeof(data['generic']['period_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -895,7 +920,7 @@ function update_form_values( line_id, voucher_id_orig ){
 
 						$("#period").html( htmlString );
 					}
-					if(data['generic']['periodization_list']['options'] != 'undefined')
+					if(typeof(data['generic']['periodization_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -912,7 +937,7 @@ function update_form_values( line_id, voucher_id_orig ){
 
 						$("#periodization").html( htmlString );
 					}
-					if(data['generic']['periodization_start_list']['options'] != 'undefined')
+					if(typeof(data['generic']['periodization_start_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -930,7 +955,7 @@ function update_form_values( line_id, voucher_id_orig ){
 						$("#periodization_start").html( htmlString );
 					}
 
-					if(data['generic']['process_code_list']['options'] != 'undefined')
+					if(typeof(data['generic']['process_code_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -947,7 +972,7 @@ function update_form_values( line_id, voucher_id_orig ){
 						$("#process_code").html( htmlString );
 					}
 
-					if(data['generic']['approved_list'] != 'undefined')
+					if(typeof(data['generic']['approved_list']) != 'undefined')
 					{
 						for ( var i = 0; i < data['generic']['approved_list'].length; ++i )
 						{
@@ -978,7 +1003,7 @@ function update_form_values( line_id, voucher_id_orig ){
 						}
 					}
 
-					if(data['generic']['approve_list']['options'] != 'undefined')
+					if(typeof(data['generic']['approve_list']['options']) != 'undefined')
 					{
 						var htmlString = "";
 
@@ -986,7 +1011,7 @@ function update_form_values( line_id, voucher_id_orig ){
 
 						$.each(obj, function(i) {
 							var selected = '';
-							if(obj[i].selected != 'undefined' && obj[i].selected == 1)
+							if(typeof(obj[i].selected) != 'undefined' && obj[i].selected == 1)
 							{
 								selected = ' selected';
 							}

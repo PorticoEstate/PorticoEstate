@@ -441,6 +441,20 @@
 			$invoice = array();
 			while ($this->db->next_record())
 			{
+				$status_line = 'O';
+				if($this->db->f('budsjettsigndato'))
+				{
+					$status_line = 'C';
+				}
+				else if($this->db->f('saksigndato'))
+				{
+					$status_line = 'B';
+				}
+				else if($this->db->f('oppsynsigndato'))
+				{
+					$status_line = 'A';
+				}
+
 				$invoice[] = array
 					(
 						'counter'				=> $i,
@@ -471,7 +485,8 @@
 						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 						'transfer_time'			=> $this->db->f('overftid'),
-						'line_text'				=> $this->db->f('line_text',true)
+						'line_text'				=> $this->db->f('line_text',true),
+						'status_line'			=> $status_line
 					);
 
 				$i++;
@@ -1879,6 +1894,18 @@
 					}
 
 					$table = 'fm_ecobilag';
+
+					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$amount = $this->db->f('belop');
+					$new_amount = $amount - $split_amount;
+					
+					if($new_amount < 0)
+					{
+						phpgwapi_cache::message_set(lang('negative sum'), 'error');
+						continue;
+					}
+
 					$metadata = $this->db->metadata($table);
 					$sql ="SELECT * FROM {$table} WHERE id= {$id}";
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -1886,9 +1913,10 @@
 
 					$value_set = array();
 
+					$skip_values = array('id','pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
 					foreach($metadata as $_field)
 					{
-						if($_field->name != 'id')
+						if(!in_array($_field->name, $skip_values))
 						{
 							$value_set[$_field->name] = $this->db->f($_field->name,true);
 						}
@@ -1899,10 +1927,6 @@
 
 					$new_id = $this->db->get_last_insert_id($table,'id');
 
-					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
-					$this->db->next_record();
-					$amount = $this->db->f('belop');
-					$new_amount = $amount - $split_amount;
 
 					$value_set= array
 					(

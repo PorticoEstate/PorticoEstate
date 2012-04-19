@@ -19,6 +19,7 @@
 
 <!-- separate tabs and  inline tables-->
 
+
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <style type="text/css">
 #box { width: 200px; height: 5px; background: blue; }
@@ -80,9 +81,11 @@
 
 <xsl:template name="invoice" xmlns:php="http://php.net/xsl">
 	<!-- loads translations into array for use with javascripts -->
+	<!--
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>
+	-->
 		<script type="text/javascript">
 			var invoice_layout_config = <xsl:value-of select="invoice_layout_config"/>;
 		</script>
@@ -122,9 +125,10 @@
 				</xsl:when>
 			</xsl:choose>
 
+				<div id="receipt"></div>
 				<div class="body">
 					<div id="voucher_details">
-						<xsl:call-template name="yui_phpgw_i18n"/>
+						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
@@ -241,7 +245,6 @@
 				<select id="voucher_id_filter" name="voucher_id_filter">
 					<xsl:apply-templates select="voucher_list/options"/>
 				</select>
-			  	<input type="text" name="refresch_voucher_id" id="refresch_voucher_id" value=""/>
 			</form>
 			<form id="update_table_dummy" method='POST' action='' ></form>
 		</td>
