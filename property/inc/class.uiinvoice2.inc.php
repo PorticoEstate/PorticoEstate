@@ -27,9 +27,9 @@
 	*/
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('registration.uicommon');
+//	phpgw::import_class('registration.uicommon');
 
-	class property_uiinvoice2 extends registration_uicommon
+	class property_uiinvoice2
 	{
 		var $cat_id;
 		var $start;
@@ -61,8 +61,9 @@
 
 		function __construct()
 		{
-			parent::__construct();
+//			parent::__construct();
 		
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account_id 			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.boinvoice',true);
 			$this->bocommon				= CreateObject('property.bocommon');
@@ -74,8 +75,51 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->allrows				= $this->bo->allrows;
 		
-			self::set_active_menu('property::invoice::invoice2');
+//			self::set_active_menu('property::invoice::invoice2');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
 		}
+
+		public function add_javascript($app, $pkg, $name)
+		{
+  			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
+		}
+		/**
+		* A more flexible version of xslttemplate.add_file
+		*/
+		public function add_template_file($tmpl)
+		{
+			if(is_array($tmpl))
+			{
+				foreach($tmpl as $t)
+				{
+					$this->add_template_file($t);
+				}
+				return;
+			}
+			foreach(array_reverse($this->tmpl_search_path) as $path)
+			{
+				$filename = $path . '/' . $tmpl . '.xsl';
+				if (file_exists($filename))
+				{
+					$GLOBALS['phpgw']->xslttpl->xslfiles[$tmpl] = $filename;
+					return;
+				}
+			}
+			echo "Template $tmpl not found in search path: ";
+			print_r($this->tmpl_search_path);
+			die;
+		}
+
+		public function link($data)
+		{
+			return $GLOBALS['phpgw']->link('/index.php', $data);
+		}
+
+		public function redirect($link_data)
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+		}
+
 
 		function update_voucher()
 		{
@@ -116,6 +160,11 @@
 
 			if(phpgw::get_var('phpgw_return_as') == 'json')
 			{
+				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$result['receipt'] = $receipt;
+				}
 				return $result;
 			}
 			else
@@ -168,15 +217,6 @@
 			$myColumnDefs = array();
 			$datavalues = array();
 			$myButtons	= array();
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
-													array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
-			);	
-
-
-			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
 
 			$datavalues[] = array
 			(
@@ -184,102 +224,112 @@
 				'values' 			=> json_encode(array()),
 				'total_records'		=> 0,
 				'permission'   		=> "''",
-				'is_paginator'		=> 0,
+				'is_paginator'		=> 1,
 				'edit_action'		=> "''",
 				'footer'			=> 0
 			);
 
-			$datatable_old = array
+			$datatable = array
 			(
-					'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id,'line_id' => $line_id,'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-						'key' => 'id',
-						'hidden' => true
-						),
-						array(
-								'key' => 'approve_line',
-								'label' => lang('select'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-						array(
-							'key'	=>	'amount',
-							'label'	=>	lang('amount'),
-							'sortable'	=>	true
-						),
-						array(
-							'key' => 'approved_amount',
-							'label' => lang('approved amount'),
-							'sortable'	=> true,
-	//						'formatter' => 'FormatterRight',
-						),
-						array(
-								'key' => 'split',
-								'label' => lang('split line'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-						array(
-								'key' => 'budget_account',
-								'label' => lang('budget account'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-							array(
-								'key' => 'dima',
-								'label' => lang('dim a'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-						array(
-								'key' => 'dimb',
-								'label' => lang('dim b'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-							array(
-								'key' => 'order_id',
-								'label' => lang('order'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-							array(
-								'key' => 'project_group',
-								'label' => lang('project group'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-							array(
-								'key' => 'line_text',
-								'label' => lang('invoice line text'),
-								'sortable' => false,
-								'formatter' => 'FormatterCenter',
-						),
-						array(
-							'key' => 'actions',
-							'hidden' => true
-						),
-						array(
-							'key' => 'labels',
-							'hidden' => true
-						),
-						array(
-							'key' => 'ajax',
-							'hidden' => true
-						),array(
-							'key' => 'parameters',
-							'hidden' => true
-						)					
-					)
-				);
+				array
+				(
+				'key' => 'id',
+				'hidden' => true
+				),
+				array
+				(
+					'key' => 'approve_line',
+					'label' => lang('select'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'status_line',
+					'label' => lang('status'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key'	=>	'amount',
+					'label'	=>	lang('amount'),
+					'formatter' => 'FormatterRight',
+					'sortable'	=>	true
+				),
+				array
+				(
+					'key' => 'approved_amount',
+					'label' => lang('approved amount'),
+					'sortable'	=> true,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
+					'key' => 'split',
+					'label' => lang('split line'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'budget_account',
+					'label' => lang('budget account'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'dima',
+					'label' => lang('dim a'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'dimb',
+					'label' => lang('dim b'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'order_id',
+					'label' => lang('order'),
+					'sortable' => false,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
+					'key' => 'project_group',
+					'label' => lang('project group'),
+					'sortable' => false,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
+					'key' => 'line_text',
+					'label' => lang('invoice line text'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'approved_amount_hidden',
+					'hidden' => true
+				)
+			);
 
-
+			$myColumnDefs[0] = array
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode($datatable)
+			);	
 
 			$data = array
 			(
 				'td_count'						=> '""',
-				'base_java_url'					=> "{menuaction:'property.uiinvoice2.update_voucher'}",
+				'base_java_url'					=> "{menuaction:'property.uiinvoice2.query'}",
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
@@ -313,36 +363,44 @@
 				'datatable_old' 				=> array()//$datatable_old;
 			);
 //_debug_array($data);die();			
-			$GLOBALS['phpgw']->css->add_external_file('/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
-			phpgwapi_yui::load_widget('layout');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('loader');
+			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			phpgwapi_yui::load_widget('layout');
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
 
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
 
+
 //			self::render_template_xsl(array('invoice2', 'common'), $data);
-			self::render_template_xsl(array('invoice2'), $data);
-			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
+//			self::render_template_xsl(array('invoice2'), $data);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
 		}
 	
 
 		public function query()
 		{
-			$this->bo->start = phpgw::get_var('startIndex');
-			$this->bo->order = phpgw::get_var('sort');
-			$this->bo->sort = phpgw::get_var('dir');
-			$this->bo->results = phpgw::get_var('results');
 			$line_id =	phpgw::get_var('line_id', 'int');
-//_debug_array($_REQUEST); die();
 			if ( ! $voucher_id = phpgw::get_var('voucher_id_filter') )
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
-
 			$values = $this->bo->read_invoice_sub($voucher_id);
 
 			foreach($values as &$entry)
@@ -355,17 +413,12 @@
 
 				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
-				
-			//	$entry['line_text'] = "<input type =\"text\" name=\"values[line_text][{$entry['id']}]\" value=\"{$entry['line_text']}\" size=\"20\">";
+				$entry['approved_amount_hidden'] = $entry['approved_amount'];
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
 				$results['results'][]= $entry;
 			}
-			$results['total_records'] = $this->bo->total_records;
-			$results['start'] = $this->bo->start;
-			$results['sort'] = 'id';
-			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
-					
-			return $this->yui_results($results);
+
+			return json_encode($values);
 		}
 
 		public function get_vouchers()

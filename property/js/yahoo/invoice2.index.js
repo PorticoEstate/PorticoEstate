@@ -1,8 +1,50 @@
 var	myPaginator_0, myDataTable_0
 
-this.myParticularRenderEvent = function()
-{
-}
+	this.myParticularRenderEvent = function()
+	{
+		this.addFooterDatatable(myPaginator_0,myDataTable_0);
+	}
+
+
+
+/********************************************************************************/
+  	this.addFooterDatatable = function(paginator,datatable)
+  	{
+  		//call getSumPerPage(name of column) in property.js
+  		tmp_sum1 = getTotalSum('amount',2,paginator,datatable);
+  		tmp_sum2 = getTotalSum('approved_amount_hidden',2,paginator,datatable);
+
+  		if(typeof(tableYUI)=='undefined')
+  		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+  		}
+  		else
+  		{
+  			tableYUI.deleteTFoot();
+  		}
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		td_sum('Sum');
+		td_empty(2);
+		td_sum(tmp_sum1);
+		td_sum(tmp_sum2);
+		td_empty(7);
+
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR);
+	}
+
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+	}	
+
+
+ /********************************************************************************/
 
 
 YAHOO.util.Event.addListener(window, "load", function()
@@ -82,7 +124,7 @@ YAHOO.INVOICE.Store = function(location, data)
 YAHOO.INVOICE.BorderLayout = function()
 {
 
-	if(invoice_layout_config != 'undefined')
+	if(typeof (invoice_layout_config) != 'undefined')
 	{
 		this.config = invoice_layout_config.length == 0 ? {} : invoice_layout_config;
 	}
@@ -180,44 +222,4 @@ YAHOO.util.Event.onDOMReady( YAHOO.INVOICE.BorderLayout );
 	{
 		elCell.innerHTML = "<center>"+oData+"</center>";
 	}
-
-	this.execute_async = function(datatable, incoming_url)
-	{
-		if(typeof(incoming_url) != 'undefined')
-		{
-			base_java_url = incoming_url;
-		}
-
- 		ds = phpGWLink('index.php',base_java_url,true);
-		
-		var callback =
-		{
-			success: function(o)
-			{
-				eval("values_ds ="+o.responseText);
-				if(values_ds=="")
-				{
-					update_datatable(datatable);
-				}
-				else
-				{
-					eval("values_ds ="+values_ds);
-					update_datatable(datatable);
-				}
-
-			},
-			failure: function(o) {window.alert('Server or your connection is dead.')},
-			timeout: 10000,
-			cache: false
-		}
-		try
-		{
-			YAHOO.util.Connect.asyncRequest('POST',ds,callback);
-		}
-		catch(e_async)
-		{
-		   alert(e_async.message);
-		}
-	}
-
 
