@@ -28,12 +28,7 @@
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('registration.uicommon');
-/*
-	include_class('registration', 'check_list', 'inc/model/');
-	include_class('registration', 'date_generator', 'inc/component/');
-	include_class('registration', 'status_checker', 'inc/helper/');
-	include_class('registration', 'date_helper', 'inc/helper/');
-*/	
+
 	class property_uiinvoice2 extends registration_uicommon
 	{
 		var $cat_id;
@@ -60,7 +55,8 @@
 			'edit'						 		=> true,
 			'get_vouchers'						=> true,
 			'get_single_voucher'				=> true,
-			'get_single_line'					=> true
+			'get_single_line'					=> true,
+			'update_voucher'					=> true
 		);
 
 		function __construct()
@@ -81,7 +77,7 @@
 			self::set_active_menu('property::invoice::invoice2');
 		}
 
-		function index()
+		function update_voucher()
 		{
 			$receipt = array();
 			$voucher_id	= phpgw::get_var('voucher_id', 'int');
@@ -101,183 +97,236 @@
 				$values['line_id'] = $line_id;
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->update_voucher2($values);
+					if($this->bo->update_voucher2($values))
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
 				}
+			}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $result;
 			}
 			else
 			{
-				if(phpgw::get_var('phpgw_return_as') == 'json')
-				{
-					return $this->query();
-				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiinvoice2.index', 'voucher_id' => $voucher_id, 'line_id' => $line_id));
+			}
+		}
 
-				$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
-				$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
-				$budget_responsible_list	= $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice');
 
-				$userlist_default = array();
-				$userlist_default[] = array('id'=> '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid, 'name'=>lang('mine vouchers'));
-				$userlist_default[] = array('id'=>'','name'=>lang('no user'));
+		function index()
+		{
+			$receipt = array();
+			$voucher_id	= phpgw::get_var('voucher_id', 'int');
+			$line_id	= phpgw::get_var('line_id', 'int');
 
-				$voucher_list = array('id' => '', 'name' => lang('select'));
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
 
-				foreach($userlist_default as $default)
-				{
-					$janitor_list = array_merge(array($default), $janitor_list);
-					$supervisor_list = array_merge(array($default), $supervisor_list);
-					$budget_responsible_list = array_merge(array($default), $budget_responsible_list);
-				}
+			$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
+			$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
+			$budget_responsible_list	= $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice');
 
-				$msgbox_data = array();
-				if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
-				{
-					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
+			$userlist_default = array();
+			$userlist_default[] = array('id'=> '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid, 'name'=>lang('mine vouchers'));
+			$userlist_default[] = array('id'=>'','name'=>lang('no user'));
 
-				$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+			$voucher_list = array('id' => '', 'name' => lang('select'));
 
-				$data = array(
-					'msgbox_data'			=> $msgbox_data,
-					'invoice_layout_config'	=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
-					'preferences_url'	=> $GLOBALS['phpgw']->link('/preferences/index.php'),
-					'preferences_text'	=> lang('preferences'),
-					'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
-					'home_text'		=> lang('home'),
-					'home_icon'		=> 'icon icon-home',
-					'about_url'		=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
-					'about_text'	=> lang('about'),
-					'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
-					'logout_text'	=> lang('logout'),
-					'user_fullname' => $user->__toString(),
-					'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-					'filter_form' 				=> array
-					(
-						'janitor_list' 				=> array('options' => $janitor_list),
-						'supervisor_list' 			=> array('options' => $supervisor_list),
-						'budget_responsible_list' 	=> array('options' => $budget_responsible_list),
-					),
-					'filter_invoice' 				=> array
-					(
-						'voucher_list' 				=> array('options' => $voucher_list),
-					),
-					'voucher_info'					=> $this->get_single_line($line_id),
-					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id,'line_id' => $line_id,'phpgw_return_as' => 'json')),
-						'field' => array(
-							array(
-								'key' => 'id',
-								'hidden' => true
-							),
-							array(
-									'key' => 'approve_line',
-									'label' => lang('select'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
-							array(
-								'key'	=>	'amount',
-								'label'	=>	lang('amount'),
-								'sortable'	=>	true
-							),
-							array(
-								'key' => 'approved_amount',
-								'label' => lang('approved amount'),
-								'sortable'	=> true,
-		//						'formatter' => 'FormatterRight',
-							),
-							array(
-									'key' => 'split',
-									'label' => lang('split line'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
-							array(
-									'key' => 'budget_account',
-									'label' => lang('budget account'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
+			foreach($userlist_default as $default)
+			{
+				$janitor_list = array_merge(array($default), $janitor_list);
+				$supervisor_list = array_merge(array($default), $supervisor_list);
+				$budget_responsible_list = array_merge(array($default), $budget_responsible_list);
+			}
 
-							array(
-									'key' => 'dima',
-									'label' => lang('dim a'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
-							array(
-									'key' => 'dimb',
-									'label' => lang('dim b'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
+			$msgbox_data = array();
+			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			{
+				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			}
 
-							array(
-									'key' => 'order_id',
-									'label' => lang('order'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
+			$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
-							array(
-									'key' => 'project_group',
-									'label' => lang('project group'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
 
+
+			$myColumnDefs = array();
+			$datavalues = array();
+			$myButtons	= array();
+			$myColumnDefs[0] = array
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
+													array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
+			);	
+
+
+			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id'])?$ticket['vendor_id']:0);
+
+			$datavalues[] = array
+			(
+				'name'				=> "0",
+				'values' 			=> json_encode(array()),
+				'total_records'		=> 0,
+				'permission'   		=> "''",
+				'is_paginator'		=> 0,
+				'edit_action'		=> "''",
+				'footer'			=> 0
+			);
+
+			$datatable_old = array
+			(
+					'source' => self::link(array('menuaction' => 'property.uiinvoice2.query', 'voucher_id' => $voucher_id,'line_id' => $line_id,'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+						'key' => 'id',
+						'hidden' => true
+						),
+						array(
+								'key' => 'approve_line',
+								'label' => lang('select'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
+						array(
+							'key'	=>	'amount',
+							'label'	=>	lang('amount'),
+							'sortable'	=>	true
+						),
+						array(
+							'key' => 'approved_amount',
+							'label' => lang('approved amount'),
+							'sortable'	=> true,
+	//						'formatter' => 'FormatterRight',
+						),
+						array(
+								'key' => 'split',
+								'label' => lang('split line'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
+						array(
+								'key' => 'budget_account',
+								'label' => lang('budget account'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
 							array(
-									'key' => 'line_text',
-									'label' => lang('invoice line text'),
-									'sortable' => false,
-									'formatter' => 'FormatterCenter',
-							),
+								'key' => 'dima',
+								'label' => lang('dim a'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
+						array(
+								'key' => 'dimb',
+								'label' => lang('dim b'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
 							array(
-								'key' => 'actions',
-								'hidden' => true
-							),
+								'key' => 'order_id',
+								'label' => lang('order'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
 							array(
-								'key' => 'labels',
-								'hidden' => true
-							),
+								'key' => 'project_group',
+								'label' => lang('project group'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
 							array(
-								'key' => 'ajax',
-								'hidden' => true
-							),array(
-								'key' => 'parameters',
-								'hidden' => true
-							)					
-						)
+								'key' => 'line_text',
+								'label' => lang('invoice line text'),
+								'sortable' => false,
+								'formatter' => 'FormatterCenter',
+						),
+						array(
+							'key' => 'actions',
+							'hidden' => true
+						),
+						array(
+							'key' => 'labels',
+							'hidden' => true
+						),
+						array(
+							'key' => 'ajax',
+							'hidden' => true
+						),array(
+							'key' => 'parameters',
+							'hidden' => true
+						)					
 					)
 				);
-/*
-    Art
-    Kategori
-    Koststed
-    Bestillingsnummer
-    Agressoprosjektnr
-    Postringstekst
-    Beløp
-*/
 
 
+
+			$data = array
+			(
+				'td_count'						=> '""',
+				'base_java_url'					=> "{menuaction:'property.uiinvoice2.update_voucher'}",
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
+				'myButtons'						=> $myButtons,
+
+				'msgbox_data'					=> $msgbox_data,
+				'invoice_layout_config'			=> json_encode(execMethod('phpgwapi.template_portico.retrieve_local', 'invoice_layout_config')),
+				'preferences_url'				=> $GLOBALS['phpgw']->link('/preferences/index.php'),
+				'preferences_text'				=> lang('preferences'),
+				'home_url'						=> $GLOBALS['phpgw']->link('/home.php'),
+				'home_text'						=> lang('home'),
+				'home_icon'						=> 'icon icon-home',
+				'about_url'						=> $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) ),
+				'about_text'					=> lang('about'),
+				'logout_url'					=> $GLOBALS['phpgw']->link('/logout.php'),
+				'logout_text'					=> lang('logout'),
+				'user_fullname' 				=> $user->__toString(),
+				'site_title'					=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
+				'filter_form' 					=> array
+													(
+														'janitor_list' 				=> array('options' => $janitor_list),
+														'supervisor_list' 			=> array('options' => $supervisor_list),
+														'budget_responsible_list' 	=> array('options' => $budget_responsible_list),
+													),
+				'filter_invoice' 					=> array
+													(
+														'voucher_list' 			=> array('options' => $voucher_list),
+													),
+				'voucher_info'					=> $this->get_single_line($line_id),
+				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
+				'datatable_old' 				=> array()//$datatable_old;
+			);
 //_debug_array($data);die();			
+			$GLOBALS['phpgw']->css->add_external_file('/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
+			phpgwapi_yui::load_widget('layout');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('loader');
 
-				$GLOBALS['phpgw']->css->add_external_file('/phpgwapi/js/yahoo/layout/assets/skins/sam/layout.css');
-				phpgwapi_yui::load_widget('layout');
-				phpgwapi_yui::load_widget('paginator');
 
-//				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-				self::add_javascript('controller', 'controller', 'jquery.js');
-				self::add_javascript('property', 'portico', 'ajax_invoice.js');
-				self::add_javascript('property', 'yahoo', 'invoice2.index.js');
 
-				self::render_template_xsl(array('invoice2', 'common'), $data);
-				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
-			}	
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('property', 'portico', 'ajax_invoice.js');
+			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
+
+//			self::render_template_xsl(array('invoice2', 'common'), $data);
+			self::render_template_xsl(array('invoice2'), $data);
+			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
 		}
 	
 
@@ -506,7 +555,7 @@
 					$voucher[0]['image_url']	= $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
-	//			$voucher[0]['image_url']	= 'http://www.nettavisen.no/';
+				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
 			}
 			else
 			{

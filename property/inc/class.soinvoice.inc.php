@@ -1967,7 +1967,7 @@
 			$receipt = $this->forward($data);
 			phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
 
-			$GLOBALS['phpgw']->db->transaction_commit();
+			return $GLOBALS['phpgw']->db->transaction_commit();
 		}
 
 		public function get_vouchers($data)

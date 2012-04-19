@@ -1,3 +1,23 @@
+var	myPaginator_0, myDataTable_0
+
+this.myParticularRenderEvent = function()
+{
+}
+
+
+YAHOO.util.Event.addListener(window, "load", function()
+{
+	loader = new YAHOO.util.YUILoader();
+	loader.addModule({
+		name: "anyone",
+		type: "js",
+	    fullpath: property_js
+	    });
+
+	loader.require("anyone");
+    loader.insert();
+});
+
 YAHOO.namespace ("INVOICE");
 
 
@@ -159,6 +179,45 @@ YAHOO.util.Event.onDOMReady( YAHOO.INVOICE.BorderLayout );
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
+
+	this.execute_async = function(datatable, incoming_url)
+	{
+		if(typeof(incoming_url) != 'undefined')
+		{
+			base_java_url = incoming_url;
+		}
+
+ 		ds = phpGWLink('index.php',base_java_url,true);
+		
+		var callback =
+		{
+			success: function(o)
+			{
+				eval("values_ds ="+o.responseText);
+				if(values_ds=="")
+				{
+					update_datatable(datatable);
+				}
+				else
+				{
+					eval("values_ds ="+values_ds);
+					update_datatable(datatable);
+				}
+
+			},
+			failure: function(o) {window.alert('Server or your connection is dead.')},
+			timeout: 10000,
+			cache: false
+		}
+		try
+		{
+			YAHOO.util.Connect.asyncRequest('POST',ds,callback);
+		}
+		catch(e_async)
+		{
+		   alert(e_async.message);
+		}
 	}
 
 
