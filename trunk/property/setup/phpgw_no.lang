@@ -1923,5 +1923,12 @@ low probability	property	no	Liten sannsynlighet
 medium probability	property	no	Middels sannsynlighet
 modified date	property	no	Oppdatert dato
 high probability	property	no	Stor sannsynlighet
-weight	property	no	Vekt
-risk	property	no	Risiko
+weight	property	property	no	Vekt
+risk	property	property	no	Risiko
+elements_pr_page	property	no	Poster pr side
+shows_from	property	no	Viser
+of_total	property	no	av
+first	property	no	Første
+previous	property	no	Forrige
+next	property	no	Neste
+last	property	no	Siste
