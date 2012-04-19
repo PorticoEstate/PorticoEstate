@@ -813,6 +813,6 @@
 
 		public function update_voucher2($data)
 		{
-			$receipt = $this->so->update_voucher2($data);
+			return $this->so->update_voucher2($data);
 		}
 	}

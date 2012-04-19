@@ -47,6 +47,34 @@
 </style>
 
 <xsl:call-template name="invoice" />
+
+		<!--  DATATABLE DEFINITIONS-->
+		<script type="text/javascript">
+			var property_js = <xsl:value-of select="property_js"/>;
+			var base_java_url = <xsl:value-of select="base_java_url"/>;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+			var td_count = <xsl:value-of select="td_count"/>;
+
+			<xsl:for-each select="datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
 	
 </xsl:template>
 
@@ -60,7 +88,7 @@
 		</script>
 
 	<!-- IMPORTANT!!! Loads YUI javascript -->
-	<xsl:call-template name="common"/>
+<!--	<xsl:call-template name="common"/> -->
 
 	<div class="yui-content">
 		<div id="invoice-layout">
@@ -101,7 +129,7 @@
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
 						</table>
-					  	<form action="#" name="voucher_form" id="voucher_form" method="post">
+					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
 						<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
@@ -200,7 +228,7 @@
 <xsl:template match="filter_invoice" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td colspan='4'>
-			<form id="invoice_queryForm">
+			<form id="invoice_queryForm" name="invoice_queryForm">
 				<xsl:attribute name="method">
 					<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 				</xsl:attribute>
@@ -213,8 +241,8 @@
 				<select id="voucher_id_filter" name="voucher_id_filter">
 					<xsl:apply-templates select="voucher_list/options"/>
 				</select>
+			  	<input type="text" name="refresch_voucher_id" id="refresch_voucher_id" value=""/>
 			</form>
-		
 			<form id="update_table_dummy" method='POST' action='' ></form>
 		</td>
 	</tr>
@@ -227,7 +255,7 @@
 				<xsl:value-of select="php:function('lang', 'voucher')" />
 			</td>
 			<td>
-			  	<input type="hidden" name="voucher_id" id="voucher_id" value="{voucher_info/voucher/voucher_id}	"/>
+			  	<input type="hidden" name="voucher_id" id="voucher_id" value="{voucher_info/voucher/voucher_id}"/>
 			  	<input type="hidden" name="line_id" id="line_id" value="{voucher_info/voucher/id}"/>
 			  	<div id= 'voucher_id_text'>
 				  <xsl:value-of select="voucher_info/voucher/voucher_id"/>		  	
@@ -553,16 +581,23 @@
 
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
+	<div id="paging_0"/>
+	<div id="datatable-container_0"/>
+
 	<div id="data_paginator"/>
 	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="row_on"><input type="submit" name="values[save_voucher]" id="save_voucher" value="{$label_submit}"/></div>
+	<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
+</xsl:template>
+
+<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
 </xsl:template>
 
 
-<xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
+
+<xsl:template name="datasource-definition_old" xmlns:php="http://php.net/xsl">
 	<script>
 		YAHOO.namespace('portico');
 	 
@@ -588,7 +623,7 @@
 		var main_source = '<xsl:value-of select="source"/>';
 		var main_columnDefs = YAHOO.portico.columnDefs;
 		var main_form = 'invoice_queryForm';
-		var main_filters = ['voucher_id_filter', 'responsibility_roles_list'];
+		var main_filters = ['voucher_id_filter', 'refresch_voucher_id'];
 		var main_container = 'datatable-container';
 		var main_table_id = 'datatable';
 		var main_pag = 'data_paginator';
@@ -597,7 +632,6 @@
 		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
 		
 	</script>
-	 
 </xsl:template>
 
 <!-- options for use with select-->
