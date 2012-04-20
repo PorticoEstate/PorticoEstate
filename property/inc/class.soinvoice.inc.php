@@ -1624,10 +1624,26 @@
 			return $allow_transfer;
 		}
 
-		function check_claim($voucher_id='')
+		function check_claim($voucher_id = 0, $line_id = 0)
 		{
+			$condition = '';
+
+			if($line_id)
+			{
+				$condition = 'WHERE fm_ecobilag.id =' . (int) $line_id;
+			}
+			else if($voucher_id)
+			{
+				$condition = 'WHERE fm_ecobilag.bilagsnr =' . (int) $voucher_id;
+			}
+
+			if(!$condition)
+			{
+				return false;
+			}
+
 			$sql = "SELECT count(*) as cnt FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
-				. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
+				. " {$condition} AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('cnt');
@@ -1727,6 +1743,7 @@
 		{
 			$condition = '';
 
+			$global_check = false;
 			if(isset($data['forward']) && is_array($data['forward']) && isset($data['line_id']) && $data['line_id'])
 			{
 				$condition = 'WHERE id =' . (int) $data['line_id'];
@@ -1734,6 +1751,7 @@
 			else if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
 			{
 				$condition = 'WHERE bilagsnr =' . (int) $data['voucher_id'];
+				$global_check = true;
 			}
 			
 			$receipt = array();
@@ -1743,38 +1761,45 @@
 				//start check
 				$check_count = $this->check_count($data['voucher_id']);
 
-				if (!($check_count['dima_count'] == $check_count['invoice_count']))
+				if($global_check )
 				{
-					$receipt['error'][] = array('msg'=>lang('Dima is missing from sub invoice in:'). " ".$data['voucher_id']);
-					$local_error= true;
+					if (!($check_count['dima_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( lang('Dima is missing from sub invoice in:'). " ".$data['voucher_id'],'error' );
+						$local_error= true;
+					}
+
+					if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( lang('Budget code is missing from sub invoice in :'). " ".$data['voucher_id'],'error');
+						$local_error= true;
+					}
+
+					if (!($check_count['kostra_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( 'Tjenestekode mangler for undebilag: ' . " ".$data['voucher_id'],'error');
+						$local_error= true;
+					}
+
+					if ($this->check_claim($data['voucher_id']))
+					{
+						phpgwapi_cache::message_set( lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']),'error');
+						$local_error= true;
+					}
+				}
+				else
+				{
+					if ($this->check_claim(0, $data['line_id']))
+					{
+						phpgwapi_cache::message_set( lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']),'error');
+						$local_error= true;
+					}
 				}
 
-				if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
-				{
-					$receipt['error'][] = array('msg'=>lang('Budget code is missing from sub invoice in :'). " ".$data['voucher_id']);
-					$local_error= true;
-				}
-
-				if (!($check_count['kostra_count'] == $check_count['invoice_count']))
-				{
-					$receipt['error'][] = array('msg'=>'Tjenestekode mangler for undebilag: ' . " ".$data['voucher_id']);
-					$local_error= true;
-				}
-
-				if ($this->check_claim($data['voucher_id']))
-				{
-					$receipt['error'][] = array('msg'=>lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']));
-					$local_error= true;
-				}
 
 				if($local_error)
 				{
-					foreach ($receipt['error'] as $_error)
-					{
-						phpgwapi_cache::message_set($_error['msg'], 'error');
-					}
-
-					return $receipt;
+					return false;
 				}
 				// end check
 
