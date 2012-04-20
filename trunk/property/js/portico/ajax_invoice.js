@@ -192,10 +192,30 @@ $(document).ready(function(){
 		$("#close_order_orig").val( '' );
 		$("#park_order").html( '' );
 
-		base_java_url['voucher_id_filter'] = $(this).val();
-		execute_async(myDataTable_0);
+		var voucher_id = $(this).val();
+		var oArgs = {menuaction:'property.uiinvoice2.get_first_line'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-		document.getElementById('image_content').src = '';
+		var line_id = 0;
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl + "&voucher_id=" + voucher_id,
+			success: function(data) {
+				if( data != null)
+				{
+					line_id = data['line_id'];
+					base_java_url['line_id'] = line_id;
+					base_java_url['voucher_id_filter'] = voucher_id;
+					execute_async(myDataTable_0);
+					update_form_values(line_id, 0);
+				}
+			}
+			});
+
+
+	//	document.getElementById('image_content').src = '';
 	});
 
 	$("#approve_line").live("click", function(e){

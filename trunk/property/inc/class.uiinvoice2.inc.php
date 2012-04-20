@@ -56,7 +56,8 @@
 			'get_vouchers'						=> true,
 			'get_single_voucher'				=> true,
 			'get_single_line'					=> true,
-			'update_voucher'					=> true
+			'update_voucher'					=> true,
+			'get_first_line'					=> true
 		);
 
 		function __construct()
@@ -433,10 +434,27 @@
 			return $vouchers;
 		}
 
+		/*not used*/
 		public function get_single_voucher($voucher_id = 0)
 		{
-			
+			$voucher = $this->bo->read_single_voucher($voucher_id);		
 		}
+
+		/*
+		* Find and select the first line
+		*/
+		public function get_first_line()
+		{
+			$voucher_id =  phpgw::get_var('voucher_id', 'int');
+			$voucher = $this->bo->read_invoice_sub($voucher_id);
+			$ret = array('line_id' => 0);
+			if($voucher)
+			{
+				$ret['line_id'] = $voucher[0]['id'];
+			}
+			return $ret;
+		}
+
 		public function get_single_line($line_id = 0)
 		{
 			$line_id	= $line_id ? $line_id : phpgw::get_var('line_id', 'int');

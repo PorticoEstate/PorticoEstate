@@ -26,9 +26,12 @@ var	myPaginator_0, myDataTable_0
 
 		//Create ROW
 		newTR = document.createElement('tr');
+		newTR.setAttribute("style","white-space:nowrap;");
 
+
+		td_empty(1);
 		td_sum('Sum');
-		td_empty(2);
+		td_empty(1);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_empty(7);
