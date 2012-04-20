@@ -402,6 +402,7 @@
 			{
 				$voucher_id = phpgw::get_var('voucher_id');
 			}
+			$this->bo->allrows = true;
 			$values = $this->bo->read_invoice_sub($voucher_id);
 
 			foreach($values as &$entry)
