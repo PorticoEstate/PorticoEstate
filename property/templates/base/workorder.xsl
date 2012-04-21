@@ -425,7 +425,6 @@
 											<xsl:value-of select="lang_start_date_statustext"/>
 										</xsl:attribute>
 									</input>
-									<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<tr>
@@ -438,7 +437,6 @@
 											<xsl:value-of select="lang_end_date_statustext"/>
 										</xsl:attribute>
 									</input>
-									<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<xsl:choose>
@@ -1108,7 +1106,6 @@
 									<xsl:value-of select="php:function('lang', 'Enter the invoice date')"/>
 								</xsl:attribute>
 							</input>
-							<img id="invoice_date-trigger" src="{img_cal}" alt="{$lang_datetitle}" title="{$lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>
@@ -1121,7 +1118,6 @@
 									<xsl:value-of select="php:function('lang', 'payment date')"/>
 								</xsl:attribute>
 							</input>
-							<img id="payment_date-trigger" src="{img_cal}" alt="{$lang_datetitle}" title="{$lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>
@@ -1134,7 +1130,6 @@
 									<xsl:value-of select="php:function('lang', 'paid')"/>
 								</xsl:attribute>
 							</input>
-							<img id="paid_date-trigger" src="{img_cal}" alt="{$lang_datetitle}" title="{$lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>

@@ -235,13 +235,10 @@
 
 			if($this->acl_manage)
 			{
-				$jscal = CreateObject('phpgwapi.jscalendar');
-				$jscal->add_listener('values_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
 				$table_update[] = array
 					(
-						'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-						'lang_datetitle'				=> lang('Select date'),
 						'lang_new_index'				=> lang('New index'),
 						'lang_new_index_statustext'		=> lang('Enter a new index'),
 						'lang_date_statustext'			=> lang('Select the date for the update'),
@@ -896,13 +893,10 @@
 					'lang_delete'		=> lang('Delete')
 				);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
 			$table_update[] = array
 				(
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
 					'lang_new_index'				=> lang('New index'),
 					'lang_new_index_statustext'		=> lang('Enter a new index'),
 					'lang_date_statustext'			=> lang('Select the date for the update'),
@@ -912,8 +906,6 @@
 
 			$table_first_entry[] = array
 				(
-					'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'			=> lang('Select date'),
 					'lang_m_cost'				=> lang('Material cost'),
 					'lang_m_cost_statustext'	=> lang('Enter a value for the material cost'),
 					'lang_w_cost'				=> lang('Labour cost'),

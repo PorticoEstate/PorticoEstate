@@ -355,7 +355,6 @@
 										</xsl:when>
 									</xsl:choose>
 								</input>
-								<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 							</xsl:when>
 							<xsl:when test="datatype='DT'">
 											<xsl:variable name="clear_function">
@@ -379,7 +378,6 @@
 													</xsl:when>
 												</xsl:choose>
 											</input>
-											<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 										</td>
 										<td>
 											<input type="text" id="values_attribute_{counter}_hour" name="values_attribute[{counter}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">

@@ -639,7 +639,6 @@
 														<xsl:value-of select="lang_finnish_date_statustext"/>
 													</xsl:attribute>
 												</input>
-												<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</td>
 										</tr>
 									</xsl:when>
@@ -1078,7 +1077,6 @@
 															<xsl:value-of select="php:function('lang', 'select the estimated date for closing the task')"/>
 														</xsl:attribute>
 													</input>
-													<img id="values_finnish_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 												</td>
 											</tr>
 										</xsl:when>
