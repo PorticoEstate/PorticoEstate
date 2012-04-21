@@ -325,9 +325,8 @@
 
 				if($paid)
 				{
-					$jscal = CreateObject('phpgwapi.jscalendar');
-					$jscal->add_listener('start_date');
-					$jscal->add_listener('end_date');
+					$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+					$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 				}
 				if (!$paid)
 				{
@@ -2999,10 +2998,8 @@ JS;
 
 			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('start_date');
-			$jscal->add_listener('end_date');
-
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -3327,18 +3324,14 @@ JS;
 			}
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('invoice_date');
-			$jscal->add_listener('payment_date');
+
+			$GLOBALS['phpgw']->jqcal->add_listener('invoice_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('payment_date');
 
 			$data = array
 				(
 					'menu'								=> $this->bocommon->get_menu(),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
-
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index')),
 					'lang_cancel'						=> lang('Cancel'),

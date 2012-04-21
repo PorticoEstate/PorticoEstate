@@ -918,15 +918,11 @@
 				$values['end_date'] = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('start_date');
-			$jscal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
 			$data = array
 				(
-					'lang_datetitle'		=> lang('Select date'),
-					'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-
 					'lang_start_date_statustext'	=> lang('Select the estimated end date for the Project'),
 					'lang_start_date'		=> lang('Start date'),
 					'value_start_date'		=> $values['start_date'],
@@ -1603,9 +1599,8 @@
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
 //			$values['planned_cost']  = number_format($values['planned_cost'], 0, ',', ' ');
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
 			$project_group_data=$this->bocommon->initiate_project_group_lookup(array(
 				'project_group'			=> $values['project_group'],
@@ -1835,8 +1830,6 @@
 					'table_header_history'				=> $table_header_history,
 					'lang_history'						=> lang('History'),
 					'lang_no_history'					=> lang('No history'),
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
 					'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 					'lang_start_date'					=> lang('Project start date'),
 					'value_start_date'					=> $values['start_date'],
@@ -2052,10 +2045,8 @@
 				'menuaction' => 'property.uiproject.index'
 			);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
-
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
 			if(($execute || $get_list) && $type)
 			{
@@ -2153,7 +2144,6 @@
 				'myColumnDefs'			=> $myColumnDefs,
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'update_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.bulk_update_status')),
-				'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'status_list_filter'	=> array('options' => $status_list_filter),
 				'status_list_new'		=> array('options' => $status_list_new),
 				'type_list'				=> array('options' => $type_array),
@@ -2340,8 +2330,6 @@
 				'myButtons'							=> $myButtons,
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'					=> lang('Select date'),
 				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 				'lang_start_date'					=> lang('Project start date'),
 				'value_start_date'					=> $values['start_date'],

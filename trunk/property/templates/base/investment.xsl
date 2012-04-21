@@ -260,7 +260,6 @@
 						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
-				<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 			</td>
 			<td height="50">
 				<xsl:variable name="lang_update">
@@ -570,7 +569,6 @@
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
-							<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>

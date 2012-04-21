@@ -606,7 +606,6 @@
 														<xsl:text>'; return true;</xsl:text>
 													</xsl:attribute>
 												</input>
-												<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</td>
 										</tr>
 										<tr>
@@ -621,7 +620,6 @@
 														<xsl:text>'; return true;</xsl:text>
 													</xsl:attribute>
 												</input>
-												<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</td>
 										</tr>
 										<tr>
@@ -636,7 +634,6 @@
 														<xsl:text>'; return true;</xsl:text>
 													</xsl:attribute>
 												</input>
-												<img id="values_termination_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</td>
 										</tr>
 										<xsl:choose>
@@ -823,7 +820,6 @@
 												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 										</input>
-										<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 										<div style="width:25px;height:15px;position:relative;float:left;"/>
 									</div>
 									<!-- <xsl:apply-templates select="table_update"/>  -->
@@ -1117,7 +1113,6 @@
 												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 										</input>
-										<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 										<div style="width:25px;height:15px;position:relative;float:left;"/>
 									</div>
 								</td>
@@ -1170,7 +1165,6 @@
 						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
-				<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 			</td>
 			<td height="50">
 				<xsl:variable name="lang_update">

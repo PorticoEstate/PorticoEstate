@@ -967,10 +967,9 @@
 				$agreement = $this->bocommon->preserve_attribute_values($agreement,$values_attribute);
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
-			$jscal->add_listener('values_termination_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_termination_date');
 
 			if ($id)
 			{
@@ -1065,12 +1064,9 @@
 
 				if (isset($content) && is_array($content))
 				{
-					$jscal->add_listener('values_date');
+					$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 					$table_update[] = array
 						(
-							'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-							'lang_datetitle'				=> lang('Select date'),
-
 							'lang_new_index'				=> lang('New index'),
 							'lang_new_index_statustext'		=> lang('Enter a new index'),
 							'lang_date_statustext'			=> lang('Select the date for the update'),
@@ -1400,7 +1396,6 @@
 					'myColumnDefs'							=> $myColumnDefs,
 					'myButtons'								=> $myButtons,
 
-					'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'allow_allrows'							=> true,
 					'allrows'								=> $this->allrows,
 					'start_record'							=> $this->start,
@@ -1612,8 +1607,7 @@
 				);
 
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1644,8 +1638,6 @@
 
 			$table_update[] = array
 				(
-					'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'			=> lang('Select date'),
 					'lang_new_index'			=> lang('New index'),
 					'lang_new_index_statustext'	=> lang('Enter a new index'),
 					'lang_date_statustext'		=> lang('Select the date for the update'),
@@ -1774,7 +1766,6 @@
 					'attributes_values'				=> $values['attributes'],
 					'lookup_functions'				=> $values['lookup_functions'],
 					'dateformat'					=> $dateformat,
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 
 					'lang_agreement'				=> lang('Agreement'),
 					'agreement_name'				=> $agreement['name'],

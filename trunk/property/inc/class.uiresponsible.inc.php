@@ -1392,9 +1392,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['java_script'] .= $lookup_function;
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_active_from');
-			$jscal->add_listener('values_active_to');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_active_to');
 
 			$type = $this->bo->read_single_type($type_id);
 
@@ -1436,11 +1435,8 @@
 					'lang_active_to'				=> lang('active to'),
 					'value_active_from'				=> isset($values['active_from']) ? $values['active_from'] : '',
 					'value_active_to'				=> isset($values['active_to']) ? $values['active_to'] : '',
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi', 'cal'),
-					'lang_datetitle'				=> lang('Select date'),
 					'lang_active_from_statustext'	=> lang('Select the start date for this responsibility'),
 					'lang_active_to_statustext'		=> lang('Select the closing date for this responsibility'),
-
 				);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('responsible matrix') . "::{$function_msg}";

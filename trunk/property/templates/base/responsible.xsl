@@ -641,7 +641,6 @@
 									<xsl:value-of select="lang_active_from_statustext"/>
 								</xsl:attribute>
 							</input>
-							<img id="values_active_from-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>
@@ -654,7 +653,6 @@
 									<xsl:value-of select="lang_active_to_statustext"/>
 								</xsl:attribute>
 							</input>
-							<img id="values_active_to-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 						</td>
 					</tr>
 					<tr>

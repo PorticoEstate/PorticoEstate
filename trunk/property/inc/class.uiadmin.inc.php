@@ -604,12 +604,11 @@
 
 			$content = $this->bo->read_fm_id();
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
 
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach($content as $i => & $entry)
 			{
-				$jscal->add_listener("date_{$entry['name']}");
+				$GLOBALS['phpgw']->jqcal->add_listener("date_{$entry['name']}");
 				$entry['key_id'] = $i;
 				$entry['start_date']	= $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
 			}
@@ -627,8 +626,6 @@
 					'lang_done'				=> lang('done'),
 					'lang_done_statustext'	=> lang('Back to Admin'),
 					'id_values'				=> $content,
-					'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'		=> lang('Select date'),
 				);
 
 			$appname	= lang('ID');
