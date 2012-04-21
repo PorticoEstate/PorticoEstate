@@ -27,7 +27,11 @@
 	*/
 
 	phpgw::import_class('phpgwapi.yui');
-//	phpgw::import_class('registration.uicommon');
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 
 	class property_uiinvoice2
 	{
@@ -381,14 +385,10 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
+			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
-
-
-//			self::render_template_xsl(array('invoice2', 'common'), $data);
-//			self::render_template_xsl(array('invoice2'), $data);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
