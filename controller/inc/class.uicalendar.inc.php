@@ -61,6 +61,13 @@
 		{
 			parent::__construct();
 			
+			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			
+			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
@@ -180,18 +187,26 @@
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
-						
-			$criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'type_id' => 1,
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
+			$manage=false;
+			if($manage)
+            {
+            	$locations = execMethod('property.solocation.get_children', $location_code);
+           
+            }else{
+            	$criteria = array
+				(
+					'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+					'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
+					'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+					'allrows' => false
+				);
 		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
+				$location_finder = new location_finder();
+				$my_locations = $location_finder->get_responsibilities( $criteria );
+            }
+				
 			
+			//print_r($my_locations);
 			if(empty($location_code)){
 				$location_code = $my_locations[0]["location_code"];
 			}

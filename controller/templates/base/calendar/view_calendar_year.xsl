@@ -7,7 +7,7 @@
 <div id="main_content">
 
 	<div id="control_plan">
-		<div class="col_1">
+		<div class="top">
 			<xsl:choose>
 				<xsl:when test="show_location">
 					<h1><xsl:value-of select="control_name"/></h1>
@@ -17,9 +17,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/></h3>
-		</div>
-
-		<div class="col_2">
 			<xsl:choose>
 				<xsl:when test="show_location">&nbsp;</xsl:when>
 				<xsl:otherwise>
@@ -51,6 +48,10 @@
 					</form>
 				</xsl:otherwise>
 			</xsl:choose>
+		</div>
+
+		<div class="middle">
+			
 					
 			<ul id="icon_color_map">
 				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
@@ -61,18 +62,18 @@
 				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 			</ul>
 		</div>
-		
+		<div id="cal_wrp">
 		<ul class="calendar">
 				<li class="heading">
+				<div class="control_details_wrp">
 					<xsl:if test="show_location">
 						<div class="location">Lokasjon</div>
 					</xsl:if>
 					<div class="title">Tittel</div>
 					<div class="assigned">Tildelt</div>
-					<div class="date">Start dato</div>
-					<div class="date">Slutt dato</div>
 					<div class="frequency">Frekvens</div>
-					<div class="months">
+					</div>
+					<div class="months_wrp">
 					<xsl:for-each select="heading_array">
 						<div>
 							<a>
@@ -97,7 +98,18 @@
 				
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-					<li>
+			  	
+			  		<li>				
+					<xsl:choose>
+				        <xsl:when test="(position() mod 2) != 1">
+				            <xsl:attribute name="class">odd</xsl:attribute>
+				        </xsl:when>
+				        <xsl:otherwise>
+				            <xsl:attribute name="class">even</xsl:attribute>
+				        </xsl:otherwise>
+				    </xsl:choose>
+				    
+				    <div class="control_details_wrp">
 						<xsl:if test="//show_location">
 							<div class="location">
 								<xsl:value-of select="control/location_name"/>
@@ -109,23 +121,12 @@
 						<div class="assigned">
 			      			<xsl:value-of select="control/responsibility_name"/>
 						</div>
-						<div class="date">
-			      			<xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/>
-						</div>
-						<div class="date">
-							<xsl:choose>
-								<xsl:when test="control/end_date != 0">
-				      				<xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/>
-				      			</xsl:when>
-				      			<xsl:otherwise>
-				      				Løpende
-				      			</xsl:otherwise>
-			      			</xsl:choose>
-						</div>
+					
 						<div class="frequency">
 			      			<xsl:value-of select="control/repeat_type_label"/>
-						</div>							
-						<div class="months">
+						</div>					
+						</div>		
+						<div class="months_wrp">
 						<xsl:for-each select="calendar_array">
 							<xsl:choose>
 									<xsl:when test="status = 'CONTROL_REGISTERED'">
@@ -254,6 +255,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</ul>
+	</div>
 </div>
 </div>
 </xsl:template>

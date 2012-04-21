@@ -14,7 +14,7 @@
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'component_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				//'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 	 			'repeat_type' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'repeat_interval' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True)

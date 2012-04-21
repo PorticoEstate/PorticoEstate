@@ -908,117 +908,32 @@ ul.check_list {
 }
 
 /* ======================  CALENDAR ========================== */
-
-#control_plan .col_1 {
-    float: left;
-    height: 240px;
-    width: 600px;
+#control_plan .top {
+    overflow: hidden;
 }
 
-#control_plan .col_2 {
-    float: right;
-    margin-top: 40px;
-    width: 330px;
+#control_plan .top h3{
+   float:left;
 }
-
-ul.calendar li{
-	clear:left;	
+#control_plan .top form{
+   float:right;
 }
-ul.calendar li.heading div {
-    font-weight: bold;
-    font-size:16px;
-}
-ul.calendar {
+#control_plan .middle {
+	border: 1px solid #DBE5EF;
+    background: none repeat scroll 0 0 #EDF5FF;    
     clear: both;
-    float: left;
-    margin-top: 30px;
-    width: 100%;
+    margin-top: 1em;
+    overflow: hidden;
+    padding: 1em;
 }
-ul.calendar.month {
-    margin-top: 0;
-    width: 60%;
-}
-ul.calendar li div {
-    float: left;
-    width: 30px;
-    padding: 3px;
-    text-align: center;
-}
-#cal_wrp {
-    clear: both;
-    float: left;
-    margin-top: 30px;
-    width: 100%;
-}
-#cal_wrp .nav{
-	padding: 1% 0;	
-}
-a.move_left{
-	float: right;
-}
-a.move_right {
-    float: right;
-    margin-right: 34%;
-}
-#days_wrp {
-    float: right;
-    height: 800px;
-    overflow-x: hidden;
-    position: relative;
-    width: 37%;
-}
-ul.calendar.days li div.cell {
-    height: 17px;
-    width: 24px;
-}
-ul.calendar.days {
-   	position: absolute;
-    width: 1120px;
-    margin-top:0;
-}
-ul.calendar li div.date, ul.calendar.info div.date {
-    width: 80px;
-}
-ul.calendar div.title, ul.calendar.info div.title {
-	width: 200px;
-}
-ul.calendar div.title {
-	width: 150px;
-}
-ul.calendar div.location {
-	width: 150px;
-	text-align: left;
-}
-ul.calendar div.assigned {
-	width: 80px;
-	text-align: left;
-}
-ul.calendar div.id, ul.calendar.info div.id {
-	width: 20px;
-}
-ul.calendar div.title{
-	text-align: left;
-}
-ul.calendar .heading div.title{
-	text-align: center;
-}
-ul.calendar div.frequency, ul.calendar.info div.frequency {
-	width: 100px;	
-}
-.months a.view_check_list {
-    width: 30px;
-}
-.cal_info_msg{
-	font-size: 16px;
-    padding: 40px 20px;	
-}
-
-/* ======================  CALENDAR COLOR MAP ========================== */
+/* ===  COLOR MAP === */
 
 ul#icon_color_map {
-    border: 1px solid #DDDDDD;
+    background: none repeat scroll 0 0 #F4EDE3;
+    border: 1px solid #F2E4CF;
+    border-radius: 5px 5px 5px 5px;
+    float: right;
     padding: 5px;
-    margin-top: 40px;
 }
 ul#icon_color_map li {
     font-size: 12px;
@@ -1027,6 +942,93 @@ ul#icon_color_map li {
 ul#icon_color_map span{
 	margin-left: 10px;
 }
+
+
+
+
+
+
+ul.calendar li{
+	clear:left;	
+}
+ul.calendar li.heading {
+    font-weight: bold;
+    font-size:15px;
+}
+.control_details_wrp div{
+	width: 100px;
+	float:left;
+}
+.days_wrp div {
+    float: left;
+    font-size: 13px;
+    height: 30px;
+    text-align: center;
+    width: 21px;
+}
+.months_wrp div {
+    float: left;
+    height: 30px;
+    text-align: center;
+    width: 52px;
+}
+ul.calendar li {
+    height: 30px;
+    padding: 7px 0;
+}
+
+ul.calendar li.even {
+    background: none repeat scroll 0 0 #DEEAF8;
+}
+#cal_wrp {
+    border: 1px solid #DBE5EF;
+    background: none repeat scroll 0 0 #EDF5FF;
+    border-top: none;
+    clear: both;
+    padding: 1em;
+}
+.control_details_wrp div{
+   float:left;
+}
+.control_details_wrp div {
+    float: left;
+    height: 30px;
+    padding: 0 10px;
+}
+.control_details_wrp div.title {
+    width: 200px;
+}
+ul.calendar div.location {
+	width: 150px;
+	text-align: left;
+}
+.control_details_wrp div.assigned {
+    text-align: left;
+    width: 115px;
+}
+.control_details_wrp div.frequency {
+	width: 130x;
+}
+
+ul.calendar div.title{
+	text-align: left;
+}
+ul.calendar .heading div.title{
+	text-align: center;
+}
+ul.calendar div.frequency {
+    margin-right: 10px;
+    width: 65px;
+}
+.months_wrp a.view_check_list {
+    width: 30px;
+}
+.cal_info_msg{
+	font-size: 16px;
+    padding: 40px 20px;	
+}
+
+
 
 
 /* ======================  CALENDAR  DATES ========================== */
@@ -1166,18 +1168,7 @@ label.comment{
 .check_items.expand_list h4{
 	font-size: 15px;	
 }
-#days_view div{
-	font-weight:bold;
-}
-.calendar .months {
-    margin-left: 20px;
-    width: 440px;
-    padding:0;
-}
-.calendar .heading a{
-    text-decoration: none;
-    color:#000;
-}
+
 .not_active{
 	opacity:0.5;
 }
@@ -1292,10 +1283,27 @@ fieldset.location_details div{
     z-index: 2;
     background:#aaa;	
 }
-#curtain{
-	display:none;
-	position:absolute;
+#curtain {
+    background: none repeat scroll 0 0 #000000;
+    display: none;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    width: 100%;
     z-index: 1;
+}
+
+#popupBox {
+    background: none repeat scroll 0 0 #fff;
+    display: none;
+    height: 300px;
+    left: 300px;
+    position: absolute;
+    top: 200px;
+    width: 300px;
+    z-index: 2;
 }
 
 /* ==================================  CHECK LIST  ================================== */
