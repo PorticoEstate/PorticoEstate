@@ -565,7 +565,7 @@ $(document).ready(function(){
 		// Checking that required fields (fields with class required) is not null
 	    $required_input_fields.each(function() {
 	    	
-	    	// User has selected a vlaue from select list
+	    	// User has selected a value from select list
 	    	if( $(this).is("select") & $(this).val() == 0 ){
 	    		var nextElem = $(this).next();
 	    		

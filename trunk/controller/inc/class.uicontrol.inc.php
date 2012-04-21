@@ -78,6 +78,17 @@
 		{
 			parent::__construct();
 
+			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			
+			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+
+			//if(!$manage)
+				
+			
+			
 			$this->so = CreateObject('controller.socontrol');
 			$this->bo = CreateObject('property.boevent',true);
 			$this->so_procedure = CreateObject('controller.soprocedure');
