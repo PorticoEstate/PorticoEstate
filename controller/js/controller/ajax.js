@@ -1,5 +1,47 @@
 $(document).ready(function(){
-		
+
+	$("#loc1").change(function () {
+		var loc1 = $(this).val();
+		$("#loc2").html( "<option></option>" );
+		$("#loc3").html( "<option></option>" );
+		$("#loc4").html( "<option></option>" );
+		$("#loc5").html( "<option></option>" );
+
+		if(!loc1)
+		{
+			return false;
+		}
+		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:loc1};
+		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
+      
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					htmlString  = "<option value = ''>" + data.length + " lokasjone(r) funnet</option>"
+					var obj = data;
+
+					$.each(obj, function(i) {
+						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+
+					$("#loc2").html( htmlString );
+				}
+				else
+				{
+					htmlString  += "<option>Ingen lokasjoner</option>"
+					$("#loc2").html( htmlString );
+				}
+			} 
+		});	
+    });
+	
+	
 	// 
 	$("#choose_my_location").change(function () {
 		 var location_code = $(this).val();
