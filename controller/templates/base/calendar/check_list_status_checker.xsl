@@ -1,19 +1,13 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="check_list_status_checker" xmlns:php="http://php.net/xsl">
-<!-- 
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
-<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
-<xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
- -->
  
- <xsl:param name="status" />
+ 
  <xsl:param name="location_code" />
  
    		<xsl:choose>
 			<xsl:when test="status = 'CONTROL_REGISTERED'">
 				<div>
 				<a>
-				<!-- 
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
 						<xsl:text>&amp;date=</xsl:text>
@@ -23,12 +17,10 @@
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="$location_code"/>
 					</xsl:attribute>
-					 -->
 					<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 				</a>
 				</div>
 			</xsl:when>
-			<!-- 
 			<xsl:when test="status = 'CONTROL_PLANNED'">
 				<div>
 				<a>
@@ -132,12 +124,9 @@
 					<img height="15" src="controller/images/status_icon_red_cross.png" />
 				</div>
 			</xsl:when>
-			-->
-			
 			<xsl:otherwise>
 				<div></div>
 			</xsl:otherwise>
-			
 		</xsl:choose>
 				
 </xsl:template>

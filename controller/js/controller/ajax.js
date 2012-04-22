@@ -834,23 +834,6 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	/* ============================ PUTS BORDER AROUND DATE WHEN ITS CLICKED  ======================== */
-	
-	$("#calendar_dates span").click(function(){
-		var thisSpan = $(this);
-		
-		$("#calendar_dates span").css("border", "2px solid black");
-		$(thisSpan).css("border", "2px solid red");
-		
-		var date = $(thisSpan).text();
-		var day = date.substring(0, date.indexOf("/"));
-		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
-		var year = date.substring(date.indexOf("-")+1, date.length);
-		
-		var valid_save_date = year + "-" + month + "-" + day;  
-		
-		$("#deadline_date").val(valid_save_date);
-	});
 	
 	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
