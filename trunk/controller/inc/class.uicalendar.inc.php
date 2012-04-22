@@ -167,7 +167,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl('calendar/view_calendar_month', $data);
+			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker'), $data);
 		}
 		
 		public function view_calendar_for_year()
@@ -261,7 +261,7 @@
 				'year' 			  	  	  => $year
 			);
 			
-			self::render_template_xsl('calendar/view_calendar_year', $data);
+			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker'), $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}

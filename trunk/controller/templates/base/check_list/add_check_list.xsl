@@ -51,16 +51,6 @@
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<input type="hidden" name="location_code" value="{$location_code}" />
 			
-			<!-- Shows dates that can be picked for setting a deadline date 		
-			<div id="calendar_dates">
-				<xsl:for-each select="calendar_array">
-					<xsl:variable name="cal_date"><xsl:value-of select="."/></xsl:variable>
-						
-					<span><xsl:value-of select="php:function('date', $date_format, number( $cal_date ) )"/></span>
-				</xsl:for-each>
-			</div>
- 			-->
- 
 			<fieldset>
 				<div class="row">
 					<label>Status</label>

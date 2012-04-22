@@ -919,8 +919,10 @@ ul.check_list {
    float:right;
 }
 #control_plan .middle {
-	border: 1px solid #DBE5EF;
-    background: none repeat scroll 0 0 #EDF5FF;    
+    background: none repeat scroll 0 0 #EDF5FF;
+    border-color: #DBE5EF #DBE5EF -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
     clear: both;
     margin-top: 1em;
     overflow: hidden;
@@ -1026,25 +1028,6 @@ ul.calendar div.frequency {
 .cal_info_msg{
 	font-size: 16px;
     padding: 40px 20px;	
-}
-
-
-
-
-/* ======================  CALENDAR  DATES ========================== */
-
-#calendar_dates{
-	margin:25px 0;	
-}
-#calendar_dates p{
-	font-weight: bold;
-	margin: 5px 0;	
-}
-#calendar_dates span {
-    border: 2px solid black;
-    margin-right: 10px;
-    padding: 1px 4px;
-    cursor: pointer;
 }
 
 /* ======================  CALENDAR INFO BOX ========================== */
