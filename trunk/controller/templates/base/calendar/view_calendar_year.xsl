@@ -128,6 +128,21 @@
 						</div>		
 						<div class="months_wrp">
 						<xsl:for-each select="calendar_array">
+						
+						 
+						<xsl:call-template name="check_list_status_checker" >
+						<!-- 
+							<xsl:with-param name="status"><xsl:value-of select="status"/></xsl:with-param>
+							<xsl:with-param name="location_code"><xsl:value-of select="$view_location_code"/></xsl:with-param>
+						-->
+						</xsl:call-template>
+						
+	 						<!-- 
+	 						<xsl:with-param name="active_tab">view_details</xsl:with-param>
+	 						 -->
+						
+						
+						<!-- 
 							<xsl:choose>
 									<xsl:when test="status = 'CONTROL_REGISTERED'">
 										<div>
@@ -245,6 +260,7 @@
 									<div></div>
 									</xsl:otherwise>
 							</xsl:choose>
+							 -->
 						</xsl:for-each>
 						</div>
 					</li>	
