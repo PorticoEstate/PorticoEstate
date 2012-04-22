@@ -92,12 +92,13 @@
 			
 			if(($from_month + 1) > 12){
 				$to_month = 1;
-				$year++;
+				$to_year = $year + 1;
 			}else{
 				$to_month = $from_month + 1;
+				$to_year = $year;
 			}
 			
-			$to_date_ts = strtotime("$to_month/01/$year");
+			$to_date_ts = strtotime("$to_month/01/$to_year");
 												
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
@@ -188,6 +189,7 @@
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
 			$manage=false;
+		
 			if($manage)
             {
             	$locations = execMethod('property.solocation.get_children', $location_code);
