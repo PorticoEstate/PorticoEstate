@@ -409,22 +409,41 @@
 							case 'CH':
 								if(!$criteria_id)
 								{
+									// from filter
 									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
 									$__querymethod = array(); // remove block
+
+									// from text-search
+									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,". $this->db2->f('id') . ",%'";
+									}
 								}
 								break;
 							case 'R':
 							case 'LB':
 								if(!$criteria_id)
 								{
-									if(!$_joinmethod_datatype_custom)//only join once
-									{
-										$_joinmethod_datatype_custom[] = "{$this->join} phpgw_cust_choice ON phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id');
-									}
-	
-									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
 										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
 										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$__filter_choise[] = $this->db2->f('id');
+									}
+
+									if($__filter_choise)
+									{
+										$_querymethod[]= "$entity_table." . $this->db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
+									}
 	
 									$__querymethod = array(); // remove block
 								}
