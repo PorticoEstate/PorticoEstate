@@ -783,7 +783,7 @@
 						switch ($uicols['name'][$i])
 						{
 							case 'num':
-							case 'loc1':
+				//			case 'loc1':
 							case 'loc1_name':
 								$uicols['input_type'][$i] = 'hidden';
 								break;
@@ -1097,7 +1097,7 @@
 					{
 						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' title='{$column['statustext']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 						}
 						else if(isset($column['format']) && $column['format']== "link")
 						{
