@@ -232,6 +232,7 @@
 	{
 		YAHOO.util.Dom.get("txt_query").value = query;
 		path_values.query = query;
+		path_values.start = 0;
 		execute_ds();
 		myPaginator.setPage(1,true);
 	}
