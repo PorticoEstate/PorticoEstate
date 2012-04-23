@@ -96,6 +96,15 @@
   	//don't delete it
   	}
 
+	var oArgs_entity = {menuaction:'property.uientity.edit'};
+	var sUrl_entity = phpGWLink('index.php', oArgs_entity);
+
+	var linktToEntity = function(elCell, oRecord, oColumn, oData)
+	{
+//	  	elCell.innerHTML = "<a href="+sUrl_entity+"&entity_id="+oRecord.getData('entity_id')+"&cat_id="+oRecord.getData('cat_id')+"&id="+oRecord.getData('id')+"&type="+oRecord.getData('_type')+">" + oData + "</a>";
+	};
+
+
 /****************************************************************************************/
 	YAHOO.util.Event.addListener(window, "load", function()
 	{

@@ -322,6 +322,9 @@
 				$code_inner[] = "{order:0, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
 */
 
+				$button_def = array();
+				$code_inner = array();
+
 				if($attrib_data)
 				{
 					$i = 0;
@@ -368,9 +371,15 @@
 					}
 				}
 
-				$code = 'var ' . implode(',', $button_def)  . ";\n";
-				$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
-
+				if($button_def)
+				{
+					$code = 'var ' . implode(',', $button_def)  . ";\n";
+					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+				}
+				else
+				{
+					$code .= 'var selectsButtons = [];';
+				}
 				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				//	eliminates those empty filters
@@ -472,6 +481,7 @@
 						{
 							case 'num':
 							case 'loc1':
+							case 'loc2':
 							case 'loc1_name':
 								$uicols['input_type'][$i] = 'hidden';
 								break;
