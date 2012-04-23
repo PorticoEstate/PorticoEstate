@@ -144,7 +144,14 @@
 					$curr_control['repeat_type'] = "År";
 			}
 
+			//$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			//lookup=1&type_id=1&lookup_name=0
+			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
+			//$property_array = execMethod('property.bolocation.read', array('type_id' => 1, 'lookup_name' => 0, 'lookup' => 1));
+			//print_r( $property_array );
+			
 			
 			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
 			
@@ -156,6 +163,7 @@
 			(		
 				'my_locations'	  		  => $my_locations,
 				'view_location_code'	  => $location_code,
+				'property_array'	  	  => $property_array,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
