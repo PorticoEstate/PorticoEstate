@@ -41,7 +41,6 @@
 								<xsl:value-of select="lang_start_date_statustext"/>
 							</xsl:attribute>
 						</input>
-						<img id="start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 					</td>
 				</tr>
 				<tr>
@@ -54,7 +53,6 @@
 								<xsl:value-of select="lang_end_date_statustext"/>
 							</xsl:attribute>
 						</input>
-						<img id="end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 					</td>
 				</tr>
 				<tr>

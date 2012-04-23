@@ -390,7 +390,10 @@
 
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
-				} 
+				}
+				if(($_POST['organization_name'] != '' or $_POST['org_id2'] != '') and isset($errors['contact_name'])) {
+					$errors['contact_name'] = lang('Organization is missing booking charge');
+				}
 				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'])
 				{
 					if (!$_POST['application_id'])
@@ -648,6 +651,7 @@
 								}
 								$comment_text_log = $comment_text_log.' sitt arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_']))." har blitt kansellert.\n For mer opplysinger slå opp i AktivBy.\n\n";
 								$comment_text_log .= phpgw::get_var('mail', 'POST');
+								$comment_text_log = html_entity_decode($comment_text_log);			
 								$sendt = 0;
 								$mail_sendt_to = '';
 

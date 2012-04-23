@@ -808,7 +808,6 @@
 								<xsl:value-of select="lang_date_statustext"/>
 							</xsl:attribute>
 						</input>
-						<img id="date_{$name}-trigger" src="{//img_cal}" alt="{//lang_datetitle}" title="{//lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="start_date"/>

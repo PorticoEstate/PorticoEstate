@@ -6191,15 +6191,40 @@
 			$sql = "INSERT INTO fm_ecobilag_process_log ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 		}
-
+/*
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilag',array(),'process_code');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilag',array(),'process_log');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilagoverf',array(),'process_code');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_ecobilagoverf',array(),'process_log');
-
+*/
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.640';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+
+	}
+	
+	$test[] = '0.9.17.640';
+	function property_upgrade0_9_17_640()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_ecobilag');
+
+		if(!isset($metadata['process_log']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','process_log', array('type' => 'text','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','process_log', array('type' => 'text','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','process_code', array('type' => 'varchar','precision' => '10','nullable' => True));
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','process_code', array('type' => 'varchar','precision' => '10','nullable' => True));
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','line_text', array('type' => 'varchar','precision' => '255','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','line_text', array('type' => 'varchar','precision' => '255','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.641';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

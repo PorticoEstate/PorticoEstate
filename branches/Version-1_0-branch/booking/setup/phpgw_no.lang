@@ -549,3 +549,4 @@ Current internal billing sequence number	booking	no	Nåværende sekvensnummer fo
 Current external billing sequence number	booking	no	Nåværende sekvensnummer for ekstern fakturering 
 Billing sequence numbers	booking	no	Sekvensnummer for fakturering
 Do not change these values unless you know what they are.	booking	no	Ikke endre disse verdiene med mindre du vet hva de er.
+Organization is missing booking charge	booking	no	Organisasjonen mangler bookingansvarlig

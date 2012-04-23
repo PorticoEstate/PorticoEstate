@@ -1320,8 +1320,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_document_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_document_date');
 
 			//data test    	$record_history = array(array(value_date=>"1111",value_user=>"22222",value_action=>"33333",value_new_value=>"44444444"));
 
@@ -1359,9 +1358,6 @@
 					'table_header_history'			=> $table_header_history,
 					'lang_history'					=> lang('History'),
 					'lang_no_history'				=> lang('No history'),
-
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
 
 					'lang_document_date_statustext'	=> lang('Select date the document was created'),
 					'lang_document_date'			=> lang('document date'),

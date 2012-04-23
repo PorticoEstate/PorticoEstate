@@ -967,10 +967,10 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
-			$jscal->add_listener('values_termination_date');
+
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_termination_date');
 
 			$this->member_id = $values['member_of'] ? $values['member_of'] : $this->member_id;
 
@@ -992,12 +992,10 @@
 
 				if (isset($content) && is_array($content))
 				{
-					$jscal->add_listener('values_date');
+					$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
 					$table_update[] = array
 						(
-							'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-							'lang_datetitle'			=> lang('Select date'),
 							'lang_new_index'			=> lang('New index'),
 							'lang_new_index_statustext'	=> lang('Enter a new index'),
 							'lang_date_statustext'		=> lang('Select the date for the update'),
@@ -1541,9 +1539,6 @@ die();
 					'lookup_functions'					=> $values['lookup_functions'],
 					'dateformat'						=> $dateformat,
 
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
-
 					'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 					'lang_start_date'					=> lang('start date'),
 					'value_start_date'					=> $values['start_date'],
@@ -1763,8 +1758,7 @@ die();
 			if($id)
 			{
 				$list = $this->bo->read_prizing(array('s_agreement_id'=>$s_agreement_id,'item_id'=>$id));
-				$jscal = CreateObject('phpgwapi.jscalendar');
-				$jscal->add_listener('values_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 			}
 
 			$uicols		= $this->bo->uicols;
@@ -1814,9 +1808,6 @@ die();
 
 			$table_update[] = array
 				(
-
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
 					'lang_new_index'				=> lang('New index'),
 					'lang_new_index_statustext'		=> lang('Enter a new index'),
 					'lang_date_statustext'			=> lang('Select the date for the update'),
@@ -2010,9 +2001,6 @@ die();
 					'attributes_group'				=> $attributes,
 					'lookup_functions'				=> $values['lookup_functions'],
 
-					//	'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
-
 					'lang_agreement'				=> lang('Agreement'),
 					'agreement_name'				=> $s_agreement['name'],
 
@@ -2026,7 +2014,6 @@ die();
 					'img_check'						=> $GLOBALS['phpgw']->common->get_image_path('property').'/check.png',
 					'location_data'					=> $location_data,
 
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'lang_cost'						=> lang('cost'),
 					'lang_cost_statustext'			=> lang('cost'),
 					'value_cost'					=> $values['cost'],

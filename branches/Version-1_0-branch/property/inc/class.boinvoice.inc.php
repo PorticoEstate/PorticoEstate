@@ -201,6 +201,12 @@
 			return $this->so->read_single_voucher($voucher_id);
 		}
 
+
+		function read_single_line($line_id)
+		{
+			return $this->so->read_single_voucher(0, $line_id);
+		}
+
 		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='')
 		{
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
@@ -807,19 +813,6 @@
 
 		public function update_voucher2($data)
 		{
-			$receipt = $this->so->update_voucher2($data);
-			$receipt = $this->so->forward($data);
-			
-			if( isset($data['order_id']) && $data['order_id'])
-			{
-				if(isset($data['close_order']) && $data['close_order'])
-				{
-					execMethod('property.soworkorder.close_orders',array($data['order_id']));
-				}
-				if(isset($data['close_order_orig']) && $data['close_order_orig'] && !$data['close_order'])
-				{
-					execMethod('property.soworkorder.reopen_orders',array($data['order_id']));
-				}
-			}
+			return $this->so->update_voucher2($data);
 		}
 	}

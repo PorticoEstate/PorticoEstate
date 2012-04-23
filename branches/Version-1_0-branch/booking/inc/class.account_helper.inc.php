@@ -31,7 +31,7 @@
 			return $GLOBALS['phpgw']->accounts->membership();
 		}
 		
-		public static function current_account_member_of_admins()
+/*		public static function current_account_member_of_admins()
 		{
 			if (!isset(self::$account_is_admin))
 			{
@@ -46,6 +46,22 @@
 						break;
 					}
 				}
+			}
+			
+			return self::$account_is_admin;
+		}*/
+
+		public static function current_account_member_of_admins()
+		{
+			if (!isset(self::$account_is_admin))
+			{
+				self::$account_is_admin = false;
+				if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+				{
+						self::$account_is_admin = true;
+				}
+
 			}
 			
 			return self::$account_is_admin;

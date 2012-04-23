@@ -359,9 +359,7 @@
 			ksort($dlarr);
 			$dateformat	= (implode($sep,$dlarr));
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('start_date');
-
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$counter = $sum_initial_value = $sum_value = 0;
 
 			while (is_array($investment_list) && list(,$investment) = each($investment_list))
@@ -762,8 +760,7 @@
 			ksort($dlarr);
 			$dateformat								= (implode($sep,$dlarr));
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 
 			$uicols = array (
 				'input_type'	=>	array('text','text','text','text','text','text','hidden'),
@@ -1053,15 +1050,12 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
 			$data = array
 				(
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'location_data'						=> $location_data,
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
 					'lang_date_statustext'				=> lang('insert the date for the initial value'),
 					'lang_date'							=> lang('Date'),
 					'lang_location'						=> lang('Location'),
