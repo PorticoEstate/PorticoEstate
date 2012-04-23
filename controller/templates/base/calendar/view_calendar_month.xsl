@@ -50,7 +50,7 @@
 				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 			</ul>
 			
-			<a style="font-weight: bold;font-size: 14px;float:left;">
+			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
@@ -60,6 +60,25 @@
 				</xsl:attribute>
 				Årsoversikt
 			</a>
+			
+ 				<select id="loc_1" class="choose_loc">
+					<xsl:for-each select="property_array">
+						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="location_code = $view_location_code">
+								<option value="{$loc_code}" selected="selected">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="{$loc_code}">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</select>				
+			
 		</div>
 		
 		

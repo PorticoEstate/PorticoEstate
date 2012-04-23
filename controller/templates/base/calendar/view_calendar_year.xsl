@@ -61,6 +61,9 @@
 				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med åpne saker</span></li>
 				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
 			</ul>
+			
+		
+			
 		</div>
 		<div id="cal_wrp">
 		<ul class="calendar">
