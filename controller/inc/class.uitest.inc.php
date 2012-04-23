@@ -28,7 +28,7 @@
  	* @version $Id: class.uicontrol.inc.php 8744 2012-01-31 18:38:02Z vator $
 	*/	
 	
-	phpgw::import_class('controller.socheck_list');
+	phpgw::import_class('controller.uicase');
 	
 	include_class('controller', 'control', 'inc/model/');
 	include_class('controller', 'check_list', 'inc/model/');
@@ -43,16 +43,10 @@
 		
 		public function index()
 		{
-			$so_check_list = CreateObject('controller.socheck_list');
+			$uicase = new controller_uicase();
 			
-			$location_code = "1101";
-			$from_date_ts = "";
-			$end_date_ts = "";
-			$repeat_type = "";
+			$uicase->updateStatusForCases(506, 17230, 0);
 			
-			$control_check_list_array = $so_check_list->get_check_lists_for_location($location_code, $from_date_ts, $to_date_ts, $repeat_type);
-			
-			print_r( $control_check_list_array );
 		}
 	}
 	

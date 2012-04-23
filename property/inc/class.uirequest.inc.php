@@ -1385,16 +1385,15 @@
 			}
 
 			$show_dates = isset($this->config->config_data['request_show_dates']) && $this->config->config_data['request_show_dates'] ? 1 : '';
-			$jscal = CreateObject('phpgwapi.jscalendar');
+
 			if($show_dates)
 			{
-				$jscal->add_listener('values_start_date');
-				$jscal->add_listener('values_end_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 			}
 
-			$jscal->add_listener('values_consume_date');
-			$jscal->add_listener('values_planning_date');
-
+			$GLOBALS['phpgw']->jqcal->add_listener('values_consume_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_planning_date');
 
 			$link_file_data = array
 				(
@@ -1615,9 +1614,6 @@
 					'table_header_history'				=> $table_header_history,
 					'lang_history'						=> lang('History'),
 					'lang_no_history'					=> lang('No history'),
-
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
 
 					'value_entry_date'					=> $values['entry_date'],
 					'value_closed_date'					=> $values['closed_date'],

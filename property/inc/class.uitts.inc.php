@@ -2001,8 +2001,7 @@
 
 			if(!$this->simple && $this->show_finnish_date)
 			{
-				$jscal = CreateObject('phpgwapi.jscalendar');
-				$jscal->add_listener('values_finnish_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
 			$data = array
@@ -2044,8 +2043,6 @@
 					'value_subject'					=> (isset($values['subject'])?$values['subject']:''),
 
 					'value_finnish_date'			=> (isset($values['finnish_date'])?$values['finnish_date']:''),
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
 					'lang_finnish_date_statustext'	=> lang('Select the estimated date for closing the task'),
 
 					'lang_cancel_statustext'		=> lang('Back to the ticket list'),
@@ -2640,8 +2637,7 @@
 
 			if(!$this->simple && $this->show_finnish_date)
 			{
-				$jscal = CreateObject('phpgwapi.jscalendar');
-				$jscal->add_listener('values_finnish_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
 			// -------- start order section
@@ -3165,8 +3161,6 @@
 					'value_origin'					=> $ticket['origin'],
 					'value_target'					=> $ticket['target'],
 					'value_finnish_date'			=> $ticket['finnish_date'],
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'				=> lang('Select date'),
 
 					'link_entity'					=> $link_entity,
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),

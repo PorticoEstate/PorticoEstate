@@ -34,7 +34,7 @@ YAHOO.booking.scheduleResourceColFormatter = function(elCell, oRecord, oColumn, 
 YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color50';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color60';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, 'info');
@@ -103,7 +103,7 @@ YAHOO.booking.bookingToHtml = function(booking) {
 YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color50';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color60';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
@@ -118,7 +118,7 @@ YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn,
 YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color50';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color60';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);

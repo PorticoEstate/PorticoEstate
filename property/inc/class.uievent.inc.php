@@ -774,9 +774,8 @@
 				$tabs['plan']		= array('label' => lang('plan'), 'link' => '#plan');
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -789,13 +788,10 @@
 				(
 					'contact_data'					=> $contact_data,
 					'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
-					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'			=> lang('Select date'),
 
 					'lang_start_date_statustext'	=> lang('Select the date for the event'),
 					'lang_start_date'				=> lang('date'),
 					'value_start_date'				=> $values['start_date'],
-					//			'start_date'					=> $start_date,
 
 					'value_enabled'					=> isset($values['enabled']) ? $values['enabled'] : '',
 					'lang_enabled'					=> lang('enabled'),

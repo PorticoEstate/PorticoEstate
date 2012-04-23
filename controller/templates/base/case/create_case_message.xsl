@@ -23,13 +23,19 @@
 					    	<xsl:value-of select="check_list/id"/>
 					    </xsl:attribute>
 					</input>
+					
+					<!-- === TITLE === -->
+				    <div class="row">
+						<label>Tittel på melding:</label>
+						<input name="message_title" type="text" class="required" />
+					</div>
 									
 					<!-- ==================  BYGG  ===================== -->
 					<div class="row">
 						<xsl:choose>
 							<xsl:when test="buildings_array/child::node()">
 								<label>Bygg:</label>
-								<select id="building_id" name="building_id">
+								<select id="building_id" name="building_id" class="required">
 										<option value="0">
 											Velg bygning
 										</option>
@@ -45,17 +51,11 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
-		
 					
-				    <!-- === TITLE === -->
-				    <div class="row">
-						<label>Tittel på melding:</label>
-						<input name="message_title" type="text" />
-					</div>
 					<!-- === CATEGORY === -->
 					<div class="row">
 						<label>Kategori:</label>
-						 <select name="message_cat_id">
+						 <select name="message_cat_id" class="required">
 						 	<option value="0">Velg kategori</option>
 							<xsl:for-each select="categories/cat_list">
 								<xsl:variable name="cat_id"><xsl:value-of select="./cat_id"/></xsl:variable>
@@ -97,7 +97,7 @@
 				</form>			
 				</xsl:when>
 				<xsl:otherwise>
-					Ingen registrerte saker
+					Ingen registrerte saker eller det er blitt registrert en melding for alle registrerte saker
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>

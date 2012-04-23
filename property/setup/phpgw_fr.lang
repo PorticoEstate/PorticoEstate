@@ -527,7 +527,7 @@ Invoice	property	fr	Facture
 Invoice date	property	fr	Date de facture
 Invoice ID	property	fr	ID de facture
 Invoice Number	property	fr	Numéro de facture
-Invoice tranferred	property	fr	Facture transférée
+Invoice transferred	property	fr	Facture transférée
 is registered	property	fr	est enregistré
 Is there a demand from the authorities to correct this condition?	property	fr	Y a-t'il une demande de la part des autorités pour corriger cette condition?
 Janitor	property	fr	Concierge

@@ -16,6 +16,11 @@
 
 	/* $Id$ */
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 	class uireg
 	{
 		var $template;
@@ -149,7 +154,7 @@ HTML;
 
 		function step2($errors = '',$r_reg = '',$o_reg = '',$missing_fields='')
 		{
-			$GLOBALS['phpgw']->js->validate_file('controller', 'jquery', 'controller');
+			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('portico', 'ajax', 'registration');
 
 			$show_password_prompt = True;

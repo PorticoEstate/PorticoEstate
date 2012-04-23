@@ -397,7 +397,6 @@
 													<xsl:value-of select="lang_start_date_statustext"/>
 												</xsl:attribute>
 											</input>
-											<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 										</td>
 									</tr>
 									<tr>
@@ -410,7 +409,6 @@
 													<xsl:value-of select="lang_end_date_statustext"/>
 												</xsl:attribute>
 											</input>
-											<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 										</td>
 									</tr>
 								</xsl:when>
@@ -449,7 +447,6 @@
 											<xsl:value-of select="php:function('lang', 'planning date')"/>
 										</xsl:attribute>
 									</input>
-									<img id="values_planning_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<tr>
@@ -478,7 +475,6 @@
 											<xsl:value-of select="php:function('lang', 'consume date')"/>
 										</xsl:attribute>
 									</input>
-									<img id="values_consume_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<tr>

@@ -574,7 +574,6 @@
 														</xsl:when>
 													</xsl:choose>
 												</input>
-												<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</xsl:when>
 											<xsl:when test="datatype='timestamp'">
 												<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}" size="12" maxlength="12">
@@ -589,7 +588,6 @@
 														</xsl:when>
 													</xsl:choose>
 												</input>
-												<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">

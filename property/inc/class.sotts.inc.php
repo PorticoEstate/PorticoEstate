@@ -577,6 +577,7 @@
 
 			if ($this->db->next_record())
 			{
+				$ticket['id']				= $id;
 				$ticket['assignedto']		= $this->db->f('assignedto');
 				$ticket['user_id']			= $this->db->f('user_id');
 				$ticket['group_id']			= $this->db->f('group_id');
@@ -871,7 +872,7 @@
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 	 					$controller = CreateObject('controller.uicase'); 
-	 					$controller->updateStatusForCases($location_id, $id, 0);
+	 					$controller->updateStatusForCases($location_id, $id, 1);
 					}
 				}
 			}
@@ -1060,7 +1061,7 @@
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
  						$controller = CreateObject('controller.uicase'); 
- 						$controller->updateStatusForCases($location_id, $id, 0);
+ 						$controller->updateStatusForCases($location_id, $id, 1);
 					}
 				}
 			}

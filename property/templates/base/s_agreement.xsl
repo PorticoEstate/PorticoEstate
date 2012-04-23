@@ -346,7 +346,6 @@
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
-									<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<tr>
@@ -361,7 +360,6 @@
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
-									<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<tr>
@@ -376,7 +374,6 @@
 											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
-									<img id="values_termination_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 								</td>
 							</tr>
 							<xsl:choose>
@@ -618,7 +615,6 @@
 											<xsl:value-of select="lang_date_statustext"/>
 										</xsl:attribute>
 									</input>
-									<img id="values_date-trigger" class="calendar-opt" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 									<div style="width:25px;height:15px;position:relative;float:left;"/>
 								</div>
 								<style type="text/css">
@@ -849,7 +845,6 @@
 													<xsl:value-of select="lang_date_statustext"/>
 												</xsl:attribute>
 											</input>
-											<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" class="calendar-opt"/>
 											<div style="width:25px;height:15px;position:relative;float:left;"/>
 										</div>
 									</td>
@@ -872,7 +867,6 @@
 							<xsl:value-of select="lang_date_statustext"/>
 						</xsl:attribute>
 					</input>
-					<img id="values_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;"/>
 				</div>
 			</td>
 		</tr>

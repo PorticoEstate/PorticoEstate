@@ -61,6 +61,13 @@
 		{
 			parent::__construct();
 			
+			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			
+			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
@@ -85,12 +92,13 @@
 			
 			if(($from_month + 1) > 12){
 				$to_month = 1;
-				$year++;
+				$to_year = $year + 1;
 			}else{
 				$to_month = $from_month + 1;
+				$to_year = $year;
 			}
 			
-			$to_date_ts = strtotime("$to_month/01/$year");
+			$to_date_ts = strtotime("$to_month/01/$to_year");
 												
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
@@ -122,9 +130,6 @@
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_with_check_list_array, $num_days_in_month, "view_days" );
 			
-			//print_r($controls_calendar_array);
-			
-			
 			foreach($controls_calendar_array as &$inst)
 			{	
 				$curr_control = &$inst['control'];
@@ -139,7 +144,14 @@
 					$curr_control['repeat_type'] = "År";
 			}
 
+			//$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			//lookup=1&type_id=1&lookup_name=0
+			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
+			//$property_array = execMethod('property.bolocation.read', array('type_id' => 1, 'lookup_name' => 0, 'lookup' => 1));
+			//print_r( $property_array );
+			
 			
 			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
 			
@@ -151,6 +163,7 @@
 			(		
 				'my_locations'	  		  => $my_locations,
 				'view_location_code'	  => $location_code,
+				'property_array'	  	  => $property_array,
 				'location_array'		  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
@@ -163,7 +176,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl('calendar/view_calendar_month', $data);
+			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker'), $data);
 		}
 		
 		public function view_calendar_for_year()
@@ -183,18 +196,27 @@
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
-						
-			$criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'type_id' => 1,
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
+			$manage=false;
 		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
+			if($manage)
+            {
+            	$locations = execMethod('property.solocation.get_children', $location_code);
+           
+            }else{
+            	$criteria = array
+				(
+					'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+					'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
+					'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+					'allrows' => false
+				);
+		
+				$location_finder = new location_finder();
+				$my_locations = $location_finder->get_responsibilities( $criteria );
+            }
+				
 			
+			//print_r($my_locations);
 			if(empty($location_code)){
 				$location_code = $my_locations[0]["location_code"];
 			}
@@ -249,7 +271,7 @@
 				'year' 			  	  	  => $year
 			);
 			
-			self::render_template_xsl('calendar/view_calendar_year', $data);
+			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker'), $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}

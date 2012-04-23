@@ -441,12 +441,27 @@
 			$invoice = array();
 			while ($this->db->next_record())
 			{
+				$status_line = 'O';
+				if($this->db->f('budsjettsigndato'))
+				{
+					$status_line = 'C';
+				}
+				else if($this->db->f('saksigndato'))
+				{
+					$status_line = 'B';
+				}
+				else if($this->db->f('oppsynsigndato'))
+				{
+					$status_line = 'A';
+				}
+
 				$invoice[] = array
 					(
 						'counter'				=> $i,
 						'claim_issued'			=> $this->db->f('claim_issued'),
 				//		'project_id'			=> $this->db->f('project_id'),
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
+						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'status'				=> $this->db->f('status'),
 						'closed'				=> $this->db->f('status') == $closed,
 						'voucher_id'			=> $this->db->f('bilagsnr'),
@@ -470,6 +485,8 @@
 						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 						'transfer_time'			=> $this->db->f('overftid'),
+						'line_text'				=> $this->db->f('line_text',true),
+						'status_line'			=> $status_line
 					);
 
 				$i++;
@@ -1299,7 +1316,8 @@
 						'project_id'			=> $this->db->f('project_id'),
 						'project_group'			=> $this->db->f('project_id'),
 						'payment_date' 			=> $this->db->f('forfallsdato'),
-						'merknad'				=> $this->db->f('merknad'),
+						'merknad'				=> $this->db->f('merknad',true),
+						'line_text'				=> $this->db->f('line_text',true),
 						'b_account_id'			=> $this->db->f('spbudact_code'),
 						'amount'				=> $this->db->f('belop'),
 						'approved_amount'		=> $this->db->f('godkjentbelop'),
@@ -1606,10 +1624,26 @@
 			return $allow_transfer;
 		}
 
-		function check_claim($voucher_id='')
+		function check_claim($voucher_id = 0, $line_id = 0)
 		{
+			$condition = '';
+
+			if($line_id)
+			{
+				$condition = 'WHERE fm_ecobilag.id =' . (int) $line_id;
+			}
+			else if($voucher_id)
+			{
+				$condition = 'WHERE fm_ecobilag.bilagsnr =' . (int) $voucher_id;
+			}
+
+			if(!$condition)
+			{
+				return false;
+			}
+
 			$sql = "SELECT count(*) as cnt FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
-				. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
+				. " {$condition} AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('cnt');
@@ -1707,46 +1741,65 @@
 		*/
 		public function forward($data)
 		{
+			$condition = '';
 
+			$global_check = false;
+			if(isset($data['forward']) && is_array($data['forward']) && isset($data['line_id']) && $data['line_id'])
+			{
+				$condition = 'WHERE id =' . (int) $data['line_id'];
+			}
+			else if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
+			{
+				$condition = 'WHERE bilagsnr =' . (int) $data['voucher_id'];
+				$global_check = true;
+			}
+			
 			$receipt = array();
 			$local_error= false;
-			if(isset($data['forward']) && is_array($data['forward']) && isset($data['voucher_id']) && $data['voucher_id'])
+			if($condition)
 			{
 				//start check
 				$check_count = $this->check_count($data['voucher_id']);
 
-				if (!($check_count['dima_count'] == $check_count['invoice_count']))
+				if($global_check )
 				{
-					$receipt['error'][] = array('msg'=>lang('Dima is missing from sub invoice in:'). " ".$data['voucher_id']);
-					$local_error= true;
+					if (!($check_count['dima_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( lang('Dima is missing from sub invoice in:'). " ".$data['voucher_id'],'error' );
+						$local_error= true;
+					}
+
+					if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( lang('Budget code is missing from sub invoice in :'). " ".$data['voucher_id'],'error');
+						$local_error= true;
+					}
+
+					if (!($check_count['kostra_count'] == $check_count['invoice_count']))
+					{
+						phpgwapi_cache::message_set( 'Tjenestekode mangler for undebilag: ' . " ".$data['voucher_id'],'error');
+						$local_error= true;
+					}
+
+					if ($this->check_claim($data['voucher_id']))
+					{
+						phpgwapi_cache::message_set( lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']),'error');
+						$local_error= true;
+					}
+				}
+				else
+				{
+					if ($this->check_claim(0, $data['line_id']))
+					{
+						phpgwapi_cache::message_set( lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']),'error');
+						$local_error= true;
+					}
 				}
 
-				if (!($check_count['spbudact_code_count'] == $check_count['invoice_count']))
-				{
-					$receipt['error'][] = array('msg'=>lang('Budget code is missing from sub invoice in :'). " ".$data['voucher_id']);
-					$local_error= true;
-				}
-
-				if (!($check_count['kostra_count'] == $check_count['invoice_count']))
-				{
-					$receipt['error'][] = array('msg'=>'Tjenestekode mangler for undebilag: ' . " ".$data['voucher_id']);
-					$local_error= true;
-				}
-
-				if ($this->check_claim($data['voucher_id']))
-				{
-					$receipt['error'][] = array('msg'=>lang('Tenant claim is not issued for project in voucher %1',$data['voucher_id']));
-					$local_error= true;
-				}
 
 				if($local_error)
 				{
-					foreach ($receipt['error'] as $_error)
-					{
-						phpgwapi_cache::message_set($_error['msg'], 'error');
-					}
-
-					return $receipt;
+					return false;
 				}
 				// end check
 
@@ -1790,7 +1843,7 @@
 				}
 
 				$value_set	= $this->db->validate_update($value_set);
-				return $this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+				return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
 			}
 
 			return false;
@@ -1799,23 +1852,36 @@
 
 		public function update_voucher2($data)
 		{
-
+			if(!isset($data['line_id']) || !$data['line_id'])
+			{
+				phpgwapi_cache::message_set(lang('select invoice'), 'error');
+				return false;
+			}
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
 			
-			$value_set['pmwrkord_code'] = $data['order_id'];
-			$value_set['dimb'] = $data['dim_b'];
-			$value_set['dima'] = $data['dim_a'];
-			$value_set['mvakode'] = $data['tax_code'];
-			$value_set['project_id'] = $data['project_group'];
-			$value_set['spbudact_code'] = $data['b_account_id'];
 			$value_set['periode'] = $data['period'];
 			$value_set['periodization'] = $data['periodization'];
 			$value_set['periodization_start'] = $data['periodization_start'];
 			$value_set['kreditnota'] = !!$data['park_invoice'];
 
 			$value_set	= $this->db->validate_update($value_set);
-			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr = '{$data['voucher_id']}'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE bilagsnr =" . (int)$data['voucher_id'],__LINE__,__FILE__);
+			unset($value_set);
+
+			$value_set_line = array();
+
+			$value_set_line['pmwrkord_code']	= $data['order_id'];
+			$value_set_line['dimb']				= $data['dim_b'];
+			$value_set_line['dima']				= $data['dim_a'];
+			$value_set_line['mvakode']			= $data['tax_code'];
+			$value_set_line['project_id']		= $data['project_group'];
+			$value_set_line['spbudact_code']	= $data['b_account_id'];
+			$value_set_line['line_text']		= $data['line_text'];
+
+			$value_set_line	= $this->db->validate_update($value_set_line);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set_line WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
+			unset($value_set_line);
 
 			if($data['order_id'] && $data['b_account_id'])
 			{
@@ -1853,6 +1919,18 @@
 					}
 
 					$table = 'fm_ecobilag';
+
+					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$amount = $this->db->f('belop');
+					$new_amount = $amount - $split_amount;
+					
+					if($new_amount < 0)
+					{
+						phpgwapi_cache::message_set(lang('negative sum'), 'error');
+						continue;
+					}
+
 					$metadata = $this->db->metadata($table);
 					$sql ="SELECT * FROM {$table} WHERE id= {$id}";
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -1860,9 +1938,10 @@
 
 					$value_set = array();
 
+					$skip_values = array('id','pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
 					foreach($metadata as $_field)
 					{
-						if($_field->name != 'id')
+						if(!in_array($_field->name, $skip_values))
 						{
 							$value_set[$_field->name] = $this->db->f($_field->name,true);
 						}
@@ -1873,10 +1952,6 @@
 
 					$new_id = $this->db->get_last_insert_id($table,'id');
 
-					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
-					$this->db->next_record();
-					$amount = $this->db->f('belop');
-					$new_amount = $amount - $split_amount;
 
 					$value_set= array
 					(
@@ -1924,7 +1999,24 @@
 					$this->db->query("INSERT INTO fm_ecobilag_process_log ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 				}
 			}
-			$GLOBALS['phpgw']->db->transaction_commit();
+
+
+			if( isset($data['order_id']) && $data['order_id'])
+			{
+				if(isset($data['close_order']) && $data['close_order'])
+				{
+					execMethod('property.soworkorder.close_orders',array($data['order_id']));
+				}
+				if(isset($data['close_order_orig']) && $data['close_order_orig'] && !$data['close_order'])
+				{
+					execMethod('property.soworkorder.reopen_orders',array($data['order_id']));
+				}
+			}
+
+			$receipt = $this->forward($data);
+			phpgwapi_cache::message_set(lang('voucher is updated'), 'message');
+
+			return $GLOBALS['phpgw']->db->transaction_commit();
 		}
 
 		public function get_vouchers($data)

@@ -850,7 +850,7 @@
 					{
 						$this->soXport->delete_from_fm_ecobilag($oRsUnderbilag[$i]['id']);		
 						//Logg transaksjon		
-						$this->soXport->log_transaction($batchid,$BilagId,lang('Invoice tranferred'));
+						$this->soXport->log_transaction($batchid,$BilagId,lang('Invoice transferred'));
 					}
 		
 					$BilagId = 'NULL';

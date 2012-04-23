@@ -90,13 +90,7 @@
 				{
 					if(!$view_only)
 					{
-						if ( !isset($GLOBALS['phpgw']->jscal) || !is_object($GLOBALS['phpgw']->jscal) )
-						{
-							$GLOBALS['phpgw']->jscal = createObject('phpgwapi.jscalendar');
-						}
-
-						$GLOBALS['phpgw']->jscal->add_listener('values_attribute_' . $i);
-						$attributes['img_cal']			= $GLOBALS['phpgw']->common->image('phpgwapi','cal');
+						$GLOBALS['phpgw']->jqcal->add_listener('values_attribute_' . $i);
 						$attributes['lang_datetitle']	= lang('Select date');
 					}
 

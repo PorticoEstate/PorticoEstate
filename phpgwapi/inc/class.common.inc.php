@@ -1571,7 +1571,7 @@ HTML;
 
 			if(!isset($GLOBALS['phpgw']->xslttpl->xslfiles['msgbox']))
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
+				$GLOBALS['phpgw']->xslttpl->add_file('msgbox',$this->get_tpl_dir('phpgwapi','base'));
 			}
 
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;

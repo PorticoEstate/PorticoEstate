@@ -236,7 +236,7 @@
 		}
 
 
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
+   	   	//Oppdater belÃ¸p pÃ¥ arbeidsordre operator="-" ved tilbakerulling
 		function correct_actual_cost($pmwrkord_code,$Belop,$actual_cost_field,$operator)
 		{
 			$Belop=$Belop/100;
@@ -245,7 +245,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-		// Hent leverandørklasse
+		// Hent leverandÃ¸rklasse
 
 		function select_vendor_class($spvend_code)
 		{
@@ -268,7 +268,7 @@
 				$this->log_start($batchid);
 			}
 
-			//Velg ut alle perioder som har bilag som skal overføres
+			//Velg ut alle perioder som har bilag som skal overfÃ¸res
 
 			$periode = $this->select_periods_with_invoice_to_transfer();
 		
@@ -389,7 +389,7 @@
 		function LagFilnavn ($batchid)
 		{	
 			$fil_katalog = $this->config->config_data['export_path'];
-			//Beregn løpenr
+			//Beregn lÃ¸penr
 			$StartLopeNr = ($batchid % 30) + 70;
 			$LopeNr = $StartLopeNr;
 		
@@ -404,13 +404,13 @@
 					return $Filnavn;
 				}
 		
-				//Genererer nytt løpenr
+				//Genererer nytt lÃ¸penr
 				$batchid = $batchid + 1;
 				$LopeNr = ($batchid % 30) + 70;
 			}
 			while  ($LopeNr != $StartLopeNr);
 		
-			//Ingen løpenr er ledige, gi feilmelding
+			//Ingen lÃ¸penr er ledige, gi feilmelding
 			return False;
 		}
 		
@@ -423,7 +423,7 @@
 			$Filnavn = $this->LagFilnavn($batchid);
 			if (!$Filnavn)
 			{
-				$message='LagFilnavn'.lang('Alle løpenr for filnavn er i bruk!');
+				$message='LagFilnavn'.lang('Alle lÃ¸penr for filnavn er i bruk!');
 				$this->errorhandler($message);
 				return $message;
 			}
@@ -439,7 +439,7 @@
 				return $message;
 			}
 			
-			//Velg ut alle hoved bilag som skal overføres
+			//Velg ut alle hoved bilag som skal overfÃ¸res
 		
 			$oRsBilag=$this->soXport->hoved_bilag($periode);
 									
@@ -448,7 +448,7 @@
 		 	$bilag_count= count($oRsBilag);
 		 	for ($k=0;$k<$bilag_count;$k++)
 			{				
-				//Hent leverandørklasse
+				//Hent leverandÃ¸rklasse
 				
 				$pmlabor_code =$this->select_vendor_class($oRsBilag[$k]['spvend_code']);
 				
@@ -479,12 +479,12 @@
 				else
 				{
 					 //Ikke lovlig
-					$message = lang('Avvik mellom fakturabeløp og godkjent beløp på splittet faktura!');
+					$message = lang('Avvik mellom fakturabelÃ¸p og godkjent belÃ¸p pÃ¥ splittet faktura!');
 					$this->errorhandler($message);
 					return $message;
 				}
 		
-				//Formater beløp
+				//Formater belÃ¸p
 				if ($oRsBilag[$k]['artid'] == 2)
 				{
 					$Belop = sprintf("%01.2f", $oRsBilag[$k][$BelopFelt]);
@@ -564,7 +564,7 @@
 						//Hent DIM C
 						$dimc = $this->soXport->select_dimc($oRsUnderbilag[$i]['pmwrkord_code']);
 		
-						//Oppdater beløp på arbeidsordre
+						//Oppdater belÃ¸p pÃ¥ arbeidsordre
 						if ($download=='on')
 						{
 							if ($oRsUnderbilag[$i]['dimd'] % 2 == 0)
@@ -584,7 +584,7 @@
 						$dimc = '';
 					}
 		
-					//Overfør til fm_ecobilagoverf
+					//OverfÃ¸r til fm_ecobilagoverf
 		
 					$oRsOverfBilag=$oRsUnderbilag[$i];
 					$oRsOverfBilag['filnavn']= basename($Filnavn);
@@ -619,7 +619,7 @@
 					{
 						$this->soXport->delete_from_fm_ecobilag($oRsUnderbilag[$i]['id']);		
 						//Logg transaksjon		
-						$this->soXport->log_transaction($batchid,$BilagId,lang('Invoice tranferred'));
+						$this->soXport->log_transaction($batchid,$BilagId,lang('Invoice transferred'));
 					}
 		
 					$BilagId = 'NULL';
@@ -631,13 +631,13 @@
 			$f9per	= $periode_aar;
 			$buffer .='F999       1'.sprintf("%4s",$f9per).'              0            0            0            0              0            0            0            0              0              0     0     0     0     0     0     0     0     0     0                                               '."\r\n";
 					
-			//Fullfør transaksjon
+			//FullfÃ¸r transaksjon
 			//g_db.SluttTransaksjon
 			
 		
 			if ($download=='on')
 			{
-				$message = 'periode: '.$periode_aar.' antall bilag/underbilag overført:'.$antall . ' , fil: ' . $Filnavn;
+				$message = 'periode: '.$periode_aar.' antall bilag/underbilag overfÃ¸rt:'.$antall . ' , fil: ' . $Filnavn;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
 				if(fclose($fp))

@@ -266,17 +266,13 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('invoice_date');
-			$jscal->add_listener('payment_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('invoice_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('payment_date');
 
 			$data = array
 				(
 					'menu'								=> $this->bocommon->get_menu(),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'					=> lang('Select date'),
 
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'sub'=> $sub)),
@@ -625,18 +621,13 @@
 			$link_data = array('menuaction'	=> 'property.uiXport.rollback');
 
 			//_debug_array($receipt);
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('date');
+			$GLOBALS['phpgw']->jqcal->add_listener('date');
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 				(
 					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-
-					'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'			=> lang('Select date'),
-					'calendar_setup'			=> "Calendar.setup({inputField  : 'date',ifFormat  : '" . $jsDateFormat . "',button : 'date-trigger'});",
 
 					'lang_select_conv'			=> lang('Select conversion'),
 					'conv_list'					=> $this->bo->select_export_conv($values['conv_type']),

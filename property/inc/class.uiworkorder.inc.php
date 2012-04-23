@@ -1465,9 +1465,8 @@
 				$values['status']=$workorder_status;
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 
 			if( isset($receipt) && is_array($receipt))
 			{
@@ -1714,9 +1713,6 @@
 					'project_link'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
 					'b_group_data'							=> $b_group_data,
 					'b_account_data'						=> $b_account_data,
-
-					'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-					'lang_datetitle'						=> lang('Select date'),
 
 					'lang_start_date_statustext'			=> lang('Select the estimated end date for the Project'),
 					'lang_start_date'						=> lang('Workorder start date'),
@@ -2196,10 +2192,10 @@
 			}
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('invoice_date');
-			$jscal->add_listener('payment_date');
-			$jscal->add_listener('paid_date');
+
+			$GLOBALS['phpgw']->jqcal->add_listener('invoice_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('payment_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('paid_date');
 
 			$order_id = isset($values['order_id']) && $values['order_id'] ? $values['order_id'] : $order_id;
 
@@ -2207,7 +2203,6 @@
 			$data = array
 			(
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index')),
 				'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiinvoice.add')),

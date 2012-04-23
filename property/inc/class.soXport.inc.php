@@ -259,6 +259,7 @@
 						$fields['mvakode'],
 						$fields['periode'],
 						$this->db->db_addslashes($fields['merknad']),
+						$this->db->db_addslashes($fields['line_text']),
 						false,
 						false,
 						false,
@@ -275,7 +276,7 @@
 
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,fakturadato,"
 						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
+						. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
 						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
 						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
 
@@ -336,6 +337,7 @@
 				$data['saksigndato'],
 				$data['budsjettsigndato'],
 				$this->db->db_addslashes($data['merknad']),
+				$this->db->db_addslashes($data['line_text']),
 				$data['splitt'],
 				$data['utbetalingid'],
 				$data['utbetalingsigndato'],
@@ -353,7 +355,7 @@
 			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,bilagsnr_ut,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
-				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
+				. " budsjettsigndato,merknad,line_text,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
 				. " currency,manual_record,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
@@ -426,6 +428,7 @@
 					'saksigndato'			=> $this->db->f('saksigndato'),
 					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 					'merknad'				=> $this->db->f('merknad',true),
+					'line_text'				=> $this->db->f('line_text',true),
 					'splitt'				=> $this->db->f('splitt'),
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
@@ -540,6 +543,7 @@
 
 					$hoved_bilag[$i]['budsjettsigndato']	= $this->db->f('budsjettsigndato');
 					$hoved_bilag[$i]['merknad']				= $this->db->f('merknad');
+					$hoved_bilag[$i]['line_text']			= $this->db->f('line_text');
 					$hoved_bilag[$i]['splitt']				= $this->db->f('splitt');
 					$hoved_bilag[$i]['utbetalingid']		= $this->db->f('utbetalingid');
 					$hoved_bilag[$i]['utbetalingsigndato']	= $this->db->f('utbetalingsigndato');
@@ -607,6 +611,7 @@
 
 				$underbilag[$i]['budsjettsigndato']	= $this->db->f('budsjettsigndato');
 				$underbilag[$i]['merknad']	= $this->db->f('merknad');
+				$underbilag[$i]['line_text']	= $this->db->f('line_text');
 				$underbilag[$i]['splitt']	= $this->db->f('splitt');
 				$underbilag[$i]['utbetalingid']	= $this->db->f('utbetalingid');
 				$underbilag[$i]['utbetalingsigndato']	= $this->db->f('utbetalingsigndato');
