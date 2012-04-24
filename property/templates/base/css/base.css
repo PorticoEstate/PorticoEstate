@@ -110,3 +110,28 @@ thead
 	color:#FFFFFF !important;
 	text-decoration: none !important;
 }
+
+#curtain {
+    background: none repeat scroll 0 0 #000000;
+    display: none;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+#popupBox {
+    background: none repeat scroll 0 0 #fff;
+    display: none;
+    height: 90%;
+    left: 80px;
+    position: absolute;
+    top: 80px;
+    width: 1200px;
+    z-index: 2;
+}
+
+
