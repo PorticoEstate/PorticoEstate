@@ -361,7 +361,7 @@
 
 			if ($member_id > 0  && !$detail)
 			{
-				$filtermethod .= " $where $entity_table.member_of $this->like '%,$member_id,%' ";
+				$filtermethod .= " $where fm_vendor.member_of {$this->like} '%,$member_id,%' ";
 				$where= 'AND';
 			}
 

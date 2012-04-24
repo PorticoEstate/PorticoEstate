@@ -239,3 +239,82 @@ YAHOO.util.Event.addListener(window, "load", function()
 });
 
 
+	this.onDOMAttrModified = function(e)
+	{
+		var attr = e.attrName || e.propertyName
+		var target = e.target || e.srcElement;
+		if (attr.toLowerCase() == 'vendor_id')
+		{
+			update_member_info();
+		}
+	}
+
+
+	this.update_member_info=function()
+	{
+		var vendor_id = $("#vendor_id").val();
+		if(!vendor_id)
+		{
+			return;
+		}
+		var oArgs = {menuaction:'property.uis_agreement.get_vendor_member_info'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl + "&vendor_id=" + vendor_id,
+			success: function(data) {
+				if( data != null)
+				{
+					if(data.sessionExpired)
+					{
+						alert('Sesjonen er utløpt - du må logge inn på nytt');
+						return;
+					}
+
+					var checked = "";
+					var obj = data;
+
+					$.each(obj, function(i) {
+
+						if(obj[i].selected != '')
+						{
+							checked = "checked=\"checked\"";					
+						}
+						htmlString  += "<input type=\"checkbox\" " + checked + "name=\"values[member_of][]\" value=\"" + obj[i].cat_id + "\"></input>";
+						htmlString  += obj[i].name;
+						htmlString  += "<br/>";
+						checked = "";
+		    		});
+
+					$("#member_of").html( htmlString );
+				}
+				else
+				{
+					$("#member_of").html( htmlString );
+				}
+			}
+			});
+		$("#member_of").html( htmlString );
+	}
+
+YAHOO.util.Event.addListener(window, "load", function()
+{
+	d = document.getElementById('vendor_id');
+	if(d)
+	{
+		if (d.attachEvent)
+		{
+			d.attachEvent('onpropertychange', onDOMAttrModified, false);
+		}
+		else
+		{
+			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+		}
+	}
+});
+
+

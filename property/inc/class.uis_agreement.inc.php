@@ -32,6 +32,7 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.yui');
 
 	class property_uis_agreement
@@ -46,16 +47,17 @@
 
 		var $public_functions = array
 			(
-				'index'  		=> true,
-				'view'			=> true,
-				'edit'   		=> true,
-				'delete'		=> true,
-				'columns'		=> true,
-				'edit_item'		=> true,
-				'view_item'		=> true,
-				'view_file'		=> true,
-				'download'		=> true,
-				'import'		=> true
+				'index'  				=> true,
+				'view'					=> true,
+				'edit'   				=> true,
+				'delete'				=> true,
+				'columns'				=> true,
+				'edit_item'				=> true,
+				'view_item'				=> true,
+				'view_file'				=> true,
+				'download'				=> true,
+				'import'				=> true,
+				'get_vendor_member_info'=> true
 			);
 
 		function property_uis_agreement()
@@ -776,6 +778,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $id));
 			}
 
+			phpgwapi_jquery::load_widget('core');
 			$values			= phpgw::get_var('values');
 			$delete_item	= phpgw::get_var('delete_item');
 			$item_id		= phpgw::get_var('item_id');
@@ -1045,18 +1048,12 @@
 
 			if($values['vendor_id'])
 			{
-
-				$generic	= CreateObject('property.bogeneric');
-				$generic->get_location_info('vendor');
-				$vendor = $generic->read_single(array('id' => $values['vendor_id']));
-				$member_of = explode(',', trim($vendor['member_of'],','));
+				$member_of_list = $this->get_vendor_member_info($values['vendor_id']);
 			}
 			else
 			{
-				$member_of	= array();
+				$member_of_list	= array();
 			}
-
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $member_of,'globals' => true));
 
 			$table_add[] = array
 				(
@@ -1544,9 +1541,7 @@ die();
 					'select_name'						=> 'values[cat_id]',
 					'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'s_agreement','order'=>'descr')),
 
-					'lang_member_of'					=> lang('member of'),
-					'member_of_name'					=> 'member_id',
-					'member_of_list2'					=> $member_of_data['cat_list'],
+					'member_of_list2'					=> $member_of_list,
 
 					'attributes_group'					=> $attributes,
 					'lookup_functions'					=> $values['lookup_functions'],
@@ -1625,6 +1620,22 @@ die();
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'uis_agreement.edit', 'property' );
 		}
+
+
+		function get_vendor_member_info($vendor_id = 0)
+		{
+			if(!$vendor_id)
+			{
+				$vendor_id =  phpgw::get_var('vendor_id', 'int');
+			}
+			$generic	= CreateObject('property.bogeneric');
+			$generic->get_location_info('vendor');
+			$vendor = $generic->read_single(array('id' => $vendor_id));
+			$member_of = explode(',', trim($vendor['member_of'],','));
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $member_of,'globals' => true));
+			return isset($member_of_data['cat_list']) && $member_of_data['cat_list'] ? $member_of_data['cat_list'] : array();
+		}
+
 
 		function download()
 		{
