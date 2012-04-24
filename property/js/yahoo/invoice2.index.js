@@ -34,7 +34,7 @@ var	myPaginator_0, myDataTable_0
 		td_empty(1);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
-		td_empty(7);
+		td_empty(8);
 
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");

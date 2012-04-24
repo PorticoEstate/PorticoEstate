@@ -306,6 +306,13 @@
 				),
 				array
 				(
+					'key' => 'dime',
+					'label' => lang('dime'),
+					'sortable' => false,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
 					'key' => 'project_group',
 					'label' => lang('project group'),
 					'sortable' => false,
@@ -417,6 +424,12 @@
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				$entry['approved_amount_hidden'] = $entry['approved_amount'];
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
+				if($entry['dime'])
+				{
+					$catetory = execMethod('phpgwapi.categories.return_single',$entry['dime']);
+					$entry['dime'] = $catetory[0]['name'];
+				}
+
 				$results['results'][]= $entry;
 			}
 
@@ -492,6 +505,7 @@
 			
 			$sign_orig = '';
 			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
+	
 			if(count($voucher))
 			{
 
@@ -587,7 +601,7 @@
 				foreach ($voucher as $line)
 				{
 					$voucher_info['generic']['approved_amount'] += $line['approved_amount'];
-					$voucher_info['generic']['amount']  += $line['amount'];	
+					$voucher_info['generic']['amount']  += $line['amount'];
 				}
 
 				$voucher_info['generic']['approved_amount'] = number_format($voucher_info['generic']['approved_amount'], 2, ',', ' ');
@@ -628,6 +642,7 @@
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
 				$voucher[0]['image_url']	= '';//'http://www.nettavisen.no/';
+
 			}
 			else
 			{
@@ -652,6 +667,17 @@
 				);
 			}
 
+			$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$cats->supress_info	= true;
+
+			$categories = $cats->formatted_xslt_list(array('selected' => isset($voucher[0]['dime']) && $voucher[0]['dime'] ? $voucher[0]['dime'] : 0));
+			
+			foreach($categories['cat_list'] as &$cat)
+			{
+				$cat['id'] = $cat['cat_id'];
+				$cat['selected'] = $cat['selected'] ? 1 : 0;
+			}
+			$voucher_info['generic']['dime_list'] = array('options' => $categories['cat_list']);			
 			$voucher_info['generic']['approved_list'] = $approved_list;
 			$voucher_info['generic']['process_code_list'] = array('options' => execMethod('property.bogeneric.get_list', array(
 				'type'		=> 'voucher_process_code',
@@ -659,11 +685,13 @@
 
 			array_unshift ($voucher_info['generic']['process_code_list']['options'],array ('id'=>'','name'=>lang('select')));
 			array_unshift ($voucher_info['generic']['dimb_list']['options'],array ('id'=>'','name'=>lang('select')));
+			array_unshift ($voucher_info['generic']['dime_list']['options'],array ('id'=>'','name'=>lang('select')));
 			array_unshift ($voucher_info['generic']['periodization_list']['options'],array('id' => '', 'name' => lang('none')));
 
 			$voucher_info['voucher'] = $voucher;
 			$voucher_info['generic']['sign_orig'] = $sign_orig;
 			$voucher_info['generic']['my_initials'] = $my_initials;
+
 //_debug_array($voucher_info);die();
 
 			return $voucher_info;
