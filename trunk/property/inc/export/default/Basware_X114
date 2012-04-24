@@ -275,6 +275,7 @@
 					'dimb'					=> $this->db->f('dimb'),
 					'mvakode'				=> $this->db->f('mvakode'),
 					'dimd'					=> $this->db->f('dimd'),
+					'dime'					=> $this->db->f('dime'),
 					'project_id'			=> $this->db->f('project_id'),
 					'kostra_id'				=> $this->db->f('kostra_id'),
 					'item_type'				=> $this->db->f('item_type'),
@@ -330,6 +331,7 @@
 				$BilagOverf['dima'],
 				$BilagOverf['loc1'],
 				$BilagOverf['dimd'],
+				$BilagOverf['dime'],
 				$BilagOverf['mvakode'],
 				$BilagOverf['periode'],
 				$BilagOverf['periodization'],
@@ -353,7 +355,7 @@
 
 			$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
-			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
+			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,dime,mvakode,"
 			. " periode,periodization,periodization_start,merknad,line_text,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
 			. " item_type,item_id,external_ref,belop,godkjentbelop,currency)"
 			. " VALUES ({$values})";

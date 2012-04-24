@@ -256,6 +256,7 @@
 						$fields['loc1'],
 						$fields['dima'],
 						$fields['dimd'],
+						$fields['dime'],
 						$fields['mvakode'],
 						$fields['periode'],
 						$this->db->db_addslashes($fields['merknad']),
@@ -276,7 +277,7 @@
 
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,fakturadato,"
 						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
+						. " fakturanr,spbudact_code,loc1,dima,dimd,dime,mvakode,periode,merknad,line_text,oppsynsigndato,saksigndato,"
 						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
 						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
 
@@ -330,6 +331,7 @@
 				$data['dimb'],
 				$data['mvakode'],
 				$data['dimd'],
+				$data['dime'],
 				$data['oppsynsmannid'],
 				$data['saksbehandlerid'],
 				$data['budsjettansvarligid'],
@@ -354,7 +356,7 @@
 
 			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,bilagsnr_ut,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
-				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
+				. " dimb,mvakode,dimd,dime,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,line_text,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
 				. " currency,manual_record,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
@@ -421,6 +423,7 @@
 					'dimb'					=> $this->db->f('dimb'),
 					'mvakode'				=> $this->db->f('mvakode'),
 					'dimd'					=> $this->db->f('dimd'),
+					'dime'					=> $this->db->f('dime'),
 					'oppsynsmannid'			=> $this->db->f('oppsynsmannid'),
 					'saksbehandlerid'		=> $this->db->f('saksbehandlerid'),
 					'budsjettansvarligid'	=> $this->db->f('budsjettansvarligid'),
@@ -521,6 +524,7 @@
 					$hoved_bilag[$i]['dimb']			= $this->db->f('dimb');
 					$hoved_bilag[$i]['mvakode']			= $this->db->f('mvakode');
 					$hoved_bilag[$i]['dimd']			= $this->db->f('dimd');
+					$hoved_bilag[$i]['dime']			= $this->db->f('dime');
 					if($this->db->f('oppsynsmannid'))
 					{
 						$hoved_bilag[$i]['oppsynsmannid']	= $this->db->f('oppsynsmannid');
@@ -587,6 +591,7 @@
 				$underbilag[$i]['dimb']	= $this->db->f('dimb');
 				$underbilag[$i]['mvakode']	= $this->db->f('mvakode');
 				$underbilag[$i]['dimd']	= $this->db->f('dimd');
+				$underbilag[$i]['dime']	= $this->db->f('dime');
 				$underbilag[$i]['project_id']	= $this->db->f('project_id');
 				$underbilag[$i]['kostra_id']	= $this->db->f('kostra_id');
 				if($this->db->f('oppsynsmannid'))

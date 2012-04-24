@@ -566,8 +566,9 @@
 				$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
 				$buffer[$i]['referanse']		= "ordre: {$order_id}";
 
-				$buffer[$i]['dimb'] 		= $order_info['dimb'];
 				$buffer[$i]['dima'] 		= $order_info['dima'];
+				$buffer[$i]['dimb'] 		= $order_info['dimb'];
+				$buffer[$i]['dime'] 		= $order_info['dime'];
 				$buffer[$i]['loc1'] 		= $order_info['loc1'];
 				$buffer[$i]['line_text']	= $order_info['title'];
 
@@ -780,7 +781,7 @@
 			$order_info = array();
 			$toarray = array();
 			$order_id = (int) $order_id;
-			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb, fm_workorder.user_id,fm_workorder.title"
+			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			if(	$this->db->next_record())
@@ -797,6 +798,7 @@
 			$order_info['vendor_id'] 			= $this->db->f('vendor_id');
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
+			$order_info['dime']					= $this->db->f('category');
 			$order_info['title']				= $this->db->f('title',true);			
 
 			$janitor_user_id 					= $this->db->f('user_id');

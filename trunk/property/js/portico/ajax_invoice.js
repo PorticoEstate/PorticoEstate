@@ -216,6 +216,7 @@ $(document).ready(function(){
 		$("#close_order").html( '' );
 		$("#close_order_orig").val( '' );
 		$("#park_order").html( '' );
+		$("#receipt").html('');
 
 		var voucher_id = $(this).val();
 		var oArgs = {menuaction:'property.uiinvoice2.get_first_line'};
@@ -244,10 +245,10 @@ $(document).ready(function(){
 	});
 
 	$("#approve_line").live("click", function(e){
+		$("#receipt").html('');
 		var line_id = $(this).val();
 		var voucher_id_orig = $("#voucher_id").val();
 		update_form_values(line_id, voucher_id_orig);
-
     });
 
 
@@ -644,6 +645,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#approve_as").html( "<option>Velg</option>" );
 				$("#order_text").html( 'Bestilling' );
 				$("#invoice_id_text").html('FakturaNr');
+				$("#receipt").html('');
 				document.getElementById('image_content').src = '';
 			}
 		}
