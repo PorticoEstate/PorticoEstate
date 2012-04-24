@@ -352,7 +352,15 @@
 				</select>
 			</td>
 		</tr>
-
+		<tr class="row_on">
+			<td>{lang_project_optional_category}.</td>
+			<td>
+				<select name="newsettings[project_optional_category]">
+					<option value="" {selected_project_optional_category_}>NO</option>
+					<option value="1" {selected_project_optional_category_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_request_show_dates}.</td>
 			<td>

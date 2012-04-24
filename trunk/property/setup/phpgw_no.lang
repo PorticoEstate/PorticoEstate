@@ -522,6 +522,7 @@ dimb roles	property	no	Roller kostnadssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
 dim d	property	no	Dim D
+dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
 disable	property	no	Deaktiver
 disabled	property	no	inaktivt
