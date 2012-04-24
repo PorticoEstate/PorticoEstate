@@ -705,7 +705,7 @@
 				$values['id']				= $this->db->f('id');
 				$values['entry_date']		= $this->db->f('entry_date');
 				$values['cat_id']			= $this->db->f('category');
-				$values['member_of']		= explode(',',$this->db->f('member_of'));
+				$values['member_of']		= explode(',',trim($this->db->f('member_of'),','));
 				$values['cat_id']			= $this->db->f('category');
 				$values['start_date']		= $this->db->f('start_date');
 				$values['end_date']			= $this->db->f('end_date');
@@ -779,7 +779,8 @@
 
 			if($values['member_of'])
 			{
-				$values['member_of']=',' . implode(',',$values['member_of']) . ',';
+				$member_of =  ',' . implode(',',$values['member_of']) . ',';
+				$values['member_of']= $member_of;
 			}
 
 			$this->db->transaction_begin();
@@ -849,6 +850,12 @@
 				. "VALUES ($vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ($id,'s_agreement')");
+
+			if( $member_of && $values['vendor_id'])
+			{
+				$vendor_id = (int)$values['vendor_id'];
+				$this->db->query("UPDATE fm_vendor SET member_of = '{$member_of}' WHERE id= {$vendor_id}");				
+			}
 
 			$receipt['s_agreement_id']= $id;//$this->db->get_last_insert_id($table,'id');
 
@@ -1011,8 +1018,8 @@
 
 		function edit($values,$values_attribute = array())
 		{
-			//_debug_array($values);
-			//_debug_array($values_attribute);
+//			_debug_array($values);
+//			_debug_array($values_attribute);
 
 			$table = 'fm_s_agreement';
 
@@ -1021,7 +1028,8 @@
 
 			if($values['member_of'])
 			{
-				$values['member_of']=',' . implode(',',$values['member_of']) . ',';
+				$member_of =  ',' . implode(',',$values['member_of']) . ',';
+				$values['member_of']= $member_of;
 			}
 
 			if(isset($values['extra']) && is_array($values['extra']))
@@ -1052,6 +1060,8 @@
 
 			$value_set['name']	= $values['name'];
 			$value_set['descr']	= $values['descr'];
+			$value_set['vendor_id']	= $values['vendor_id'];
+
 			if($value_set)
 			{
 				$value_set	= ',' . $this->db->validate_update($value_set);
@@ -1076,6 +1086,12 @@
 				. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id='{$values['s_agreement_id']}'");
 
 			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= '{$values['s_agreement_id']}'");
+
+			if( $member_of && $values['vendor_id'])
+			{
+				$vendor_id = (int)$values['vendor_id'];
+				$this->db->query("UPDATE fm_vendor SET member_of = '{$member_of}' WHERE id= {$vendor_id}");				
+			}
 
 			$this->db->transaction_commit();
 			$receipt['s_agreement_id']= $values['s_agreement_id'];

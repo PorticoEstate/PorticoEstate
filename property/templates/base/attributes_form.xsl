@@ -583,7 +583,7 @@
 		<xsl:variable name="counter">
 			<xsl:value-of select="counter"/>
 		</xsl:variable>
-		<table cellpadding="2" cellspacing="2" width="50%" align="left">
+		<table cellpadding="2" cellspacing="2" align="left">
 			<xsl:for-each select="choice">
 				<tr>
 					<xsl:attribute name="class">
@@ -600,10 +600,6 @@
 						</xsl:choose>
 					</xsl:attribute>
 					<td align="left">
-						<xsl:value-of select="value"/>
-						<xsl:text> </xsl:text>
-					</td>
-					<td align="left">
 						<xsl:choose>
 							<xsl:when test="checked='checked'">
 								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}" checked="checked"/>
@@ -612,6 +608,10 @@
 								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}"/>
 							</xsl:otherwise>
 						</xsl:choose>
+						<xsl:text> </xsl:text>
+					</td>
+					<td align="left">
+						<xsl:value-of select="value"/>
 					</td>
 				</tr>
 			</xsl:for-each>
