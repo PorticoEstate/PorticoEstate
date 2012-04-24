@@ -1152,10 +1152,13 @@
 						$error_id=true;
 					}
 
-					if(!$values['cat_id'])
+					if(!isset($config->config_data['project_optional_category']) || !$config->config_data['project_optional_category'])
 					{
-						$receipt['error'][]=array('msg'=>lang('Please select a category !'));
-						$error_id=true;
+						if(!$values['cat_id'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+							$error_id=true;
+						}
 					}
 
 					if(!$values['coordinator'])

@@ -472,6 +472,7 @@
 						'dima'					=> $this->db->f('dima'),
 						'dimb'					=> $this->db->f('dimb'),
 						'dimd'					=> $this->db->f('dimd'),
+						'dime'					=> $this->db->f('dime'),
 						'remark' 				=> !!$this->db->f('merknad'),
 						'tax_code'				=> $this->db->f('mvakode'),
 						'amount'				=> $this->db->f('belop'),
@@ -1304,6 +1305,7 @@
 						'dim_a'					=> $this->db->f('dima'),
 						'dim_b'					=> $this->db->f('dimb'),
 						'dim_d'					=> $this->db->f('dimd'),
+						'dim_e'					=> $this->db->f('dime'),
 						'tax_code'				=> $this->db->f('mvakode'),
 						'invoice_id'			=> $this->db->f('fakturanr'),
 						'kid_nr'				=> $this->db->f('kidnr'),
@@ -1874,6 +1876,7 @@
 			$value_set_line['pmwrkord_code']	= $data['order_id'];
 			$value_set_line['dimb']				= $data['dim_b'];
 			$value_set_line['dima']				= $data['dim_a'];
+			$value_set_line['dime']				= $data['dim_e'];
 			$value_set_line['mvakode']			= $data['tax_code'];
 			$value_set_line['project_id']		= $data['project_group'];
 			$value_set_line['spbudact_code']	= $data['b_account_id'];
@@ -1938,7 +1941,7 @@
 
 					$value_set = array();
 
-					$skip_values = array('id','pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
+					$skip_values = array('id','pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
 					foreach($metadata as $_field)
 					{
 						if(!in_array($_field->name, $skip_values))
