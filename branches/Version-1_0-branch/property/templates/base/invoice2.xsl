@@ -26,6 +26,7 @@
 //select { width: 200px; }
 #voucher_id_filter { width: 800px; }
 #dim_b { width: 200px; }
+#dim_e { width: 200px; }
 #period { width: 200px; }
 #periodization { width: 200px; }
 #periodization_start { width: 200px; }
@@ -429,6 +430,16 @@
 			</td>
 			<td>
 			  	<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'dime')" />
+			</td>
+			<td>
+				<select id="dim_e" name="values[dim_e]">
+					<xsl:apply-templates select="voucher_info/generic/dime_list/options"/>
+		  		</select>
 			</td>
 		</tr>
 		<tr class ='row_off'>

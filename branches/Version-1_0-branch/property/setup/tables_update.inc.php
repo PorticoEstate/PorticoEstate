@@ -6228,3 +6228,19 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	
+
+	$test[] = '0.9.17.641';
+	function property_upgrade0_9_17_641()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','category',array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => '0'));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','dime', array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','dime', array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.642';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
