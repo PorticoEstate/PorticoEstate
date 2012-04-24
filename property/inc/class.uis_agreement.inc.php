@@ -1043,7 +1043,20 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,link_data => array()));
+			if($values['vendor_id'])
+			{
+
+				$generic	= CreateObject('property.bogeneric');
+				$generic->get_location_info('vendor');
+				$vendor = $generic->read_single(array('id' => $values['vendor_id']));
+				$member_of = explode(',', trim($vendor['member_of'],','));
+			}
+			else
+			{
+				$member_of	= array();
+			}
+
+			$member_of_data	= $this->cats->formatted_xslt_list(array('selected' => $member_of,'globals' => true));
 
 			$table_add[] = array
 				(
@@ -1533,7 +1546,7 @@ die();
 
 					'lang_member_of'					=> lang('member of'),
 					'member_of_name'					=> 'member_id',
-					'member_of_list'					=> $member_of_data['cat_list'],
+					'member_of_list2'					=> $member_of_data['cat_list'],
 
 					'attributes_group'					=> $attributes,
 					'lookup_functions'					=> $values['lookup_functions'],
