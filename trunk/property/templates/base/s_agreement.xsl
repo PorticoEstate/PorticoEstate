@@ -287,11 +287,9 @@
 									<xsl:value-of select="lang_descr"/>
 								</td>
 								<td>
-									<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+									<textarea cols="60" rows="6" name="values[descr]">
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_descr_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 										<xsl:value-of select="value_descr"/>
 									</textarea>
@@ -306,6 +304,20 @@
 								</td>
 							</tr>
 							<xsl:call-template name="vendor_form"/>
+							<xsl:choose>
+								<xsl:when test="member_of_list2 != ''">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'member of')"/>
+										</td>
+										<td valign="top">
+											<div id="member_of">
+												<xsl:apply-templates select="member_of_list2"/>
+											</div>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_budget"/>
@@ -376,22 +388,6 @@
 									</input>
 								</td>
 							</tr>
-							<xsl:choose>
-								<xsl:when test="member_of_list2 != ''">
-									<tr>
-										<div id="member_of">
-											<td valign="top">
-												<xsl:value-of select="php:function('lang', 'member of')"/>
-											</td>
-											<td valign="top">
-												<p style="height: 80px; overflow: auto; border: 5px solid #eee; background: #eee; color: #000; margin-bottom: 1.5em;">
-													<xsl:apply-templates select="member_of_list2"/>
-												</p>
-											</td>
-										</div>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
 							<tr>
 								<td width="19%" align="left" valign="top">
 									<xsl:value-of select="lang_budget"/>
