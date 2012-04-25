@@ -87,8 +87,11 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
+
+			<div id="receipt"></div>
+
 			<xsl:choose>
-				<xsl:when test="value_workorder_id!='' and mode='edit'">
+				<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
 					<td>
 						<table>
 							<tr>
@@ -121,7 +124,7 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
+		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}">
 			<div class="yui-navset" id="workorder_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
@@ -786,7 +789,8 @@
 								<xsl:variable name="lang_save">
 									<xsl:value-of select="lang_save"/>
 								</xsl:variable>
-								<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
+								<input type="hidden" name="values[save]" value="1"/>
+								<input type="submit" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_save_statustext"/>
 									</xsl:attribute>
@@ -806,7 +810,7 @@
 					<xsl:variable name="lang_done">
 						<xsl:value-of select="lang_done"/>
 					</xsl:variable>
-					<form method="post" action="{$done_action}">
+					<form id="workorder_cancel" method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>

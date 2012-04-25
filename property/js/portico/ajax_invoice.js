@@ -249,7 +249,6 @@ $(document).ready(function(){
 		var line_id = $(this).val();
 		var voucher_id_orig = $("#voucher_id").val();
 		update_form_values(line_id, voucher_id_orig);
-//		load_order();
     });
 
 
@@ -378,7 +377,10 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					var oArgs_order = {menuaction:'property.uiinvoice.view_order', order_id: voucher[0].order_id};
 					var requestUrl_order = phpGWLink('index.php', oArgs_order);
-					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+//					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+
+					var htmlString_order  =  " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+
 					$("#order_text").html( htmlString_order );
 				}
 				else
@@ -655,42 +657,25 @@ function update_form_values( line_id, voucher_id_orig ){
 
 //------------
 
-function load_order( order_id ){
-
-	var order_id = $("#order_id").val( );
+function load_order( id ){
+//	var order_id = $("#order_id").val( );
 	$("#curtain").show();
 	$("#popupBox").fadeIn("slow");
-
-	//$("#curtain").hide();
-	//$("#popupBox").hide();
-	var oArgs = {menuaction:'property.uiworkorder.edit', id: order_id};
+	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
-//	requestUrl = "http://www.nettavisen.no/";
-
-//alert(requestUrl); return;
 
 	var htmlString = "";
-	htmlString += "<iframe  width=\"100%\" height=\"1000\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
+	htmlString += "<iframe  width=\"100%\" height=\"100%\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
 	$("#popupBox").html( htmlString );
-
-
-	var oArgs = {menuaction:'property.uiinvoice2.get_single_line'};
-	var requestUrl = phpGWLink('index.php', oArgs, true);
-/*
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: requestUrl + "&order_id=" + order_id,
-		success: function(data) {
-			if(data.sessionExpired)
-			{
-				alert('Sesjonen er utløpt - du må logge inn på nytt');
-				return;
-			}
-			var voucher = data['voucher'];
-
-		}
-	});
-*/
 }
+
+function hide_popupBox( ){
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig);
+}
+
+
 
