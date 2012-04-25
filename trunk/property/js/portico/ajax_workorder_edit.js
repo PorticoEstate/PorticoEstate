@@ -65,7 +65,8 @@ $(document).ready(function(){
 	   				
 					if(ok)
 					{
-						parent.hide_popupBox();
+						parent.closeJS_remote();
+					//	parent.hide_popupBox();
 					}
 				}
 			}
@@ -74,7 +75,8 @@ $(document).ready(function(){
 
 	$("#workorder_cancel").live("submit", function(e){
 		e.preventDefault();
-		parent.hide_popupBox();
+		parent.closeJS_remote();
+//		parent.hide_popupBox();
 	});
 
 });
