@@ -120,6 +120,8 @@
 	$app = lang($app);
 	$tpl_vars = array
 	(
+		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
+		'nofooter'		=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
