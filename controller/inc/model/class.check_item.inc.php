@@ -36,10 +36,7 @@
 
 		protected $id;
 		protected $control_item_id;
-		protected $status;
-		protected $comment;
 		protected $check_list_id;
-		protected $measurement;
 				
 		// Objects
 		protected $control_item;
@@ -70,33 +67,12 @@
 		
 		public function get_control_item_id() { return $this->control_item_id; }
 				
-		public function set_status($status)
-		{
-			$this->status = (int)$status;
-		}
-		
-		public function get_status() { return (int)$this->status; }
-		
-		public function set_comment($comment)
-		{
-			$this->comment = $comment;
-		}
-		
-		public function get_comment() { return $this->comment; }
-		
 		public function set_check_list_id($check_list_id)
 		{
 			$this->check_list_id = $check_list_id;
 		}
 		
 		public function get_check_list_id() { return $this->check_list_id; }
-		
-		public function set_measurement($measurement)
-		{
-			$this->measurement = $measurement;
-		}
-		
-		public function get_measurement() { return $this->measurement; }
 		
 		
 		// =================  Getters and setters for objects =================
