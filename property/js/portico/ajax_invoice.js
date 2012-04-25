@@ -658,15 +658,36 @@ function update_form_values( line_id, voucher_id_orig ){
 //------------
 
 function load_order( id ){
-//	var order_id = $("#order_id").val( );
-	$("#curtain").show();
-	$("#popupBox").fadeIn("slow");
 	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	var htmlString = "";
-	htmlString += "<iframe  width=\"100%\" height=\"100%\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
-	$("#popupBox").html( htmlString );
+	TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+//	$("#curtain").show();
+//	$("#popupBox").fadeIn("slow");
+//	var htmlString = "";
+//	htmlString += "<iframe  width=\"100%\" height=\"100%\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
+//	$("#popupBox").html( htmlString );
+}
+
+function closeJS_local()
+{
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig)
+}
+
+function closeJS_remote()
+{
+	TINY.box.hide();
+/*
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig)
+*/
 }
 
 function hide_popupBox( ){
