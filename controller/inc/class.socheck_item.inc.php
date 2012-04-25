@@ -58,18 +58,18 @@
 		{
 			$cols = array(
 					'control_item_id',
-					'status',
-					'comment',
+					//'status',
+					//'comment',
 					'check_list_id',
-					'measurement'
+					//'measurement'
 			);
 
 			$values = array(
 				$this->marshal($check_item->get_control_item_id(), 'int'),
-				$check_item->get_status(),
-				$this->marshal($check_item->get_comment(), 'string'),
+				//$check_item->get_status(),
+				//$this->marshal($check_item->get_comment(), 'string'),
 				$this->marshal($check_item->get_check_list_id(), 'int'),
-				$this->marshal($check_item->get_measurement(), 'int')
+				//$this->marshal($check_item->get_measurement(), 'int')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -83,10 +83,10 @@
 
 			$values = array(
 				'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-				'status = ' . $check_item->get_status(),
-				'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
+				//'status = ' . $check_item->get_status(),
+				//'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
 				'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int'),
-				'measurement = ' . $this->marshal($check_item->get_measurement(), 'string')
+				//'measurement = ' . $this->marshal($check_item->get_measurement(), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -112,8 +112,8 @@
 
 			if($this->db->next_record()) {
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id', true), 'int'));
-				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				//$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
 
@@ -153,10 +153,10 @@
 									
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-					$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
-					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+					//$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+					//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+					//$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 					
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 					$control_item->set_title($this->db->f('title', true), 'string');
@@ -221,8 +221,8 @@
 
 			if($this->db->next_record()) {
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id', true), 'int'));
-				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				//$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
 
@@ -263,10 +263,10 @@
 			while ($this->db->next_record()) {
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				//$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+				//$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 				$control_item->set_title($this->db->f('title', true), 'string');
@@ -338,10 +338,10 @@
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-					$check_item->set_status($this->db->f('ci_status', true), 'int');
-					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+					//$check_item->set_status($this->db->f('ci_status', true), 'int');
+					//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+					//$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 					
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 					$control_item->set_title($this->db->f('title', true), 'string');
@@ -423,10 +423,10 @@
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-					$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
-					$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+					//$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+					//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-					$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+					//$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 					
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 					$control_item->set_title($this->db->f('title', true), 'string');
@@ -494,10 +494,10 @@
 			while ($this->db->next_record()) {
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-				$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-				$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
+				//$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
+				//$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
+				//$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
 				if($return_type == "return_array")
 					$check_items_array[] = $check_item->toArray();
