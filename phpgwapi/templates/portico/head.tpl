@@ -28,6 +28,8 @@
 		<!--
 			var border_layout_config = {border_layout_config};
 			var navbar_config = {navbar_config};
+			var noheader = {noheader};
+			var nofooter = {nofooter};
 		//-->
 		</script>
 		<!-- BEGIN javascript -->
