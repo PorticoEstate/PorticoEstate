@@ -126,11 +126,11 @@ thead
 #popupBox {
     background: none repeat scroll 0 0 #fff;
     display: none;
-    height: 90%;
+    height: 50%;
     left: 80px;
     position: absolute;
     top: 80px;
-    width: 1200px;
+    width: 800px;
     z-index: 2;
 }
 

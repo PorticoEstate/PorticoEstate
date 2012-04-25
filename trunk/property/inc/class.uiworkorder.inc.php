@@ -27,7 +27,15 @@
  	* @version $Id$
 	*/
 
+	/**
+	* Import the YUI class
+	*/
 	phpgw::import_class('phpgwapi.yui');
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 
 	/**
 	 * Description
@@ -840,6 +848,14 @@
 
 		function edit($mode = 'edit')
 		{
+			if( $GLOBALS['phpgw_info']['flags']['nonavbar']	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
+			$_lean = phpgw::get_var('lean', 'bool');
+
 			$id = phpgw::get_var('id'); // in case of bigint
 			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
@@ -882,11 +898,11 @@
 				$project_id 				= phpgw::get_var('project_id', 'int');
 				$values						= phpgw::get_var('values');
 				$values['ecodimb']			= phpgw::get_var('ecodimb');
-				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
-				$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
-				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
-				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
-				$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
+				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int');
+				$values['vendor_name']		= phpgw::get_var('vendor_name', 'string');
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
+				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string');
+				$values['event_id']			= phpgw::get_var('event_id', 'int');
 				$origin						= phpgw::get_var('origin');
 				$origin_id					= phpgw::get_var('origin_id', 'int');
 
@@ -1194,6 +1210,29 @@
 						}
 					}
 				}
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+					$result['receipt'] = $receipt;
+	
+					return $result;
+				}
+
 			}
 
 			if($project_id && !isset($values['project_id']))
@@ -1858,7 +1897,8 @@
 					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
 					'lang_edit_statustext'					=> lang('Edit this entry '),
 					'lang_edit'								=> lang('Edit'),
-					'value_extra_mail_address'				=> $value_extra_mail_address
+					'value_extra_mail_address'				=> $value_extra_mail_address,
+					'lean'									=> $_lean ? 1 : 0
 				);
 
 			$appname						= lang('Workorder');
@@ -1881,6 +1921,7 @@
 //			phpgwapi_yui::load_widget('button');
 
 
+			phpgwapi_jquery::load_widget('core');
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
@@ -1890,7 +1931,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );	
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );	
 		}
 
 		function add()

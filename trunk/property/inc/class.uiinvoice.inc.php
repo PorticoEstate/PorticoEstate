@@ -3783,14 +3783,17 @@ JS;
 			$order_id	= phpgw::get_var('order_id'); // could be bigint
 			$soXport    = CreateObject('property.soXport');
 
+			$nonavbar = phpgw::get_var('nonavbar', 'bool');
+			$lean = phpgw::get_var('lean', 'bool');
+
 			$order_type = $soXport->check_order($order_id);
 			switch($order_type)
 			{
 				case 'workorder':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id, 'tab' => 'budget'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id, 'tab' => 'budget', 'nonavbar' => $nonavbar, 'lean' => $lean));
 					break;
 				case 's_agreement':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id, 'nonavbar' => $nonavbar, 'lean' => $lean));
 					break;
 				default:
 					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
