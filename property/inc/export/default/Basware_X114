@@ -106,11 +106,24 @@
 				$sql= "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE  approved_amount = '0.00' OR ( budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL ) ORDER BY bilagsnr ASC";
 			}
 			$this->db->query($sql,__LINE__,__FILE__);
-			$vouchers = array();
+			$vouchers_step1 = array();
 			while ($this->db->next_record())
 			{
-				$vouchers[]	= $this->db->f('bilagsnr');
+				$vouchers_step1[]	= $this->db->f('bilagsnr');
 			}
+
+			//Filter out partially approved
+			$vouchers = array();
+			foreach($vouchers_step1 as $bilagsnr)
+			{
+				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE bilagsnr = {$bilagsnr} AND budsjettsigndato IS NULL";
+				$this->db->query($sql,__LINE__,__FILE__);
+				if( !$this->db->next_record() )
+				{
+					$vouchers[] = $bilagsnr;
+				}
+			}
+
 			return $vouchers;
 		}
 
@@ -285,7 +298,7 @@
 					'budsjettansvarligid'	=> $this->db->f('budsjettansvarligid'),
 					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 					'saksigndato'			=> $this->db->f('saksigndato'),
-					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
+		//			'budsjettsigndato'		=> $this->db->f('budsjettsigndato'), // må anvises på nytt etter tilbakerulling
 					'merknad'				=> $this->db->f('merknad',true),
 					'line_text'				=> $this->db->f('line_text',true),
 					'splitt'				=> $this->db->f('splitt'),
