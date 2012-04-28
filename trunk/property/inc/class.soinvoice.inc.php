@@ -441,18 +441,18 @@
 			$invoice = array();
 			while ($this->db->next_record())
 			{
-				$status_line = 'O';
+				$status_line = 0;
 				if($this->db->f('budsjettsigndato'))
 				{
-					$status_line = 'C';
+					$status_line = 3;
 				}
 				else if($this->db->f('saksigndato'))
 				{
-					$status_line = 'B';
+					$status_line = 2;
 				}
 				else if($this->db->f('oppsynsigndato'))
 				{
-					$status_line = 'A';
+					$status_line = 1;
 				}
 
 				$invoice[] = array
@@ -2072,12 +2072,11 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
+			$sql = "SELECT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
 			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
-			." $filtermethod $querymethod"
-			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr, oppsynsigndato, saksigndato,budsjettsigndato";
+			." $filtermethod $querymethod";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');
@@ -2091,38 +2090,64 @@
 
 			while($this->db->next_record())
 			{
-				$status = 'O';
+				$bilagsnr = $this->db->f('bilagsnr');
+
+				$values[$bilagsnr]['bilagsnr_ut']		= $this->db->f('bilagsnr_ut');
+				$values[$bilagsnr]['org_name']			= $this->db->f('org_name');
+				$values[$bilagsnr]['currency']			= $this->db->f('currency');
+				$values[$bilagsnr]['kreditnota']		= $this->db->f('kreditnota');
+				$values[$bilagsnr]['type']				= $this->db->f('type');
+
+				if(isset($values[$bilagsnr]['godkjentbelop']))
+				{
+					$values[$bilagsnr]['godkjentbelop'] += $this->db->f('godkjentbelop');
+				}
+				else
+				{
+					$values[$bilagsnr]['godkjentbelop'] = $this->db->f('godkjentbelop');
+				}
+
+				$status = 0;
 				if($this->db->f('budsjettsigndato'))
 				{
-					$status = 'C';
+					$status = 3;
 				}
 				else if($this->db->f('saksigndato'))
 				{
-					$status = 'B';
+					$status = 2;
 				}
 				else if($this->db->f('oppsynsigndato'))
 				{
-					$status = 'A';
+					$status = 1;
 				}
 				
-				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
+				$values[$bilagsnr]['status'][] = $status;
+			}
+			
+			$voucers = array();
+			foreach ($values as $bilagsnr => $entry)
+			{
+				$status = $entry['status'];
+				sort($status);
+				
+				$voucher_id = $entry['bilagsnr_ut'] ? $entry['bilagsnr_ut'] : $bilagsnr;
 				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
 							$voucher_id,
-							trim(strtoupper($this->db->f('org_name',true))),
-							$this->db->f('currency'),
-							$this->db->f('kreditnota') ? 'X' : '',
-							$this->db->f('type'),
-							number_format($this->db->f('godkjentbelop'), 2, ',', ' '),
-							$status
+							trim(strtoupper($entry['org_name'])),
+							$entry['currency'],
+							$entry['kreditnota'] ? 'X' : '',
+							$entry['type'],
+							number_format($entry['godkjentbelop'], 2, ',', ' '),
+							$status[0]
 						);
 
-				$values[] = array
+				$voucers[] = array
 				(
-					'id'	=> $this->db->f('bilagsnr'),
+					'id'	=> $bilagsnr,
 					'name'	=> $name
 				);
 			}
-			return $values;
-		}
 
+			return $voucers;
+		}
 	}
