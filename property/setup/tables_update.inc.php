@@ -6294,6 +6294,7 @@
 		$sql = 'SELECT * FROM fm_responsibility_contact JOIN phpgw_accounts ON fm_responsibility_contact.contact_id = phpgw_accounts.person_id WHERE expired_on IS NULL AND ecodimb IS NOT NULL';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
+		$roles = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$roles[] = array

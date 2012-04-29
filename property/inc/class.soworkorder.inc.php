@@ -1215,7 +1215,7 @@
 
 			$value_set_invoice = array();
 			$value_set_invoice['spbudact_code'] = $workorder['b_account_id'];
-			$value_set_invoice['dime']			= $workorder['category'];
+			$value_set_invoice['dime']			= $workorder['cat_id'];
 
 			$value_set_invoice	= $this->bocommon->validate_db_update($value_set_invoice);
 
