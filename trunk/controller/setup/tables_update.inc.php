@@ -645,3 +645,15 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.32';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.32';
+	function controller_upgrade0_1_32()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_list','comment',array(
+			'type' => 'text', 
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.33';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
