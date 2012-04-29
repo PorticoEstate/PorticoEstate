@@ -75,7 +75,7 @@
 			<xsl:when test="status = 'control_accomplished_with_errors'">
 				<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
 					<div id="info_box"></div>
-   					<a class="view_check_list">
+   					<a class="view_info_box">
 					 	<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 							<xsl:text>&amp;check_list_id=</xsl:text>
