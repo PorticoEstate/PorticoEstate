@@ -1022,9 +1022,7 @@ ul.calendar div.frequency {
     margin-right: 10px;
     width: 65px;
 }
-.months_wrp a.view_check_list {
-    width: 30px;
-}
+
 .cal_info_msg{
 	font-size: 16px;
     padding: 40px 20px;	
@@ -1032,19 +1030,34 @@ ul.calendar div.frequency {
 
 /* ======================  CALENDAR INFO BOX ========================== */
 
+a.view_info_box {
+    color: #FFFFFF;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    left: 23px;
+    position: absolute;
+    text-decoration: none;
+    top: 8px;
+}
+.days_wrp a.view_info_box {
+    left: 8px;
+}
+
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #243356;
+    display: none;
+    float: none;
+    font-size: 12px;
+    height: 200px;
     left: 40px;
     padding: 10px;
     position: absolute;
     text-align: left;
     top: 3px;
-    width: 350px;
+    width: 400px;
     z-index: 1;
-    font-size:12px;
-    position:absolute;
-    display:none;
 }
 
 #info_box label{
@@ -1422,15 +1435,7 @@ li.check_item_case .col_3 {
     display: inline-block;
     width: 18%;
 }
-a.view_check_list{
- 	color: #FFFFFF;
-    display: block;
-    font-size: 10px;
-    font-weight: bold;
-    height: 13px;
-    text-decoration: none;
-    width: 24px;	
-}
+
 
 /* ================================ CASE MESSAGE ============================= */
 #caseMessage a#showMessage {
