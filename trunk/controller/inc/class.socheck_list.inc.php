@@ -53,8 +53,8 @@ class controller_socheck_list extends controller_socommon
 	
 	public function get_single($check_list_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
-		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, ci.id as ci_id, ci.status as ci_status, control_item_id, "; 
-		$sql .= "ci.comment as ci_comment, check_list_id "; 
+		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, ci.id as ci_id, control_item_id, "; 
+		$sql .= "check_list_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "WHERE cl.id = $check_list_id";
@@ -81,8 +81,6 @@ class controller_socheck_list extends controller_socommon
 			
 			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'int'));
-			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
 			$check_items_array[] = $check_item;
@@ -100,7 +98,7 @@ class controller_socheck_list extends controller_socommon
 		
 	public function get_single_with_check_items($check_list_id, $status, $type){
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, num_open_cases, location_code, num_pending_cases, ";
-		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
+		$sql .= "ci.id as ci_id, control_item_id, check_list_id, "; 
 		$sql .= "coi.title as coi_title, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id, coi.type "; 
 		$sql .= "FROM controller_check_list cl "; 
@@ -139,10 +137,7 @@ class controller_socheck_list extends controller_socommon
 			if($this->db->f('ci_id', true) != ''){
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-				$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
-				$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-				$check_item->set_measurement($this->unmarshal($this->db->f('measurement', true), 'int'));
 				
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
 				$control_item->set_title($this->db->f('coi_title', true), 'string');
@@ -167,7 +162,7 @@ class controller_socheck_list extends controller_socommon
 			return null;
 		}
 	}
-	
+	/*
 	public function get_check_list(){
 
 		$current_time = time();
@@ -208,11 +203,11 @@ class controller_socheck_list extends controller_socommon
 				
 		return $results;
 	}
-	
+	*/
 	function get_check_lists_for_control($control_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
-		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id ";
+		$sql .= "ci.id as ci_id, control_item_id, check_list_id ";
 		$sql .= "FROM controller_check_list cl, controller_check_item ci ";
 		$sql .= "WHERE cl.control_id = $control_id ";
 		$sql .= "AND cl.id = ci.check_list_id "; 
@@ -247,8 +242,6 @@ class controller_socheck_list extends controller_socommon
 			
 			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'int'));
-			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
 			$check_items_array[] = $check_item->toArray();
@@ -311,17 +304,17 @@ class controller_socheck_list extends controller_socommon
 	
 	function get_agg_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $control_id = 0 ){
 				
-		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(ci.id) ";
+		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(cl.num_open_cases) ";
 		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
 		$sql .= "WHERE cl.location_code = '{$location_code}' ";
+		
 		if($control_id > 0)
 		{
 			$sql .= "AND c.id = {$control_id} ";
 		}
+		
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
-		$sql .= "AND cl.id = ci.check_list_id ";
-		$sql .= "AND ci.status = 0 ";
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "GROUP BY c.id, title, start_date, end_date, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
 		$sql .= "ORDER BY c.id";

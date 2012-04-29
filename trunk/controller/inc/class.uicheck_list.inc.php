@@ -64,13 +64,12 @@
 										'register_case'					=> true,
 										'view_open_cases'				=> true,
 										'view_closed_cases'				=> true,
-										'view_measurements'				=> true,
+										//'view_measurements'				=> true, SLETT HVIS DET IKKE OPPSTÅR FEILMELDINGER
 										'view_control_details'			=> true,
 										'view_control_items'			=> true,
-										'add_check_item_to_list'		=> true,
-										'save_check_items'				=> true,
-										'save_check_item'				=> true,
-										'get_check_list_info'			=> true,
+										//'save_check_items'				=> true, SLETT HVIS DET IKKE OPPSTÅR FEILMELDINGER
+										//'save_check_item'				=> true, SLETT HVIS DET IKKE OPPSTÅR FEILMELDINGER
+										'get_check_list_info'			=> true, 
 										'get_cases_for_check_list'		=> true
 									);
 
@@ -694,17 +693,15 @@
 			
 			self::render_template_xsl('check_list/view_control_items', $data);
 		}
-		
+		/*
+		 * 
+		 * HVIS DETTE IKKE RESULTERER I FEILMELDINGER KAN VI BARE SLETTE DISS FUNKSJONENE
 		function add_check_item_to_list(){
 			$control_item_id = phpgw::get_var('control_item_id');
 			$check_list_id = phpgw::get_var('check_list_id');
-			$comment = phpgw::get_var('comment');
-			$status = (int)phpgw::get_var('status');
 			$type = phpgw::get_var('type');
 
 			$check_item_obj = new controller_check_item();
-			$check_item_obj->set_status($status);
-			$check_item_obj->set_comment($comment);
 			$check_item_obj->set_check_list_id($check_list_id);
 			$check_item_obj->set_control_item_id($control_item_id);
 
@@ -726,13 +723,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 
 			foreach($check_item_ids as $check_item_id){
-				$status = phpgw::get_var('status_' . $check_item_id);
-				$comment = phpgw::get_var('comment_' . $check_item_id);
-
 				$check_item = $this->so_check_item->get_single($check_item_id);
-
-				$check_item->set_status( $status );
-				$check_item->set_comment( $comment );
 
 				$this->so_check_item->store( $check_item );
 			}
@@ -770,7 +761,7 @@
 			else
 				return json_encode( array( "status" => "not_saved" ) );
 		}
-		
+		*/
 		// Returns check list info as JSON
 		public function get_check_list_info()
 		{
