@@ -39,8 +39,6 @@
 		</div>
 		
 		<div class="middle">
-			
-					
 			<ul id="icon_color_map">
 				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
 				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
@@ -60,7 +58,7 @@
 				</xsl:attribute>
 				Årsoversikt
 			</a>
-			
+			<!-- 
  				<select id="loc_1" class="choose_loc">
 					<xsl:for-each select="property_array">
 						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
@@ -78,7 +76,7 @@
 						</xsl:choose>
 					</xsl:for-each>
 				</select>				
-			
+			 -->
 		</div>
 		
 		
