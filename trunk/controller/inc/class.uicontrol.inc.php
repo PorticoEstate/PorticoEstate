@@ -37,6 +37,8 @@
 	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.soprocedure');
 	
+	phpgw::import_class('phpgwapi.yui');
+	
 	include_class('controller', 'control', 'inc/model/');
 	include_class('controller', 'control_area', 'inc/model/');
 	include_class('controller', 'control_item_list', 'inc/model/');
@@ -345,6 +347,8 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			//$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			//$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 			
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
