@@ -134,7 +134,7 @@
 
 			if($values = phpgw::get_var('values'))
 			{
-				$approve = execMethod('property.uiinvoice.get_approve_role');
+				$approve = execMethod('property.uiinvoice.get_approve_role',  $values['dim_b']);
 
 				if(!$approve)
 				{
@@ -198,7 +198,16 @@
 			$userlist_default[] = array('id'=> '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid, 'name'=>lang('mine vouchers'));
 			$userlist_default[] = array('id'=>'','name'=>lang('no user'));
 
-			$voucher_list = array('id' => '', 'name' => lang('select'));
+			$voucher_list = array();
+			if($voucher_id)
+			{
+				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id ));
+			}
+			
+			if(!$voucher_list)
+			{
+				$voucher_list = array('id' => '', 'name' => lang('select'));
+			}
 
 			foreach($userlist_default as $default)
 			{
@@ -217,8 +226,6 @@
 
 			$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
-
-
 			$myColumnDefs = array();
 			$datavalues = array();
 			$myButtons	= array();
@@ -226,7 +233,7 @@
 			$datavalues[] = array
 			(
 				'name'				=> "0",
-				'values' 			=> json_encode(array()),
+				'values' 			=> $this->query(),//json_encode(array()),
 				'total_records'		=> 0,
 				'permission'   		=> "''",
 				'is_paginator'		=> 1,
@@ -371,8 +378,7 @@
 														'voucher_list' 			=> array('options' => $voucher_list),
 													),
 				'voucher_info'					=> $this->get_single_line($line_id),
-				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
-				'datatable_old' 				=> array()//$datatable_old;
+				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher'))
 			);
 //_debug_array($data);die();			
 			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
@@ -507,12 +513,12 @@
 			
 			$sign_orig = '';
 			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
-	
+
 			if(count($voucher))
 			{
 
 //---------start forward
-				$approve = execMethod('property.uiinvoice.get_approve_role');
+				$approve = execMethod('property.uiinvoice.get_approve_role', $voucher[0]['dim_b']);
  
 				$approved_list[] = array
 				(

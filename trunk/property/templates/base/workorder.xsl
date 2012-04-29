@@ -137,10 +137,17 @@
 											<xsl:value-of select="lang_project_id"/>
 										</td>
 										<td>
-											<xsl:variable name="project_link"><xsl:value-of select="project_link"/>&amp;id=<xsl:value-of select="value_project_id"/></xsl:variable>
-											<a href="{$project_link}">
-												<xsl:value-of select="value_project_id"/>
-											</a>
+											<xsl:choose>
+												<xsl:when test="lean = 0">
+													<xsl:variable name="project_link"><xsl:value-of select="project_link"/>&amp;id=<xsl:value-of select="value_project_id"/></xsl:variable>
+													<a href="{$project_link}">
+														<xsl:value-of select="value_project_id"/>
+													</a>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="value_project_id"/>
+												</xsl:otherwise>
+											</xsl:choose>
 											<input type="hidden" name="values[project_id]" value="{value_project_id}"/>
 										</td>
 									</tr>

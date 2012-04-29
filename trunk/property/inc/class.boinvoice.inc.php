@@ -368,7 +368,7 @@
 
 		function select_dimb_list($selected='')
 		{
-			$dimbs=$this->so->select_dimb_list();
+			$dimbs=$this->so->select_dimb_list($selected);
 			return $this->bocommon->select_list($selected,$dimbs);
 		}
 
@@ -768,9 +768,9 @@
 			return $line;
 		}
 
-		function check_role()
+		function check_role($dimb = 0)
 		{
-			return $this->so->check_role();
+			return $this->so->check_role($dimb);
 		}
 
 		public function get_historical_accounting_periods()
