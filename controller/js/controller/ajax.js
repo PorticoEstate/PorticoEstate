@@ -430,7 +430,7 @@ $(document).ready(function(){
 	});
 	
 	// Fetches info about a check list on hover status image icon
-	$('a.view_check_list').bind('contextmenu', function(){
+	$('a.view_info_box').bind('contextmenu', function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		
@@ -476,12 +476,12 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$("a.view_check_list").mouseout(function(){
+	$("a.view_info_box").mouseout(function(){
 		var infoBox = $(this).parent().find("#info_box");
 		
 		$(infoBox).hide();
 	});
-	
+	/*
 	$(".frm_save_check_item").live("submit", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
@@ -509,7 +509,7 @@ $(document).ready(function(){
 				}
 			});
 	});
-	
+	*/
 	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
@@ -893,13 +893,13 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	
+	/*
 	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-	
+	*/
 	$(".frm_register_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -925,14 +925,14 @@ $(document).ready(function(){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
-	
+	/*
 	$(".frm_save_check_item").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		
 		$(submitBnt).removeClass("not_active");
 	});
-	
+	*/
 	$(".frm_save_control_item").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
