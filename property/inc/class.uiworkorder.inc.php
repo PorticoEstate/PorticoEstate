@@ -1622,7 +1622,12 @@
 				);
 
 
-			$_formatter_voucher_link			= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+			$_formatter_voucher_link	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+
+			if($_lean)
+			{
+				$_formatter_voucher_link = '""';
+			}
 
 			$myColumnDefs[2] = array
 				(

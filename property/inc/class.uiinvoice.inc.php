@@ -4041,7 +4041,7 @@ JS;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
 		}
 
-		function get_approve_role()
+		function get_approve_role($dimb = 0)
 		{
 			$role_check = array
 			(
@@ -4050,7 +4050,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$roles 	= $this->bo->check_role();
+			$roles 	= $this->bo->check_role($dimb);
 
 			$approve = array();
 			foreach ($roles as $role => $role_value)
