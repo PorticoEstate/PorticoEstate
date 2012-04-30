@@ -519,6 +519,7 @@ dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i 
 dim b	property	no	Kostnadssted
 dimb	property	no	Kostnadssted
 dimb roles	property	no	Roller kostnadssted
+dimb role user	property	no	Bruker/Rolle/Kostnadssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
 dim d	property	no	Dim D
