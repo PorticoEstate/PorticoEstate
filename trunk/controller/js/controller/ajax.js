@@ -481,35 +481,7 @@ $(document).ready(function(){
 		
 		$(infoBox).hide();
 	});
-	/*
-	$(".frm_save_check_item").live("submit", function(e){
-		e.preventDefault();
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var requestUrl = $(thisForm).attr("action"); 
-
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		
-		    		  if(obj.status == "saved"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");	
-		    				  
-		    				// Changes text on save button back to original
-		    				window.setTimeout(function() {
-		    				  $(submitBnt).val('Oppdater måling');
-		    				  $(submitBnt).addClass("not_active");
-		    					 }, 1000);	   				  
-					  }
-				  }
-				}
-			});
-	});
-	*/
+	
 	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
