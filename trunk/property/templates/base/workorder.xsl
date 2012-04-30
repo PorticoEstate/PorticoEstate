@@ -295,6 +295,7 @@
 										</td>
 										<td>
 											<xsl:value-of select="value_workorder_id"/>
+											<input type="hidden" id="workorder_id" name="test_for_new" value="{value_workorder_id}"/>
 										</td>
 									</tr>
 									<xsl:choose>
