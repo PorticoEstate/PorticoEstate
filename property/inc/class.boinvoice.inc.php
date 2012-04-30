@@ -773,6 +773,11 @@
 			return $this->so->check_role($dimb);
 		}
 
+		public function get_dimb_role_user($role_id, $selected = '')
+		{
+			return $this->so->get_dimb_role_user($role_id, $selected);
+		}
+
 		public function get_historical_accounting_periods()
 		{
 			return $this->so->get_historical_accounting_periods();

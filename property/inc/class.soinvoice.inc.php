@@ -1070,6 +1070,32 @@
 			return $this->role;
 		}
 
+		function get_dimb_role_user($role_id, $selected = '')
+		{
+			$filter_dimb = '';
+			$role_id = (int) $role_id;
+			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
+			." {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
+			." WHERE role_id = {$role_id} {$filter_dimb} AND expired_on IS NULL"
+			." ORDER BY account_lastname ASC, account_firstname ASC";
+
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while($this->db->next_record())
+			{
+				$id = $this->db->f('account_lid');
+				$values[] = array
+				(
+					'id'		=> $id,
+					'name'		=> $this->db->f('account_lastname') . ', ' . $this->db->f('account_firstname'),
+					'selected'	=> $selected == $id ? 1 : 0
+				);
+			}
+			return $values;
+		}
+
 		function check_count($voucher_id)
 		{
 
