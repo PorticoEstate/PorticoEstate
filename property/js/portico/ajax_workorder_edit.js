@@ -1,6 +1,12 @@
 $(document).ready(function(){
 
 	$("#workorder_edit").live("submit", function(e){
+
+		if( ! $("#workorder_id").val() )
+		{
+			return;
+		}
+
 		e.preventDefault();
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
