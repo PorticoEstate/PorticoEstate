@@ -2142,7 +2142,7 @@
 			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
-			." $filtermethod $querymethod";
+			." $filtermethod $querymethod ORDER BY bilagsnr";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');

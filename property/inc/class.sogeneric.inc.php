@@ -1114,7 +1114,7 @@
 						'name'				=> lang('dimb role'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
-						'menu_selection'	=> 'admin::property::unit'
+						'menu_selection' 	=> 'admin::property::accounting::dimb_role'
 					);
 				break;
 				//-------- ID type varchar
@@ -1561,7 +1561,7 @@
 						'name'				=> lang('dimb role'),
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
-						'menu_selection' 	=> 'admin::property::accounting::dimb_role',
+						'menu_selection' 	=> 'admin::property::accounting::dimb_role_user',
 						'default'			=> array
 							(
 								'created_by' 	=> array('add'	=> '$this->account'),
