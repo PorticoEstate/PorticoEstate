@@ -954,11 +954,28 @@
 				}
 			}
 
+			if($project_id && !isset($values['project_id']))
+			{
+				$values['project_id']=$project_id;
+			}
+
+			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
+
+
 			if (isset($values['save']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
+				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+				{
+					if(!execMethod('property.boinvoice.get_approve_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']))
+					{
+						$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
+						$error_id=true;
+					}
 				}
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
@@ -1235,12 +1252,6 @@
 
 			}
 
-			if($project_id && !isset($values['project_id']))
-			{
-				$values['project_id']=$project_id;
-			}
-
-			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 
 			if(!isset($receipt['error']))
 			{

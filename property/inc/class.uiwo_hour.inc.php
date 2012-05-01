@@ -1223,6 +1223,7 @@
 			{
 				$values_hour = $common_data['content'];
 			}
+
 			$project	= $this->boproject->read_single($common_data['workorder']['project_id'],array(),true);
 
 			$bolocation	= CreateObject('property.bolocation');
@@ -1442,6 +1443,15 @@
 
 			if($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
 			{
+				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+				{
+					if(!execMethod('property.boinvoice.get_approve_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					{
+						phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'] ), 'error' );
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+					}
+				}
+
 				$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : $to_email;
 				$email_data['use_yui_table'] = false;
 
@@ -1867,6 +1877,15 @@ HTML;
 
 			$common_data		= $this->common_data($workorder_id);
 			$project			= $this->boproject->read_single($common_data['workorder']['project_id'],array(),true);
+
+			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			{
+				if(!execMethod('property.boinvoice.get_approve_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']))
+				{
+					phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb'] ), 'error' );
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+				}
+			}
 
 			$content = $this->_get_order_details($common_data['content'],	$show_cost);
 

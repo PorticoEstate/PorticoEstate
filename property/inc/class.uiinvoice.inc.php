@@ -1760,7 +1760,7 @@ JS;
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
-				if($this->get_approve_role())
+				if($this->bo->get_approve_role())
 				{
 					$receipt = $this->bo->update_invoice_sub($values);
 				}
@@ -2299,7 +2299,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$approve = $this->get_approve_role();
+			$approve = $this->bo->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -3897,7 +3897,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$approve = $this->get_approve_role();
+			$approve = $this->bo->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -4041,30 +4041,4 @@ JS;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
 		}
 
-		function get_approve_role($dimb = 0)
-		{
-			$role_check = array
-			(
-				'is_janitor' 				=> lang('janitor'),
-				'is_supervisor' 			=> lang('supervisor'),
-				'is_budget_responsible' 	=> lang('b - responsible')
-			);
-
-			$roles 	= $this->bo->check_role($dimb);
-
-			$approve = array();
-			foreach ($roles as $role => $role_value)
-			{
-				if ($role_value && isset($role_check[$role]))
-				{
-					$approve[] = array
-					(
-						'id'		=> $role,
-						'name'		=> $role_check[$role],
-						'selected'	=> 0
-					);
-				}
-			}
-			return $approve;
-		}
 	}
