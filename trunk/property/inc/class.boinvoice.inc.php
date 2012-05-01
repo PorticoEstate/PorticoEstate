@@ -820,4 +820,33 @@
 		{
 			return $this->so->update_voucher2($data);
 		}
+
+		function get_approve_role($dimb = 0)
+		{
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
+			$roles 	= $this->check_role($dimb);
+
+			$approve = array();
+			foreach ($roles as $role => $role_value)
+			{
+				if ($role_value && isset($role_check[$role]))
+				{
+					$approve[] = array
+					(
+						'id'		=> $role,
+						'name'		=> $role_check[$role],
+						'selected'	=> 0
+					);
+				}
+			}
+			return $approve;
+		}
+
+
 	}

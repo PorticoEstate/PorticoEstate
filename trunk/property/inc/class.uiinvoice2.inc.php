@@ -132,7 +132,7 @@
 
 			if($values = phpgw::get_var('values'))
 			{
-				$approve = execMethod('property.uiinvoice.get_approve_role',  $values['dim_b']);
+				$approve = execMethod('property.boinvoice.get_approve_role',  $values['dim_b']);
 
 				if(!$approve)
 				{
@@ -539,7 +539,7 @@
 					$budget_responsible_list	= $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice');
 				}
 
-				$approve = execMethod('property.uiinvoice.get_approve_role', $voucher[0]['dim_b']);
+				$approve = execMethod('property.boinvoice.get_approve_role', $voucher[0]['dim_b']);
  
 				$approved_list[] = array
 				(

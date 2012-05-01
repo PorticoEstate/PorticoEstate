@@ -1108,6 +1108,21 @@
 
 					$save=true;
 
+					if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+					{
+						if(!isset($values['ecodimb']) || !$values['ecodimb'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Please select dimb!'));
+							$error_id=true;
+						}
+
+						if(!execMethod('property.boinvoice.get_approve_role', $values['ecodimb']))
+						{
+							$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $values['ecodimb'] ));
+							$error_id=true;
+						}
+					}
+	
 					if(!isset($values['location']))
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a location !'));
