@@ -312,7 +312,7 @@
 
 			$join_method = $_join_method ?  implode (' ', $_join_method) : '';
 
-			$sql = "SELECT * FROM {$table} {$join_method} {$filtermethod} {$querymethod}";
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table} {$join_method} {$filtermethod} {$querymethod}";
 
 			$this->_db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->_db->next_record();
