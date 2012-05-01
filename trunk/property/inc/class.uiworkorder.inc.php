@@ -972,7 +972,7 @@
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
 					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
-					if(!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && ! $approve_role['budget_responsible'])
+					if(!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
 					{
 						$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
 						$error_id=true;
@@ -980,7 +980,7 @@
 
  					if(isset($values['approved']) && $values['approved'] && (!isset($values['approved_orig']) || ! $values['approved_orig']))
 					{
-						if(!$approve_role['is_supervisor'] && ! $approve_role['budget_responsible'])
+						if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
 						{
 							$receipt['error'][]=array('msg'=>lang('you do not have permission to approve this order') );
 							$error_id=true;
