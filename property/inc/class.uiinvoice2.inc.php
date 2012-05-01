@@ -190,9 +190,9 @@
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$janitor_list				= $this->bo->get_dimb_role_user(1,$janitor);
-				$supervisor_list			= $this->bo->get_dimb_role_user(2,$supervisor);
-				$budget_responsible_list	= $this->bo->get_dimb_role_user(3,$budget_responsible);
+				$janitor_list				= $this->bo->get_dimb_role_user(1,'', $janitor);
+				$supervisor_list			= $this->bo->get_dimb_role_user(2,'', $supervisor);
+				$budget_responsible_list	= $this->bo->get_dimb_role_user(3,'', $budget_responsible);
 			}
 			else
 			{
@@ -528,9 +528,9 @@
 
 				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
-					$janitor_list				= $this->bo->get_dimb_role_user(1,isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'');
-					$supervisor_list			= $this->bo->get_dimb_role_user(2,isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'');
-					$budget_responsible_list	= $this->bo->get_dimb_role_user(3,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'');
+					$janitor_list				= $this->bo->get_dimb_role_user(1,$voucher[0]['dim_b'], isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'');
+					$supervisor_list			= $this->bo->get_dimb_role_user(2,$voucher[0]['dim_b'], isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'');
+					$budget_responsible_list	= $this->bo->get_dimb_role_user(3,$voucher[0]['dim_b'], isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'');
 				}
 				else
 				{

@@ -1070,9 +1070,9 @@
 			return $this->role;
 		}
 
-		function get_dimb_role_user($role_id, $selected = '')
+		function get_dimb_role_user($role_id, $dimb = '', $selected = '')
 		{
-			$filter_dimb = '';
+			$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
 			$role_id = (int) $role_id;
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
 			." {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
