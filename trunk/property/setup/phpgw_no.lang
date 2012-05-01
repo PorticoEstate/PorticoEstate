@@ -1151,6 +1151,7 @@ open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
+order is not approved	property	no	Bestilling er ikke godkjent
 order_dim1	property	no	Aktivitet
 order id	property	no	BestillingsNr
 order_id	property	no	BestillingsNr
