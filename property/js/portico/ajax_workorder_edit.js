@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 	$("#workorder_edit").live("submit", function(e){
 
-		if( ! $("#workorder_id").val() )
+		if($("#lean").val() == 0)
 		{
 			return;
 		}

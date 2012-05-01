@@ -89,7 +89,7 @@
 			</xsl:choose>
 
 			<div id="receipt"></div>
-
+			<input type="hidden" id = "lean" name="lean" value="{lean}"/>
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
 					<td>
@@ -295,7 +295,6 @@
 										</td>
 										<td>
 											<xsl:value-of select="value_workorder_id"/>
-											<input type="hidden" id="workorder_id" name="test_for_new" value="{value_workorder_id}"/>
 										</td>
 									</tr>
 									<xsl:choose>
@@ -389,6 +388,7 @@
 											<xsl:value-of select="php:function('lang', 'approved')"/>
 										</td>
 										<td>
+											<input type="hidden" name="values[approved_orig]" value="{value_approved}"/>
 											<input type="checkbox" name="values[approved]" value="1">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'approved')"/>
@@ -667,9 +667,8 @@
 											<table>
 												<tr>
 													<td>
-														<input type="hidden" id="notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
-														</input>
-														<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly" title="{$lang_contact_statustext}"/>
+														<input type="hidden" id="notify_contact" name="notify_contact" value=""/>
+														<input type="hidden" name="notify_contact_name" value=""/>
 													</td>
 												</tr>
 											</table>

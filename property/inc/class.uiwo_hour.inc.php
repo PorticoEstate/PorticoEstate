@@ -1445,9 +1445,15 @@
 			{
 				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
-					if(!execMethod('property.boinvoice.get_approve_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
+					if(!$approve_role['is_supervisor'] && ! $approve_role['budget_responsible'] && !$workorder['approved'])
 					{
 						phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'] ), 'error' );
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+					}
+					if(!$workorder['approved'])
+					{
+						phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
 						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
 					}
 				}
@@ -1880,9 +1886,15 @@ HTML;
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				if(!execMethod('property.boinvoice.get_approve_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']))
+				$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']);
+				if(!$approve_role['is_supervisor'] && ! $approve_role['budget_responsible'] && !$workorder['approved'])
 				{
-					phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb'] ), 'error' );
+					phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'] ), 'error' );
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+				}
+				if(!$workorder['approved'])
+				{
+					phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
 				}
 			}
