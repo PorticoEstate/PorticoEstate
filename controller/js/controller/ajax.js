@@ -454,19 +454,17 @@ $(document).ready(function(){
 		    		  var infoBox = $(divWrp).find("#info_box");
 		    		  $(infoBox).show();
 		    		  
-		    		  var htmlStr = "<h5>Åpne saker</h5><ul>";
+		    		  var htmlStr = "<h3>Åpne saker</h3>";
 		    		
 		    		  $.each(obj, function(i) {
-		    			  htmlStr += "<li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj[i].control_item.title + "</span>";
-		    			  htmlStr += "<ul>";
-		    			  
+		    			  htmlStr += "<div class='check_item'><h5>" + (parseInt(i) + 1) + ". " + obj[i].control_item.title + "</h5>";
+		    			  		    			  
 		    			  $(obj[i].cases_array).each(function(j) {
-		    				  htmlStr += "<li>" + "Sak " + (parseInt(j) + 1) + ":  " + obj[i].cases_array[j].descr + "</li>";
+		    				  htmlStr += "<p class='case'>" + "<label>Sak " + (parseInt(j) + 1) + ": </label>" + obj[i].cases_array[j].descr + "</p>";
 		    			  });
-		    			  htmlStr += "</ul></li>";
 		    			});
 		    		  
-		    		  htmlStr += "</ul>"; 
+		    		  htmlStr += "</div>"; 
 		    		
 		    		  $(infoBox).html( htmlStr );  
 	    		  }
