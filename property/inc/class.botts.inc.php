@@ -778,6 +778,7 @@
 		 */
 		function add_ticket($data)
 		{
+
 			$boloc	= CreateObject('property.bolocation');
 			$location_details = $boloc->read_single($data['location_code'], array('noattrib' => true));
 
@@ -805,22 +806,22 @@
 
 			$ticket = array
 			(
-				'origin'    => isset($data['origin']) ? $data['origin'] : null,
-				'origin_id' => isset($data['origin_id']) ? $data['origin_id'] : null,
-				'cat_id'    => $data['cat_id'],
-				'group_id'  => isset($data['group_id']) && $data['group_id'] ? $data['group_id']: $default_group,
-				'assignedto'=> $assignedto,
-				'priority'  => isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
-				'status'    => 'O', // O = Open
-				'subject'   => $data['title'],
-				'details'   => $data['details'],
-				'apply'     => true,
-				'contact_id'=> 0,
-				'location'  => $location,
-				'location_code' => $data['location_code'],
-				'street_name'   => $location_details['street_name'],
-				'street_number' => $location_details['street_number'],
-				'location_name' => $location_details['loc1_name'],
+				'origin_id'			=> isset($data['origin_id']) ? $data['origin_id'] : null,
+				'origin_item_id'	=> isset($data['origin_item_id']) ? $data['origin_item_id'] : null,
+				'cat_id'   			=> $data['cat_id'],
+				'group_id'  		=> isset($data['group_id']) && $data['group_id'] ? $data['group_id']: $default_group,
+				'assignedto'		=> $assignedto,
+				'priority'			=> isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
+				'status'			=> 'O', // O = Open
+				'subject'			=> $data['title'],
+				'details'			=> $data['details'],
+				'apply'				=> true,
+				'contact_id'		=> 0,
+				'location'			=> $location,
+				'location_code'		=> $data['location_code'],
+				'street_name'		=> $location_details['street_name'],
+				'street_number'		=> $location_details['street_number'],
+				'location_name'		=> $location_details['loc1_name'],
 			);
 
 			$result = $this->add($ticket);
