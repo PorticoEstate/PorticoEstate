@@ -757,18 +757,24 @@
 			{
 				if($ticket['origin'][0]['data'][0]['id'])
 				{
-					$interlink_data = array
-						(
-							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']),
-							'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
-							'location2_item_id' => $id,
-							'account_id'		=> $this->account
-						);
-
-					$interlink 	= CreateObject('property.interlink');
-					$interlink->add($interlink_data,$this->db);
+					$ticket['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', $ticket['origin'][0]['location']);
+					$ticket['origin_item_id'] = $ticket['origin'][0]['data'][0]['id'];
 				}
+			}
+
+			if(isset($ticket['origin_id']) && $ticket['origin_id'] && isset($ticket['origin_item_id']) && $ticket['origin_item_id'])
+			{
+				$interlink_data = array
+					(
+						'location1_id'		=> $ticket['origin_id'],
+						'location1_item_id' => $ticket['origin_item_id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+						'location2_item_id' => $id,
+						'account_id'		=> $this->account
+					);
+
+				$interlink 	= CreateObject('property.interlink');
+				$interlink->add($interlink_data,$this->db);
 			}
 
 			if($this->db->transaction_commit())

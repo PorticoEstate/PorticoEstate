@@ -1917,6 +1917,7 @@ tenant	common	no	Leietaker
 internal	common	no	Intern
 in progress date	property	no	Påbegynt dato
 delivered date	property	no	Utført dato
+checklist	property	no	Sjekkliste
 closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
 negative value for budget	property	no	Negativ verdi for kostnadsestimat
