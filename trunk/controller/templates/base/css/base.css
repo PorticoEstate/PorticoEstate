@@ -920,7 +920,7 @@ ul.check_list {
 }
 #control_plan .middle {
     background: none repeat scroll 0 0 #EDF5FF;
-    border-color: #DBE5EF #DBE5EF -moz-use-text-color;
+    border-color: #DBE5EF;
     border-style: solid solid none;
     border-width: 1px 1px 0;
     clear: both;
@@ -1043,10 +1043,9 @@ a.view_info_box {
 .days_wrp a.view_info_box {
     left: 8px;
 }
-
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #243356;
+    border: 1px solid #98B4D6;
     display: none;
     float: none;
     font-size: 12px;
@@ -1059,28 +1058,27 @@ a.view_info_box {
     width: 400px;
     z-index: 1;
 }
-
-#info_box label{
-	font-weight:bold;
-	margin-right:2px;
-	font-size:12px;
-	display: inline-block;
-	width: 70px;
-}
-
-#info_box ul li ul label{
-	display: inline;
-}
-
-#info_box ul li ul {
-    margin: 5px 0;
-    padding-left: 5px;
+#info_box h3 {
+ 	background: none repeat scroll 0 0 #D1E3F8;
+    margin: 0 0 10px;
+    padding: 5px 0;
+    text-align: center;
 }
 #info_box h5 {
- 	font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
-    padding: 0 0 8px;
-    text-align: center;
+    margin: 0 0 4px;
+    text-align: left;
+}
+#info_box .check_item {
+ 	width: 100% 	
+}
+#info_box .check_item label{
+ 	display:inline;
+ 	margin-left:20px; 	
+}
+#info_box .case {
+ 	text-align:left; 	
 }
 .empty_list{
 	font-size: 16px;
