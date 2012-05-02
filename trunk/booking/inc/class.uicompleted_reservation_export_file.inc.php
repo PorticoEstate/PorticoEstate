@@ -9,6 +9,7 @@ phpgw::import_class('booking.uicommon');
 			'show'			=>	true,
 			'add'				=> true,
 			'download'  	=> true,
+			'log'  	=> true,
 			'upload'	=> true,
 		);
 
@@ -52,6 +53,7 @@ phpgw::import_class('booking.uicommon');
 			$export_file['created_on'] = pretty_timestamp($export_file['created_on']);
 			$export_file['index_link'] = $this->link_to('index');
 			$export_file['download_link'] = $this->link_to('download', array('id' => $export_file['id']));
+			$export_file['log_link'] = $this->link_to('log', array('id' => $export_file['id']));
 		}
 		
 		public function index()
@@ -121,6 +123,12 @@ phpgw::import_class('booking.uicommon');
 							'sortable' => false,
 						),
 						array(
+							'key' => 'log',
+							'label' => lang('Logfile'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						),
@@ -147,6 +155,17 @@ phpgw::import_class('booking.uicommon');
 					'label' => lang('Download'), 
 					'href' => $this->link_to('download', array('id' => $export_file['id']))
 				);
+                if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'] and !empty($export_file['log_filename'])) {
+    				$export_file['log'] = array(
+	    				'label' => lang('log'), 
+	    				'href' => $this->link_to('log', array('id' => $export_file['id']))
+	    			);
+                } else {
+					$export_file['log'] = array(
+						'label' => ' ', 
+						'href' => '#'
+					);
+                }
 				if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
 				{
 					$export_file['upload'] = array(
@@ -186,6 +205,17 @@ phpgw::import_class('booking.uicommon');
 			}
 			
 			$file = $this->bo->get_file($export_file);
+			
+			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
+		}
+		public function log() {
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			
+			if (!is_array($export_file)) {
+				$this->redirect_to('index');
+			}
+			
+			$file = $this->bo->get_logfile($export_file);
 			
 			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
 		}
