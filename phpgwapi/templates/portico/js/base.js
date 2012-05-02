@@ -175,16 +175,28 @@ YAHOO.PORTICO.BorderLayout = function()
 			this.config.unitRightWidth = 6;
 		}	
 		
+		var header_height = 26;
+		if(noheader)
+		{
+			header_height = 0;
+		}
+
+		var footer_height = 26;
+		if(nofooter)
+		{
+			footer_height = 0;
+		}
+
 		this.layout = new YAHOO.widget.Layout({
 			minWidth: 600,
 			minHeight: 400,
             units: [
-				{ position: 'top', body: layout['north'], height: 26 },
+				{ position: 'top', body: layout['north'], height: header_height },
 				{ position: 'left', header: this.getHeader( layout['west'] ), body: layout['west'], width: this.config.unitLeftWidth, resize: true, scroll: true, gutter: "5px", collapse: false,  maxWidth: 300, minWidth: 6 },
                 { position: 'center', header: this.getHeader( layout['center'] ), body: layout['center'], scroll: true, gutter: "5px 0px" },
 	// Uncomment for make use of east-layout
     //           { position: 'right', header: this.getHeader( layout['east']  ), body: layout['east'], width: this.config.unitRightWidth, resize: true, scroll: true, gutter: "5px", collapse: false, maxWidth: 300, minWidth: 6 },
-                { position: 'bottom', body: layout['south'], height: 26 }
+                { position: 'bottom', body: layout['south'], height: footer_height }
             ]
         });
 

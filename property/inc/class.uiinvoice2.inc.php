@@ -45,12 +45,7 @@
 		var $type_id;
 		var $location_code;
 	
-		private $so_control_area;
-		private $so_control;
-		private $so_check_list;
-		private $so_control_item;
-		private $so_check_item;
-		private $so_procedure;
+		private $config;
 
 		var $public_functions = array
 		(
@@ -82,6 +77,9 @@
 		
 //			self::set_active_menu('property::invoice::invoice2');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::invoice2';
+			$this->config				= CreateObject('phpgwapi.config','property');
+			$this->config->read();
+
 		}
 
 		public function add_javascript($app, $pkg, $name)
@@ -134,7 +132,7 @@
 
 			if($values = phpgw::get_var('values'))
 			{
-				$approve = execMethod('property.uiinvoice.get_approve_role');
+				$approve = execMethod('property.boinvoice.get_approve_role',  $values['dim_b']);
 
 				if(!$approve)
 				{
@@ -190,15 +188,33 @@
 				return $this->query();
 			}
 
-			$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
-			$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
-			$budget_responsible_list	= $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice');
+			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			{
+				$janitor_list				= $this->bo->get_dimb_role_user(1,'', $janitor);
+				$supervisor_list			= $this->bo->get_dimb_role_user(2,'', $supervisor);
+				$budget_responsible_list	= $this->bo->get_dimb_role_user(3,'', $budget_responsible);
+			}
+			else
+			{
+				$janitor_list				= $this->bocommon->get_user_list_right(32,$janitor,'.invoice');
+				$supervisor_list			= $this->bocommon->get_user_list_right(64,$supervisor,'.invoice');
+				$budget_responsible_list	= $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice');
+			}
 
 			$userlist_default = array();
 			$userlist_default[] = array('id'=> '*' . $GLOBALS['phpgw']->accounts->get($this->account_id)->lid, 'name'=>lang('mine vouchers'));
 			$userlist_default[] = array('id'=>'','name'=>lang('no user'));
 
-			$voucher_list = array('id' => '', 'name' => lang('select'));
+			$voucher_list = array();
+			if($voucher_id)
+			{
+				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id ));
+			}
+			
+			if(!$voucher_list)
+			{
+				$voucher_list = array('id' => '', 'name' => lang('select'));
+			}
 
 			foreach($userlist_default as $default)
 			{
@@ -217,8 +233,6 @@
 
 			$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
-
-
 			$myColumnDefs = array();
 			$datavalues = array();
 			$myButtons	= array();
@@ -226,7 +240,7 @@
 			$datavalues[] = array
 			(
 				'name'				=> "0",
-				'values' 			=> json_encode(array()),
+				'values' 			=> $this->query(),//json_encode(array()),
 				'total_records'		=> 0,
 				'permission'   		=> "''",
 				'is_paginator'		=> 1,
@@ -371,8 +385,7 @@
 														'voucher_list' 			=> array('options' => $voucher_list),
 													),
 				'voucher_info'					=> $this->get_single_line($line_id),
-				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher')),
-				'datatable_old' 				=> array()//$datatable_old;
+				'update_action'					=> self::link(array('menuaction' => 'property.uiinvoice2.update_voucher'))
 			);
 //_debug_array($data);die();			
 			$GLOBALS['phpgw_info']['flags']['noframework']	= true;
@@ -396,6 +409,8 @@
 
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
+			self::add_javascript('property', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
@@ -505,12 +520,26 @@
 			
 			$sign_orig = '';
 			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
-	
+
 			if(count($voucher))
 			{
 
 //---------start forward
-				$approve = execMethod('property.uiinvoice.get_approve_role');
+
+				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+				{
+					$janitor_list				= $this->bo->get_dimb_role_user(1,$voucher[0]['dim_b'], isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'');
+					$supervisor_list			= $this->bo->get_dimb_role_user(2,$voucher[0]['dim_b'], isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'');
+					$budget_responsible_list	= $this->bo->get_dimb_role_user(3,$voucher[0]['dim_b'], isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'');
+				}
+				else
+				{
+					$janitor_list				= $this->bocommon->get_user_list_right(32,isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'','.invoice');
+					$supervisor_list			= $this->bocommon->get_user_list_right(64,isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'','.invoice');
+					$budget_responsible_list	= $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice');
+				}
+
+				$approve = execMethod('property.boinvoice.get_approve_role', $voucher[0]['dim_b']);
  
 				$approved_list[] = array
 				(
@@ -518,7 +547,7 @@
 					'role_sign'	=> 'oppsynsmannid',
 					'initials'	=> $voucher[0]['janitor'] ? $voucher[0]['janitor'] : '',
 					'date'		=> $voucher[0]['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['oppsynsigndato'] ) ) :'',
-					'user_list'	=> !$voucher[0]['oppsynsigndato'] ? array('options' => $this->bocommon->get_user_list_right(32,isset($voucher[0]['janitor'])?$voucher[0]['janitor']:'','.invoice')) : ''
+					'user_list'	=> !$voucher[0]['oppsynsigndato'] ? array('options' => $janitor_list) : ''
 				);
 				$approved_list[] = array
 				(
@@ -526,7 +555,7 @@
 					'role_sign'	=> 'saksbehandlerid',
 					'initials'	=> $voucher[0]['supervisor'] ? $voucher[0]['supervisor'] : '',
 					'date'		=> $voucher[0]['saksigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['saksigndato'] ) ) :'',
-					'user_list'	=> !$voucher[0]['saksigndato'] ? array('options' => $this->bocommon->get_user_list_right(64,isset($voucher[0]['supervisor'])?$voucher[0]['supervisor']:'','.invoice')) : ''
+					'user_list'	=> !$voucher[0]['saksigndato'] ?array('options' => $supervisor_list) : ''
 				);
 				$approved_list[] = array
 				(
@@ -534,7 +563,7 @@
 					'role_sign'	=> 'budsjettansvarligid',
 					'initials'	=> $voucher[0]['budget_responsible'] ? $voucher[0]['budget_responsible'] : '',
 					'date'		=> $voucher[0]['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $voucher[0]['budsjettsigndato'] ) ) :'',
-					'user_list'	=> !$voucher[0]['budsjettsigndato'] ? array('options' => $this->bocommon->get_user_list_right(128,isset($voucher[0]['budget_responsible'])?$voucher[0]['budget_responsible']:'','.invoice')) : ''
+					'user_list'	=> !$voucher[0]['budsjettsigndato'] ? array('options' => $budget_responsible_list) : ''
 				);
 
 				foreach($approved_list as &$_approved_list)

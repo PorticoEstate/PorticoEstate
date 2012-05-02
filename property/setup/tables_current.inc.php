@@ -1065,7 +1065,7 @@
 				'budsjettsigndato' => array('type' => 'timestamp','nullable' => True),
 				'utbetalingsigndato' => array('type' => 'timestamp','nullable' => True),
 				'merknad' => array('type' => 'text','nullable' => True),
-				'splitt' => array('type' => 'int','precision' => '2','nullable' => True),
+				'splitt' => array('type' => 'int','precision' => '4','nullable' => True),
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'pre_transfer' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -1121,7 +1121,7 @@
 				'overftid' => array('type' => 'timestamp','nullable' => True),
 				'ordrebelop' => array('type' => 'decimal','precision' => '20','scale' => '2','default' => '0','nullable' => False),
 				'merknad' => array('type' => 'text','nullable' => True),
-				'splitt' => array('type' => 'int','precision' => '2','nullable' => True),
+				'splitt' => array('type' => 'int','precision' => '4','nullable' => True),
 				'filnavn' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -1169,6 +1169,35 @@
 			'pk' => array('id'),
 			'ix' => array(),
 			'fk' => array(),
+			'uc' => array()
+		),
+		'fm_ecodimd_role' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '25','nullable' => False)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
+		'fm_ecodimb_role_user' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'ecodimb' => array('type' => 'int','precision' => '2','nullable' => False),
+				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'role_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'default' => array('type' => 'int','precision' => '2','nullable' => true),
+				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array('fm_ecodimd_role' => array('role_id' => 'id'),'fm_ecodimd' => array('ecodimd' => 'id'),'phpgw_accounts' => array('user_id'=>'account_id')),
 			'uc' => array()
 		),
 		'fm_ecodimd' => array(

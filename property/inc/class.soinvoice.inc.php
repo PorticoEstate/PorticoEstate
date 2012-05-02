@@ -441,18 +441,18 @@
 			$invoice = array();
 			while ($this->db->next_record())
 			{
-				$status_line = 'O';
+				$status_line = 0;
 				if($this->db->f('budsjettsigndato'))
 				{
-					$status_line = 'C';
+					$status_line = 3;
 				}
 				else if($this->db->f('saksigndato'))
 				{
-					$status_line = 'B';
+					$status_line = 2;
 				}
 				else if($this->db->f('oppsynsigndato'))
 				{
-					$status_line = 'A';
+					$status_line = 1;
 				}
 
 				$invoice[] = array
@@ -867,10 +867,11 @@
 					$this->db->next_record();
 					switch ( $this->db->f('type') )
 					{
-					case 'workorder':
-						$historylog_workorder->add($entry,$id,$status_code[$entry]);
-						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'$status_code[$entry]'" . "where id=$id");
-						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+						case 'workorder':
+							$historylog_workorder->add($entry,$id,$status_code[$entry]);
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'{$status_code[$entry]}'" . "where id=$id");
+							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
+							break;
 					}
 				}
 			}
@@ -1033,9 +1034,31 @@
 			return $this->db->f('merknad');
 		}
 
-		function check_role()
+		function check_role($dimb = 0)
 		{
-			if(!isset($this->role) || !$this->role)
+			if($this->role && !$dimb)
+			{
+				return $this->role;
+			}
+
+			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			{
+				$dimb = (int) $dimb;
+				$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 1 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->next_record();
+				$this->role['is_janitor'] = !!$this->db->f('user_id');
+
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 2 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->next_record();
+				$this->role['is_supervisor'] = !!$this->db->f('user_id');
+
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 3 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->next_record();
+				$this->role['is_budget_responsible'] = !!$this->db->f('user_id');
+				
+			}
+			else
 			{
 				$this->role = array(
 					'is_janitor' 				=> $this->acl->check('.invoice', 32, 'property'),
@@ -1045,6 +1068,32 @@
 				);
 			}
 			return $this->role;
+		}
+
+		function get_dimb_role_user($role_id, $dimb = '', $selected = '')
+		{
+			$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
+			$role_id = (int) $role_id;
+			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
+			." {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
+			." WHERE role_id = {$role_id} {$filter_dimb} AND expired_on IS NULL"
+			." ORDER BY account_lastname ASC, account_firstname ASC";
+
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while($this->db->next_record())
+			{
+				$id = $this->db->f('account_lid');
+				$values[] = array
+				(
+					'id'		=> $id,
+					'name'		=> $this->db->f('account_lastname') . ', ' . $this->db->f('account_firstname'),
+					'selected'	=> $selected == $id ? 1 : 0
+				);
+			}
+			return $values;
 		}
 
 		function check_count($voucher_id)
@@ -1198,17 +1247,47 @@
 		}
 
 		//----------
-		function select_dimb_list()
+		function select_dimb_list($selected = 0)
 		{
-			$this->db->query("SELECT * FROM fm_ecodimb order by id asc ");
+			$selected = (int) $selected;
+			$include_selected = false;
+
+			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			{
+				$sql = "SELECT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
+				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int) $this->account_id . ' ORDER BY descr ASC';
+				$include_selected = true;
+			}
+			else
+			{
+				$sql = "SELECT * FROM fm_ecodimb ORDER BY descr ASC";
+			}
+
+			$selected_found = false;
+			$this->db->query($sql);
 			$dimb_list = array();
 			while ($this->db->next_record())
 			{
-				$dimb_list[] = Array(
-					'id'        => $this->db->f('id'),
-					'name'       => $this->db->f('descr')
+				$id = $this->db->f('id');
+				if($id == $selected)
+				{
+					$selected_found = true;
+				}			
+
+				$dimb_list[] = array
+				(
+					'id'        => $id,
+					'name'       => $this->db->f('descr',true)
 				);
 			}
+
+			if($include_selected && $selected && !$selected_found)
+			{
+				$this->db->query("SELECT descr FROM fm_ecodimb WHERE id={$selected}");
+				$this->db->next_record();
+				array_unshift($dimb_list, array ('id' => $selected, 'name' => '**' . $this->db->f('descr',true) . '**' ) );
+			}
+
 			return $dimb_list;
 		}
 
@@ -1883,12 +1962,25 @@
 			$value_set_line['line_text']		= $data['line_text'];
 
 			$value_set_line	= $this->db->validate_update($value_set_line);
-			$this->db->query("UPDATE fm_ecobilag SET $value_set_line WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
 			unset($value_set_line);
 
+			//update workorder
 			if($data['order_id'] && $data['b_account_id'])
 			{
-				$this->db->query("UPDATE fm_workorder SET account_id = '{$data['b_account_id']}' WHERE id='{$data['order_id']}'");
+				$this->db->query("SELECT type FROM fm_orders WHERE id={$data['order_id']}",__LINE__,__FILE__);
+				$this->db->next_record();
+				switch ( $this->db->f('type') )
+				{
+					case 'workorder':
+						$value_set_line['account_id']			= $data['b_account_id'];
+						$value_set_line['category']				= $data['dim_e'];
+
+						$value_set_line	= $this->db->validate_update($value_set_line);
+						$this->db->query("UPDATE fm_workorder SET {$value_set_line} WHERE id='{$data['order_id']}'");
+						unset($value_set_line);
+						break;
+				}
 			}
 
 			foreach($data['approved_amount'] as $line_id => $approved_amount)
@@ -1926,9 +2018,8 @@
 					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
 					$this->db->next_record();
 					$amount = $this->db->f('belop');
-					$new_amount = $amount - $split_amount;
 					
-					if($new_amount < 0)
+					if(($amount - $split_amount) < 0)
 					{
 						phpgwapi_cache::message_set(lang('negative sum'), 'error');
 						continue;
@@ -1958,16 +2049,17 @@
 
 					$value_set= array
 					(
-						'belop'			=> $new_amount,
-						'godkjentbelop' => $new_amount,
+						'belop'			=> $split_amount,
+						'godkjentbelop' => $split_amount
 					);
 					$value_set	= $this->db->validate_update($value_set);
 					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
 
 					$value_set= array
 					(
-						'belop'			=> $split_amount,
-						'godkjentbelop' => $split_amount,
+						'belop'			=> $amount - $split_amount,
+						'godkjentbelop' => $amount - $split_amount,
+						'splitt'		=> $id
 					);
 					$value_set	= $this->db->validate_update($value_set);
 					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$new_id}" ,__LINE__,__FILE__);
@@ -2072,12 +2164,11 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT DISTINCT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, sum(godkjentbelop) as godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
+			$sql = "SELECT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
 			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
-			." $filtermethod $querymethod"
-			." GROUP BY bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr, oppsynsigndato, saksigndato,budsjettsigndato";
+			." $filtermethod $querymethod ORDER BY bilagsnr";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');
@@ -2091,38 +2182,64 @@
 
 			while($this->db->next_record())
 			{
-				$status = 'O';
+				$bilagsnr = $this->db->f('bilagsnr');
+
+				$values[$bilagsnr]['bilagsnr_ut']		= $this->db->f('bilagsnr_ut');
+				$values[$bilagsnr]['org_name']			= $this->db->f('org_name');
+				$values[$bilagsnr]['currency']			= $this->db->f('currency');
+				$values[$bilagsnr]['kreditnota']		= $this->db->f('kreditnota');
+				$values[$bilagsnr]['type']				= $this->db->f('type');
+
+				if(isset($values[$bilagsnr]['godkjentbelop']))
+				{
+					$values[$bilagsnr]['godkjentbelop'] += $this->db->f('godkjentbelop');
+				}
+				else
+				{
+					$values[$bilagsnr]['godkjentbelop'] = $this->db->f('godkjentbelop');
+				}
+
+				$status = 0;
 				if($this->db->f('budsjettsigndato'))
 				{
-					$status = 'C';
+					$status = 3;
 				}
 				else if($this->db->f('saksigndato'))
 				{
-					$status = 'B';
+					$status = 2;
 				}
 				else if($this->db->f('oppsynsigndato'))
 				{
-					$status = 'A';
+					$status = 1;
 				}
 				
-				$voucher_id = $this->db->f('bilagsnr_ut') ? $this->db->f('bilagsnr_ut') : $this->db->f('bilagsnr');
+				$values[$bilagsnr]['status'][] = $status;
+			}
+			
+			$voucers = array();
+			foreach ($values as $bilagsnr => $entry)
+			{
+				$status = $entry['status'];
+				sort($status);
+				
+				$voucher_id = $entry['bilagsnr_ut'] ? $entry['bilagsnr_ut'] : $bilagsnr;
 				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
 							$voucher_id,
-							trim(strtoupper($this->db->f('org_name',true))),
-							$this->db->f('currency'),
-							$this->db->f('kreditnota') ? 'X' : '',
-							$this->db->f('type'),
-							number_format($this->db->f('godkjentbelop'), 2, ',', ' '),
-							$status
+							trim(strtoupper($entry['org_name'])),
+							$entry['currency'],
+							$entry['kreditnota'] ? 'X' : '',
+							$entry['type'],
+							number_format($entry['godkjentbelop'], 2, ',', ' '),
+							$status[0]
 						);
 
-				$values[] = array
+				$voucers[] = array
 				(
-					'id'	=> $this->db->f('bilagsnr'),
+					'id'	=> $bilagsnr,
 					'name'	=> $name
 				);
 			}
-			return $values;
-		}
 
+			return $voucers;
+		}
 	}

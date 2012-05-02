@@ -27,7 +27,15 @@
  	* @version $Id$
 	*/
 
+	/**
+	* Import the YUI class
+	*/
 	phpgw::import_class('phpgwapi.yui');
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 
 	/**
 	 * Description
@@ -840,6 +848,14 @@
 
 		function edit($mode = 'edit')
 		{
+			if( $GLOBALS['phpgw_info']['flags']['nonavbar']	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
+			$_lean = phpgw::get_var('lean', 'bool');
+
 			$id = phpgw::get_var('id'); // in case of bigint
 			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 
@@ -882,11 +898,11 @@
 				$project_id 				= phpgw::get_var('project_id', 'int');
 				$values						= phpgw::get_var('values');
 				$values['ecodimb']			= phpgw::get_var('ecodimb');
-				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
-				$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
-				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
-				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
-				$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
+				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int');
+				$values['vendor_name']		= phpgw::get_var('vendor_name', 'string');
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int');
+				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string');
+				$values['event_id']			= phpgw::get_var('event_id', 'int');
 				$origin						= phpgw::get_var('origin');
 				$origin_id					= phpgw::get_var('origin_id', 'int');
 
@@ -938,11 +954,38 @@
 				}
 			}
 
+			if($project_id && !isset($values['project_id']))
+			{
+				$values['project_id']=$project_id;
+			}
+
+			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
+
+
 			if (isset($values['save']))
 			{
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+				}
+
+				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+				{
+					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
+					if(!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
+					{
+						$receipt['error'][]=array('msg'=>lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
+						$error_id=true;
+					}
+
+ 					if(isset($values['approved']) && $values['approved'] && (!isset($values['approved_orig']) || ! $values['approved_orig']))
+					{
+						if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
+						{
+							$receipt['error'][]=array('msg'=>lang('you do not have permission to approve this order') );
+							$error_id=true;
+						}
+					}
 				}
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
@@ -1194,14 +1237,31 @@
 						}
 					}
 				}
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+					$result['receipt'] = $receipt;
+	
+					return $result;
+				}
+
 			}
 
-			if($project_id && !isset($values['project_id']))
-			{
-				$values['project_id']=$project_id;
-			}
-
-			$project	= (isset($values['project_id'])?$boproject->read_single_mini($values['project_id']):'');
 
 			if(!isset($receipt['error']))
 			{
@@ -1583,7 +1643,12 @@
 				);
 
 
-			$_formatter_voucher_link			= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+			$_formatter_voucher_link	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'YAHOO.widget.DataTable.formatLink_invoicehandler_2' : 'YAHOO.widget.DataTable.formatLink';
+
+			if($_lean)
+			{
+				$_formatter_voucher_link = '""';
+			}
 
 			$myColumnDefs[2] = array
 				(
@@ -1858,7 +1923,8 @@
 					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
 					'lang_edit_statustext'					=> lang('Edit this entry '),
 					'lang_edit'								=> lang('Edit'),
-					'value_extra_mail_address'				=> $value_extra_mail_address
+					'value_extra_mail_address'				=> $value_extra_mail_address,
+					'lean'									=> $_lean ? 1 : 0
 				);
 
 			$appname						= lang('Workorder');
@@ -1881,6 +1947,7 @@
 //			phpgwapi_yui::load_widget('button');
 
 
+			phpgwapi_jquery::load_widget('core');
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
@@ -1890,7 +1957,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );	
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );	
 		}
 
 		function add()

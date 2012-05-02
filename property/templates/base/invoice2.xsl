@@ -21,63 +21,36 @@
 
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<style type="text/css">
-#box { width: 200px; height: 5px; background: blue; }
-//select { width: 200px; }
-#voucher_id_filter { width: 800px; }
-#dim_b { width: 200px; }
-#dim_e { width: 200px; }
-#period { width: 200px; }
-#periodization { width: 200px; }
-#periodization_start { width: 200px; }
-#process_code { width: 200px; }
-#tax_code { width: 200px; }
-#approve_as { width: 200px; }
-#_oppsynsmannid { width: 200px; }
-#_saksbehandlerid { width: 200px; }
-#_budsjettansvarligid { width: 200px; }
-.row_on,.th_bright
-{
-	background-color: #CCEEFF;
-}
+	<style type="text/css">
+	#box { width: 200px; height: 5px; background: blue; }
+	//select { width: 200px; }
+	#voucher_id_filter { width: 800px; }
+	#dim_b { width: 200px; }
+	#dim_e { width: 200px; }
+	#period { width: 200px; }
+	#periodization { width: 200px; }
+	#periodization_start { width: 200px; }
+	#process_code { width: 200px; }
+	#tax_code { width: 200px; }
+	#approve_as { width: 200px; }
+	#_oppsynsmannid { width: 200px; }
+	#_saksbehandlerid { width: 200px; }
+	#_budsjettansvarligid { width: 200px; }
+	.row_on,.th_bright
+	{
+		background-color: #CCEEFF;
+	}
 
-.row_off
-{
-	background-color: #DDF0FF;
-}
+	.row_off
+	{
+		background-color: #DDF0FF;
+	}
 
-</style>
+	</style>
 
-<xsl:call-template name="invoice" />
-
-		<!--  DATATABLE DEFINITIONS-->
-		<script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-			var myButtons = new Array();
-			var td_count = <xsl:value-of select="td_count"/>;
-
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-			<xsl:for-each select="myButtons">
-				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>
-	
+	<xsl:call-template name="invoice" />
+	<div id="popupBox"></div>	
+	<div id="curtain"></div>
 </xsl:template>
 
 <xsl:template name="invoice" xmlns:php="http://php.net/xsl">
@@ -607,45 +580,36 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
-</xsl:template>
 
+		<!--  DATATABLE DEFINITIONS-->
+		<script type="text/javascript">
+			var property_js = <xsl:value-of select="//property_js"/>;
+			var base_java_url = <xsl:value-of select="//base_java_url"/>;
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+			var td_count = <xsl:value-of select="//td_count"/>;
 
-
-<xsl:template name="datasource-definition_old" xmlns:php="http://php.net/xsl">
-	<script>
-		YAHOO.namespace('portico');
-	 
- 		YAHOO.portico.columnDefs = [
-				<xsl:for-each select="//datatable/field">
+			<xsl:for-each select="//datatable">
+				datatable[<xsl:value-of select="name"/>] = [
 					{
-						key: "<xsl:value-of select="key"/>",
-						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
-						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
-						hidden: true,
-						</xsl:if>
-						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
-						</xsl:if>
-						className: "<xsl:value-of select="className"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-			];
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="//myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="//myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
 
-		var main_source = '<xsl:value-of select="source"/>';
-		var main_columnDefs = YAHOO.portico.columnDefs;
-		var main_form = 'invoice_queryForm';
-		var main_filters = ['voucher_id_filter', 'refresch_voucher_id'];
-		var main_container = 'datatable-container';
-		var main_table_id = 'datatable';
-		var main_pag = 'data_paginator';
-		var related_table = new Array('vouchers_table');
-	
-		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
-		
-	</script>
+
 </xsl:template>
 
 <!-- options for use with select-->

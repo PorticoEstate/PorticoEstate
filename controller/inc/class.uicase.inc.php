@@ -99,13 +99,7 @@
 				$new_check_item = new controller_check_item();
 				$new_check_item->set_check_list_id( $check_list_id );
 				$new_check_item->set_control_item_id( $control_item_id );
-				if($status == 0)
-					$new_check_item->set_status( controller_check_item_case::STATUS_OPEN );
-				else
-					$new_check_item->set_status( controller_check_item_case::STATUS_CLOSED );
-					
-				$new_check_item->set_comment( null );
-				
+							
 				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
 				$check_item = $this->so_check_item->get_single($saved_check_item_id);
 			}

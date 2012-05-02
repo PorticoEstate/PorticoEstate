@@ -368,7 +368,7 @@
 
 		function select_dimb_list($selected='')
 		{
-			$dimbs=$this->so->select_dimb_list();
+			$dimbs=$this->so->select_dimb_list($selected);
 			return $this->bocommon->select_list($selected,$dimbs);
 		}
 
@@ -768,9 +768,14 @@
 			return $line;
 		}
 
-		function check_role()
+		function check_role($dimb = 0)
 		{
-			return $this->so->check_role();
+			return $this->so->check_role($dimb);
+		}
+
+		public function get_dimb_role_user($role_id, $dimb = '', $selected = '')
+		{
+			return $this->so->get_dimb_role_user($role_id, $dimb, $selected);
 		}
 
 		public function get_historical_accounting_periods()
@@ -815,4 +820,33 @@
 		{
 			return $this->so->update_voucher2($data);
 		}
+
+		function get_approve_role($dimb = 0)
+		{
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
+			$roles 	= $this->check_role($dimb);
+
+			$approve = array();
+			foreach ($roles as $role => $role_value)
+			{
+				if ($role_value && isset($role_check[$role]))
+				{
+					$approve[] = array
+					(
+						'id'		=> $role,
+						'name'		=> $role_check[$role],
+						'selected'	=> 0
+					);
+				}
+			}
+			return $approve;
+		}
+
+
 	}

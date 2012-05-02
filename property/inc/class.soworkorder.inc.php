@@ -1211,9 +1211,15 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_workorder SET $value_set WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_workorder SET {$value_set} WHERE id= {$workorder['id']}" ,__LINE__,__FILE__);
 
-			$this->db->query("UPDATE fm_ecobilag SET spbudact_code = '{$workorder['b_account_id']}' WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
+			$value_set_invoice = array();
+			$value_set_invoice['spbudact_code'] = $workorder['b_account_id'];
+			$value_set_invoice['dime']			= $workorder['cat_id'];
+
+			$value_set_invoice	= $this->bocommon->validate_db_update($value_set_invoice);
+
+			$this->db->query("UPDATE fm_ecobilag SET {$value_set_invoice} WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
 
 /*			if($workorder['charge_tenant'])
 			{
