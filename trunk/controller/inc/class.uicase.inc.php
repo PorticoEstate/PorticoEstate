@@ -344,9 +344,6 @@
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
 			
-			_debug_array(array($location_id, $location_item_id));
-			die();
-			
 			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
 
 			if(!empty ( $cases_array ) ){
