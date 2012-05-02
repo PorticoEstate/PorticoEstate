@@ -377,7 +377,10 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					var oArgs_order = {menuaction:'property.uiinvoice.view_order', order_id: voucher[0].order_id};
 					var requestUrl_order = phpGWLink('index.php', oArgs_order);
-					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+//					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+
+					var htmlString_order  =  " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+
 					$("#order_text").html( htmlString_order );
 				}
 				else
@@ -651,3 +654,49 @@ function update_form_values( line_id, voucher_id_orig ){
 		}
 	});
 }
+
+//------------
+
+function load_order( id ){
+	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+//	$("#curtain").show();
+//	$("#popupBox").fadeIn("slow");
+//	var htmlString = "";
+//	htmlString += "<iframe  width=\"100%\" height=\"100%\" src = \"" + requestUrl + "\" ><p>Your browser does not support iframes.</p></iframe>";
+//	$("#popupBox").html( htmlString );
+}
+
+function closeJS_local()
+{
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig)
+}
+
+function closeJS_remote()
+{
+	TINY.box.hide();
+/*
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig)
+*/
+}
+
+function hide_popupBox( ){
+	var line_id = $("#line_id").val( );
+	var voucher_id_orig = $("#voucher_id").val();
+	$("#curtain").hide();
+	$("#popupBox").hide();
+	update_form_values(line_id, voucher_id_orig);
+}
+
+
+

@@ -6244,3 +6244,84 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.642';
+	function property_upgrade0_9_17_642()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','splitt', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','splitt', array('type' => 'int','precision' => '4','nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_ecodimb_role', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'name' => array('type' => 'varchar','precision' => '25','nullable' => False)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_ecodimb_role_user', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'ecodimb' => array('type' => 'int','precision' => '2','nullable' => False),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'role_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'default_user' => array('type' => 'int','precision' => '2','nullable' => true),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array('fm_ecodimb_role' => array('role_id' => 'id'),'fm_ecodimb' => array('ecodimb' => 'id'),'phpgw_accounts' => array('user_id'=>'account_id')),
+				'uc' => array()
+			)
+		);
+
+		$sql = 'SELECT * FROM fm_responsibility_contact JOIN phpgw_accounts ON fm_responsibility_contact.contact_id = phpgw_accounts.person_id WHERE expired_on IS NULL AND ecodimb IS NOT NULL';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$roles = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$roles[] = array
+			(
+				'ecodimb'		=> $GLOBALS['phpgw_setup']->oProc->f('ecodimb'),
+				'user_id'		=> $GLOBALS['phpgw_setup']->oProc->f('account_id'),
+				'role_id'		=> $GLOBALS['phpgw_setup']->oProc->f('responsibility_id') == 2 ? 3 : 2,
+				'default_user'		=> $GLOBALS['phpgw_setup']->oProc->f('responsibility_id') == 2 ? 1 : '',
+				'active_from'	=> $GLOBALS['phpgw_setup']->oProc->f('active_from'),
+				'active_to'		=> $GLOBALS['phpgw_setup']->oProc->f('active_to'),
+				'created_on'	=> $GLOBALS['phpgw_setup']->oProc->f('created_on'),
+				'created_by'	=> $GLOBALS['phpgw_setup']->oProc->f('created_by')
+			);
+			$i++;
+		}
+
+		foreach ($roles as $role)
+		{
+			$cols = implode(',', array_keys($role));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($role));
+			$sql = "INSERT INTO fm_ecodimb_role_user ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.643';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

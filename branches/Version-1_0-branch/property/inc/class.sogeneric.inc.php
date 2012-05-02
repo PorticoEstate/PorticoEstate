@@ -53,16 +53,35 @@
 
 		function read($data, $filter = array())
 		{
-			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
-			$query		= isset($data['query'])?$data['query']:'';
-			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-			$order		= isset($data['order'])?$data['order']:'';
-			$allrows	= isset($data['allrows'])?$data['allrows']:'';
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				= isset($data['query']) ? $data['query']:'';
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order				= isset($data['order']) ? $data['order'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
+			$custom_criteria	= isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
+			}
+
+			
+			$_join_method = array();
+			$_filter_array = array();
+			if($custom_criteria)
+			{
+				foreach ($custom_criteria as $_custom_criteria)
+				{
+					if(isset($this->location_info['custom_criteria'][$_custom_criteria]['join']) && is_array($this->location_info['custom_criteria'][$_custom_criteria]['join']))
+					{
+						$_join_method = array_merge($_join_method, $this->location_info['custom_criteria'][$_custom_criteria]['join']);
+					}
+					if(isset($this->location_info['custom_criteria'][$_custom_criteria]['filter']) && is_array($this->location_info['custom_criteria'][$_custom_criteria]['filter']))
+					{
+						$_filter_array = array_merge($_filter_array, $this->location_info['custom_criteria'][$_custom_criteria]['filter']);
+					}
+				}
 			}
 
 /*
@@ -93,7 +112,7 @@
 				}			
 			}
  */
-			$_filter_array = array();
+
 			$get_single = array();
 			foreach ( $this->location_info['fields'] as $field )
 			{
@@ -291,7 +310,9 @@
 				$querymethod .= $_query_end;
 			}
 
-			$sql = "SELECT * FROM $table {$filtermethod} {$querymethod}";
+			$join_method = $_join_method ?  implode (' ', $_join_method) : '';
+
+			$sql = "SELECT DISTINCT {$table}.* FROM {$table} {$join_method} {$filtermethod} {$querymethod}";
 
 			$this->_db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->_db->next_record();
@@ -461,6 +482,14 @@
 								'descr' => lang('descr'),
 								'type' => 'varchar'
 							)
+						),
+						'custom_criteria' => array
+						(
+							'dimb_role_user' => array
+							(
+								'join'		=> array("{$this->_db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"),
+								'filter'	=> array('fm_ecodimb_role_user.user_id = ' . (int) $this->account)
+							)	
 						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
@@ -1065,6 +1094,29 @@
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
 				break;
+
+			case 'dimb_role':
+				$info = array
+					(
+						'table' 			=> 'fm_ecodimb_role',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit role'),
+						'add_msg'			=> lang('add role'),
+						'name'				=> lang('dimb role'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection' 	=> 'admin::property::accounting::dimb_role'
+					);
+				break;
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array
@@ -1444,6 +1496,81 @@
 				break;
 
 				//-------- ID type auto
+
+			case 'dimb_role_user':
+
+				$info = array
+					(
+						'table' 			=> 'fm_ecodimb_role_user',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'ecodimb',
+								'descr'			=> lang('dim b'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'dimb',	'selected' => '##ecodimb##')//b_account_category
+								)
+							),
+							array
+							(
+								'name'			=> 'role_id',
+								'descr'			=> lang('role type'),
+								'type'			=> 'select',
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'dimb_role',	'selected' => '##role_id##')
+								)
+							),
+							array
+							(
+								'name'			=> 'user_id',
+								'descr'			=> lang('user'),
+								'type'			=> 'select',
+								'filter'		=> true,
+								'get_single'	=> 'get_user',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocommon.get_user_list_right2',
+									'method_input'	=> array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.invoice')
+								)
+							),
+							array
+							(
+								'name' => 'default_user',
+								'descr' => lang('default'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('dimb role'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection' 	=> 'admin::property::accounting::dimb_role_user',
+						'default'			=> array
+							(
+								'created_by' 	=> array('add'	=> '$this->account'),
+								'created_on'	=> array('add'	=> 'time()'),
+							),
+						'check_grant'		=> false	
+					);
+				break;
+
 			case 'order_dim1':
 				$info = array
 					(

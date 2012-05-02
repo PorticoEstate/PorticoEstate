@@ -41,7 +41,7 @@
 				'controller' => array
 				(
 					'text'	=> lang('Controller'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.view_control_details') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.control_list') ),
 					'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'

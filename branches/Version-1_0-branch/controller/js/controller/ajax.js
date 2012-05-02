@@ -430,7 +430,7 @@ $(document).ready(function(){
 	});
 	
 	// Fetches info about a check list on hover status image icon
-	$('a.view_check_list').bind('contextmenu', function(){
+	$('a.view_info_box').bind('contextmenu', function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		
@@ -454,19 +454,17 @@ $(document).ready(function(){
 		    		  var infoBox = $(divWrp).find("#info_box");
 		    		  $(infoBox).show();
 		    		  
-		    		  var htmlStr = "<h5>Åpne saker</h5><ul>";
+		    		  var htmlStr = "<h3>Åpne saker</h3>";
 		    		
 		    		  $.each(obj, function(i) {
-		    			  htmlStr += "<li><label>" + (parseInt(i) + 1) + ": Tittel</label><span>" + obj[i].control_item.title + "</span>";
-		    			  htmlStr += "<ul>";
-		    			  
+		    			  htmlStr += "<div class='check_item'><h5>" + (parseInt(i) + 1) + ". " + obj[i].control_item.title + "</h5>";
+		    			  		    			  
 		    			  $(obj[i].cases_array).each(function(j) {
-		    				  htmlStr += "<li>" + "Sak " + (parseInt(j) + 1) + ":  " + obj[i].cases_array[j].descr + "</li>";
+		    				  htmlStr += "<p class='case'>" + "<label>Sak " + (parseInt(j) + 1) + ": </label>" + obj[i].cases_array[j].descr + "</p>";
 		    			  });
-		    			  htmlStr += "</ul></li>";
 		    			});
 		    		  
-		    		  htmlStr += "</ul>"; 
+		    		  htmlStr += "</div>"; 
 		    		
 		    		  $(infoBox).html( htmlStr );  
 	    		  }
@@ -476,38 +474,10 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$("a.view_check_list").mouseout(function(){
+	$("a.view_info_box").mouseout(function(){
 		var infoBox = $(this).parent().find("#info_box");
 		
 		$(infoBox).hide();
-	});
-	
-	$(".frm_save_check_item").live("submit", function(e){
-		e.preventDefault();
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var requestUrl = $(thisForm).attr("action"); 
-
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		
-		    		  if(obj.status == "saved"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");	
-		    				  
-		    				// Changes text on save button back to original
-		    				window.setTimeout(function() {
-		    				  $(submitBnt).val('Oppdater måling');
-		    				  $(submitBnt).addClass("not_active");
-		    					 }, 1000);	   				  
-					  }
-				  }
-				}
-			});
 	});
 	
 	$(".frm_save_control_item").live("click", function(e){
@@ -893,13 +863,13 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	
+	/*
 	$(".frm_save_check_item").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-	
+	*/
 	$(".frm_register_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -925,14 +895,14 @@ $(document).ready(function(){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
-	
+	/*
 	$(".frm_save_check_item").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		
 		$(submitBnt).removeClass("not_active");
 	});
-	
+	*/
 	$(".frm_save_control_item").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");

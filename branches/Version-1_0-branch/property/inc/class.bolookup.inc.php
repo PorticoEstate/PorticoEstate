@@ -326,10 +326,19 @@
 		}
 		function read_ecodimb()
 		{
+			$config				= CreateObject('phpgwapi.config','property');
+			$config->read();
+
+			$custom_criteria = array();
+			if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+			{
+				$custom_criteria = array('dimb_role_user');
+			}
+
 			$ecodimb	= CreateObject('property.sogeneric');
 			$ecodimb->get_location_info('dimb',false);
 			$values = $ecodimb->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows));
+				'allrows'=>$this->allrows, 'custom_criteria' => $custom_criteria));
 
 			$this->total_records = $ecodimb->total_records;
 

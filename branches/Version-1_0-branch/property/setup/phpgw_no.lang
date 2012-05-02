@@ -519,8 +519,10 @@ dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i 
 dim b	property	no	Kostnadssted
 dimb	property	no	Kostnadssted
 dimb roles	property	no	Roller kostnadssted
+dimb role user	property	no	Bruker/Rolle/Kostnadssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
+Please select dimb!	property	no	Angi kostnadssted
 dim d	property	no	Dim D
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
@@ -1149,6 +1151,7 @@ open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
+order is not approved	property	no	Bestilling er ikke godkjent
 order_dim1	property	no	Aktivitet
 order id	property	no	BestillingsNr
 order_id	property	no	BestillingsNr
@@ -1899,6 +1902,7 @@ write off period	property	no	avskrivningsperiode
 year	property	no	År
 yearly	property	no	Årlig
 you are not approved for this task	property	no	Du mangler rettigheter for denne oppgaven
+you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette kostnadsstedet: %1
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet

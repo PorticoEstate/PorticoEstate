@@ -1760,7 +1760,7 @@ JS;
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
-				if($this->get_approve_role())
+				if($this->bo->get_approve_role())
 				{
 					$receipt = $this->bo->update_invoice_sub($values);
 				}
@@ -2299,7 +2299,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$approve = $this->get_approve_role();
+			$approve = $this->bo->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -3783,14 +3783,17 @@ JS;
 			$order_id	= phpgw::get_var('order_id'); // could be bigint
 			$soXport    = CreateObject('property.soXport');
 
+			$nonavbar = phpgw::get_var('nonavbar', 'bool');
+			$lean = phpgw::get_var('lean', 'bool');
+
 			$order_type = $soXport->check_order($order_id);
 			switch($order_type)
 			{
 				case 'workorder':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id, 'tab' => 'budget'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id, 'tab' => 'budget', 'nonavbar' => $nonavbar, 'lean' => $lean));
 					break;
 				case 's_agreement':
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id, 'nonavbar' => $nonavbar, 'lean' => $lean));
 					break;
 				default:
 					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -3894,7 +3897,7 @@ JS;
 				'is_budget_responsible' 	=> lang('b - responsible')
 			);
 
-			$approve = $this->get_approve_role();
+			$approve = $this->bo->get_approve_role();
 
 			$values	= phpgw::get_var('values');
 
@@ -4038,30 +4041,4 @@ JS;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('forward' => $data));
 		}
 
-		function get_approve_role()
-		{
-			$role_check = array
-			(
-				'is_janitor' 				=> lang('janitor'),
-				'is_supervisor' 			=> lang('supervisor'),
-				'is_budget_responsible' 	=> lang('b - responsible')
-			);
-
-			$roles 	= $this->bo->check_role();
-
-			$approve = array();
-			foreach ($roles as $role => $role_value)
-			{
-				if ($role_value && isset($role_check[$role]))
-				{
-					$approve[] = array
-					(
-						'id'		=> $role,
-						'name'		=> $role_check[$role],
-						'selected'	=> 0
-					);
-				}
-			}
-			return $approve;
-		}
 	}
