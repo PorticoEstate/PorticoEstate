@@ -2019,10 +2019,21 @@
 					$this->db->next_record();
 					$amount = $this->db->f('belop');
 					
-					if(($amount - $split_amount) < 0)
+					if($amount > 0)
 					{
-						phpgwapi_cache::message_set(lang('negative sum'), 'error');
-						continue;
+						if(($amount - $split_amount) <= 0)
+						{
+							phpgwapi_cache::message_set(lang('negative sum'), 'error');
+							continue;
+						}
+					}
+					else
+					{
+						if(($amount - $split_amount) >= 0)
+						{
+							phpgwapi_cache::message_set(lang('positive sum'), 'error');
+							continue;
+						}
 					}
 
 					$metadata = $this->db->metadata($table);
@@ -2032,7 +2043,8 @@
 
 					$value_set = array();
 
-					$skip_values = array('id','pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
+					$skip_values = array('id','project_id', 'pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
+
 					foreach($metadata as $_field)
 					{
 						if(!in_array($_field->name, $skip_values))
