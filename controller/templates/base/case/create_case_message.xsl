@@ -15,7 +15,7 @@
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				
-				<form id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.register_case_message" method="post">
+				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.register_case_message" method="post">
 					<input>
 						<xsl:attribute name="name">check_list_id</xsl:attribute>
 					    <xsl:attribute name="type">hidden</xsl:attribute>
