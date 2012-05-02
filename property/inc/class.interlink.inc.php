@@ -258,6 +258,11 @@
 						'id'			=> $id
 					);
 			}
+			else if($type == '.checklist')
+			{
+				$link = array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $id);
+			}
+
 			return $GLOBALS['phpgw']->link('/index.php',$link);	
 		}
 
