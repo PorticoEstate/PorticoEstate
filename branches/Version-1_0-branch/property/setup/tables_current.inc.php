@@ -1163,7 +1163,7 @@
 		),
 		'fm_ecodimb' => array(
 			'fd' => array(
-				'id' => array('type' => 'int','precision' => '2','nullable' => False),
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '25','nullable' => False)
 			),
 			'pk' => array('id'),
@@ -1184,7 +1184,7 @@
 		'fm_ecodimb_role_user' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-				'ecodimb' => array('type' => 'int','precision' => '2','nullable' => False),
+				'ecodimb' => array('type' => 'int','precision' => '4','nullable' => False),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'role_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'default' => array('type' => 'int','precision' => '2','nullable' => true),
