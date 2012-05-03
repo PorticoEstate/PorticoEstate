@@ -1096,6 +1096,18 @@
 			return $values;
 		}
 
+		function get_default_dimb_role_user($role_id, $dimb)
+		{
+			$dimb		= (int) $dimb;
+			$role_id	= (int) $role_id;
+			$sql = "SELECT user_id FROM fm_ecodimb_role_user"
+			." WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND expired_on IS NULL AND default_user = 1";
+//_debug_array($sql);
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return (int)$this->db->f('user_id');
+		}
+
 		function check_count($voucher_id)
 		{
 
