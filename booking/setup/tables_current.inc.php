@@ -640,6 +640,7 @@
 			'fd' => array(
 				'id' 							=> array('type' => 'auto', 'nullable' => False),
 				'filename'				  	=> array('type' => 'text'),
+				'log_filename'				  	=> array('type' => 'text'),
 				'type'				   	=> array('type' => 'text', 'nullable' => False),
 				'total_cost' 				=> array('type' => 'decimal','precision' => '10', 'scale'=>'2', 'nullable' => False),
 				'total_items' 				=> array('type' => 'int','precision' => '4','nullable' => False),

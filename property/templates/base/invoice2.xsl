@@ -98,8 +98,6 @@
 					<xsl:call-template name="msgbox"/>
 				</xsl:when>
 			</xsl:choose>
-
-				<div id="receipt"></div>
 				<div class="body">
 					<div id="voucher_details">
 						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
@@ -575,6 +573,7 @@
 	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />
+	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 	<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
 </xsl:template>

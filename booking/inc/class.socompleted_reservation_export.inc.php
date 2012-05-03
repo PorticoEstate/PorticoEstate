@@ -13,6 +13,11 @@
 		
 		function __construct()
 		{
+			$this->event_so = CreateObject('booking.soevent');
+			$this->allocation_bo = CreateObject('booking.boallocation');
+			$this->booking_bo = CreateObject('booking.bobooking');
+			$this->event_bo = CreateObject('booking.boevent');
+			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->completed_reservation_so = CreateObject('booking.socompleted_reservation');
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
@@ -596,6 +601,9 @@
 			//$orders = array();
 			$export_info = array();
 			$output = array();
+			$log = array();
+
+			$log[] = 'Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp';
 
 			/* NOTE: The specification states that values of type date
 			 * should be left padded with spaces. The example file,
@@ -640,13 +648,22 @@
 			$stored_header = array();			
 			$line_no = 0;
             $header_count = 0;
+			$log_order_id = '';
+			$log_customer_name = '';
+			$log_customer_nr = '';
+			$log_buidling = '';
+			
+			$internal = false;
+
 			foreach($reservations as &$reservation) {
+
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
 				}
-				$type = $reservation['customer_type'];
 
-				if (($stored_header == array()) || ($stored_header['tekst2'] != $this->get_customer_identifier_value_for($reservation)))
+				$type = $reservation['customer_type'];
+	
+				if ($stored_header == array() || $stored_header['tekst2'] != $this->get_customer_identifier_value_for($reservation))
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
@@ -682,13 +699,13 @@
 					}
 				
 					//Nøkkelfelt, kundens personnr/orgnr.
+					$stored_header['tekst2'] = $this->get_customer_identifier_value_for($reservation);
+
 		            if ($type == 'internal') {
 						$header['tekst2'] = str_pad(substr($config->config_data['organization_value'], 0, 12), 12, ' ');
-						$stored_header['tekst2'] = $config->config_data['organization_value'];
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 		            } else {
 						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$stored_header['tekst2'] = $this->get_customer_identifier_value_for($reservation);
 		            }
 
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
@@ -793,6 +810,39 @@
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
 
+					$log_order_id = $order_id;
+
+		            if ($type == 'internal') {
+						$log_customer_nr = $header['tekst2'].' '.$header['ext_ord_ref'];
+					} else {
+						$log_customer_nr = $header['tekst2'];
+					}
+					if(!empty($reservation['organization_id'])) {
+						$org = $this->organization_bo->read_single($reservation['organization_id']);				
+						$log_customer_name = $org['name'];
+					} else {
+						$data = $this->event_so->get_org($reservation['customer_organization_number']);
+						if(!empty($data['id'])) {
+							$log_customer_name = $data['name'];
+						} else {
+							if($reservation['reservation_type'] == 'event') {
+								$data = $this->event_bo->read_single($reservation['reservation_id']);
+								$log_customer_name = $data['contact_name'];
+#							} elseif ($reservation['reservation_type'] == 'booking') {
+#								$data = $this->booking_bo->read_single($reservation['reservation_id']);
+#								error_log('b'.$data['id']." ".$data['group_id']);
+#							} else {
+#								$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+#								error_log('a'.$data['id']." ".$data['organization_id']);
+							}
+						}
+					}
+
+					$log_buidling = $reservation['building_name'];
+					$log_cost = $reservation['cost'];
+					$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
+
+					$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
 				} else {
 
 					//item level
@@ -872,6 +922,12 @@
 					//$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+
+					$log_cost = $reservation['cost'];
+					$log_varelinjer_med_dato = $reservation['article_description'].' - '.$reservation['description'];
+
+					$log[] = $log_order_id.';'.$log_customer_name.' - '.$log_customer_nr.';'.$log_varelinjer_med_dato.';'.$log_buidling.';'.$log_cost;
+
 				}
 			}
 			
@@ -879,7 +935,7 @@
 				return null;
 			}
 		
-			return array('data' => implode("\n", $output), 'info' => $export_info, 'header_count' => $header_count);
+			return array('data' => implode("\n", $output), 'data_log' => implode("\n", $log), 'info' => $export_info, 'header_count' => $header_count);
 		}
 		
 		protected function get_agresso_row_template() {

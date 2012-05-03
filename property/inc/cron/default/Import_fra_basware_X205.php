@@ -43,9 +43,6 @@
 		var $splitt=0;
 		var $soXport;
 		var $invoice;
-		var $bestiller = 85; //cat_id for rolle
-		var $attestant = 150; //cat_id for rolle
-		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
 		var $debug = false;
 		var $skip_import = false;
@@ -810,13 +807,10 @@
 				$toarray[] = $prefs['email'];
 			}
 */
-			$criteria_supervisor				= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->attestant); // attestere
-			$supervisor_contact_id				= $this->responsible->get_responsible($criteria_supervisor);
-			if($supervisor_contact_id)
+			$supervisor_user_id				= $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
+			if($supervisor_user_id)
 			{
-				$supervisor_user_id					= $this->responsible->get_contact_user_id($supervisor_contact_id);
 				$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
-
 /*
 				$prefs = $this->bocommon->create_preferences('property', $supervisor_user_id);
 				if($prefs['email'])
@@ -826,11 +820,9 @@
 */
 			}
 
-			$criteria_budget_responsible		= array('ecodimb' => $order_info['dimb'], 'cat_id' => $this->budsjettansvarlig); //anviser
-			$budget_responsible_contact_id		= $this->responsible->get_responsible($criteria_budget_responsible);
-			if($budget_responsible_contact_id)
+			$budget_responsible_user_id			= $this->invoice->get_default_dimb_role_user(3, $order_info['dimb']);
+			if($budget_responsible_user_id)
 			{
-				$budget_responsible_user_id			= $this->responsible->get_contact_user_id($budget_responsible_contact_id);
 				$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
 			}
 

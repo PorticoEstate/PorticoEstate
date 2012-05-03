@@ -24,6 +24,7 @@
 					'id'				=> array('type' => 'int'),
 					'type' 			=> array('type' => 'string', 'required' => true, 'query' => true),
 					'filename' 		=> array('type' => 'string'),
+					'log_filename' 		=> array('type' => 'string'),
 					'total_cost'	=> array('type' => 'decimal', 'required' => true),
 					'total_items'	=> array('type' => 'int', 'required' => true),
 					key(booking_socommon::$AUTO_CREATED_ON) => current(booking_socommon::$AUTO_CREATED_ON),
@@ -67,6 +68,14 @@
 		public function get_file($entity_file) {
 			if (isset($entity_file['filename']) && !empty($entity_file['filename'])) {
 				return $this->file_storage->get($entity_file['filename']);
+			}
+			
+			return null;
+		}
+
+		public function get_logfile($entity_file) {
+			if (isset($entity_file['log_filename']) && !empty($entity_file['log_filename'])) {
+				return $this->file_storage->get($entity_file['log_filename']);
 			}
 			
 			return null;
@@ -121,15 +130,16 @@
 						if (!is_null($export_result['export'])) {
 							$export_infos[$export_type][] = $export_result['export']['info'];	
 						}
+
                         if ($export_type == 'external') {
 							$export_result['total_items'] = $export_result['export']['header_count'];	
+							$export_log = $export_result['export']['data_log'];	
                         }
 						
 						$export_configurations[$export_type][$export['id']] = $conf;
 						$total_items[$export_type] += $export_result['total_items'];
 						$total_cost[$export_type] += $export_result['total_cost'];
 					}
-					
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
 				
@@ -147,23 +157,29 @@
 					$entity_export_file['id'] = $receipt['id'];
 				
 					$entity_export_file['filename'] = 'export_'.$export_type.'_'.$entity_export_file['id'].'.'.$this->file_type_for_export_type($export_type);
-				
 					$export_file = new booking_storage_object($entity_export_file['filename']);
 					$export_files[] = $export_file;
 					
 					$export_file->set_data($export_data[$export_type]);
-					
+			
 					$this->file_storage->attach($export_file)->persist();
-
+                                            
+                    if ($export_type == 'external') {
+    					$entity_export_file['log_filename'] = 'log_'.$export_type.'_'.$entity_export_file['id'].'.csv';
+    					$log_export_file = new booking_storage_object($entity_export_file['log_filename']);
+    					$log_export_files[] = $log_export_file;
+    					$log_export_file->set_data($export_log);
+    					$this->file_storage->attach($log_export_file)->persist();
+                    }
 					$this->update($entity_export_file); //Save the generated file name
 					$entity_export_files[$entity_export_file['id']] = $entity_export_file;
 				
 					foreach($export_configurations[$export_type] as $export_id => $conf) {
-						$export_conf_updates[] = sprintf(
-							"UPDATE bb_completed_reservation_export_configuration SET export_file_id=%s WHERE id=%s",
-							$entity_export_file['id'],
-							$conf['id']
-						);
+               			$export_conf_updates[] = sprintf(
+		    				"UPDATE bb_completed_reservation_export_configuration SET export_file_id=%s WHERE id=%s",
+		    				$entity_export_file['id'],
+		    				$conf['id']
+		    			);
 					}
 					
 					$associated_reservation_count = 0;

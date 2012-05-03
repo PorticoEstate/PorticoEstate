@@ -99,11 +99,11 @@
 		{
 			if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval']== 1)
 			{
-				$sql= "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE approved_amount = '0.00' OR (budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL) ORDER BY bilagsnr ASC";
+				$sql= "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE approved_amount = '0.00' OR budsjettsigndato IS NOT NULL ORDER BY bilagsnr ASC";
 			}
 			else
 			{
-				$sql= "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE  approved_amount = '0.00' OR ( budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL ) ORDER BY bilagsnr ASC";
+				$sql= "SELECT DISTINCT fm_ecobilag.bilagsnr FROM fm_ecobilag {$this->join} fm_ecobilag_sum_view ON fm_ecobilag.bilagsnr = fm_ecobilag_sum_view.bilagsnr WHERE  approved_amount = '0.00' OR ( budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) ) ORDER BY bilagsnr ASC";
 			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers_step1 = array();

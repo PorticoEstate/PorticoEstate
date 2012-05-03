@@ -6249,6 +6249,7 @@
 	function property_upgrade0_9_17_642()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb','id', array('type' => 'int','precision' => '4','nullable' => false));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','splitt', array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','splitt', array('type' => 'int','precision' => '4','nullable' => True));
 
@@ -6273,7 +6274,7 @@
 			'fm_ecodimb_role_user', array(
 				'fd' => array(
 					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
-					'ecodimb' => array('type' => 'int','precision' => '2','nullable' => False),
+					'ecodimb' => array('type' => 'int','precision' => '4','nullable' => False),
 					'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
 					'role_id' => array('type' => 'int','precision' => '4','nullable' => False),
 					'default_user' => array('type' => 'int','precision' => '2','nullable' => true),
