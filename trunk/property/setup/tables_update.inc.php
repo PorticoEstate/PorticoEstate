@@ -6326,3 +6326,26 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.643';
+	function property_upgrade0_9_17_643()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+			. ' SELECT fm_orders.id as order_id, sum(godkjentbelop) AS actual_cost FROM fm_ecobilagoverf join fm_orders ON fm_ecobilagoverf.pmwrkord_code = fm_orders.id GROUP BY fm_orders.id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.644';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

@@ -535,6 +535,19 @@
 							</tr>
 							<tr>
 								<td valign="top">
+									<xsl:value-of select="lang_addition_percentage"/>
+								</td>
+								<td>
+									<input type="text" name="values[addition_percentage]" value="{value_addition_percentage}" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_addition_percentage_statustext"/>
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ % ]
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
 									<xsl:value-of select="lang_budget"/>
 								</td>
 								<td>
@@ -547,14 +560,6 @@
 								</td>
 								<td>
 									<input type="text" name="values[addition_rs]" value="{value_addition_rs}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_addition_percentage"/>
-								</td>
-								<td>
-									<input type="text" name="values[addition_percentage]" value="{value_addition_percentage}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_addition_percentage_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ % ]
 								</td>
 							</tr>
 							<tr>

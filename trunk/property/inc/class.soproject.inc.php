@@ -668,7 +668,7 @@
 					$project['actual_cost']		= 0;
 					$project['billable_hours']	= 0;
 
-					$sql_workder  = 'SELECT contract_sum, calculation, budget,'
+					$sql_workder  = 'SELECT contract_sum, addition, calculation, budget,'
 					. ' (fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost) as actual_cost,'
 					. ' billable_hours,closed'
 					. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
@@ -685,7 +685,7 @@
 						}
 						else if($this->db->f('contract_sum') > 0)
 						{
-							$_sum = $this->db->f('contract_sum');
+							$_sum = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 						}
 						else if($this->db->f('calculation') > 0)
 						{
@@ -850,9 +850,13 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,contract_sum,"
-				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
-				." FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
+			$this->db->query("SELECT fm_workorder.title, fm_orders_actual_cost_view.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
+				. " fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
+				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->left_join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id"
+				. " WHERE project_id={$project_id}");
+
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
@@ -861,13 +865,13 @@
 					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
 					'calculation'		=> $this->db->f('calculation'),
+					'actual_cost'		=> $this->db->f('actual_cost'),
 					'vendor_id'			=> $this->db->f('vendor_id'),
-					'act_mtrl_cost'		=> $this->db->f('act_mtrl_cost'),
-					'act_vendor_cost'	=> $this->db->f('act_vendor_cost'),
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
-					'contract_sum'		=> (int)$this->db->f('contract_sum')
+					'contract_sum'		=> (int)$this->db->f('contract_sum'),
+					'addition_percentage'	=> (int)$this->db->f('addition')
 				);
 			}
 			return $budget;
@@ -1552,7 +1556,7 @@
 			$config->read();
 			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum"
+			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
@@ -1567,7 +1571,7 @@
 
 				if($this->db->f('contract_sum') > 0)
 				{
-					$_amount = $this->db->f('contract_sum');
+					$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 				}
 				else if($this->db->f('calculation') > 0)
 				{

@@ -1119,7 +1119,8 @@
 
 			if ( abs((int)$workorder['contract_sum']) > 0)
 			{
-				$combined_cost = (int)$workorder['contract_sum'];
+				$addition = 1 + ((int)$workorder['addition_percentage']/100);
+				$combined_cost = (int)$workorder['contract_sum'] * $addition;
 			}
 			else if ($this->db->f('calculation') > 0)
 			{
