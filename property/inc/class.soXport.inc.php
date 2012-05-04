@@ -765,7 +765,7 @@
 			$orders = array();
 			if($orders_affected)
 			{
-				$sql = 'SELECT order_id, actual_cost FROM fm_orders_actual_cost_view WHERE order_id IN (' . implode(',' array_keys($orders_affected)) . ')';
+				$sql = 'SELECT order_id, actual_cost FROM fm_orders_actual_cost_view WHERE order_id IN (' . implode(',', array_keys($orders_affected)) . ')';
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				while ($this->db->next_record())
