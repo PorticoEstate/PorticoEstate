@@ -42,6 +42,7 @@
 		var $client_code = 14;
 		protected $connection = false;
 		protected $global_lock = false;
+		protected $orders_affected = array();
 
 		function  __construct()
 		{
@@ -456,6 +457,8 @@
 
 				if($line['pmwrkord_code'])
 				{
+					$orders_affected[$line['pmwrkord_code']] = true;
+
 					$Belop = sprintf("%01.2f", $line['ordrebelop'])*100;
 
 					if ($line['dimd'] % 2 == 0)
@@ -732,6 +735,8 @@
 
 				if($line['order_id'])
 				{
+					$orders_affected[$line['order_id']] = true;
+
 					//Oppdater beløp på arbeidsordre
 					if ($download=='on')
 					{
@@ -891,6 +896,8 @@
 
 				if($transfer_ok)
 				{
+					$this->soXport->update_actual_cost_from_archive($this->orders_affected);
+
 					if ( !$this->global_lock )
 					{
 						$this->db->transaction_commit();

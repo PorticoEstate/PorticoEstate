@@ -79,43 +79,70 @@
 				. time() . "', reg_info='" . base64_encode(serialize($fields))
 				. "' WHERE reg_lid='$account_lid'",__LINE__,__FILE__);
 
-			if ($this->config['activate_account'] == 'pending_approval' || $this->config['activate_account'] =='immediately')
+			if ($this->config['activate_account'] == 'pending_approval' )
 			{
 				return $this->reg_id;
 			}
 
-			$smtp = createobject('phpgwapi.send');
-
-			$GLOBALS['phpgw']->template->set_file(array(
-				'message' => 'confirm_email.tpl'
-			));
-
-			if ($fields['n_given'])
+			if($this->config['activate_account'] =='immediately')
 			{
-				$GLOBALS['phpgw']->template->set_var ('firstname', $fields['n_given'] . ' ');
+				$url = $GLOBALS['phpgw']->link('/login.php',array( 'logindomain' => $GLOBALS['phpgw_info']['user']['domain']),false,true);
+				$body = <<<HTML
+
+	Hi {$info['n_given']} {$info['n_family']},
+
+	This is a confirmation email for your new account on {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
+	Click on the following link to log into your account. 
+	
+	<a href='$url'>Login.</a>
+
+	User: {$account_lid}
+	Password:{$fields['passwd']}
+
+	If you did not request this account, simply ignore this message.
+	{$support_email_text} {$support_email}
+	
+HTML;
+			$body = nl2br($body);
 			}
-
-			if ($fields['n_family'])
+			else
 			{
-				$GLOBALS['phpgw']->template->set_var ('lastname', $fields['n_family'] . ' ');
-			}
+
+				$GLOBALS['phpgw']->template->set_file(array(
+					'message' => 'confirm_email.tpl'
+				));
+
+				if ($fields['n_given'])
+				{
+					$GLOBALS['phpgw']->template->set_var ('firstname', $fields['n_given'] . ' ');
+				}
+
+				if ($fields['n_family'])
+				{
+					$GLOBALS['phpgw']->template->set_var ('lastname', $fields['n_family'] . ' ');
+				}
 
 
-			$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.step4', 'reg_id'=> $this->reg_id, 'logindomain' => $_REQUEST['logindomain']),false,true);
-			$GLOBALS['phpgw']->template->set_var('activate_url',"</br><a href='$url'>Link.</a></br>");
+				$url = $GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=> 'registration.boreg.step4', 'reg_id'=> $this->reg_id, 'logindomain' => $_REQUEST['logindomain']),false,true);
+				$GLOBALS['phpgw']->template->set_var('activate_url',"</br><a href='$url'>Link.</a></br>");
 
-			if ($this->config['support_email'])
-			{
-				$GLOBALS['phpgw']->template->set_var ('support_email_text', lang ('Report all problems and abuse to'));
-				$GLOBALS['phpgw']->template->set_var ('support_email', $this->config['support_email']);
+				if ($this->config['support_email'])
+				{
+					$GLOBALS['phpgw']->template->set_var ('support_email_text', lang ('Report all problems and abuse to'));
+					$GLOBALS['phpgw']->template->set_var ('support_email', $this->config['support_email']);
+				}
+
+				$body = $GLOBALS['phpgw']->template->fp('out','message');
 			}
 
 			$subject = $this->config['subject_confirm'] ? lang($this->config['subject_confirm']) : lang('Account registration');
 			$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
 
+			$smtp = createobject('phpgwapi.send');
+
 			try
 			{
-				$smtp->msg('email',$fields['email'],$subject,$GLOBALS['phpgw']->template->fp('out','message'),'','','',$noreply,'','html');
+				$smtp->msg('email',$fields['email'],$subject,$body,'','','',$noreply,'','html');
 			}
 			catch(Exception $e)
 			{

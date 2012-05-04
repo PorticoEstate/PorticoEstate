@@ -80,6 +80,10 @@ $(document).ready(function(){
 	});
 
 	$("#workorder_cancel").live("submit", function(e){
+		if($("#lean").val() == 0)
+		{
+			return;
+		}
 		e.preventDefault();
 		parent.closeJS_remote();
 //		parent.hide_popupBox();

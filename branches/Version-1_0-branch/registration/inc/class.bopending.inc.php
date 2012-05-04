@@ -277,8 +277,6 @@
 				if($so->create_account($reg_info['reg_lid'],$reg_info['reg_info']))
 				{
 					$info = unserialize(base64_decode($reg_info['reg_info']));
-					unset($info['passwd']);
-					unset($info['passwd_confirm']);
 
 					$body = <<<HTML
 
@@ -289,10 +287,16 @@
 	
 	<a href='$url'>Login.</a>
 	
+	User: {$reg_info['reg_lid']}
+	Password:{$info['passwd']}
+
 	If you did not request this account, simply ignore this message.
 	{$support_email_text} {$support_email}
 	
 HTML;
+					unset($info['passwd']);
+					unset($info['passwd_confirm']);
+
 					try
 					{
 //						$info['email'] = 'sigurd.nes@bergen.kommune.no';
