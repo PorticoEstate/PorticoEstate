@@ -6336,6 +6336,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_workorder SET combined_cost = 0 WHERE combined_cost IS NULL");
 
 		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
 			. ' SELECT fm_orders.id as order_id, sum(godkjentbelop) AS actual_cost FROM fm_ecobilagoverf join fm_orders ON fm_ecobilagoverf.pmwrkord_code = fm_orders.id GROUP BY fm_orders.id';
