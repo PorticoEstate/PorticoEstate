@@ -1556,7 +1556,7 @@
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
-			. " GROUP BY fm_workorder.id, fm_workorder.start_date ORDER BY start_date ASC";
+			. " GROUP BY fm_workorder.id, fm_workorder.start_date,fm_workorder.addition ORDER BY start_date ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 
