@@ -228,57 +228,6 @@ HTML;
 			$this->template->set_block ('form', 'other_fields_proto', 'other_fields_list');
 			reset ($this->fields);
 			
-/*
-			$this->fields['loc1'] = array
-			(
-				'field_name' => 'loc1',
-				'field_text' => 'Eiendom',
-				'field_type' => 'location',
-				'field_values' => '',
-				'field_required' => 'Y',
-				'field_order' => 0
-        	);
-
-			$this->fields['loc2'] = array
-			(
-				'field_name' => 'loc2',
-				'field_text' => 'Bygning',
-				'field_type' => 'location',
-				'field_values' => '',
-				'field_required' => 'N',
-				'field_order' => 0
-        	);
-
-			$this->fields['loc3'] = array
-			(
-				'field_name' => 'loc3',
-				'field_text' => 'Etasje',
-				'field_type' => 'location',
-				'field_values' => '',
-				'field_required' => 'N',
-				'field_order' => 0
-        	);
-
-			$this->fields['loc4'] = array
-			(
-				'field_name' => 'loc4',
-				'field_text' => 'Sone',
-				'field_type' => 'location',
-				'field_values' => '',
-				'field_required' => 'N',
-				'field_order' => 0
-        	);
-
-			$this->fields['loc5'] = array
-			(
-				'field_name' => 'loc5',
-				'field_text' => 'Rom',
-				'field_type' => 'location',
-				'field_values' => '',
-				'field_required' => 'N',
-				'field_order' => 0
-        	);
-*/
 //_debug_array($this->fields);
 			foreach ($this->fields as $num => $field_info)
 			{
