@@ -663,11 +663,9 @@
 					$project['actual_cost']		= 0;
 					$project['billable_hours']	= 0;
 
-					$sql_workder  = 'SELECT contract_sum, addition, calculation, budget,'
-					. ' fm_orders_actual_cost_view.actual_cost,'
+					$sql_workder  = 'SELECT contract_sum, addition, calculation, budget, actual_cost,'
 					. ' billable_hours,closed'
 					. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-					. " {$this->left_join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id"
 					. " WHERE project_id = '{$project['project_id']}'";
 
 					$this->db->query($sql_workder);
@@ -846,11 +844,10 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT fm_workorder.title, fm_orders_actual_cost_view.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
 				. " fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " {$this->left_join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id"
 				. " WHERE project_id={$project_id}");
 
 			while ($this->db->next_record())
@@ -1832,18 +1829,15 @@
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
+					$actual_cost = ',actual_cost';
 
 					$join_method = "{$this->join} {$status_table} ON  {$table}.status = {$status_table}.id";
 					if($paid)
 					{
 						$join_method .=  " {$this->join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id";
-					}
-					else
-					{
-						$join_method .=  " {$this->left_join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id";
+						$actual_cost = ',fm_orders_actual_cost_view.actual_cost';
 					}
 
-					$actual_cost = ',fm_orders_actual_cost_view.actual_cost';
 					$this->_update_status_workorder($execute, $status_new, $ids);
 					$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
 					. " {$join_method}"

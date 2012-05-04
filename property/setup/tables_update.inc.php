@@ -6303,7 +6303,7 @@
 				'ecodimb'		=> $GLOBALS['phpgw_setup']->oProc->f('ecodimb'),
 				'user_id'		=> $GLOBALS['phpgw_setup']->oProc->f('account_id'),
 				'role_id'		=> $GLOBALS['phpgw_setup']->oProc->f('responsibility_id') == 2 ? 3 : 2,
-				'default_user'		=> $GLOBALS['phpgw_setup']->oProc->f('responsibility_id') == 2 ? 1 : '',
+				'default_user'	=> $GLOBALS['phpgw_setup']->oProc->f('responsibility_id') == 2 ? 1 : '',
 				'active_from'	=> $GLOBALS['phpgw_setup']->oProc->f('active_from'),
 				'active_to'		=> $GLOBALS['phpgw_setup']->oProc->f('active_to'),
 				'created_on'	=> $GLOBALS['phpgw_setup']->oProc->f('created_on'),
@@ -6346,6 +6346,51 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.644';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.644';
+	function property_upgrade0_9_17_644()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','actual_cost',array(
+			'type'		=> 'decimal',
+			'precision'	=> '20',
+			'scale'		=> '2',
+			'nullable'	=> true,
+			'default'	=> '0.00'
+			)
+		);
+
+		$sql = 'SELECT order_id, actual_cost FROM fm_orders_actual_cost_view';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$orders = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[] = array
+			(
+				'order_id'		=>	$GLOBALS['phpgw_setup']->oProc->f('order_id'),
+				'actual_cost'	=>	$GLOBALS['phpgw_setup']->oProc->f('actual_cost')
+			);
+		}
+		foreach ($orders as $order)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.645';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

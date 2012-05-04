@@ -38,6 +38,7 @@
 		
 		var $old_files_deleted;
 		var $debug;
+		protected $orders_affected = array();
 		
 		function export_conv()
 		{
@@ -390,6 +391,8 @@
 		
 				if($BilagOverf[$i]['pmwrkord_code'])
 				{
+					$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
+
 					$Belop = sprintf("%01.2f", $BilagOverf[$i]['ordrebelop'])*100;
 				
 					if ($BilagOverf[$i]['dimd'] % 2 == 0)
@@ -698,6 +701,8 @@
 					if($oRsUnderbilag[$i]['pmwrkord_code'])
 					{
 		
+						$orders_affected[$BilagOverf[$i]['pmwrkord_code']] = true;
+
 						//Oppdater beløp på arbeidsordre
 						if ($download=='on' && !$pre_transfer)
 						{
@@ -916,6 +921,8 @@
 
 				if($transfer_ok)
 				{
+					$this->soXport->update_actual_cost_from_archive($this->orders_affected);
+
 					$this->db->transaction_commit();
 					$message = 'Ankomstregistrering: periode: '.$periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
 				}

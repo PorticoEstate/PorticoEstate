@@ -274,9 +274,6 @@
 				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
 				$paranthesis .='(';
 
-				$joinmethod .= " {$this->left_join} fm_orders_actual_cost_view ON (fm_workorder.id = fm_orders_actual_cost_view.order_id))";
-				$paranthesis .='(';
-
 				$cols .= ',fm_vendor.org_name';
 				$cols_return[] = 'org_name';
 				$uicols['input_type'][]		= 'hidden';
@@ -303,8 +300,7 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= true;
 
-//				$cols .= ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
-//				$cols .= ',fm_orders_actual_cost_view.actual_cost';
+				$cols .= ',fm_workorder.actual_cost';
 				$cols_return[] = 'actual_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'actual_cost';
@@ -315,7 +311,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
-				$uicols['sortable'][]		= false;
+				$uicols['sortable'][]		= true;
 
 				$joinmethod .= " {$this->left_join} fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
@@ -418,7 +414,7 @@
 						$ordermethod = " ORDER BY fm_workorder.id {$sort}";
 						break;
 					case 'actual_cost':
-						$order_field = ',fm_orders_actual_cost_view.actual_cost';
+						$order_field = ',fm_workorder.actual_cost';
 						break;
 					case 'address':
 						if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
@@ -508,7 +504,7 @@
 			{
 				$filtermethod .= " $where fm_wo_hours_category.id=$wo_hour_cat_id ";
 				$where= 'AND';
-				$group_method = " group by fm_project.id,{$location_table}.location_code,fm_workorder.id,workorder_id,title,fm_workorder.status,fm_workorder.entry_date,user_lid,fm_workorder.vendor_id,project_owner,{$location_table}.address,fm_vendor.org_name,fm_workorder.combined_cost,fm_orders_actual_cost_view.actual_cost,fm_workorder.act_vendor_cost";
+				$group_method = " group by fm_project.id,{$location_table}.location_code,fm_workorder.id,workorder_id,title,fm_workorder.status,fm_workorder.entry_date,user_lid,fm_workorder.vendor_id,project_owner,{$location_table}.address,fm_vendor.org_name,fm_workorder.combined_cost,fm_workorder.actual_cost,fm_workorder.act_vendor_cost";
 			}
 
 			if ($b_group)
