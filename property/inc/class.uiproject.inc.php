@@ -1661,6 +1661,7 @@
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
+//_debug_array($values['workorder_budget']);die();
 			$datavalues[1] = array
 				(
 					'name'					=> "1",
@@ -1679,7 +1680,8 @@
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),

@@ -147,6 +147,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_sum(tmp_sum3);
+		td_empty(1);
 		td_sum(tmp_sum4);
 		td_empty(5);
 

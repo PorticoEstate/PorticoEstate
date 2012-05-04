@@ -511,21 +511,22 @@
 
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
-				$sum_workorder_budget= $sum_workorder_budget+$workorder_data[$i]['budget'];
-				$sum_deviation= $sum_deviation+$workorder_data[$i]['deviation'];
-				$sum_workorder_calculation= $sum_workorder_calculation+$workorder_data[$i]['calculation'];
-				$sum_workorder_actual_cost= $sum_workorder_actual_cost+$workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
+				$sum_workorder_budget+= $workorder_data[$i]['budget'];
+				$sum_deviation+= $workorder_data[$i]['deviation'];
+				$sum_workorder_calculation+= $workorder_data[$i]['calculation'];
+				$sum_workorder_actual_cost+= $workorder_data[$i]['actual_cost'];
 
 				$values['workorder_budget'][$i]['title']=$workorder_data[$i]['title'];
 				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
-				$values['workorder_budget'][$i]['contract_sum']=number_format($workorder_data[$i]['contract_sum'], 2, ',', '');
+				$values['workorder_budget'][$i]['contract_sum']=(float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
 				$values['workorder_budget'][$i]['budget']= $workorder_data[$i]['budget'];
-				$values['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
+				$values['workorder_budget'][$i]['calculation']=(float)number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
 				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
-				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
+				$values['workorder_budget'][$i]['actual_cost'] = (float)number_format($workorder_data[$i]['actual_cost'] ? $workorder_data[$i]['actual_cost'] : 0, 2, ',', '');
 				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
 //				$values['workorder_budget'][$i]['paid_percent'] = (int)$workorder_data[$i]['paid_percent'];
+				$values['workorder_budget'][$i]['addition_percentage'] = $workorder_data[$i]['addition_percentage'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
