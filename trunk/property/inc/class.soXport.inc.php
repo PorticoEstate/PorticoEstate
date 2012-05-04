@@ -760,6 +760,30 @@
 		}
 
 
+		public function update_actual_cost_from_archive($orders_affected)
+		{
+			$orders = array();
+			if($orders_affected)
+			{
+				$sql = 'SELECT order_id, actual_cost FROM fm_orders_actual_cost_view WHERE order_id IN (' . implode(',' array_keys($orders_affected)) . ')';
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				while ($this->db->next_record())
+				{
+					$orders[] = array
+					(
+						'order_id'		=>	$this->db->f('order_id'),
+						'actual_cost'	=>	$this->db->f('actual_cost')
+					);
+				}
+
+				foreach ($orders as $order)
+				{
+					$this->db->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
+				}
+			}
+		}
+
    	   	// Oppdater beløp på arbeidsordre
    	   	// operator="-" ved tilbakerulling
 		public function correct_actual_cost($order_id, $amount, $actual_cost_field, $operator)

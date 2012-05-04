@@ -505,6 +505,7 @@
 				'deviation' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
 				'act_mtrl_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'act_vendor_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'actual_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'addition' => array('type' => 'int','precision' => '4','nullable' => True),
 				'rig_addition' => array('type' => 'int','precision' => '4','nullable' => True),
 				'account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
