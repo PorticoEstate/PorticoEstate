@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package registration
- 	* @version $Id: class.uicheck_list.inc.php 8628 2012-01-21 10:42:05Z vator $
+ 	* @version $Id$
 	*/
 
 	phpgw::import_class('phpgwapi.yui');
