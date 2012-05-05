@@ -1,4 +1,4 @@
-  <!-- $Id: event_form.xsl 8281 2011-12-13 09:24:03Z sigurdne $ -->
+  <!-- $Id$ -->
 	<xsl:template name="event_view">
 		<xsl:apply-templates select="event_data"/>
 	</xsl:template>

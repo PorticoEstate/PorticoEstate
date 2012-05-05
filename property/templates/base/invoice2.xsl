@@ -1,4 +1,4 @@
-<!-- $Id: pending_vouchers.xsl 8854 2012-02-14 07:54:40Z vator $ -->
+<!-- $Id$ -->
 
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
