@@ -213,6 +213,7 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 						),
 */
+/*
 						'dimb_role'	=> array
 						(
 							'text'	=> lang('dimb roles'),
@@ -222,6 +223,12 @@
 						(
 							'text'	=> lang('dimb role user'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'dimb_role_user') )
+						),
+*/
+						'dimb_role_user2' => array
+						(
+							'text'	=> lang('dimb role user'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index') )
 						),
 
 						'accounting_dimd'	=> array
