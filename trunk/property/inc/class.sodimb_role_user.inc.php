@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package registration
- 	* @version $Id: class.uiinvoice2.inc.php 9286 2012-05-05 11:12:02Z sigurdne $
+ 	* @version $Id$
 	*/
 
 

@@ -1,4 +1,4 @@
-<!-- $Id: invoice2.xsl 9286 2012-05-05 11:12:02Z sigurdne $ -->
+<!-- $Id$ -->
 
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
