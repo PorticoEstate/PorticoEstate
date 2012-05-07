@@ -52,6 +52,7 @@
 		{
 			parent::__construct($appname);
 			$this->_db2 = clone($this->_db);			
+			$this->contacts = CreateObject('phpgwapi.contacts');
 		}
 
 		/**
@@ -66,7 +67,6 @@
 		 */
 		public function prepare($values, $appname, $location, $view_only='')
 		{
-			$contacts		= CreateObject('phpgwapi.contacts');
 			$vendor			= CreateObject('property.sogeneric');
 			$vendor->get_location_info('vendor',false);
 
@@ -149,7 +149,7 @@ JS;
 				{
 					if($attributes['value'])
 					{
-						$contact_data					= $contacts->read_single_entry($attributes['value'],array('fn','tel_work','email'));
+						$contact_data					= $this->contacts->read_single_entry($attributes['value'],array('fn','tel_work','email'));
 						$attributes['contact_name']		= $contact_data[0]['fn'];
 						$attributes['contact_email']	= $contact_data[0]['email'];
 						$attributes['contact_tel']		= $contact_data[0]['tel_work'];
@@ -176,10 +176,10 @@ JS;
 				{
 					if($attributes['value'])
 					{
-						$contact_data				= $contacts->get_principal_organizations_data($attributes['value']);
+						$contact_data				= $this->contacts->get_principal_organizations_data($attributes['value']);
 						$attributes['org_name']		= $contact_data[0]['org_name'];
 
-						$comms = $contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
+						$comms = $this->contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
 
 						$comm_data = array();
 						if(is_array($comms))
@@ -475,6 +475,11 @@ JS;
 			}
 
 			$ret = '';
+
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " location_id = {$location_id}";
+
 			switch($data['datatype'])
 			{
 				case 'R':
@@ -488,11 +493,11 @@ JS;
 					}
 					break;
 				case 'AB':
-					$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
+					$contact_data	= $this->contacts->read_single_entry($data['value'],array('fn'));
 					$ret =  $contact_data[0]['fn'];
 					break;
 				case 'ABO':
-					$contact_data	= $contacts->get_principal_organizations_data($data['value']);
+					$contact_data	= $this->contacts->get_principal_organizations_data($data['value']);
 					$ret = $contact_data[0]['org_name'];
 					break;
 				case 'VENDOR':
@@ -552,10 +557,6 @@ JS;
 
 		function translate_value($values, $location_id, $location_count = 0)
 		{
-			$choice_table = 'phpgw_cust_choice';
-			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " location_id = {$location_id}";
-			$contacts = CreateObject('phpgwapi.contacts');
 //			_debug_array($values);die();
 			$location = array();
 			$ret = array();
