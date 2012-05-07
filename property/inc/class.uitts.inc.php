@@ -374,7 +374,7 @@
 			$data = array
 				(
 					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+					'column_list'		=> $this->bo->column_list($selected),
 					'function_msg'		=> $function_msg,
 					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'lang_columns'		=> lang('columns'),
@@ -930,39 +930,16 @@
 			$uicols['descr'][]	= lang('entry date');
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$columns = $this->bo->get_columns();
 
+//_debug_array($custom_cols);die();
 			foreach ($custom_cols as $col)
 			{
 				$uicols['name'][]		= $col;
-				$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$uicols['descr'][]		= $columns[$col]['name'];
 			}
 
 
-			if( $order_read )
-			{
-				$uicols['name'][] = 'order_id';
-				$uicols['descr'][]	= lang('order id');
-//				$uicols['name'][] = 'vendor';
-//				$uicols['descr'][]	= lang('vendor');
-			}
-
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
-			{
-				$uicols['name'][] = 'estimate';
-				$uicols['descr'][]	= lang('estimate');
-				$uicols['name'][] = 'actual_cost';
-				$uicols['descr'][]	= lang('actual cost');
-			}
-
-/*
-			if( $this->show_finnish_date )
-			{
-				$uicols['name'][] = 'finnish_date';
-				$uicols['descr'][]	= lang('finnish date');
-				$uicols['name'][] = 'delay';
-				$uicols['descr'][]	= lang('delay');
-			}
-*/
 			$uicols['name'][] = 'child_date';
 			$uicols['descr'][]	= lang('child date');
 			$uicols['name'][] = 'link_view';
