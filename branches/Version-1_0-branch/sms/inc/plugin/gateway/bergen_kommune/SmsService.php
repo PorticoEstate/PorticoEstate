@@ -112,6 +112,11 @@
 		 * @access public
 		 * @var string
 		 */
+		public $tlfavsender;
+		/**
+		 * @access public
+		 * @var string
+		 */
 		public $tekst;
 		/**
 		 * @access public
