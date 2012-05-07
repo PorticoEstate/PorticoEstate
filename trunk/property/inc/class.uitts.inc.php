@@ -940,31 +940,6 @@
 			}
 
 
-			if( $order_read )
-			{
-				$uicols['name'][] = 'order_id';
-				$uicols['descr'][]	= lang('order id');
-//				$uicols['name'][] = 'vendor';
-//				$uicols['descr'][]	= lang('vendor');
-			}
-
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
-			{
-				$uicols['name'][] = 'estimate';
-				$uicols['descr'][]	= lang('estimate');
-				$uicols['name'][] = 'actual_cost';
-				$uicols['descr'][]	= lang('actual cost');
-			}
-
-/*
-			if( $this->show_finnish_date )
-			{
-				$uicols['name'][] = 'finnish_date';
-				$uicols['descr'][]	= lang('finnish date');
-				$uicols['name'][] = 'delay';
-				$uicols['descr'][]	= lang('delay');
-			}
-*/
 			$uicols['name'][] = 'child_date';
 			$uicols['descr'][]	= lang('child date');
 			$uicols['name'][] = 'link_view';
