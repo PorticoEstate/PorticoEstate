@@ -535,7 +535,7 @@
 				}
 				else if (!ctype_digit($_order_id))
 				{
-					$merknad = "bestillingsnummeret er på feil format: '{$_order_id}'";
+					$merknad = "bestillingsnummeret er på feil format: {$_order_id}";
 					$this->receipt['error'][] = array('msg' => $merknad);
 				}
 				else if (!$order_info['order_exist'])

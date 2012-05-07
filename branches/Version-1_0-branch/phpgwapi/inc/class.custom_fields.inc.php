@@ -468,7 +468,7 @@
 						break;
 
 					case 'D':
-						$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']);
+						$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']) - phpgwapi_datetime::user_timezone();
 						$attrib['value'] = date($this->_dateformat, $ts);
 						break;
 
@@ -476,7 +476,7 @@
 						if($attrib['value']['date'])
 						{
 							$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
-							$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']);
+							$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']) - phpgwapi_datetime::user_timezone();
 							$attrib['value'] = date($this->_datetimeformat, $ts);
 						}
 						else
