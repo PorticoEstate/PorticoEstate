@@ -94,15 +94,22 @@
 						$attributes['lang_datetitle']	= lang('Select date');
 					}
 
-					if(isset($attributes['value']) && $attributes['value'])
+
+					if($attributes['datatype'] == 'D')
 					{
-						if($attributes['datatype'] == 'DT')
-						{
-							$timestamp= strtotime($attributes['value']);
-							$attributes['value'] = array();
-							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
-							$attributes['value']['hour'] = date('H', $timestamp);
-							$attributes['value']['min'] = date('i', $timestamp);
+							$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
+							$confirm_msg = lang('delete') . '?';
+							$clear_functions[$m]['action']	= <<<JS
+							if(confirm("{$confirm_msg}"))
+							{
+								var attribute_{$i}_date = document.getElementById('values_attribute_{$i}');
+								attribute_{$i}_date.value = '';
+							}
+JS;
+							$m++;
+					}
+					else if($attributes['datatype'] == 'DT')
+					{
 							$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
 							$confirm_msg = lang('delete') . '?';
 							$clear_functions[$m]['action']	= <<<JS
@@ -117,6 +124,17 @@
 							}
 JS;
 							$m++;
+					}
+
+					if(isset($attributes['value']) && $attributes['value'])
+					{
+						if($attributes['datatype'] == 'DT')
+						{
+							$timestamp= strtotime($attributes['value']);
+							$attributes['value'] = array();
+							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
+							$attributes['value']['hour'] = date('H', $timestamp);
+							$attributes['value']['min'] = date('i', $timestamp);
 
 						}
 						else
