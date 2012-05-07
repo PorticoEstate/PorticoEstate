@@ -40,6 +40,7 @@
 			$Melding = new Melding();
 
 			$Melding->tlfmottaker	= (string)$sms_to;
+			$Melding->tlfavsender	= (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'];
 			$Melding->orgnr			= (string)$orgnr;
 			$Melding->tekst			= (string)$sms_msg;
 
