@@ -180,55 +180,68 @@
 			$this->vendor_id		= isset($data['vendor_id'])?$data['vendor_id']:'';
 		}
 
-		function column_list($selected = array(),$type_id='',$allrows='')
+
+		function column_list($selected = array())
 		{
 			if(!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : '';
 			}
-			$filter = array('list' => ''); // translates to "list IS NULL"
+			$_columns = $this->get_columns();
+
+			$columns = array();
+			foreach($_columns as $id => $column_info)
+			{
+				$columns[] = $column_info;
+			}
+
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
+		}
+
+		public function get_columns()
+		{
 			$columns = array();
 
-
-			$columns[] = array
+			$columns['modified_date'] = array
 				(
 					'id'		=> 'modified_date',
 					'name'		=> lang('modified date'),
 //					'sortable'	=> true
 				);
 
-			$columns[] = array
+			$columns['status'] = array
 				(
 					'id' => 'status',
 					'name'=> lang('status')
 				);
-			$columns[] = array
+			$columns['address'] = array
 				(
 					'id' => 'address',
 					'name'=> lang('address')
 				);
-			$columns[] = array
+			$columns['user'] = array
 				(
 					'id' => 'user',
 					'name'=> lang('user')
 				);
-			$columns[] = array
+			$columns['assignedto'] = array
 				(
 					'id' => 'assignedto',
 					'name'=> lang('assignedto')
 				);
 
-			$columns[] = array
+			$columns['vendor'] = array
 				(
 					'id' => 'vendor',
 					'name'=> lang('vendor')
 				);
-			$columns[] = array
+			$columns['billable_hours'] = array
 				(
 					'id' => 'billable_hours',
 					'name'=> lang('billable hours')
 				);
-			$columns[] = array
+			$columns['district'] = array
 				(
 					'id' => 'district',
 					'name'=> lang('district')
@@ -238,7 +251,7 @@
 
 			foreach($this->uicols_related as $related)
 			{
-				$columns[] = array
+				$columns[$related] = array
 				(
 						'id' => $related,
 						'name'=> ltrim(lang(str_replace('_', ' ', $related)),'!')
@@ -247,21 +260,34 @@
 
 			if( $this->show_finnish_date )
 			{
-				$columns[] = array
+				$columns['finnish_date'] = array
 					(
 						'id' => 'finnish_date',
 						'name'=> lang('finnish_date')
 					);
-				$columns[] = array
+				$columns['delay'] = array
 					(
 						'id' => 'delay',
 						'name'=> lang('delay')
 					);
 			}
 
-			$column_list=$this->bocommon->select_multi_list($selected,$columns);
-			return $column_list;
+
+			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			foreach ($custom_cols as $custom_col)
+			{
+				$columns[$custom_col['column_name']] = array
+				(
+					'id' => $custom_col['column_name'],
+					'name'=> $custom_col['input_text'],
+					'datatype' => $custom_col['datatype'],
+				);
+			}
+
+			return $columns;
 		}
+
+
 
 		function filter($data=0)
 		{

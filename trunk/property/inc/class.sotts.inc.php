@@ -439,7 +439,13 @@
 			. "fm_tts_tickets.entry_date,fm_tts_tickets.modified_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
 			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name {$result_order_field}";
 
-			//fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district
+			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+			
+			foreach ($custom_cols as $custom_col)
+			{
+				$return_fields .= ",fm_tts_tickets.{$custom_col['column_name']}";
+			}
+
 			$sql = "SELECT DISTINCT {$return_fields}  FROM fm_tts_tickets"
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
@@ -508,6 +514,7 @@
 					unset($_fetch_single);
 				}
 
+				$i = 0;
 				while ($this->db->next_record())
 				{
 					$tickets[]= array
@@ -535,6 +542,26 @@
 							'new_ticket'		=> $this->db->f('view') ? false : true,
 							'billable_hours'	=> $this->db->f('billable_hours'),
 					);
+
+					foreach ($custom_cols as $custom_col)
+					{
+						if($custom_value = $this->db->f($custom_col['column_name'],true))
+						{
+							switch($custom_col['datatype'])
+							{
+								case 'DT':
+									$custom_value = $GLOBALS['phpgw']->common->show_date(strtotime($custom_value) - phpgwapi_datetime::user_timezone());
+									break;
+								case 'D':
+									$custom_value = $GLOBALS['phpgw']->common->show_date(strtotime($custom_value) - phpgwapi_datetime::user_timezone(),$this->dateformat);
+									break;
+								default:
+								// nothing
+							}
+						}
+						$tickets[$i][$custom_col['column_name']] = $custom_value;
+					}
+					$i ++;
 				}
 			}
 

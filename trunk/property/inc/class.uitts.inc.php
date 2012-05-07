@@ -374,7 +374,7 @@
 			$data = array
 				(
 					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+					'column_list'		=> $this->bo->column_list($selected),
 					'function_msg'		=> $function_msg,
 					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'lang_columns'		=> lang('columns'),
@@ -930,11 +930,13 @@
 			$uicols['descr'][]	= lang('entry date');
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$columns = $this->bo->get_columns();
 
+//_debug_array($custom_cols);die();
 			foreach ($custom_cols as $col)
 			{
 				$uicols['name'][]		= $col;
-				$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$uicols['descr'][]		= $columns[$col]['name'];
 			}
 
 
