@@ -26,10 +26,6 @@
 				<dd><xsl:value-of disable-output-escaping="yes" select="resource/description"/></dd>
 			</xsl:if>
 			
-			<xsl:if test="resource/activity_name and normalize-space(resource/activity_name)">
-				<dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
-				<dd><xsl:value-of select="resource/activity_name"/></dd>
-			</xsl:if>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
 			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
