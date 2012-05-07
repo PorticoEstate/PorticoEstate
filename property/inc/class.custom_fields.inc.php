@@ -51,6 +51,7 @@
 		public function __construct($appname = null)
 		{
 			parent::__construct($appname);
+			$this->_db2 = clone($this->_db);			
 		}
 
 		/**
@@ -133,8 +134,8 @@ JS;
 							$timestamp= strtotime($attributes['value']);
 							$attributes['value'] = array();
 							$attributes['value']['date'] = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
-							$attributes['value']['hour'] = date('H', $timestamp);
-							$attributes['value']['min'] = date('i', $timestamp);
+							$attributes['value']['hour'] = date('H', $timestamp + phpgwapi_datetime::user_timezone());
+							$attributes['value']['min'] = date('i', $timestamp + phpgwapi_datetime::user_timezone());
 
 						}
 						else
@@ -417,7 +418,7 @@ JS;
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
-							$entry['value'] = $this->_db->db_addslashes($entry['value']);
+							$entry['value'] = $this->_db2->db_addslashes($entry['value']);
 						}
 
 						if($entry['datatype'] == 'pwd' && $entry['value'] && $entry['value2'])
@@ -444,9 +445,9 @@ JS;
 					{
 						if($id)
 						{
-							$this->_db->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}",__LINE__,__FILE__);
-							$this->_db->next_record();
-							$old_value = $this->_db->f($entry['name']);
+							$this->_db2->query("SELECT {$entry['name']} FROM $table WHERE id = {$id}",__LINE__,__FILE__);
+							$this->_db2->next_record();
+							$old_value = $this->_db2->f($entry['name']);
 							if($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
@@ -464,6 +465,89 @@ JS;
 				}
 			}
 			return $data;
+		}
+
+		public function get_translated_value($data, $location_id)
+		{
+			if(!$data['value'])
+			{
+				return $data['value'];
+			}
+
+			$ret = '';
+			switch($data['datatype'])
+			{
+				case 'R':
+				case 'LB':
+					if($data['attrib_id'])
+					{
+						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .(int)$data['attrib_id']. "  AND id=" . (int)$data['value'];
+						$this->_db2->query($sql);
+						$this->_db2->next_record();
+						$ret =  $this->_db2->f('value');
+					}
+					break;
+				case 'AB':
+					$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
+					$ret =  $contact_data[0]['fn'];
+					break;
+				case 'ABO':
+					$contact_data	= $contacts->get_principal_organizations_data($data['value']);
+					$ret = $contact_data[0]['org_name'];
+					break;
+				case 'VENDOR':
+					$sql="SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
+					$this->_db2->query($sql);
+					$this->_db2->next_record();
+					$ret =  $this->_db2->f('org_name',true);
+					break;
+				case 'CH':
+					$ch = explode(',', trim($data['value'], ','));
+					if (isset($ch) AND is_array($ch))
+					{
+						for ($k=0;$k<count($ch);$k++)
+						{
+							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
+							$this->_db2->query($sql);
+							while ($this->_db2->next_record())
+							{
+								$ch_value[]=$this->_db2->f('value');
+							}
+						}
+						$ret =  @implode(",", $ch_value);
+						unset($ch_value);
+					}
+					break;
+				case 'D':
+					$ret =  $GLOBALS['phpgw']->common->show_date(strtotime($data['value']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					break;
+				case 'DT':
+					$ret =  $GLOBALS['phpgw']->common->show_date(strtotime($data['value']));
+					break;
+				case 'timestamp':
+		//			$ret =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$data['value']);
+					$ret =  $GLOBALS['phpgw']->common->show_date($data['value']);
+					break;
+				case 'link':
+					$ret =  phpgw::safe_redirect($data['value']);
+					break;
+				case 'user':
+					$ret =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
+					break;
+				case 'pwd':
+					$ret =   lang('yes');
+					break;
+				default:
+					if(is_array($data['value']))
+					{
+						$ret =  $data['value'];								
+					}
+					else
+					{
+						$ret =  stripslashes($data['value']);
+					}
+			}
+			return $ret;
 		}
 
 		function translate_value($values, $location_id, $location_count = 0)
@@ -485,78 +569,7 @@ JS;
 						$location = explode('-',$data['value']);
 					}
 
-					$ret[$j][$field] = '';
-					if($data['value'])
-					{
-						switch($data['datatype'])
-						{
-							case 'R':
-							case 'LB':
-								if($data['attrib_id'])
-								{
-									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .(int)$data['attrib_id']. "  AND id=" . (int)$data['value'];
-									$this->_db->query($sql);
-									$this->_db->next_record();
-									$ret[$j][$field] =  $this->_db->f('value');
-								}
-								break;
-							case 'AB':
-								$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
-								$ret[$j][$field] =  $contact_data[0]['fn'];
-								break;
-							case 'ABO':
-								$contact_data	= $contacts->get_principal_organizations_data($data['value']);
-								$ret[$j][$field] = $contact_data[0]['org_name'];
-								break;
-							case 'VENDOR':
-								$sql="SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
-								$this->_db->query($sql);
-								$this->_db->next_record();
-								$ret[$j][$field] =  $this->_db->f('org_name',true);
-								break;
-							case 'CH':
-								$ch = explode(',', trim($data['value'], ','));
-								if (isset($ch) AND is_array($ch))
-								{
-									for ($k=0;$k<count($ch);$k++)
-									{
-										$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
-										$this->_db->query($sql);
-										while ($this->_db->next_record())
-										{
-											$ch_value[]=$this->_db->f('value');
-										}
-									}
-									$ret[$j][$field] =  @implode(",", $ch_value);
-									unset($ch_value);
-								}
-								break;
-							case 'D':
-								$ret[$j][$field] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($data['value']));
-								break;
-							case 'timestamp':
-								$ret[$j][$field] =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$data['value']);
-								break;
-							case 'link':
-								$ret[$j][$field] =  phpgw::safe_redirect($data['value']);
-								break;
-							case 'user':
-								$ret[$j][$field] =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
-								break;
-							case 'pwd':
-								$ret[$j][$field] =   lang('yes');
-								break;
-							default:
-								if(is_array($data['value']))
-								{
-									$ret[$j][$field] =  $data['value'];								
-								}
-								else
-								{
-									$ret[$j][$field] =  stripslashes($data['value']);
-								}
-						}
-					}
+					$ret[$j][$field] = $this->get_translated_value($data, $location_id);
 
 					if($location)
 					{

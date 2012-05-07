@@ -493,6 +493,8 @@
 			$this->sum_budget		= $cache_info['sum_budget'];
 			$this->sum_actual_cost	= $cache_info['sum_actual_cost'];
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
 			$tickets = array();
 			if(!$dry_run)
 			{
@@ -547,17 +549,7 @@
 					{
 						if($custom_value = $this->db->f($custom_col['column_name'],true))
 						{
-							switch($custom_col['datatype'])
-							{
-								case 'DT':
-									$custom_value = $GLOBALS['phpgw']->common->show_date(strtotime($custom_value) - phpgwapi_datetime::user_timezone());
-									break;
-								case 'D':
-									$custom_value = $GLOBALS['phpgw']->common->show_date(strtotime($custom_value) - phpgwapi_datetime::user_timezone(),$this->dateformat);
-									break;
-								default:
-								// nothing
-							}
+							$custom_value = $this->custom->get_translated_value(array('value' =>$custom_value, 'attrib_id' => $custom_col['attrib_id'], 'datatype' => $custom_col['datatype'] ), $location_id);
 						}
 						$tickets[$i][$custom_col['column_name']] = $custom_value;
 					}

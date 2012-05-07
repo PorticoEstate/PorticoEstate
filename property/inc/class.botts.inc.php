@@ -231,6 +231,25 @@
 					'name'=> lang('assignedto')
 				);
 
+			if( $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
+			{
+				$columns['order_id'] = array
+					(
+						'id' => 'order_id',
+						'name'=> lang('order id')
+					);
+				$columns['estimate'] = array
+					(
+						'id' => 'estimate',
+						'name'=> lang('estimate')
+					);
+				$columns['actual_cost'] = array
+					(
+						'id' => 'actual_cost',
+						'name'=> lang('actual cost')
+					);
+			}
+
 			$columns['vendor'] = array
 				(
 					'id' => 'vendor',
