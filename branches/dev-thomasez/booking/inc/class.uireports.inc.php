@@ -143,7 +143,7 @@ class booking_uireports extends booking_uicommon
 		$newTerms = array();
 		$newTermsIntKey = array();
 		foreach( $terms as $id => $data ) {
-			error_log( $id );
+//			error_log( $id );
 			if( array_key_exists( $data['term'], $newTerms ) ) {
 				$newTerms[$data['term']]['count'] += $data['count'];
 			} else {
@@ -188,9 +188,9 @@ class booking_uireports extends booking_uicommon
 		}
 		$db->query( $sql );
 		$terms = $db->resultSet;
-		error_log( var_export( $terms, true ) );
+//		error_log( var_export( $terms, true ) );
 		$terms = $this->mergeSimilarTerms(  $terms );
-		error_log( var_export( $terms, true ) );
+//		error_log( var_export( $terms, true ) );
 		self::render_template('report_searchterms', array(
 			"period" => $form_period,
 			"terms" => $terms,
