@@ -171,6 +171,12 @@
 			</dl>
 			
 			<div class="clr"/>
+			<dl class="form-col">
+				<dt><label for="field_keywords"><xsl:value-of select="php:function('lang', 'Keywords')"/></label></dt>
+				<dd><input id="field_keywords" name="keywords" type="text" value="{resource/keywords}"/></dd>
+			</dl>
+
+			<div class="clr"/>
 			
 			<div class="form-buttons">
 				<input type="submit" id="button">

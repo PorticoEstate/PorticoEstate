@@ -35,6 +35,10 @@
         </dl>
 		<div class="clr"/>
 		<dl class="form-col">
+			<xsl:if test="resource/keywords!=''">				
+				<dt><label for="field_keywords"><xsl:value-of select="php:function('lang', 'keywords')"/></label></dt>
+				<dd><xsl:value-of select="resource/keywords"/></dd>
+			</xsl:if>
 			<xsl:if test="resource/campsites!=''">				
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
 				<dd><xsl:value-of select="resource/campsites"/></dd>

@@ -50,6 +50,7 @@
 				'animals' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
 				'internett_phone' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
 				'handicap' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
+				'keywords' => array( 'type' => 'text', 'nullable' => True )
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -147,6 +148,7 @@
 				'animals' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
 				'internett_phone' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
 				'handicap' => array('type' => 'varchar','precision' => '50','nullable' => True, 'default' => NULL),
+				'keywords' => array( 'type' => 'text', 'nullable' => True )
 			),
 			'pk' => array('id'),
 			'fk' => array(

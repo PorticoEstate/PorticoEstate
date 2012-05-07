@@ -27,7 +27,7 @@
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
 			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','internal_cost','external_cost','cost_type','campsites','bedspaces',
-'heating','kitchen','water','location','communication','usage_time','weather_url','map_url','swiming','sanitation_facilities','animals','internett_phone','handicap');
+'heating','kitchen','water','location','communication','usage_time','weather_url','map_url','swiming','sanitation_facilities','animals','internett_phone','handicap', 'keywords');
 		}
 		
 		protected function building_cost_types()

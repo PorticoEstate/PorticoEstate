@@ -22,8 +22,6 @@
         <div class="description"><xsl:value-of select="building/description" disable-output-escaping="yes"/></div>
 
         <dl class="proplist-col">
-			<dt><xsl:value-of select="php:function('lang', 'Street')" /></dt>
-            <dd><xsl:value-of select="building/street"/></dd>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Zip code')" /></dt>
             <dd><xsl:value-of select="building/zip_code"/></dd>
@@ -33,6 +31,9 @@
 			
 			<dt><xsl:value-of select="php:function('lang', 'District')" /></dt>
             <dd><xsl:value-of select="building/district"/></dd>
+
+			<dt><xsl:value-of select="php:function('lang', 'Keywords')" /></dt>
+            <dd><xsl:value-of select="building/keywords"/></dd>
 
 			<xsl:if test="building/location_code">
 				<dt><xsl:value-of select="php:function('lang', 'Location Code')" /></dt>

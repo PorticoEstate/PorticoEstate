@@ -43,7 +43,8 @@
 					'sanitation_facilities' 		=> array('type' => 'string', 'query' => true),
 					'animals' 		=> array('type' => 'string', 'query' => true),
 					'internett_phone' 		=> array('type' => 'string', 'query' => true),
-					'handicap' 		=> array('type' => 'string', 'query' => true)
+					'handicap' 		=> array('type' => 'string', 'query' => true),
+					'keywords' => array('type' => 'string', 'query' => true, 'required' => false ),
 				)
 			);
 		}

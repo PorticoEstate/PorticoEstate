@@ -79,7 +79,8 @@
 							'fkey' 		=> 'activity_id',
 							'key' 		=> 'id',
 							'column' 	=> 'name'
-					))
+					)),
+					'keywords'			=> array('type' => 'string', 'query' => true, 'required' => false),
 				)
 			);
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

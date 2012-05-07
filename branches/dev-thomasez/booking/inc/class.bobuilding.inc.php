@@ -21,7 +21,7 @@
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
 						'write' => array_fill_keys(array('name', 'homepage', 'description', 'email', 'phone', 'street', 'zip_code', 'city', 'district','deactivate_application','deactivate_calendar','deactivate_sendmessage','internal_cost','external_cost','cost_type','campsites','bedspaces',
-'heating','kitchen','water','location','communication','usage_time','weather_url','map_url','swiming','sanitation_facilities','animals','internett_phone','handicap'), true),
+'heating','kitchen','water','location','communication','usage_time','weather_url','map_url','swiming','sanitation_facilities','animals','internett_phone','handicap','keywords'), true),
 					),
 					'global' => array
 					(

@@ -24,7 +24,7 @@
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time',
-'swiming','sanitation_facilities','animals','internett_phone','handicap');
+'swiming','sanitation_facilities','animals','internett_phone','handicap','keywords');
 			self::set_active_menu('booking::resources');
 		}
 		

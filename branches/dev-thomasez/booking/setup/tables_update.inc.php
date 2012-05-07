@@ -2767,9 +2767,20 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.14';
-			echo( "SUxESS!!" );
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
-		echo( "Feil!!" );
+	}
+
+	$test[] = '0.2.14';
+	function booking_upgrade0_2_14()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN keywords text DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN keywords text DEFAULT NULL");
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.15';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
 	}
 
