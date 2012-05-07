@@ -213,6 +213,7 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 						),
 */
+/*
 						'dimb_role'	=> array
 						(
 							'text'	=> lang('dimb roles'),
@@ -222,6 +223,12 @@
 						(
 							'text'	=> lang('dimb role user'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'dimb_role_user') )
+						),
+*/
+						'dimb_role_user2' => array
+						(
+							'text'	=> lang('dimb role user'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index') )
 						),
 
 						'accounting_dimd'	=> array
@@ -617,6 +624,8 @@
 				$config	= CreateObject('phpgwapi.config','property');
 				$config->read();
 				
+				$invoicehandler	= isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
+
 				if(!isset($config->config_data['suppress_tenant']) || !$config->config_data['suppress_tenant'])
 				{
 					$children['tenant'] = array
@@ -826,18 +835,10 @@
 							'text'	=>	lang('Add')
 						);
 				}
-//				if ( $acl->check('.invoice', PHPGW_ACL_ADD, 'property') )
-				{
-					$children['invoice2'] = array
-						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice2.index')),
-							'text'	=>	'Faktura2'
-						);
-				}
 
 				$menus['navigation']['invoice'] = array
 					(
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index')),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> "property.{$invoicehandler}.index")),
 						'text'	=> lang('Invoice'),
 						'image'	=> array('property', 'invoice'),
 						'children'	=> array_merge(array
