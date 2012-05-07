@@ -212,6 +212,12 @@
                             'text'  => lang('Free time'),
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
 							'image' => array('property', 'report'),
+                        ),
+                        'search_terms' => array
+                        (
+                            'text'  => lang('Search terms'),
+                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.searchterms') ),
+									'image' => array('property', 'report'),
                         )
                     )       
                 ),      

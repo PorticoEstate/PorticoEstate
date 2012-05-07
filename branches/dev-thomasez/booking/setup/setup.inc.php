@@ -1,5 +1,5 @@
 <?php
-	$setup_info['booking']['version'] = '0.2.13';
+	$setup_info['booking']['version'] = '0.2.14';
 	$setup_info['booking']['name'] = 'booking';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
@@ -55,7 +55,8 @@
 		'bb_system_message',
 		'bb_office',
 		'bb_office_user',
-		'bb_documentation'
+		'bb_documentation',
+		'bb_searchcount'
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

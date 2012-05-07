@@ -857,4 +857,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_searchcount' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'term' => array('type' => 'text', 'nullable' => False),
+				'period' => array('type' => 'int', 'nullable' => False,'precision' => '8', 'default' => '0' ),
+				'count' => array('type' => 'int', 'nullable' => False,'precision' => '8', 'default' => '0' )
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('id')
+		),
 	);

@@ -2746,3 +2746,30 @@
 		}
 	}
 
+	$test[] = '0.2.13';
+	function booking_upgrade0_2_13()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_searchcount', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'term' => array('type' => 'text', 'nullable' => False),
+					'period' => array('type' => 'int', 'nullable' => False, 'precision' => '8', 'default' => '0' ),
+					'count' => array('type' => 'int', 'nullable' => False, 'precision' => '8', 'default' => '0' )
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('id')
+			)
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.14';
+			echo( "SUxESS!!" );
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+		echo( "Feil!!" );
+	}
+

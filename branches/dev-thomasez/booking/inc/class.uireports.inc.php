@@ -9,6 +9,7 @@ class booking_uireports extends booking_uicommon
 			'index'                 =>      true,
 			'participants'          =>      true,
 			'freetime'              =>      true,
+			'searchterms'              =>      true,
 		);
 
 	public function __construct()
@@ -23,6 +24,7 @@ class booking_uireports extends booking_uicommon
 	{
 		$reports[] = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array('menuaction' => 'booking.uireports.participants')));
 		$reports[] = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
+		$reports[] = array('name' => lang('Search terns'), 'url' => self::link(array('menuaction' => 'booking.uireports.searchterms')));
 
 		self::render_template('report_index',
 		array('reports' => $reports));
@@ -134,6 +136,66 @@ class booking_uireports extends booking_uicommon
 
 		self::render_template('report_freetime',
 				array('show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));
+	}
+
+	// Merge similar terms from different months. Used when displaying search counters from several months and/or years.
+	private function mergeSimilarTerms( $terms ) {
+		$newTerms = array();
+		$newTermsIntKey = array();
+		foreach( $terms as $id => $data ) {
+			error_log( $id );
+			if( array_key_exists( $data['term'], $newTerms ) ) {
+				$newTerms[$data['term']]['count'] += $data['count'];
+			} else {
+				$newTerms[$data['term']] = array( 'term' => $data['term'], 'count' => $data['count'] );
+			}
+		}
+
+		// Convert to integer keys. phpGroupware needs keys to be integer in order to traverse them
+		$i = 0;
+		foreach( $newTerms as $key => $data ) {
+			$newTermsIntKey[$i] = $data;
+			$i++;
+		}
+		return $newTermsIntKey;
+	}
+
+
+	public function searchterms()
+	{
+		self::set_active_menu('booking::reportcenter::search_terms');
+
+		$errors = array();
+		$db = & $GLOBALS['phpgw']->db;
+
+		// Set period
+		$form_period = ( $_POST['period'] ? $_POST['period'] : date("Y-m-d" ) );
+		$year = date( "Y", strtotime( $form_period ) );
+		$month = date( "m", strtotime( $form_period ) );
+		$database_period = $year . $month;
+
+		// Get search terms
+		switch( $_POST['dimension'] ) {
+			case "forever":
+				$sql = "SELECT term,count FROM bb_searchcount ORDER BY count DESC";
+				break;
+			case "year":
+				$sql = "SELECT term,count FROM bb_searchcount WHERE period>=" . $year . "01 AND period<=" . $year . "12 ORDER BY count DESC";
+				break;
+			default: // Month
+				$sql = "SELECT term,count FROM bb_searchcount WHERE period=" . $database_period . " ORDER BY count DESC";
+				break;
+		}
+		$db->query( $sql );
+		$terms = $db->resultSet;
+		error_log( var_export( $terms, true ) );
+		$terms = $this->mergeSimilarTerms(  $terms );
+		error_log( var_export( $terms, true ) );
+		self::render_template('report_searchterms', array(
+			"period" => $form_period,
+			"terms" => $terms,
+			"dimension" => $_POST['dimension']
+		) );
 	}
 
 	private function get_free_allocations($buildings, $from, $to, $weekdays)

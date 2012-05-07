@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.bocommon');
+	phpgw::import_class( 'booking.sosearchcount' );
 	
 	class bookingfrontend_bosearch extends booking_bocommon
 	{
@@ -234,6 +235,9 @@
 			$final_array = array_merge_recursive($bui_result, $org_result, $res_result);
 			$final_array['total_records_sum']	=	array_sum((array)$final_array['total_records']);
 			
+			// Finally increase search counter
+			$counter = new booking_searchcount();
+			$counter->increaseTerm( $searchterm );
 			return $final_array;
 		}
 	}
