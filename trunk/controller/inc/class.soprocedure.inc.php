@@ -412,7 +412,7 @@
 				$like_clauses = array();
 				switch($search_type){
 					default:
-						$like_clauses[] = "controller_procedure.title $this->like $like_pattern";
+						$like_clauses[] = "procedure.title $this->like $like_pattern";
 						break;
 				}
 				if(count($like_clauses))
@@ -422,7 +422,7 @@
 			}
 
 			$filter_clauses = array();
-			$filter_clauses[] = "controller_procedure.end_date IS NULL";
+			$filter_clauses[] = "procedure.end_date IS NULL";
 			/*
 			switch($filters['is_active']){
 				case "non_active":
@@ -436,11 +436,11 @@
 
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "controller_procedure.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "procedure.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
 			if(isset($filters['control_areas']))
 			{
-				$filter_clauses[] = "controller_procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
+				$filter_clauses[] = "procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
 			}
 
 			if(count($filter_clauses))
@@ -452,16 +452,17 @@
 
 			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
-			$tables = "controller_procedure";
+			$tables = "controller_procedure procedure";
 
 			if($return_count) // We should only return a count
 			{
-				$cols = 'COUNT(DISTINCT(controller_procedure.id)) AS count';
+				$cols = 'COUNT(DISTINCT(procedure.id)) AS count';
 			}
 			else
 			{
-				$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date, controller_procedure.control_area_id ";
+				$cols .= "procedure.id, procedure.title, procedure.purpose, procedure.responsibility, procedure.description, procedure.reference, procedure.attachment, procedure.start_date, procedure.end_date, procedure.procedure_id, procedure.revision_no, procedure.revision_date, procedure.control_area_id ";
 			}
+			//var_dump($sort_field);
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
