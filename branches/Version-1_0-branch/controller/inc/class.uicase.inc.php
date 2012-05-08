@@ -284,9 +284,10 @@
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 						
 			// Registers message and updates check items with message ticket id
+			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
-				$case->set_location_id($location_id);
+				$case->set_location_id($location_id_ticket);
 				$case->set_location_item_id($message_ticket_id);
 				$this->so->store($case);
 			}			
@@ -313,7 +314,6 @@
 						
 			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
-			print_r($message_ticket);
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
@@ -353,14 +353,17 @@
 					$this->so->update( $case );
 				}
 				
+				// Gets first case of cases related to the message  
 				$case = $cases_array[0];
-				
+
+				// Gets check_item from case
 				$check_item_id = $case->get_check_item_id();
-	
+
+				// Gets check_list from check_item
 				$check_item = $this->so_check_item->get_single( $check_item_id );
 				$check_list_id = $check_item->get_check_list_id(); 
 				
-				// Updates status for check list 
+				// Updates number of open cases for check list 
 				$status_checker = new status_checker();
 				$status_checker->update_check_list_status( $check_list_id );	
 			}
