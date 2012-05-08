@@ -23,7 +23,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<style type="text/css">
 	#box { width: 200px; height: 5px; background: blue; }
-	//select { width: 200px; }
+	select { width: 200px; }
 	.row_on,.th_bright
 	{
 		background-color: #CCEEFF;
@@ -95,10 +95,10 @@
 			<xsl:value-of select="php:function('lang', 'dim b')" />
 		</td>
 		<td>
-			<xsl:value-of select="php:function('lang', 'user')" />
+			<xsl:value-of select="php:function('lang', 'role')" />
 		</td>
 		<td>
-			<xsl:value-of select="php:function('lang', 'role')" />
+			<xsl:value-of select="php:function('lang', 'user')" />
 		</td>
 		<td colspan = "2" align = "center">
 			<xsl:value-of select="php:function('lang', 'search')" />
@@ -113,13 +113,13 @@
 		  </select>
 		</td>		
 		<td>
-		  <select id="user_id" name="user_id">
-			<xsl:apply-templates select="user_list/options"/>
+		  <select id="role_id" name="role_id">
+			<xsl:apply-templates select="role_list/options"/>
 		  </select>
 		</td>		
 		<td>
-		  <select id="role_id" name="role_id">
-			<xsl:apply-templates select="role_list/options"/>
+		  <select id="user_id" name="user_id">
+			<xsl:apply-templates select="user_list/options"/>
 		  </select>
 		</td>		
 		<td>
