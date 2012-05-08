@@ -56,7 +56,7 @@
 			}
 			else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() < $todays_date_ts )
 			{
-				$status = "control_not_accomplished";
+				$status = "CONTROL_NOT_DONE";
 			}
 			else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 			{
@@ -67,17 +67,18 @@
 				$status = "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS";
 			}
 			else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_num_open_cases() > 0){
-				$status = "control_accomplished_with_errors";
+				$status = "CONTROL_DONE_WITH_ERRORS";
 				$check_list_status_info->set_num_open_cases($this->check_list->get_num_open_cases());
 			}
 			else if( $this->check_list->get_status() == controller_check_list::STATUS_CANCELED)
 			{
-				$status = "control_canceled";
+				$status = "CONTROL_CANCELED";
 			}
 			
 			
 			$check_list_status_info->set_deadline_date_txt( date("d/m-Y", $this->check_list->get_deadline()) );
 			$check_list_status_info->set_deadline_date_ts( $this->check_list->get_deadline() );
+			$check_list_status_info->set_location_code( $this->check_list->get_location_code() );
 			$check_list_status_info->set_status($status);
 		
 			return $check_list_status_info; 
