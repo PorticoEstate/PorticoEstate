@@ -57,7 +57,7 @@
 						<xsl:text>&amp;check_list_id=</xsl:text>
 						<xsl:value-of select="info/check_list_id"/>
 					</xsl:attribute>
-					<img height="15" src="controller/images/status_red_cross.png" />
+					<img height="15" src="controller/images/status_icon_red_cross.png" />
 				</a>
 				</div>
 		</xsl:when>
