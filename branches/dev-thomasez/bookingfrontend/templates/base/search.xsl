@@ -100,11 +100,33 @@
 		</div>
 		</div>
 		<div style="text-align:center;">
-			<img alt="" >
-				<xsl:attribute name="src">
-					<xsl:value-of select="frontimage"/> 
-				</xsl:attribute>
-			</img>
+			<xsl:choose>
+				<xsl:when test="frontimages">
+					<div id="frontimagesbox">
+						<xsl:for-each select="frontimages">
+							<a>
+								<xsl:attribute name="href">index.php?menuaction=bookingfrontend.uiresource.show&amp;id=<xsl:value-of select="owner_id"/></xsl:attribute>
+								<div class="frontimagebox">
+									<div class="frontimage">
+										<xsl:attribute name="style">
+											background-image: url( 'index.php?menuaction=bookingfrontend.uidocument_resource.download&amp;id=<xsl:value-of select="id"/>' );
+										</xsl:attribute>
+									</div>
+									<xsl:value-of disable-output-escaping="yes" select="description"/>
+								</div>
+							</a>
+						</xsl:for-each>
+						<div class="clr"></div>
+					</div>
+				</xsl:when>
+				<xsl:otherwise>
+					<img alt="" >
+						<xsl:attribute name="src">
+							<xsl:value-of select="frontimage"/> 
+						</xsl:attribute>
+					</img>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>	
 	</xsl:if>
 	<xsl:variable name="layout"><xsl:value-of select="layout" /></xsl:variable>

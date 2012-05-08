@@ -8,6 +8,7 @@
 		const CATEGORY_PICTURE = 'picture';
 		const CATEGORY_DRAWING = 'drawing';
 		const CATEGORY_REGULATION = 'regulation';
+		const CATEGORY_FRONTPAGE_PICTURE = 'frontpage_picture';
 		const CATEGORY_OTHER = 'other';
 		
 		protected 
@@ -17,6 +18,7 @@
 			   self::CATEGORY_PICTURE,
 			   self::CATEGORY_DRAWING,
 				self::CATEGORY_REGULATION,
+				self::CATEGORY_FRONTPAGE_PICTURE,
 			   self::CATEGORY_OTHER,
 			),
 			$uploadRootDir,

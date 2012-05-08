@@ -390,4 +390,29 @@ font-size: 0.9em;
     cursor: pointer!important;
 }
 
+div.frontimagebox {
+	width: 214px;
+	margin: 2px;
+	padding: 0px;
+	color: #888;
+	float: left;
+	clear: none;
+	font-size: 9pt;
+	text-align: left;
+}
 
+div.frontimagebox div.frontimage {
+	width: 214px;
+	height: 110px;
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	display: block;
+	background-repeat: no-repeat;
+	background-position: center 30%;
+}
+
+div#frontimagesbox {
+	clear: both;
+	display: inline-block;
+}

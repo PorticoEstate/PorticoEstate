@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.sodocument_resource');
 
 	class bookingfrontend_uisearch extends booking_uicommon
 	{
@@ -93,10 +94,30 @@
 				);
 			}
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'search.js');
-      // Should of course be replaced with some config option for the image
-      // or using the tmpl_search_path. Need to work a little mor on this system
-      // to find the right option. - thomasez
-			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/images/nsf/forsidebilde.png",'layout' => $layout,'resource' => $resource) : array('search' => $search,'layout' => $layout,'resource' => $resource);
+
+			// Images are now loaded from bb_document with category frontpage_picture
+			if( !is_null( $search ) ) {
+				$params = array('search' => $search,'layout' => $layout,'resource' => $resource);
+			} else {
+
+
+				$params = array(
+					'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/images/nsf/forsidebilde.png",
+					'layout' => $layout,
+					'resource' => $resource,
+				);
+
+				// Get frontpage picture documents
+				$sodoc = CreateObject('booking.sodocument_resource');
+				$documents = $sodoc->read( array( "filters" => array( "category" => booking_sodocument::CATEGORY_FRONTPAGE_PICTURE ) ) );
+
+				// Insert into $params if there are pictures
+				if( $documents['total_records'] > 0 ) {
+					// Convert nl2br on description
+					foreach( $documents['results'] as $key => $data ) { $documents['results'][$key]['description'] = nl2br( $documents['results'][$key]['description'] ); }
+					$params['frontimages'] = $documents['results'];
+				}
+			}
 //			echo "<pre>";print_r($resource);exit;
 			
 			self::render_template('search', $params);
