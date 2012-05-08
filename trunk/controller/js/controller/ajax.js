@@ -581,6 +581,8 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 
+	
+	
 	//=============================  MESSAGE  ===========================
 	
 	// REGISTER MESSAGE
@@ -637,7 +639,7 @@ $(document).ready(function(){
 	
 	
 	
-	//=============================  CASE  ===========================
+	//=======================================  CASE  ======================================
 	
 	// REGISTER CASE
 	$(".frm_register_case").live("submit", function(e){
@@ -664,12 +666,15 @@ $(document).ready(function(){
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
 		    				  if( type == "control_item_type_2")
-		    					  $(submitBnt).val('Registrer måling');
+		    					  $(submitBnt).val('Lagre måling');
 		    				  else
-		    					  $(submitBnt).val('Registrer sak');
+		    					  $(submitBnt).val('Lagre sak');
 		    				  
 							$(submitBnt).addClass("not_active");
 		    			  }, 1000);
+
+		    			  $(thisForm).delay(1500).slideUp(500);
+		    			  $(thisForm).parents("ul.expand_list").find("h4 img").delay(1500).attr("src", "controller/images/arrow_right.png");
 					  }
 				  }
 				}
