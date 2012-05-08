@@ -41,7 +41,7 @@
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
-												 	<input type="submit" class="btn not_active" name="save_control" value="Registrer sak" />
+												 	<input type="submit" class="btn not_active" name="save_control" value="Lagre sak" />
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
@@ -76,7 +76,7 @@
 														 </textarea>
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												   <input type="submit" name="save_control" value="Registrer måling" class="not_active" title="{$lang_save}" />
+												   <input type="submit" name="save_control" value="Lagre måling" class="not_active" title="{$lang_save}" />
 												</form>
 											</xsl:when>
 										</xsl:choose>	
