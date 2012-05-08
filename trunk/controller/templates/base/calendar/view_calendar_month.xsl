@@ -8,7 +8,7 @@
 	<div id="control_plan">
 		<div class="top">
 			<h1><xsl:value-of select="location_array/loc1_name"/></h1>
-			<h3 style="margin:0;font-size:19px;">Kalenderoversikt for <xsl:value-of select="period"/><span style="margin-left:5px;"><xsl:value-of select="year"/></span></h3>
+			<h3>Kalenderoversikt for <xsl:value-of select="period"/><span class="year"><xsl:value-of select="year"/></span></h3>
 		
 			<form action="#">
 				<input type="hidden" name="period_type" value="view_year" />
@@ -39,14 +39,8 @@
 		</div>
 		
 		<div class="middle">
-			<ul id="icon_color_map">
-				<li><img height="15" src="controller/images/status_icon_yellow_ring.png" /><span>Kontroll satt opp</span></li>
-				<li><img height="15" src="controller/images/status_icon_yellow.png" /><span>Kontroll har planlagt dato</span></li>
-				<li><img height="15" src="controller/images/status_icon_dark_green.png" /><span>Kontroll gjennomført uten åpne saker før frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_light_green.png" /><span>Kontroll gjennomført uten åpne saker etter frist</span></li>
-				<li><img height="15" src="controller/images/status_icon_red_empty.png" /><span>Kontroll gjennomført med åpne saker</span></li>
-				<li><img height="15" src="controller/images/status_icon_red_cross.png" /><span>Kontroll ikke gjennomført</span></li>
-			</ul>
+			
+			<xsl:call-template name="icon_color_map" />
 			
 			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
 				<xsl:attribute name="href">
@@ -81,7 +75,6 @@
 		
 		
 		<div id="cal_wrp">
-			
 			<ul class="calendar month">
 				<li class="heading">
 					<div class="control_details_wrp">
@@ -117,7 +110,7 @@
 			      			<xsl:value-of select="control/responsibility_name"/>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_type"/>
+			      			<xsl:value-of select="control/repeat_type_label"/>
 			      			<xsl:value-of select="control/repeat_interval"/>
 						</div>
 				
