@@ -37,6 +37,7 @@
 	include_class('controller', 'status_agg_month_info', 'inc/helper/');
 	include_class('controller', 'calendar_builder', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
+	include_class('controller', 'year_calendar', 'inc/component/');
 		
 	class controller_uicalendar extends controller_uicommon
 	{
@@ -114,7 +115,7 @@
 			$my_locations = $location_finder->get_responsibilities( $criteria );
 
 			if(empty($location_code)){
-				$location_code = $my_locations[0]["location_code"];	
+				$location_code = $my_locations[0]["location_code"];
 			}
 			
 			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -130,27 +131,10 @@
 			
 			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_with_check_list_array, $num_days_in_month, "view_days" );
 			
-			foreach($controls_calendar_array as &$inst)
-			{	
-				$curr_control = &$inst['control'];
-
-				if($curr_control['repeat_type'] == 0)
-					$curr_control['repeat_type'] = "Dag";
-				else if($curr_control['repeat_type'] == 1)
-					$curr_control['repeat_type'] = "Uke";
-				else if($curr_control['repeat_type'] == 2)
-					$curr_control['repeat_type'] = "Måned";
-				else if($curr_control['repeat_type'] == 3)
-					$curr_control['repeat_type'] = "År";
-			}
-
-			//$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
-			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			//lookup=1&type_id=1&lookup_name=0
+		
 			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
-			//$property_array = execMethod('property.bolocation.read', array('type_id' => 1, 'lookup_name' => 0, 'lookup' => 1));
-			//print_r( $property_array );
+		
 			
 			
 			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
@@ -176,7 +160,7 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker'), $data);
+			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
 		}
 		
 		public function view_calendar_for_year()
@@ -196,6 +180,7 @@
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
+			
 			$manage=false;
 		
 			if($manage)
@@ -215,8 +200,6 @@
 				$my_locations = $location_finder->get_responsibilities( $criteria );
             }
 				
-			
-			//print_r($my_locations);
 			if(empty($location_code)){
 				$location_code = $my_locations[0]["location_code"];
 			}
@@ -227,7 +210,7 @@
 			// Creates a calendar object for time period
 			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
-			// Loops through controls with repeat type: day or week in controls_for_location_array
+			// Loops through controls with repeat type day or week in controls_for_location_array
 			// and populates array that contains aggregate open cases pr month.   		
 			foreach($controls_for_location_array as $control){
 				if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1){
@@ -271,7 +254,7 @@
 				'year' 			  	  	  => $year
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker'), $data);
+			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
@@ -280,82 +263,94 @@
 		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
+			$year = phpgw::get_var('year');
 			
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
 			}
 			
-			$year = intval( date("Y") );
-						
+			if(empty($year)){
+				$year = intval( date("Y") );
+			}
+			
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
-
-			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
-			$controls_with_check_lists_array = array();
+			//$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
 			
-			if( $control->get_repeat_type() == 0 | $control->get_repeat_type() == 1 )
-			{
-				foreach($locations_for_control_array as $location)
-				{
-					$location_code = $location["location_code"];
+			//$controls_with_check_lists_array = array();
+			$locations_with_calendar_array = array();
+			
+			if($control->get_repeat_type() <= 1 ){
+				foreach($locations_for_control_array as $location){
+					$curr_location_code = $location['location_code'];
 					
-					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $location_code, $year);
-					$curr_control = clone $control;										
-					$curr_control->set_agg_open_cases_pr_month_array( $agg_open_cases_pr_month_array );
-					$curr_control->set_location_code($location_code);
-
-					$controls_with_check_lists_array[] = $curr_control;
-				}
-			}
-			else if($control->get_repeat_type() == 2 | $control->get_repeat_type() == 3)
-			{
-				foreach($locations_for_control_array as $location)
-				{
-					$location_code = $location["location_code"];
-					$curr_control = clone $control;
-					$control_check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $control->get_repeat_type(), $control->get_id() );
-					$curr_control->set_location_code($location_code);
+					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_location_code, $year);
 					
-					$controls_with_check_lists_array[] = $curr_control;
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
 				}
-			}
-			
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array($controls_with_check_lists_array, 12, "view_months" );
+			}else if($control->get_repeat_type() == 2){
+				foreach($locations_for_control_array as $location){
+					$curr_location_code = $location['location_code'];
+					
+					$repeat_type = 2;
+					$location_with_check_lists = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $repeat_type);	
+					
+					$check_lists_array = $location_with_check_lists["check_lists_array"];
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
 						
-			foreach($controls_calendar_array as &$inst)
-			{	
-				$curr_control = &$inst['control'];
-				//var_dump($control['location_code']);
-				foreach($locations_for_control_array as $loc1)
-				{
-					if($curr_control["location_code"] == $loc1["location_code"])
-						$curr_control["location_name"] = $loc1["loc1_name"];
+					$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
 				}
-			}
+			}else if($control->get_repeat_type() == 3){
+				foreach($locations_for_control_array as $location){
+					$curr_location_code = $location['location_code'];
+					
+					$repeat_type = 3;
+					$location_with_check_lists = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $repeat_type);	
+					
+					$year_calendar = new year_calendar($control, $year);
+					
+					$check_lists_array = $location_with_check_lists["check_lists_array"];
+					
+					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
+						
+					$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
+				}			
+			}	
 			
-			//_debug_array($controls_calendar_array);
+			$criteria = array
+			(
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
+				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+				'allrows' => false
+			);
+		
+			$location_finder = new location_finder();
+			$my_locations = $location_finder->get_responsibilities( $criteria );
 			
+			//$controls_calendar_array = $this->calendar_builder->build_calendar_array($controls_with_check_lists_array, 12, "view_months" );
 			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-			
+
 			$data = array
 			(
-				'my_locations'	  		  => $locations_for_control_array,
-				'view_location_code'	  => null,
-				'location_array'		  => $locations_for_control_array,
-				'heading_array'		  	  => $heading_array,
-				'controls_calendar_array' => $controls_calendar_array,
-				'date_format' 			  => $date_format,
-				'period' 			  	  => $year,
-				'year' 			  	  	  => $year,
-				'show_location'			  => 'yes',
-				'control_name'			  => $control->get_title()
+				'my_locations'	  		  		=> $my_locations,
+				'control'			  	  		=> $control->toArray(),
+				'heading_array'		  	  		=> $heading_array,
+				'locations_with_calendar_array' => $locations_with_calendar_array,
+				'date_format' 			  		=> $date_format,
+				'period' 			  	  		=> $year,
+				'year' 			  	  	  		=> $year,
 			);
 			
-			self::render_template_xsl('calendar/view_calendar_year', $data);
-			
+			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}

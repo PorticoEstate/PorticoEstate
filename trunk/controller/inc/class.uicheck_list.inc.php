@@ -650,9 +650,6 @@
 			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_1", 'closed', null, 'return_array');
 			$closed_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_2", 'closed', null, 'return_array');
 
-			//echo "SKRIVER UT LUKKEDE SAKER";
-			//print_r($closed_check_items_and_cases);
-			
 			$data = array
 			(
 				'closed_check_items_and_cases'			=> $closed_check_items_and_cases,
