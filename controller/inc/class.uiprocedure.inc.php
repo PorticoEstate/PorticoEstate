@@ -140,7 +140,7 @@
 						array(
 							'key' => 'title',
 							'label' => lang('Procedure title'),
-							'sortable'	=> false
+							'sortable'	=> true
 						),
 						array(
 							'key' => 'purpose',
@@ -466,10 +466,15 @@
 				/*
 				 * hack to fix display of &nbsp; char 
 				 */
+				
 				$procedure->set_description(str_replace("&nbsp;", " ",$procedure->get_description()));
 				$procedure->set_responsibility(str_replace('&nbsp;', ' ', $procedure->get_responsibility()));
 				$procedure->set_reference(str_replace('&nbsp;', ' ', $procedure->get_reference()));
-				
+/*
+				$procedure->set_description(htmlspecialchars_decode($procedure->get_description()));
+				$procedure->set_responsibility(htmlspecialchars_decode($procedure->get_responsibility()));
+				$procedure->set_reference(htmlspecialchars_decode($procedure->get_reference()));
+*/				
 
 				$procedure_array = $procedure->toArray();
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)

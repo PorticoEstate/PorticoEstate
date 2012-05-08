@@ -908,12 +908,17 @@ ul.check_list {
 }
 
 /* ======================  CALENDAR ========================== */
-#control_plan .top {
-    overflow: hidden;
-}
 
+#control_plan .top h1{
+   
+}
 #control_plan .top h3{
-   float:left;
+   margin:0;
+   font-size:19px;
+   overflow: hidden;
+}
+#control_plan .top h3 .year{
+   margin-left:5px;
 }
 #control_plan .top form{
    float:right;
@@ -972,7 +977,7 @@ ul.calendar li.heading {
     float: left;
     height: 30px;
     text-align: center;
-    width: 52px;
+    width: 40px;
 }
 ul.calendar li {
     height: 30px;
@@ -1001,8 +1006,8 @@ ul.calendar li.even {
     width: 200px;
 }
 ul.calendar div.location {
-	width: 150px;
-	text-align: left;
+    text-align: left;
+    width: 600px;
 }
 .control_details_wrp div.assigned {
     text-align: left;
@@ -1012,17 +1017,16 @@ ul.calendar div.location {
 	width: 130x;
 }
 
-ul.calendar div.title{
+ul.calendar div.title {
 	text-align: left;
 }
-ul.calendar .heading div.title{
+ul.calendar .heading div.title {
 	text-align: center;
 }
 ul.calendar div.frequency {
     margin-right: 10px;
     width: 65px;
 }
-
 .cal_info_msg{
 	font-size: 16px;
     padding: 40px 20px;	
@@ -1035,7 +1039,7 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
-    left: 23px;
+    left: 18px;
     position: absolute;
     text-decoration: none;
     top: 8px;

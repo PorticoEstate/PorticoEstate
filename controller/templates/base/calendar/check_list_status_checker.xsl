@@ -33,6 +33,22 @@
 				</a>
 				</div>
 			</xsl:when>
+			<xsl:when test="status = 'CONTROL_NOT_DONE'">
+				<div>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
+							<xsl:text>&amp;date=</xsl:text>
+							<xsl:value-of select="info/date"/>
+							<xsl:text>&amp;control_id=</xsl:text>
+							<xsl:value-of select="info/control_id"/>
+							<xsl:text>&amp;location_code=</xsl:text>
+							<xsl:value-of select="$location_code"/>
+						</xsl:attribute>
+						<img height="15" src="controller/images/status_icon_red_cross.png" />
+					</a>
+				</div>
+			</xsl:when>
 			<xsl:when test="status = 'CONTROL_NOT_DONE_WITH_PLANNED_DATE'">
 				<div>
 				<a>
@@ -72,7 +88,7 @@
 					</a>
 				</div>
 			</xsl:when>
-			<xsl:when test="status = 'control_accomplished_with_errors'">
+			<xsl:when test="status = 'CONTROL_DONE_WITH_ERRORS'">
 				<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
 					<div id="info_box"></div>
    					<a class="view_info_box">
@@ -89,37 +105,24 @@
 					</a>
 				</div>
 			</xsl:when>
-			<xsl:when test="status = 'control_not_accomplished_with_info'">
-				<div style="position:relative;">
-   					<div id="info_box"></div>
-					<a>
-					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-						<xsl:text>&amp;check_list_id=</xsl:text>
-						<xsl:value-of select="info/check_list_id"/>
-					</xsl:attribute>
-						<span style="display:none"><xsl:value-of select="info/id"/></span>
-						<img height="15" src="controller/images/status_icon_red_cross.png" />
-					</a>
-				</div>
-			</xsl:when>
-			<xsl:when test="status = 'control_not_accomplished'">
-				<div>
-					<a>
-						<xsl:attribute name="href">
-							<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
-							<xsl:text>&amp;date=</xsl:text>
-							<xsl:value-of select="info/date"/>
-							<xsl:text>&amp;control_id=</xsl:text>
-							<xsl:value-of select="info/control_id"/>
-							<xsl:text>&amp;location_code=</xsl:text>
-							<xsl:value-of select="$location_code"/>
+			<xsl:when test="status = 'CONTROLS_DONE_WITH_ERRORS'">
+				<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
+					<div id="info_box"></div>
+   					<a class="view_info_box">
+					 	<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+							<xsl:text>&amp;check_list_id=</xsl:text>
+							<xsl:value-of select="info/check_list_id"/>
 						</xsl:attribute>
-						<img height="15" src="controller/images/status_icon_red_cross.png" />
+						<span style="display:none">
+							<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+							<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+						</span>
+						<xsl:value-of select="info"/>
 					</a>
 				</div>
 			</xsl:when>
-			<xsl:when test="status = 'control_canceled'">
+			<xsl:when test="status = 'CONTROL_CANCELED'">
 				<div>
 					<img height="15" src="controller/images/status_icon_red_cross.png" />
 				</div>

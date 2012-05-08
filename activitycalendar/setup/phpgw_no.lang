@@ -433,3 +433,4 @@ update_org	activitycalendar	no	Oppdater organisasjonsregister
 edit_contact_info	activitycalendar	no	For å redigere kontaktopplysninger:
 edit_contact_info_org	activitycalendar	no	Gå til organisasjonsopplysninger
 edit_contact_info_group	activitycalendar	no	Gå til gruppeopplysninger
+arena_helptext	activitycalendar	no	I feltet Navn skal det stå navn på arena, som det heter på folkemunne.<br/>Når du redigerer feltet besøksadresse, gjøres det automatisk oppslag i gatetabellen, dette for å sikre at adresser skrives riktig, og kan kobles mot kart.<br/>Når du har funnet rett gateadresse , gå til feltet Husnummer og legg inn husnummer.<br/>Trykk lagre.
