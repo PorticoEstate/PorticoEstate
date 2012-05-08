@@ -421,18 +421,6 @@
 				$this->status_id		= $default_status;
 			}
 
-/*
-			$bgcolor_array[1]	= '#dadada';
-			$bgcolor_array[2]	= '#dad0d0';
-			$bgcolor_array[3]	= '#dacaca';
-			$bgcolor_array[4]	= '#dac0c0';
-			$bgcolor_array[5]	= '#dababa';
-			$bgcolor_array[6]	= '#dab0b0';
-			$bgcolor_array[7]	= '#daaaaa';
-			$bgcolor_array[8]	= '#da9090';
-			$bgcolor_array[9]	= '#da8a8a';
-			$bgcolor_array[10]	= '#da7a7a';
- */
 			$bgcolor_array[1]	= '#da7a7a';
 			$bgcolor_array[2]	= '#dababa';
 			$bgcolor_array[3]	= '#dadada';
@@ -1249,15 +1237,16 @@
 			//values for Pagination
 			$json = array
 				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array(),
-					'show_sum'			=> $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property'),
-					'sum_budget'		=> $this->bo->sum_budget,
-					'sum_actual_cost'	=> $this->bo->sum_actual_cost
+					'recordsReturned' 		=> $datatable['pagination']['records_returned'],
+					'totalRecords' 			=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 			=> $datatable['pagination']['records_start'],
+					'sort'					=> $datatable['sorting']['order'],
+					'dir'					=> $datatable['sorting']['sort'],
+					'records'				=> array(),
+					'show_sum_estimate'		=> in_array('estimate', $custom_cols),//$this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property'),
+					'show_sum_actual_cost'	=> in_array('actual_cost', $custom_cols),
+					'sum_budget'			=> $this->bo->sum_budget,
+					'sum_actual_cost'		=> $this->bo->sum_actual_cost
 				);
 
 			// values for datatable

@@ -116,7 +116,7 @@
 
   	this.myParticularRenderEvent = function()
   	{
-		if(values_ds.show_sum)
+		if(values_ds.show_sum_estimate || values_ds.show_sum_actual_cost)
 		{
 			tableYUI.deleteTFoot();
 			addFooterDatatable();
@@ -128,14 +128,33 @@
 		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 		tmp_sum_actual_cost = YAHOO.util.Number.format(values_ds.sum_actual_cost, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 
+		var show_estimate = false;
+		var show_actual_cost = false;
 		count_empty = 0;
 		for(i=0;i<myColumnDefs.length;i++)
 		{
 			if (myColumnDefs[i].key == 'estimate')
 			{
+				show_estimate = true;
 				count_empty = i;
 				break;
 			}
+		}
+
+		count_empty_cost = 0;
+		for(i=0;i<myColumnDefs.length;i++)
+		{
+			if (myColumnDefs[i].key == 'actual_cost')
+			{
+				count_empty_cost = i;
+				show_actual_cost = true;
+				break;
+			}
+		}
+
+		if(!count_empty)
+		{
+			count_empty = count_empty_cost;
 		}
 
 		count_empty_end = myColumnDefs.length - count_empty - 2;
@@ -143,8 +162,14 @@
 		//Create ROW
 		newTR = document.createElement('tr');
 		td_empty(count_empty);
-		td_sum(tmp_sum_budget);
-		td_sum(tmp_sum_actual_cost);
+		if(show_estimate)
+		{
+			td_sum(tmp_sum_budget);
+		}
+		if(show_actual_cost)
+		{
+			td_sum(tmp_sum_actual_cost);
+		}
 		td_empty(count_empty_end);
 		//Add to Table
 		myfoot = tableYUI.createTFoot();
