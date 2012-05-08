@@ -170,4 +170,13 @@
 
 			return $values;
 		}
+
+		public function edit($data)
+		{
+			_debug_array($data);
+			die();
+			return $values;
+		}
+
+
 	}

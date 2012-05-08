@@ -77,7 +77,7 @@
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>
-					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
+					  	<form action="{update_action}" name="acl_form" id="acl_form" method="post">
 						<table align = "center" width="95%">
 								<xsl:call-template name="role_fields" />
 								<tr>
@@ -152,7 +152,7 @@
 				<xsl:value-of select="php:function('lang', 'date from')" />
 			</td>
 			<td>
-			  	<input type="text" name="values[start_date]" id="start_date" value="{voucher_info/voucher/line_text}"/>
+			  	<input type="text" name="values[active_from]" id="active_from" value=""/>
 			</td>
 		</tr>	
 		<tr class ='row_off'>
@@ -160,7 +160,7 @@
 				<xsl:value-of select="php:function('lang', 'date to')" />
 			</td>
 			<td>
-			  	<input type="text" name="values[end_date]" id="end_date" value="{voucher_info/voucher/line_text}"/>
+			  	<input type="text" name="values[active_to]" id="active_to" value=""/>
 			</td>
 		</tr>
 </xsl:template>
@@ -177,7 +177,7 @@
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
+	<div class="row_on"><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">

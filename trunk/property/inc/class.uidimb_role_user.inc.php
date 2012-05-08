@@ -255,8 +255,8 @@
 				'update_action'					=> self::link(array('menuaction' => 'property.uidimb_role_user.edit'))
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
@@ -313,4 +313,51 @@
 			return json_encode($values);
 		}
 
+		public function edit()
+		{
+			$user_id =	phpgw::get_var('user_id', 'int');
+			$dimb_id =	phpgw::get_var('dimb_id', 'int');
+			$role_id =	phpgw::get_var('role_id', 'int');
+			$query =	phpgw::get_var('query');
+
+			if($values = phpgw::get_var('values'))
+			{
+				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
+				{
+					$receipt['error'][]=true;
+					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
+				}
+				if(!$receipt['error'])
+				{
+					if($this->bo->edit($values))
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+				}
+			}
+
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$result['receipt'] = $receipt;
+				}
+				return $result;
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uidimb_role_user.index', 'user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query' => $query));
+			}
+		}
 	}
