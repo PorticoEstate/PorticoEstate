@@ -284,10 +284,11 @@
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 						
 			// Registers message and updates check items with message ticket id
+			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
-				$case->set_location_id($message_ticket_id);
-				$case->set_location_item_id($location_id);
+				$case->set_location_id($location_id_ticket);
+				$case->set_location_item_id($message_ticket_id);
 				$this->so->store($case);
 			}			
 			
