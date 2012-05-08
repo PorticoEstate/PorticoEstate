@@ -22,8 +22,6 @@ $(document).ready(function()
     });
 
 	$("#acl_form").live("submit", function(e){
-	return;
-
 		e.preventDefault();
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -46,7 +44,7 @@ $(document).ready(function()
 	    			if(obj.status == "updated")
 	    			{
 		    			$(submitBnt).val("Lagret");
-						var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query:$("#query").val()};
+						var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query_start:$("#query_start").val(),query_end:$("#query_end").val()};
 						execute_async(myDataTable_0,oArgs);
 					}
 					else
@@ -82,8 +80,6 @@ $(document).ready(function()
 	   				
 	   				}
 	   				$("#receipt").html(htmlString);
-	   				
-	   				update_form_values(line_id, voucher_id_orig);
 				}
 			}
 		});
@@ -93,8 +89,9 @@ $(document).ready(function()
 
 function update_dimb_role_user_table()
 {
-	var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query:$("#query").val()};
+	var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query_start:$("#query_start").val(),query_end:$("#query_end").val()};
 	execute_async(myDataTable_0,  oArgs);
+	$("#receipt").html('');
 }
 
 

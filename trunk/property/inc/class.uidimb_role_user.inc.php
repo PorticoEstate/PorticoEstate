@@ -255,6 +255,8 @@
 				'update_action'					=> self::link(array('menuaction' => 'property.uidimb_role_user.edit'))
 			);
 
+			$GLOBALS['phpgw']->jqcal->add_listener('query_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('query_end');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
@@ -285,10 +287,11 @@
 			$user_id =	phpgw::get_var('user_id', 'int');
 			$dimb_id =	phpgw::get_var('dimb_id', 'int');
 			$role_id =	phpgw::get_var('role_id', 'int');
-			$query =	phpgw::get_var('query');
+			$query_start =	phpgw::get_var('query_start');
+			$query_end =	phpgw::get_var('query_end');
 
 //			$this->bo->allrows = true;
-			$values = $this->bo->read(array('user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query' => $query));
+			$values = $this->bo->read(array('user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query_start' => $query_start, 'query_end' => $query_end));
 
 			foreach($values as &$entry)
 			{
@@ -352,6 +355,10 @@
 				{
 					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 					$result['receipt'] = $receipt;
+				}
+				else
+				{
+					$result['receipt'] = array();
 				}
 				return $result;
 			}
