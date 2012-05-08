@@ -36,6 +36,7 @@
 		private $deadline_date_ts;
 		private $deadline_date_txt;
 		private $info_text;
+		private $location_code;
 		private $num_open_cases;
 			
 		public function __construct(){}
@@ -82,6 +83,13 @@
 		
 		public function get_info_text() { return $this->info_text; }
 		
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
+		}
+		
+		public function get_location_code() { return $this->location_code; }
+		
 		public function set_num_open_cases($num_open_cases)
 		{
 			$this->num_open_cases = $num_open_cases;
@@ -99,6 +107,7 @@
 				'deadline_date_ts' => $this->get_deadline_date_ts(),
 				'deadline_date_txt' => $this->get_deadline_date_txt(),
 				'info_text' => $this->get_info_text(),
+				'location_code' => $this->get_location_code(),
 				'num_open_cases' => $this->get_num_open_cases()
 			);
 		}
