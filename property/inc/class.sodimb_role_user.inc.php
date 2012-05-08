@@ -26,6 +26,7 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
 
 	class property_sodimb_role_user
 	{
@@ -34,7 +35,7 @@
 
 		function __construct()
 		{
-			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account_id 	= (int) $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->db2			= clone($this->db);
 			$this->join			= & $this->db->join;
@@ -45,6 +46,9 @@
 
 		function read($data)
 		{
+			$query_start =  phpgwapi_datetime::date_to_timestamp($data['query_start']);
+			$query_end =  phpgwapi_datetime::date_to_timestamp($data['query_end']);
+
 			$dimb_id = (int) $data['dimb_id'];			
 			if(isset($data['user_id']) && $data['user_id'])
 			{
@@ -78,6 +82,15 @@
 				$where = 'AND';
 			}
 
+			if($query_start)
+			{
+				$filtermethod .= "{$where} active_from < $query_start";				
+			}
+
+			if($query_end)
+			{
+				$filtermethod .= "{$where} (active_to > $query_end OR active_to = 0)";				
+			}
 
 			$sql = "SELECT fm_ecodimb_role_user.id, fm_ecodimb.id as ecodimb, user_id,role_id, active_from, active_to, default_user, fm_ecodimb_role.name as role"
 			. " FROM fm_ecodimb_role_user"
@@ -173,10 +186,100 @@
 
 		public function edit($data)
 		{
-			_debug_array($data);
-			die();
-			return $values;
+			$active_from	= phpgwapi_datetime::date_to_timestamp($data['active_from']);
+			$active_to		= phpgwapi_datetime::date_to_timestamp($data['active_to']);
+			$delete 		= isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
+			$default_user 	= isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
+			$alter_date 	= isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
+			$add 			= isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
+
+			$this->db->transaction_begin();
+
+			$c_default_user = 0;
+			foreach($default_user as $id)
+			{
+				if( !in_array($id, $delete) )
+				{
+					$this->db->query("UPDATE fm_ecodimb_role_user SET default_user = 1 WHERE id = '{$id}'",__LINE__,__FILE__);
+					$c_default_user ++;
+				}
+			}
+
+			unset($id);
+
+			$c_alter_date = 0;
+			foreach($alter_date as $id)
+			{
+				if( !in_array($id, $delete) )
+				{
+					$value_set = array();
+					if($active_from)
+					{
+						$value_set['active_from'] = $active_from;
+					}
+					if($active_to)
+					{
+						$value_set['active_to'] = $active_to;
+					}
+					
+					if($value_set)
+					{
+						$value_set	= $this->db->validate_update($value_set);
+						$this->db->query("UPDATE fm_ecodimb_role_user SET {$value_set} WHERE id = '{$id}'",__LINE__,__FILE__);
+						unset($value_set);
+					}
+					$c_alter_date ++;
+				}
+			}
+			unset($id);
+
+			foreach($add as $info)
+			{
+				$user_arr = explode('_',  $info);
+				$value_set = array
+				(
+					'ecodimb'		=> $user_arr[0],
+					'role_id'		=> $user_arr[1],
+					'user_id'		=> $user_arr[2],
+					'default_user'	=> false,
+					'active_from'	=> $active_from ? $active_from : time(),
+					'active_to'		=> $active_to ? $active_to : 0,
+					'created_on'	=> time(),
+					'created_by'	=> $this->account_id
+				);
+				
+				$sql = 'INSERT INTO fm_ecodimb_role_user (' . implode(',', array_keys($value_set)) . ') VALUES (' . $this->db->validate_insert(array_values($value_set)) . ')';
+				$this->db->query($sql,__LINE__,__FILE__);				
+			}
+
+			$ok = false;
+			if($this->db->transaction_commit())
+			{
+				$ok = true;
+				foreach($delete as $id)
+				{
+					$this->db->query('UPDATE fm_ecodimb_role_user SET expired_on =' . time() . " , expired_by = {$this->account_id} WHERE id = '{$id}'",__LINE__,__FILE__);
+				}
+
+				if($delete)
+				{
+					phpgwapi_cache::message_set(lang('%1 roles deleted', count($delete)), 'message');
+				}
+				if($c_alter_date)
+				{
+					phpgwapi_cache::message_set(lang('%1 dates altered', $c_alter_date), 'message');
+				}
+				if($add)
+				{
+					phpgwapi_cache::message_set(lang('%1 roles added', count($add)), 'message');
+				}
+
+				if($c_default_user)
+				{
+					phpgwapi_cache::message_set(lang('%1 roles set at default', $c_default_user), 'message');
+				}
+			}
+
+			return $ok;
 		}
-
-
 	}

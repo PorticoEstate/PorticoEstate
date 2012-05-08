@@ -24,18 +24,6 @@
 	<style type="text/css">
 	#box { width: 200px; height: 5px; background: blue; }
 	//select { width: 200px; }
-	#voucher_id_filter { width: 800px; }
-	#dim_b { width: 200px; }
-	#dim_e { width: 200px; }
-	#period { width: 200px; }
-	#periodization { width: 200px; }
-	#periodization_start { width: 200px; }
-	#process_code { width: 200px; }
-	#tax_code { width: 200px; }
-	#approve_as { width: 200px; }
-	#_oppsynsmannid { width: 200px; }
-	#_saksbehandlerid { width: 200px; }
-	#_budsjettansvarligid { width: 200px; }
 	.row_on,.th_bright
 	{
 		background-color: #CCEEFF;
@@ -112,8 +100,10 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'role')" />
 		</td>
-		<td>
+		<td colspan = "2" align = "center">
 			<xsl:value-of select="php:function('lang', 'search')" />
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="php:function('lang', 'date')" />
 		</td>
 	</tr>
 	  <tr id="filters">
@@ -133,7 +123,10 @@
 		  </select>
 		</td>		
 		<td>
-			<input type="text" name="query" id="query"/>
+			<input type="text" name="query_start" id="query_start" size = "10"/>
+		</td>
+		<td>
+			<input type="text" name="query_end" id="query_end" size = "10"/>
 		</td>
 		<td>
 			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
