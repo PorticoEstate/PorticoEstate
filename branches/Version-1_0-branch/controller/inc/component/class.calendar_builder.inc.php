@@ -29,13 +29,13 @@ class calendar_builder {
 		$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $this->period_start_date, $this->period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
 		$dates_array = $date_generator->get_dates();
 		
-		// Inserts dates 
+		// Inserts dates
 		foreach($dates_array as $date){
 			
 			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 			
 			if($date < $todays_date){
-				$status = "control_not_accomplished";
+				$status = "CONTROL_NOT_DONE";
 			}else{
 				$status = "CONTROL_REGISTERED";
 			}
@@ -63,6 +63,8 @@ class calendar_builder {
 			// ========================  DISPLAY STATUS FOR A MONTH OR DAYS IN A MONTH  ==========================
 			if($period_type == "view_days" | ($period_type == "view_months" & $control->get_repeat_type() == 2 | $control->get_repeat_type() == 3))
 			{
+				$check_list_array = $control->get_check_lists_array();
+				
 				$calendar_array = $this->init_calendar( $control, $num, $period_type );
 								
 				foreach($control->get_check_lists_array() as $check_list)

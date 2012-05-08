@@ -41,6 +41,11 @@ var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo la
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($arena->get_id()){ echo $arena->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
+				<dt><?php if($editable){
+						echo lang('arena_helptext');
+						}
+				?>
+				</dt>
 				<dt>
 					<?php if($arena->get_arena_name() || $editable) { ?>
 					<label for="name"><?php echo lang('name') ?></label>
