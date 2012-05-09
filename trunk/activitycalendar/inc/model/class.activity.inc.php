@@ -251,8 +251,9 @@
 				if($this->get_new_org())
 				{
 					$group_name = activitycalendar_sogroup::get_instance()->get_group_name_local($this->get_group_id());
-					$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_1());
-					$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_2());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_group_id(), true));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_1()->get_id());
+					$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_2()->get_id());
 					$desc = activitycalendar_sogroup::get_instance()->get_description_local($this->get_group_id());
 				}
 				else
@@ -270,8 +271,9 @@
 				if($this->get_new_org())
 				{
 					$org_name = activitycalendar_soorganization::get_instance()->get_organization_name_local($this->get_organization_id());
-					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1());
-					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_organization_id()));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1()->get_id());
+					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2()->get_id());
 					$desc = activitycalendar_soorganization::get_instance()->get_description_local($this->get_organization_id());
 				}
 				else

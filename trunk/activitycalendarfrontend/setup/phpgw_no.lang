@@ -95,3 +95,5 @@ address	activitycalendarfrontend	no	Adresse
 activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for organisasjonen.<br/>Du velger organisasjon og aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
 mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
 mail_subject_update	activitycalendarfrontend	no	Melding fra AktivBy - Aktivitetsoversikt
+save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå videre til Ny aktivitet
+new_organization	activitycalendarfrontend	no	Ny organisasjon

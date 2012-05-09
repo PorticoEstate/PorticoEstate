@@ -195,7 +195,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	function get_group_contact_name($id)
 	{
 		$result = "Ingen";
-    	if(isset($id)){
+    	if(isset($id) && $id != ''){
 	    	$q1="SELECT name, phone, email FROM bb_group_contact WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -208,7 +208,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	function get_group_contact_name_local($id)
 	{
 		$result = "Ingen";
-    	if(isset($id)){
+    	if(isset($id) && $id != ''){
 	    	$q1="SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -221,7 +221,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	function get_org_contact_name($id)
 	{
 		$result = "Ingen";
-    	if(isset($id)){
+    	if(isset($id) && $id != ''){
 	    	$q1="SELECT name, phone, email FROM bb_organization_contact WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -234,7 +234,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	function get_org_contact_name_local($id)
 	{
 		$result = "Ingen";
-    	if(isset($id)){
+    	if(isset($id) && $id != ''){
 	    	$q1="SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
