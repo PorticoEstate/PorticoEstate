@@ -175,6 +175,8 @@
 					$persons[] = $p;
 				}
 				
+				$message = lang('organization_saved_form');
+				
 				$this->render('activity_new.php', array
 					(
 						'activity' 	=> $activity,
