@@ -962,10 +962,6 @@ ul.calendar li.heading {
     font-weight: bold;
     font-size:15px;
 }
-.control_details_wrp div{
-	width: 100px;
-	float:left;
-}
 .days_wrp div {
     float: left;
     font-size: 13px;
@@ -978,6 +974,10 @@ ul.calendar li.heading {
     height: 30px;
     text-align: center;
     width: 40px;
+}
+.months_wrp div a, .days_wrp div a, .control_details_wrp span, .days_wrp div span {
+    display: block;
+    padding: 8px 0;
 }
 ul.calendar li {
     height: 30px;
@@ -994,13 +994,11 @@ ul.calendar li.even {
     clear: both;
     padding: 1em;
 }
-.control_details_wrp div{
-   float:left;
-}
 .control_details_wrp div {
     float: left;
     height: 30px;
     padding: 0 10px;
+    width: 100px;
 }
 .control_details_wrp div.title {
     width: 200px;
@@ -1039,10 +1037,7 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
-    left: 18px;
-    position: absolute;
     text-decoration: none;
-    top: 8px;
 }
 .days_wrp a.view_info_box {
     left: 8px;

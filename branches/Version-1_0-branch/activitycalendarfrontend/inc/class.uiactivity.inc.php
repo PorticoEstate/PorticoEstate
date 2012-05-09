@@ -48,6 +48,12 @@
 		{
 			//$GLOBALS['phpgw']->redirect_link('/activitycalendarfrontend/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.edit', 'action' => 'new_activity'));
 			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
+			
+			$c = createobject('phpgwapi.config','activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+			
+			$ajaxUrl = $c->config_data['AJAXURL'];
 
 			$categories = $this->so_activity->get_categories();
 			$targets = $this->so_activity->get_targets();
@@ -67,7 +73,7 @@
 				if($o_id == "new_org")
 				{
 					$new_org = true;
-					$this->render('activity_new.php', array
+					$this->render('activity_new_org.php', array
 						(
 							'activity' 	=> $activity,
 							'new_organization' => true,
@@ -79,7 +85,8 @@
 							'offices' => $offices,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)
 					);
 				}
@@ -116,10 +123,95 @@
 							'offices' => $offices,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)
 					);
 				}
+			}
+			else if(isset($_POST['save_organization']))
+			{
+				//add new organization to internal activitycalendar organization register
+				$org_info['name'] = phpgw::get_var('orgname');
+				$org_info['orgnr'] = phpgw::get_var('orgno');
+				$org_info['homepage'] = phpgw::get_var('homepage');
+				$org_info['phone'] = phpgw::get_var('phone');
+				$org_info['email'] = phpgw::get_var('email');
+				$org_info['description'] = phpgw::get_var('org_description');
+				$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
+				//$org_info['zip'] = phpgw::get_var('postaddress');
+				$org_info['district'] = phpgw::get_var('org_district'); 
+				$org_info['status'] = "new";
+				$o_id = $this->so_activity->add_organization_local($org_info);
+				
+				//add contact persons
+				$contact1 = array();
+				$contact1['name'] = phpgw::get_var('org_contact1_name');
+				$contact1['phone'] = phpgw::get_var('org_contact1_phone');
+				$contact1['mail'] = phpgw::get_var('org_contact1_mail');
+				$contact1['org_id'] = $o_id;
+				$contact1['group_id'] = 0;
+				$this->so_activity->add_contact_person_local($contact1);
+				
+				if(phpgw::get_var('org_contact2_name'))
+				{
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('org_contact2_name');
+					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
+					$contact2['mail'] = phpgw::get_var('org_contact2_mail');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$this->so_activity->add_contact_person_local($contact2);
+				}
+				else
+				{
+					$this->so_activity->add_contact_person_local($contact1);
+				}
+				
+				//$persons = $this->so_organization->get_contacts_local_as_objects($o_id);
+				//var_dump($persons);
+				$person_arr = $this->so_contact->get_local_contact_persons($o_id);
+				foreach($person_arr as $p)
+				{
+					//var_dump($p);
+					$persons[] = $p;
+				}
+				
+				$person_ids = $this->so_organization->get_contacts_local($o_id);
+				$desc = phpgw::get_var('org_description');
+				$organization = $this->so_organization->get_organization_local($o_id);
+				$new_org = true;
+
+				$organization = $this->so_organization->get_organization_local($o_id);
+				$person_arr = $this->so_organization->get_contacts_local_as_objects($o_id);
+				foreach($person_arr as $p)
+				{
+					//var_dump($p);
+					$persons[] = $p;
+				}
+				
+				$message = lang('organization_saved_form');
+				
+				$this->render('activity_new.php', array
+					(
+						'activity' 	=> $activity,
+						'new_organization' => true,
+						'organization' => $organization,
+						'contact1' => $persons[0],
+						'contact2' => $persons[1],
+						'groups' => $groups,
+						'arenas' => $arenas,
+						'buildings' => $buildings,
+						'categories' => $categories,
+						'targets' => $targets,
+						'districts' => $districts,
+						'offices' => $offices,
+						'editable' => true,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
+					)
+				);
 			}
 			else if(isset($_POST['save_activity']))
 			{
@@ -134,41 +226,9 @@
 					$get_org_from_local = true;
 				}
 				
-				if($o_id == "new_org")
+				if($get_org_from_local)
 				{
 					$activity->set_new_org(true);
-					//add new organization to internal activitycalendar organization register
-					$org_info['name'] = phpgw::get_var('orgname');
-					$org_info['orgnr'] = phpgw::get_var('orgno');
-					$org_info['homepage'] = phpgw::get_var('homepage');
-					$org_info['phone'] = phpgw::get_var('phone');
-					$org_info['email'] = phpgw::get_var('email');
-					$org_info['description'] = phpgw::get_var('org_description');
-					$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-					//$org_info['zip'] = phpgw::get_var('postaddress');
-					$org_info['district'] = phpgw::get_var('org_district'); 
-					$org_info['status'] = "new";
-					$o_id = $this->so_activity->add_organization_local($org_info);
-					
-					//add contact persons
-					$contact1 = array();
-					$contact1['name'] = phpgw::get_var('org_contact1_name');
-					$contact1['phone'] = phpgw::get_var('org_contact1_phone');
-					$contact1['mail'] = phpgw::get_var('org_contact1_mail');
-					$contact1['org_id'] = $o_id;
-					$contact1['group_id'] = 0;
-					$this->so_activity->add_contact_person_local($contact1);
-					
-					$contact2 = array();
-					$contact2['name'] = phpgw::get_var('org_contact2_name');
-					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
-					$contact2['mail'] = phpgw::get_var('org_contact2_mail');
-					$contact2['org_id'] = $o_id;
-					$contact2['group_id'] = 0;
-					$this->so_activity->add_contact_person_local($contact2);
-					
-					//$persons = $this->so_organization->get_contacts_local_as_objects($o_id);
-					//var_dump($persons);
 					$person_arr = $this->so_contact->get_local_contact_persons($o_id);
 					foreach($person_arr as $p)
 					{
@@ -176,7 +236,7 @@
 						$persons[] = $p;
 					}
 					$person_ids = $this->so_organization->get_contacts_local($o_id);
-					$desc = phpgw::get_var('org_description');
+					$desc = $this->so_organization->get_description_local($o_id);
 					$organization = $this->so_organization->get_organization_local($o_id);
 					$new_org = true;
 					$new_org_group = true;
@@ -303,6 +363,8 @@
 				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($person_ids);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+				$activity->set_contact_person_2_address(phpgw::get_var('contact2_address') . ", " . phpgw::get_var('contact2_number'));
+				$activity->set_contact_person_2_zip(phpgw::get_var('contact2_postaddress'));
 				$activity->set_frontend(true);
 				$activity->set_new_org($new_org_group);
 				
@@ -345,7 +407,8 @@
 									'districts' => $districts,
 									'offices' => $offices,
 									'message' => isset($message) ? $message : phpgw::get_var('message'),
-									'error' => isset($error) ? $error : phpgw::get_var('error')
+									'error' => isset($error) ? $error : phpgw::get_var('error'),
+									'ajaxURL' => $ajaxUrl
 								)
 					);
 				}
@@ -378,7 +441,8 @@
 							'editable' => true,
 							'cancel_link' => $cancel_link,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -387,7 +451,8 @@
 			{
 				return $this->render('activity_new_step_1.php', array
 						(
-							'organizations' => $organizations
+							'organizations' => $organizations,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 			}
@@ -420,6 +485,12 @@
 		{
 			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
 
+			$c = createobject('phpgwapi.config','activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+			
+			$ajaxUrl = $c->config_data['AJAXURL'];
+			
 			$id = intval(phpgw::get_var('id', 'GET'));
 
 			$categories = $this->so_activity->get_categories();
@@ -445,7 +516,8 @@
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,
-							'message' => $message
+							'message' => $message,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -461,7 +533,8 @@
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,
-							'organizations' => $organizations
+							'organizations' => $organizations,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -470,7 +543,8 @@
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					return $this->render('activity_edit_step_1.php', array
 						(
-							'activities' => $activities
+							'activities' => $activities,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -486,7 +560,8 @@
 						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 						return $this->render('activity_edit_step_1.php', array
 							(
-								'activities' => $activities
+								'activities' => $activities,
+								'ajaxURL' => $ajaxUrl
 							)	
 						);
 					}
@@ -497,7 +572,8 @@
 						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 						return $this->render('activity_edit_step_1.php', array
 							(
-								'activities' => $activities
+								'activities' => $activities,
+								'ajaxURL' => $ajaxUrl
 							)	
 						);
 					}
@@ -589,7 +665,8 @@
 												'districts' => $districts,
 												'offices' => $offices,
 												'message' => isset($message) ? $message : phpgw::get_var('message'),
-												'error' => isset($error) ? $error : phpgw::get_var('error')
+												'error' => isset($error) ? $error : phpgw::get_var('error'),
+												'ajaxURL' => $ajaxUrl
 											)
 								);
 							}
@@ -618,7 +695,8 @@
 										'editable' => true,
 										'cancel_link' => $cancel_link,
 										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error')
+										'error' => isset($error) ? $error : phpgw::get_var('error'),
+										'ajaxURL' => $ajaxUrl
 									)	
 								);
 							}
@@ -641,7 +719,8 @@
 										'offices' => $offices,
 										'editable' => true,
 										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error')
+										'error' => isset($error) ? $error : phpgw::get_var('error'),
+										'ajaxURL' => $ajaxUrl
 									)
 						);
 					}
