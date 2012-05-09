@@ -12,10 +12,19 @@
 	// Make sure we're always logged in
 	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-		$login = "bookingguest";
-		$passwd = "bkbooking";
-		$_POST['submitit'] = "";
+		
+		$c = createobject('phpgwapi.config','activitycalendarfrontend');
+		$c->read();
+		$config = $c->config_data;
 
+		$login = $c->config_data['anonymous_user'];
+		$passwd = $c->config_data['anonymous_pass'];
+		$_POST['submitit'] = "";
+		
+/*		$login = "activitycalendar_guest";
+		$passwd = "bkactivities";
+		$_POST['submitit'] = "";
+*/
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 		if(!$GLOBALS['sessionid'])
 		{

@@ -48,12 +48,9 @@
 		<ul class="calendar">
 				<li class="heading">
 				<div class="control_details_wrp">
-					<xsl:if test="show_location">
-						<div class="location">Lokasjon</div>
-					</xsl:if>
-					<div class="title">Tittel</div>
-					<div class="assigned">Tildelt</div>
-					<div class="frequency">Frekvens</div>
+					<div class="title"><span>Tittel</span></div>
+					<div class="assigned"><span>Tildelt</span></div>
+					<div class="frequency"><span>Frekvens</span></div>
 					</div>
 					<div class="months_wrp">
 					<xsl:for-each select="heading_array">
@@ -98,13 +95,13 @@
 								</div>
 							</xsl:if>
 							<div class="title">
-				      			<xsl:value-of select="control/title"/>
+				      			<span><xsl:value-of select="control/title"/></span>
 							</div>
 							<div class="assigned">
-				      			<xsl:value-of select="control/responsibility_name"/>
+				      			<span><xsl:value-of select="control/responsibility_name"/></span>
 							</div>
 							<div class="frequency">
-				      			<xsl:value-of select="control/repeat_type_label"/>
+				      			<span><xsl:value-of select="control/repeat_type_label"/></span>
 							</div>
 						</div>		
 						<div class="months_wrp">

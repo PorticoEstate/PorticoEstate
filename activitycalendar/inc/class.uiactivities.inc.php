@@ -265,6 +265,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				}
 			}
 		}
+		$editable = true;
+		if($activity->get_new_org())
+		{
+			$error = lang('org_not_transferred');
+			$editable = false;
+		}
 
 		return $this->render('activity.php', array
 			(
@@ -278,7 +284,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'targets' => $targets,
 				'districts' => $districts,
 				'offices' => $offices,
-				'editable' => true,
+				'editable' => $editable,
 				'cancel_link' => $cancel_link,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')

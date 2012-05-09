@@ -443,7 +443,14 @@ function allOK()
 					else
 					{
 						if($activity->get_organization_id()){
-							echo activitycalendar_soorganization::get_instance()->get_organization_name($activity->get_organization_id());
+							if($activity->get_new_org())
+							{
+								echo activitycalendar_soorganization::get_instance()->get_organization_name_local($activity->get_organization_id());
+							}
+							else
+							{
+								echo activitycalendar_soorganization::get_instance()->get_organization_name($activity->get_organization_id());
+							}
 						}
 					}
 					?>
@@ -496,7 +503,10 @@ function allOK()
 						}
 						else if($activity->get_organization_id())
 						{
-							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+							if($activity->get_new_org())
+								echo $contpers_so->get_org_contact_name_local($activity->get_contact_person_1());
+							else
+								echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
 						}
 					?>
 				</dd>
@@ -513,7 +523,10 @@ function allOK()
 						}
 						else if($activity->get_organization_id())
 						{
-							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+							if($activity->get_new_org())
+								echo $contpers_so->get_org_contact_name_local($activity->get_contact_person_2());
+							else
+								echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
 						}
 					?>
 				</dd>
