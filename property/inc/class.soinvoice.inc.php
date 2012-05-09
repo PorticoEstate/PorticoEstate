@@ -1103,7 +1103,7 @@
 			$dimb		= (int) $dimb;
 			$role_id	= (int) $role_id;
 			$sql = "SELECT user_id FROM fm_ecodimb_role_user"
-			." WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND expired_on IS NULL AND default_user = 1";
+			." WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND expired_on IS NULL AND default_user = 1  AND active_from < " . time(). ' AND (active_to > ' . time() . ' OR active_to = 0)';
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
