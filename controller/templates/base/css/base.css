@@ -1007,7 +1007,7 @@ ul.calendar li.even {
 }
 ul.calendar div.location {
     text-align: left;
-    width: 600px;
+    width: 100px;
 }
 .control_details_wrp div.assigned {
     text-align: left;
