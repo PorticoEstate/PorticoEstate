@@ -45,35 +45,50 @@ var divcontent_end = "</select>";
 
 function allOK()
 {
-/*	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
+	if(document.getElementById('orgname').value == null || document.getElementById('orgname').value == '')
 	{
-		alert("Tittel må fylles ut!");
+		alert("Organisasjonsnavn må fylles ut!");
 		return false;
 	} 
-	if(document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0)
+	if(document.getElementById('org_district').value == null || document.getElementById('org_district').value == 0)
 	{
-		if(document.getElementById('arena_id').value == null || document.getElementById('arena_id').value == 0)
+		alert("Bydel må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('phone').value == null || document.getElementById('phone').value == '')
+	{
+		alert("Telefonnummer for organisasjonen må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('address').value == null || document.getElementById('address').value == 0)
+	{
+		alert("Gateadresse må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('postaddress').value == null || document.getElementById('postaddress').value == '')
+	{
+		alert("Postnummer og sted må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('org_description').value == null || document.getElementById('org_description').value == '')
+	{
+		alert("Beskrivelse for organisasjonen må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('org_contact1_name').value == null || document.getElementById('org_contact1_name').value == '')
+	{
+		alert("Navn på kontaktperson 1 må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('org_contact1_mail').value == null || document.getElementById('org_contact1_mail').value == '')
+	{
+		if(document.getElementById('org_contact1_phone').value == null || document.getElementById('org_contact1_phone').value == '')
 		{
-			alert("Arena må fylles ut!");
+			alert("E-post eller telefon for kontaktperson 1 må fylles ut!");
 			return false;
 		}
 	}
-	if(document.getElementById('time').value == null || document.getElementById('time').value == '')
-	{
-		alert("Tid må fylles ut!");
-		return false;
-	}
-	if(document.getElementById('category').value == null || document.getElementById('category').value == 0)
-	{
-		alert("Kategori må fylles ut!");
-		return false;
-	}
-	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
-	{
-		alert("Hovedansvarlig kulturkontor må fylles ut!");
-		return false;
-	}
-	else */
+	else 
 		return true;
 }
 
