@@ -44,9 +44,9 @@ class month_calendar {
 	
 	function init_calendar(){
 
-		$this->calendar_array = array();
+		$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $this->month, $this->year);
 		
-		for($i=1;$i<=$num;$i++){
+		for($i=1;$i<=$num_days_in_month;$i++){
 			$this->calendar_array[$i] = null;
 		}
 		
@@ -69,6 +69,24 @@ class month_calendar {
 		}
 	}
    	
+	public static function get_heading_array($year, $month){
+		$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);		
+		$heading_array = array();
+		
+		for($i=1;$i<=$num_days_in_month;$i++){
+			$heading_array[$i] = "$i";	
+		}
+		
+		return $heading_array;
+	}
+	
+	public static function get_month_name($month){
+	
+		$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
+		
+		return $month_array[$month]; 
+	}
+		
 	// Function that puts checklists into a twelve months array for displaying a year or a days array for displaying a month
 	public function build_calendar( $check_lists_array ){
 		

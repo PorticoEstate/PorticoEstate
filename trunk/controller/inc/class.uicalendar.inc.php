@@ -53,7 +53,6 @@
 				
 		public $public_functions = array
 		(
-			'index'	=>	true,
 			'view_calendar_for_month'			=>	true,
 			'view_calendar_for_year'			=>	true,
 			'view_calendar_year_for_locations'	=>  true,
@@ -64,12 +63,12 @@
 		{
 			parent::__construct();
 			
-			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 			
-			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 			
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
@@ -103,8 +102,6 @@
 			
 			$to_date_ts = strtotime("$to_month/01/$to_year");
 												
-			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
-			
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
@@ -120,39 +117,37 @@
 				$location_code = $my_locations[0]["location_code"];
 			}
 			
-			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-			
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts);
 
-			// Fetches control ids with check lists for specified time period
+			// Fetches all control ids with check lists for specified time period
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts);
 			
 			// Loops through all controls for location and populates controls with check lists
-			$control_with_check_list_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
+			$controls_with_check_list_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 			
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $control_with_check_list_array, $num_days_in_month, "view_days" );
+			$controls_calendar_array = array();
+			foreach($controls_with_check_list_array as $control){
+				$month_calendar = new month_calendar($control, $year, $month);
+				$calendar_array = $month_calendar->build_calendar( $control->get_check_lists_array() );
+
+				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+			}
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 		
 			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
-			
-			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
-			
-			for($i=1;$i<=$num_days_in_month;$i++){
-				$heading_array[$i] = "$i";	
-			}
- 			
+			 			
 			$data = array
 			(		
 				'my_locations'	  		  => $my_locations,
 				'view_location_code'	  => $location_code,
 				'property_array'	  	  => $property_array,
 				'location_array'		  => $location_array,
-				'heading_array'		  	  => $heading_array,
+				'heading_array'		  	  => month_calendar::get_heading_array($year, $month),
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
-				'period' 			  	  => $month_array[ $month - 1],
+				'period' 			  	  => month_calendar::get_month_name($month-1),
 				'month_nr' 			  	  => $month,
 				'year' 			  	  	  => $year,
 			);
@@ -396,15 +391,6 @@
 		
 			$location_finder = new location_finder();
 			$my_locations = $location_finder->get_responsibilities( $criteria );
-
-			
-			$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
-			
-			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-			
-			for($i=1;$i<=$num_days_in_month;$i++){
-				$heading_array[$i] = "$i";	
-			}
  			
 			$data = array
 			(		
@@ -412,12 +398,12 @@
 				'view_location_code'	  		=> $location_code,
 				'property_array'	  	  		=> $property_array,
 				'location_array'		  		=> $location_array,
-				'heading_array'		  	  		=> $heading_array,
 				'locations_with_calendar_array' => $locations_with_calendar_array,
 				'date_format' 			  		=> $date_format,
-				'period' 			  	  		=> $month_array[ $month - 1],
 				'month_nr' 			  	  		=> $month,
 				'year' 			  	  	  		=> $year,
+				'heading_array'		  	  		=> month_calendar::get_heading_array($year, $month),
+				'period' 			  	 		=> month_calendar::get_month_name($month-1),
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);

@@ -78,13 +78,13 @@
 			<ul class="calendar month">
 				<li class="heading">
 					<div class="control_details_wrp">
-						<div class="title">Tittel</div>
-						<div class="assigned">Tildelt</div>
-						<div class="frequency">Frekvens</div>
+						<div class="title"><span>Tittel</span></div>
+						<div class="assigned"><span>Tildelt</span></div>
+						<div class="frequency"><span>Frekvens</span></div>
 					</div>
 					<div class="days_wrp">
 						<xsl:for-each select="heading_array">
-							<div><xsl:value-of select="."/></div>
+							<div><span><xsl:value-of select="."/></span></div>
 						</xsl:for-each>
 					</div>
 				</li>
@@ -104,14 +104,16 @@
 					
 					<div class="control_details_wrp">
 						<div class="title">
-			      			<xsl:value-of select="control/title"/>
+			      			<span><xsl:value-of select="control/title"/></span>
 						</div>
 						<div class="assigned">
-			      			<xsl:value-of select="control/responsibility_name"/>
+			      			<span><xsl:value-of select="control/responsibility_name"/></span>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_type_label"/>
-			      			<xsl:value-of select="control/repeat_interval"/>
+			      			<span>
+			      				<xsl:value-of select="control/repeat_type_label"/>
+			      				<xsl:value-of select="control/repeat_interval"/>
+			      			</span>
 						</div>
 				
 			</div>

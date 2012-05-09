@@ -13,7 +13,7 @@
 	<h3 class="box_header ext">Melding registrert</h3>
 	<div id="caseMessage" class="box ext">
 		
-			<a id="showMessage">
+			<a id="showMessage" target="_blank">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
 					<xsl:text>&amp;id=</xsl:text>
