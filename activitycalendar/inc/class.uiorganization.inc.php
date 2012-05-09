@@ -161,7 +161,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact2 = array();
 					$contact2['name'] = $contact2_name;
 					$contact2['phone'] = $contact2_phone;
-					$contact2['mail'] = $contact_mail_2;
+					$contact2['mail'] = $contact2_email;
 					$contact2['group_id'] = $new_group_id;
 					$soactivity->add_contact_person_group($contact2);
 					
