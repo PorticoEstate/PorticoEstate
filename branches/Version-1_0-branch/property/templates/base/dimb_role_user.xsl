@@ -23,19 +23,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<style type="text/css">
 	#box { width: 200px; height: 5px; background: blue; }
-	//select { width: 200px; }
-	#voucher_id_filter { width: 800px; }
-	#dim_b { width: 200px; }
-	#dim_e { width: 200px; }
-	#period { width: 200px; }
-	#periodization { width: 200px; }
-	#periodization_start { width: 200px; }
-	#process_code { width: 200px; }
-	#tax_code { width: 200px; }
-	#approve_as { width: 200px; }
-	#_oppsynsmannid { width: 200px; }
-	#_saksbehandlerid { width: 200px; }
-	#_budsjettansvarligid { width: 200px; }
+	select { width: 200px; }
 	.row_on,.th_bright
 	{
 		background-color: #CCEEFF;
@@ -77,7 +65,7 @@
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>
-					  	<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
+					  	<form action="{update_action}" name="acl_form" id="acl_form" method="post">
 						<table align = "center" width="95%">
 								<xsl:call-template name="role_fields" />
 								<tr>
@@ -107,13 +95,15 @@
 			<xsl:value-of select="php:function('lang', 'dim b')" />
 		</td>
 		<td>
-			<xsl:value-of select="php:function('lang', 'user')" />
-		</td>
-		<td>
 			<xsl:value-of select="php:function('lang', 'role')" />
 		</td>
 		<td>
+			<xsl:value-of select="php:function('lang', 'user')" />
+		</td>
+		<td colspan = "2" align = "center">
 			<xsl:value-of select="php:function('lang', 'search')" />
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="php:function('lang', 'date')" />
 		</td>
 	</tr>
 	  <tr id="filters">
@@ -123,17 +113,20 @@
 		  </select>
 		</td>		
 		<td>
-		  <select id="user_id" name="user_id">
-			<xsl:apply-templates select="user_list/options"/>
-		  </select>
-		</td>		
-		<td>
 		  <select id="role_id" name="role_id">
 			<xsl:apply-templates select="role_list/options"/>
 		  </select>
 		</td>		
 		<td>
-			<input type="text" name="query" id="query"/>
+		  <select id="user_id" name="user_id">
+			<xsl:apply-templates select="user_list/options"/>
+		  </select>
+		</td>		
+		<td>
+			<input type="text" name="query_start" id="query_start" size = "10"/>
+		</td>
+		<td>
+			<input type="text" name="query_end" id="query_end" size = "10"/>
 		</td>
 		<td>
 			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
@@ -152,7 +145,7 @@
 				<xsl:value-of select="php:function('lang', 'date from')" />
 			</td>
 			<td>
-			  	<input type="text" name="values[start_date]" id="start_date" value="{voucher_info/voucher/line_text}"/>
+			  	<input type="text" name="values[active_from]" id="active_from" value=""/>
 			</td>
 		</tr>	
 		<tr class ='row_off'>
@@ -160,7 +153,7 @@
 				<xsl:value-of select="php:function('lang', 'date to')" />
 			</td>
 			<td>
-			  	<input type="text" name="values[end_date]" id="end_date" value="{voucher_info/voucher/line_text}"/>
+			  	<input type="text" name="values[active_to]" id="active_to" value=""/>
 			</td>
 		</tr>
 </xsl:template>
@@ -177,7 +170,7 @@
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-	<div class="row_on"><input type="submit" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/></div>
+	<div class="row_on"><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">

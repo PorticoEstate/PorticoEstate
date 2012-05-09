@@ -43,7 +43,7 @@
 		}
 
 
-		function read($data)
+		public function read($data)
 		{
 			static $users = array();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -65,6 +65,11 @@
 			}
 
 			return $values;
+		}
 
+		public function edit($data)
+		{
+			$values =  $this->so->edit($data);
+			return $values;
 		}
 	}

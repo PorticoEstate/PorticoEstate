@@ -97,7 +97,7 @@ class calendar_builder {
 				
 				foreach($control->get_agg_open_cases_pr_month_array() as $status_agg_month_info)
 				{
-					$status = "controls_accomplished_with_errors";
+					$status = "CONTROLS_DONE_WITH_ERRORS";
 					
 					$calendar_array[$status_agg_month_info->get_month_nr()]["status"] = $status;
 					$calendar_array[$status_agg_month_info->get_month_nr()]["info"] = $status_agg_month_info->get_agg_open_cases();
