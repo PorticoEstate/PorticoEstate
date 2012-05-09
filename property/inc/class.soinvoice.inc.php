@@ -1045,15 +1045,15 @@
 			{
 				$dimb = (int) $dimb;
 				$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
-				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 1 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 1 {$filter_dimb} AND expired_on IS NULL AND active_from < " . time(). ' AND (active_to > ' . time() . ' OR active_to = 0)');
 				$this->db->next_record();
 				$this->role['is_janitor'] = !!$this->db->f('user_id');
 
-				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 2 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 2 {$filter_dimb} AND expired_on IS NULL AND active_from < " . time(). ' AND (active_to > ' . time() . ' OR active_to = 0)');
 				$this->db->next_record();
 				$this->role['is_supervisor'] = !!$this->db->f('user_id');
 
-				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 3 {$filter_dimb} AND expired_on IS NULL");
+				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id = 3 {$filter_dimb} AND expired_on IS NULL AND active_from < " . time(). ' AND (active_to > ' . time() . ' OR active_to = 0)');
 				$this->db->next_record();
 				$this->role['is_budget_responsible'] = !!$this->db->f('user_id');
 				
@@ -1075,9 +1075,11 @@
 			$filter_dimb = $dimb ? "AND ecodimb = {$dimb}" : '';
 			$role_id = (int) $role_id;
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
-			." {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
-			." WHERE role_id = {$role_id} {$filter_dimb} AND expired_on IS NULL"
-			." ORDER BY account_lastname ASC, account_firstname ASC";
+			. " {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
+			. " WHERE role_id = {$role_id} {$filter_dimb} AND expired_on IS NULL"
+			. ' AND active_from < ' . time()
+			. ' AND (active_to > ' . time() . ' OR active_to = 0)'
+			. " ORDER BY account_lastname ASC, account_firstname ASC";
 
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
