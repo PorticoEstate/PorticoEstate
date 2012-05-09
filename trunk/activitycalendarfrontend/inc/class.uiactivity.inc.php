@@ -48,6 +48,12 @@
 		{
 			//$GLOBALS['phpgw']->redirect_link('/activitycalendarfrontend/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.edit', 'action' => 'new_activity'));
 			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
+			
+			$c = createobject('phpgwapi.config','activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+			
+			$ajaxUrl = $c->config_data['AJAXURL'];
 
 			$categories = $this->so_activity->get_categories();
 			$targets = $this->so_activity->get_targets();
@@ -79,7 +85,8 @@
 							'offices' => $offices,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)
 					);
 				}
@@ -116,7 +123,8 @@
 							'offices' => $offices,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)
 					);
 				}
@@ -200,7 +208,8 @@
 						'offices' => $offices,
 						'editable' => true,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error')
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
 					)
 				);
 			}
@@ -398,7 +407,8 @@
 									'districts' => $districts,
 									'offices' => $offices,
 									'message' => isset($message) ? $message : phpgw::get_var('message'),
-									'error' => isset($error) ? $error : phpgw::get_var('error')
+									'error' => isset($error) ? $error : phpgw::get_var('error'),
+									'ajaxURL' => $ajaxUrl
 								)
 					);
 				}
@@ -431,7 +441,8 @@
 							'editable' => true,
 							'cancel_link' => $cancel_link,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -440,7 +451,8 @@
 			{
 				return $this->render('activity_new_step_1.php', array
 						(
-							'organizations' => $organizations
+							'organizations' => $organizations,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 			}
@@ -473,6 +485,12 @@
 		{
 			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
 
+			$c = createobject('phpgwapi.config','activitycalendarfrontend');
+			$c->read();
+			$config = $c->config_data;
+			
+			$ajaxUrl = $c->config_data['AJAXURL'];
+			
 			$id = intval(phpgw::get_var('id', 'GET'));
 
 			$categories = $this->so_activity->get_categories();
@@ -498,7 +516,8 @@
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,
-							'message' => $message
+							'message' => $message,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -514,7 +533,8 @@
 					return $this->render('activity_edit_step_1.php', array
 						(
 							'activities' => $activities,
-							'organizations' => $organizations
+							'organizations' => $organizations,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -523,7 +543,8 @@
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					return $this->render('activity_edit_step_1.php', array
 						(
-							'activities' => $activities
+							'activities' => $activities,
+							'ajaxURL' => $ajaxUrl
 						)	
 					);
 				}
@@ -539,7 +560,8 @@
 						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 						return $this->render('activity_edit_step_1.php', array
 							(
-								'activities' => $activities
+								'activities' => $activities,
+								'ajaxURL' => $ajaxUrl
 							)	
 						);
 					}
@@ -550,7 +572,8 @@
 						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 						return $this->render('activity_edit_step_1.php', array
 							(
-								'activities' => $activities
+								'activities' => $activities,
+								'ajaxURL' => $ajaxUrl
 							)	
 						);
 					}
@@ -642,7 +665,8 @@
 												'districts' => $districts,
 												'offices' => $offices,
 												'message' => isset($message) ? $message : phpgw::get_var('message'),
-												'error' => isset($error) ? $error : phpgw::get_var('error')
+												'error' => isset($error) ? $error : phpgw::get_var('error'),
+												'ajaxURL' => $ajaxUrl
 											)
 								);
 							}
@@ -671,7 +695,8 @@
 										'editable' => true,
 										'cancel_link' => $cancel_link,
 										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error')
+										'error' => isset($error) ? $error : phpgw::get_var('error'),
+										'ajaxURL' => $ajaxUrl
 									)	
 								);
 							}
@@ -694,7 +719,8 @@
 										'offices' => $offices,
 										'editable' => true,
 										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error')
+										'error' => isset($error) ? $error : phpgw::get_var('error'),
+										'ajaxURL' => $ajaxUrl
 									)
 						);
 					}
