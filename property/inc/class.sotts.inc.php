@@ -582,6 +582,11 @@
 
 			$entity[$i]['type']='.project';
 			$uicols[]	= 'project';
+			$i++;
+
+			$entity[$i]['type']='.project.workorder';
+			$uicols[]	= 'workorder';
+
 
 			$this->uicols_related	= $uicols;
 			return $entity;
