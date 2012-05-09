@@ -353,7 +353,7 @@
 					$this->so->update( $case );
 				}
 				
-				// Gets first case of cases related to the message  
+				// Gets first case of cases related to the message
 				$case = $cases_array[0];
 
 				// Gets check_item from case
