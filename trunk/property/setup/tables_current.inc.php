@@ -1172,7 +1172,7 @@
 			'fk' => array(),
 			'uc' => array()
 		),
-		'fm_ecodimd_role' => array(
+		'fm_ecodimb_role' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '25','nullable' => False)
@@ -1188,9 +1188,9 @@
 				'ecodimb' => array('type' => 'int','precision' => '4','nullable' => False),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'role_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'default' => array('type' => 'int','precision' => '2','nullable' => true),
-				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'default_user' => array('type' => 'int','precision' => '2','nullable' => true, 'default' => 0),
+				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => True, 'default' => 0),
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'expired_on' => array('type' => 'int', 'precision' => 4,'nullable' => True),
@@ -1198,7 +1198,7 @@
 			),
 			'pk' => array('id'),
 			'ix' => array(),
-			'fk' => array('fm_ecodimd_role' => array('role_id' => 'id'),'fm_ecodimd' => array('ecodimd' => 'id'),'phpgw_accounts' => array('user_id'=>'account_id')),
+			'fk' => array('fm_ecodimb_role' => array('role_id' => 'id'),'fm_ecodimb' => array('ecodimb' => 'id'),'phpgw_accounts' => array('user_id'=>'account_id')),
 			'uc' => array()
 		),
 		'fm_ecodimd' => array(
