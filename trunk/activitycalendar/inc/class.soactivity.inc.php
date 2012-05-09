@@ -949,6 +949,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$targets[] = array(
 					'id'				=> (int) $this->db->f('id'),
 					'name'				=> utf8_decode($this->db->f('name',true)),
+					'sort'				=> (int) $this->db->f('sort'),
 			);
 		}
 		return $targets;
