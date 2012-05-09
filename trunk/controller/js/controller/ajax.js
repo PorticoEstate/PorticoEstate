@@ -673,8 +673,9 @@ $(document).ready(function(){
 							$(submitBnt).addClass("not_active");
 		    			  }, 1000);
 
-		    			  $(thisForm).delay(1500).slideUp(500);
-		    			  $(thisForm).parents("ul.expand_list").find("h4 img").delay(1500).attr("src", "controller/images/arrow_right.png");
+		    			  $(thisForm).delay(1500).slideUp(500, function(){
+		    				  $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");  
+		    			  });
 					  }
 				  }
 				}
