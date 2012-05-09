@@ -719,7 +719,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$whereclause_date = "AND last_change_date > {$from_date}";
 		}
 		$activities = array();
-		$sql = "SELECT * FROM activity_activity where state=3 {$whereclause_date}";
+		$sql = "SELECT * FROM activity_activity where state in(3,5) {$whereclause_date}";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
