@@ -2368,9 +2368,14 @@
 
 				if ( (isset($values['send_mail']) && $values['send_mail']) 
 					|| (isset($this->bo->config->config_data['mailnotification'])
-					&& $this->bo->config->config_data['mailnotification']
-					&& $this->bo->fields_updated
-				))
+						&& $this->bo->config->config_data['mailnotification']
+						&& $this->bo->fields_updated
+						)
+					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
+						&& $this->bo->fields_updated
+						)
+				)
 				{
 					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 				}
