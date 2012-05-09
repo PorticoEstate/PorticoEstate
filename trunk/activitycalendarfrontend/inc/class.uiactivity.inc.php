@@ -145,13 +145,20 @@
 				$contact1['group_id'] = 0;
 				$this->so_activity->add_contact_person_local($contact1);
 				
-				$contact2 = array();
-				$contact2['name'] = phpgw::get_var('org_contact2_name');
-				$contact2['phone'] = phpgw::get_var('org_contact2_phone');
-				$contact2['mail'] = phpgw::get_var('org_contact2_mail');
-				$contact2['org_id'] = $o_id;
-				$contact2['group_id'] = 0;
-				$this->so_activity->add_contact_person_local($contact2);
+				if(phpgw::get_var('org_contact2_name'))
+				{
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('org_contact2_name');
+					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
+					$contact2['mail'] = phpgw::get_var('org_contact2_mail');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$this->so_activity->add_contact_person_local($contact2);
+				}
+				else
+				{
+					$this->so_activity->add_contact_person_local($contact1);
+				}
 				
 				//$persons = $this->so_organization->get_contacts_local_as_objects($o_id);
 				//var_dump($persons);
