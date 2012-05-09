@@ -16,7 +16,7 @@
 					'index'	=> array
 					(
 						'text'	=> lang('Configuration'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'activiticalendarfrontend') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'activitycalendarfrontend') )
 					),
 				);
 			}
