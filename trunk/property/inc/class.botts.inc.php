@@ -932,7 +932,10 @@
 
 			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
 				|| (isset($this->config->config_data['mailnotification'])
-				&& $this->config->config_data['mailnotification'])
+					&& $this->config->config_data['mailnotification'])
+				|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
+					&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
+				)
 			)
 			{
 				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);

@@ -296,7 +296,12 @@
 			}
 
 			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
-			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+				|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
+						&& $this->bo->fields_updated
+					)
+			)
 			{
 				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
@@ -316,7 +321,12 @@
 			$ticket = $this->bo->read_single($id);
 
 			$receipt 	= $this->bo->update_priority(array('priority'=>$new_priority),$id);
-			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
+						&& $this->bo->fields_updated
+						)
+			)
 			{
 				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
@@ -3266,7 +3276,12 @@
 				$so	= CreateObject('property.sotts');
 				$so->acl_location	= '.ticket.external';
 				$receipt = $so->update_ticket($values,$id);
-				if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+				if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']==1
+						&& $this->bo->fields_updated
+						)
+				)
 				{
 					$receipt = $this->bo->mail_ticket($id, $so->fields_updated, $receipt);
 				}
