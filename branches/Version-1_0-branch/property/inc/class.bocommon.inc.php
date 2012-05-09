@@ -360,7 +360,18 @@
 				}
 			}
 
-			if(!$users = $this->socommon->fm_cache('acl_userlist_'. $rights[0] . '_' . $acl_location))
+			$right_index = 0;
+
+			foreach ($rights as $right)
+			{
+				$right_index += $right;
+			}
+
+			$acl_userlist_name = "acl_userlist_{$right_index}_{$acl_location}";
+
+			reset($rights);
+
+			if(!$users = $this->socommon->fm_cache($acl_userlist_name))
 			{
 				$users_gross = array();
 				foreach ($rights as $right)

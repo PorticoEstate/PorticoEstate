@@ -878,7 +878,7 @@
 			
 			foreach($results["results"] as &$res) {
 				$res['show_locations'] = array(
-					'href' => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_locations', 'control_id' => $res['id'])),
+					'href' => self::link(array('menuaction' => 'controller.uicalendar.view_calendar_year_for_locations', 'control_id' => $res['id'])),
 					'label' => lang('show_controls_for_location'),
 				);
 			}
