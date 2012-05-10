@@ -132,13 +132,13 @@
 				'my_locations'	  		  => $my_locations,
 				'view_location_code'	  => $location_code,
 				'property_array'	  	  => $property_array,
-				'location_array'		  => $location_array,
+				'current_location'		  => $location_array,
 				'heading_array'		  	  => month_calendar::get_heading_array($year, $month),
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
-				'period' 			  	  => month_calendar::get_month_name($month-1),
-				'month_nr' 			  	  => $month,
-				'year' 			  	  	  => $year,
+				'current_month' 		  => month_calendar::get_month_name($month-1),
+				'current_year' 			  => $year,
+				'current_month_nr' 		  => $month
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -240,12 +240,11 @@
 			(
 				'my_locations'	  		  => $my_locations,
 				'view_location_code'	  => $location_code,
-				'location_array'		  => $location_array,
+				'current_location'  	  => $location_array,
 				'heading_array'		  	  => $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
-				'period' 			  	  => $year,
-				'year' 			  	  	  => $year
+				'current_year' 			  => $year,
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);

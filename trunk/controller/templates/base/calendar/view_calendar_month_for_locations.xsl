@@ -1,14 +1,14 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-<xsl:variable name="year"><xsl:value-of select="year"/></xsl:variable>
+<xsl:variable name="current_year"><xsl:value-of select="current_year"/></xsl:variable>
+<xsl:variable name="current_month"><xsl:value-of select="current_month"/></xsl:variable>
 
 <div id="main_content">
-
 	<div id="control_plan">
 		<div class="top">
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
-			<h3>Periode: <xsl:value-of select="period"/></h3>
+			<h3>Periode: <xsl:value-of select="$current_year"/></h3>
 			
 			<form action="#">
 				<input type="hidden" name="period_type" value="view_year" />
@@ -36,6 +36,18 @@
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="year"/>
+					<xsl:text>&amp;control_id=</xsl:text>
+					<xsl:value-of select="control/id"/>
+				</xsl:attribute>
+				Årsoversikt
+			</a>
+			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;month=</xsl:text>
+					<xsl:value-of select="current_month"/>
 					<xsl:text>&amp;control_id=</xsl:text>
 					<xsl:value-of select="control/id"/>
 				</xsl:attribute>
