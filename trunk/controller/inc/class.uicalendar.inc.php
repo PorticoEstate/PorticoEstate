@@ -35,7 +35,6 @@
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_list_status_info', 'inc/helper/');
 	include_class('controller', 'status_agg_month_info', 'inc/helper/');
-	include_class('controller', 'calendar_builder', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 	include_class('controller', 'year_calendar', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
@@ -49,7 +48,6 @@
 		private $so_control_item;
 		private $so_check_list;
 		private $so_check_item;
-		private $calendar_builder;
 				
 		public $public_functions = array
 		(
@@ -167,7 +165,7 @@
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
 			
-			$manage=false;
+			$manage = false;
 		
 			if($manage)
             {
@@ -189,12 +187,11 @@
 			if(empty($location_code)){
 				$location_code = $my_locations[0]["location_code"];
 			}
-						
+			
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, 	$repeat_type = null);
-
-			// Creates a calendar object for time period
-			$this->calendar_builder = new calendar_builder($from_date_ts, $to_date_ts);
+			
+			$controls_calendar_array = array();
 			
 			// Loops through controls with repeat type day or week in controls_for_location_array
 			// and populates array that contains aggregate open cases pr month.   		
@@ -203,8 +200,11 @@
 					
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $location_code, $year);
-										
-					$control->set_agg_open_cases_pr_month_array( $agg_open_cases_pr_month_array );
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+						
+					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				}
 			}
 			
@@ -221,8 +221,16 @@
 			
 			// Loops through all controls for location and populates controls with check lists
 			$controls_for_location_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
-	
-			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $controls_for_location_array, 12, "view_months" );
+
+			foreach($controls_for_location_array as $control){
+				if($control->get_repeat_type() == 2 | $control->get_repeat_type() == 3){
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_calendar( $control->get_check_lists_array() );
+											
+					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+				}
+			}
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
@@ -374,6 +382,7 @@
  			
 			$data = array
 			(		
+				'control'	  		  			=> $control->toArray(),
 				'my_locations'	  		  		=> $my_locations,
 				'view_location_code'	  		=> $location_code,
 				'property_array'	  	  		=> $property_array,
