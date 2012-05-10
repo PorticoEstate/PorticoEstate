@@ -75,24 +75,20 @@
 		
 		
 		<div id="cal_wrp">
-			<ul class="calendar month">
-				<li class="heading">
-					<div class="control_details_wrp">
-						<div class="title"><span>Tittel</span></div>
-						<div class="assigned"><span>Tildelt</span></div>
-						<div class="frequency"><span>Frekvens</span></div>
-					</div>
-					<div class="days_wrp">
+			<table id="calendar" class="month">
+				<tr class="heading">
+						<th class="title"><span>Tittel</span></th>
+						<th class="assigned"><span>Tildelt</span></th>
+						<th class="frequency"><span>Frekvens</span></th>
 						<xsl:for-each select="heading_array">
-							<div><span><xsl:value-of select="."/></span></div>
+							<th><span><xsl:value-of select="."/></span></th>
 						</xsl:for-each>
-					</div>
-				</li>
+				</tr>
 				<xsl:choose>	
 					<xsl:when test="controls_calendar_array/child::node()">
 			  	<xsl:for-each select="controls_calendar_array">
 
-					<li>				
+					<tr>				
 					<xsl:choose>
 				        <xsl:when test="(position() mod 2) != 1">
 				            <xsl:attribute name="class">odd</xsl:attribute>
@@ -102,22 +98,19 @@
 				        </xsl:otherwise>
 				    </xsl:choose>
 					
-					<div class="control_details_wrp">
-						<div class="title">
+						<td class="title">
 			      			<span><xsl:value-of select="control/title"/></span>
-						</div>
-						<div class="assigned">
+						</td>
+						<td class="assigned">
 			      			<span><xsl:value-of select="control/responsibility_name"/></span>
-						</div>
-						<div class="frequency">
+						</td>
+						<td class="frequency">
 			      			<span>
 			      				<xsl:value-of select="control/repeat_type_label"/>
 			      				<xsl:value-of select="control/repeat_interval"/>
 			      			</span>
-						</div>
+						</td>
 				
-			</div>
-			<div class="days_wrp">
 				<xsl:for-each select="calendar_array">
 					
 					<xsl:call-template name="check_list_status_checker" >
@@ -125,17 +118,16 @@
 					</xsl:call-template>
 					
 				</xsl:for-each>
-				</div>
-				</li>
+				</tr>
 				</xsl:for-each>
 				
 					</xsl:when>
 					<xsl:otherwise>
-						<div class="cal_info_msg">Ingen sjekklister for bygg i angitt periode</div>
+						<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 					</xsl:otherwise>
 				</xsl:choose>
 			
-			</ul>
+			</table>
 		</div>
 	</div>
 </div>

@@ -6,7 +6,7 @@
  
    		<xsl:choose>
 			<xsl:when test="status = 'CONTROL_REGISTERED'">
-				<div>
+				<td>
 				<a>
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
@@ -19,10 +19,10 @@
 					</xsl:attribute>
 					<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 				</a>
-				</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_PLANNED'">
-				<div>
+				<td>
 				<a>
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -31,10 +31,10 @@
 					</xsl:attribute>
 					<img height="15" src="controller/images/status_icon_yellow.png" />
 				</a>
-				</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_NOT_DONE'">
-				<div>
+				<td>
 					<a>
 						<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
@@ -47,10 +47,10 @@
 						</xsl:attribute>
 						<img height="15" src="controller/images/status_icon_red_cross.png" />
 					</a>
-				</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_NOT_DONE_WITH_PLANNED_DATE'">
-				<div>
+				<td>
 				<a>
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -59,10 +59,10 @@
 					</xsl:attribute>
 					<img height="15" src="controller/images/status_icon_red_cross.png" />
 				</a>
-				</div>
+				</td>
 		</xsl:when>
 			<xsl:when test="status = 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS'">
-				<div>
+				<td>
 					<a>
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -72,63 +72,70 @@
 						<span style="display:none"><xsl:value-of select="info/id"/></span>
 						<img height="15" src="controller/images/status_icon_dark_green.png" />
 					</a>
-				</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS'">
-				<div style="position:relative;">
-   					<div id="info_box"></div>
-					<a>
-					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-						<xsl:text>&amp;check_list_id=</xsl:text>
-						<xsl:value-of select="info/check_list_id"/>
-					</xsl:attribute>
-						<span style="display:none"><xsl:value-of select="info/id"/></span>
-						<img height="15" src="controller/images/status_icon_light_green.png" />
-					</a>
-				</div>
+				<td>
+					<div style="position:relative;">
+					
+	   					<div id="info_box"></div>
+						<a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+							<xsl:text>&amp;check_list_id=</xsl:text>
+							<xsl:value-of select="info/check_list_id"/>
+						</xsl:attribute>
+							<span style="display:none"><xsl:value-of select="info/id"/></span>
+							<img height="15" src="controller/images/status_icon_light_green.png" />
+						</a>
+					</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_DONE_WITH_ERRORS'">
-				<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-					<div id="info_box"></div>
-   					<a class="view_info_box">
-					 	<xsl:attribute name="href">
-							<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-							<xsl:text>&amp;check_list_id=</xsl:text>
-							<xsl:value-of select="info/check_list_id"/>
-						</xsl:attribute>
-						<span style="display:none">
-							<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-							<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-						</span>
-						<xsl:value-of select="info/num_open_cases"/>
-					</a>
-				</div>
+				<td>
+					<div class="info_box_wrp">
+						<div id="info_box"></div>
+	   					<a class="view_info_box">
+						 	<xsl:attribute name="href">
+								<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+								<xsl:text>&amp;check_list_id=</xsl:text>
+								<xsl:value-of select="info/check_list_id"/>
+							</xsl:attribute>
+							<span style="display:none">
+								<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+								<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+							</span>
+							<xsl:value-of select="info/num_open_cases"/>
+						</a>
+					</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROLS_DONE_WITH_ERRORS'">
-				<div style="position:relative;background: url(controller/images/status_icon_red_empty.png) no-repeat 50% 50%;">
-					<div id="info_box"></div>
-   					<a class="view_info_box">
-					 	<xsl:attribute name="href">
-							<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-							<xsl:text>&amp;check_list_id=</xsl:text>
-							<xsl:value-of select="info/check_list_id"/>
-						</xsl:attribute>
-						<span style="display:none">
-							<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
-							<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-						</span>
-						<xsl:value-of select="info"/>
-					</a>
-				</div>
+				<td>
+					<div class="info_box_wrp">
+						<div id="info_box"></div>
+	   					<a class="view_info_box">
+						 	<xsl:attribute name="href">
+								<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+								<xsl:text>&amp;check_list_id=</xsl:text>
+								<xsl:value-of select="info/check_list_id"/>
+							</xsl:attribute>
+							<span style="display:none">
+								<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
+								<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+							</span>
+							<xsl:value-of select="info"/>
+						</a>
+					</div>
+				</td>
 			</xsl:when>
 			<xsl:when test="status = 'CONTROL_CANCELED'">
-				<div>
+				<td>
 					<img height="15" src="controller/images/status_icon_red_cross.png" />
-				</div>
+				</td>
 			</xsl:when>
 			<xsl:otherwise>
-				<div></div>
+				<td></td>
 			</xsl:otherwise>
 		</xsl:choose>
 				

@@ -949,42 +949,22 @@ ul#icon_color_map li {
 ul#icon_color_map span{
 	margin-left: 10px;
 }
-
-
-
-
-
-
-ul.calendar li{
-	clear:left;	
+#calendar {
+    width: 100%
 }
-ul.calendar li.heading {
+#calendar th {
     font-weight: bold;
     font-size:15px;
+    background:none;
 }
-.days_wrp div {
-    float: left;
-    font-size: 13px;
-    height: 30px;
+#calendar th, #calendar td {
+    padding: 10px;
     text-align: center;
-    width: 21px;
 }
-.months_wrp div {
-    float: left;
-    height: 30px;
-    text-align: center;
-    width: 40px;
+#calendar.month th, #calendar.month td {
+    padding: 5px;
 }
-.months_wrp div a, .days_wrp div a, .control_details_wrp span, .days_wrp div span {
-    display: block;
-    padding: 8px 0;
-}
-ul.calendar li {
-    height: 30px;
-    padding: 7px 0;
-}
-
-ul.calendar li.even {
+#calendar .even {
     background: none repeat scroll 0 0 #DEEAF8;
 }
 #cal_wrp {
@@ -1000,32 +980,18 @@ ul.calendar li.even {
     padding: 0 10px;
     width: 100px;
 }
-.control_details_wrp div.title {
-    width: 200px;
-}
-ul.calendar div.location {
-    text-align: left;
-    width: 100px;
-}
-.control_details_wrp div.assigned {
-    text-align: left;
-    width: 115px;
-}
-.control_details_wrp div.frequency {
-	width: 130x;
-}
 
-ul.calendar div.title {
+#calendar .title, #calendar .location_name {
 	text-align: left;
 }
-ul.calendar .heading div.title {
+#calendar .heading .title {
 	text-align: center;
 }
-ul.calendar div.frequency {
+#calendar .frequency {
     margin-right: 10px;
     width: 65px;
 }
-.cal_info_msg{
+.cal_info_msg {
 	font-size: 16px;
     padding: 40px 20px;	
 }
@@ -1037,7 +1003,19 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
+    padding-left: 3px;
+    text-align: center;
     text-decoration: none;
+}
+.info_box_wrp {
+	background: url("../../../images/status_icon_red_empty.png") no-repeat scroll 50% 50% transparent;
+    height: 15px;
+    position: relative;
+    text-align: center;
+    width: 15px;
+}
+#calendar.month a.view_info_box {
+    padding-left: 5px;
 }
 .days_wrp a.view_info_box {
     left: 8px;

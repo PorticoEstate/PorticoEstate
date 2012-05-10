@@ -103,7 +103,6 @@
 				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string')
 			);
 
-			//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 			return isset($result);
@@ -121,7 +120,6 @@
 
 			$joins = "	{$this->left_join} fm_building_part ON (p.building_part_id = fm_building_part.id)";
 			$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
-			//$joins .= "	{$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
 
 			$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title FROM controller_control_group p {$joins} WHERE p.id = " . $id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
@@ -134,7 +132,6 @@
 			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control_group->set_control_area_name($category[0]['name']);
-			//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
