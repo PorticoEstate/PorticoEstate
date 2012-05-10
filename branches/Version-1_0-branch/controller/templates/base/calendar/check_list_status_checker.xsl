@@ -116,15 +116,21 @@
 						<div id="info_box"></div>
 	   					<a class="view_info_box">
 						 	<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
-								<xsl:text>&amp;check_list_id=</xsl:text>
-								<xsl:value-of select="info/check_list_id"/>
+								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+								<xsl:text>&amp;control_id=</xsl:text>
+								<xsl:value-of select="//control/id"/>
+								<xsl:text>&amp;location_code=</xsl:text>
+								<xsl:value-of select="//current_location/location_code"/>
+								<xsl:text>&amp;year=</xsl:text>
+								<xsl:value-of select="//current_year"/>
+								<xsl:text>&amp;month=</xsl:text>
+								<xsl:number />
 							</xsl:attribute>
 							<span style="display:none">
 								<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
 								<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 							</span>
-							<xsl:value-of select="info"/>
+							<xsl:value-of select="info/agg_open_errors"/>
 						</a>
 					</div>
 				</td>

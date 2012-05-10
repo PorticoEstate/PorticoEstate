@@ -8,8 +8,8 @@
 
 	<div id="control_plan">
 		<div class="top">
-			<h1>Kontrollplan for <xsl:value-of select="location_array/loc1_name"/></h1>
-			<h3 style="margin:0;font-size:19px;">Periode: <xsl:value-of select="period"/></h3>
+			<h1>Kontrollplan for bygg/eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
+			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
 			<form action="#">
 				<input type="hidden" name="period_type" value="view_year" />
@@ -56,7 +56,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="$year"/>
+									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;location_code=</xsl:text>
 									<xsl:value-of select="$view_location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
@@ -90,7 +90,21 @@
 				      			<span><xsl:value-of select="control/responsibility_name"/></span>
 							</td>
 							<td class="frequency">
-				      			<span><xsl:value-of select="control/repeat_type_label"/></span>
+				      			<span>
+					      			<xsl:choose>
+					      				<xsl:when test="control/repeat_interval = 1">
+					      					<span class="pre">Hver</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval = 2">
+					      					<span class="pre">Annenhver</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval > 2">
+					      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+					      				</xsl:when>
+					      			</xsl:choose>
+					      			
+					      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+				      			</span>
 							</td>
 							<xsl:for-each select="calendar_array">
 								<xsl:call-template name="check_list_status_checker" >

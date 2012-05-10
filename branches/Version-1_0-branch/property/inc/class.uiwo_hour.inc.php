@@ -1445,17 +1445,28 @@
 			{
 				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
-					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
-					if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'] && !$workorder['approved'])
+					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['workorder']['ecodimb']);
+
+					$_ok = false;
+					if($approve_role['is_supervisor'])
 					{
-						phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'] ), 'error' );
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+						$_ok = true;
 					}
-					if(!$workorder['approved'])
+					else if( $approve_role['is_budget_responsible'] )
+					{
+						$_ok = true;					
+					}
+					else if( $workorder['approved'] )
+					{
+						$_ok = true;					
+					}
+
+					if(!$_ok)
 					{
 						phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
 						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
 					}
+					unset($_ok);
 				}
 
 				$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : $to_email;
@@ -1887,16 +1898,27 @@ HTML;
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']);
-				if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'] && !$workorder['approved'])
+
+				$_ok = false;
+				if($approve_role['is_supervisor'])
 				{
-					phpgwapi_cache::message_set( lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'] ), 'error' );
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
+					$_ok = true;
 				}
-				if(!$workorder['approved'])
+				else if( $approve_role['is_budget_responsible'] )
+				{
+					$_ok = true;					
+				}
+				else if( $workorder['approved'] )
+				{
+					$_ok = true;					
+				}
+
+				if(!$_ok)
 				{
 					phpgwapi_cache::message_set( lang('order is not approved'), 'error' );
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.view', 'workorder_id'=> $workorder_id, 'from' => phpgw::get_var('from')));
 				}
+				unset($_ok);
 			}
 
 			$content = $this->_get_order_details($common_data['content'],	$show_cost);
