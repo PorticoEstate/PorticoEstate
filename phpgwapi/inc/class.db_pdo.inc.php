@@ -76,8 +76,9 @@
 		* @param string $Host database host to connect to (optional)
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
+		* @param int    $Port Port for database host (optional)
 		*/
-		public function connect($Database = null, $Host = null, $User = null, $Password = null)
+		public function connect($Database = null, $Host = null, $User = null, $Password = null, $Port = null)
 		{
 			if ( !is_null($Database) )
 			{
@@ -97,6 +98,11 @@
 			if ( !is_null($Password) )
 			{
 				$this->Password = $Password;
+			}
+
+			if ( !is_null($Port) )
+			{
+				$this->Port = $Port;
 			}
 
 			switch ( $this->Type )
@@ -131,9 +137,27 @@
 				case 'oracle':
 					try
 					{
+
+/*
+						$this->debug = true;
+						$tns = " 
+							(DESCRIPTION =
+							    (ADDRESS_LIST =
+							      (ADDRESS = (PROTOCOL = TCP)(HOST = {$this->Host})(PORT = 21521))
+							    )
+							    (CONNECT_DATA =
+							      (SERVICE_NAME = FELPROD)
+							    )
+							  )
+				       ";
+
+					    $this->db = new PDO("oci:dbname=".$tns,$this->User,$this->Password);
+*/
+						$port = $this->Port ? $this->Port : 1521;
+
 						$_charset = ';charset=AL32UTF8';
 				//		$_charset = '';
-						$this->db = new PDO("oci:dbname={$this->Host}/{$this->Database}{$_charset}", $this->User, $this->Password);
+						$this->db = new PDO("oci:dbname={$this->Host}:{$port}/{$this->Database}{$_charset}", $this->User, $this->Password);
 						unset($_charset);
 					}
 					catch(PDOException $e){}
