@@ -30,6 +30,17 @@
 		</div>
 		<div class="middle">
 			<xsl:call-template name="icon_color_map" />
+			
+			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="year"/>
+					<xsl:text>&amp;control_id=</xsl:text>
+					<xsl:value-of select="control/id"/>
+				</xsl:attribute>
+				Årsoversikt
+			</a>
 		</div>
 		<div id="cal_wrp">
 			<table id="calendar" class="month">
@@ -42,16 +53,7 @@
 					</th>
 					<xsl:for-each select="heading_array">
 						<th>
-							<a>
-								<xsl:attribute name="href">
-									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
-									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="$year"/>
-									<xsl:text>&amp;month=</xsl:text>
-									<xsl:number/>
-								</xsl:attribute>
-								<xsl:value-of select="."/>
-							</a>				
+							<xsl:value-of select="."/>
 						</th>
 					</xsl:for-each>
 				</tr>
