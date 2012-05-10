@@ -125,6 +125,59 @@
 				}
 			}
 
+
+			//Add vouchers with split-line and approved amount = 0.00
+			$extra_candidates = array();
+			$sql = "SELECT DISTINCT bilagsnr FROM fm_ecobilag WHERE (godkjentbelop = '0' OR godkjentbelop = '0.00') AND budsjettsigndato IS NULL";
+			$this->db->query($sql,__LINE__,__FILE__);
+			while( $this->db->next_record() )
+			{
+				$extra_candidates[]	= $this->db->f('bilagsnr');
+			}
+
+			foreach($extra_candidates as $extra_candidate)
+			{
+				if(in_array($extra_candidate, $vouchers))
+				{
+					continue;
+				}
+
+				$sql = "SELECT bilagsnr,oppsynsigndato,saksigndato,budsjettsigndato FROM fm_ecobilag WHERE bilagsnr = {$extra_candidate} AND (godkjentbelop > 0 OR godkjentbelop < 0)";
+
+				$this->db->query($sql,__LINE__,__FILE__);
+				$transfer_extra 	= true;
+				while( $this->db->next_record() )
+				{
+					$oppsynsigndato 	= $this->db->f('oppsynsigndato');
+					$saksigndato		= $this->db->f('saksigndato');
+					$budsjettsigndato	= $this->db->f('budsjettsigndato');
+
+					if(isset($this->config->config_data['common']['invoice_approval']) && $this->config->config_data['common']['invoice_approval']== 1)
+					{
+						if(!$budsjettsigndato)
+						{
+							$transfer_extra = false;
+						}
+					}
+					else
+					{
+						if (!$budsjettsigndato)
+						{
+							$transfer_extra = false;
+						}
+						else if ($budsjettsigndato && !$saksigndato && !$oppsynsigndato)
+						{
+							$transfer_extra = false;
+						}
+					}
+				}
+
+				if($transfer_extra)
+				{
+					$vouchers[] = $extra_candidate;
+				}
+			}
+
 			return $vouchers;
 		}
 

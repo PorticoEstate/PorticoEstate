@@ -45,16 +45,13 @@
 		</div>
 		 
 		<div id="cal_wrp">
-		<ul class="calendar">
-				<li class="heading">
-				<div class="control_details_wrp">
-					<div class="title"><span>Tittel</span></div>
-					<div class="assigned"><span>Tildelt</span></div>
-					<div class="frequency"><span>Frekvens</span></div>
-					</div>
-					<div class="months_wrp">
+		<table id="calendar">
+				<tr class="heading">
+						<th class="title"><span>Tittel</span></th>
+						<th class="assigned"><span>Tildelt</span></th>
+						<th class="frequency"><span>Frekvens</span></th>
 					<xsl:for-each select="heading_array">
-						<div>
+						<th>
 							<a>
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
@@ -67,10 +64,9 @@
 								</xsl:attribute>
 								<xsl:value-of select="."/>
 							</a>				
-						</div>
+						</th>
 					</xsl:for-each>
-					</div>
-				</li>
+				</tr>
 			
 			<xsl:choose>
 				<xsl:when test="controls_calendar_array/child::node()">
@@ -78,7 +74,7 @@
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			  	
-			  		<li>				
+			  		<tr>				
 						<xsl:choose>
 					        <xsl:when test="(position() mod 2) != 1">
 					            <xsl:attribute name="class">odd</xsl:attribute>
@@ -87,38 +83,28 @@
 					            <xsl:attribute name="class">even</xsl:attribute>
 					        </xsl:otherwise>
 					    </xsl:choose>
-				    
-					    <div class="control_details_wrp">
-							<xsl:if test="//show_location">
-								<div class="location">
-									<xsl:value-of select="control/location_name"/>
-								</div>
-							</xsl:if>
-							<div class="title">
+							<td class="title">
 				      			<span><xsl:value-of select="control/title"/></span>
-							</div>
-							<div class="assigned">
+							</td>
+							<td class="assigned">
 				      			<span><xsl:value-of select="control/responsibility_name"/></span>
-							</div>
-							<div class="frequency">
+							</td>
+							<td class="frequency">
 				      			<span><xsl:value-of select="control/repeat_type_label"/></span>
-							</div>
-						</div>		
-						<div class="months_wrp">
+							</td>
 							<xsl:for-each select="calendar_array">
 								<xsl:call-template name="check_list_status_checker" >
 									<xsl:with-param name="location_code"><xsl:value-of select="$view_location_code"/></xsl:with-param>
 								</xsl:call-template>
 							</xsl:for-each>
-						</div>
-					</li>	
+					</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="cal_info_msg">Ingen sjekklister for bygg i angitt periode</div>
+				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
-	</ul>
+	</table>
 	</div>
 </div>
 </div>

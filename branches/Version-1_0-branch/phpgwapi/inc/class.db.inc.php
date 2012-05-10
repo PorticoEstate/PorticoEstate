@@ -84,6 +84,11 @@
 		var $Password;
 
 		/**
+		* @var integer $Port Port used to connect to database
+		*/
+		var $Port;
+
+		/**
 		* @var bool $debug enable debugging
 		*/
 		var $debug = false;
@@ -200,8 +205,9 @@
 		* @param string $Host database host to connect to (optional)
 		* @param string $User name of database user (optional)
 		* @param string $Password password for database user (optional)
+		* @param int    $Port Port for database host (optional)
 		*/
-		abstract public function connect($Database = null, $Host = null, $User = null, $Password = null);
+		abstract public function connect($Database = null, $Host = null, $User = null, $Password = null, $Port = null);
 
 
 		/**

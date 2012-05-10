@@ -188,19 +188,22 @@ function allOK()
 	<?php }?>
 	</div>
 		<h1><?php echo lang('new_activity') ?></h1>
+		<div>
+			<?php echo lang('required_fields')?>
+		</div>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col" style="width: 200%">
 				<h2><?php echo lang('what')?></h2>
 				<dt>
-					<label for="title"><?php echo lang('title') ?></label>
+					<label for="title"><?php echo lang('title') ?> (*)</label>
 				</dt>
 				<dd>
 					<?php echo lang('title_helptext')?><br/>
 					<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="60"/>
 				</dd>
 				<dt>
-					<label for="category"><?php echo lang('category') ?></label>
+					<label for="category"><?php echo lang('category') ?> (*)</label>
 				</dt>
 				<dd>
 					<?php
@@ -217,7 +220,7 @@ function allOK()
 					</select>
 				</dd>
 				<dt>
-					<label for="target"><?php echo lang('target') ?></label>
+					<label for="target"><?php echo lang('target') ?> (*)</label>
 				</dt>
 				<dd>
 					<?php
@@ -232,7 +235,7 @@ function allOK()
 					?>
 				</dd>
 				<dt>
-					<label for="district"><?php echo lang('district') ?></label>
+					<label for="district"><?php echo lang('district') ?> (*)</label>
 				</dt>
 				<dd>
 					<?php
@@ -255,7 +258,7 @@ function allOK()
 				<hr />
 				<h2><?php echo lang('where_when')?></h2>
 				<dt>
-					<label for="arena"><?php echo lang('arena') ?></label>
+					<label for="arena"><?php echo lang('arena') ?> (*)</label>
 					<br/><?php echo lang('arena_helptext')?>
 				</dt>
 				<dt>
@@ -308,13 +311,13 @@ function allOK()
 					<input type="text" name="arena_postaddress"/></dd>
 				</span>
 				<dt>
-					<label for="time"><?php echo lang('time') ?></label>
+					<label for="time"><?php echo lang('time') ?> (*)</label>
 				</dt>
 				<dd>
 					<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" />
 				</dd>
 				<dt>
-					<label for="office"><?php echo lang('office') ?></label>
+					<label for="office"><?php echo lang('office') ?> (*)</label>
 				</dt>
 				<dd>
 					<?php
@@ -330,7 +333,7 @@ function allOK()
 						?>
 					</select>
 				</dd>
-				<dt>Kontaktinformasjon for kulturkontoret</dt>
+				<dt>Kontaktinformasjon for kulturkontoret (*)</dt>
 				<dt><label for="contact2_address">Adresse</label>
 				<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
 				<div id="contact2_address_container"></div></dd>
@@ -341,7 +344,7 @@ function allOK()
 				<hr />
 				<h2><?php echo lang('who')?></h2>
 				<dt>
-					<label for="organization_id"><?php echo lang('organization') ?></label>
+					<label for="organization_id"><?php echo lang('organization') ?> (*)</label>
 				</dt>
 				<?php if($new_organization){?>
 					<input type="hidden" name="new_org" id="new_org" value="yes" />
@@ -392,17 +395,17 @@ function allOK()
 					</select>
 				</dd>
 				<span id="new_group_fields" style="display: none;">
-					<dt><label for="groupname">Navn</label></dt>
+					<dt><label for="groupname">Navn (*)</label></dt>
 					<dd><input type="text" name="groupname" size="100"/><br/></dd>
-					<dt><label for="group_description">Beskrivelse av aktiviteten</label></dt>
+					<dt><label for="group_description">Beskrivelse av aktiviteten (*)</label></dt>
 					<dd><textarea rows="10" cols="100" name="group_description"></textarea></dd>
 					<hr/>
 					<dt>Kontaktperson 1</dt>
-					<dt><label for="contact1_name">Navn</label></dt>
+					<dt><label for="contact1_name">Navn (*)</label></dt>
 					<dd><input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/></dd>
-					<dt><label for="contact1_phone">Telefon</label></dt>
+					<dt><label for="contact1_phone">Telefon (*)</label></dt>
 					<dd><input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/></dd>
-					<dt><label for="contact1_mail">E-post</label></dt>
+					<dt><label for="contact1_mail">E-post (*)</label></dt>
 					<dd><input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/></dd>
 					<dt>Kontaktperson 2</dt>
 					<dt><label for="contact2_name">Navn</label></dt>

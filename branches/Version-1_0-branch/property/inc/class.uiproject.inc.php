@@ -1533,40 +1533,70 @@
 					'project_id'	=> (isset($id)?$id:'')
 				);
 
-			$supervisor_id = 0;
-
-			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
-			{
-				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-			}
-
-			$need_approval = isset($config->config_data['project_approval'])?$config->config_data['project_approval']:'';
 			$supervisor_email = array();
-			if ($supervisor_id && $need_approval)
+			if($need_approval = isset($config->config_data['project_approval']) ? $config->config_data['project_approval'] : '')
 			{
-				$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-				$supervisor_email[] = array
+				$invoice	= CreateObject('property.soinvoice');
+				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+				{
+					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
+					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);				
+					$supervisor_email[] = array
 					(
 						'id'	  => $supervisor_id,
 						'address' => $prefs['email'],
 					);
-				if ( isset($prefs['approval_from']) )
-				{
-					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
-					if(isset($prefs2['email']))
-					{
-						$supervisor_email[] = array
-							(
-								'id'	  => $prefs['approval_from'],
-								'address' => $prefs2['email'],
-							);
-						$supervisor_email = array_reverse($supervisor_email);
-					}
+					$supervisor2_id = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
+					$prefs2 = $this->bocommon->create_preferences('property', $supervisor2_id);
+					$supervisor_email[] = array
+					(
+						'id'	  => $supervisor2_id,
+						'address' => $prefs2['email'],
+					);
+					$supervisor_email = array_reverse($supervisor_email);
+					unset($prefs);
 					unset($prefs2);
+					unset($invoice);
 				}
-				unset($prefs);
+				else
+				{
+					$supervisor_id = 0;
+
+					if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+						&& $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'] )
+					{
+						$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+					}
+
+
+					if ($supervisor_id )
+					{
+						$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
+						$supervisor_email[] = array
+						(
+							'id'	  => $supervisor_id,
+							'address' => $prefs['email'],
+						);
+
+						if ( isset($prefs['approval_from']) )
+						{
+							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+							if(isset($prefs2['email']))
+							{
+								$supervisor_email[] = array
+								(
+									'id'	  => $prefs['approval_from'],
+									'address' => $prefs2['email'],
+								);
+								$supervisor_email = array_reverse($supervisor_email);
+							}
+							unset($prefs2);
+						}
+						unset($prefs);
+					}
+				}
 			}
 
 			$project_status=(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']:'');

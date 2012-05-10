@@ -29,6 +29,7 @@
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
+			$db->Port = $config->config_data['external_db_port'];
 			$db->Type = $config->config_data['external_db_type'];
 			$db->Database = $config->config_data['external_db_name'];
 			$db->User = $config->config_data['external_db_user'];
