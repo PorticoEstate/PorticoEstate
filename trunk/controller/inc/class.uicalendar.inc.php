@@ -275,7 +275,7 @@
 					
 					$year_calendar = new year_calendar($control, $year);
 					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
-					$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
+					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
 			}else if($control->get_repeat_type() > 1){
 				foreach($locations_for_control_array as $location){
@@ -288,8 +288,8 @@
 					
 					$year_calendar = new year_calendar($control, $year);
 					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
-						
-					$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
+
+					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
 			}
 			
@@ -357,8 +357,8 @@
 					
 				$month_calendar = new month_calendar($control, $year, $month);
 				$calendar_array = $month_calendar->build_calendar( $check_lists_array );
-						
-				$locations_with_calendar_array[] = array("location" => $curr_location_code, "calendar_array" => $calendar_array);
+
+				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 			}
 			
 			$criteria = array

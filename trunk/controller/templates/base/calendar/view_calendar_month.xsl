@@ -123,7 +123,7 @@
 				
 					</xsl:when>
 					<xsl:otherwise>
-						<tr class="cal_info_msg"><td colspan="10">Ingen sjekklister for bygg i angitt periode</td></tr>
+						<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 					</xsl:otherwise>
 				</xsl:choose>
 			
