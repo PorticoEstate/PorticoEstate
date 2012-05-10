@@ -980,16 +980,18 @@ ul#icon_color_map span{
     padding: 0 10px;
     width: 100px;
 }
-
-#calendar .title, #calendar .location_name {
-	text-align: left;
-}
-#calendar .heading .title {
-	text-align: center;
-}
 #calendar .frequency {
     margin-right: 10px;
     width: 65px;
+}
+#calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location_name {
+    text-align: left;
+}
+#calendar .frequency .pre {
+    margin-right: 3px;
+}
+#calendar .frequency .val {
+    text-transform: lowercase;
 }
 .cal_info_msg {
 	font-size: 16px;

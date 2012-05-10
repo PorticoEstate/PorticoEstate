@@ -70,7 +70,7 @@ class year_calendar {
 			$status = "CONTROLS_DONE_WITH_ERRORS";
 					
 			$this->calendar_array[$status_agg_month_info->get_month_nr()]["status"] = $status;
-			$this->calendar_array[$status_agg_month_info->get_month_nr()]["info"] = $status_agg_month_info->get_agg_open_cases();
+			$this->calendar_array[$status_agg_month_info->get_month_nr()]["info"]["agg_open_errors"] = $status_agg_month_info->get_agg_open_cases();
 		}
 					
 		return $this->calendar_array;
