@@ -108,15 +108,18 @@ function allOK()
 	<?php }?>
 	</div>
 		<h1><?php echo lang('new_organization') ?></h1>
+		<div>
+			<?php echo lang('required_fields')?>
+		</div>
 		<form action="#" method="post">
 			<input type="hidden" name="activity" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col" style="width: 200%">
 				<input type="hidden" name="organization_id" id="organization_id" value="new_org" />
-				<dt><label for="orgname">Organisasjonsnavn</label></dt>
+				<dt><label for="orgname">Organisasjonsnavn (*)</label></dt>
 				<dd><input type="text" name="orgname" size="100"/></dd>
 				<dt><label for="orgno">Organisasjonsnummer</label></dt>
 				<dd><input type="text" name="orgno"/></dd>
-				<dt><label for="district">Bydel</label></dt>
+				<dt><label for="district">Bydel (*)</label></dt>
 				<dd><select name="org_district">
 						<option value="0">Ingen bydel valgt</option>
 				<?php 
@@ -129,26 +132,26 @@ function allOK()
 				</select></dd>
 				<dt><label for="homepage">Hjemmeside</label></dt>
 				<dd><input type="text" name="homepage" size="100"/></dd>
-				<dt><label for="email">E-post</label></dt>
+				<dt><label for="email">E-post (*)</label></dt>
 				<dd><input type="text" name="email"/></dd>
-				<dt><label for="phone">Telefon</label></dt>
+				<dt><label for="phone">Telefon (*)</label></dt>
 				<dd><input type="text" name="phone"/></dd>
-				<dt><label for="street">Gate</label></dt>
+				<dt><label for="street">Gate (*)</label></dt>
 				<dd><input type="text" name="address_txt" id="address_txt" onkeyup="javascript:get_address_search()"/>
 				<div id="address_container"></div></dd>
 				<dt><label for="number">Husnummer</label></dt>
 				<dd><input type="text" name="number"/><br/></dd>
-				<dt><label for="postaddress">Postnummer og Sted</label></dt>
+				<dt><label for="postaddress">Postnummer og Sted (*)</label></dt>
 				<dd><input type="text" name="postaddress" size="100"/></dd>
-				<dt><label for="org_description">Beskrivelse</label></dt>
+				<dt><label for="org_description">Beskrivelse (*)</label></dt>
 				<dd><textarea rows="10" cols="100" name="org_description"></textarea></dd>
 				<hr/>
 				<b>Kontaktperson 1</b><br/>
-				<dt><label for="contact1_name">Navn</label>
+				<dt><label for="contact1_name">Navn (*)</label>
 				<input type="text" name="org_contact1_name" size="100"/></dt>
-				<dt><label for="contact1_phone">Telefon</label>
+				<dt><label for="contact1_phone">Telefon (*)</label>
 				<input type="text" name="org_contact1_phone"/></dt>
-				<dt><label for="contact1_mail">E-post</label>
+				<dt><label for="contact1_mail">E-post (*)</label>
 				<input type="text" name="org_contact1_mail"/></dt><br/><br/><br/>
 				<b>Kontaktperson 2</b><br/>
 				<dt><label for="contact2_name">Navn</label>
