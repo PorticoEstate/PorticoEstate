@@ -69,25 +69,6 @@ class month_calendar {
 		}
 	}
    	
-	public static function get_heading_array($year, $month){
-		$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);		
-		$heading_array = array();
-		
-		for($i=1;$i<=$num_days_in_month;$i++){
-			$heading_array[$i] = "$i";	
-		}
-		
-		return $heading_array;
-	}
-	
-	public static function get_month_name($month){
-	
-		$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
-		
-		return $month_array[$month]; 
-	}
-		
-	// Function that puts checklists into a twelve months array for displaying a year or a days array for displaying a month
 	public function build_calendar( $check_lists_array ){
 		
 		foreach($check_lists_array as $check_list){
@@ -99,5 +80,41 @@ class month_calendar {
 		}
 		
 		return $this->calendar_array;
+	}
+	
+	public static function get_heading_array($year, $month){
+		$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);		
+		$heading_array = array();
+		
+		for($i=1;$i<=$num_days_in_month;$i++){
+			$heading_array[$i] = "$i";	
+		}
+		
+		return $heading_array;
+	}
+	
+	public static function get_start_month_date_ts($year, $from_month){
+		return strtotime("$from_month/01/$year");
+	}
+	
+	public static function get_end_month_date_ts($year, $from_month){
+		if(($from_month + 1) > 12){
+			$to_month = 1;
+			$to_year = $year + 1;
+		}else{
+			$to_month = $from_month + 1;
+			$to_year = $year;
+		}
+		
+		$to_date_ts = strtotime("$to_month/01/$to_year");
+		
+		return $to_date_ts; 
+	}
+	
+	public static function get_month_name($month){
+	
+		$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
+		
+		return $month_array[$month]; 
 	}
 }

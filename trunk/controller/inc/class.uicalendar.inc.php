@@ -90,18 +90,9 @@
 			$year = intval( $year );
 			$from_month = intval( $month );
 				
-			$from_date_ts = strtotime("$from_month/01/$year");
-			
-			if(($from_month + 1) > 12){
-				$to_month = 1;
-				$to_year = $year + 1;
-			}else{
-				$to_month = $from_month + 1;
-				$to_year = $year;
-			}
-			
-			$to_date_ts = strtotime("$to_month/01/$to_year");
-												
+			$from_date_ts = month_calendar::get_start_month_date_ts($year, $month);
+			$to_date_ts = month_calendar::get_end_month_date_ts($year, $month);
+															
 			$criteria = array
 			(
 				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
@@ -342,7 +333,7 @@
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
 			}
-						
+
 			if(empty($year)){
 				$year = intval( date("Y") );
 			}
@@ -351,20 +342,9 @@
 				$month = date("n");
 			}
 			
-			$from_month = $month;
+			$from_date_ts = month_calendar::get_start_month_date_ts($year, $month);
+			$to_date_ts = month_calendar::get_end_month_date_ts($year, $month);
 			
-			$from_date_ts = strtotime("$from_month/01/$year");
-			
-			if(($from_month + 1) > 12){
-				$to_month = 1;
-				$to_year = $year + 1;
-			}else{
-				$to_month = $from_month + 1;
-				$to_year = $year;
-			}
-			
-			$to_date_ts = strtotime("$to_month/01/$to_year");
-						
 			$locations_with_calendar_array = array();
 			
 			foreach($locations_for_control_array as $location){
