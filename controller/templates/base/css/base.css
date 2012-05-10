@@ -980,22 +980,8 @@ ul#icon_color_map span{
     padding: 0 10px;
     width: 100px;
 }
-.control_details_wrp div.title {
-    width: 200px;
-}
-ul.calendar div.location {
-    text-align: left;
-    width: 100px;
-}
-.control_details_wrp div.assigned {
-    text-align: left;
-    width: 115px;
-}
-.control_details_wrp div.frequency {
-	width: 130x;
-}
 
-#calendar .title {
+#calendar .title, #calendar .location_name {
 	text-align: left;
 }
 #calendar .heading .title {
@@ -1005,7 +991,7 @@ ul.calendar div.location {
     margin-right: 10px;
     width: 65px;
 }
-.cal_info_msg{
+.cal_info_msg {
 	font-size: 16px;
     padding: 40px 20px;	
 }
@@ -1026,7 +1012,7 @@ a.view_info_box {
     height: 15px;
     position: relative;
     text-align: center;
-    width: 100%;
+    width: 15px;
 }
 #calendar.month a.view_info_box {
     padding-left: 5px;

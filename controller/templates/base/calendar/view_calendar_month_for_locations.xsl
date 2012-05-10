@@ -32,25 +32,28 @@
 			<xsl:call-template name="icon_color_map" />
 		</div>
 		<div id="cal_wrp">
-			<table id="calendar">
+			<table id="calendar" class="month">
 				<tr>
-					<th class="control_details_wrp">
-						<span class="location">Lokasjon</span>
+					<th>
+						<span class="location_code">Lokasjonskode</span>
 					</th>
-						<xsl:for-each select="heading_array">
-							<th>
-								<a>
-									<xsl:attribute name="href">
-										<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
-										<xsl:text>&amp;year=</xsl:text>
-										<xsl:value-of select="$year"/>
-										<xsl:text>&amp;month=</xsl:text>
-										<xsl:number/>
-									</xsl:attribute>
-									<xsl:value-of select="."/>
-								</a>				
-							</th>
-						</xsl:for-each>
+					<th>
+						<span class="location_name">Lokasjonsnavn</span>
+					</th>
+					<xsl:for-each select="heading_array">
+						<th>
+							<a>
+								<xsl:attribute name="href">
+									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
+									<xsl:text>&amp;year=</xsl:text>
+									<xsl:value-of select="$year"/>
+									<xsl:text>&amp;month=</xsl:text>
+									<xsl:number/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</a>				
+						</th>
+					</xsl:for-each>
 				</tr>
 			
 			<xsl:choose>
@@ -66,26 +69,24 @@
 					            <xsl:attribute name="class">even</xsl:attribute>
 					        </xsl:otherwise>
 					    </xsl:choose>
-				    
-						<th>
-							<span class="location">Lokasjonskode</span>
-						</th>
-						<th>
-							<span class="location">Lokasjonsnavn</span>
-						</th>
-						<th>
-							<span class="location">Adresse</span>
-						</th>
-							<xsl:for-each select="calendar_array">
-								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
-								</xsl:call-template>
-							</xsl:for-each>
+					    
+					    <td>
+							<xsl:value-of select="location/location_code"/>
+						</td>
+						<td class="location_name">
+							<xsl:value-of select="location/loc1_name"/>
+						</td>
+
+						<xsl:for-each select="calendar_array">
+							<xsl:call-template name="check_list_status_checker" >
+								<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+							</xsl:call-template>
+						</xsl:for-each>
 					</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="cal_info_msg"><td colspan="10">Ingen sjekklister for bygg i angitt periode</td></tr>
+				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
 	</table>
