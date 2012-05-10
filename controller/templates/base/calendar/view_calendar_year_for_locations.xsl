@@ -46,7 +46,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="$year"/>
+									<xsl:value-of select="$current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
