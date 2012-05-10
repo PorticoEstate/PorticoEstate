@@ -124,6 +124,10 @@
 			<td>{lang_login_external_db_host}:</td>
 			<td><input name="newsettings[external_db_host]" value="{value_external_db_host}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_login_external_db_port}:</td>
+			<td><input name="newsettings[external_db_port]" value="{value_external_db_port}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_type}:</td>
 			<td>
