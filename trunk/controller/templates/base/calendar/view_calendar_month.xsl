@@ -42,7 +42,7 @@
 			
 			<xsl:call-template name="icon_color_map" />
 			
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
+			<a id="showYear">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
@@ -52,30 +52,34 @@
 				</xsl:attribute>
 				Årsoversikt
 			</a>
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;month=</xsl:text>
-					<xsl:value-of select="current_month - 1"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:value-of select="$location_code"/>
-				</xsl:attribute>
-				<xsl:value-of select="current_month"/>
-			</a>
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;month=</xsl:text>
-					<xsl:value-of select="current_month + 1"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:value-of select="$location_code"/>
-				</xsl:attribute>
-				<xsl:value-of select="current_month + 1"/>
-			</a>
+			<div id="monthNav">
+				<a id="showPrevMonth">
+					<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>&amp;month=</xsl:text>
+						<xsl:value-of select="current_month - 1"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
+					</xsl:attribute>
+					<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr - 1"/> capitalized</xsl:variable>
+					<xsl:value-of select="php:function('lang', $month_str)" />
+				</a>
+				<a id="showNextMonth">
+					<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>&amp;month=</xsl:text>
+						<xsl:value-of select="current_month_nr + 1"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="$location_code"/>
+					</xsl:attribute>
+					<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr + 1"/> capitalized</xsl:variable>
+					<xsl:value-of select="php:function('lang', $month_str)" />
+				</a>
+			</div>
 			<!-- 
  				<select id="loc_1" class="choose_loc">
 					<xsl:for-each select="property_array">

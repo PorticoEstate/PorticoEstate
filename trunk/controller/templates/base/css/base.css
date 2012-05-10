@@ -931,7 +931,7 @@ ul.check_list {
     clear: both;
     margin-top: 1em;
     overflow: hidden;
-    padding: 1em;
+    padding: 1em 1em 0;
 }
 /* ===  COLOR MAP === */
 
@@ -996,6 +996,27 @@ ul#icon_color_map span{
 .cal_info_msg {
 	font-size: 16px;
     padding: 40px 20px;	
+}
+#showYear{
+	display:block;
+	font-weight: bold;
+	font-size: 14px;
+	float:left;
+}
+#showNextMonth{
+    display: block;
+    float: right;
+
+}
+#showPrevMonth {
+    display: block;
+    float: left;
+}
+#monthNav {
+    clear: both;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 1em;
 }
 
 /* ======================  CALENDAR INFO BOX ========================== */
