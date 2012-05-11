@@ -1003,22 +1003,25 @@ ul#icon_color_map span{
 	font-size: 14px;
 	float:left;
 }
-#showNextMonth{
-    display: block;
-    float: right;
-
-}
-#showPrevMonth {
-    display: block;
-    float: left;
-}
-#monthNav {
+#calNav {
     clear: both;
     font-size: 14px;
     font-weight: bold;
     padding-top: 1em;
 }
+#calNav a.showNext{
+    display: block;
+    float: right;
 
+}
+#calNav a.showPrev {
+    display: block;
+    float: left;
+    margin-left: 547px;
+}
+#calNav a.showPrev.month {
+    margin-left: 446px;
+}
 /* ======================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
