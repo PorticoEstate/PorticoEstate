@@ -214,19 +214,19 @@
 			if ( (int) $GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)) )
 			{
 				$toarray = array();
-				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsmannid IS NOT NULL';
+				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsigndato IS NULL AND oppsynsmannid IS NOT NULL';
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
 				{
 					$toarray[$this->db->f('responsible')] = true;
 				}
-				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksbehandlerid IS NOT NULL';
+				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksigndato IS NULL AND saksbehandlerid IS NOT NULL';
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
 				{
 					$toarray[$this->db->f('responsible')] = true;
 				}
-				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE budsjettansvarligid IS NOT NULL';
+				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE saksigndato IS NOT NULL AND budsjettsigndato IS NULL AND budsjettansvarligid IS NOT NULL';
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				while($this->db->next_record())
