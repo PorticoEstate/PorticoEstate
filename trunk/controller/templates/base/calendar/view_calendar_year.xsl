@@ -51,7 +51,6 @@
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
-					
 					<xsl:value-of select="current_year - 1"/>
 				</a>
 				<a class="showNext">
@@ -62,7 +61,6 @@
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
-					
 					<xsl:value-of select="current_year + 1"/>
 				</a>
 			</div>
