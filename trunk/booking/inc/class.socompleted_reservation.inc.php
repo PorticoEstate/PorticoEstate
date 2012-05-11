@@ -249,9 +249,9 @@
 			//Remember that the default value of customer_type is already
 			//set to 'external' so we only have to adjust customer_type
 			//when dealing with an internal customer
-			if (strlen($customer_info['organization_number']) == 5) {
+			if ((strlen($customer_info['organization_number']) == 5) || (strlen($customer_info['organization_number']) == 6)) {
 				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
-			} else if (strlen($customer_info['customer_organization_number']) == 5) {
+			} else if ((strlen($customer_info['customer_organization_number']) == 6) || (strlen($customer_info['customer_organization_number']) == 5)){
 				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
 			} else if (intval($customer_info['customer_internal']) == 1) {
 				$entity['customer_type'] = self::CUSTOMER_TYPE_INTERNAL;
@@ -261,7 +261,7 @@
 		protected function set_organization(&$entity, &$organization) {
 			$entity['organization_id'] = $organization['id'];
             if (intval($organization['customer_internal']) == 1) {
-                if (strlen($organization['customer_number']) == 5) {
+                if ((strlen($organization['customer_number']) == 5) || (strlen($organization['customer_number']) == 6)) {
                     $entity['customer_organization_number'] = $organization['customer_number'];
 	                $entity['customer_identifier_type'] = 'organization_number';
                 } elseif ($organization['customer_identifier_type'] == 'ssn') {

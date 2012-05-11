@@ -268,7 +268,7 @@
 
 		function get_org($orgnumber)
 		{
-			$sql = "SELECT id,name FROM bb_organization WHERE organization_number='".$orgnumber."' OR customer_organization_number='".$orgnumber."'";
+			$sql = "SELECT id,name FROM bb_organization WHERE (organization_number='".$orgnumber."' OR customer_organization_number='".$orgnumber."') AND active != 0";
 
 			$this->db->limit_query($sql,0, __LINE__, __FILE__, 1);
 			if($this->db->next_record())

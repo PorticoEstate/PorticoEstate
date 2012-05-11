@@ -552,3 +552,5 @@ Do not change these values unless you know what they are.	booking	no	Ikke endre 
 Organization is missing booking charge	booking	no	Organisasjonen mangler bookingansvarlig
 Logfile	booking	no	Logfil
 log	booking	no	Last ned
+Agegroups can not be larger than 9999 peoples	booking	no	Det kan ikke være mer en 9999 personer i hver målgruppe.
+Resourcenumber is wrong, 5 or 6 characters long	booking	no	Ressursnummer er feil, skal være 5 eller 6 tegn langt.
