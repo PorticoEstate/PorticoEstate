@@ -1010,7 +1010,7 @@ ul#icon_color_map span{
 }
 #calNav {
     clear: both;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     padding-top: 1em;
 }
@@ -1021,6 +1021,7 @@ ul#icon_color_map span{
 #calNav a.showNext{
     display: block;
     float: right;
+    padding-top: 5px;
 }
 #calNav a.showNext img{
     margin-left:5px;
@@ -1029,7 +1030,9 @@ ul#icon_color_map span{
     display: block;
     float: left;
     margin-left: 547px;
-    padding-left:3px;
+    padding-left: 3px;
+    padding-top: 5px;
+    vertical-align: sub;
 }
 #calNav a.showPrev img{
     margin-right:5px;
