@@ -97,6 +97,12 @@ $(document).ready(function(){
 			return;
 		}
 
+		if($("#periodization").val() && ! $("#periodization_start").val())
+		{
+			alert('Du må velge startperiode');
+			return;
+		}
+
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
