@@ -931,7 +931,7 @@ ul.check_list {
     clear: both;
     margin-top: 1em;
     overflow: hidden;
-    padding: 1em;
+    padding: 1em 1em 0;
 }
 /* ===  COLOR MAP === */
 
@@ -997,7 +997,31 @@ ul#icon_color_map span{
 	font-size: 16px;
     padding: 40px 20px;	
 }
+#showYear{
+	display:block;
+	font-weight: bold;
+	font-size: 14px;
+	float:left;
+}
+#calNav {
+    clear: both;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 1em;
+}
+#calNav a.showNext{
+    display: block;
+    float: right;
 
+}
+#calNav a.showPrev {
+    display: block;
+    float: left;
+    margin-left: 547px;
+}
+#calNav a.showPrev.month {
+    margin-left: 446px;
+}
 /* ======================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
