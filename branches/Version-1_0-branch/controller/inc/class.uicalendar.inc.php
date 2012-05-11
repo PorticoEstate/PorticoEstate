@@ -136,7 +136,6 @@
 				'heading_array'		  	  => month_calendar::get_heading_array($year, $month),
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
-				'current_month' 		  => month_calendar::get_month_name($month-1),
 				'current_year' 			  => $year,
 				'current_month_nr' 		  => $month
 			);
@@ -152,7 +151,7 @@
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			
-			// Array that should conatain control and calendar objects that will be sent to view		
+			// Array that should conatain control and calendar objects that will be sent to view
 			$controls_calendar_array = array();
 			
 			if(empty($year)){

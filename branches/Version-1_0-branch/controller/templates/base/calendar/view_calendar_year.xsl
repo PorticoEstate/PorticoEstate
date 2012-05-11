@@ -42,6 +42,31 @@
 					
 			<xsl:call-template name="icon_color_map" />
 			
+			<div id="calNav">
+				<a class="showPrev">
+					<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year - 1"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="current_location/location_code"/>
+					</xsl:attribute>
+					
+					<xsl:value-of select="current_year - 1"/>
+				</a>
+				<a class="showNext">
+						<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+						<xsl:text>&amp;year=</xsl:text>
+						<xsl:value-of select="current_year + 1"/>
+						<xsl:text>&amp;location_code=</xsl:text>
+						<xsl:value-of select="current_location/location_code"/>
+					</xsl:attribute>
+					
+					<xsl:value-of select="current_year + 1"/>
+				</a>
+			</div>
+			
 		</div>
 		 
 		<div id="cal_wrp">
@@ -62,7 +87,9 @@
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
-								<xsl:value-of select="."/>
+								
+								<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
+								<xsl:value-of select="php:function('lang', $month_str)" />
 							</a>				
 						</th>
 					</xsl:for-each>

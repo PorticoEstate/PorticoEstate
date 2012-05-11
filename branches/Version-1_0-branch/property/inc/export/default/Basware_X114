@@ -816,7 +816,17 @@
 				$oRsOverfBilag['pmwrkord_code']	= $line['order_id'];
 				$oRsOverfBilag['bilagsnr_ut']	= $bilagsnr_ut;
 				$oRsOverfBilag['periode']		= $periode;
-				$dim6							= $line['dime'];
+
+				if($line['dime'])
+				{
+					$category		= $this->cats->return_single($line['dime']);
+					$category_arr	= explode('-',$category[0]['name']);
+					$dim6			= (int)trim($category_arr[0]);
+				}
+				else
+				{
+					$dim6			= '';				
+				}
 
 				//Kopier verdier  til fm_ecobilagoverf
 				if ($download=='on' && !$this->debug)
