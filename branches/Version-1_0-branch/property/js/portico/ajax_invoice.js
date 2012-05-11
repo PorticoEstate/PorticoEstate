@@ -2,176 +2,19 @@ $(document).ready(function(){
 	
 	// When janitor is selected, vouchers are fetched from db and voucer select list is populated
 	$("#janitor_lid").change(function () {
-//		var janitor_lid = $(this).val();
-		var janitor_lid = $("#janitor_lid").val();
-		var supervisor_lid = $("#supervisor_lid").val();
-		var budget_responsible_lid = $("#budget_responsible_lid").val();
-		var query = $("#query").val();
-
-		var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
-			success: function(data) {
-				if( data != null)
-				{
-					if(data.sessionExpired)
-					{
-						alert('Sesjonen er utløpt - du må logge inn på nytt');
-						return;
-					}
-
-					htmlString  = "<option>" + data.length + " bilag funnet</option>"
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					$("#voucher_id_filter").html( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen bilag</option>"
-					$("#voucher_id_filter").html( htmlString );
-				}
-			} 
-			});
-		
+		update_voucher_filter();		
     });
 
 	$("#supervisor_lid").change(function () {
-//		var janitor_lid = $(this).val();
-		var janitor_lid = $("#janitor_lid").val();
-		var supervisor_lid = $("#supervisor_lid").val();
-		var budget_responsible_lid = $("#budget_responsible_lid").val();
-		var query = $("#query").val();
-
-		var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
-			success: function(data) {
-				if( data != null)
-				{
-					if(data.sessionExpired)
-					{
-						alert('Sesjonen er utløpt - du må logge inn på nytt');
-						return;
-					}
-
-					htmlString  = "<option>" + data.length + " bilag funnet</option>"
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					$("#voucher_id_filter").html( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen bilag</option>"
-					$("#voucher_id_filter").html( htmlString );
-				}
-			} 
-			});
-		
+		update_voucher_filter();		
     });
 
 	$("#budget_responsible_lid").change(function () {
-		var janitor_lid = $("#janitor_lid").val();
-		var supervisor_lid = $("#supervisor_lid").val();
-		var budget_responsible_lid = $("#budget_responsible_lid").val();
-		var query = $("#query").val();
-
-		var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
-			success: function(data) {
-				if( data != null)
-				{
-					if(data.sessionExpired)
-					{
-						alert('Sesjonen er utløpt - du må logge inn på nytt');
-						return;
-					}
-
-					htmlString  = "<option>" + data.length + " bilag funnet</option>"
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					$("#voucher_id_filter").html( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen bilag</option>"
-					$("#voucher_id_filter").html( htmlString );
-				}
-			} 
-			});
-		
+		update_voucher_filter();		
     });
 
-
 	$("#search").click(function(e){
-		var janitor_lid = $("#janitor_lid").val();
-		var supervisor_lid = $("#supervisor_lid").val();
-		var budget_responsible_lid = $("#budget_responsible_lid").val();
-		var query = $("#query").val();
-		var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
-			success: function(data) {
-				if( data != null)
-				{
-					if(data.sessionExpired)
-					{
-						alert('Sesjonen er utløpt - du må logge inn på nytt');
-						return;
-					}
-
-					htmlString  = "<option>" + data.length + " bilag funnet</option>"
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					$("#voucher_id_filter").html( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen bilag</option>"
-					$("#voucher_id_filter").html( htmlString );
-				}
-			}
-			});
+		update_voucher_filter();
 	});
 
 	$("#voucher_id_filter").change(function () {
@@ -185,17 +28,12 @@ $(document).ready(function(){
 		$("#invoice_id").html( '' );
 		$("#kid_nr").html( '' );
 		$("#vendor").html('' );
-//		$("#janitor").html( '' );
-//		$("#supervisor").html( '' );
-//		$("#budget_responsible").html( '' );
 		$("#close_order_orig").val( '' );
 		$("#my_initials").val( '' );
 		$("#sign_orig").val( '' );
 		$("#invoice_date").html( '' );
 		$("#payment_date").html( '' );
 		$("#b_account_id").val( '' );
-//		$("#amount").html( '' );
-//		$("#approved_amount").html( '' );
 		$("#currency").html( '' );
 		$("#oppsynsmannid").html( '' );
 		$("#saksbehandlerid").html( '' );
@@ -239,9 +77,6 @@ $(document).ready(function(){
 				}
 			}
 			});
-
-
-	//	document.getElementById('image_content').src = '';
 	});
 
 	$("#approve_line").live("click", function(e){
@@ -259,6 +94,12 @@ $(document).ready(function(){
 		if(!line_id)
 		{
 			alert('Du må velge linje i bilag');
+			return;
+		}
+
+		if($("#periodization").val() && ! $("#periodization_start").val())
+		{
+			alert('Du må velge startperiode');
 			return;
 		}
 
@@ -327,13 +168,57 @@ $(document).ready(function(){
 	   				
 	   				}
 	   				$("#receipt").html(htmlString);
-	   				
 	   				update_form_values(line_id, voucher_id_orig);
+					update_voucher_filter();
 				}
 			}
 		});
 	});
 });
+
+
+
+function update_voucher_filter(){
+	var janitor_lid = $("#janitor_lid").val();
+	var supervisor_lid = $("#supervisor_lid").val();
+	var budget_responsible_lid = $("#budget_responsible_lid").val();
+	var query = $("#query").val();
+
+	var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+      
+	var htmlString = "";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
+		success: function(data) {
+			if( data != null)
+			{
+				if(data.sessionExpired)
+				{
+					alert('Sesjonen er utløpt - du må logge inn på nytt');
+					return;
+				}
+
+				htmlString  = "<option>" + data.length + " bilag funnet</option>"
+				var obj = data;
+
+				$.each(obj, function(i) {
+					htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+	    			});
+
+				$("#voucher_id_filter").html( htmlString );
+			}
+			else
+			{
+				htmlString  += "<option>Ingen bilag</option>"
+				$("#voucher_id_filter").html( htmlString );
+			}
+		} 
+	});
+}
 
 
 function update_form_values( line_id, voucher_id_orig ){
@@ -412,7 +297,15 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#b_account_id").val( voucher[0].b_account_id );
 				$("#dim_a").val( voucher[0].dim_a );
 				$("#currency").html( voucher[0].currency );
-				$("#process_log").html( data['generic'].process_log );
+				
+				if(data['generic'].process_log != null)
+				{
+					$("#process_log").html( data['generic'].process_log );
+				}
+				else
+				{
+					$("#process_log").html( '' );
+				}
 				$("#my_initials").val( data['generic'].my_initials );
 				$("#sign_orig").val( data['generic'].sign_orig );
 				$("#line_text").val( voucher[0].line_text );
