@@ -1182,7 +1182,6 @@
 					$type_id	= count($location_types);
 				}
 				$cols.= ",fm_location1.loc1_name";
-				$this->join = $this->socommon->join;
 				$joinmethod .= " {$this->join}  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
 				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
@@ -1207,7 +1206,7 @@
 		//		if($_level > 1) // very expensive 
 				if($_level == 2 && in_array(2, $list_location_level))
 				{
-					$joinmethod .= " {$this->join} fm_location{$_level}";
+					$joinmethod .= " {$this->left_join} fm_location{$_level}";
 					$paranthesis .='(';
 					$on = 'ON';
 					for ($k=($_level-1); $k>0; $k--)
