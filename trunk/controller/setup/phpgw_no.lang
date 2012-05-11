@@ -46,6 +46,18 @@ month 9 capitalized	controller	no	September
 month 10 capitalized	controller	no	Oktober
 month 11 capitalized	controller	no	November
 month 12 capitalized	controller	no	Desember
+short_month 1 capitalized	controller	no	Jan
+short_month 2 capitalized	controller	no	Feb
+short_month 3 capitalized	controller	no	Mar
+short_month 4 capitalized	controller	no	Apr
+short_month 5 capitalized	controller	no	Mai
+short_month 6 capitalized	controller	no	Jun
+short_month 7 capitalized	controller	no	Jul
+short_month 8 capitalized	controller	no	Aug
+short_month 9 capitalized	controller	no	Sep
+short_month 10 capitalized	controller	no	Okt
+short_month 11 capitalized	controller	no	Nov
+short_month 12 capitalized	controller	no	Des
 monthly	controller	no	Månedlig
 month	controller	no	Måned
 no part of town	controller	no	Bydel ikke valgt

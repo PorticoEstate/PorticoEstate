@@ -46,14 +46,14 @@
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="year"/>
+					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:value-of select="$location_code"/>
+					<xsl:value-of select="current_location/location_code"/>
 				</xsl:attribute>
 				Årsoversikt
 			</a>
-			<div id="monthNav">
-				<a id="showPrevMonth">
+			<div id="calNav">
+				<a class="showPrev month">
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 						<xsl:text>&amp;year=</xsl:text>
@@ -66,7 +66,7 @@
 					<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr - 1"/> capitalized</xsl:variable>
 					<xsl:value-of select="php:function('lang', $month_str)" />
 				</a>
-				<a id="showNextMonth">
+				<a class="showNext">
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 						<xsl:text>&amp;year=</xsl:text>

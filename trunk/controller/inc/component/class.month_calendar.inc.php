@@ -110,11 +110,4 @@ class month_calendar {
 		
 		return $to_date_ts; 
 	}
-	
-	public static function get_month_name($month){
-	
-		$month_array = array("Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember");
-		
-		return $month_array[$month]; 
-	}
 }
