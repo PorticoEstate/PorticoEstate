@@ -909,9 +909,7 @@ ul.check_list {
 
 /* ======================  CALENDAR ========================== */
 
-#control_plan .top h1{
-   
-}
+
 #control_plan .top h3{
    margin:0;
    font-size:19px;
@@ -962,7 +960,7 @@ ul#icon_color_map span{
     text-align: center;
 }
 #calendar.month th, #calendar.month td {
-    padding: 5px;
+    padding: 5px 3px;
 }
 #calendar .even {
     background: none repeat scroll 0 0 #DEEAF8;
@@ -980,9 +978,12 @@ ul#icon_color_map span{
     padding: 0 10px;
     width: 100px;
 }
+#calendar .title, #calendar .assigned {
+	width: 150px;
+}
 #calendar .frequency {
     margin-right: 10px;
-    width: 65px;
+    width: 100px;
 }
 #calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location_name {
     text-align: left;
@@ -1003,24 +1004,42 @@ ul#icon_color_map span{
 	font-size: 14px;
 	float:left;
 }
+#showYear img {
+    margin-right: 5px;
+    vertical-align: bottom;
+}
 #calNav {
     clear: both;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     padding-top: 1em;
 }
+#calNav img{
+    vertical-align:bottom;
+}
+
 #calNav a.showNext{
     display: block;
     float: right;
-
+}
+#calNav a.showNext img{
+    margin-left:5px;
 }
 #calNav a.showPrev {
     display: block;
     float: left;
     margin-left: 547px;
+    padding-left:3px;
+}
+#calNav a.showPrev img{
+    margin-right:5px;
 }
 #calNav a.showPrev.month {
-    margin-left: 446px;
+    margin-left: 437px;
+}
+#calNav .current {
+    font-size: 21px;
+    padding-left: 230px;
 }
 /* ======================  CALENDAR INFO BOX ========================== */
 
