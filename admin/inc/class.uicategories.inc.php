@@ -348,6 +348,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file('cats');
 
+/*
 			if ( $appname )
 			{
 				$GLOBALS['phpgw']->template->set_var('title_categories',lang('Edit global category for %1',lang($appname) . $location?"::{$location}":''));
@@ -355,6 +356,30 @@
 			else
 			{
 				$GLOBALS['phpgw']->template->set_var('title_categories',lang('Edit global category'));
+			}
+*/
+			$active = array
+			(
+				array
+				(
+					'id'	=> 0,
+					'name'	=> lang('inactive')
+				),
+				array
+				(
+					'id'	=> 1,
+					'name'	=> lang('active')
+				),
+				array
+				(
+					'id'	=> 2,
+					'name'	=> lang('inactive and hidden')
+				)
+			);
+
+			foreach ($active as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $cats[0]['active'] ? 1 : 0;
 			}
 
 			$data = array
@@ -376,7 +401,8 @@
 				'lang_cancel_statustext'	=> lang('leave the category untouched and return back to the list'),
 				'lang_save_statustext'		=> lang('save the category and return back to the list'),
 				'lang_apply_statustext'		=> lang('save the category'),
-				'cat_select'			=> $this->bo->cats->formatted_xslt_list(array('select_name' => 'values[parent]', 'selected' => $parent,'self' => $this->cat_id,'globals' => $global_cats))
+				'cat_select'			=> $this->bo->cats->formatted_xslt_list(array('select_name' => 'values[parent]', 'selected' => $parent,'self' => $this->cat_id,'globals' => $global_cats)),
+				'active_list'			=> array('options' => $active)
 			);
 
 			$link_data['menuaction'] = 'admin.uicategories.edit';

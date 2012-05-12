@@ -127,7 +127,7 @@
 
 <!-- BEGIN cat_edit -->
 
-	<xsl:template match="cat_edit">
+	<xsl:template match="cat_edit" xmlns:php="http://php.net/xsl">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td colspan="3" align="center">
@@ -146,11 +146,9 @@
 			</tr>
 			<tr>
 				<td colspan="2"><xsl:value-of select="lang_name"/>:</td>
-				<td><input name="values[name]" size="50" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_name_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+				<td><input name="values[name]" size="50">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_name_statustext"/>
 						</xsl:attribute>
 						<xsl:attribute name="value">
 							<xsl:value-of select="value_name"/>
@@ -160,11 +158,9 @@
 			</tr>
 			<tr>
 				<td colspan="2" valign="top"><xsl:value-of select="lang_descr"/>:</td>
-				<td><textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_descr_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+				<td><textarea cols="60" rows="10" name="values[descr]" wrap="virtual" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_descr_statustext"/>
 						</xsl:attribute>
 						<xsl:value-of select="value_descr"/>		
 					</textarea>
@@ -175,6 +171,14 @@
 				<td>
 					<input name="values[color]" id="value_color" value="{value_color}" />
 					<img src="img_color_selector" onclick="colorSelector('colorSelector);" alt="{lang_color_selector}" title="lang_color_selector" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><label for="value_active"><xsl:value-of select="php:function('lang', 'active')"/></label>:</td>
+				<td>
+					<select name="values[active]" id="value_active">
+						<xsl:apply-templates select="active_list/options"/>
+					</select>
 				</td>
 			</tr>
 
@@ -215,3 +219,13 @@
 			</form>
 		</table>
 	</xsl:template>
+
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+	
