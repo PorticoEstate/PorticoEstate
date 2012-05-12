@@ -3049,3 +3049,25 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+
+	/**
+	* change datatype to bigint
+	*
+	* @return string the new version number
+	*/
+	$test[] = '0.9.17.538';
+	function phpgwapi_upgrade0_9_17_538()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','active', array('type' => 'int','precision' => '2','default' => '1','nullable' => True));				
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE phpgw_categories SET active = 1',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.539';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
