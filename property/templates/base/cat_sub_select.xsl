@@ -6,7 +6,7 @@
 		<xsl:variable name="cat_sub_name">
 			<xsl:value-of select="cat_sub_name"/>
 		</xsl:variable>
-		<select name="{$cat_sub_name}" class="forms" title="{$lang_cat_sub_statustext}">
+		<select id = "global_category_id" name="{$cat_sub_name}" class="forms" title="{$lang_cat_sub_statustext}">
 			<xsl:apply-templates select="cat_sub_list"/>
 		</select>
 	</xsl:template>

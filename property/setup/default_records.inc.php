@@ -880,5 +880,17 @@ $solocation->update_location();
 		$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS' 
 			. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
 			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
-
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+			. ' SELECT fm_orders.id as order_id, sum(godkjentbelop) AS actual_cost FROM fm_ecobilagoverf join fm_orders ON fm_ecobilagoverf.pmwrkord_code = fm_orders.id GROUP BY fm_orders.id';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
+			. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')",__LINE__,__FILE__);
+
