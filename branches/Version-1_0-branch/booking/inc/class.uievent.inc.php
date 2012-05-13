@@ -339,7 +339,7 @@
 					} else {
 						$_POST['customer_identifier_type'] = 'organization_number';
 						$_POST['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_number']) == 5) {
+						if ((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5)) {
  							$_POST['customer_organization_number'] = $organization['customer_number'];
 						} else {
 							$errors['resource_number'] = lang('The resource number is wrong or not present');
@@ -394,7 +394,7 @@
 				if(($_POST['organization_name'] != '' or $_POST['org_id2'] != '') and isset($errors['contact_name'])) {
 					$errors['contact_name'] = lang('Organization is missing booking charge');
 				}
-				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'])
+				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'] && !$errors['activity_id'])
 				{
 					if (!$_POST['application_id'])
 					{
@@ -529,7 +529,7 @@
 					} else {
 						$event['customer_identifier_type'] = 'organization_number';
 						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_number']) == 5) {
+						if ((strlen($organization['customer_number']) == 6) || (strlen($organization['customer_number']) == 5)) {
  							$event['customer_organization_number'] = $organization['customer_number'];
 						} else {
 							$errors['resource_number'] = lang('The resource number is wrong or not present');

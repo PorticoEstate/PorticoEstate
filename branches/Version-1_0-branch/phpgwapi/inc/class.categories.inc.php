@@ -3,7 +3,7 @@
 	* Category manager
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage utilities
@@ -272,7 +272,8 @@
 						'name'			=> $this->db->f('cat_name'),
 						'description'	=> $this->db->f('cat_description'),
 						'data'			=> $this->db->f('cat_data'),
-						'last_mod'		=> $this->db->f('last_mod')
+						'last_mod'		=> $this->db->f('last_mod'),
+						'active'		=> (int)$this->db->f('active')
 					);
 				}
 			}
@@ -368,7 +369,8 @@
 					'parent'		=> (int)$this->db->f('cat_parent'),
 					'name'			=> $this->db->f('cat_name'),
 					'description'	=> $this->db->f('cat_description'),
-					'data'			=> $this->db->f('cat_data')
+					'data'			=> $this->db->f('cat_data'),
+					'active'		=> (int)$this->db->f('active')
 				);
 			}
 
@@ -413,7 +415,8 @@
 						'parent'		=> (int)$this->db->f('cat_parent'),
 						'name'			=> $this->db->f('cat_name'),
 						'description'	=> $this->db->f('cat_description'),
-						'data'			=> $this->db->f('cat_data')
+						'data'			=> $this->db->f('cat_data'),
+						'active'		=> (int)$this->db->f('active')
 					);
 				}
 
@@ -506,9 +509,11 @@
 					'parent'		=> $this->db->f('cat_parent'),
 					'name'			=> $this->db->f('cat_name', true),
 					'description'	=> $this->db->f('cat_description', true),
-					'data'			=> $this->db->f('cat_data')
+					'data'			=> $this->db->f('cat_data'),
+					'active'		=> (int)$this->db->f('active')
 				);
 			}
+
 			return $cats;
 		}
 
@@ -736,6 +741,7 @@
 
 			$values['level'] = 0;
 			$values['main'] = 0;
+			$values['active'] = (int) $values['active'];
 			if ($values['parent'] > 0)
 			{
 				$values['level']	= (int) $this->id2name($values['parent'],'level')+1;
@@ -754,9 +760,9 @@
 				$id_val = $values['id'] . ',';
 			}
 
-			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, location_id, cat_name, cat_description, cat_data, cat_main ,cat_level, last_mod)"
+			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, location_id, cat_name, cat_description, cat_data, cat_main ,cat_level, active, last_mod)"
 				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id},"
-					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', {$values['main']}, {$values['level']}," . time() . ')',__LINE__,__FILE__);
+					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', {$values['main']}, {$values['level']}, {$values['active']}," . time() . ')',__LINE__,__FILE__);
 
 			if ($values['id'] > 0)
 			{
@@ -900,6 +906,7 @@
 			$sql = "UPDATE phpgw_categories SET cat_name='" . $values['name'] . "', cat_description='" . $values['descr']
 					. "', cat_data='" . $values['data'] . "', cat_parent=" . $values['parent'] . ", cat_access='"
 					. $values['access'] . "', cat_main=" . $values['main'] . ', cat_level=' . $values['level'] . ',last_mod=' . time()
+					. ', active = ' . (int) $values['active']
 					. " WHERE cat_appname='" . $this->app_name . "' AND cat_id=" . $values['id'];
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -909,6 +916,7 @@
 				'cat_id'	=> $values['id'],
 				'cat_name'	=> $values['name'],
 				'cat_owner'	=> $this->account_id,
+				'active'	=> (int) $values['active'],
 				'location'	=> 'cat_edit',
 				'location_id' => $this->location_id
 			);

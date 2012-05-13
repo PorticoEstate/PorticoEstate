@@ -224,6 +224,9 @@
 				if(strlen($_POST['shortname']) > 11){
 					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
 				}
+				if((strlen($_POST['customer_number']) != 5) && (strlen($_POST['customer_number']) != 6) && ($_POST['customer_number'] != '')){
+					$errors['customer_number'] = lang('Resourcenumber is wrong, 5 or 6 characters long');
+				}
 				if(!$errors)
 				{
 					$organization['shortname'] = $_POST['shortname'];

@@ -1762,10 +1762,19 @@
 				}
 			}
 
-			$catetory = $this->cats->return_single($project['cat_id']);
-//			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
+/*			
+			if(isset($project['cat_id']) && $project['cat_id'])
+			{
+				$catetory = $this->cats->return_single($project['cat_id']);
+				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $project['cat_id']);
+				$cat_sub = array_merge($catetory,$cat_sub);
+			}
+			else
+			{
+				$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
+			}
+*/
 			$cat_sub = $this->cats->return_sorted_array($start = 0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, false);
-			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
 			$user_list = $this->bocommon->get_user_list('select', isset($values['user_id']) && $values['user_id'] ? $values['user_id'] : $this->account ,false,false,-1,false,false,'',-1);
@@ -1985,7 +1994,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );	
-			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );	
+			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );
 		}
 
 		function add()

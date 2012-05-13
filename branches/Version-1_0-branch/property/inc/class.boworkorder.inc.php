@@ -48,7 +48,8 @@
 				'read_single'	=> true,
 				'save'			=> true,
 				'delete'		=> true,
-				'check_perms'	=> true
+				'check_perms'	=> true,
+				'get_category'	=> true
 			);
 
 		function property_boworkorder($session=false)
@@ -165,6 +166,13 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','workorder',$data);
 			}
+		}
+
+		public function get_category()
+		{
+			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$category	= $this->cats->return_single($cat_id);
+			return $category[0];
 		}
 
 		function column_list($selected = array())

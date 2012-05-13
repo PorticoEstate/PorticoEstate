@@ -27,11 +27,11 @@
 				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
                 if(intval($from_entity['customer_internal']) == 1)
                 {
-                    if (strlen($from_entity['customer_number']) == 5)    			
+                    if ((strlen($from_entity['customer_number']) == 6) || (strlen($from_entity['customer_number']) == 5))    			
                     {
                     	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_number'];
                     }
-                    elseif (strlen($from_entity['customer_organization_number']) == 5) 
+                    elseif ((strlen($from_entity['customer_organization_number']) == 6) ||  (strlen($from_entity['customer_organization_number']) == 5)) 
 					{
                     	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_organization_number'];
 					} 			
@@ -116,7 +116,7 @@
 			$identifier_field = $this->field_prefix.$identifier_field;
 			$identifier_value = isset($data[$identifier_field]) ? trim($data[$identifier_field]) : null;
 
-			if ($identifier_field == 'customer_organization_number' and (strlen($identifier_value) != 5 and strlen($identifier_value) != 9)){
+			if ($identifier_field == 'customer_organization_number' and (strlen($identifier_value) != 5 and strlen($identifier_value) != 6 and strlen($identifier_value) != 9)){
 				return null;
 			}
 
