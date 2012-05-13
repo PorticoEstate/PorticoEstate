@@ -161,5 +161,47 @@ $(document).ready(function(){
 			} 
 		});	
     });
+
+	$("#loc5").change(function () {
+		var loc1 = $("#loc1").val();
+		var loc2 = $("#loc2").val();
+		var loc3 = $("#loc3").val();
+		var loc4 = $("#loc4").val();
+		var loc5 = $(this).val();
+		$("#loc6").html( "<option></option>" );
+		if(!loc5)
+		{
+			return false;
+		}
+
+		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:loc1 + "-" + loc2 + "-" + loc3 + "-" + loc4 + "-" + loc5};
+		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
+      
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					htmlString  = "<option value = ''>" + data.length + " lokasjone(r) funnet</option>"
+					var obj = data;
+					$.each(obj, function(i) {
+						htmlString  += "<option value='" + obj[i].id + "'>"+ obj[i].name + "</option>";
+		    			});
+
+					$("#loc6").html( htmlString );
+				}
+				else
+				{
+					htmlString  += "<option>Ingen lokasjoner</option>"
+					$("#loc6").html( htmlString );
+				}
+			} 
+		});	
+    });
+
 });
 
