@@ -143,6 +143,7 @@
 				'lang_add_sub'			=> lang('add sub'),
 				'lang_name'				=> lang('name'),
 				'lang_descr'			=> lang('description'),
+				'lang_status'			=> lang('status'),
 				'lang_edit'				=> lang('edit'),
 				'lang_delete'			=> lang('delete'),
 				'lang_sort_statustext'	=> lang('sort the entries'),
@@ -156,8 +157,14 @@
 											))
 			);
 
+
+			$lang_add_sub_statustext	= lang('add a subcategory');
+			$lang_edit_statustext		= lang('edit this category');
+			$lang_delete_statustext		= lang('delete this category');
+			$lang_add_sub				= lang('add sub');
+
 			$content = array();
-			while (is_array($categories) && list(,$cat) = each($categories))
+			foreach ($categories as $cat)
 			{
 				$level		= $cat['level'];
 				$cat_name	= $GLOBALS['phpgw']->strip_html($cat['name']);
@@ -223,18 +230,20 @@
 
 				$content[] = array
 				(
-					'name'				=> $cat_name . $appendix,
-					'descr'				=> $descr,
-					'main'				=> $main,
-					'add_sub_url'			=> $add_sub_url,
-					'edit_url'			=> $edit_url,
-					'delete_url'			=> $delete_url,
-					'lang_add_sub_statustext'	=> lang('add a subcategory'),
-					'lang_edit_statustext'		=> lang('edit this category'),
-					'lang_delete_statustext'	=> lang('delete this category'),
-					'lang_add_sub'			=> lang('add sub'),
-					'lang_edit'			=> $lang_edit,
-					'lang_delete'			=> $lang_delete
+					'name'						=> $cat_name . $appendix,
+					'descr'						=> $descr,
+					'main'						=> $main,
+					'status'					=> $cat['active'],
+					'status_text'				=> $cat['active'] == 1 ? 'active' : 'disabled',
+					'add_sub_url'				=> $add_sub_url,
+					'edit_url'					=> $edit_url,
+					'delete_url'				=> $delete_url,
+					'lang_add_sub_statustext'	=> $lang_add_sub_statustext,
+					'lang_edit_statustext'		=> $lang_edit_statustext,
+					'lang_delete_statustext'	=> $lang_delete_statustext,
+					'lang_add_sub'				=> $lang_add_sub,
+					'lang_edit'					=> $lang_edit,
+					'lang_delete'				=> $lang_delete
 				);
 			}
 
