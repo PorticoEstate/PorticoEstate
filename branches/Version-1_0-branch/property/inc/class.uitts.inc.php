@@ -857,7 +857,7 @@
 									array
 									( //div values  combo_box_0
 										'id' => 'values_combo_box_0',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2])
+										'value'	=> $this->bocommon->select2String($values_combo_box[3])
 									)
 								)
 							)
