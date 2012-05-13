@@ -33,7 +33,7 @@
 	<xsl:template match="cat_select">
 	<xsl:variable name="lang_cat_statustext"><xsl:value-of select="lang_cat_statustext"/></xsl:variable>
 	<xsl:variable name="select_name"><xsl:value-of select="select_name"/></xsl:variable>
-		<select name="{$select_name}" class="forms" onMouseover="window.status='{$lang_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
+		<select id = "global_category_id" name="{$select_name}" class="forms" onMouseover="window.status='{$lang_cat_statustext}'; return true;" onMouseout="window.status='';return true;">
 			<option value="0"><xsl:value-of select="lang_no_cat"/></option>
 				<xsl:apply-templates select="cat_list"/>
 		</select>

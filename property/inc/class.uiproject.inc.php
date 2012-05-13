@@ -30,6 +30,11 @@
 	phpgw::import_class('phpgwapi.yui');
 
 	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+	/**
 	 * Description
 	 * @package property
 	 */
@@ -2035,7 +2040,9 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.edit', 'property' );
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+
+			phpgwapi_jquery::load_widget('core');
+			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_project_edit', 'property' );
 		}
 
 		function delete()

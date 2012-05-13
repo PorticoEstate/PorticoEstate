@@ -446,7 +446,7 @@
 				foreach($application['agegroups'] as $ag)
 				{
 					if($ag['male'] > 9999 || $ag['female'] > 9999) {
-						$errors['agegroups'] = lang('Agegroups kan not be larger than 9999 peoples');
+						$errors['agegroups'] = lang('Agegroups can not be larger than 9999 peoples');
 					}
 				}
 

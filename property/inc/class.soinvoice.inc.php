@@ -2181,7 +2181,8 @@
 				{
 					$data['supervisor_lid'] = ltrim($data['supervisor_lid'],'*');
 		//			$filtermethod .= " $where oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
-		//			$where = 'AND';
+					$filtermethod .= " $where saksigndato IS NULL";
+					$where = 'AND';
 				}
 
 				$filtermethod .= " $where saksbehandlerid = '{$data['supervisor_lid']}'";
