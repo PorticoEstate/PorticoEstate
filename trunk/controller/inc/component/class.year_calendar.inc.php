@@ -76,4 +76,14 @@ class year_calendar {
 		return $this->calendar_array;
 	}
 	
+	public static function get_heading_array(){
+			
+		$heading_array = array();
+		
+		for($i=1;$i<=12;$i++){
+			$heading_array[$i] = "$i";	
+		}
+		
+		return $heading_array;
+	}
 }

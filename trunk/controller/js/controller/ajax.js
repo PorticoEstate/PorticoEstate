@@ -109,7 +109,12 @@ $(document).ready(function(){
          		  		htmlString  += "<option>Ingen kontroller</option>"
          		  		$("#cat_id").html( htmlString );
          		  	}
-			  }  
+			  }
+         	  error: function(XMLHttpRequest, textStatus, errorThrown) {
+        	    if (XMLHttpRequest.status === 401) {
+        	      location.href = '/';
+        	    }
+        	  }
 			});
 			
     });

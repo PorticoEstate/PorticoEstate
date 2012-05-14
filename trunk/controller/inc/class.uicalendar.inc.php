@@ -130,20 +130,20 @@
 			$data = array
 			(		
 				'my_locations'	  		  => $my_locations,
-				'view_location_code'	  => $location_code,
 				'property_array'	  	  => $property_array,
 				'current_location'		  => $location_array,
 				'heading_array'		  	  => month_calendar::get_heading_array($year, $month),
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
 				'current_year' 			  => $year,
-				'current_month_nr' 		  => $month
+				'current_month_nr' 		  => $month,
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
+			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker', 
+											'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
 		}
 		
 		public function view_calendar_for_year()
@@ -233,20 +233,19 @@
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
-			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-			
 			$data = array
 			(
 				'my_locations'	  		  => $my_locations,
-				'view_location_code'	  => $location_code,
 				'current_location'  	  => $location_array,
-				'heading_array'		  	  => $heading_array,
+				'heading_array'		  	  => year_calendar::get_heading_array(),
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  => $date_format,
 				'current_year' 			  => $year,
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
+			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 
+											'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
@@ -301,7 +300,7 @@
 			
 			$criteria = array
 			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], //
 				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
 				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
 				'allrows' => false
@@ -310,20 +309,19 @@
 			$location_finder = new location_finder();
 			$my_locations = $location_finder->get_responsibilities( $criteria );
 			
-			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-
 			$data = array
 			(
 				'my_locations'	  		  		=> $my_locations,
 				'control'			  	  		=> $control->toArray(),
-				'heading_array'		  	  		=> $heading_array,
+				'heading_array'		  	  		=> year_calendar::get_heading_array(),
 				'locations_with_calendar_array' => $locations_with_calendar_array,
 				'date_format' 			  		=> $date_format,
-				'period' 			  	  		=> $year,
-				'year' 			  	  	  		=> $year,
+				'current_year'	  	  	  		=> $year,
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
+			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 
+											 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
@@ -382,18 +380,18 @@
 			(		
 				'control'	  		  			=> $control->toArray(),
 				'my_locations'	  		  		=> $my_locations,
-				'view_location_code'	  		=> $location_code,
 				'property_array'	  	  		=> $property_array,
 				'location_array'		  		=> $location_array,
+				'heading_array'		  	  		=> month_calendar::get_heading_array($year, $month),
 				'locations_with_calendar_array' => $locations_with_calendar_array,
 				'date_format' 			  		=> $date_format,
-				'month_nr' 			  	  		=> $month,
-				'year' 			  	  	  		=> $year,
-				'heading_array'		  	  		=> month_calendar::get_heading_array($year, $month),
-				'period' 			  	 		=> month_calendar::get_month_name($month-1),
+				'current_month_nr' 			  	=> $month,
+				'current_year' 			  	  	=> $year,
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_checker', 'calendar/icon_color_map'), $data);
+			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_checker', 
+											 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}

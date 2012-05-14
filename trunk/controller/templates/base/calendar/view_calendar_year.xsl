@@ -1,8 +1,6 @@
 <!-- $Id$ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-<xsl:variable name="year"><xsl:value-of select="year"/></xsl:variable>
-<xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
 
@@ -11,35 +9,13 @@
 			<h1>Kontrollplan for bygg/eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
 			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
-			<form action="#">
-				<input type="hidden" name="period_type" value="view_year" />
-				<input type="hidden" name="year">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="year"/>
-			      </xsl:attribute>
-				</input>
-
-				<select id="choose_my_location">
-					<xsl:for-each select="my_locations">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<xsl:choose>
-							<xsl:when test="location_code = $view_location_code">
-								<option value="{$loc_code}" selected="selected">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="{$loc_code}">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</select>					
-			</form>
+			<!-- =====================  SELECT MY LOCATIONS  ================= -->
+			<xsl:call-template name="select_my_locations" />
+			
 		</div>
 		<div class="middle">
 					
+			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			
 			<div id="calNav">
@@ -81,7 +57,7 @@
 									<xsl:text>&amp;year=</xsl:text>
 									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;location_code=</xsl:text>
-									<xsl:value-of select="$view_location_code"/>
+									<xsl:value-of select="current_location/location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
@@ -133,7 +109,7 @@
 							</td>
 							<xsl:for-each select="calendar_array">
 								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="$view_location_code"/></xsl:with-param>
+									<xsl:with-param name="location_code"><xsl:value-of select="current_location/location_code"/></xsl:with-param>
 								</xsl:call-template>
 							</xsl:for-each>
 					</tr>	
