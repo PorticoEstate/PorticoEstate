@@ -99,3 +99,7 @@ save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå vid
 new_organization	activitycalendarfrontend	no	Ny organisasjon
 organization_saved_form	activitycalendarfrontend	no	Organisasjonen er opprettet i aktivitetsoversikten.<br/>Du kan nå registrere en aktivitet tilknyttet den nye organisasjonen.
 required_fields	activitycalendarfrontend	no	Felter merket med (*) er påkrevde felt.
+mailBaseURL	activitycalendarfrontend	no	Base-URL for e-post
+ajaxURL	activitycalendarfrontend	no	URL for AJAX-kall
+Anonymous_user	activitycalendarfrontend	no	Brukernavn for frontend
+Anonymous_password	activitycalendarfrontend	no	Passord for frontend
