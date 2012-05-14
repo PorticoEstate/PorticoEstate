@@ -1823,4 +1823,32 @@
 			}
 			return $values;
 		}
+
+		/**
+		 * Get location by name
+		 *
+		 * @param array   $data array with level and name to search for
+		 *
+		 * @return array array of hits
+		 */
+		public function get_locations_by_name($data)
+		{
+			$level = isset($data['level']) && $data['level'] ? $data['level'] : 1;
+
+			$location_name = isset($data['location_name']) && $data['location_name'] ? $data['location_name'] : '';
+			$values = array();
+			if($location_name)
+			{
+				$this->db->query("SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE loc{$level}_name {$this->like} '{$location_name}%'",__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$values[] = array
+					(
+						'name'			=> $this->db->f('name',true),
+						'location_code'	=> $this->db->f('location_code'),
+					);
+				}
+			}
+			return $values;
+		}
 	}

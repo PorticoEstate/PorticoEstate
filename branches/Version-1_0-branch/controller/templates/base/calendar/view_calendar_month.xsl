@@ -1,8 +1,6 @@
 <!-- $Id$ -->
-<xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
-<xsl:variable name="view_location_code"><xsl:value-of select="view_location_code"/></xsl:variable>
 
 <div id="main_content">
 	<div id="control_plan">
@@ -11,36 +9,13 @@
 			<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 			<h3>Kalenderoversikt for <xsl:value-of select="php:function('lang', $month_str)" /><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		
-			<form action="#">
-				<input type="hidden" name="period_type" value="view_year" />
-				<input type="hidden" name="year">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="year"/>
-			      </xsl:attribute>
-				</input>
-
-				<select id="choose_my_location">
-					<xsl:for-each select="my_locations">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<xsl:choose>
-							<xsl:when test="location_code = $view_location_code">
-								<option value="{$loc_code}" selected="selected">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="{$loc_code}">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</select>					
-			</form>
+			<!-- =====================  SELECT MY LOCATIONS  ================= -->
+			<xsl:call-template name="select_my_locations" />
 		</div>
 		
 		<div class="middle">
 			
+			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			
 			<a id="showYear">
@@ -151,12 +126,12 @@
 		<div id="cal_wrp">
 			<table id="calendar" class="month">
 				<tr class="heading">
-						<th class="title"><span>Tittel</span></th>
-						<th class="assigned"><span>Tildelt</span></th>
-						<th class="frequency"><span>Frekvens</span></th>
-						<xsl:for-each select="heading_array">
-							<th><span><xsl:value-of select="."/></span></th>
-						</xsl:for-each>
+					<th class="title"><span>Tittel</span></th>
+					<th class="assigned"><span>Tildelt</span></th>
+					<th class="frequency"><span>Frekvens</span></th>
+					<xsl:for-each select="heading_array">
+						<th><span><xsl:value-of select="."/></span></th>
+					</xsl:for-each>
 				</tr>
 				<xsl:choose>	
 					<xsl:when test="controls_calendar_array/child::node()">
@@ -199,7 +174,7 @@
 				<xsl:for-each select="calendar_array">
 					
 					<xsl:call-template name="check_list_status_checker" >
-						<xsl:with-param name="location_code"><xsl:value-of select="$view_location_code"/></xsl:with-param>
+						<xsl:with-param name="location_code"><xsl:value-of select="current_location/location_code"/></xsl:with-param>
 					</xsl:call-template>
 					
 				</xsl:for-each>
