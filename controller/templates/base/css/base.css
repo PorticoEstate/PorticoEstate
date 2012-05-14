@@ -402,7 +402,7 @@ input{
 }
 input[type="submit"] {
     background: none repeat scroll 0 0 #4F9AEA;
-    border: 0 none;
+    border: 1px solid #4685C8;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     cursor: pointer;
@@ -1029,7 +1029,6 @@ ul#icon_color_map span{
 #calNav a.showPrev {
     display: block;
     float: left;
-    margin-left: 547px;
     padding-left: 3px;
     padding-top: 5px;
     vertical-align: sub;
@@ -1037,14 +1036,11 @@ ul#icon_color_map span{
 #calNav a.showPrev img{
     margin-right:5px;
 }
-#calNav a.showPrev.month {
-    margin-left: 437px;
-}
 #calNav .current {
     display: block;
     float: left;
     font-size: 21px;
-    padding-left: 200px;
+    padding-left: 500px;
 }
 /* ======================  CALENDAR INFO BOX ========================== */
 
