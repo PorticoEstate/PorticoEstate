@@ -316,8 +316,6 @@ $(document).ready(function(){
 			
     });
 	
-	// file: control.xsl 
-	// When control area is selected, procedures are fetched from db and procedure select list is populated
 	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
 		 
@@ -350,6 +348,8 @@ $(document).ready(function(){
 			  }  
 			});	
     });
+	
+	/* ================================  CONTROL GROUP ================================== */
 			
 	$("#frm_save_control_groups").submit(function(e){
 		var thisForm = $(this);
@@ -360,6 +360,8 @@ $(document).ready(function(){
 			$(thisForm).before("<div style='margin: 10px 0;text-align: center;width: 200px;' class='input_error_msg'>Du må velge en eller flere grupper</div>");
 		}
 	});
+	
+	/* ================================  CONTROL ITEM ================================== */
 	
 	$("#frm_control_items").submit(function(e){
 		var thisForm = $(this);
@@ -375,16 +377,13 @@ $(document).ready(function(){
 		$("#frm_save_control_details").find(".focus").removeClass("focus");
 		$(this).addClass("focus");
 	});
-	
-	$("#frm_save_control_details input").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
-	
+		
 	$("#frm_save_control_details select").focus(function(e){
 		$("#frm_save_control_details").find(".focus").removeClass("focus");
 		$(this).addClass("focus");
 	});
+	
+	/* =========================  CONTROL  =============================================== */
 	
 	// =================  SAVE CONTROL DETAILS - FORM SUBMIT  ==================
 	$("#frm_save_control_details").submit(function(e){
@@ -430,56 +429,35 @@ $(document).ready(function(){
 	    	
 	});
 	
-	// Fetches info about a check list on hover status image icon
-	$('a.view_info_box').bind('contextmenu', function(){
-		var thisA = $(this);
-		var divWrp = $(this).parent();
-		
-		var add_param = $(thisA).find("span").text();
-		
-		var oArgs = {menuaction:'controller.uicheck_list.get_cases_for_check_list'};
-		var baseUrl = phpGWLink('index.php', oArgs, true);
-		var requestUrl = baseUrl + add_param
-		
-		//var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl,
-			  dataType: 'json',
-	    	  success: function(data) {
-	    		  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-
-	    			  // Show info box with info about check list
-		    		  var infoBox = $(divWrp).find("#info_box");
-		    		  $(infoBox).show();
-		    		  
-		    		  var htmlStr = "<h3>Åpne saker</h3>";
-		    		
-		    		  $.each(obj, function(i) {
-		    			  htmlStr += "<div class='check_item'><h5>" + (parseInt(i) + 1) + ". " + obj[i].control_item.title + "</h5>";
-		    			  		    			  
-		    			  $(obj[i].cases_array).each(function(j) {
-		    				  htmlStr += "<p class='case'>" + "<label>Sak " + (parseInt(j) + 1) + ": </label>" + obj[i].cases_array[j].descr + "</p>";
-		    			  });
-		    			});
-		    		  
-		    		  htmlStr += "</div>"; 
-		    		
-		    		  $(infoBox).html( htmlStr );  
-	    		  }
-	    	  }
-		   });
-		
-		return false;
+	/* HELP TEXT */
+	$("#control_details input").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
 	});
 	
-	$("a.view_info_box").mouseout(function(){
-		var infoBox = $(this).parent().find("#info_box");
-		
-		$(infoBox).hide();
+	$("#control_details input").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
 	});
+	
+	$("#control_details select").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
+	});
+	
+	$("#control_details select").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
+	/*
+	$(".frm_save_control_item").click(function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		
+		$(submitBnt).removeClass("not_active");
+	});
+	*/
 	
 	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();
@@ -505,7 +483,32 @@ $(document).ready(function(){
 			});
 	});
 	
-	//===========================  CHECKLIST  ================================
+	//=====================================  CHECKLIST  ================================
+	
+	// ADD CHECKLIST
+	$("#frm_add_check_list").live("submit", function(e){
+		
+		var thisForm = $(this);
+		var statusFieldVal = $("#status").val();
+		var completedDateVal = $("#completed_date").val();
+		var completedDateRow = $("#completed_date").closest(".row");
+		
+		// Checks that COMPLETE DATE is set if status is set to DONE 
+		if(statusFieldVal == 1 & completedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+		}		
+	});	
+	
+	// Display submit button on click
+	$("#frm_add_check_list").live("click", function(e){
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).removeClass("not_active");
+	});
+
+	
 	
 	// UPDATE CHECKLIST DETAILS	
 	$("#frm_update_check_list").live("submit", function(e){
@@ -556,86 +559,9 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-
-	//=============================  ADD CHECKLIST  ===========================
-
-	// ADD CHECKLIST
-	$("#frm_add_check_list").live("submit", function(e){
-		
-		var thisForm = $(this);
-		var statusFieldVal = $("#status").val();
-		var completedDateVal = $("#completed_date").val();
-		var completedDateRow = $("#completed_date").closest(".row");
-		
-		// Checks that COMPLETE DATE is set if status is set to DONE 
-		if(statusFieldVal == 1 & completedDateVal == ''){
-			e.preventDefault();
-			// Displays error message above completed date
-			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-		}		
-	});	
-	
-	// Display submit button on click
-	$("#frm_add_check_list").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-
 	
 	
-	//=============================  MESSAGE  ===========================
-	
-	// REGISTER MESSAGE
-	$("#frmRegCaseMessage").submit(function(e){
-		
-		var thisForm = $(this);
 
-		var $required_input_fields = $(this).find(".required");
-		var status = true;
-	
-		// Checking that required fields (fields with class required) is not null
-	    $required_input_fields.each(function() {
-	    	
-	    	// User has selected a value from select list
-	    	if( $(this).is("select") & $(this).val() == 0 ){
-	    		var nextElem = $(this).next();
-	    		
-	    		if( !$(nextElem).hasClass("input_error_msg") )
-	    			$(this).after("<div class='input_error_msg'>Vennligst velg fra listen</div>");
-	    			    		
-	    		status = false;
-	    	}
-	    	// Input field is not empty
-	    	else if( $(this).is("input") & $(this).val() == '' ){
-	    		var nextElem = $(this).next();
-	    		
-	    		if( !$(nextElem).hasClass("input_error_msg") )
-	    			$(this).after("<div class='input_error_msg'>Vennligst fyll ut dette feltet</div>");
-	    			    		
-	    		status = false;
-	    	}
-	    	else{
-	    		var nextElem = $(this).next();
-
-	    		if( $(nextElem).hasClass("input_error_msg") )
-	    			$(nextElem).remove();
-	    	}
-	    });	
-	    
-	    if( $(thisForm).find('input[type=checkbox]:checked').length == 0){
-	    	
-	    	if( !$(thisForm).find("ul.cases").prev().hasClass("input_error_msg") )
-	    		$(thisForm).find("ul.cases").before("<div class='input_error_msg'>Vennligst velg en sak som meldingen omfatter</div>");
-	    	
-	    	status = false;
-	    }
-	  
-	    if( !status ){
-	    	e.preventDefault();
-	    }
-	    	
-	});
 	
 	
 	
@@ -876,31 +802,111 @@ $(document).ready(function(){
 		$(submitBnt).removeClass("not_active");
 	});
 	
-	$("#control_details input").focus(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeIn(300);
-	});
+	//=============================  MESSAGE  ===========================
 	
-	$("#control_details input").focusout(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeOut(300);
-	});
-	
-	$("#control_details select").focus(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeIn(300);
-	});
-	
-	$("#control_details select").focusout(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeOut(300);
-	});
-	
-	$(".frm_save_control_item").click(function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
+	// REGISTER MESSAGE
+	$("#frmRegCaseMessage").submit(function(e){
 		
-		$(submitBnt).removeClass("not_active");
+		var thisForm = $(this);
+
+		var $required_input_fields = $(this).find(".required");
+		var status = true;
+	
+		// Checking that required fields (fields with class required) is not null
+	    $required_input_fields.each(function() {
+	    	
+	    	// User has selected a value from select list
+	    	if( $(this).is("select") & $(this).val() == 0 ){
+	    		var nextElem = $(this).next();
+	    		
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Vennligst velg fra listen</div>");
+	    			    		
+	    		status = false;
+	    	}
+	    	// Input field is not empty
+	    	else if( $(this).is("input") & $(this).val() == '' ){
+	    		var nextElem = $(this).next();
+	    		
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Vennligst fyll ut dette feltet</div>");
+	    			    		
+	    		status = false;
+	    	}
+	    	else{
+	    		var nextElem = $(this).next();
+
+	    		if( $(nextElem).hasClass("input_error_msg") )
+	    			$(nextElem).remove();
+	    	}
+	    });	
+	    
+	    if( $(thisForm).find('input[type=checkbox]:checked').length == 0){
+	    	
+	    	if( !$(thisForm).find("ul.cases").prev().hasClass("input_error_msg") )
+	    		$(thisForm).find("ul.cases").before("<div class='input_error_msg'>Vennligst velg en sak som meldingen omfatter</div>");
+	    	
+	    	status = false;
+	    }
+	  
+	    if( !status ){
+	    	e.preventDefault();
+	    }
+	    	
+	});
+	
+	
+	/* ==================================  CALENDAR ===================================== */ 
+	
+	// Fetches info about a check list on hover status image icon
+	$('a.view_info_box').bind('contextmenu', function(){
+		var thisA = $(this);
+		var divWrp = $(this).parent();
+		
+		var add_param = $(thisA).find("span").text();
+		
+		var oArgs = {menuaction:'controller.uicheck_list.get_cases_for_check_list'};
+		var baseUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = baseUrl + add_param
+		
+		//var requestUrl = "http://portico/pe/index.php?menuaction=controller.uicheck_list.get_cases_for_check_list" + add_param;
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl,
+			  dataType: 'json',
+	    	  success: function(data) {
+	    		  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+
+	    			  // Show info box with info about check list
+		    		  var infoBox = $(divWrp).find("#info_box");
+		    		  $(infoBox).show();
+		    		  
+		    		  var htmlStr = "<h3>Åpne saker</h3>";
+		    		
+		    		  $.each(obj, function(i) {
+		    			  htmlStr += "<div class='check_item'><h5>" + (parseInt(i) + 1) + ". " + obj[i].control_item.title + "</h5>";
+		    			  		    			  
+		    			  $(obj[i].cases_array).each(function(j) {
+		    				  htmlStr += "<p class='case'>" + "<label>Sak " + (parseInt(j) + 1) + ": </label>" + obj[i].cases_array[j].descr + "</p>";
+		    			  });
+		    			});
+		    		  
+		    		  htmlStr += "</div>"; 
+		    		
+		    		  $(infoBox).html( htmlStr );  
+	    		  }
+	    	  }
+		   });
+		
+		return false;
+	});
+	
+	$("a.view_info_box").mouseout(function(){
+		var infoBox = $(this).parent().find("#info_box");
+		
+		$(infoBox).hide();
 	});
 		
 	
