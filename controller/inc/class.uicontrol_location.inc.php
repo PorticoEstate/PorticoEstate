@@ -175,7 +175,6 @@
 
 			phpgwapi_yui::load_widget('paginator');
 			
-			//self::add_javascript('controller', 'yahoo', 'control_tabs.js');  Slett hvis ikke systemet påvirkes. Mulig denne ikke har noen funksjon
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');	
 
@@ -350,7 +349,6 @@
 				
 				phpgwapi_yui::load_widget('paginator');
 				
-				//self::add_javascript('controller', 'yahoo', 'control_tabs.js'); Slett hvis ikke systemet påvirkes. Mulig denne ikke har noen funksjon 
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 	
