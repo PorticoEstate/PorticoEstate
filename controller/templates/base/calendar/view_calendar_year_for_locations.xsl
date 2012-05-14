@@ -1,7 +1,6 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-<xsl:variable name="year"><xsl:value-of select="year"/></xsl:variable>
 
 <div id="main_content">
 
@@ -10,26 +9,15 @@
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Periode: <xsl:value-of select="period"/></h3>
 			
-			<form action="#">
-				<input type="hidden" name="period_type" value="view_year" />
-				<input type="hidden" name="year">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="year"/>
-			      </xsl:attribute>
-				</input>
-
-				<select id="choose_my_location">
-					<xsl:for-each select="my_locations">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<option value="{$loc_code}">
-							<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-						</option>
-					</xsl:for-each>
-				</select>					
-			</form>
+			<!-- =====================  SELECT MY LOCATIONS  ================= -->
+			<xsl:call-template name="select_my_locations" />
+			
 		</div>
 		<div class="middle">
+		
+			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
+			
 		</div>
 		<div id="cal_wrp">
 			<table id="calendar">
@@ -46,13 +34,15 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="$current_year"/>
+									<xsl:value-of select="current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
 								</xsl:attribute>
-								<xsl:value-of select="."/>
+								
+								<xsl:variable name="month_str">short_month <xsl:value-of select="."/> capitalized</xsl:variable>
+								<xsl:value-of select="php:function('lang', $month_str)" />
 							</a>				
 						</th>
 					</xsl:for-each>
