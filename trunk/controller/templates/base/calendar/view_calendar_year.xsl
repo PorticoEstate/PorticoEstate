@@ -27,8 +27,12 @@
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
+					<img height="17" src="controller/images/left_arrow_simple_black.png" />
 					<xsl:value-of select="current_year - 1"/>
 				</a>
+				<span class="current">
+						<xsl:value-of select="current_year"/>
+				</span>
 				<a class="showNext">
 						<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
@@ -38,6 +42,7 @@
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
 					<xsl:value-of select="current_year + 1"/>
+					<img height="17" src="controller/images/right_arrow_simple_black.png" />
 				</a>
 			</div>
 			
