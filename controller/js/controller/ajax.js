@@ -58,8 +58,6 @@ $(document).ready(function(){
 		});	
     });
 	
-	
-	// 
 	$("#choose_my_location").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
@@ -109,7 +107,7 @@ $(document).ready(function(){
          		  		htmlString  += "<option>Ingen kontroller</option>"
          		  		$("#cat_id").html( htmlString );
          		  	}
-			  }
+			  },
          	  error: function(XMLHttpRequest, textStatus, errorThrown) {
         	    if (XMLHttpRequest.status === 401) {
         	      location.href = '/';
@@ -149,8 +147,6 @@ $(document).ready(function(){
          });
     });
 	
-	// file: uicheck_list.xsl
-	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list").change(function () {
 		var control_area_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
@@ -730,7 +726,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("a.quick_edit").live("click", function(e){
+	$("a.quick_edit_case").live("click", function(e){
 		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 									
@@ -874,13 +870,6 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	/*
-	$(".frm_save_check_item").live("click", function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		$(submitBnt).removeClass("not_active");
-	});
-	*/
 	$(".frm_register_case").live("click", function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -906,14 +895,7 @@ $(document).ready(function(){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
-	/*
-	$(".frm_save_check_item").click(function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		
-		$(submitBnt).removeClass("not_active");
-	});
-	*/
+	
 	$(".frm_save_control_item").click(function(e){
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
