@@ -1445,7 +1445,7 @@
 			{
 				if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
-					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['workorder']['ecodimb']);
+					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
 
 					$_ok = false;
 					if($approve_role['is_supervisor'])
@@ -1908,7 +1908,7 @@ HTML;
 				{
 					$_ok = true;					
 				}
-				else if( $workorder['approved'] )
+				else if( $common_data['workorder']['approved'] )
 				{
 					$_ok = true;					
 				}
