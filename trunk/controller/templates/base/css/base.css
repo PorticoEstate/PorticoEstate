@@ -1129,7 +1129,7 @@ ul#filters input[type="text"], ul#filters select {
 }
 ul#search_list input[type="submit"] {
     margin: 0;
-    padding: 3px 15px;
+    padding: 2px 15px;
 }
 ul#search_list input[type="text"] {
     margin: 0 5px 0 0;
