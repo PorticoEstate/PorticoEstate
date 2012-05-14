@@ -59,7 +59,7 @@
 											
 											<!-- === QUICK EDIT MENU === -->
 											<div class="quick_menu">
-													<a class="quick_edit" href="">
+													<a class="quick_edit_case" href="">
 														endre
 													</a>
 													<a class="close_case">
@@ -210,7 +210,7 @@
 											<div class="case_info">
 												<div class="case_descr"><xsl:value-of select="descr"/></div>
 												<div class="quick_menu">
-														<a class="quick_edit first" href="">
+														<a class="quick_edit_case first" href="">
 															endre
 														</a>
 														<a class="close_case">
