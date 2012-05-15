@@ -7,7 +7,7 @@
 	<div id="control_plan">
 		<div class="top">
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
-			<h3>Periode: <xsl:value-of select="period"/></h3>
+			<h3>Periode: <xsl:value-of select="current_year"/></h3>
 			
 			<!-- =====================  SELECT MY LOCATIONS  ================= -->
 			<xsl:call-template name="select_my_locations" />
