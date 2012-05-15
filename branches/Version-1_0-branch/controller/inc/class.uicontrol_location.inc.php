@@ -58,12 +58,12 @@
 	
 		var $public_functions = array(
 										'index' => true,
-										'view_locations_for_control' 	=> true,
-										'register_control_to_location' 	=> true,
-										'register_control_to_location_2' 	=> true,
-										'get_locations_for_control' 	=> true,
-										'get_location_category'			=> true,
-										'get_district_part_of_town'		=> true
+										'view_locations_for_control' 		=> true,
+										'register_control_to_location' 		=> true,
+										'register_control_to_location_2'	=> true,
+										'get_locations_for_control' 		=> true,
+										'get_location_category'				=> true,
+										'get_district_part_of_town'			=> true
 									);
 
 		function __construct()
@@ -175,7 +175,6 @@
 
 			phpgwapi_yui::load_widget('paginator');
 			
-			//self::add_javascript('controller', 'yahoo', 'control_tabs.js');  Slett hvis ikke systemet påvirkes. Mulig denne ikke har noen funksjon
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');	
 
@@ -350,7 +349,6 @@
 				
 				phpgwapi_yui::load_widget('paginator');
 				
-				//self::add_javascript('controller', 'yahoo', 'control_tabs.js'); Slett hvis ikke systemet påvirkes. Mulig denne ikke har noen funksjon 
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 	
