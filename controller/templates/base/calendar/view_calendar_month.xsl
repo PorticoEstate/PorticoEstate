@@ -41,7 +41,7 @@
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
 							</xsl:attribute>
-							<img height="17" src="controller/images/left_arrow_simple_black.png" />
+							<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
 							<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr - 1"/> capitalized</xsl:variable>
 							<xsl:value-of select="php:function('lang', $month_str)" />
 						</a>
@@ -56,7 +56,7 @@
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
 							</xsl:attribute>
-							<img height="17" src="controller/images/left_arrow_simple_black.png" />
+							<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
 							<xsl:variable name="month_str">month 12 capitalized</xsl:variable>
 							<xsl:value-of select="php:function('lang', $month_str)" />
 						</a>
@@ -81,7 +81,7 @@
 							</xsl:attribute>
 							<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr + 1"/> capitalized</xsl:variable>
 							<xsl:value-of select="php:function('lang', $month_str)" />
-							<img height="17" src="controller/images/right_arrow_simple_black.png" />
+							<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
 						</a>
 					</xsl:when>
 					<xsl:otherwise>
@@ -96,7 +96,7 @@
 							</xsl:attribute>
 							<xsl:variable name="month_str">month 1 capitalized</xsl:variable>
 							<xsl:value-of select="php:function('lang', $month_str)" />
-							<img height="17" src="controller/images/right_arrow_simple_black.png" />
+							<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>

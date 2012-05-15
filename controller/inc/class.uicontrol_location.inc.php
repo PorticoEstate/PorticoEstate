@@ -58,12 +58,12 @@
 	
 		var $public_functions = array(
 										'index' => true,
-										'view_locations_for_control' 	=> true,
-										'register_control_to_location' 	=> true,
-										'register_control_to_location_2' 	=> true,
-										'get_locations_for_control' 	=> true,
-										'get_location_category'			=> true,
-										'get_district_part_of_town'		=> true
+										'view_locations_for_control' 		=> true,
+										'register_control_to_location' 		=> true,
+										'register_control_to_location_2'	=> true,
+										'get_locations_for_control' 		=> true,
+										'get_location_category'				=> true,
+										'get_district_part_of_town'			=> true
 									);
 
 		function __construct()
