@@ -27,7 +27,7 @@
 						<xsl:text>&amp;location_code=</xsl:text>
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
-					<img height="17" src="controller/images/left_arrow_simple_black.png" />
+					<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
 					<xsl:value-of select="current_year - 1"/>
 				</a>
 				<span class="current">
@@ -42,7 +42,7 @@
 						<xsl:value-of select="current_location/location_code"/>
 					</xsl:attribute>
 					<xsl:value-of select="current_year + 1"/>
-					<img height="17" src="controller/images/right_arrow_simple_black.png" />
+					<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
 				</a>
 			</div>
 			
