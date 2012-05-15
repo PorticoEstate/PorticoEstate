@@ -50,12 +50,12 @@
 
 			$so = createobject('registration.soreg');
 
-			if (! $r_reg['loginid'])
+			if (! $r_reg['loginid'] && !$this->config['username_is'] == 'email')
 			{
 				$errors[] = lang('You must enter a username');
 			}
 
-			if (! is_array($errors) && $so->account_exists($r_reg['loginid']))
+			if (! is_array($errors) && $r_reg['loginid'] && $so->account_exists($r_reg['loginid']))
 			{
 				$errors[] = lang('Sorry, that username is already taken.');
 			}
@@ -67,13 +67,31 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
+				if(!$this->config['username_is'] == 'email')
+				{
+					$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
+				}
 				$ui->step2();
 			}
 		}
 
 		function step2()
 		{
+
+			if($this->config['username_is'] == 'email')
+			{
+				$this->fields['loginid'] = array
+				(
+		            'field_name' => 'loginid',
+		            'field_text' => lang('username'),
+		            'field_type' => 'email',
+		            'field_values' =>'', 
+		            'field_required' => 'Y',
+		            'field_order' => 1
+				);
+			}
+
+			$ui = createobject('registration.uireg');
 			if(!$r_reg = phpgw::get_var('r_reg'))
 			{
 				$r_reg = array();
@@ -223,7 +241,7 @@
 				$reg_id = $so->step2($fields);
 			}
 
-			$ui = createobject('registration.uireg');
+
 			if (is_array($errors))
 			{
 				$ui->step2($errors,$r_reg,$o_reg,$missing_fields);
