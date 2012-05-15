@@ -84,13 +84,14 @@
 	include(PHPGW_API_INC.'/functions.inc.php');
 
 
+	$c = createobject('phpgwapi.config','registration');
+	$c->read();
+	$config = $c->config_data;
+
 	// Make sure we're always logged in
 	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
 
-		$c = createobject('phpgwapi.config','registration');
-		$c->read();
-		$config = $c->config_data;
 //_debug_array($config);die();
 
 		$login = $c->config_data['anonymous_user'];
@@ -229,8 +230,16 @@ HTML;
 	else
 	{
 		$app = 'registration';
-		$class = 'uireg';
-		$method = 'step1';
+		if($config['username_is'] != 'email')
+		{
+			$class = 'uireg';
+			$method = 'step1';
+		}
+		else
+		{
+			$class = 'boreg';
+			$method = 'step1';
+		}
 	}
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 

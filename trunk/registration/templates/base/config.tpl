@@ -60,6 +60,7 @@
     <td>
      <select name="newsettings[username_is]">
       <option value="choice"{selected_username_is_choice}>{lang_Users_Choice}</option>
+      <option value="email"{selected_username_is_email}>{lang_email_address}</option>
       <option value="http"{selected_username_is_http}>{lang_HTTP_Username}</option>
      </select>
     </td>
