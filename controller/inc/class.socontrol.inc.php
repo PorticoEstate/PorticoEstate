@@ -145,7 +145,7 @@
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+		//		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -187,7 +187,7 @@
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+			//	$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
@@ -383,7 +383,7 @@
 	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				//$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
@@ -427,7 +427,7 @@
 			$control->set_control_area_name($category[0]['name']);
 			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
 			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+	//		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_type_label($control->get_repeat_type());
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
