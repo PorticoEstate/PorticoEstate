@@ -2,7 +2,7 @@ add_check_list_to_location	controller	no	Registrer kontroll for bygg
 location_connections	controller	no	Byggknytning
 control	controller	no	Kontroll
 controller	common	no	Kontroll
-control_item_type_1	no	Ingen ekstra felt
+control_item_type_1		no 		Ingen ekstra felt
 control_item_type_2	no	Måling
 control_item_type_3	no	Nedtrekksliste
 control_item_type_4	no	Radioknapper
