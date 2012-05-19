@@ -59,4 +59,25 @@
 			$GLOBALS['setup_info']['registration']['currentver'] = '0.8.4';
 			return $GLOBALS['setup_info']['registration']['currentver'];
 		}
-	}	
+	}
+
+	$test[] = '0.8.4';
+	function registration_upgrade0_8_4()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->set_timer(
+			array('hour' => "*/2"),
+			'registration_clear_reg_accounts',
+			'registration.hook_helper.clear_reg_accounts',
+			null
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['registration']['currentver'] = '0.8.5';
+			return $GLOBALS['setup_info']['registration']['currentver'];
+		}
+	}
+

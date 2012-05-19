@@ -82,6 +82,8 @@
 						if($suffix && $field_info['field_type'] == 'location' && !is_array ($current_fields[$field_info['field_name']]))
 						{
 							$field_info['field_name'] = rtrim($transform_name,'1') . $suffix;
+							$_child_level = $suffix +1;
+							$field_info['field_values'] = "{$_child_level}::loc{$_child_level}_name::loc{$suffix}_name";
 						}
 						else if($suffix && $field_info['field_type'] == 'location' && is_array ($current_fields[$field_info['field_name']]))
 						{
