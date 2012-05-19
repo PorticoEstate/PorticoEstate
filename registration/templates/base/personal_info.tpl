@@ -42,6 +42,7 @@
 {javascript}
 
 
+<center>{message}</center>
 <center>{errors}</center>
 <form action="{form_action}" method="POST">
  <table border="0" width="75%" align="center">

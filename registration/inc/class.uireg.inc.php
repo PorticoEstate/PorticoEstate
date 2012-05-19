@@ -25,6 +25,7 @@
 	{
 		var $template;
 		var $bomanagefields;
+		var $first_location = false;
 		var $fields;
 		var $bo;
 		var $config;
@@ -229,16 +230,10 @@ HTML;
 //----
 			if($this->config['username_is'] == 'email')
 			{
-
+				$this->template->set_var('message',lang('username as email'));
 				$username_fields = $this->get_username_fields();
 				$username_fields['lang_username'] = '<b>' . lang('username') . '</b>';
-				$username_fields['value_username'] = 'test';//$loginid;
-
-//					$missing['loginid'] = true;
-//					$username_fields['missing_loginid'] = '<font color="#CC0000">*</font>';
-//					$username_fields['value_username'] = 'test';//$loginid;
-//					$errors[] = lang('you must enter a username');
-
+				$username_fields['value_username'] = $GLOBALS['phpgw']->session->appsession('loginid','registration');
 				$this->template->set_var($username_fields);
 			}
 			else
@@ -256,9 +251,6 @@ HTML;
 			$this->template->set_var('lang_password',lang('Password'));
 			$this->template->set_var('lang_reenter_password',lang('Re-enter password'));
 			$this->template->set_var('lang_submit',lang('Submit'));
-
-
-
 
 			if (!$show_password_prompt)
 			{
@@ -487,9 +479,17 @@ HTML;
 				$rstring = <<<HTML
 				<select id="{$name}" name="{$a}[{$name}]">
 HTML;
-				if($name == 'loc1')
+				if(!$this->first_location)
 				{
-					$locations = execMethod('property.solocation.get_children');
+					$field_info_arr = explode('::', $this->fields[$name]['field_values']);
+					$criteria = array
+					(
+						'location_code'	=> '',//$location_code,
+						'child_level'	=> (int) ltrim($name, 'loc'),
+						'field_name'	=> isset($field_info_arr[2]) && $field_info_arr[2] ? $field_info_arr[2] : "{$name}_name"
+					);
+
+					$locations = execMethod('property.solocation.get_children',$criteria);
 					array_unshift($locations, array('id' => '', 'name' => lang('select')));
 
 					foreach ($locations as $location)
@@ -505,6 +505,7 @@ HTML;
 				</select>
 HTML;
 				}
+				$this->first_location = true;
 			}
 
 			return $rstring;
