@@ -26,3 +26,11 @@
 	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('registration','activate_account','email')");
 	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('registration','username_is','choice')");
 	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('registration','password_is','choice')");
+
+	$asyncservice = CreateObject('phpgwapi.asyncservice');
+	$asyncservice->set_timer(
+		array('hour' => "*/2"),
+		'registration_clear_reg_accounts',
+		'registration.hook_helper.clear_reg_accounts',
+		null
+	);

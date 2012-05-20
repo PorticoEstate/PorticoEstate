@@ -174,7 +174,7 @@
 				<xsl:for-each select="calendar_array">
 					
 					<xsl:call-template name="check_list_status_checker" >
-						<xsl:with-param name="location_code"><xsl:value-of select="current_location/location_code"/></xsl:with-param>
+						<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
 					</xsl:call-template>
 					
 				</xsl:for-each>

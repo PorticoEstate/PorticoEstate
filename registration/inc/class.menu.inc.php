@@ -40,7 +40,7 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'registration.uipending.index')),
 						'text'	=> lang('registration'),
 						'image'	=> array('admin', 'navbar'),
-						'order'	=> -6,
+						'order'	=> -4,
 						'group'	=> 'systools'
 					),
 				);

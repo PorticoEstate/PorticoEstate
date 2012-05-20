@@ -25,6 +25,7 @@
 	{
 		var $template;
 		var $bomanagefields;
+		var $first_location = false;
 		var $fields;
 		var $bo;
 		var $config;
@@ -99,19 +100,37 @@
 			$this->template->set_var('lang_username',lang('Username'));
 			$this->template->set_var('lang_submit',lang('Submit'));
 
+			$var = $this->get_username_fields();
+			$this->template->set_var($var);
+			$this->template->pfp('out','form');
+
+			$this->footer();
+		}
+
+
+		function get_username_fields()
+		{
+			$values = array();
 			if( $GLOBALS['phpgw_info']['server']['domain_from_host'] 
 				&& !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
-				$this->template->set_var(
-						array(
-							'domain_selects'	=> '',
-							'logindomain'		=> $_SERVER['SERVER_NAME']
-						)
-					);
-				$this->template->parse('domain_from_hosts', 'domain_from_host');
+				$values = array
+				(
+					'domain_select'	=> '',
+					'domain_from_host'	=> "<input type = 'hidden' name='logindomain' id='logindomain' value ='{$_SERVER['SERVER_NAME']}' />"
+				);
 			}
 			elseif( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
+
+				$lang_domain = lang('domain');
+				$domain_select =  <<<HTML
+		<td>{$lang_domain}</td>
+		<td>
+			<select name="logindomain" id="logindomain" class="inputbox">
+HTML;
+
+
 				$options = '';
 				foreach($GLOBALS['_phpgw_domain'] as $domain_name => $domain_vars)
 				{
@@ -127,32 +146,30 @@
 HTML;
 				}
 
-				$this->template->set_var('domain_options', $options);
+				$domain_select .=  <<<HTML
+				{$options}
+			</select>
+		</td>
+HTML;
 
-				$this->template->set_var(
-						array(
-							'domain_from_hosts'	=> '',
-							'lang_domain'		=> lang('domain')
-						)
-					);
+				$values = array
+				(
+					'domain_select'	=> $domain_select,
+					'domain_from_host'	=> ''
+				);
 			}
 			else
 			{
-				$this->template->set_var(
-						array(
-							'domain_selects'		=> '',
-							'domain_from_hosts'	=> ''
-						)
-					);
-
+				$values = array
+				(
+					'domain_select'	=> '',
+					'domain_from_host'	=> ''
+				);
 			}
-
-			$this->template->pfp('out','form');
-
-			$this->footer();
+			return $values;
 		}
 
-		function step2($errors = '',$r_reg = '',$o_reg = '',$missing_fields='')
+		function step2($errors = array(),$r_reg = '',$o_reg = '',$missing_fields='')
 		{
 			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('portico', 'ajax', 'registration');
@@ -173,11 +190,6 @@ HTML;
 				'_personal_info' => 'personal_info.tpl'
 			));
 			$this->template->set_block('_personal_info','form');
-
-			if ($errors)
-			{
-				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
-			}
 
 			$tpl_vars = array
 			(
@@ -213,6 +225,26 @@ HTML;
 					$post_values[$name] = $value;
 					$this->template->set_var('value_' . $name,$value);
 				}
+			}
+
+//----
+			if($this->config['username_is'] == 'email')
+			{
+				$this->template->set_var('message',lang('username as email'));
+				$username_fields = $this->get_username_fields();
+				$username_fields['lang_username'] = '<b>' . lang('username') . '</b>';
+				$username_fields['value_username'] = $GLOBALS['phpgw']->session->appsession('loginid','registration');
+				$this->template->set_var($username_fields);
+			}
+			else
+			{
+				$this->template->set_block ('form', 'username', 'empty');		
+			}
+//-------
+
+			if ($errors)
+			{
+				$this->template->set_var('errors',$GLOBALS['phpgw']->common->error_list($errors));
 			}
 
 			$this->template->set_var('form_action',$GLOBALS['phpgw']->link('/registration/main.php',array('menuaction'=>'registration.boreg.step2','logindomain' => $_REQUEST['logindomain'])));
@@ -447,9 +479,17 @@ HTML;
 				$rstring = <<<HTML
 				<select id="{$name}" name="{$a}[{$name}]">
 HTML;
-				if($name == 'loc1')
+				if(!$this->first_location)
 				{
-					$locations = execMethod('property.solocation.get_children');
+					$field_info_arr = explode('::', $this->fields[$name]['field_values']);
+					$criteria = array
+					(
+						'location_code'	=> '',//$location_code,
+						'child_level'	=> (int) ltrim($name, 'loc'),
+						'field_name'	=> isset($field_info_arr[2]) && $field_info_arr[2] ? $field_info_arr[2] : "{$name}_name"
+					);
+
+					$locations = execMethod('property.solocation.get_children',$criteria);
 					array_unshift($locations, array('id' => '', 'name' => lang('select')));
 
 					foreach ($locations as $location)
@@ -465,6 +505,7 @@ HTML;
 				</select>
 HTML;
 				}
+				$this->first_location = true;
 			}
 
 			return $rstring;

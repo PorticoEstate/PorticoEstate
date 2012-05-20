@@ -4,17 +4,13 @@
 <!-- BEGIN input -->
 <form action="{form_action}" method="POST">
  <table border="0" width="40%" align="center">
-	<tr >
-		<td>{lang_domain}</td>
-		<td>
-			<select name="logindomain" id="logindomain" class="inputbox">
-				{domain_options}
-			</select>
-		</td>
-	</tr>
+
+  <tr>
+	{domain_select}
+  </tr>
   <tr>
    <td>{lang_username}</td>
-   <td><input name="r_reg[loginid]" value="{value_username}"></td>
+   <td>{domain_from_host}<input name="r_reg[loginid]" value="{value_username}"></td>
   </tr>
  
   <tr>

@@ -32,6 +32,7 @@ select	registration	no	Velg
 type	registration	no	Type
 update/add	registration	no	Oppdater/Legg til
 Username	registration	no	Brukernavn
+username as email	registration	no	Angi epost som brukernavn
 values (for dropdown only; comma separated)	registration	no	Verdi (bare for Dropdown; comma separert)
 wrong session	registration	no	Feil session
 you have entered an invalid birthday	registration	no	Du har angitt en ugyldig fødselsdag
