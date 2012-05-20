@@ -1789,29 +1789,42 @@
 			return $this->db->f('id');
 		}
 
-		function get_children($location_code = '')
+		function get_children($criteria = '')
 		{
-			if(!$location_code)
+			if(is_array($criteria))
 			{
-				$level = 0;
+				$location_code 	= $criteria['location_code'];
+				$child_level	= $criteria['child_level'];
+				$id_field		= 'location_code';
+				$field_name		= $criteria['field_name'];
 			}
 			else
 			{
-				$level = count(explode('-', $location_code));
-			}
+				$location_code = $criteria;
+				if(!$location_code)
+				{
+					$level = 0;
+				}
+				else
+				{
+					$level = count(explode('-', $location_code));
+				}
 
-			$child_level = $level + 1;
+				$child_level = $level + 1;
+				$id_field = "loc{$child_level}";
+				$field_name = "loc{$child_level}_name";
+			}
 
 			$location_types	= $this->soadmin_location->select_location_type();
 
 			$values = array();
 			
-			if( $level >= count($location_types))
+			if( $child_level > count($location_types))
 			{
 				return $values;
 			}
 			
-			$this->db->query("SELECT loc{$child_level} AS id, loc{$child_level}_name AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%'",__LINE__,__FILE__);
+			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%'",__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');

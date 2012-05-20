@@ -714,6 +714,7 @@
 
 		function add_manual_invoice($values, $skip_update_voucher_id = false)
 		{
+			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
 			$this->db->transaction_begin();
 
@@ -738,6 +739,7 @@
 
 				if($line['order_id'])
 				{
+					$orders_affected[$line['order_id']] = true;
 					//Oppdater beløp på bestilling
 					if ($line['dimd'] % 2 == 0)
 					{
@@ -756,6 +758,7 @@
 			}
 
 			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
+ 			$this->update_actual_cost_from_archive($orders_affected);
 			return $this->db->transaction_commit();
 		}
 
