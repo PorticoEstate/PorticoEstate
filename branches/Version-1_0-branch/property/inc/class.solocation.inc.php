@@ -1824,7 +1824,7 @@
 				return $values;
 			}
 			
-			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%'",__LINE__,__FILE__);
+			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%' ORDER BY {$field_name} ASC",__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
