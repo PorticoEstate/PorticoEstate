@@ -50,12 +50,12 @@
 
 			$so = createobject('registration.soreg');
 
-			if (! $r_reg['loginid'])
+			if (! $r_reg['loginid'] && !$this->config['username_is'] == 'email')
 			{
 				$errors[] = lang('You must enter a username');
 			}
 
-			if (! is_array($errors) && $so->account_exists($r_reg['loginid']))
+			if (! is_array($errors) && $r_reg['loginid'] && $so->account_exists($r_reg['loginid']))
 			{
 				$errors[] = lang('Sorry, that username is already taken.');
 			}
@@ -67,13 +67,17 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
+				if(!$this->config['username_is'] == 'email')
+				{
+					$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
+				}
 				$ui->step2();
 			}
 		}
 
 		function step2()
 		{
+			$ui = createobject('registration.uireg');
 			if(!$r_reg = phpgw::get_var('r_reg'))
 			{
 				$r_reg = array();
@@ -83,8 +87,48 @@
 				$o_reg = array();
 			}
 			$fields = array();
+			$errors = array();
+//		_debug_array($r_reg);
+			
+//-------
+			if($this->config['username_is'] == 'email')
+			{
+				$this->fields['loginid'] = array
+				(
+		            'field_name' => 'loginid',
+		            'field_text' => lang('username'),
+		            'field_type' => 'email',
+		            'field_values' =>'', 
+		            'field_required' => 'Y',
+		            'field_order' => 1
+				);
 
-			//echo '<pre>'; print_r($r_reg); echo '</pre>';
+				if (! $r_reg['loginid'])
+				{
+					$missing_fields[] = 'loginid';
+					$errors[] = lang('you must enter a username');
+				}
+				else
+				{
+					$loginid = $GLOBALS['phpgw']->session->appsession('loginid','registration');
+					
+					if($r_reg['loginid'] != $loginid)
+					{
+						$GLOBALS['phpgw']->session->appsession('loginid','registration',$r_reg['loginid']);
+						$loginid = false;
+					}
+
+					if( !$loginid )
+					{
+						if( execMethod('registration.soreg.account_exists', $r_reg['loginid']))
+						{
+							$errors[] = lang('Sorry, that username is already taken.');						
+						}
+					}
+				}
+			}
+
+//--------
 
 			if ($this->config['password_is'] == 'http')
 			{
@@ -202,14 +246,13 @@
 				}
 			}
 
-			while (is_array($o_reg) && list($name,$value) = each($o_reg))
-			{
-				$fields[$name] = $value;
-			}
-
 			if (is_array ($o_reg))
 			{
 				reset($o_reg);
+				foreach ($o_reg as $name => $value)
+				{
+					$fields[$name] = $value;
+				}
 			}
 
 			if (is_array($missing_fields))
@@ -217,19 +260,19 @@
 				$errors[] = lang('You must fill in all of the required fields');
 			}
 
-			if (! is_array($errors))
+			if (! $errors)
 			{
 				$so     = createobject('registration.soreg');
 				$reg_id = $so->step2($fields);
 			}
 
-			$ui = createobject('registration.uireg');
-			if (is_array($errors))
+			if ($errors)
 			{
 				$ui->step2($errors,$r_reg,$o_reg,$missing_fields);
 			}
 			else
 			{
+				$GLOBALS['phpgw']->session->appsession('loginid','registration','');
 				// Redirect them so they don't hit refresh and make a mess
 				$GLOBALS['phpgw']->redirect_link('/registration/main.php',array('menuaction' => 'registration.uireg.ready_to_activate', 'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain']));
 			}
@@ -414,6 +457,10 @@
 			{
 				return True;
 			}
+			else if ($this->config['password_is'] == 'email')
+			{
+				return True;
+			}
 			elseif ($this->config['password_is'] == 'http')
 			{
 				if (!$_SERVER['PHP_AUTH_PW'])
@@ -432,14 +479,26 @@
 		function get_locations()
 		{
 			$location_code = phpgw::get_var('location_code');
-
-			$locations = execMethod('property.solocation.get_children', $location_code);
-
-			if(!$location_code)
+			$field = phpgw::get_var('field');
+			if($field)
 			{
-				array_push($locations, array('id' => '', 'name' => lang('select')));
+				$field_info_arr = explode('::', $this->fields[$field]['field_values']);
 			}
 
-			return $locations;
+			$criteria = array
+			(
+				'location_code'	=> $location_code,
+				'child_level'	=> $field_info_arr[0],
+				'field_name'	=> $field_info_arr[1]
+			);
+	
+			$locations = execMethod('property.solocation.get_children',$criteria);
+			$values = array
+			(
+				'child_level'	=> $field_info_arr[0],
+				'locations'		=> $locations
+			);
+
+			return $values;
 		}
 	}

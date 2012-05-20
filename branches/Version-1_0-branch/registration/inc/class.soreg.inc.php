@@ -60,19 +60,17 @@
 			$this->reg_id = md5(time() . $account_lid . $GLOBALS['phpgw']->common->randomstring(32));
 			$account_lid  = $GLOBALS['phpgw']->session->appsession('loginid','registration');
 
-			$location = array();
-
-			for ($i=1; $i<=6; $i++)
+			for ($i=1; $i < 10; $i++)
 			{
 				if (isset($fields["loc{$i}"]) && $fields["loc{$i}"])
 				{
-					$location[] = $fields["loc{$i}"];
+					$fields['location_code'] = $fields["loc{$i}"];
 				}
 			}
 
-			if($location)
+			if($this->config['username_is'] == 'email')
 			{
-				$fields['location_code'] = implode('-', $location);
+				$fields['email'] = $fields['loginid'];
 			}
 
 			$this->db->query("UPDATE phpgw_reg_accounts SET reg_id='" . $this->reg_id . "', reg_dla='"
@@ -445,7 +443,9 @@ HTML;
 					'location'	=> 'registration',
 					'location_code' => $fields['location_code'],
 					'contact_id'	=> $GLOBALS['phpgw']->accounts->get($account_id)->person_id,
-					'account_lid'	=> $account_lid
+					'account_lid'	=> $account_lid,
+					'account_id' 	=> $account_id,
+					'email'			=> $fields['email']
 				);
 
 				$GLOBALS['phpgw']->hooks->single($args, 'property');

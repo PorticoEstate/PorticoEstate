@@ -42,9 +42,24 @@
 {javascript}
 
 
+<center>{message}</center>
 <center>{errors}</center>
 <form action="{form_action}" method="POST">
  <table border="0" width="75%" align="center">
+
+<!-- BEGIN username -->
+  <tr>
+   <td width="1%"></td>
+	{domain_select}
+  </tr>
+  <tr>
+   <td width="1%">{missing_loginid}</td>
+   <td>{lang_username}</td>
+   <td>{domain_from_host}<input name="r_reg[loginid]" value="{value_username}"></td>
+  </tr>
+<!-- END username -->
+
+
 <!-- BEGIN password -->
   <tr>
    <td width="1%">{missing_passwd}</td>

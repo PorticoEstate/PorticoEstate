@@ -33,10 +33,17 @@
 	class controller_control_item extends controller_model
 	{
 		public static $so;
+		
 		/*
+		const "CONTROL_ITEM_TYPE_MAALING" = "control_item_type_1";
 		const CONTROL_ITEM_TYPE_MAALING = "control_item_type_1";
-		const CONTROL_ITEM_TYPE_MAALING = "control_item_type_1";
-		*/	
+		*/
+		
+		public static $type_array = array("CONTROL_ITEM_TYPE_1" => "Vanlig", 
+										 "CONTROL_ITEM_TYPE_2" => "Måling",
+										 "CONTROL_ITEM_TYPE_3" => "Nedtrekksliste",
+										 "CONTROL_ITEM_TYPE_4" => "Radioknapper");
+		
 		protected $id;
 		protected $title;
 		protected $required;
