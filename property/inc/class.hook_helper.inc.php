@@ -70,6 +70,14 @@
 			$sql = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 
+			if($data['email'])
+			{
+				$pref = CreateObject('phpgwapi.preferences',  $data['account_id']);
+				$pref->read();
+				$pref->add('property','email', $data['email'],'user');
+				$pref->save_repository();
+			}
+
 			$message =lang('user %1 added to %2',$data['account_lid'],$data['location_code']);
 			phpgwapi_cache::message_set($message, 'message');
 		}
