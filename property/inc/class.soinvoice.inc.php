@@ -557,6 +557,7 @@
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name"
 				. " FROM $table"
+				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_vendor ON {$table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
@@ -583,11 +584,15 @@
 
 			foreach ($values as &$entry)
 			{
-				$sql = "SELECT budsjettsigndato{$overftid} FROM $table WHERE pmwrkord_code = '{$entry['workorder_id']}' AND bilagsnr = '{$entry['voucher_id']}' AND fakturanr = '{$entry['invoice_id']}'";
+				$sql = "SELECT budsjettsigndato{$overftid},fm_ecoart.descr as type"
+				. " FROM {$table} {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
+				. " WHERE pmwrkord_code = '{$entry['workorder_id']}' AND bilagsnr = '{$entry['voucher_id']}' AND fakturanr = '{$entry['invoice_id']}'";
+
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$entry['budsjettsigndato']	= $this->db->f('budsjettsigndato');
 				$entry['transfer_time']		= $this->db->f('overftid');
+				$entry['type']				= $this->db->f('type');
 			}
 
 			return $values;
