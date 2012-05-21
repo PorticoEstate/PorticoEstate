@@ -415,10 +415,14 @@
 			$values['godkjentbelop']	= $values['amount'];
 
 			$_dateformat = $this->bocommon->dateformat;
-			
-			$values['fakturadato'] 		= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['invoice_date']));
-			$values['forfallsdato'] 	= date($_dateformat,phpgwapi_datetime::date_to_timestamp($values['payment_date']));
-			$values['periode']			= date('Ym',phpgwapi_datetime::date_to_timestamp($values['paid_date']));
+
+			$invoice_date 	= $values['invoice_date'] ? phpgwapi_datetime::date_to_timestamp($values['invoice_date']) : time();
+			$payment_date 	= $values['payment_date'] ? phpgwapi_datetime::date_to_timestamp($values['payment_date']) : time();
+			$paid_date		= $values['paid_date'] ? phpgwapi_datetime::date_to_timestamp($values['paid_date']) : time();
+
+			$values['fakturadato'] 		= date($_dateformat, $invoice_date);
+			$values['forfallsdato'] 	= date($_dateformat, $payment_date);
+			$values['periode']			= date('Ym', $paid_date);
 
 			$values['kildeid'] 			= 1;
 			$values['pmwrkord_code']	= $values['order_id'];
