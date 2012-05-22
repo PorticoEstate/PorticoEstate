@@ -1379,6 +1379,12 @@
 				{
 					$_location_data = $values['location_data'];
 				}
+				else if(isset($values['location']) && is_array($values['location']))
+				{
+					$location_code=implode("-", $values['location']);
+					$values['extra']['view'] = true;
+					$_location_data = $bolocation->read_single($location_code,$values['extra']);
+				}
 				else
 				{
 					if(isset($project['location_data']) && $project['location_data'])
