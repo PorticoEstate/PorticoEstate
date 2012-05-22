@@ -48,11 +48,22 @@ if($contract->get_id() > 0) {
 		 <br/>
 		<label><?php echo lang('last_updated') ?> </label>
 		<?php
-			echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_last_updated());
+			if($contract->get_id() > 0) {
+				echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_last_updated());
+			}
+			else{
+				echo date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $created);
+			}
 		 ?>
 		<label>&nbsp;&nbsp;<?php echo lang('name') ?></label>
 		<?php
-		 	echo $contract->get_last_edited_by();
+			if($contract->get_id() > 0) {
+		 		echo $contract->get_last_edited_by();
+			}
+			else
+			{
+				echo $GLOBALS['phpgw']->accounts->id2name($created_by);
+			}
 		 ?>
 		<br/>
 		<label><?php echo lang('composite') ?> </label>

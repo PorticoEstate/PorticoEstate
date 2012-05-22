@@ -399,6 +399,8 @@
 			else
 			{
 				if($this->isAdministrator() || $this->isExecutiveOfficer()){
+					$created = strtotime('now');
+					$created_by = $GLOBALS['phpgw_info']['user']['account_id'];
 					if(!isset($contract)){
 						$contract = new rental_contract();
 						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -410,6 +412,8 @@
 						(
 							'contract' 	=> $contract,
 							'notification' => $notification,
+							'created' => $created,
+							'created_by' => $created_by,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error'),

@@ -386,7 +386,7 @@
 			
 			if($db->next_record())
 			{
-				return $db->f('count(*)');
+				return $db->f('count');
 			}
 			return 0;
 		}
