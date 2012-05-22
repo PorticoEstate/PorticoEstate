@@ -115,7 +115,7 @@ var vendor_id;
 		td_empty(3);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
-		td_empty(4);
+		td_empty(5);
 
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");
