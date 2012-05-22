@@ -48,6 +48,7 @@
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'));
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
+			$GLOBALS['phpgw']->translation->add_app('property');
 		}
 
 		public function index()
@@ -517,12 +518,36 @@
 
 		public function add_ticket()
 		{
+
+			$values         = phpgw::get_var('values');
+
+			$bypass 		= phpgw::get_var('bypass', 'bool');
+			if($bypass)
+			{
+				$boadmin_entity		= CreateObject('property.boadmin_entity');
+				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
+				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
+				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+
+				if($p_entity_id && $p_cat_id)
+				{
+					$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
+					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
+
+					$id = phpgw::get_var('p_num');
+					$item = execMethod('property.boentity.read_single',(array('id' => $id, 'entity_id' => $p_entity_id, 'cat_id' => $p_cat_id, 'view' => true)));
+				}
+
+			}
+
 			$bo	= CreateObject('property.botts',true);
 			$boloc	= CreateObject('property.bolocation',true);
 
 			$location_details = $boloc->read_single($this->location_code, array('noattrib' => true));
 
-			$values         = phpgw::get_var('values');
+
 			$missingfields  = false;
 			$msglog         = array();
 
@@ -668,10 +693,11 @@
 				'locationdesc'  	=> $values['locationdesc'],
 				'description'   	=> $values['description'],
 				'noform'        	=> $noform,
-				'category_list'		=> $category_list
+				'category_list'		=> $category_list,
+				'custom_attributes'	=> array('attributes' => $item['attributes']),
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk','attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
 		}
 

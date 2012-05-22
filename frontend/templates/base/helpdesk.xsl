@@ -50,7 +50,7 @@
             </script>
         </xsl:when>
     </xsl:choose>
-    <h2>Ny skademelding</h2>
+    <h2>Ny melding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
         <table cellpadding="0" cellspacing="0" width="100%">
             <xsl:choose>
@@ -66,7 +66,7 @@
 
             <xsl:if test="noform != 1">
                 <tr>
-                    <td class="th_text" valign="top">
+                   <td class="th_text" valign="top">
                         <xsl:value-of select="php:function('lang', 'category')" />
                     </td>
                     <td class="th_text" valign="top">
@@ -126,6 +126,17 @@
                         <input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
                     </td>
                 </tr>
+                 <tr>
+                  <td>
+                  </td>
+                  <td >
+ 					<li>
+						<xsl:apply-templates select="custom_attributes/attributes"/>
+						<hr/>
+        			</li>
+                    </td>
+                </tr>
+
             </xsl:if>
         </table>
     </form>
