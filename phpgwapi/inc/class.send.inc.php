@@ -42,7 +42,7 @@
 			}
 			if ($sender == '')
 			{
-				$sender = $GLOBALS['phpgw_info']['user']['fullname'].' <'.$GLOBALS['phpgw_info']['user']['preferences']['email']['address'].'>';
+				$sender = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 
 			switch( $service )
@@ -67,6 +67,7 @@
 			else
 			{
 				$smtp->From = $from_array[0];
+				$smtp->FromName = $sender;
 			}
 /*			
 			if(strpos($to,','))
