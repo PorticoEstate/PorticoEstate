@@ -2213,11 +2213,11 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, godkjentbelop, oppsynsigndato, saksigndato,budsjettsigndato"
+			$sql = "SELECT bilagsnr,bilagsnr_ut, org_name, currency, kreditnota, fm_ecoart.descr as type, godkjentbelop, forfallsdato, oppsynsigndato, saksigndato,budsjettsigndato"
 			." FROM fm_ecobilag"
 			." {$this->join} fm_vendor ON fm_vendor.id = fm_ecobilag.spvend_code"
 			." {$this->join} fm_ecoart ON fm_ecoart.id = fm_ecobilag.artid"
-			." $filtermethod $querymethod ORDER BY bilagsnr";
+			." $filtermethod $querymethod ORDER BY forfallsdato ASC, bilagsnr ASC";
 
 			$lang_voucer = lang('voucher id');
 			$lang_vendor = lang('vendor');
@@ -2225,6 +2225,7 @@
 			$lang_parked = lang('parked');
 			$lang_type = lang('type');
 			$lang_approved_amount = lang('approved amount');
+			$lang_payment_date = lang('payment date');
 			
 			$this->db->query($sql,__LINE__,__FILE__);
 			$values = array();
@@ -2238,6 +2239,7 @@
 				$values[$bilagsnr]['currency']			= $this->db->f('currency');
 				$values[$bilagsnr]['kreditnota']		= $this->db->f('kreditnota');
 				$values[$bilagsnr]['type']				= $this->db->f('type');
+				$values[$bilagsnr]['payment_date']		= $this->db->f('forfallsdato');
 
 				if(isset($values[$bilagsnr]['godkjentbelop']))
 				{
@@ -2268,11 +2270,13 @@
 			$voucers = array();
 			foreach ($values as $bilagsnr => $entry)
 			{
+				$payment_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($entry['payment_date']));
 				$status = $entry['status'];
 				sort($status);
 				
 				$voucher_id = $entry['bilagsnr_ut'] ? $entry['bilagsnr_ut'] : $bilagsnr;
-				$name = sprintf("{$lang_voucer}:% 8s | {$lang_vendor}:% 20s | {$lang_currency}:% 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
+				$name = sprintf("{$lang_payment_date}: % 10s | {$lang_voucer}:% 8s | {$lang_vendor}: % 50s | {$lang_currency}: % 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
+							$payment_date,
 							$voucher_id,
 							trim(strtoupper($entry['org_name'])),
 							$entry['currency'],

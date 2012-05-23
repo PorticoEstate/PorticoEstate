@@ -45,6 +45,7 @@
 
 		public function __construct()
 		{
+			$GLOBALS['phpgw']->translation->add_app('property');
 			$this->location_id			= phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			$location_info				= $GLOBALS['phpgw']->locations->get_name($this->location_id);
 			$this->acl_location			= $location_info['location'];
@@ -606,11 +607,11 @@
 						(
 							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
 							'noframework'	=> 1,
-							'target'		=> '_lightbox',
+//							'target'		=> '_blank',
+							'target'		=> '_tinybox',
 							'p_entity_id'	=> $this->entity_id,
 							'p_cat_id'		=> $this->cat_id,
 							'type'			=> $this->type,
-							'target'		=> '_blank',
 							'bypass'		=> true,
 							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",							
 						)),
@@ -618,6 +619,8 @@
 					);
 			}
 
+			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed' , 'property');
+			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
@@ -877,7 +880,6 @@
 
 		public function view()
 		{
-			$GLOBALS['phpgw']->translation->add_app('property');
 			$bo	= & $this->bo;
 			$id = phpgw::get_var('id');
 			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'view' => true));

@@ -1408,6 +1408,7 @@
 					if($this->db->next_record())
 					{
 						$sql = "UPDATE fm_project_budget SET budget = budget + {$entry['budget']} WHERE project_id = {$new_project_id} AND year = {$entry['year']}";
+						$this->db->query($sql,__LINE__,__FILE__);
 					}
 					else
 					{
@@ -1445,6 +1446,7 @@
 				{
 					$historylog->add('B',$new_project_id, $new_budget_new_project, $old_budget_new_project);
 				}
+
 				$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id} WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 				$this->db->query("UPDATE fm_project SET reserve = 0 WHERE reserve IS NULL AND id = {$new_project_id}" ,__LINE__,__FILE__);
 				$this->db->query("UPDATE fm_project SET budget = {$new_budget_new_project}, reserve = reserve + {$reserve_old_project} WHERE id = {$new_project_id}" ,__LINE__,__FILE__);

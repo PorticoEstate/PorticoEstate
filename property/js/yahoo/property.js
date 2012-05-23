@@ -676,6 +676,12 @@
 							//console.log(sUrl); // firebug
 							showlightbox(sUrl);
 						}
+						else if(substr_count(sUrl,'target=_tinybox')>0)
+						{
+							//have to be defined as a local function. Example in invoice.list_sub.js
+							//console.log(sUrl); // firebug
+							showtinybox(sUrl);
+						}
 						else
 						{
 							window.open(sUrl,'_self');
@@ -1470,6 +1476,25 @@
 		}
 		return array_result;
 	}
+
+	this.showtinybox = function(sUrl)
+	{
+		TINY.box.show({
+		iframe:sUrl,
+		boxid:'frameless',
+		width:750,
+		height:450,
+		fixed:false,
+		maskid:'darkmask',
+		maskopacity:40,
+		mask:true,
+		animate:true,
+		close: true,
+	//	closejs:function(){closeJS_local()}
+		});
+	}
+
+
 //----------------------------------------------------------------------------------------
 
 	CreateLoading();
