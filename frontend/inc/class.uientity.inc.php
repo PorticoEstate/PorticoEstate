@@ -164,7 +164,6 @@
 			}
 
 			$datatable = array();
-			$values_combo_box = array();
 
 			if($this->cat_id)
 			{
@@ -198,10 +197,6 @@
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
-
-				$values_combo_box[0]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[0],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -318,14 +313,35 @@
 
 				$custom	= createObject('phpgwapi.custom_fields');
 				$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
-/*
-				$button_def[] = "oMenuButton_0";
-				$code_inner[] = "{order:0, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
-*/
 
 				$button_def = array();
 				$code_inner = array();
 
+				$values_combo_box = array();
+/*
+				$values_combo_box[0]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$datatable['actions']['form'][0]['fields']['field'][] = array
+				(
+					'id' => 'btn_criteria_id',
+					'name' => 'criteria_id',
+					'value'	=> lang('search criteria'),
+					'type' => 'button',
+					'style' => 'filter',
+					'tab_index' => 0
+				);
+
+				$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
+				(
+					'id' 	=> "values_combo_box_0",
+					'value'	=> $this->bocommon->select2String($values_combo_box[0])						
+				);
+
+				$button_def[] = "oMenuButton_0";
+				$code_inner[] = "{order:0, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
+*/
 				if($attrib_data)
 				{
 					$i = 0;
@@ -381,6 +397,7 @@
 				{
 					$code .= 'var selectsButtons = [];';
 				}
+
 				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				//	eliminates those empty filters
