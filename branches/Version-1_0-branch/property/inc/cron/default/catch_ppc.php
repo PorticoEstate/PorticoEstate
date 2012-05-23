@@ -232,11 +232,14 @@
 							case 'int4':
 								// Check if input starts with - (optional) and then only
 								// contains numbers
+								/*
 								if( preg_match('@^[-]?[0-9]+$@', $insert_value) !== 1 )
 								{
 									$val_errors[] = lang('Input for field "%1" is "%2", but should be int (%3)',
 										$field_info->name, $insert_value, $file);
 								}
+								*/
+								$insert_value = $insert_value ? (int) $insert_value : '';
 								break;
 							case 'numeric':
 								$insert_value = str_replace( ',', '.', $insert_value);
