@@ -1,17 +1,7 @@
 //--------------------------------------------------------
 // Declaration of location.index vars
 //--------------------------------------------------------
-	//define SelectButton
-/*
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
- 	var selectsButtons = [
-	{order:0, var_URL:'cat_id',		name:'btn_cat_id',		style:'categorybutton',	dependiente:''},
-	{order:1, var_URL:'district_id',name:'btn_district_id',	style:'districtbutton',	dependiente:''},
-	{order:2, var_URL:'status',		name:'btn_status_id',	style:'statusbutton',	dependiente:''},
-	{order:3, var_URL:'filter',		name:'btn_user_id',		style:'userIdbutton',	dependiente:''},
-	{order:4, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
-	]
-*/
+	//SelectButton deined i ui-class
 	// define buttons
 	var oNormalButton_0, oNormalButton_1, oNormalButton_2;
 	var normalButtons = [
