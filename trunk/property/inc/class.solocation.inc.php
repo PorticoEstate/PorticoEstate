@@ -1831,7 +1831,7 @@
 				$values[] = array
 				(
 					'id'	=>  $id,
-					'name'	=>  $id . ' :: ' .$this->db->f('name')
+					'name'	=>  $this->db->f('name')
 				);
 			}
 			return $values;
