@@ -55,7 +55,7 @@
 		{
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'helpdesk.index';
 			$this->insert_links_on_header_state();
-			$bo	= CreateObject('property.botts',true);
+			$bo	= CreateObject('property.botts');
 
 			$dry_run = false;
 			$second_display = phpgw::get_var('second_display', 'bool');
@@ -356,6 +356,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('frontend') . ' - ' . $appname . ': ' . $function_msg;
 
+			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
+			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed' , 'property');
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
@@ -370,7 +372,6 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
-			//print_r( $GLOBALS['phpgw']->xslttpl->get_vars());
 		}
 
 		private function cmp($a, $b)
@@ -518,28 +519,15 @@
 
 		public function add_ticket()
 		{
-
 			$values         = phpgw::get_var('values');
+			$p_entity_id	= phpgw::get_var('p_entity_id', 'int');
+			$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
+			$p_num			= phpgw::get_var('p_num');
+			$origin			= phpgw::get_var('origin');
 
-			$bypass 		= phpgw::get_var('bypass', 'bool');
-			if($bypass)
+			if($p_entity_id && $p_cat_id && $p_num)
 			{
-				$boadmin_entity		= CreateObject('property.boadmin_entity');
-				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
-				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
-				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
-
-				if($p_entity_id && $p_cat_id)
-				{
-					$entity_category = $boadmin_entity->read_single_category($p_entity_id,$p_cat_id);
-					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
-
-					$id = phpgw::get_var('p_num');
-					$item = execMethod('property.boentity.read_single',(array('id' => $id, 'entity_id' => $p_entity_id, 'cat_id' => $p_cat_id, 'view' => true)));
-				}
-
+				$item = execMethod('property.boentity.read_single',(array('id' => $p_num, 'entity_id' => $p_entity_id, 'cat_id' => $p_cat_id, 'view' => true)));
 			}
 
 			$bo	= CreateObject('property.botts',true);
@@ -596,24 +584,24 @@
 						$default_group = 0;
 					}
 
-					$ticket = array(
-						'origin'    => null,
-						'origin_id' => null,
-						'cat_id'    => $cat_id,
-						'group_id'  => ($default_group ? $default_group : null),
-						'assignedto'=> $assignedto,
-						'priority'  => 3,
-						'status'    => 'O', // O = Open
-						'subject'   => $values['title'],
-						'details'   => $values['locationdesc'].":\n\n".$values['description'],
-						'apply'     => lang('Apply'),
-						'contact_id'=> 0,
-						'location'  => $location,
-						'location_code' => $this->location_code,
-						'street_name'   => $location_details['street_name'],
-						'street_number' => $location_details['street_number'],
-						'location_name' => $location_details['loc1_name'],
-						//'locationdesc'  => $values['locationdesc']
+					$ticket = array
+					(
+						'origin_id'			=> $GLOBALS['phpgw']->locations->get_id('property', $origin),
+						'origin_item_id'	=> $p_num,
+						'cat_id'			=> $cat_id,
+						'group_id'			=> ($default_group ? $default_group : null),
+						'assignedto'		=> $assignedto,
+						'priority'			=> 3,
+						'status'			=> 'O', // O = Open
+						'subject'			=> $values['title'],
+						'details'			=> $values['locationdesc'].":\n\n".$values['description'],
+						'apply'				=> lang('Apply'),
+						'contact_id'		=> 0,
+						'location'			=> $location,
+						'location_code'		=> $this->location_code,
+						'street_name'		=> $location_details['street_name'],
+						'street_number'		=> $location_details['street_number'],
+						'location_name'		=> $location_details['loc1_name'],
 					);
 
 					$result = $bo->add($ticket);
@@ -621,7 +609,6 @@
 					{
 						$msglog['message'][] = array('msg' => lang('Ticket added'));
 						$noform = true;
-
 
 						// Files
 						$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
@@ -685,10 +672,20 @@
 				}
 			}
 
+			$form_action_data = array
+			(
+				'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+				'noframework'	=> '1',
+				'origin'    	=> $origin,
+				'p_entity_id'	=> $p_entity_id,
+				'p_cat_id'		=> $p_cat_id,
+				'p_num'			=> $p_num,
+			);
+
 			$data = array(
 				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
 				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$form_action_data),
 				'title'         	=> $values['title'],
 				'locationdesc'  	=> $values['locationdesc'],
 				'description'   	=> $values['description'],

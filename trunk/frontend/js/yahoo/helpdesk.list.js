@@ -73,7 +73,20 @@
 	{
 		var oArgs = {menuaction:'frontend.uihelpdesk.add_ticket', noframework:'1'};
 		var sUrl = phpGWLink('index.php', oArgs);
-
+/*
+		TINY.box.show({
+		iframe:sUrl,
+		boxid:'frameless',
+		width:750,
+		height:450,
+		fixed:false,
+		maskid:'darkmask',
+		maskopacity:40,
+		mask:true,
+		animate:true,
+		close: true
+		});
+*/
 		var onDialogShow = function(e, args, o)
 		{
 			var frame = document.createElement('iframe');
