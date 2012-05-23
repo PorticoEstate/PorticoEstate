@@ -130,10 +130,9 @@
                   <td>
                   </td>
                   <td >
- 					<li>
+
 						<xsl:apply-templates select="custom_attributes/attributes"/>
-						<hr/>
-        			</li>
+
                     </td>
                 </tr>
 
