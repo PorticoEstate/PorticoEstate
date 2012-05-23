@@ -52,7 +52,7 @@
 			$location_arr				= explode('.', $this->acl_location);
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.boentity',true);
+			$this->bo					= CreateObject('property.boentity');
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->soadmin_entity		= & $this->bo->soadmin_entity;
 

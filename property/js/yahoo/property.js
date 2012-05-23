@@ -1489,8 +1489,7 @@
 		maskopacity:40,
 		mask:true,
 		animate:true,
-		close: true,
-	//	closejs:function(){closeJS_local()}
+		close: true
 		});
 	}
 
