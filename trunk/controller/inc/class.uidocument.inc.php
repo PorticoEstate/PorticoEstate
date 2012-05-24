@@ -34,7 +34,7 @@
 	include_class('controller', 'document', 'inc/model/');
 
 	class controller_uidocument extends controller_uicommon
-	{	
+	{
 		private $so;
 		private $so_procedure;
 		
@@ -405,7 +405,9 @@
 			$document_type = phpgw::get_var('type');
 			if(isset($_POST['edit_procedure']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit', 'id' => $procedure_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array(
+											'menuaction' => 'controller.uiprocedure.edit', 
+											'id' => $procedure_id));
 			}
 			else
 			{
@@ -425,32 +427,30 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 				
-				$documents = $this->so->get(null,null,null,null,null,null,array('procedure_id' => $procedure_id, 'type' => $document_type));
-				//$document_array = array();
-				//var_dump($documents);
+				$documents = $this->so->get(null,null,null,null,null,null,array(
+											'procedure_id' => $procedure_id, 
+											'type' => $document_type));
 					
-				//$document_array[] = array('document' => $document->toArray());
 				$table_header[] = array('header' => lang('Document title'));
 				$table_header[] = array('header' => lang('Document name'));
 				$table_header[] = array('header' => lang('Document description'));
 				
 				foreach($documents as $document)
 				{
-					/*
-					 * hack to fix display of &nbsp; char 
-					 */
+					/* hack to fix display of &nbsp; char */
 					$document->set_description(str_replace("&nbsp;", " ",$document->get_description()));
 					$doc_array = $document->toArray();
 					$doc_array['link'] = self::link(array('menuaction' => 'controller.uidocument.view', 'id' => $doc_array['id']));
 					$table_values[] = array('document' => $doc_array);
 				}
-				//var_dump($table_values);
 
 				$procedure_array = $procedure->toArray();
 				
 				$tabs = array( array(
 							'label' => lang('Procedure'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure->get_id()))
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array(
+												'menuaction' => 'controller.uiprocedure.view', 
+												'id' => $procedure->get_id()))
 
 						), array(
 							'label' => lang('View_documents_for_procedure')
@@ -472,14 +472,12 @@
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 
-				//self::render_template_xsl('procedure_item', $data);
 				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_documents'), $data);
 			}
 		}
 		
 		public function document_types()
 		{
-			//self::set_active_menu('controller::control_item2::control_item_list2');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->get_document_types();
 				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_documents'), $data);
@@ -512,7 +510,6 @@
 					)
 				),
 			);
-//_debug_array($data);
 
 			self::render_template_xsl('datatable', $data);
 		}
