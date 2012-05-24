@@ -1,111 +1,110 @@
 <?php
-	/**
-	* phpGroupWare - controller: a part of a Facilities Management System.
-	*
-	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
-	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package property
-	* @subpackage controller
- 	* @version $Id$
-	*/	
+    /**
+    * phpGroupWare - controller: a part of a Facilities Management System.
+    *
+    * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
+    * @author Torstein Vadla <torstein.vadla@bouvet.no>
+    * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+    * This file is part of phpGroupWare.
+    *
+    * phpGroupWare is free software; you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation; either version 2 of the License, or
+    * (at your option) any later version.
+    *
+    * phpGroupWare is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with phpGroupWare; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    *
+    * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+    * @internal Development of this application was funded by http://www.bergen.kommune.no/
+    * @package property
+    * @subpackage controller
+    * @version $Id$
+    */	
 
-	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('controller.sodocument');
-	phpgw::import_class('controller.soprocedure');
-	include_class('controller', 'document', 'inc/model/');
+    phpgw::import_class('controller.uicommon');
+    phpgw::import_class('controller.sodocument');
+    phpgw::import_class('controller.soprocedure');
+    include_class('controller', 'document', 'inc/model/');
 
-	class controller_uidocument extends controller_uicommon
-	{
-		private $so;
-		private $so_procedure;
-		
-		public $public_functions = array
-		(
+    class controller_uidocument extends controller_uicommon
+    {
+        private $so;
+        private $so_procedure;
+
+        public $public_functions = array
+        (
 				'query'		=> true,
 				'add'		=> true,
 				'view'		=> true,
 				'delete'	=> true,
 				'show'		=> true,
 				'document_types'	=> true
-			);
-		
-		public function __construct()
-		{
-			parent::__construct();
-			$this->so = controller_sodocument::get_instance();
-			$this->so_procedure = controller_soprocedure::get_instance();
-		}
-		
-		public function query()
-		{
-			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
-			$sort_field		= phpgw::get_var('sort');
-			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
-			// Form variables
-			$search_for 	= phpgw::get_var('query');
-			$search_type	= phpgw::get_var('search_option');
-			// Create an empty result set
-			$result_objects = array();
-			$result_count = 0;
-			
-			//Retrieve a contract identifier and load corresponding contract
-			$procedure_id = phpgw::get_var('procedure_id');
-			if(isset($procedure_id))
-			{
-				$procedure = $this->so_procedure->get_single($procedure_id);
-			}
-			
-			$type = phpgw::get_var('type');
-			switch($type)
-			{
-				case 'documents_for_procedure':
-					$filters = array('procedure_id' => $procedure_id, 'document_type' => phpgw::get_var('document_type'));
-					break;
-			}
+        );
 
-			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$result_count = $this->so->get_count($search_for, $search_type, $filters);
+        public function __construct()
+        {
+            parent::__construct();
+            $this->so = controller_sodocument::get_instance();
+            $this->so_procedure = controller_soprocedure::get_instance();
+        }
+
+        public function query()
+        {
+            // YUI variables for paging and sorting
+            $start_index	= phpgw::get_var('startIndex', 'int');
+            $num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
+            $sort_field		= phpgw::get_var('sort');
+            $sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+            // Form variables
+            $search_for 	= phpgw::get_var('query');
+            $search_type	= phpgw::get_var('search_option');
+            // Create an empty result set
+            $result_objects = array();
+            $result_count = 0;
+
+            //Retrieve a contract identifier and load corresponding contract
+            $procedure_id = phpgw::get_var('procedure_id');
+            if(isset($procedure_id))
+            {
+                $procedure = $this->so_procedure->get_single($procedure_id);
+            }
+
+            $type = phpgw::get_var('type');
+            switch($type)
+            {
+                case 'documents_for_procedure':
+                    $filters = array('procedure_id' => $procedure_id, 'document_type' => phpgw::get_var('document_type'));
+                    break;
+            }
+
+            $result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+            $result_count = $this->so->get_count($search_for, $search_type, $filters);
+            
+            //Serialize the documents found
+            $rows = array();
+            foreach ($result_objects as $result) {
+                if(isset($result))
+                {
+                    $rows[] = $result->serialize();
+                }
+            }
 			
-			//Serialize the documents found
-			$rows = array();
-			foreach ($result_objects as $result) {
-				if(isset($result))
-				{
-					$rows[] = $result->serialize();
-				}
-			}
+            $editable = phpgw::get_var('editable') == '1' ? true : false;
 			
-			$editable = phpgw::get_var('editable') == '1' ? true : false;
-			
-			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type, isset($procedure) ? $procedure->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
+            //Add context menu columns (actions and labels)
+            array_walk($rows, array($this, 'add_actions'), array($type, isset($procedure) ? $procedure->has_permission(PHPGW_ACL_EDIT) : false, $this->type_of_user, $editable));
 				
-			
-			//Build a YUI result from the data
-			$result_data = array('results' => $rows, 'total_records' => $result_count);	
-			return $this->yui_results($result_data, 'total_records', 'results');
-		}
+            //Build a YUI result from the data
+            $result_data = array('results' => $rows, 'total_records' => $result_count);	
+            return $this->yui_results($result_data, 'total_records', 'results');
+        }
 		
 		public function get_document_types()
 		{
