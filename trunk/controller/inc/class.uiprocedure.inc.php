@@ -414,9 +414,13 @@
 			$procedures_array = $this->so->get_procedures_by_control_area($control_area_id);
 
 			if(count($procedures_array)>0)
+			{
 				return json_encode( $procedures_array );
+			}
 			else
+			{
 				return null;
+			}
 		}
 
 
@@ -470,11 +474,17 @@
 
 				$procedure_array = $procedure->toArray();
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
+				{
 					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
+				}
 				if($procedure->get_end_date() && $procedure->get_end_date() != null)
+				{
 					$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
+				}
 				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
-					$procedure_revision_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
+				{
+					$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
+				}
 
 				if(!$view_revision)
 				{
