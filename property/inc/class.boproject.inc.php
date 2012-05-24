@@ -516,7 +516,7 @@
 				$sum_workorder_calculation+= $workorder_data[$i]['calculation'];
 				$sum_workorder_actual_cost+= $workorder_data[$i]['actual_cost'];
 
-				$values['workorder_budget'][$i]['title']=htmlentities($workorder_data[$i]['title']);
+				$values['workorder_budget'][$i]['title']=htmlspecialchars_decode($workorder_data[$i]['title']);
 				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
 				$values['workorder_budget'][$i]['contract_sum']=(float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
 				$values['workorder_budget'][$i]['budget']= $workorder_data[$i]['budget'];
