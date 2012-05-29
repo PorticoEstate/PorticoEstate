@@ -161,7 +161,6 @@ dl.proplist-col {
 }
 dl.proplist dt,
 dl.proplist-col dt { 
-    font-style: italic; 
     font-weight: bolder; 
     font-size: 90%; 
     margin: .8em 0 .1em 0;
@@ -409,6 +408,9 @@ input[type="submit"] {
     margin-top: 20px;
     padding: 5px 20px;
 }
+.row input[type="submit"] {
+    padding: 2px 10px;
+}
 select{
 	padding: 3px 1px 3px 4px;
 }
@@ -484,6 +486,94 @@ h1 img{
 
 .yui-content h2{
     margin:0 0 10px;
+}
+
+
+/* =======================================  CONTROL ITEM  ========================================= */
+
+#control_item_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border-color: #DBE5EF;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
+    clear: both;
+    margin-top: 1em;
+    overflow: hidden;
+    padding: 1em 1em 0;
+    width: 1150px;
+}
+#control_item_details label{
+	margin-right: 10px;
+}
+#control_item_details label.top {
+    display: block;
+    margin-bottom: 3px;
+}
+#control_item_details .styleWrp {
+    background: none repeat scroll 0 0 #F2F8FF;
+    border: 1px solid #DBE5EF;
+    border-radius: 5px 5px 5px 5px;
+    padding: 10px;
+}
+#control_item_details dl.proplist dt, dl.proplist-col dt {
+    font-size: 1em;
+    font-weight: normal;
+    margin-top: 1.5em;
+}
+#control_item_details .control_item_type {
+    margin-top: 0.5em;
+}
+#control_item_details .control_item_type .active {
+    background: none repeat scroll 0 0 #0F6CCF;
+}
+#control_item_details input[type=radio] {
+    display:none;
+}
+
+/* =======================================  ADD CONTROL ITEM LIST VALUES  ========================================= */
+
+#add_control_item_option_panel {
+	margin-top: 2em;
+	display: none;
+}
+#add_control_item_option_panel label{
+	display: inline-block;
+	width: 85px; 
+}
+#add_control_item_option_panel input[type=text]{
+	display: inline-block;
+	width: 150px; 
+}
+#add_control_item_option_panel hr{
+	border: 1px solid #CCD2D9;
+}
+
+ul#control_item_options{
+	margin-bottom: 1em;
+}
+ul#control_item_options li {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+ul#control_item_options li .order_nr{
+    margin-left: 5px;
+}
+ul#control_item_options input[type="text"] {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+}
+ul#control_item_options label {
+    margin-right: 10px;
+}
+ul#control_item_options .btn.delete {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 1.1em;
+    font-weight: normal;
+    margin: 0 0 0 2px;
+    text-align: center;
+    width: 45px;
 }
 
 /* =======================================  CONTROL TAB VIEW  ========================================= */
@@ -1421,6 +1511,7 @@ li.check_item_case .col_3 {
 .frm_update_case input[type="submit"], .frm_update_case input[type="button"] {
     float: left;
     margin-top: 10px;
+    padding: 3px 6px;
 }
 .frm_update_case input[type="text"]{
  	width: 170px;  
@@ -1436,6 +1527,7 @@ li.check_item_case .col_3 {
 }
 
 /* ===============================  FORM REGISTER CASE  ============================= */
+
 .frm_register_case {
 	margin-bottom: 1em;
 }
@@ -1459,6 +1551,7 @@ li.check_item_case .col_3 {
 
 
 /* ================================ CASE MESSAGE ============================= */
+
 #caseMessage a#showMessage {
     float: right;
     font-size: 17px;
@@ -1477,7 +1570,6 @@ li.check_item_case .col_3 {
     border: 1px solid #EBE5DD;
     padding: 0.5em 1%;
 }
-
 #caseMessage ul.cases h4{
 	margin-top:0
 }
@@ -1488,7 +1580,7 @@ li.check_item_case .col_3 {
 	margin-top:20px;
 }
 
-/* ==============================  QUICK MENU  ============================= */
+/* ==============================  CASE QUICK MENU  ============================= */
 
 .quick_menu {
     font-size: 12px;
@@ -1498,7 +1590,6 @@ li.check_item_case .col_3 {
     margin-right: 5px;
     text-decoration: underline;
 }
-
 ul#groups {
     margin-left: 10px;
     margin-top: 5px;
@@ -1518,13 +1609,13 @@ ul#groups h4{
 input.focus, select.focus{
 	border: 2px solid #dae6f4;
 }
-
 div.controller_checklist {
 	padding: 20px;
 	border: 1px solid #ABABAB;
 }
 
-/* ======================== REGISTER CONTROL FOR LOCATION ===================== */
+/* =====================  REGISTER CONTROL FOR LOCATION  ===================== */
+
 #choose_control{
 	margin: 10px;
 	padding: 10px; 
@@ -1537,27 +1628,25 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
-/* ======================== CONTROL DETAILS =================================== */
+/* ==========================  CONTROL DETAILS   ============================ */
 
 #control_details label {
     display: inline-block;
     font-weight: bold;
     width: 100px;
 }
-
 #control_details #select_all{
 	margin-left: 660px;	
 }
-
 #control_details #location_form{
 	margin-left: 20px;
 	margin-bottom: 20px;	
 }
-
 .help_text {
-    background: none repeat scroll 0 0 #DDDDDD;
-    padding: 3px 6px;
+    background: none repeat scroll 0 0 #CCDBED;
     display: none;
+    padding: 6px 10px;
+    vertical-align: baseline;
 }
 
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
@@ -1568,4 +1657,11 @@ ul.control_groups li ul {
 
 ul.control_groups h3 {
     margin-bottom: 0.5em;
+}
+
+/* =============================  IMAGE LOADER  ======================= */
+
+img#loading {
+	margin-left: 5px;
+	vertical-align: middle;
 }
