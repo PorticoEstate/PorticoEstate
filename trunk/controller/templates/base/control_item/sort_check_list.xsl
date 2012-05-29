@@ -4,6 +4,8 @@
 <xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 
 <div class="yui-content tab_content">
+
+	<h2>Sorter kontrollgrupper og kontrollpunkt</h2>
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
 		<form action="#" id="frmSaveOrder">
@@ -37,7 +39,7 @@
 				</xsl:choose>
 				</xsl:for-each>
 			</ul>
-			<input type="submit" value="Lagre rekkefølge" />
+			<span id="saveOrder" class="btn"><span class="text">Lagre rekkefølge</span></span>
 		</form>
 </div>
 </xsl:template>
