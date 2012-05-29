@@ -27,9 +27,11 @@ $(document).ready(function(){
 	});
 	
 	// Saves group and item order
-	$("#frmSaveOrder").submit(function(e){
+	$("#saveOrder").click(function(e){
 		e.preventDefault();
 
+		var thisForm = $(this).closest("form");
+		var submitBtn = $(this);
 		var control_id = $("#control_id").val();
 		
 		var group_order_arr = new Array();
@@ -51,12 +53,21 @@ $(document).ready(function(){
 	
 		var requestUrl = "index.php?menuaction=controller.uicontrol_group.save_group_and_item_order";
 		
+		$(submitBtn).find(".text").text("Lagrer");
+		
+		$(submitBtn).find(".text").append("<img id='loading' src='controller/images/loading.gif' />");
+		
 		// Saves order for groups and items to db
 		$.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&control_id=" + control_id + "&group_order=" + group_order_arr.toString() + "&item_order=" + item_order_arr.toString(),
 			  success: function() {
-				  alert("Lagret");
+				  
+				  $(submitBtn).find("img").remove();
+					$(submitBtn).find(".text").text("Lagre rekkefølge");
+				  
+				  
+				  
 			  }
 		});
 	});

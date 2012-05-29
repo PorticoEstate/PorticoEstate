@@ -1,5 +1,26 @@
 $(document).ready(function(){
 
+	$(".control_item_type").click(function(){
+		var thisBtn = $(this).find(".btn");
+		var thisRadio = $(this).find("input[type=radio]");
+		
+		// Clears active button and checked underlying radiobutton
+		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
+		$(".control_item_type").find(".btn").removeClass("active");
+		
+		// Makes button active and checkes underlying radiobutton
+		$(thisRadio).attr("checked", "checked");
+		$(thisBtn).addClass("active");
+		
+		var control_item_type = $(this).find("input[type=radio]").val();
+		
+		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
+			$("#add_control_item_option_panel").slideDown(500);
+		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
+			$("#add_control_item_option_panel").slideUp(500);
+		}
+	});
+	
 	$(".choose_loc").live( "change", function () {
 		var thisSelectBox = $(this);
 		var loc_code = $(this).val();
@@ -383,9 +404,50 @@ $(document).ready(function(){
 		$(this).addClass("focus");
 	});
 	
+	/* =========================  CONTROL OPTION ======================================== */
+	
+	$("#add_control_item_list_value input[type=button]").live("click", function(e){
+		e.preventDefault();
+		
+		var listValue = $(this).parent().find("input[name=option_value]").val();
+		var order_nr = 1;
+		
+		if($("ul#control_item_options").children().length == 0){
+			order_nr = 1;
+		}else{
+			order_nr = $("ul#control_item_options").find("li").last().find(".order_nr").text();
+			order_nr++;
+		}
+		
+		$("ul#control_item_options").append("<li><label>Listeverdi<span class='order_nr'>" + order_nr + "</span></label><input type='text' name='option_values[]' value='" + listValue + "' /><span class='btn delete'>Slett</span></li>")
+		$(this).parent().find("input[name=option_value]").val('');
+	});
+	
+	/*
+	$("#frm_add_control_item_option").live("submit", function(e){
+		e.preventDefault();
+alert("feil")
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
+			  success: function(data) {
+				  if(data){
+	    			  var obj = jQuery.parseJSON(data);
+		    		  
+	    			  if(obj.status == "saved"){
+			    		$("#control_item_options").append("<li><label>Valgverdi</label>" + obj.saved_object.label + "</li>")
+	    			  }
+				  }
+				}
+			});
+	});
+	*/
 	/* =========================  CONTROL  =============================================== */
 	
-	// =================  SAVE CONTROL DETAILS - FORM SUBMIT  ==================
+	// SAVE CONTROL DETAILS
 	$("#frm_save_control_details").submit(function(e){
 		
 		var thisForm = $(this);
@@ -449,15 +511,6 @@ $(document).ready(function(){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut(300);
 	});
-	
-	/*
-	$(".frm_save_control_item").click(function(e){
-		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		
-		$(submitBnt).removeClass("not_active");
-	});
-	*/
 	
 	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();

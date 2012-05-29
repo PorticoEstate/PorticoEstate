@@ -34,15 +34,7 @@
 	{
 		public static $so;
 		
-		/*
-		const "CONTROL_ITEM_TYPE_MAALING" = "control_item_type_1";
-		const CONTROL_ITEM_TYPE_MAALING = "control_item_type_1";
-		*/
-		
-		public static $type_array = array("CONTROL_ITEM_TYPE_1" => "Vanlig", 
-										 "CONTROL_ITEM_TYPE_2" => "Måling",
-										 "CONTROL_ITEM_TYPE_3" => "Nedtrekksliste",
-										 "CONTROL_ITEM_TYPE_4" => "Radioknapper");
+		public $type_array = array("control_item_type_1", "control_item_type_2", "control_item_type_3", "control_item_type_4");
 		
 		protected $id;
 		protected $title;
@@ -54,6 +46,8 @@
 		protected $control_area_id;
 		protected $control_area_name;
 		protected $type;
+		
+		protected $options_array;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -135,6 +129,18 @@
 		}
 		
 		public function get_type() { return $this->type; }
+		
+		public function set_options_array($options_array)
+		{
+			$this->options_array = $options_array;
+		}
+		
+		public function get_options_array() { return $this->options_array; }
+		
+		public function get_control_item_types()
+		{
+			return array_values( $this->type_array );
+		}
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -160,6 +166,7 @@
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
+			$result['control_area'] = $this->get_control_area_name();
 			$result['control_area'] = $this->get_control_area_name();
 						
 			return $result;

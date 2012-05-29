@@ -287,12 +287,11 @@
 				$sql .= "AND cic.status = 2 ";
 			else if($status == 'open_or_waiting')
 				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
-				
-			if($type == 'control_item_type_1')
-				$sql .= "AND coi.type = 'control_item_type_1' ";
-			else if($type == 'control_item_type_2')
-				$sql .= "AND coi.type = 'control_item_type_2' ";
-							
+			
+			if($type != null){
+				$sql .= "AND coi.type = '$type' ";
+			}
+										
 			if($messageStatus != null & $messageStatus == 'no_message_registered')
 				$sql .= "AND cic.location_item_id IS NULL ";
 			else if($messageStatus != null &  $messageStatus == 'message_registered')
