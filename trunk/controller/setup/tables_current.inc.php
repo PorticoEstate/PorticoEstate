@@ -230,5 +230,16 @@
 			'ix' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'controller_control_item_option', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+				'option_value' =>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
+				'control_item_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)			
 	);
