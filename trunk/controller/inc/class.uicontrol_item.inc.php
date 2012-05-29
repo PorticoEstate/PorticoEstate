@@ -44,6 +44,8 @@
 		private $so_control_item;
 		private $so_control_group;
 		private $so_control_area;
+		private $so_control_item_option;
+		
 
 		public $public_functions = array
 		(
@@ -59,11 +61,12 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->so = CreateObject('controller.socontrol');
-			$this->so_control_item = CreateObject('controller.socontrol_item');
+			$this->so = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
+			$this->so_control_item_option = CreateObject('controller.socontrol_item_option');
+			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
 		}
 
@@ -184,7 +187,6 @@
 		}
 
 		public function delete_item_list(){
-
 			$control_id = phpgw::get_var('control_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 
@@ -196,9 +198,10 @@
 		public function edit()
 		{
 			$control_item_id = phpgw::get_var('id');
+		
 			if(isset($control_item_id) && $control_item_id > 0)
 			{
-				$control_item = $this->so_control_item->get_single($control_item_id);
+				$control_item = $this->so->get_single($control_item_id);
 			}
 			else
 			{
@@ -215,29 +218,30 @@
 					$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
 					$control_item->set_title(phpgw::get_var('title'));
 					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
-					$control_item->set_type(phpgw::get_var('measurement') == 'on' ? 'control_item_type_2' : 'control_item_type_1');
+					$control_item->set_type(phpgw::get_var('control_item_type'));
 					$control_item->set_what_to_do( $what_to_do_txt );
 					$control_item->set_how_to_do( $how_to_do_txt );
 					$control_item->set_control_group_id( phpgw::get_var('control_group') );
 					$control_item->set_control_area_id( phpgw::get_var('control_area') );
-
-					//$this->so->store($control_item);
-
-					if(isset($control_item_id) && $control_item_id > 0)
+				
+					$control_item_id = $this->so->store($control_item);
+						
+					if($control_item_id > 0)
 					{
-						$ctrl_item_id = $control_item_id;
-						if($this->so_control_item->store($control_item))
-						{
-							$message = lang('messages_saved_form');
-						}
-						else
-						{
-							$error = lang('messages_form_error');
+						$message = lang('messages_saved_form');
+						
+						if($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'){
+							$option_values = phpgw::get_var('option_values');
+				
+							foreach($option_values as $option_value){
+								$control_item_option = new controller_control_item_option($option_value, $control_item_id);
+								$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
+							}
 						}
 					}
 					else
 					{
-						$ctrl_item_id = $this->so_control_item->add($control_item);
+						$ctrl_item_id = $this->so->add($control_item);
 						if($ctrl_item_id)
 						{
 							$message = lang('messages_saved_form');
@@ -247,6 +251,7 @@
 							$error = lang('messages_form_error');
 						}
 					}
+
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index', 'dir' => 'desc'));
 				}
 			}
@@ -263,76 +268,14 @@
 			}
 			else
 			{
-				//Sigurd: START as categories
+				// Sigurd: START as categories
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
 				
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-								
-				$control_area_array = array();
-				foreach($control_areas['cat_list'] as $cat_list)
-				{
-					if($cat_list['cat_id'] == $control_item->get_control_area_id())
-					{
-						$control_area_array[] = array
-						(
-							'id' 	=> $cat_list['cat_id'],
-							'name'	=> $cat_list['name'],
-							'selected' => 1,
-						);
-					}
-					else
-					{
-						$control_area_array[] = array
-						(
-							'id' 	=> $cat_list['cat_id'],
-							'name'	=> $cat_list['name'],
-						);
-					}
-				}				
-				// END as categories
-				//$control_area_array = $this->so_control_area->get_control_area_array();
-				$control_group_array = $this->so_control_group->get_control_group_array();
+				$control_areas_array = $control_areas['cat_list'];
 
-
-				if($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-
-/*				foreach ($control_area_array as $control_area)
-				{
-					$control_area_options[] = array
-					(
-						'id'	=> $control_area->get_id(),
-						'name'	=> $control_area->get_title()
-						 
-					);
-				}
-*/
-				foreach ($control_group_array as $control_group)
-				{
-					if($control_group->get_id() == $control_item->get_control_group_id())
-					{
-						$control_group_options[] = array
-						(
-							'id'	=> $control_group->get_id(),
-							'name'	=> $control_group->get_group_name(),
-							'selected' => 1
-						);
-					}
-					else
-					{
-						$control_group_options[] = array
-						(
-							'id'	=> $control_group->get_id(),
-							'name'	=> $control_group->get_group_name()
-							 
-						);
-					}
-				}
+				$control_groups_array = $this->so_control_group->get_control_group_array();
 				
 				/*
 				 * hack to fix display of &nbsp; char 
@@ -341,22 +284,15 @@
 				$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
 
 				$control_item_array = $control_item->toArray();
-
+				
 				$data = array
 				(
-					'value_id'				=> !empty($control_item) ? $control_item->get_id() : 0,
-					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'control_item'			=> $control_item_array,
-					'control_area'			=> array('options' => $control_area_array),
-					'control_group'			=> array('options' => $control_group_options),
+					'control_areas'			=> $control_areas_array,
+					'control_groups'		=> $control_groups_array,
 				);
 
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
-
-				/*$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
-				$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
-				$GLOBALS['phpgw']->richtext->generate_script();*/
 				$this->use_yui_editor(array('what_to_do','how_to_do'));
 				
 				self::add_javascript('controller', 'controller', 'jquery.js');
@@ -426,11 +362,11 @@
 			$control_item_id = phpgw::get_var('control_item_id');
 			if(isset($control_item_id))
 			{
-				$control_item = $this->so_control_item->get_single($control_item_id);
+				$control_item = $this->so->get_single($control_item_id);
 			}
 
-			$result_objects = $this->so_control_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$object_count = $this->so_control_item->get_count($search_for, $search_type, $filters);
+			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 
 			$results = array();
@@ -467,7 +403,7 @@
 			{
 				if(isset($control_item_id) && $control_item_id > 0)
 				{
-					$control_item = $this->so_control_item->get_single($control_item_id);
+					$control_item = $this->so->get_single($control_item_id);
 				}
 				else
 				{
