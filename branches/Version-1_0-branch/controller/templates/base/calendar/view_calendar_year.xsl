@@ -18,6 +18,7 @@
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<div id="calNav">
 				<a class="showPrev">
 					<xsl:attribute name="href">

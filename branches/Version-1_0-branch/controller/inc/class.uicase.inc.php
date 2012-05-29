@@ -75,7 +75,6 @@
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
 			$type = phpgw::get_var('type');
-			$measurement = phpgw::get_var('measurement');
 			$status = phpgw::get_var('status');
 			 
 			$check_list = $this->so_check_list->get_single($check_list_id);
@@ -95,6 +94,7 @@
 			
 			*/
 			
+			// Makes a check item if there isn't already made one  
 			if($check_item == null){
 				$new_check_item = new controller_check_item();
 				$new_check_item->set_check_list_id( $check_list_id );
@@ -116,9 +116,20 @@
 			$case->set_modified_date($todays_date_ts);
 			$case->set_modified_by($user_id);
 			$case->set_modified_by($user_id);
-			$case->set_measurement($measurement);
 			$case->set_status($status);
-				
+
+			// Saves selected value from  or measurement
+			if($type == 'control_item_type_2'){
+				$measurement = phpgw::get_var('measurement');
+				$case->set_measurement( $measurement );
+			}else if($type == 'control_item_type_3'){
+				$option_value = phpgw::get_var('option_value');
+				$case->set_measurement( $option_value );
+			}else if($type == 'control_item_type_4'){
+				$option_value = phpgw::get_var('option_value');
+				$case->set_measurement( $option_value );
+			}
+			
 			$case_id = $this->so->store($case);
 			
 			if($case_id > 0){
@@ -127,8 +138,9 @@
 						
 				return json_encode( array( "status" => "saved" ) );
 			}
-			else
-				return json_encode( array( "status" => "not_saved" ) );	
+			else{
+				return json_encode( array( "status" => "not_saved" ) );
+			}	
 		}
 		
 		function save_case(){
@@ -160,9 +172,9 @@
 				
 				return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
 			}
-			else
+			else{
 				return json_encode( array( "status" => "not_saved" ) );
-			
+			}
 		}
 		
 		function create_case_message(){
@@ -382,8 +394,9 @@
 						
 				return json_encode( array( "status" => "deleted" ) );
 			}
-			else
+			else{
 				return json_encode( array( "status" => "not_deleted" ) );
+			}
 		}
 		
 		public function close_case()
@@ -402,8 +415,9 @@
 						
 				return json_encode( array( "status" => "true" ) );
 			}
-			else
+			else{
 				return json_encode( array( "status" => "false" ) );
+			}
 		}
 		
 		public function open_case()
@@ -422,8 +436,9 @@
 						
 				return json_encode( array( "status" => "true" ) );
 			}
-			else
+			else{
 				return json_encode( array( "status" => "false" ) );
+			}
 		}
 		
 		public function query(){}

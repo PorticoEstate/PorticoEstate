@@ -26,8 +26,10 @@
 					<xsl:text>&amp;location_code=</xsl:text>
 					<xsl:value-of select="current_location/location_code"/>
 				</xsl:attribute>
-				<img height="25" src="controller/images/up_arrow.png" />Årsoversikt
+				<img height="20" src="controller/images/left_arrow_simple_light_blue.png" />Årsoversikt
 			</a>
+			
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<div id="calNav">
 				<xsl:choose>
 					<xsl:when test="current_month_nr > 1">
