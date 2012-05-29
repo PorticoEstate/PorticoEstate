@@ -41,15 +41,15 @@
 					<xsl:when test="editable">
 						<select class="required" id="control_area_id" name="control_area_id">
 						<option value="">Velg kontrollområde</option>
-							<xsl:for-each select="control_areas_array2">
+							<xsl:for-each select="control_areas_array">
 								<xsl:choose>
-									<xsl:when test="id = $control_area_id">
-										<option value="{id}" selected="selected">
+									<xsl:when test="cat_id = $control_area_id">
+										<option value="{cat_id}" selected="selected">
 											<xsl:value-of disable-output-escaping="yes" select="name"/>
 										</option>
 									</xsl:when>
 									<xsl:otherwise>
-										<option value="{id}">
+										<option value="{cat_id}">
 											<xsl:value-of disable-output-escaping="yes" select="name"/>
 										</option>
 									</xsl:otherwise>
@@ -86,13 +86,13 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
-						<span class="help_text">Angi hvilken prosedyre kontrollen er basert på</span>
+						<span class="help_text">Angi hvilken prosedyre som ligger til grunn for kontrollen</span>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/procedure_name" />
 					</xsl:otherwise>
 				</xsl:choose>
-				</dd>
+				</dd>	
 				<dt>
 					<label for="title">Tittel</label>
 				</dt>
