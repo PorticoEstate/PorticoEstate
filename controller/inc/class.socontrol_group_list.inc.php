@@ -200,23 +200,6 @@
 
 		function get_id_field_name($extended_info = false){}
 
-		function populate(int $control_group_id, &$control_group)
-		{
-			/*
-			if($control_group == null) {
-				$control_group = new controller_control_group((int) $control_group_id);
-
-				$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
-				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
-				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
-				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
-				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
-			}
-			//var_dump($control_group);
-			return $control_group;
-			*/
-		}
+		function populate(int $control_group_id, &$control_group){}
 
 	}
