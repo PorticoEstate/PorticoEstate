@@ -639,7 +639,7 @@
 				
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-
+			
 			$data = array
 			(
 				'open_check_items_and_cases'		=> $open_check_items_and_cases,
