@@ -31,6 +31,7 @@
 	phpgw::import_class('controller.socommon');
 
 	include_class('controller', 'control_item_list', 'inc/model/');
+	include_class('controller', 'control_item_option', 'inc/model/');
 
 	class controller_socontrol_item_list extends controller_socommon
 	{
@@ -68,13 +69,10 @@
 			);
 
 			$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
-			//$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if(isset($result)) {
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_list', 'id');
-				// Forward this request to the update method
-				//return $this->update($control_item);
 			}
 			else
 			{
@@ -221,6 +219,73 @@
 			return $results;
 		}
 
+		function get_control_items_and_options_by_control_and_group($control_id, $control_group_id, $return_type = "return_array")
+		{
+			$results = array();
+
+			$sql  =	"SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
+			$sql .= "FROM controller_control_item ci ";
+			$sql .= "LEFT JOIN controller_control_item_list cl ON cl.control_item_id = ci.id ";
+			$sql .= "LEFT JOIN controller_control c ON c.id = cl.control_id ";
+			$sql .= "LEFT JOIN controller_control_item_option cio ON ci.id = cio.control_item_id ";
+			$sql .= "WHERE c.id=$control_id ";
+			$sql .= "AND ci.control_group_id=$control_group_id ";
+			$sql .= "ORDER BY cl.order_nr";
+			
+			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+			
+			$control_item_id = 0;
+			$control_item = null;
+			$control_item_array = array();
+			while ($this->db->next_record()) {
+				if( $this->db->f('ci_id', true) != $control_item_id ){
+					if($control_item_id != 0){
+						$control_item->set_options_array($options_array);
+						
+						if($return_type == "return_array")
+							$control_item_array[] = $control_item->toArray();
+						else
+							$control_item_array[] = $control_item;
+					}
+						
+					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
+					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+					$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+
+					$options_array = array();
+				}
+				
+				$control_item_option = new controller_control_item_option($this->db->f('option_value', true), $this->db->f('control_item_id', true));
+				$control_item_option->set_id($this->db->f('cio_id', true));
+				
+				if($return_type == "return_array")
+					$options_array[] = $control_item_option->toArray();
+				else
+					$options_array[] = $control_item_option;
+				 
+				
+				$control_item_id = $control_item->get_id();
+			}
+			
+			if($control_item != null){
+				$control_item->set_options_array($options_array);
+
+				if($return_type == "return_array"){
+					$control_item_array[] = $control_item->toArray();
+				}else{
+					$control_item_array[] = $control_item;
+				}
+				
+				return $control_item_array;
+			}else {
+				return null;
+			}
+		}
+		
 		// Deletes control list item defines by control id and control item id
 		function delete($control_id, $control_item_id)
 		{
