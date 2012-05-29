@@ -164,7 +164,7 @@
 				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 
-				$results[] = $control_group;
+				$results[] = $control_group->toArray();
 			}
 
 			return $results;
