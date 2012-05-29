@@ -88,8 +88,6 @@
 			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 
 			//if(!$manage)
-				
-			
 			
 			$this->so = CreateObject('controller.socontrol');
 			$this->bo = CreateObject('property.boevent',true);
@@ -299,22 +297,14 @@
 			{
 				$control = $this->so->get_single($control_id);	
 			}
-
+			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-							
-			$control_areas_array2 = array();
-			foreach($control_areas['cat_list'] as $cat_list)
-			{
-				$control_areas_array2[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
+			$control_areas_array = $control_areas['cat_list'];
+			
 			// END as categories
 		
 			if($control != null)
@@ -337,7 +327,7 @@
 				'view'						=> "control_details",
 				'editable' 					=> true,
 				'control'					=> ($control != null) ? $control->toArray() : null,
-				'control_areas_array2'		=> $control_areas_array2,
+				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array,
 				'repeat_type_array'			=> $repeat_type_array
@@ -371,7 +361,7 @@
 			{
 				$control = $this->so->get_single($control_id);
 			}
-			// Add control details 
+			// Add control details
 			else {
 				$control = new controller_control();
 			}
