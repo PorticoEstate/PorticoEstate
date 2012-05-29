@@ -657,3 +657,24 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.33';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.33';
+	function controller_upgrade0_1_33()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_item_option', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+				'option_value' =>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
+				'control_item_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);			
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.34';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
