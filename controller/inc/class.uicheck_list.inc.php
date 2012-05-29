@@ -561,10 +561,11 @@
 			//Populating array with saved control items for each group
 			foreach ($saved_control_groups as $control_group)
 			{	
-				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
-				
-				if(count($saved_control_items) > 0)				
+				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
+
+				if(count($saved_control_items) > 0){				
 					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+				}
 			}
 			
 			/* ================  Ikke slett!!! Kode som henter ut  utstyr basert på lokasjon  ==================       
@@ -628,14 +629,20 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
-			
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_1", 'open', null, 'return_array');
-			$open_check_items_and_measurements = $this->so_check_item->get_check_items_with_cases($check_list_id, "control_item_type_2", 'open_or_waiting', null, 'return_array');
-			
+
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, 'return_array');
+
+			foreach($open_check_items_and_cases as $key => $check_item){
+				
+				$check_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
+				$check_item['control_item']['options_array'] = $check_item_with_options['options_array'];
+				
+				$open_check_items_and_cases[$key] = $check_item;
+			}
+
 			$data = array
 			(
 				'open_check_items_and_cases'		=> $open_check_items_and_cases,
-				'open_check_items_and_measurements'	=> $open_check_items_and_measurements,
 				'check_list' 						=> $check_list->toArray()
 			);
 			
