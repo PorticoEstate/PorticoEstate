@@ -1,0 +1,77 @@
+body
+{
+	background: #ccc url('../../base/images/logo-large.png') no-repeat fixed top left;
+	color: #000;
+}
+
+/* styles for IE 5 Mac */
+#horizon
+{
+	background-color: transparent;
+	position: absolute;
+	top: 100px;
+	left: 175px;
+}
+ 
+/* following rules are invisible to IE 5 \*/
+#horizon
+{
+	top: 50%;
+	left: 0px;
+	width: 100%;
+	margin-top: -175px;
+	min-width: 800px; 
+}
+/* end IE 5 hack */ 
+	  
+input[type=text], input[type=password], select
+{
+	width: 100px;
+}
+
+input, select
+{
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+label
+{
+	margin-left: 50px;
+}
+
+#loginbox
+{
+	background-color: #adadad;
+	border: 1px solid #999;
+	margin: 0px auto;
+	width: 450px;
+}
+
+#logintitle
+{
+	background-color: #ccc;
+	border-bottom: 1px solid #ccc;
+	color: #525252;
+	font-size: large;
+	margin-bottom: 25px;
+	padding: 5px;
+}
+
+#loginmsg, #loginmsg a, #testjs, #testjs a
+{
+	color: #000;
+	margin: 25px auto;
+	text-align: center;
+	width: 700px;
+}
+
+#testjs
+{
+	font-weight: bold;
+}
+
+#version
+{
+	text-align: right;
+}

@@ -1,0 +1,111 @@
+body, div, input, p, select, textarea
+{
+	color: #069;
+	font-family: "Liberation Sans", Verdana, sans-serif;
+	font-size: 11px;
+}
+
+a
+{
+	color: #f93;
+	text-decoration: none;
+}
+
+a:hover, a:active
+{
+	text-decoration: underline;
+}
+
+img
+{
+	border: 0px;
+}
+
+input.button
+{
+	margin: 10px;
+	width: auto;
+}
+
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+.warn
+{
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
+}
+
+div.error, div.warn
+{
+	font-weight: bold;
+	padding: 5px;
+	text-align: center;
+}
+
+label
+{
+	padding-right: 10px;
+	text-align: right;
+	vertical-align: top;
+	width: 150px;
+}
+
+form br
+{
+	clear: left;
+}
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: right;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+
+/* Reset headings which get broken by YUI! - based on firefox 2 html.css */
+h1
+{
+  font-size: 2em;
+  font-weight: bold;
+  margin: .67em 0;
+}
+
+h2
+{
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: .83em 0;
+}
+
+h3
+{
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+h4
+{
+  font-weight: bold;
+  margin: 1.33em 0;
+}
+/* End headings fix */
+

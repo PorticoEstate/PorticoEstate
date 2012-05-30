@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Rename or make a copy of this file and call the new file jasper_config.xml
+-->
+
+<JasperConfig>
+	<Reports>
+		<!-- N.B. No spaces in 'name' -->
+		<!-- 'connection' must match name in the connection tag defined above -->
+		<!-- 'source' must be an absolute path to the jasper template file (jrxml) -->
+		<Report name="report_participants" source="/absolute/path/participants.jrxml"/>
+	</Reports>
+</JasperConfig>

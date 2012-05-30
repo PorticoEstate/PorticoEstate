@@ -1,0 +1,29 @@
+/*
+ * phpGroupWare Notes
+ *
+ * Created by Dave Hall
+ * Licensed under the GNU Public License v3
+ */
+
+#note_view
+{
+	background: #ff8 url(../images/pin.png) scroll top left no-repeat;
+	border: 0px solid #ee6;
+	border-width: 1px 3px 3px 1px;
+	margin: 1em 5em;
+	padding: 24px 1em 1em 1em;
+}
+
+#note_view, #note_view div, #note_view p
+{
+	color: #000;
+}
+
+#note_view #note_created
+{
+	border-top: 1px solid #ee6;
+	font-size: smaller;
+	margin: 0.5em 0 0 0;
+	padding: 0.5em 0 0 0;
+	text-align: right;
+}

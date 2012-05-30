@@ -1,0 +1,147 @@
+%1 already exists as a file	filemanager	ja	%1 はファイルとして既に存在しています
+application	filemanager	ja	アプリケーション
+back to file manager	filemanager	ja	ファイル管理に戻る
+cannot create directory because it begins or ends in a space	filemanager	ja	先頭または末尾にスペース文字が含まれているので、ディレクトリを作成できません
+cannot edit %1 because it is not a text format.	filemanager	ja	%1はテキストファイルではないので、編集できません
+cannot replace %1 because it is a directory	filemanager	ja	%1 はディレクトリなので置換できません
+choose directory -->	filemanager	ja	ディレクトリ選択
+click on any of the column headers to sort the list by that column.	filemanager	ja	カラムヘッダのいずれかをクリックすると、そのカラムの内容からリストをソートします。
+clicking the execute button will execute the unix-style [command_line|command line] specified in the text box above.  if you don't know what this is, you probably should turn the option off in the preferences.	filemanager	ja	「実行」ボタンをクリックすると、コマンド入力欄で指定したUNIXスタイルの[command_line|コマンドライン]を実行します。<br>UNIXコマンドに精通していない場合は、ユーザー設定で「コマンドライン」オプションをオフに設定しておくことをお勧めします。
+command sucessfully run	filemanager	ja	コマンドは正常に実行されました
+comment	filemanager	ja	コメント
+comments cannot contain "%1"	filemanager	ja	コメントに"%1"を含めることはできません
+copied %1 to %2	filemanager	ja	%1 を %2 にコピーしました
+copy to	filemanager	ja	コピー
+copy to:	filemanager	ja	コピー
+could not copy %1 to %2	filemanager	ja	%1 を %2 にコピーできませんでした
+could not copy %1 to %2 quota exceeded	filemanager	ja	クォーターによる制限の為、%1 を %2 にコピーできませんでした
+could not create %1	filemanager	ja	%1 を作成できませんでした
+could not create directory %1	filemanager	ja	ディレクトリ %1 を作成できませんでした
+could not delete %1	filemanager	ja	%1 を削除できませんでした
+could not move %1 to %2	filemanager	ja	%1 を %2 に移動できませんでした
+could not move %1 to %2 quota exceeded	filemanager	ja	クォーターによる制限の為、%1 を %2 に移動できませんでした
+could not rename %1 to %2	filemanager	ja	%1 を %2 に名称変更できませんでした
+could not save %1	filemanager	ja	%1 を保存できませんでした
+could not upload %1 quota exceeded	filemanager	ja	クォーターによる制限の為、%1 をアップロードできませんでした
+create a comment for a file or directory, or edit an existing comment.  you can select as many files or directories as you want.	filemanager	ja	ファイルやディレクトリに対してコメントを作成したり、設定済みのコメントを編集します。<br>複数のファイル、ディレクトリを選択することができます。
+create file	filemanager	ja	ファイル作成
+create folder	filemanager	ja	フォルダ作成
+created	filemanager	ja	作成日
+created %1	filemanager	ja	%1 を作成しました
+created by	filemanager	ja	作成者
+created directory %1	filemanager	ja	ディレクトリ %1 を作成しました
+creates a directory (folder == directory).  the name of the directory is specified in the text box next to the create folder button.	filemanager	ja	ディレクトリ（フォルダ）を作成します。<br>テキストボックスにディレクトリ名を指定して「フォルダ作成」ボタンをクリックしてください。
+creates a file in the current directory.  the name of the file is specified in the text box next to the create file button.  after clicking the create file button you will be presented with the [edit|edit] screen, where you may edit the file you just created.  if you do not with to make any changes to the file at this time, simply click the save button and the file will be saved as an empty file.	filemanager	ja	カレントディレクトリにファイルを作成します。<br>テキストボックスにファイル名を入力して、「ファイル作成」ボタンをクリックしてください。<br>「ファイル作成」ボタンクリック後、[edit|編集]画面に切り替わりますので、ファイル内容を編集します。<br>その際、ファイルに対して変更を加えない状態で「保存」ボタンをクリックすると、空ファイルが保存されます。
+date	filemanager	ja	日付
+default number of upload fields to show	filemanager	ja	アップロード用フィールドのデフォルト表示数
+delete	filemanager	ja	削除
+delete the selected file(s).  you can select as many files or directories as you want.  when deleting directories, the entire directory and all of its contents are deleted.  you will not be prompted to make sure you want to delete the file(s); make sure you really want to delete them before clicking delete.	filemanager	ja	選択したファイルを削除します。<br>複数のファイル、ディレクトリを選択することができます。<br>ディレクトリを削除すると、そのディレクトリ下に含まれるディレクトリやファイルが全て削除されます。
+deleted %1	filemanager	ja	%1 を削除しました
+directory	filemanager	ja	ディレクトリ
+directory %1 already exists	filemanager	ja	ディレクトリ %1 は既に存在しています
+directory %1 does not exist	filemanager	ja	ディレクトリ %1 は存在しません
+directory list	filemanager	ja	ディレクトリ・リスト
+directory name	filemanager	ja	ディレクトリ名
+directory names cannot contain "%1"	filemanager	ja	ディレクトリ名に"%1"を含めることはできません
+display attributes	filemanager	ja	表示項目
+displays who created the file or directory.	filemanager	ja	ファイル及びディレクトリの作成者です。
+displays who last modified the file or directory.	filemanager	ja	ファイル及びディレクトリの最終更新者です。
+download	filemanager	ja	ダウンロード
+download the first selected file to your local computer.  you can only download one file at a time.  directories cannot be downloaded, only files.	filemanager	ja	選択したファイルをクライアント・コンピューターにダウンロードします。複数選択している場合は、先頭のファイルのみダウンロードします。<br>同時に１つのファイルしかダウンロードできません。また、ディレクトリをダウンロードすることはできません。
+edit	filemanager	ja	編集
+edit comments	filemanager	ja	コメント編集
+edit quota	filemanager	ja	クォータ編集
+edit the text of the selected file(s).  you can select more than one file; this is useful when you want to copy part of one file into another.  clicking preview will show you a preview of the file.  click save to save your changes.	filemanager	ja	選択したファイルのテキスト内容を編集します。<br>複数のファイルを選択することができます。複数のファイルを選択して、テキストの内容をコピーして別のテキストボックスに貼り付けるのに便利です。<br>「プレビュー」ボタンをクリックすると、そのファイルの内容がプレビュー表示されます。<br>「保存」ボタンをクリックすると、ファイルが上書き保存されます。
+enter a unix-style command line here, which will be executed when the [execute|execute] button is pressed.  if you don't know what this is, you probably should turn the option off in the preferences.	filemanager	ja	UNIXスタイルのコマンドを入力します。<br>[execute|実行]ボタンをクリックすると、入力したコマンドが実行されます。<br>UNIXコマンドに精通していない場合は、ユーザー設定で「コマンドライン」オプションをオフに設定しておくことをお勧めします。
+enter comma separated quota value in mb	filemanager	ja	クォーター値（MB単位）をコンマ区切りで入力
+erroneous input! check quota value!	filemanager	ja	入力エラーです。クォーター値を確認してください。
+error running command	filemanager	ja	コマンド実行エラー
+execute	filemanager	ja	実行
+failed to create directory	filemanager	ja	ディレクトリ作成に失敗しました
+file	filemanager	ja	ファイル
+file %1 already exists. please edit it or delete it first.	filemanager	ja	ファイル %1 は既に存在しています。訂正するか削除するかしてください。
+file %1 could not be created.	filemanager	ja	ファイル %1 を作成できませんでした
+file name	filemanager	ja	ファイル名
+file names cannot contain "%1"	filemanager	ja	ファイル名に"%1"を含めることはできません
+file names cannot contain \ or /	filemanager	ja	ファイル名にスラッシュ(/)やバックスラッシュ(\)を含むことはできません
+file stats	filemanager	ja	ステータス
+filemanager	common	ja	ファイル管理
+filemanager preferences	filemanager	ja	ファイル管理 ユーザー設定
+files	filemanager	ja	ファイル
+folder	filemanager	ja	フォルダ
+go to	filemanager	ja	戻る
+go to %1	filemanager	ja	%1 にディレクトリ変更
+go to your home directory	filemanager	ja	ホームディレクトリに戻る
+go to:	filemanager	ja	進む
+home	filemanager	ja	ホーム
+locked	filemanager	ja	ファイルロック
+menu -->	filemanager	ja	コマンドメニュー
+mime type	filemanager	ja	MIMEタイプ
+modified	filemanager	ja	更新日
+modified by	filemanager	ja	更新者
+move to	filemanager	ja	ファイル移動
+move to:	filemanager	ja	ファイル移動
+moved %1 to %2	filemanager	ja	%1 を %2 に移動しました
+no version history for this file/directory	filemanager	ja	このファイル（ディレクトリ）のバージョン履歴はありません
+operation	filemanager	ja	操作
+other settings	filemanager	ja	他の設定項目
+owner	filemanager	ja	所有者
+preview %1	filemanager	ja	%1をプレビュー
+preview of %1	filemanager	ja	%1のプレビュー
+refresh	filemanager	ja	画面更新
+rename	filemanager	ja	名称変更
+rename the selected file(s).  you can select as many files or directories as you want.  you are presented with a text field to enter the new name of each file or directory.	filemanager	ja	選択したファイル名をリネームします。<br>複数のファイル、ディレクトリを選択することができます。<br>選択したファイル、ディレクトリにテキストボックスが各々現れますので、新しい名称を入力してください。
+renamed %1 to %2	filemanager	ja	%1 を %2 に名称変更しました
+replaced %1	filemanager	ja	%1 を置換しました
+save %1	filemanager	ja	%1 を保存
+save all	filemanager	ja	全て保存
+saved %1	filemanager	ja	%1 を保存しました
+show	filemanager	ja	表示
+show ..	filemanager	ja	親ディレクトリ（..）表示
+show command line (experimental. dangerous)	filemanager	ja	コマンドラインを表示（実験段階・危険）
+show dotfiles	filemanager	ja	ドット（.）ファイルを表示
+show help	filemanager	ja	ヘルプ表示
+show upload fields	filemanager	ja	アップロード用フィールドの表示
+size	filemanager	ja	サイズ
+sort by	filemanager	ja	並び替え
+sort by:	filemanager	ja	並び替え：
+sync the database with the filesystem for the current directory.  this is useful if you use another interface to access the same files.  any new files or directories in the current directory will be read in, and the attributes for the other files will be updated to reflect any changes to the filesystem.  update is run automatically every few page loads (currently every 20 page loads as of this writing, but that may have changed by now).	filemanager	ja	カレントディレクトリに対するファイルシステム・データベースの同期を行います。<br>同じファイルにアクセスする別のインターフェイスを使用する場合に有用です。<br>カレントディレクトリにおける新規ファイル及び新規ディレクトリが読み込まれます。また、ファイルシステムに対して行った変更点を反映する為に、ファイル属性が更新されます。<br>何ページか読み込まれるたびに自動的に更新されます。（現時点では、プログラム上、20ページ読み込まれるたびに更新されるようになっています。この処理に関しては、変更される可能性があります。）
+the application associated with the file or directory.  usually the application used to create it.  a blank application field is ok.	filemanager	ja	ファイルまたはディレクトリに関連付けられているアプリケーションです。<br>通常、作成したアプリケーションが表示されます。<br>アプリケーション欄は空欄でも問題ありません。
+the comment for the file or directory.  comments can be set when creating the file or directory, and created or edited any time thereafter.	filemanager	ja	ファイルまたはディレクトリのコメントです。<br>コメントはファイルやディレクトリの作成時、コメント編集時に設定することができます。
+the current version for the file or directory.  clicking on the version number will display a list of changes made to the file or directory.	filemanager	ja	ファイルまたはディレクトリの最新バージョンです。<br>バージョン番号をクリックすると、ファイルやディレクトリに対して行った変更内容を表示します。
+the directory list contains a list of all directories you have (at least) read access to.  selecting a directory and clicking one of the [go_to|go to]/[copy_to|copy to]/[move_to|move to] buttons will perform the selected action on that directory.  for example, if you select "/home/somegroup/reports" from the directory list, and click the "[copy_to|copy to]" button, all selected files and directories will be copied to "/home/somegroup/reports".	filemanager	ja	ディレクトリ・リストは、読み取り権限があるディレクトリの一覧です。<br>ディレクトリを選択し、[go_to|進む]/[copy_to|コピー]/[move_to|ファイル移動] ボタンのいずれかをクリックすると、その動作に応じた処理を行います。<br>(例）ディレクトリ・リストから"/home/somegroup/reports"を選択し、"[copy_to|コピー]" ボタンをクリックすると、選択されているファイルやディレクトリが"/home/somegroup/reports"にコピーされます。
+the full path of the local file to upload.  you can type it in or use the browse.. button to select it.  the file will be uploaded to the current directory.  you cannot upload directories, only files.	filemanager	ja	アップロードするローカル・ファイルのフルパスです。<br>フルパスを直接入力するか、「参照...」ボタンをクリックしてファイルを選択します。<br>そのファイルはカレントディレクトリにアップロードされます。<br>ディレクトリをアップロードすることはできません。
+the go to button takes you to the directory selected in the drop down [directory_list|directory list].	filemanager	ja	カレントディレクトリを[directory_list|ディレクトリ・リスト]（ドロップダウンリスト）で選択しているディレクトリにします。
+the home button takes you to your personal home directory.	filemanager	ja	ユーザーのパーソナル・ホームディレクトリに切り替えます。
+the inital comment to use for the newly uploaded file.  totally optional and completely arbitrary.  you can [edit_comments|create or edit the comment] at any time in the future.	filemanager	ja	アップロードするファイルに使用するコメントです。コメントはオプション的なもので、特に指定しなくてもかまいません。<br>アップロード後、いつでも[edit_comments|コメントの編集]を行うことができます。
+the mime-type of the file.  examples include text/plain, text/html, image/jpeg.  the special mime-type directory is used for directories.	filemanager	ja	ファイルのMIMEタイプです。（例）text/plain, text/html, image/jpeg<br>ディレクトリの場合は、DirectoryというMIMEタイプが使用されます。
+the name of the directory you're currently in.	filemanager	ja	カレント・ディレクトリ名です。
+the name of the file or directory.	filemanager	ja	ファイル及びディレクトリの名前です。
+the owner of the file or directory.  this can be a user or group name.	filemanager	ja	ファイル及びディレクトリの所有者です。<br>ユーザー名やグループ名が該当します。
+the size of the file or directory in the most convenient units: bytes (b), kilobytes (kb), megabytes (mb), gigabytes (gb).  sizes for directories include subfiles and subdirectories.	filemanager	ja	ファイル及びディレクトリのサイズです。<br>バイト(B)、キロバイト(KB)、メガバイト(MB)、ギガバイト(GB)の中から、最も最適な単位が表示されます。<br>ディレクトリの場合は、そのディレクトリ下のサブディレクトリやファイルのサイズも含みます。
+the up button takes you to the directory above the current directory.  for example, if you're in /home/jdoe/mydir, the up button would take you to /home/jdoe.	filemanager	ja	カレント・ディレクトリの親ディレクトリへ移動します。<br>(例）カレント・ディレクトリが/home/jdoe/mydirの場合、「上へ」をクリックすると、/home/jdoeに移動することになります。
+this setting determines how many [upload_files|upload fields] will be shown at once.  you can change the default number that will be shown in the [preferences].	filemanager	ja	この設定項目によって、一度に表示する[upload_files|アップロード用フィールド] 数が決定されます。<br>「ユーザー設定」−「ファイル管理」において、デフォルト表示数を変更することができます。
+this will copy all selected files and directories to the directory selected in the drop down [directory_list|directory list].	filemanager	ja	[directory_list|ディレクトリ・リスト]（ドロップダウンリスト）で選択しているディレクトリにファイルやディレクトリをコピーします。<br>複数のファイル、ディレクトリを指定することができます。
+this will move all selected files and directories to the directory selected in the drop down [directory_list|directory list].	filemanager	ja	[directory_list|ディレクトリ・リスト]（ドロップダウンリスト）で選択しているディレクトリにファイルやディレクトリを移動します。<br>複数のファイル、ディレクトリを指定することができます。
+this will upload the files listed in the input boxes above, and store them in the current directory.	filemanager	ja	ファイル指定入力欄に表示されているファイルをアップロードします。<br>ファイルはカレントディレクトリに保存されます。
+total files	filemanager	ja	総ファイル数
+unknown mime-type defaults to text/plain when viewing	filemanager	ja	未知のMIMEタイプの場合、text/planをデフォルトとして表示する
+unlimited	common	ja	無制限
+unused space	filemanager	ja	空き容量
+up	filemanager	ja	上へ
+update	filemanager	ja	更新
+updated comment for %1	filemanager	ja	%1 のコメントを更新しました
+upload comment	filemanager	ja	ファイル用コメント
+upload fields	filemanager	ja	アップロード用フィールド
+upload file	filemanager	ja	アップロード ファイル
+upload files	filemanager	ja	ファイル・アップロード
+used space	filemanager	ja	使用容量
+users	filemanager	ja	ユーザー
+various statistics on the number and size of the files in the current directory.  in some situations, these reflect different statistics.  for example, when in / or the base directory.	filemanager	ja	カレントディレクトリにおけるファイル数やファイルサイズ等のステータスです。<br>いくつかの状況において、ステータス情報は異なる結果になります。（例）ルートディレクトリ＆ベースディレクトリの場合等。
+version	filemanager	ja	バージョン
+view documents in new window	filemanager	ja	新しいウインドウにドキュメント表示
+view documents on server (if available)	filemanager	ja	ドキュメントをサーバー上に表示（利用可能の場合）
+when the file or directory was created.	filemanager	ja	ファイル及びディレクトリの作成日です。
+when the file or directory was last modified.	filemanager	ja	ファイル及びディレクトリの最終更新日です。
+who	filemanager	ja	ユーザー
+you do not have access to %1	filemanager	ja	%1 にアクセスしていません

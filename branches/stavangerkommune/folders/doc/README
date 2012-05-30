@@ -1,0 +1,45 @@
+The folders module shows all categories of the phpgroupware
+to the actual phpgw user.
+To get all valid categories for this user the following
+SQL statement is used:
+
+SELECT cat_id AS id,
+      cat_parent AS parent_id,
+      cat_name AS text,
+      cat_name AS href,
+      cat_name AS title,
+      cat_appname AS target
+FROM phpgw_categories
+WHERE ( cat_owner='?' or cat_access = 'public')
+
+? - is the ID of the actual user who is logged in.
+
+Additionally the folders module is able to show all
+mail accounts with all its mail folders for the actual
+phpgw user.
+
+This feature is only available to user which have the
+email module enabled in their account configuration.
+
+To parse and show the categories and mail folders, the
+application folders uses the project 'phplayersmenu'.
+This project is included without changing the original
+source code of this project.
+The folders application only builds a new child of one
+original phplayersmenu class to realize an interface
+between the phpgw and phplayersmenu.
+
+The phplayersmenu allows to show its content (in this
+case categories and email folders) in a vertical tree
+(like the file browser trees) or in a horizontal menu.
+The actual version of the folders application only allows
+a vertical tree view.
+
+Each element in this tree is a hyperlink to the according
+phpgw module with a category or email foders information.
+So if a user clicks on a certain category (element in the
+folders tree) of the todo module - The todo module is called
+with this certain category as a search criteria.
+( The $_GET-Var 'fcat_id' is used therefore ).
+For email folders the same procedure is used but with
+different $_GET-Vars.

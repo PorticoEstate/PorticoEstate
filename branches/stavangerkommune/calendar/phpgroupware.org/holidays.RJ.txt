@@ -1,0 +1,4 @@
+RJ	São Sebastião	20	1	0	0	0
+RJ	Dia do Comércio (Categoria)	0	10	3	1	0
+RJ	São Jorge	23	4	0	0	0
+RJ	Zumbi	20	11	0	0	0

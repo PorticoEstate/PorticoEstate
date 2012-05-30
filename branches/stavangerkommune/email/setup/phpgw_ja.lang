@@ -1,0 +1,401 @@
+%1 - %2 of %3	email	ja	%1 - %2 of %3
+%1 messages have been deleted	email	ja	%1 件削除しました。
+1 message has been deleted	email	ja	1 件削除しました。
+1 message has been moved to	email	ja	1 件次のフォルダへ移動しました
+<b>*apply*</b> this filter	email	ja	<b>フィルタ適用</b>
+<b>apply all</b> filters	email	ja	<b>全フィルタ適用</b>
+<em>semi-dumb ui</em>	email	ja	編集画面
+a scrips tag block of code, javascript or otherwise, is in an inline html message. not necessarily bad, but user may want to know. this is script ... code ... script blocks, not the "onmouseover"  stuff.	email	ja	JavaScript等のコードのscriptタグ・ブロックが、インラインHTMLメッセージにあります。必ずしも悪いことではありませんが、ユーザーが知りたいと思うかもしれません。このメッセージには、SCRIPT...コード...SCRIPTブロックがありますが、"OnMouseOver"イベントは含まれていません。
+account	email	ja	アカウント
+account name	email	ja	アカウント名
+account user name	email	ja	アカウントユーザー名
+accounts	email	ja	アカウント管理
+accounts:	email	ja	アカウント
+acctnum	email	ja	アカウントNo.
+add to address book	email	ja	アドレス帳に追加
+add to addressbook	email	ja	アドレス帳へ追加
+address book	email	ja	アドレス帳
+after	email	ja	以降
+all (can be very slow)	common	ja	指定なし(処理遅い)
+all messages	email	ja	全メッセージ
+and	email	ja	かつ
+and stop filtering	email	ja	移動後フィルタ解除
+answered	email	ja	返信済み（Answered）
+apply	email	ja	適用
+apply filters report:	email	ja	フィルタリング報告<br />(メール振り分け結果)
+apr	email	ja	04月
+aqua fusion	email	ja	Aqua Fusion
+arrival date	email	ja	到着日時
+as	email	ja	
+attach file	email	ja	添付ファイル
+attach signature	email	ja	署名追加
+attachment	email	ja	添付ファイル
+aug	email	ja	08月
+bcc	common	ja	Bcc
+bcc address	email	ja	Bccアドレス
+before	email	ja	以前
+big	email	ja	大
+bigger	email	ja	
+biggest	email	ja	最大
+body	email	ja	本文
+both	email	ja	両方
+button type	email	ja	ボタンタイプ
+cache server data whenever possible	email	ja	可能な限りサーバーにデータをキャッシュします
+cc	common	ja	Cc
+cc address	email	ja	Ccアドレス
+change font size in your e-mail pages	email	ja	メッセージ閲覧ページのフォントサイズを変更
+check flags for type of mails	email	ja	メールのフラグ種別をチェック
+choose for rename	email	ja	変更フォルダ選択
+choose to rename	email	ja	変更フォルダ選択
+clear query	common	ja	クエリ解除
+click here for more info in a new window	email	ja	ここをクリックすると新規画面上に詳しい情報が表示されます
+click here to continue	email	ja	続行するにはここをクリックしてください
+click here to edit the settings for this email account.	email	ja	このメールアカウントに対する設定項目を編集するには、ここをクリックしてください。
+click here to return to your home page.	email	ja	ここをクリックすると、ホーム画面に戻ります
+company	email	ja	会社
+compose	email	ja	メッセージ作成
+compose message	email	ja	メッセージ作成
+compose new	common	ja	メッセージ作成
+contains	email	ja	が次の文字と等しい
+corporate addressbook gui	common	ja	アドレス帳
+could not open this mailbox	email	ja	このメールボックスはオープンできません
+create (expert)	email	ja	フォルダ作成（エキスパート）
+create a folder	email	ja	フォルダ作成
+current attachments	email	ja	現在の添付ファイル
+current attachments (%1)	email	ja	選択されている添付ファイル（%1）
+custom e-mail preferences	email	ja	カスタム設定
+custom e-mail settings	email	ja	カスタム設定
+custom email settings	email	ja	カスタム設定
+date	email	ja	送信日付
+debugging page	email	ja	デバッグページ
+dec	email	ja	12月
+default sorting order	email	ja	ソート順（既定）
+default:	common	ja	デフォルト：
+delete (expert)	email	ja	フォルダ削除（エキスパート）
+delete a folder	email	ja	フォルダ削除
+delete account	common	ja	アカウント削除
+deleted	email	ja	削除済み(Deleted)
+deleted messages (trash) folder	email	ja	削除メッセージ移動先フォルダ名
+deleted messages folder name	email	ja	削除メッセージフォルダ名
+deleted messages go to trash	email	ja	削除メッセージをTrashフォルダへ移動
+deleted messages saved to folder:	email	ja	削除メッセージをフォルダに保存
+destination options	common	ja	宛先オプション
+discard	email	ja	
+does not contain	email	ja	が次の文字と等しくない
+draft	email	ja	草稿
+e-mail extra account	email	ja	電子メール拡張アカウント
+e-mail extra accounts	email	ja	電子メール拡張アカウント
+e-mail extra accounts list	email	ja	電子メール拡張アカウント一覧
+e-mail filters	common	ja	フィルタ管理
+e-mail folders	common	ja	IMAPフォルダ
+e-mail inbox filters list	email	ja	受信メールフィルタリスト
+e-mail preferences	common	ja	電子メールユーザー設定
+each user has a summary page which can display a variety of information. this option will show a small list of email messages in the inbox of the users default email account on the users summary home page.	email	ja	各ユーザーには、各種情報を一度に簡潔表示することができるページ（ポータル画面）があります。このオプションは、ユーザーのホームページに、デフォルトの電子メールアカウントのINBOX（受信トレイ）にあるメール内容を一覧表示するようにします。
+edit filters	email	ja	フィルタ編集
+email account name	email	ja	電子メールアカウント名
+email address	email	ja	電子メールアドレス
+email date	email	ja	メール日付
+email filters	email	ja	フィルタ
+email password	email	ja	電子メールパスワード
+email preferences	email	ja	環境設定
+email reader with multiple accounts and mailbox filtering.	about	ja	電子メールクライアント・アプリケーション<br />複数アカウント管理＆メールフィルタ機能
+email signature	email	ja	署名
+email type	common	ja	電子メールタイプ
+enable this email account	common	ja	アカウントを有効にする
+enable utf-7 encoded folder names	email	ja	UTF-7 エンコードのフォルダ名を使用
+enter the search string in the text boxes	email	ja	テキストボックスに検索文字列を入力
+enter your default mail domain ( from: user@domain )	admin	ja	メールドメイン名 ( 書式 user@domain の domain部分 )
+enter your pop	admin	ja	POP
+enter your smtp server hostname or ip address	admin	ja	SMTP サーバ名または IP アドレス
+enter your smtp server port	admin	ja	SMTP ポート番号
+error moving messages to	email	ja	メッセージの移動に失敗しました
+error text not provided	email	ja	
+error: unknown message data	email	ja	エラー：認識不能なメッセージデータです
+evolution style	email	ja	Evolution Style
+extra accounts	email	ja	特別なアカウント
+extra e-mail account	common	ja	拡張アカウント
+extra e-mail accounts	common	ja	拡張アカウント管理
+extra e-mail preferences number %1	email	ja	拡張メールアカウント設定 No.%1
+feb	email	ja	02月
+fewer actions	email	ja	
+fewer choices	email	ja	
+file	email	ja	ファイル名
+file attachment	email	ja	添付ファイル
+file into	email	ja	メッセージ移動
+fileinto	email	ja	メッセージ移動
+files	email	ja	ファイル
+fill in as much as you can	email	ja	必須入力項目
+filter [%1] had [%2] matches.	email	ja	フィルタ [%1] は %2件一致します。<br />
+filter [number] and name	email	ja	フィルタ
+filter inbox for accounts	email	ja	フィルタ対象アカウント
+filter name	email	ja	フィルタ名
+filter name:	email	ja	フィルタ名：
+filter named	email	ja	フィルタ名
+filter number	email	ja	フィルタ番号
+filters	email	ja	フィルタ
+filters list	email	ja	フィルタ一覧
+firstname	email	ja	姓
+flag as important	email	ja	重要フラグ
+flagged	email	ja	フラグ付（Flagged）
+folder	email	ja	フォルダ
+folder maintenance	email	ja	フォルダメンテナンス
+folder name	email	ja	フォルダ名
+folder size	email	ja	フォルダサイズ
+folders	email	ja	フォルダ
+for these items, fill only what is different from you default e-mail preferences	common	ja	これらの項目に関しては、デフォルトのメール設定と異なる項目についてのみ入力してください。
+forward	email	ja	転送
+from	email	ja	差出人
+from address	email	ja	差出人アドレス
+get size	email	ja	サイズ取得
+go	email	ja	切替
+go back	email	ja	戻る
+go back to	email	ja	戻り先：
+header field	email	ja	ヘッダーフィールド
+hidden	email	ja	非表示
+hide help	email	ja	ヘルプ非表示
+html messages with the iframe  tag may be klez or other worm emails.	email	ja	IFRAMEタグ付のHTMLメッセージは、KLEZや他のワーム・メールの可能性があります。
+icon size	email	ja	アイコンサイズ
+icon theme	email	ja	アイコンテーマ
+if &quot; deleted messages go to trash &quot; is checked, deleted message will be sent to the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;trash&quot;. this will be your &quot;trash&quot; folder, but it does not have to actually be called &quot;trash&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	ja	"削除メッセージをTrashフォルダへ移動"項目をチェックした場合、削除メッセージは、ここで指定したフォルダに移動されることになります。指定したフォルダが存在しない場合は、自動的にフォルダが作成されます。デフォルトは、"Trash"です。自身の"Trash"用フォルダになりますが、実際には"Trash"である必要はなく、自由に指定することが可能です。この機能は、IMAPサーバーに限り有効で、POPサーバーでは利用できません。
+if &quot; sent messages folder &quot; is checked, a copy of your sent mail will be stored in the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;sent&quot;. this will be your &quot;sent&quot; folder, but it does not have to actually be called &quot;sent&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	ja	"送信メッセージをSentフォルダへ保存"項目をチェックした場合、送信メールはここで指定したフォルダに保存されるようになります。指定したフォルダが存在しない場合は、自動的にフォルダが作成されます。デフォルトは、"Sent"です。自身の"Sent"用フォルダになりますが、実際には"Sent"である必要はなく、自由に指定することが可能です。この機能は、IMAPサーバーに限り有効で、POPサーバーでは利用できません。
+if applicable	email	ja	指定時
+if checked, a copy of your sent mail will be stored in the &quot;sent&quot; folder name which you specify in the box for &quot;sent messages folder &quot;. only works with imap servers, pop servers do not have folders.	email	ja	この項目をチェックすると、"送信メッセージ保存先フォルダ"で指定した"Sent"フォルダに、送信したメッセージのコピーが保存されます。この機能は、IMAPサーバーに限り有効で、POPサーバーでは利用できません。
+if checked, deleted message will be sent to the &quot;trash&quot; folder name which you specify in the box for &quot; deleted messages (trash) folder &quot;. only works with imap servers, pop servers do not have folders.	email	ja	この項目をチェックすると、削除したメッセージは、削除メッセージ移動先フォルダ欄で指定した"Trash"用フォルダに移動されます。この機能は、IMAPサーバーに限り有効で、POPサーバーでは利用できません。
+if fileto then select destination folder	email	ja	移動先フォルダ選択
+if messages match	email	ja	メッセージ条件
+if there is no obvious error, check your username and password first.	email	ja	エラーの原因が明確でない場合は、ユーザー名とパスワードを最初に確認してください。
+if using an imap server, what kind is it, most often this option can safely be set to &quot;cyrus or courier&quot;. technically, this means the server uses a dot between the different parts of the folder names, such as &quot;inbox.sent&quot;. the other major kind of imap server is the university of washington &quot;uwash&quot; imap server. it uses slashes instead of the dots the other servers use, and although it has a folder called &quot;inbox&quot;, it is not considered the &quot;namespace&quot; for the other folder names. the &quot;uw-maildir&quot; is a rare combination of the two above types. this is the least used kind of imap server. if you are unsure, ask your it administrator. only applies to imap servers.	email	ja	IMAPサーバーを利用している場合、IMAPサーバーの種類としては、"Cyrus or Courier"を指定することが最も無難です。技術的には、"INBOX.Sent"のようなフォルダ名の異なるパーツ間をドットで区切って処理するサーバーかどうかを意味します。メジャーなIMAPサーバーの一つに、ワシントン州立大が開発した"UWash"IMAPサーバーがあります。"UWash"は、他のサーバーが採用しているドットの代わりにスラッシュを採用しています。また、"INBOX"と呼ばれるフォルダがあり、"INBOX"フォルダは、他のフォルダの"名前空間"として考えれれていません。"UW-Maildir"は、上記２つのIMAPサーバーを掛け合わせた稀なタイプですが、ほとんど利用されていないIMAPサーバーです。よくわからない場合は、採用しているIMAPサーバーの種別をIT管理者に相談してください。
+image	email	ja	イメージ
+imap mail server hostname or ip address	admin	ja	IMAP サーバ名または IP アドレス
+imap server type	common	ja	IMAPサーバー種別
+important	email	ja	重要
+in the email index page, the page which lists all the mails in a folder, mail may be sorted by date, author, size, or subject, however all of these need to be ordered from first to last, this options controlls what is first and last. for example, if sorting by date, the newest to oldest displays the most recent emails first, in decending order down to the oldest emails last.	email	ja	フォルダ内の全メールを一覧表示するインデックスページでは、メールを日付、差出人、サイズ、件名でソートできます。しかしながら、ソートするに際して並び替え順序が必要になってきます。このオプションは、ソート順を指定する項目です。例えば、日付でソートした場合、「最新 -> 旧」にすると、最新のメールが先頭に表示され、最も古いメールが最後に表示されるようになります。
+inbox	email	ja	受信トレイ
+input error	email	ja	入力エラー
+input error:	email	ja	入力エラー：
+it is not rfc standard to base64 encode a part of a message that is not an attachment. note this check is currently done after the message is already being viewed, it should probably stop the message from being automatically displayed, i.e. give a "show this" button instead.	email	ja	添付ファイルがないメッセージの一部がBASE64エンコードされているのは、ＲＦＣに準拠しておりません。メッセージが既に表示された後なら、このチェックは、すぐ実行されることに注意してください。自動的に表示されるメッセージ（例．give a "show this" button instead.
+jan	email	ja	01月
+javascript	email	ja	Javascript
+jul	email	ja	07月
+jun	email	ja	06月
+keep	email	ja	
+keyword	email	ja	キーワード
+keywords	email	ja	キーワード
+lastname	email	ja	名
+layout 1	common	ja	レイアウト１
+layout 2	common	ja	レイアウト２
+lines	email	ja	
+list messages	email	ja	メッセージ一覧
+long names	email	ja	長いフォルダ名
+mail folder(uw-maildir)	email	ja	メールフォルダ（UW-MailDir）
+mail server	email	ja	メールサーバー
+mail server login type	admin	ja	メールサーバログインタイプ
+mail server type	email	ja	メールサーバー種別
+mail settings	admin	ja	電子メール設定
+mail you send will use this address as the &quot;from&quot; address. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. when the recipient clicks reply, this address will be used. you can leave this box blank and the default value will be used.	email	ja	このアドレスは、送信メールの差出人アドレスとして使用されるようになります。phpGroupWareログイン名と同じか、サーバー管理者によって設定されたアドレスになります。メール受信者が返信をクリックした時に、このアドレスは宛先として使用されるようになります。空欄の場合は、デフォルトのアドレスが使用されます。
+manage accounts	email	ja	アカウント管理
+manage folders	email	ja	フォルダ管理
+mar	email	ja	03月
+message has an attachment that is some kind of script or exe file that windows users should be warned not to click on it. these are filenames like attachments the end with the usual "bad stuff", such as bat, inf, pif, com, exe, reg, vbs, and scr	email	ja	メッセージに、ある種のスクリプトまたはEXEファイルが添付されていますので、Windowsユーザーはそれをクリックしないように注意してください。bat、inf、pif、com、exe、reg、vbs、scrのような、いわゆる"bad stuff"を拡張子にもつファイルが添付されております。
+message list layout	common	ja	メッセージ一覧レイアウト
+messages	email	ja	メッセージ
+messages found in folder	email	ja	件のメッセージがあります。検索フォルダ：
+messages have been moved to	email	ja	件次のフォルダへ移動しました
+mine	common	ja	所有者
+more actions	email	ja	
+more choices	email	ja	
+more data	common	ja	付加情報
+most us and european users do not need to enable this. if this option is checked then your email server can handle folder names with non us-ascii charactors in them/ default is disabled, not checked. only use if you are really sure you need it. only works with imap servers, pop servers do not have folders.	email	ja	US及びヨーロッパ圏の大部分のユーザーは、この項目を有効にする必要はありません。この項目をチェックすると、US-ASCII以外の文字で、フォルダ名を指定できるようになります。デフォルトは、無効ですので、日本語フォルダを利用する場合は、必ず有効にしてください。この機能は、IMAPサーバーに限り有効で、POPサーバーでは利用できません。
+move down	email	ja	下へ
+move selected messages into	email	ja	選択メッセージを移動
+move this message into	email	ja	メッセージの移動
+move up	email	ja	上へ
+mozilla modern style	email	ja	Mozzila Modern Style
+my mail filter	email	ja	新しいフィルタ
+name of the mail server you want to access. should be a name like &quot;mail.example.com&quot;. if you leave this box blank then the default value will be used.	email	ja	アクセスするメールサーバー名を指定します。"mail.example.com"のようにFQDNで指定するようにしてください。空欄の場合は、デフォルトのメールサーバー名になります。
+new	email	ja	新着
+new account	email	ja	アカウント作成
+new filter	email	ja	フィルタ作成
+new message	email	ja	新着メッセージ
+new messages	email	ja	新着
+newest	common	ja	最新
+next message	email	ja	次のメッセージ
+no change	email	ja	変更はありません
+no error returned from server	email	ja	サーバーからエラーは返ってきていません
+no message found in folder '%1'	email	ja	フォルダ（%1）には、メッセージがありません
+no next message	email	ja	次のメッセージはありません
+no previous message	email	ja	前のメッセージはありません
+no subject	email	ja	No Subject
+noia &#64; carlitus style	email	ja	Noia &#64; Carlitus Style
+non-standard	email	ja	既定値を使用しない
+not used	email	ja	利用しない
+notify on delivery	email	ja	到達通知
+nov	email	ja	11月
+number	email	ja	No.
+number of matches	email	ja	一致件数
+number of matches:	email	ja	一致件数：
+oct	email	ja	10月
+old	email	ja	旧メッセージ（Old）
+oldest	email	ja	旧
+on	email	ja	一致
+only needed with the university of washington &quot;uwash&quot; imap server. the default value is &quot;mail&quot; which means your mail folders, other then inbox, are located in a directory called &quot;mail&quot; directly under your &quot;home&quot; directory. this box may be left empty, which means your mail folders are located in your &quot;home&quot; directory, not a subdirectory. if your mail folders are located in a subdirectory of &quot;home&quot; then put the name of that subdirectory here. generally, it is not necessary to use any special slashes or tildes, &quot;home&quot; is always considered the base directory, and the slash bewteen &quot;home&quot; and the subdirectory will be added for you automatically, do not put the slash in this box.	email	ja	"UWash"IMAPサーバーを指定している場合にのみ有効です。デフォルトは、メールフォルダ(INBOX)を意味する"mail"です。自身のホームディレクトリ下の"mail"という名前のディレクトリに直接位置します。空欄のままでも構いませんが、その場合メールフォルダは、サブディレクトリではなく、ホームディレクトリに位置するようになります。メールフォルダが"HOME"のサブディレクトリに位置する場合に、ここでサブディレクトリ名を指定します。一般的に、特殊なスラッシュやチルダを使用すべきではありません。"HOME"は、常にベースディレクトリとして考えられ、"HOME"とサブディレクトリ間のスラッシュは自動的に追加されますので、ここではスラッシュを入力しません。
+or	email	ja	または
+or enter text	email	ja	移動先フォルダ直接入力
+organization	email	ja	組織名
+persistent email server session	email	ja	メールサーバーとのセッションを持続します
+phone	email	ja	電話番号
+phpgroupware email reader with multiple accounts and mailbox filtering.	about	ja	複数アカウント機能やメールボックス・フィルタリング機能を装備したphpGroupWare用Webメールです。
+please fill in everything you need	email	ja	必要事項を設定してください
+please select a folder to rename	email	ja	名称変更するフォルダを選択してください
+please select a message first	email	ja	メッセージを選択してください
+please submit a filename to attach	email	ja	添付するファイルを送信してください
+please type a folder name in the text box	email	ja	テキストボックスにフォルダ名を入力してください
+please wait!	email	ja	しばらくお待ちください
+previous	email	ja	
+previous message	email	ja	前のメッセージ
+printable	email	ja	印刷画面
+raw message	email	ja	生メッセージ
+read mail	email	ja	メール一覧画面
+received headers	email	ja	ヘッダー（Received:）
+recent	email	ja	最近のメッセージ（Recent）
+recipient	email	ja	受取人
+redirect	email	ja	リダイレクト
+reject	email	ja	
+remove	common	ja	解除
+rename (expert)	email	ja	フォルダ名変更（エキスパート）
+rename a folder	email	ja	フォルダ名変更
+reply	email	ja	返信
+reply all	email	ja	全員に返信
+replyto	email	ja	返信先
+request delivery notification	email	ja	到達通知を要求
+requested filter action	email	ja	フィルタ・アクション
+requested filter action:	email	ja	フィルタ・アクション：
+required	email	ja	必須項目
+reset	email	ja	リセット
+result	email	ja	結果
+return mails during this time period	email	ja	メールの期間指定
+save deleted messages in folder named below	email	ja	以下のフォルダに削除済みのメッセージが保存されます
+save sent messages in folder named below	email	ja	以下のフォルダに送信済みのメッセージが保存されます
+search for mails in these folders	email	ja	検索対象フォルダの選択
+search this folder	email	ja	指定フォルダを検索
+section	email	ja	Section
+seen	email	ja	既読（Seen）
+select categories	common	ja	カテゴリ選択
+select command	common	ja	コマンド選択
+select destination	common	ja	宛先選択
+select email address	email	ja	電子メールアドレス
+select filter	email	ja	フィルタ選択
+select home email address	email	ja	電子メール（個人）
+select this box if you want the text body of the message you are forwarding to appear inline in the body of your sent message	email	ja	送信メールの本文にインライン表示されるように、転送メッセージ内容を付加したい場合にチェックします。
+select work email address	email	ja	電子メール（仕事）
+select your mail server type	admin	ja	メールサーバタイプ
+select your screensize for propper showing of the javascript addressbook	email	ja	アドレス帳画面サイズの選択
+select your style for the addressbook. the traditional, simple style. or the new javascript enabled complex addressbook	email	ja	アドレス帳スタイルの選択
+send	email	ja	送信
+send deleted messages to the trash	email	ja	削除メッセージをゴミ箱へ
+send forwarded mail as quoted attachment	email	ja	メール本文に転送メッセージを添える
+send to all category	common	ja	全カテゴリへ送信
+sender	email	ja	送信者
+sent	email	ja	送信済み
+sent folder	email	ja	送信済みフォルダ
+sent messages folder	common	ja	送信メッセージ保存先フォルダ名
+sent messages folder name	email	ja	送信済みメッセージフォルダ名
+sent messages saved in &quot;sent&quot; folder	common	ja	送信メッセージをSentフォルダへ保存
+sent messages saved to folder:	email	ja	送信メッセージをフォルダに保存
+sep	email	ja	09月
+settings	email	ja	ユーザー設定
+short names	email	ja	短いフォルダ名
+show help	email	ja	ヘルプ表示
+show long names	email	ja	長いフォルダ名
+show message	email	ja	メッセージ表示
+show new messages in combobox	email	ja	フォルダ一覧リストに未読メール数を表示
+show new messages on main screen	email	ja	新着メッセージをホーム画面に表示
+show sender's email address with name	email	ja	送信者名の表示方法
+show short names	email	ja	短いフォルダ名
+show total folder size by default	email	ja	デフォルトでフォルダサイズを表示
+simple	email	ja	シンプル
+size	email	ja	サイズ
+size larger than	email	ja	
+size smaller than	email	ja	
+small	email	ja	小
+smaller	email	ja	小
+smallest	email	ja	最小
+somebody	email	ja	
+sort by	email	ja	並び替え
+spell check	email	ja	スペルチェック
+standard	email	ja	標準
+standard e-mail preferences	email	ja	基本設定
+stop if matched	email	ja	一致した場合にストップ
+submit the filter data to the database by clicking submit,<br />then you may test or apply the filter.	email	ja	実行ボタンをクリックすると、データベースにフィルタデータを保存します。<br />その後、"フィルタのテスト"または"フィルタ適用"を実行します。
+switch accounts	email	ja	アカウント切替
+switch current folder to	common	ja	カレントフォルダ変更
+system	common	ja	システム
+test all filters	email	ja	全フィルタテスト
+test or apply all filters	email	ja	テストまたは全フィルタの適用
+test results:	email	ja	テスト結果<br />
+test run this filter	email	ja	フィルタのテスト
+text	email	ja	テキスト
+the email application offers 2 different layouts for the index page, that is the page that lists the emails in a folder. this page may be the page the user looks at the most and so different layouts, or looks, are offered.	email	ja	フォルダにあるメールを一覧表示するインデックス・ページ用に２つの異なるレイアウトが用意されています。インデックス・ページは、ユーザーが最もよく目にするページなので、ユーザー毎にレイアウトを選択できるようになっています。
+the email application offers different button displays, these buttons can be text, images, or both.	email	ja	この電子メールアプリケーションには、異なるボタン表示方法が用意されています。「テキスト」「イメージ」「両方」の中から選択することができます。
+the email application offers different icon image themes, groups of images of a similar style which are used in this email application. currently the available themes are images based on evolution by ximian and the netscape7, mozilla browser buttons. additional themes are anticipated and welcome.	email	ja	この電子メールアプリケーションには、テーマごとにアイコンが用意されています。現時点で、有効なテーマは、XimianのEvolution、Netscape7やMozillaボタンをベースにしたイメージです。テーマの追加は歓迎します。
+the email application offers different icon image themes, these icons can be big or small.	email	ja	この電子メールアプリケーションには、テーマごとに異なるサイズ（大 or 小）のアイコンイメージが用意されています。
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you clear this box, then it goes back to the default value. if you only need some custom settings but want this one to be the default value, then leave this box blank, the default value will be used, and you will see that default value in this box the next time you come to this preferences page.	email	ja	このメールアカウント名は、メールチェック時に必要なログイン名を指定します。このメールアカウント名は、phpGroupWareログイン名と同じかもしれないし、サーバー管理者がメール専用に設定しているアカウント名かもしれません。複数のメールアカウントをセットアップする場合は、このフィールドは必須入力です。標準のメールカウントのみセットアップする場合は、恐らくデフォルト値で問題ないと思われます。このフィールドを空欄にして保存すると、デフォルト値に戻ります。何項目かカスタム設定が必要だけどもこの項目のみデフォルト値にしたい場合は、空欄にするとデフォルト値が使われます。また、次にこのユーザー設定ページにアクセスした際には、デフォルト値が表示されているはずです。
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	ja	このメールアカウント名は、メールチェック時に必要なログイン名を指定します。このメールアカウント名は、phpGroupWareログイン名と同じかもしれないし、サーバー管理者がメール専用に設定しているアカウント名かもしれません。複数のメールアカウントをセットアップする場合は、このフィールドは必須入力です。標準のメールカウントのみセットアップする場合は、恐らくデフォルト値で問題ないと思われます。カスタム・パスワードを設定する場合は、次回、この設定ページにアクセスした際に、このフィールドは空欄になっています。あなたのメールアカウント用パスワードが、設定後、ブラウザに送信されないようにする為のセキュリティ機能です。カスタム・パスワードを変更するのは簡単で、このフィールドに新しいパスワードを入力するだけです。拡張メールアカウントでは、この項目は必須入力です。標準のメールアカウントでは、&quot;カスタム設定を使用&quot;オプションのチェックを外すことで、カスタム・パスワードをクリアできます。
+the password to use when checking mail for this email account. this may be the same as your phpgroupware password, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	ja	メールチェック時に使用するパスワードです。phpGroupWareのアカウント・パスワードと同じか、サーバー管理者によって設定されたパスワードになります。複数のメールカウントをセットアップする場合は、この項目は必須入力です。セットアップするメールアカウントが１つしかない場合は、この項目は、恐らくこのままで構わないでしょう。メールアカウント専用のパスワードを設定しても、再度このユーザー設定ページにアクセスすると空欄のまま何も表示されません。パスワード設定後は、メールアカウント用パスワードは、ブラウザに送信されることはなく、セキュリティ上問題ありません。メールアカウント・パスワード変更の際は、新しいパスワードを再入力してください。拡張メールアカウントを設定する場合は、パスワードは必須です。デフォルト・メールアカウントでは、"カスタム設定を使用"オプションのチェックを外すことで、メールアカウントのパスワードをクリアできます。
+the type of mail server you want to access. imap mail servers have folders, such as the sent and trash folders. pop servers do not have folders. pop, pop-3, and pop3 are the same thing. you can have the server connection encrypted by using imaps or pops, only if the mailserver supports it and if your phpgroupware installation has a &quot;ssl&quot; capabable version of php.	email	ja	アクセスするメールサーバー種別を指定します。IMAPサーバーは、"Sent"や"Trash"といったフォルダを利用することが出来ますが、POPサーバーは、フォルダを利用できません。POP・POP-3・POP3は、同じ意味です。IMAPS(IMAP over SSL)やPOPS(POP over SSL)を利用して、サーバー接続を暗号化することが可能です。但し、メールサーバーがSSL対応で、PHPのimap拡張モジュールがSSLに対応している必要があります。
+then do this	email	ja	動作
+then take this actions	email	ja	
+there is no text or other part of the email to display to the user, all part(s) are attachments.	email	ja	ユーザーに表示するテキストやメールの他の部分がありません。全て添付ファイルです。
+there was an error trying to connect to your imap server.<br />please contact your admin to check the servername, username or password.	email	ja	IMAPサーバーへの接続に失敗しました。<br />サーバー名、ユーザー名及びパスワードを確認し、管理者に連絡してください。
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	ja	メールサーバーへの接続に失敗しました。<br />ユーザー名及びパスワードを確認し、管理者に連絡してください。
+there was an error trying to connect to your pop3 server.<br />please contact your admin to check the servername, username or password.	email	ja	POPサーバーへの接続に失敗しました。<br />サーバー名、ユーザー名及びパスワードを確認し、管理者に連絡してください。
+this confusing and often misunderstood option is left over from this email apps origins as aeromail by mark cushman. when viewing a list of emails in a folder, the from column may show you a) the senders name only, if a name was provided, b) the senders from email address, in addition to the senders name, or c) the senders reply to address if it is different from the senders from address, in addition to the senders name if it was provided. typically users set this to none, which will show only the senders name. if no name was supplied by the sender, then the senders from email address will be shown, whether a seperate reply to address is provided has no effect on this, the from address is always used if the senders name is not provided.	email	ja	この混同しやすいオプションは、このWebメールアプリケーションのオリジナル版Aeromai（Mark Cushman製作）から削除されています。フォルダにあるメール一覧を表示する時に、差出人カラムが<u>a)名前がある場合は送信者名のみ、b)送信者名に加えて送信者メールアドレス、c)送信者名に加えて、送信者メールアドレスと異なる返信先アドレス</u>のどれかで表示されるようになります。通常、ユーザーは<b>なし</b>に設定するので、差出人カラムには、送信者名のみ表示されます。送信者の名前が指定されていない場合は、送信者のFromメールアドレスが表示され、返信先アドレスがあったとしても影響はなく、送信者名が無い場合は、常にFromアドレスが使用されます。
+this data not supplied.	email	ja	データは供給されていません
+this folder is empty	email	ja	このフォルダにはメッセージがありません
+this is really a visual template conflict issue. the phpgw template already has it own css, and style sheets are cascading, subsequent css can be inherited by the page and totally b0rk the look of the template theme. or maybe not, only certain css tags are really capable of this such as the css body property, or the a (href) properties.	email	ja	ビジュアル・テンプレートに関する競合問題が起こっています。phpGroupWareテンプレートは、既にそのテンプレート用CSSが適用されており、スタイルシートのカスケード、ページでは後方のCSSが継承されますので、テンプレート・テーマのもつ外観性を損ねます。恐らくないとは思いますが、あるCSSタグ(CSS BODYプロパティや A(href)プロパティ等)だけは、実際にこの現象を引き起こしやすいです。
+this is the name that appears in the account combobox. if for leave this blank, your accounts will be given a standard name like account[1]: jane doe, where jane doe is the name you give below as your full name. if you want to give an account a special name you can fill this in. no matter what, this is for your use, your emails will still use your full name as your from name for email messages. note that your full name for your email account 0 is the name you gave in the phpgroupware setup.	email	ja	アカウント用コンボボックスに表示される名前です。空欄のままであれば、"アカウント[1]: デモ 太郎"のように標準のアカウント名になります（"デモ 太郎"はあなたのフルネームに該当します）。専用のアカウント名を指定したい場合は、このフィールドに名前を入力します。たとえこのアカウント名を使用したとしても、メールの差出人アドレスとしては、あなたのフルネームが使用されることになります。メールの標準アカウント[0]用フルネームは、phpGroupWareのセットアップ時に指定した名前であることに注意してください。
+this is the name that appears in the users from address. the default mail account gets this value automatically from the phpgwapi. additional accounts are created with the phpgwapi supplied fullname you can specify a different fullname for each extra email account.	email	ja	この項目は、ユーザーの差出人(From)アドレスに現れる名前になります。デフォルトのメールアカウント名は、phpGroupWare APIから自動的に決定されます。追加カウントは、phpGroupWare APIにより決められた名前で作成されますが、各拡張メールカウントごとに異なったフルネームを指定することができます。
+this pref currently does nothing users may have more than one email account. in the future it is anticipated that automatic actions may be performed on these accounts, such as automatic new mail checks,auto filtering, etc... perhaps the user may want to disable an account so that these automatic actions do not occur for that account. this is one possible use. also, an admin may want to disable accounts from time to time.	email	ja	ユーザーが１つのメールアカウントを利用する限りは、このページでは何も設定しなくても構いません。今後、新着メールチェック機能、メールフィルタリング機能等といった自動処理が、これらのアカウント上で実行されることが予想されます。恐らく、ユーザーはこれらの自動処理がそのアカウントに影響しないように、アカウント状態を無効にしたい時もあるでしょう。アカウント状態の有効・無効切り替え機能は、有効な１つの手段です。さらに、管理者が時々アカウントを無効にしたい時もあるかもしれません。
+this specifies whether or not to show the number of new message in the folders combo box on the index screen.	email	ja	インデックス画面のフォルダ選択用コンボボックスに新着メッセージ数を表示するかどうかを指定します。
+this specifies whether or not to show the total size of folders by default. if this is not checked, you will be presented with a button allowing you to display folder size..	email	ja	フォルダ内のメッセージ合計サイズをデフォルトで表示するかどうかを指定します。チェックしない場合は、フォルダサイズを取得する為のボタンが表示されるようになります。
+this text will be appended to the bottom of the users emails for this email account. currently, html tags are not supported. also, forwarded email will not get this email sig appended to it for reasons such as it clutters the email, the forwarded part probably has its own email sig from the original author, which is really the information that matters the most.	email	ja	ここで指定するテキストは、このメールアカウントを利用する上で、メール本文の下部に追加されます。現時点では、HTMLタグに対応しておりません。なお、転送メールにこの署名を付加することはありません。理由は、転送部分には、元の差出人の電子メール署名が存在している可能性があり、どの情報が最も大事になってくるのかメールの内容がわかりにくくなるからです。
+to	common	ja	宛先
+to address	email	ja	宛先アドレス
+total messages	email	ja	合計
+trash	email	ja	ゴミ箱
+trash folder	email	ja	削除済みフォルダ
+u-wash mail folder	email	ja	U-Wash メールフォルダ
+unable to get source folder name	email	ja	変更前のフォルダ名を取得できません
+unable to get target folder name	email	ja	ターゲット対象のフォルダ名を取得できません
+unanswered	email	ja	未返信（Unanswered）
+undeleted	email	ja	未削除（Undeleted）
+undisclosed recipients	email	ja	受信者未公開
+undisclosed sender	email	ja	送信者未公開
+unflagged	email	ja	フラグなし（Unflagged）
+unknown action	email	ja	予期せぬアクションです
+unknown error	email	ja	予期せぬエラーです
+unknown translation	email	ja	言語変換できないフレーズ
+unseen	email	ja	未読（Unseen）
+use custom settings	email	ja	カスタム設定を使用
+view as html	email	ja	HTML表示
+view formatted	email	ja	フォーマット表示
+view headers	email	ja	ヘッダ情報
+view unformatted	email	ja	未フォーマット表示
+warn_attachment_name_dangerous	email	ja	添付ファイル名が危険なことを示す警告です
+warn_attachment_only_mail	email	ja	添付ファイルのみのメール示す警告です
+warn_b64_encoded_displayable	email	ja	base64方式エンコードデータに関連する警告です
+warn_has_iframe_maybe_klez	email	ja	klezワームの可能性があるIFRAME関連の警告です
+warn_script_tags	email	ja	スクリプト・タグに関する警告です
+warn_style_sheet	email	ja	スタイルシートに関連する警告です
+we have recently added this new addressbook so that users can choose to have a more complex addressbook that features a) easy, point and click searching, b) best suited for organizations with large central addressbooks with many categories. you can choose here which addressbook do you prefer.	email	ja	新しいタイプのアドレス帳（JavaScript）が追加されました。特徴としては、a)クリックだけで簡単に検索できて、b)多くのカテゴリを有する大規模なアドレス帳を管理する組織に最適であることが挙げれます。利用者ごとに、環境に応じてアドレス帳のタイプを選択できるようになりました。
+we have three sizes that tell us how to better render the addressbook for you: 800x600 (addressbook will popout in a 700 pixel wide box), 1024x768 (it will be a 800 box), 1200x1600 (will be a 900 box). the fonts for all html stuff will be, respectively set to xx-small, x-small and normal (no font setting).	email	ja	利用者の環境に適するように、アドレス帳の表示サイズに３つのサイズを用意しています。：800x600（700ピクセルのボックス表示）、1024x768（800ピクセルのボックス表示）、1200x1600（900ピクセルのボックス表示）<br />アドレス帳のHTMLに関するフォントは、サイズ順にxx-small、x-small、normal（フォント未指定）になります。
+wrote	email	ja	wrote
+you have %1 new messages!	common	ja	%1件の新着メールがあります
+you have 1 new message!	common	ja	1件の新着メールがあります
+you have messages!	common	ja	メッセージがあります
+you have no new messages	common	ja	新着メールはありません
+you must click %1 for the file to actually upload	email	ja	実際にファイルをアップロードする場合は%1をクリックしてください
+your full name	common	ja	名前
+your message has been sent	common	ja	メッセージを送信しました
+your server administrator will set the default values for the following options. you may never need to change any of them. if you do need to use settings that are different from the defaults for the options below here, then check this box. default is disabled, not checked. if you fill in some of the options, but later decide to go back to the default values, unchecking this box will erase your custom values and put back the default values. all of the following options start out with the default value, so you may see some settings below even if you have never filled them in. this checkbox only shows up for the default email account. if you are setting up additional email accounts, you will be required to fill in the following options and this checkbox will not be displayed, it will be checked for all extra email accounts.	email	ja	サーバー管理者が以下のオプションに対するデフォルト値を設定しています。下記オプションを全く変更しなくてもWebメール機能を利用できるかもしれません。ここで指定されているデフォルト値と異なった設定を行わなければならない場合に、このチェックボックスをONにします。デフォルトは無効で、チェックOFFの状態です。カスタム項目オプションのいくつかを設定しても、このチェックボックスをOFFにすると、設定した内容はリセットされデフォルト値に戻ってしまいます。言い換えると、デフォルト値に戻すには、このチェックボックスをOFFにします。下記オプション全てが最初はデフォルト値で表示されますので、下記オプションを設定したことがなくても、どのように設定すればいいのか参考になると思います。このチェックボックスは、標準のメールアカウントに対してのみ表示されます。追加のメールアカウントをセットアップする場合は、下記オプションは必須入力となり、このチェックボックスは表示されません。全ての拡張メールアカウントに関しては、暗黙的にチェックされている状態です。
+）をストップすべきです。		ja	
