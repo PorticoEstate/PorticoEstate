@@ -1,5 +1,54 @@
 $(document).ready(function(){
 
+	/*	
+	$("#searchLocationName").bind("keyup", function(event) {
+		var thisTextField = $(this);
+	    var location_name = String.fromCharCode(event.which);
+	    var level = 1;
+	    var locationSearchString = $(this).val();
+	    
+	    var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
+		var baseUrl = phpGWLink('index.php', oArgs, false);
+		var requestUrl = baseUrl + "&location_name=" + locationSearchString + "&level=" + level + "&phpgw_return_as=json";
+		 
+	    $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data )
+				{
+					var obj = data;
+					
+					var htmlString = "<ul id='suggestList'>";
+					$.each(obj, function(i) {
+						if(i % 2 == 0){
+							htmlString  += "<li class='even'><span>" + obj[i].name + "</span><span>" + obj[i].location_code + "</span></li>";	
+						}else{
+							htmlString  += "<li><span>" + obj[i].name + "</span><span>" + obj[i].location_code + "</span></li>";
+						}
+						
+					});
+					
+					htmlString += "</ul>";
+				}
+				
+				$("#searchLocationName").after(htmlString);
+				
+				var searchBoxTop = $("#searchLocationName").position().top;
+				var searchBoxHeight = $("#searchLocationName").height();
+				var searchBoxLeft = $("#searchLocationName").position().left;
+				
+				$("#suggestList").css("top", searchBoxTop + searchBoxHeight + 8);
+				$("#suggestList").css("left", searchBoxLeft);
+			}
+		});	
+	  });
+	
+	*/
+	
+	
+	
 	$(".control_item_type").click(function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");

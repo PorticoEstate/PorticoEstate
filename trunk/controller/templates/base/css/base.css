@@ -998,12 +998,10 @@ ul.check_list {
 }
 
 /* ======================  CALENDAR ========================== */
-
-
-#control_plan .top h3{
-   margin:0;
-   font-size:19px;
-   overflow: hidden;
+#control_plan .top h3 {
+    float: left;
+    font-size: 19px;
+    margin: 0;
 }
 #control_plan .top h3 .year{
    margin-left:5px;
@@ -1021,18 +1019,19 @@ ul.check_list {
     overflow: hidden;
     padding: 1em 1em 0;
 }
-/* ===  COLOR MAP === */
+
+/* ==================  COLOR MAP ============================= */
 
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #F4EDE3;
-    border: 1px solid #F2E4CF;
+    background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #DDDDDD;
     border-radius: 5px 5px 5px 5px;
     float: right;
-    padding: 5px;
+    padding: 1em;
 }
 ul#icon_color_map li {
     font-size: 12px;
-    padding: 3px 10px;
+    padding: 3px 0;
 }
 ul#icon_color_map span{
 	margin-left: 10px;
@@ -1664,4 +1663,41 @@ ul.control_groups h3 {
 img#loading {
 	margin-left: 5px;
 	vertical-align: middle;
+}
+
+/* =============================  SUGGEST LIST  ======================= */
+ul#suggestList {
+    background: #fff;
+    left: 1px;
+    position: absolute;
+    top: 1px;
+    z-index: 2;
+    border: 1px solid #DBE5EF;
+}
+ul#suggestList li{
+    padding: 0.5em;
+}
+ul#suggestList li.even {
+    background: none repeat scroll 0 0 #EAEFF5;
+}
+#searchLocation {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    float: right;
+    margin-bottom: 10px;
+    padding: 1em;
+}
+#searchLocation label{
+	display: block;
+}
+#chooseBuilding {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    float: left;
+    padding: 1em;
+}
+#chooseBuilding label{
+	margin-bottom:5px;	
 }

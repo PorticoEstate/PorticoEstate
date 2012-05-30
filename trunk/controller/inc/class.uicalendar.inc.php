@@ -169,7 +169,6 @@
 			if($manage)
             {
             	$locations = execMethod('property.solocation.get_children', $location_code);
-           
             }else{
             	$criteria = array
 				(
@@ -248,6 +247,8 @@
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
 		}
 
 		public function view_calendar_year_for_locations()

@@ -2,6 +2,89 @@
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
+
+<style>
+	.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
+	#searchLocationName { width: 25em; }
+	
+	
+	.ui-combobox {
+		position: relative;
+		display: inline-block;
+	}
+	.ui-button {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin-left: -1px;
+		padding: 0;
+		/* adjust styles for IE 6/7 */
+		*height: 1.7em;
+		*top: 0.1em;
+	}
+	.ui-autocomplete-input {
+		margin: 0;
+		padding: 0.3em;
+	}
+
+</style>
+	
+<script>
+<xsl:text>
+
+$(document).ready(function(){
+
+	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
+	var baseUrl = phpGWLink('index.php', oArgs, false);
+
+	$("#searchLocationName").autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				url: baseUrl,
+				dataType: "json",
+				data: {
+					location_name: request.term,
+					level: 1,
+					phpgw_return_as: "json"
+				},
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.name,
+							value: item.location_code
+						}
+					}));
+				}
+			});
+		},
+		focus: function (event, ui) {
+ 			$(event.target).val(ui.item.label);
+  			return false;
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+			chooseLocation( ui.item.label, ui.item.value);
+		}
+	});
+	
+	
+	
+});
+
+function chooseLocation( label, value ){
+	var currentYear = $("#currentYear").val();
+	
+	var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+	var baseUrl = phpGWLink('index.php', oArgs, false);
+	var requestUrl = baseUrl +  "&amp;location_code=" + value + "&amp;year=" + currentYear;
+	
+	window.location.replace(requestUrl);
+}
+
+</xsl:text>
+
+</script>
+
 <div id="main_content">
 
 	<div id="control_plan">
@@ -9,12 +92,25 @@
 			<h1>Kontrollplan for bygg/eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
 			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
-			<!-- =====================  SELECT MY LOCATIONS  ================= -->
-			<xsl:call-template name="select_my_locations" />
-			
+			<!-- =====================  SEARCH FOR LOCATION  ================= -->
+			<div id="searchLocation">
+				<label>Søk etter andre bygg/eiendommer</label>
+				<input type="hidden" id="currentYear">
+					<xsl:attribute name="value">
+						<xsl:value-of select="current_year"/>
+					</xsl:attribute>
+				</input>
+				<input type="text" value="" id="searchLocationName" />
+			</div>
 		</div>
 		<div class="middle">
-					
+			
+			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
+			<div id="chooseBuilding">
+				<label>Velg et annet bygg på eiendommen</label>
+				<xsl:call-template name="select_my_locations" />
+			</div>
+			
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			

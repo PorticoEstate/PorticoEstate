@@ -11,15 +11,17 @@
 
 	<select id="choose_my_location">
 		<xsl:for-each select="my_locations">
-			<xsl:variable name="loc_code"><xsl:value-of select="current_location/location_code"/></xsl:variable>
+			<xsl:variable name="loc_code"><xsl:value-of select="../current_location/location_code"/></xsl:variable>
 			<xsl:choose>
-				<xsl:when test="location_code = current_location/location_code">
-					<option value="{$loc_code}" selected="selected">
+				<xsl:when test="location_code = loc_code">
+					<option selected="selected">
+						<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>
 						<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
 					</option>
 				</xsl:when>
 				<xsl:otherwise>
-					<option value="{$loc_code}">
+					<option>
+						<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>
 						<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
 					</option>
 				</xsl:otherwise>
