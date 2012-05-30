@@ -219,10 +219,11 @@ $(document).ready(function(){
 	
 	$("#control_area_list").change(function () {
 		var control_area_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
+		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
+	  	$("#hidden_control_area_id").val( control_area_id );
+         var control_id_init = $("#hidden_control_id").val();
          var htmlString = "";
          
          $.ajax({
@@ -235,17 +236,31 @@ $(document).ready(function(){
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
+
+						var selected = '';
+						if(obj[i].id == control_id_init)
+						{
+							selected = ' selected';
+						}
+							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
 		    			});
 					 				  				  
 					  $("#control_id").html( htmlString );
-					}else {
+					}
+					else
+					{
          		  		htmlString  += "<option>Ingen kontroller</option>"
          		  		$("#control_id").html( htmlString );
+				  		$("#hidden_control_id").val(-1); //reset
          		  	}
 			  }  
 			});
 			
+    });
+
+	$("#control_id").change(function () {
+		var control_id = $(this).val();
+  		$("#hidden_control_id").val( control_id );
     });
 
 	// file: uicheck_list.xsl

@@ -31,7 +31,7 @@
 				 --> 
 				 <select style="float:left;" id="control_area_list" name="control_area_list">
 					<option value="">Velg kontrollområde</option>
-					<xsl:for-each select="control_areas_array2">
+					<xsl:for-each select="control_areas_array">
 						<option value="{id}">
 							<xsl:value-of disable-output-escaping="yes" select="name"/>
 						</option>

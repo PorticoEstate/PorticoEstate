@@ -109,10 +109,10 @@
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 							
-			$control_areas_array2 = array();
+			$control_areas_array = array();
 			foreach($control_areas['cat_list'] as $cat_list)
 			{
-				$control_areas_array2[] = array
+				$control_areas_array[] = array
 				(
 					'id' 	=> $cat_list['cat_id'],
 					'name'	=> $cat_list['name'],
@@ -130,7 +130,7 @@
 			$data = array(
 				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'					=> "view_locations_for_control",
-				'control_areas_array2'	=> $control_areas_array2,
+				'control_areas_array'	=> $control_areas_array,
 				'locations_table' => array(
 					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
 					'field' => array(
@@ -183,40 +183,26 @@
 		
 		function register_control_to_location()
 		{
+			$control_id = phpgw::get_var('control_id');
 			if(phpgw::get_var('save_location'))
 			{
+				$values = phpgw::get_var('values');
 				//add component to control using component item ID
-				$items_checked = array();
-				$items = phpgw::get_var('values_assign');
-				$item_arr = explode('|',$items);
-				foreach($item_arr as $item)
-				{
-					$items_checked[] = explode(';',$item);
-				}
-				//var_dump($items_checked);
+				$values['control_location'] = isset($values['control_location']) && $values['control_location'] ? array_unique($values['control_location']) : array();
+				$values['control_location_orig'] = isset($values['control_location_orig']) && $values['control_location_orig'] ? array_unique($values['control_location_orig']) : array();
 
-				$control_id = phpgw::get_var('control_id');
-				//$location_code = phpgw::get_var('location_code');
-				
-				$control_location  = null;
-				$control_location_id = 0;
-				
-				foreach($items_checked as $location_code)
+				$ok = $this->so_control->register_control_to_location($control_id, $values);
+
+/*				if($ok)
 				{
-					$control_location = $this->so_control->get_control_location($control_id, $location_code[0]);
-					
-					if($control_location == null )
-					{					
-						$control_location_id = $this->so_control->register_control_to_location($control_id, $location_code[0]);
-					}
-				}
-				
-/*				if($control_location_id > 0)
 					return json_encode( array( "status" => "saved" ) );
+				}
 				else
+				{
 					return json_encode( array( "status" => "not_saved" ) );
+				}
 */
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location', 'control_id' => $control_id));
 
 			}
 			else
@@ -258,24 +244,31 @@
 				$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($responsibility_roles,$default_value);
 				
-				// Sigurd: START as categories
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
 				
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 								
-				$control_areas_array2 = array();
+				$control_areas_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
-					$control_areas_array2[] = array
+					$control_areas_array[] = array
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
 					);		
 				}
-				// END as categories
-				
-				
+
+				$control_info = execMethod('controller.socontrol.get_single', $control_id);
+				if($control_info)
+				{
+					$control_array = array
+					(
+						'id' => $control_id,
+						'title'	=> $control_info->get_title()
+					);
+				}
+
 				$tabs = array( array(
 							'label' => lang('View_locations_for_control'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
@@ -287,8 +280,9 @@
 				$data = array(
 					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 					'view'						=> "register_control_to_location",
+					'control_id'				=> $control_id,
 					'control_filters'			=> array(
-						'control_areas_array2' 	=> $control_areas_array2,
+						'control_areas_array' 	=> $control_areas_array,
 						'control_array' 			=> $control_array
 					),
 					'filter_form' 				=> array(
@@ -298,8 +292,12 @@
 						'part_of_town_list' 		=> $part_of_town_list
 					),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control')),
+						'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control','control_id_init'	=> $control_id)),
 						'field' => array(
+							array(
+								'key' => 'location_registered',
+								'hidden' => true
+							),
 							array(
 								'key' => 'location_code',
 								'label' => lang('Property'),
@@ -322,10 +320,15 @@
 								'sortable'	=> false
 							),
 							array(
+								'key' => 'control_name',
+								'label' => lang('control'),
+								'sortable'	=> false
+							),
+							array(
 									'key' => 'checked',
 									'label' => 'Velg',
 									'sortable' => false,
-									'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
+									'formatter' => 'formatterCheckLocation',
 									'className' => 'mychecks'
 							),
 							array(
@@ -351,6 +354,7 @@
 				
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'yahoo', 'register_control_to_location.js');
 	
 				self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/register_control_to_location', 'common'), $data);
 			}		
@@ -383,8 +387,25 @@
 		}
 		
 		public function query(){
-			$type_id = phpgw::get_var('type_id');
-			//var_dump($type_id);
+			$type_id = phpgw::get_var('type_id', 'int');
+			$control_id = phpgw::get_var('control_id', 'int');
+			$control_id_init = phpgw::get_var('control_id_init', 'int');
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+
+			$control_id = $control_id ? $control_id : $control_id_init;
+			
+			if($control_area_id && !execMethod('controller.socontrol.get_controls_by_control_area',$control_area_id))
+			{
+				$control_id = 0;
+			}
+
+			$control_info = execMethod('controller.socontrol.get_single', $control_id);
+			$control_name = '';
+			if($control_info)
+			{
+				$control_name = $control_info->get_title();
+			}
+
 			$view_type = phpgw::get_var('view_type');
 			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
 			
@@ -397,15 +418,15 @@
 			
 			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
 												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run, 'results' => $return_results));
-//_debug_array($location_list);
-			$rows_total = $this->bo->read(array('type_id' => $type_id, 'allrows' => true));
-			
-			foreach($location_list as $location)
+
+			foreach($location_list as &$location)
 			{
+				$location['control_name'] = $control_name;
+				$location['location_registered'] = !!$this->so_control->get_control_location($control_id, $location['location_code']);
 				$results['results'][]= $location;	
 			}
 			
-			$results['total_records'] = count($rows_total);
+			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
 			$results['sort'] = 'location_code';
 			$results['dir'] = "ASC";
