@@ -41,9 +41,9 @@
 			The ajax opearation is handled in ajax.js 
 		-->
 		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div> 
-		 <select style="float:left;" id="control_area_list" name="control_area_list">
+		 <select style="float:left;" id="control_area_list" name="control_area_id">
 			<option value="">Velg kontrollområde</option>
-			<xsl:for-each select="control_areas_array2">
+			<xsl:for-each select="control_areas_array">
 				<option value="{id}">
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</option>
@@ -92,6 +92,15 @@
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	  <ul id="filters">
 	  	<li>
+			<input type="hidden" id="hidden_control_id" name="control_id">
+				<xsl:attribute name="value">
+					<xsl:value-of select="//control_id"/>
+				</xsl:attribute>
+			</input>
+
+			<input type="hidden" id="hidden_control_area_id" name="control_area_id">
+			</input>
+	  	
 		  <select id="type_id" name="type_id">
 			<xsl:for-each select="building_types">
 				<xsl:variable name="building_type_id"><xsl:value-of select="id"/></xsl:variable>
@@ -144,98 +153,6 @@
 </xsl:template>
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<script type="text/javascript">
-	<![CDATA[
-	function checkAll(myclass)
-  	{
-		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
-		for(i=0;i<controls.length;i++)
-		{
-			//for class=mychecks, they have to be interchanged
-			//checkbox is located within td->div->input. To get the input-object, use controls[i].children[0].children[0]
-			if(myclass=='mychecks')
-			{
-				if(controls[i].children[0].children[0].checked)
-				{
-					controls[i].children[0].children[0].checked = false;
-				}
-				else
-				{
-					controls[i].children[0].children[0].checked = true;
-				}
-			}
-			//for the rest, always id checked
-			else
-			{
-				controls[i].children[0].children[0].checked = true;
-			}
-		}
-	}
-	
-	function saveLocationToControl()
-	{
-		var control_id_value = document.getElementById('control_id').value;
-		
-		if( !(control_id_value > 0) ){
-			var choose_control_elem = document.getElementById('choose_control');
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
-						
-			error_elem.style.display = 'block';
-			
-			return false;
-		}else{
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
-			error_elem.style.display = 'none';
-		}
-				
-		var divs = YAHOO.util.Dom.getElementsByClassName('location_submit');
-		var mydiv = divs[divs.length-1];
-
-		// styles for dont show
-		
-
-		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('mychecks');
-		var values_return = ""; //new Array(); 
-			
-		for(i=0;i<valuesForPHP.length;i++)
-		{
-			if(valuesForPHP[i].children[0].children[0].checked)
-			{
-				if(values_return != "")
-					values_return +="|"+valuesForPHP[i].parentNode.firstChild.firstChild.firstChild.firstChild.nodeValue+';'+valuesForPHP[i].children[0].children[0].value;
-				else
-					values_return += valuesForPHP[i].parentNode.firstChild.firstChild.firstChild.firstChild.nodeValue+';'+valuesForPHP[i].children[0].children[0].value;
-			}
-		}
-		
-		if( !(values_return.length > 0) ){
-			var datatable_container_elem = document.getElementById('datatable-container');
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[1];
-						
-			error_elem.style.display = 'block';
-			
-			return false;
-		}else{
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[1];
-			error_elem.style.display = 'none';
-		}
-
-		mydiv.style.display = "none";
-
-		var returnfield = document.createElement('input');
-		returnfield.setAttribute('name', 'values_assign');
-		returnfield.setAttribute('type', 'text');
-		returnfield.setAttribute('value', values_return);
-		mydiv.appendChild(returnfield);
-		
-		var control_id_field = document.createElement('input');
-		control_id_field.setAttribute('name', 'control_id');
-		control_id_field.setAttribute('type', 'text');
-		control_id_field.setAttribute('value', control_id_value);
-		mydiv.appendChild(control_id_field);
-	}
-	]]>
-	</script>
 	<div id="data_paginator"/>
 	<div class="error_msg" style="margin-left:20px;">Du må velge bygg før du kan legge til en kontroll</div>
 	<div id="datatable-container"/>
@@ -276,7 +193,7 @@
 		var main_source = '<xsl:value-of select="source"/>';
 		var main_columnDefs = YAHOO.controller.columnDefs;
 		var main_form = 'queryForm';
-		var main_filters = ['type_id', 'cat_id', 'district_id', 'part_of_town_id', 'responsibility_roles_list'];
+		var main_filters = ['type_id', 'cat_id', 'district_id', 'part_of_town_id', 'responsibility_roles_list', 'control_area_list', 'control_id'];
 		var main_container = 'datatable-container';
 		var main_table_id = 'datatable';
 		var main_pag = 'data_paginator';
