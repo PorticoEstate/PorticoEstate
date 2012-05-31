@@ -754,7 +754,7 @@ SCRIPT;
 		{
 			return self::get_messages($messages, 'info');
 		}
-
+ 
 		/**
 		 * Download xls, csv or similar file representation of a data table
 		 */
