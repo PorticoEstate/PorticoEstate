@@ -1441,12 +1441,12 @@
 		{
 			switch($data['format'])
 			{
-			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'), $this->xsl_rootdir);
-				break;
-			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'), $this->xsl_rootdir);
-				break;
+				case 'select':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'), $this->xsl_rootdir);
+					break;
+				case 'filter':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'), $this->xsl_rootdir);
+					break;
 			}
 
 			$sogeneric = CreateObject('property.sogeneric');
