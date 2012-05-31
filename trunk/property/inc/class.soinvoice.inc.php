@@ -72,7 +72,7 @@
 			$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 			$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
 			$paid 			= isset($data['paid'])?$data['paid']:'';
-			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : mktime(0,0,0,'01','01',date('Y'));
 			$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 			$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 			$loc1 			= isset($data['loc1'])?$data['loc1']:'';
