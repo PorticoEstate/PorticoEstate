@@ -1995,7 +1995,7 @@
 			$value_set_line['mvakode']			= $data['tax_code'];
 			$value_set_line['project_id']		= $data['project_group'];
 			$value_set_line['spbudact_code']	= $data['b_account_id'];
-			$value_set_line['line_text']		= $data['line_text'];
+			$value_set_line['line_text']		= $this->db->db_addslashes($data['line_text']);
 
 			$value_set_line	= $this->db->validate_update($value_set_line);
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
