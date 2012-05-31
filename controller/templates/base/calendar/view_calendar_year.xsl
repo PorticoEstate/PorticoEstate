@@ -63,7 +63,7 @@ $(document).ready(function(){
 		},
 		minLength: 1,
 		select: function( event, ui ) {
-			chooseLocation( ui.item.label, ui.item.value);
+		  chooseLocation( ui.item.label, ui.item.value);
 		}
 	});
 	
@@ -89,11 +89,19 @@ function chooseLocation( label, value ){
 
 	<div id="control_plan">
 		<div class="top">
-			<h1>Kontrollplan for bygg/eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
+			<xsl:choose>
+				<xsl:when test="location_level = 1">
+					<h1>Kontrollplan for eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
+				</xsl:when>
+				<xsl:otherwise>
+						<h1>Kontrollplan for bygg: <xsl:value-of select="current_location/loc2_name"/></h1>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
-			<div id="searchLocation">
+			<div id="searchLocation" class="selectBox">
 				<label>Søk etter andre bygg/eiendommer</label>
 				<input type="hidden" id="currentYear">
 					<xsl:attribute name="value">
@@ -102,14 +110,39 @@ function chooseLocation( label, value ){
 				</input>
 				<input type="text" value="" id="searchLocationName" />
 			</div>
+			
+			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
+			<div id="chooseMyLocation" class="selectBox">
+				<label>Velg et annet bygg du har ansvar for</label>
+				<xsl:call-template name="select_my_locations" />
+			</div>
 		</div>
 		<div class="middle">
 			
-			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
-			<div id="chooseBuilding">
+			<div id="chooseBuilding" class="selectBox">
 				<label>Velg et annet bygg på eiendommen</label>
-				<xsl:call-template name="select_my_locations" />
+				<xsl:call-template name="select_buildings_on_property" />
 			</div>
+			
+			<!-- 
+ 				<select id="loc_1" class="choose_loc">
+					<xsl:for-each select="property_array">
+						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="location_code = current_location/location_code">
+								<option value="{$loc_code}" selected="selected">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="{$loc_code}">
+									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+								</option>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</select>				
+			-->
 			
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
