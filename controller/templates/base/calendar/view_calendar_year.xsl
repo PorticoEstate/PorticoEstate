@@ -5,7 +5,7 @@
 
 <style>
 	.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
-	#searchLocationName { width: 25em; }
+	#search-location-name { width: 25em; }
 	
 	
 	.ui-combobox {
@@ -37,7 +37,7 @@ $(document).ready(function(){
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, false);
 
-	$("#searchLocationName").autocomplete({
+	$("#search-location-name").autocomplete({
 		source: function( request, response ) {
 			$.ajax({
 				url: baseUrl,
@@ -66,9 +66,6 @@ $(document).ready(function(){
 		  chooseLocation( ui.item.label, ui.item.value);
 		}
 	});
-	
-	
-	
 });
 
 function chooseLocation( label, value ){
@@ -101,25 +98,38 @@ function chooseLocation( label, value ){
 			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
-			<div id="searchLocation" class="selectBox">
+			<div id="search-location" class="select-box">
 				<label>Søk etter andre bygg/eiendommer</label>
 				<input type="hidden" id="currentYear">
 					<xsl:attribute name="value">
 						<xsl:value-of select="current_year"/>
 					</xsl:attribute>
 				</input>
-				<input type="text" value="" id="searchLocationName" />
+				<input type="text" value="" id="search-location-name" />
 			</div>
 			
 			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
-			<div id="chooseMyLocation" class="selectBox">
+			<div id="choose-my-location" class="select-box">
 				<label>Velg et annet bygg du har ansvar for</label>
 				<xsl:call-template name="select_my_locations" />
 			</div>
 		</div>
+		
 		<div class="middle">
-			
-			<div id="chooseBuilding" class="selectBox">
+			<div id="choose-building" class="select-box">
+				<xsl:if test="location_level > 1">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+							<xsl:text>&amp;year=</xsl:text>
+							<xsl:value-of select="current_year"/>
+							<xsl:text>&amp;location_code=</xsl:text>
+							<xsl:value-of select="current_location/loc1"/>
+						</xsl:attribute>
+						Vis kontrollplan for eiendom
+					</a> 
+				</xsl:if>
+
 				<label>Velg et annet bygg på eiendommen</label>
 				<xsl:call-template name="select_buildings_on_property" />
 			</div>
