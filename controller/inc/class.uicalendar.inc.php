@@ -163,28 +163,46 @@
 			$from_date_ts = strtotime("01/01/$year");
 			$to_year = $year + 1;
 			$to_date_ts = strtotime("01/01/$to_year");
-			
-			$manage = false;
-		
-			if($manage)
-            {
-            	$locations = execMethod('property.solocation.get_children', $location_code);
-            }else{
-            	$criteria = array
-				(
-					'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
-					'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
-					'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-					'allrows' => false
-				);
-		
-				$location_finder = new location_finder();
-				$my_locations = $location_finder->get_responsibilities( $criteria );
-            }
 				
+      $criteria = array
+			(
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
+				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+				'allrows' => false
+			);
+		
+			$location_finder = new location_finder();
+			$my_locations = $location_finder->get_responsibilities( $criteria );
+            
 			if(empty($location_code)){
 				$location_code = $my_locations[0]["location_code"];
 			}
+			
+			$manage = true;
+	
+			$level = count(explode('-', $location_code));
+			
+			// Property level
+			if($level == 1){
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if($level > 1){
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}
+			
+			if($manage){
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+				
+      	$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+      }else{
+        $buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+      }
 			
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, 	$repeat_type = null);
@@ -231,19 +249,22 @@
 			}
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
+
 			$data = array
 			(
-				'my_locations'	  		  => $my_locations,
-				'current_location'  	  => $location_array,
-				'heading_array'		  	  => year_calendar::get_heading_array(),
+				'buildings_on_property'		=> $buildings_on_property,
+				'my_locations'						=> $my_locations,
+				'current_location'  	  	=> $location_array,
+				'heading_array'		  	  	=> year_calendar::get_heading_array(),
 				'controls_calendar_array' => $controls_calendar_array,
-				'date_format' 			  => $date_format,
-				'current_year' 			  => $year,
+				'date_format' 			  		=> $date_format,
+				'current_year' 			  		=> $year,
+				'location_level'		  		=> $level,
 			);
 			
 			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 
-											'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+																			'calendar/icon_color_map', 'calendar/select_my_locations', 
+																			'calendar/select_buildings_on_property'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -312,12 +333,12 @@
 			
 			$data = array
 			(
-				'my_locations'	  		  		=> $my_locations,
-				'control'			  	  		=> $control->toArray(),
-				'heading_array'		  	  		=> year_calendar::get_heading_array(),
+				'my_locations'	  		  				=> $my_locations,
+				'control'			  	  						=> $control->toArray(),
+				'heading_array'		  	  				=> year_calendar::get_heading_array(),
 				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'date_format' 			  		=> $date_format,
-				'current_year'	  	  	  		=> $year,
+				'date_format' 			  					=> $date_format,
+				'current_year'	  	  	  			=> $year,
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 
