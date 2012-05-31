@@ -1023,7 +1023,7 @@ ul.check_list {
 /* ==================  COLOR MAP ============================= */
 
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #F6F6F6;
+    background: none repeat scroll 0 0 #FEFBF4;
     border: 1px solid #DDDDDD;
     border-radius: 5px 5px 5px 5px;
     float: right;
@@ -1634,13 +1634,16 @@ div.controller_checklist {
     font-weight: bold;
     width: 100px;
 }
+
 #control_details #select_all{
 	margin-left: 660px;	
 }
+
 #control_details #location_form{
 	margin-left: 20px;
 	margin-bottom: 20px;	
 }
+
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
@@ -1674,30 +1677,37 @@ ul#suggestList {
     z-index: 2;
     border: 1px solid #DBE5EF;
 }
+
 ul#suggestList li{
     padding: 0.5em;
 }
+
 ul#suggestList li.even {
     background: none repeat scroll 0 0 #EAEFF5;
 }
+
 #searchLocation {
-    background: none repeat scroll 0 0 #F6F6F6;
-    border: 1px solid #DDDDDD;
-    border-radius: 5px 5px 5px 5px;
     float: right;
     margin-bottom: 10px;
-    padding: 1em;
 }
-#searchLocation label{
-	display: block;
+
+#chooseMyLocation {
+    float: right;
+    margin-right: 10px;
 }
+
 #chooseBuilding {
-    background: none repeat scroll 0 0 #F6F6F6;
+    float: left;
+}
+
+.selectBox{
+ 		background: none repeat scroll 0 0 #FEFBF4;
     border: 1px solid #DDDDDD;
     border-radius: 5px 5px 5px 5px;
-    float: left;
-    padding: 1em;
+    padding: 1em;	
 }
-#chooseBuilding label{
-	margin-bottom:5px;	
+
+.selectBox label{
+	margin-bottom:5px;
+	display: block;	
 }
