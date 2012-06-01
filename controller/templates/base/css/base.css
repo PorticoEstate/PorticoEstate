@@ -1784,14 +1784,13 @@ ul#suggestList li.even {
   text-align: justify;	
 }
 
-#choose_loc .btn{
-	display: inline-block;
-	padding: 2px 8px;	
+#choose_loc .btn {
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 2px 8px;
 }
 
 #choose_loc .btn.active{
-	display: inline-block;
-	padding: 2px 8px;
 	background: #3F7EC1;	
 }
 
