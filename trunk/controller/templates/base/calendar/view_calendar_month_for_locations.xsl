@@ -27,9 +27,14 @@
 			</form>
 		</div>
 		<div class="middle">
-			<xsl:call-template name="icon_color_map" />
 			
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
+			<!-- =====================  ICON COLOR MAP  ================= -->
+			<xsl:call-template name="icon_color_map" />
+				
+				
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->
+			<div id="calNav">
+			<a class="showPrev month">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>

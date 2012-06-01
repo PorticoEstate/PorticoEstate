@@ -399,6 +399,10 @@ input{
     margin: 0 13px 0 0;
     padding: 3px 6px;
 }
+input[type="radio"] {
+    margin: 0 5px 0 2px;
+    padding: 3px 6px;
+}
 input[type="submit"] {
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #4685C8;
@@ -424,8 +428,9 @@ textarea{
 h1 em {
 	font-style:italic;
 }
-a{
-	color: #0066CC;
+a {
+    color: #0066CC;
+    text-decoration: none;
 }
 div.info, div.error, div.warning {
 	font-weight: normal;
@@ -1709,6 +1714,9 @@ div.controller_checklist {
 }
 
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
+#control_group_tabview .yui-content{
+	padding: 10px;	
+}
 
 ul.control_groups li ul {
     margin-left: 1em;
@@ -1775,3 +1783,15 @@ ul#suggestList li.even {
   padding: 0 0 10px;
   text-align: justify;	
 }
+
+#choose_loc .btn{
+	display: inline-block;
+	padding: 2px 8px;	
+}
+
+#choose_loc .btn.active{
+	display: inline-block;
+	padding: 2px 8px;
+	background: #3F7EC1;	
+}
+

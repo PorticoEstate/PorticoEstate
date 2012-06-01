@@ -1,5 +1,20 @@
 $(document).ready(function(){
-	
+
+	$("#choose_loc a").click(function(){
+		
+		$("#choose_loc a").removeClass("active");
+		$(this).addClass("active");
+		
+		var loc_type = $(this).attr("href");
+		
+		$("#loc_type").val( loc_type.substring(9, 10) );
+		$("#search-location-name").focus();
+
+		$( "#search-location-name" ).autocomplete( "search");
+		
+		return false;
+	});
+
 	$(".control_item_type").click(function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
@@ -283,40 +298,6 @@ $(document).ready(function(){
 			
     });
 	
-	// When control area is selected, controls are fetched from db and control select list is populated
-/*	$("#control_group").change(function () {
-		 var control_group_id = $(this).val();
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_area_by_control_group', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_group_id=" + control_group_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Ingen kontrollområde</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
-		    			});
-					 				  				  
-					  $("#control_group_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontrollområder</option>"
-         		  		$("#control_group_id").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-*/
-	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
 	$("#ifc").change(function () {
@@ -437,28 +418,6 @@ $(document).ready(function(){
 		$(this).parent().find("input[name=option_value]").val('');
 	});
 	
-	/*
-	$("#frm_add_control_item_option").live("submit", function(e){
-		e.preventDefault();
-alert("feil")
-		var thisForm = $(this);
-		var requestUrl = $(thisForm).attr("action");
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		  
-	    			  if(obj.status == "saved"){
-			    		$("#control_item_options").append("<li><label>Valgverdi</label>" + obj.saved_object.label + "</li>")
-	    			  }
-				  }
-				}
-			});
-	});
-	*/
 	/* =========================  CONTROL  =============================================== */
 	
 	// SAVE CONTROL DETAILS

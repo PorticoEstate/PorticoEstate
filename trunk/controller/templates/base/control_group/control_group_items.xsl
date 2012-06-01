@@ -3,12 +3,7 @@
 
 <xsl:call-template name="yui_booking_i18n"/>
 <div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
-	<xsl:value-of select="php:function('lang', 'Control_items')" />
-</h1>
 </div>
-
-<div class="yui-content">
 	<div>
 		<xsl:if test="selected_control_items">
 			<h2>Valgte kontrollpunkt</h2>
@@ -50,5 +45,4 @@
 		</xsl:when>
 	   </xsl:choose>
 	</div>
-</div>
 </xsl:template>
