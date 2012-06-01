@@ -37,14 +37,18 @@ $(document).ready(function(){
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, false);
 
+	var location_type = $("#loc_type").val();
+
 	$("#search-location-name").autocomplete({
 		source: function( request, response ) {
+			location_type = $("#loc_type").val();
+		
 			$.ajax({
 				url: baseUrl,
 				dataType: "json",
 				data: {
 					location_name: request.term,
-					level: 1,
+					level: location_type,
 					phpgw_return_as: "json"
 				},
 				success: function( data ) {
@@ -99,7 +103,11 @@ function chooseLocation( label, value ){
 			
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
-				<label>Søk etter andre bygg/eiendommer</label>
+				<div id="choose_loc">
+					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
+							<input id="loc_type" type="hidden" name="loc_type" value="2" />
+					</label>
+				</div>
 				<input type="hidden" id="currentYear">
 					<xsl:attribute name="value">
 						<xsl:value-of select="current_year"/>
