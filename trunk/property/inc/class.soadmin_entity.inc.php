@@ -1053,7 +1053,7 @@
 		 */
 		function convert_to_eav()
 		{
-			die('vent litt med denne');
+//			die('vent litt med denne');
 
 			phpgw::import_class('phpgwapi.xmlhelper');			
 			$this->type = 'entity';

@@ -495,10 +495,10 @@
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
 
-			$_last_period_last_year = (string)(date('Y') -1) . '12';
+//			$_last_period_last_year = (string)(date('Y') -1) . '12';
 			$period_list = $this->bo->period_list();
 			$periodization_start_list = $period_list;
-			array_unshift($period_list,array ('id'=> $_last_period_last_year,'name'=> $_last_period_last_year));
+//			array_unshift($period_list,array ('id'=> $_last_period_last_year,'name'=> $_last_period_last_year));
 
 			$period_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $period_list);
 			$periodization_start_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $periodization_start_list);
