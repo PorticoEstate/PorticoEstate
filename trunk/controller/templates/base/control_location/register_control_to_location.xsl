@@ -41,7 +41,7 @@
 			The ajax opearation is handled in ajax.js 
 		-->
 		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div> 
-		 <select style="float:left;" id="control_area_list" name="control_area_id">
+		 <select id="control_area_list" name="control_area_id">
 			<option value="">Velg kontrollområde</option>
 			<xsl:for-each select="control_areas_array">
 				<option value="{id}">
@@ -154,7 +154,7 @@
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<div id="data_paginator"/>
-	<div class="error_msg" style="margin-left:20px;">Du må velge bygg før du kan legge til en kontroll</div>
+	<div class="error_msg">Du må velge bygg før du kan legge til en kontroll</div>
 	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />

@@ -1,33 +1,6 @@
 <!-- $Id$ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-
-
-<style>
-	.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
-	#search-location-name { width: 25em; }
-	
-	
-	.ui-combobox {
-		position: relative;
-		display: inline-block;
-	}
-	.ui-button {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		margin-left: -1px;
-		padding: 0;
-		/* adjust styles for IE 6/7 */
-		*height: 1.7em;
-		*top: 0.1em;
-	}
-	.ui-autocomplete-input {
-		margin: 0;
-		padding: 0.3em;
-	}
-
-</style>
 	
 <script>
 <xsl:text>
@@ -124,6 +97,8 @@ function chooseLocation( label, value ){
 		</div>
 		
 		<div class="middle">
+		
+			<!-- =====================  CHOOSE ANOTHER BUILDING ON PROPERTY  ================= -->
 			<div id="choose-building" class="select-box">
 				<xsl:if test="location_level > 1">
 					<a>

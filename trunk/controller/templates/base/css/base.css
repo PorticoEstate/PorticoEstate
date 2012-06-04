@@ -1201,6 +1201,10 @@ a.view_info_box {
     text-decoration: none;
 }
 
+.ext_info{
+    display:none;
+}
+
 .info_box_wrp {
     background: url("../../../images/status_icon_red_empty.png") no-repeat scroll 50% 50% transparent;
     height: 15px;
@@ -1561,7 +1565,9 @@ li.check_item_case .col_3 {
 }
 
 /* ================================  FORM UPDATE CASE  ============================= */
-
+.frm_update_case{
+	display: none;
+}
 .frm_update_case label {
 	display: block;	
 }
@@ -1675,7 +1681,7 @@ div.controller_checklist {
 	border: 1px solid #ABABAB;
 }
 
-/* =====================  REGISTER CONTROL FOR LOCATION  ===================== */
+/* =====================  CONTROL LOCATION  ===================== */
 
 #choose_control{
 	margin: 10px;
@@ -1689,6 +1695,18 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
+#control_area_list {
+	float:left;	
+}
+
+#data_paginator .error_msg{
+	margin-left:20px;
+}
+
+#locations-container{
+	margin:20px;
+}
+	
 /* ==========================  CONTROL DETAILS   ============================ */
 
 #control_details label {
@@ -1713,6 +1731,10 @@ div.controller_checklist {
     vertical-align: baseline;
 }
 
+#repeat_interval{
+	width: 20px;	
+}
+	
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
 #control_group_tabview .yui-content{
 	padding: 10px;	
@@ -1756,6 +1778,10 @@ ul#suggestList li.even {
     margin-bottom: 10px;
 }
 
+#search-location-name { 
+	width: 16em; 
+}
+
 #choose-my-location {
     float: right;
     margin-right: 10px;
@@ -1763,6 +1789,11 @@ ul#suggestList li.even {
 
 #choose-building {
     float: left;
+}
+
+.month_view #choose-building {
+    clear:left;
+    margin-top: 1em;
 }
 
 .select-box { 
@@ -1794,3 +1825,19 @@ ul#suggestList li.even {
 	background: #3F7EC1;	
 }
 
+#print_control_items{
+	margin-top:20px;
+}
+
+#exec_print {
+	margin:20px 0 0 40px;
+}
+
+#yui-history-iframe { 
+	position:absolute;
+	top:0; 
+	left:0;
+	width:1px; 
+	height:1px;
+	visibility:hidden;
+}

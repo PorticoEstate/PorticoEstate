@@ -85,7 +85,7 @@
 				<xsl:text>&amp;control_id=</xsl:text>
 					<xsl:value-of select="control_as_array/id"/>
 			</xsl:attribute>
-			<div style="margin-top:30px">
+			<div>
 				Se kalenderoversikt for kontroll
 			</div>
 		</a>
