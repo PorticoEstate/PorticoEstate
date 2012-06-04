@@ -37,7 +37,7 @@
 		
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches controls from db and populates the control list.
 			 The ajax opearation is handled in ajax.js --> 
-		 <select style="float:left;" id="control_area_list" name="control_area_list">
+		 <select id="control_area_list" name="control_area_list">
 			<xsl:for-each select="control_area_array">
 				<xsl:variable name="control_area_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$control_area_id}">
