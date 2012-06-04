@@ -1967,6 +1967,85 @@
 		}
 
 
+
+
+		function get_order_info($order_id)
+		{
+			$order_info = array();
+			$toarray = array();
+			$order_id = (int) $order_id;
+			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
+			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			if(	$this->db->next_record())
+			{
+				$order_info['order_exist'] = true;
+			}
+			if ($this->db->f('location_code'))
+			{ 
+				$parts = explode('-',$this->db->f('location_code'));
+				$order_info['dima'] = implode('', $parts);
+				$order_info['loc1'] = $parts[0];
+			}
+
+			$order_info['vendor_id'] 			= $this->db->f('vendor_id');
+			$order_info['spbudact_code']		= $this->db->f('account_id');
+			$order_info['dimb']					= $this->db->f('ecodimb');
+			$order_info['dime']					= $this->db->f('category');
+			$order_info['title']				= $this->db->f('title',true);			
+
+			$janitor_user_id 					= $this->db->f('user_id');
+			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			$supervisor_user_id					= $this->get_default_dimb_role_user(2, $order_info['dimb']);
+			if($supervisor_user_id)
+			{
+				$order_info['supervisor']		= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+			}
+
+			$budget_responsible_user_id			= $this->get_default_dimb_role_user(3, $order_info['dimb']);
+			if($budget_responsible_user_id)
+			{
+				$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			}
+
+			if(!$order_info['budget_responsible'])
+			{
+				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
+			}
+
+			$order_info['toarray'] = $toarray;
+			return $order_info;
+		}
+
+
+		public function update_voucher_by_changed_order($line_id, $order_id)
+		{
+			$order_info = $this->get_order_info($order_id);
+			if (!$order_info['order_exist'])
+			{
+				phpgwapi_cache::message_set(lang('not a valid order'), 'error');
+				return false;
+			}
+
+			$GLOBALS['phpgw']->db->transaction_begin();
+			$value_set = array();
+			$value_set['pmwrkord_code']			= $order_id;
+			$value_set['dima'] 					= $order_info['dima'];
+			$value_set['dimb'] 					= $order_info['dimb'];
+			$value_set['dime'] 					= $order_info['dime'];
+			$value_set['loc1'] 					= $order_info['loc1'];
+			$value_set['line_text']				= $order_info['title'];
+			$value_set['spbudact_code']			= $order_info['spbudact_code'];
+			$value_set['oppsynsmannid']			= $order_info['janitor'];
+			$value_set['saksbehandlerid']		= $order_info['supervisor'];
+			$value_set['budsjettansvarligid']	= $order_info['budget_responsible'];
+
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id =" . (int)$line_id,__LINE__,__FILE__);
+			return $GLOBALS['phpgw']->db->transaction_commit();
+
+		}
+
 		public function update_voucher2($data)
 		{
 			if(!isset($data['line_id']) || !$data['line_id'])
@@ -1974,6 +2053,23 @@
 				phpgwapi_cache::message_set(lang('select invoice'), 'error');
 				return false;
 			}
+
+			$this->db->query("SELECT pmwrkord_code as order_id FROM fm_ecobilag WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
+			$this->db->next_record();
+			if($data['order_id']!=$this->db->f('order_id'))
+			{
+				if($this->update_voucher_by_changed_order($data['line_id'], $data['order_id']))
+				{
+					phpgwapi_cache::message_set(lang('voucher info updated from order'), 'message');			
+					return true;
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('something went wrong'), 'error');
+					return false;				
+				}
+			}
+
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
 			
