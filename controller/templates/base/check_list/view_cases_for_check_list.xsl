@@ -62,7 +62,7 @@
 	 		<xsl:with-param name="active_tab">view_cases</xsl:with-param>
 		</xsl:call-template>
 		
-		<a style="display:none;" id="view_open_cases">
+		<a id="view_open_cases">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>

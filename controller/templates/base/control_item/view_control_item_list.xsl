@@ -48,8 +48,8 @@
 				</li>
 			</xsl:for-each>
 		</ul>
-		<div style="margin:20px 0;">
-			<a  style="text-decoration:underline;font-size:20px;color:#333;">
+		<div>
+			<a>
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.save_check_list</xsl:text>
 					<xsl:text>&amp;control_id=</xsl:text>

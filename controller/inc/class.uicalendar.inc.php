@@ -106,6 +106,29 @@
 				$location_code = $my_locations[0]["location_code"];
 			}
 			
+			$level = count(explode('-', $location_code));
+			
+			// Property level
+			if($level == 1){
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if($level > 1){
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}
+			
+			if($manage){
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+				
+      	$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+      }else{
+        $buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+      }
+			
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts);
 
@@ -129,21 +152,26 @@
 			 			
 			$data = array
 			(		
-				'my_locations'	  		  => $my_locations,
-				'property_array'	  	  => $property_array,
-				'current_location'		  => $location_array,
-				'heading_array'		  	  => month_calendar::get_heading_array($year, $month),
+				'buildings_on_property'		=> $buildings_on_property,
+				'my_locations'	  		  	=> $my_locations,
+				'property_array'	  	  	=> $property_array,
+				'current_location'		  	=> $location_array,
+				'heading_array'		  	  	=> month_calendar::get_heading_array($year, $month),
 				'controls_calendar_array' => $controls_calendar_array,
-				'date_format' 			  => $date_format,
-				'current_year' 			  => $year,
-				'current_month_nr' 		  => $month,
+				'date_format' 			  		=> $date_format,
+				'current_year' 			  		=> $year,
+				'current_month_nr' 		  	=> $month,
+				'location_level'		  		=> $level,
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
 			
 			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker', 
-											'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+																			'calendar/icon_color_map', 'calendar/select_my_locations', 
+																			'calendar/select_buildings_on_property'), $data);
 		}
 		
 		public function view_calendar_for_year()

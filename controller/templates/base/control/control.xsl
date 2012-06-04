@@ -158,7 +158,7 @@
 				<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-						<input class="required" style="width:20px;" size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
+						<input class="required" id="repeat_interval" size="2" type="text" name="repeat_interval" value="{control/repeat_interval}" />
 						<span class="help_text">Angi hvilket frekvensintervall kontrollen skal ha. Hvis du velger 2, betyr det at kontrollen skal gjennomføres annenhver dag</span>
 					</xsl:when>
 					<xsl:otherwise>

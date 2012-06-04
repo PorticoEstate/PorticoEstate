@@ -29,7 +29,7 @@
 					 The operation fetches controls from db and populates the control list.
 					 The ajax operation is handled in ajax.js 
 				 --> 
-				 <select style="float:left;" id="control_area_list" name="control_area_list">
+				 <select id="control_area_list" name="control_area_list">
 					<option value="">Velg kontrollområde</option>
 					<xsl:for-each select="control_areas_array">
 						<option value="{id}">
@@ -71,7 +71,7 @@
 				</ul>
 			</div>
 			
-			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 			<input id="yui-history-field" type="hidden"/>
 			
 			<xsl:apply-templates select="locations_table"/>
@@ -84,7 +84,7 @@
 <xsl:template match="locations_table" xmlns:php="http://php.net/xsl">
 	
 	<div id="loc_paginator"/>
-	<div style="margin:20px;" id="locations-container"/>
+	<div id="locations-container"/>
   	<xsl:call-template name="locations-definition" />
 </xsl:template>
 
