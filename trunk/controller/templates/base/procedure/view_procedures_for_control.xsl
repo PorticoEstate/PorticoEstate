@@ -4,7 +4,7 @@
 	<h3 style="margin:5px 0;">Prosedyre for <xsl:value-of select="control_procedure/title"/></h3>
 	
 	<div>
-		<a class="btn_m" id="print_control_items" target="_blank">
+		<a class="btn_m" id="print-control-items" target="_blank">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 				<xsl:text>&amp;procedure_id=</xsl:text>
@@ -34,10 +34,10 @@
 	<ul id="groups">
 		<xsl:for-each select="group_procedures_array">
 			<li>
-				<h4 style="margin:2px 0;"><xsl:value-of select="procedure/title"/></h4>
+				<h4><xsl:value-of select="procedure/title"/></h4>
 				<div style="margin-bottom:10px;">
 					<span>Gruppe: </span><xsl:value-of select="control_group/group_name"/>
-					<a class="btn_sm" style="margin-left:5px;" id="print_control_items" target="_blank">
+					<a class="btn_sm" style="margin-left:5px;" id="print-control-items" target="_blank">
 						<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 							<xsl:text>&amp;procedure_id=</xsl:text>
