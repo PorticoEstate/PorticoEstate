@@ -158,7 +158,7 @@
 						</xsl:when>
 						<xsl:when test="inactive">
 							<xsl:variable name="lang_back"><xsl:value-of select="php:function('lang', 'back')" /></xsl:variable>
-							<input type="button" value="{$lang_back}" title="{$lang_back}" onclick="javascript: history.go(-1);" style="margin: 0 0 15px 15px; padding: 1px 15px;"/>
+							<input type="button" value="{$lang_back}" title="{$lang_back}" onclick="javascript: history.go(-1);" class="btn"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
@@ -169,7 +169,7 @@
 			</form>
 			<xsl:choose>
 				<xsl:when test="values != ''">
-					<table cellpadding="10" cellspacing="10" align="left" style="margin-left: 1em;">
+					<table cellpadding="10" cellspacing="10" align="left">
 						<xsl:call-template name="table_header_history"/>
 						<xsl:call-template name="values_history"/>
 					</table>

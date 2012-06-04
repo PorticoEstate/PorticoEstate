@@ -30,7 +30,7 @@
 		</ul>
 	</div>
 	
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" ></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />

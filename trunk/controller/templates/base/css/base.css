@@ -1839,3 +1839,7 @@ img#loading {
 	height:1px;
 	visibility:hidden;
 }
+
+#control_group_id {
+	width: 250px;
+}
