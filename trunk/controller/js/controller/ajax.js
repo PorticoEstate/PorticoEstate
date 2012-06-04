@@ -1,8 +1,9 @@
 $(document).ready(function(){
 
-	$("#choose_loc a").click(function(){
+	// Changes location level between building and property in serch location select box
+	$("#choose-loc a").click(function(){
 		
-		$("#choose_loc a").removeClass("active");
+		$("#choose-loc a").removeClass("active");
 		$(this).addClass("active");
 		
 		var loc_type = $(this).attr("href");
@@ -15,6 +16,7 @@ $(document).ready(function(){
 		return false;
 	});
 
+	// Changes control type location level between building and property in serch location select box
 	$(".control_item_type").click(function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
@@ -35,63 +37,6 @@ $(document).ready(function(){
 			$("#add_control_item_option_panel").slideUp(500);
 		}
 	});
-	
-	$(".choose_loc").live( "change", function () {
-		var thisSelectBox = $(this);
-		var loc_code = $(this).val();
-		var loc_id = $(this).attr("id");
-		var loc_arr = loc_id.split('_');
-		var loc_level = parseInt(loc_arr[1]);
-		var new_loc_id = "loc_" + (parseInt(loc_level)+1);
-		
-		var id = "";
-		var new_loc_code = "";
-		var level;
-		for(level = 1;level <= loc_level;level++){
-			id = "loc_" + level;
-			if(level > 1)
-				new_loc_code += "-" + $("#" + id).val();
-			else
-				new_loc_code += $("#" + id).val();
-		}
-		
-		if(!loc_code)
-		{
-			return false;
-		}
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:new_loc_code};
-		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function(data) {
-				if( data != null)
-				{
-					htmlString  = "<select class='choose_loc' name='" + new_loc_id  + "' id='" + new_loc_id  + "' >" +
-								  "<option value = ''>" + data.length + " lokasjone(r) funnet</option>";
-								  
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					htmlString += "</select>";
-					
-					$(thisSelectBox).after( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen lokasjoner</option>"
-					$(new_loc_id).html( htmlString );
-				}
-			} 
-		});	
-    });
 	
 	$(".selectLocation").change(function () {
 		 var location_code = $(this).val();
@@ -585,11 +530,6 @@ $(document).ready(function(){
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-	
-	
-
-	
-	
 	
 	
 	//=======================================  CASE  ======================================
