@@ -15,10 +15,8 @@
 					</xsl:for-each>
 				</ul>
 				<xsl:if test="//editable">
-					<div class="form-buttons">
 						<xsl:variable name="lang_remove"><xsl:value-of select="php:function('lang', 'remove')" /></xsl:variable>
 						<input type="submit" name="remove_control_group_items" value="{$lang_remove}" title = "{$lang_remove}" />
-					</div>
 				</xsl:if>
 			</form>
 		</xsl:if>
@@ -37,10 +35,8 @@
 	   				<li><input type="checkbox"  name="control_tag_ids[]" value="{$control_item_id}" /><xsl:value-of select="title"/></li>
 				</xsl:for-each>
 			</ul>		
-			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 				<input type="submit" name="save_control_group_items" value="{$lang_save}" title = "{$lang_save}" />
-			</div>
 			</form>
 		</xsl:when>
 	   </xsl:choose>

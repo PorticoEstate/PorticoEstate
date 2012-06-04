@@ -33,7 +33,7 @@
 </xsl:template>
 
 <xsl:template match="control_group_filters" name="control_group_filters" xmlns:php="http://php.net/xsl">
-	<div style="margin: 10px;padding: 10px; width: 25%;">
+	<div id="select-wrp">
 		
 		<!-- When control area is chosen, an ajax request is executed. The operation fetches control groups from db and populates the control group list.
 			 The ajax opearation is handled in ajax.js --> 

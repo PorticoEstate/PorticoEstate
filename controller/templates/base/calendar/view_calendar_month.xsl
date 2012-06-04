@@ -77,7 +77,7 @@ function chooseLocation( label, value ){
 		
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
-				<div id="choose_loc">
+				<div id="choose-loc">
 					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
 							<input id="loc_type" type="hidden" name="loc_type" value="2" />
 					</label>
@@ -211,28 +211,8 @@ function chooseLocation( label, value ){
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-			<!-- 
- 				<select id="loc_1" class="choose_loc">
-					<xsl:for-each select="property_array">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<xsl:choose>
-							<xsl:when test="location_code = $view_location_code">
-								<option value="{$loc_code}" selected="selected">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="{$loc_code}">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</select>				
-			 -->
 		</div>
-		
-		
+			
 		<div id="cal_wrp">
 			<table id="calendar" class="month">
 				<tr class="heading">

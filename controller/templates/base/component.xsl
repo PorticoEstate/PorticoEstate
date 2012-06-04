@@ -44,7 +44,7 @@
 </xsl:template>
 
 <xsl:template match="form">
-	<form id="queryForm" style="margin: 20px; width: 65%;">
+	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 		</xsl:attribute>
@@ -63,7 +63,7 @@
 
 <xsl:template match="toolbar">
 	<div id="toolbar">
-		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
+		  <table class='yui-skin-sam'>
 			<tr>
 		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>

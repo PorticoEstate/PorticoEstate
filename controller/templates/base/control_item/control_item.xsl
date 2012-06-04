@@ -7,7 +7,14 @@
 
 <div id="main_content">
 
-<h1><xsl:value-of select="php:function('lang', 'Register control item')" /></h1>
+<xsl:choose>
+	<xsl:when test="editable">
+		<h1><xsl:value-of select="php:function('lang', 'Register control item')" /></h1>
+	</xsl:when>
+	<xsl:otherwise>
+		<h1><xsl:value-of select="php:function('lang', 'View control item')" /></h1>
+	</xsl:otherwise>
+</xsl:choose>
 
 <ul class="check_list">
 	<xsl:for-each select="check_list_array">

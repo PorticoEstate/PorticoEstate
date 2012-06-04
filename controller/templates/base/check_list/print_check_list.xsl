@@ -69,6 +69,6 @@ ul.groups h3 {
 }
 
 </style>
-<a id="exec_print" href="#print" class="btn" onClick="window.print()">Skriv ut</a>
+<a id="exec-print" href="#print" class="btn" onClick="window.print()">Skriv ut</a>
 
 </xsl:template>
