@@ -183,11 +183,13 @@ div.identifier-header label {
 
 .form-buttons {
     clear: both;
-    padding-top: 2em;
+    padding-top: 1em;
 }
+
 .form-buttons button {
     margin-right: .5em;
 }
+
 .form-buttons .cancel {
     margin-left: .6em;
 }
@@ -197,6 +199,7 @@ div.identifier-header label {
     display:none; 
     position:absolute; z-index:1;
 }
+
 #toolbar {
     width: 100%;
     background-color: #eee;
@@ -514,41 +517,48 @@ h1 img{
 
 /* =======================================  CONTROL ITEM  ========================================= */
 
-#control_item_details{
-	background: none repeat scroll 0 0 #EDF5FF;
+#control_item_details {
+    background: none repeat scroll 0 0 #EDF5FF;
     border-color: #DBE5EF;
-    border-style: solid solid none;
-    border-width: 1px 1px 0;
+    border-style: solid;
+    border-width: 1px;
     clear: both;
     margin-top: 1em;
     overflow: hidden;
-    padding: 1em 1em 0;
-    width: 1150px;
+    padding: 1em;
+    width: 100%;
 }
+
 #control_item_details label{
 	margin-right: 10px;
 }
+
 #control_item_details label.top {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
 }
+
 #control_item_details .styleWrp {
     background: none repeat scroll 0 0 #F2F8FF;
     border: 1px solid #DBE5EF;
     border-radius: 5px 5px 5px 5px;
     padding: 10px;
 }
+
 #control_item_details dl.proplist dt, dl.proplist-col dt {
     font-size: 1em;
     font-weight: normal;
-    margin-top: 1.5em;
+    margin-bottom: 2em;
 }
+
 #control_item_details .control_item_type {
     margin-top: 0.5em;
 }
+
 #control_item_details .control_item_type .active {
     background: none repeat scroll 0 0 #0F6CCF;
 }
+
 #control_item_details input[type=radio] {
     display:none;
 }
@@ -559,14 +569,17 @@ h1 img{
 	margin-top: 2em;
 	display: none;
 }
+
 #add_control_item_option_panel label{
 	display: inline-block;
 	width: 85px; 
 }
+
 #add_control_item_option_panel input[type=text]{
 	display: inline-block;
 	width: 150px; 
 }
+
 #add_control_item_option_panel hr{
 	border: 1px solid #CCD2D9;
 }
@@ -574,20 +587,25 @@ h1 img{
 ul#control_item_options{
 	margin-bottom: 1em;
 }
+
 ul#control_item_options li {
     margin-bottom: 5px;
     margin-right: 5px;
 }
+
 ul#control_item_options li .order_nr{
     margin-left: 5px;
 }
+
 ul#control_item_options input[type="text"] {
     background: none repeat scroll 0 0 transparent;
     border: medium none;
 }
+
 ul#control_item_options label {
     margin-right: 10px;
 }
+
 ul#control_item_options .btn.delete {
     background: none repeat scroll 0 0 #EEEEEE;
     border: 1px solid #CCCCCC;
@@ -828,10 +846,11 @@ ul.row li{
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 10px;
     padding: 5px 10px;
     text-decoration: none;
 }
+
 .btn_m{
     padding: 2px 10px;
     font-size: 12px;
@@ -1113,13 +1132,13 @@ ul.check_list {
   text-align: justify;	
 }
 
-#choose_loc .btn {
+#choose-loc .btn {
     display: inline-block;
     font-size: 0.9em;
     padding: 2px 8px;
 }
 
-#choose_loc .btn.active{
+#choose-loc .btn.active{
 	background: #3F7EC1;	
 }
 
@@ -1264,7 +1283,6 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
-    padding-top: 2px;
     text-align: center;
     text-decoration: none;
 }
@@ -1278,11 +1296,11 @@ a.view_info_box {
     height: 15px;
     position: relative;
     text-align: center;
-    width: 100%;
+    width: 15px;
 }
 
-#calendar.month a.view_info_box {
-    padding-left: 5px;
+.year .info_box_wrp {
+    width: 100%;
 }
 
 .days_wrp a.view_info_box {
@@ -1823,11 +1841,11 @@ img#loading {
 	vertical-align: middle;
 }
 
-#print_control_items{
+#print-control-items{
 	margin-top:20px;
 }
 
-#exec_print {
+#exec-print {
 	margin:20px 0 0 40px;
 }
 
@@ -1842,4 +1860,21 @@ img#loading {
 
 #control_group_id {
 	width: 250px;
+}
+
+#select-wrp {
+	margin: 10px;
+	padding: 10px;
+	width: 25%;
+}
+
+#queryForm{
+	margin: 20px; 
+	width: 65%;
+}
+
+table.yui-skin-sam {
+	border: 0;
+	padding: 0;
+	margin: 0;
 }
