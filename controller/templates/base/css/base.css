@@ -215,7 +215,6 @@ table.datatableToolbar {
 	padding: .3em;
 }
 
-
 #controller_user_error {
     width: 100%;
     background-color: #eee;
@@ -395,14 +394,23 @@ h1 img, li img {
 	vertical-align: middle;
 }
 /* Set up common form styles.  TODO: needs refinement. */
+
+/* ======================================================================================================================
+																												CONTROLLER MODULE CSS
+ ======================================================================================================================== */
+
+/* ==========================================   SELECTORS, IDS AND CLASSES    =========================================== */
+
 input{
     margin: 0 13px 0 0;
     padding: 3px 6px;
 }
+
 input[type="radio"] {
     margin: 0 5px 0 2px;
     padding: 3px 6px;
 }
+
 input[type="submit"] {
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #4685C8;
@@ -412,9 +420,11 @@ input[type="submit"] {
     margin-top: 20px;
     padding: 5px 20px;
 }
+
 .row input[type="submit"] {
     padding: 2px 10px;
 }
+
 select{
 	padding: 3px 1px 3px 4px;
 }
@@ -422,31 +432,38 @@ select{
 fieldset {
 	border-bottom:0px solid #ccc;
 }
+
 textarea{
 	padding: 4px;	
 }
+
 h1 em {
 	font-style:italic;
 }
+
 a {
     color: #0066CC;
     text-decoration: none;
 }
-div.info, div.error, div.warning {
+
+.info, .error, .warning {
 	font-weight: normal;
 	margin:20px;
 	padding:5px;
 	font-size:1.1em;
 	text-align: left;
 }
-p.message {
+
+.message {
 	margin: 5px;
 }
+
 .info {
 	background-color:#CCFFCC;
 	border:1px solid #00FF00;
 	color:black;
 }
+
 .warning {
 	background-color: #FEEFB3;
 	border:1px solid #9F6000;
@@ -455,9 +472,11 @@ p.message {
 .yui-calendar td.calcell {
 	border:0px !important;
 }
+
 .yui-skin-sam .yui-dt TABLE TH{
 	border: none !important;
 }
+
 .yui-skin-sam .yui-dt TABLE TD{
 	border: none !important;
 }
@@ -493,7 +512,6 @@ h1 img{
     margin:0 0 10px;
 }
 
-
 /* =======================================  CONTROL ITEM  ========================================= */
 
 #control_item_details{
@@ -512,7 +530,7 @@ h1 img{
 }
 #control_item_details label.top {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
 }
 #control_item_details .styleWrp {
     background: none repeat scroll 0 0 #F2F8FF;
@@ -730,7 +748,6 @@ dl.proplist, dl.proplist-col {
 }
 
 #innertoolbar-button{
-	/*background: none repeat scroll 0 0 #CCCCCC;*/
     color: #111111;
 }
 
@@ -986,8 +1003,6 @@ h3.check_item_details{
 	margin-bottom:0;	
 }
 
-
-
 /* =======================================  CHECK ITEM  ========================================= */
 
 .check_item div{
@@ -1033,7 +1048,7 @@ ul.check_list {
 	width: 925px;	
 }
 
-/* ======================  CALENDAR ========================== */
+/* ====================================  CALENDAR  ========================================= */
 #control_plan .top h3 {
     float: left;
     font-size: 19px;
@@ -1053,6 +1068,59 @@ ul.check_list {
     margin-top: 1em;
     overflow: hidden;
     padding: 1em 1em 0;
+}
+
+/* =============================  SEARCH LOCATION BOX  ======================= */
+#search-location {
+    float: right;
+    margin-bottom: 10px;
+}
+
+#search-location-name { 
+	width: 16em; 
+}
+
+#choose-my-location {
+    float: right;
+    margin-right: 10px;
+}
+
+#choose-building {
+    float: left;
+}
+
+.month_view #choose-building {
+    clear:left;
+    margin-top: 1em;
+}
+
+.select-box { 
+ 		background: none repeat scroll 0 0 #FEFBF4;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    padding: 1em;	
+}
+
+.select-box label{
+	margin-bottom:5px;
+	display: block;	
+}
+
+.select-box a{
+	display: block;
+  font-weight: bold;
+  padding: 0 0 10px;
+  text-align: justify;	
+}
+
+#choose_loc .btn {
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 2px 8px;
+}
+
+#choose_loc .btn.active{
+	background: #3F7EC1;	
 }
 
 /* ==================  COLOR MAP ============================= */
@@ -1189,7 +1257,7 @@ ul#icon_color_map span{
     font-size: 21px;
     padding-left: 500px;
 }
-/* ======================  CALENDAR INFO BOX ========================== */
+/* ===============================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
     color: #FFFFFF;
@@ -1753,76 +1821,6 @@ ul.control_groups h3 {
 img#loading {
 	margin-left: 5px;
 	vertical-align: middle;
-}
-
-/* =============================  SUGGEST LIST  ======================= */
-ul#suggestList {
-    background: #fff;
-    left: 1px;
-    position: absolute;
-    top: 1px;
-    z-index: 2;
-    border: 1px solid #DBE5EF;
-}
-
-ul#suggestList li{
-    padding: 0.5em;
-}
-
-ul#suggestList li.even {
-    background: none repeat scroll 0 0 #EAEFF5;
-}
-
-#search-location {
-    float: right;
-    margin-bottom: 10px;
-}
-
-#search-location-name { 
-	width: 16em; 
-}
-
-#choose-my-location {
-    float: right;
-    margin-right: 10px;
-}
-
-#choose-building {
-    float: left;
-}
-
-.month_view #choose-building {
-    clear:left;
-    margin-top: 1em;
-}
-
-.select-box { 
- 		background: none repeat scroll 0 0 #FEFBF4;
-    border: 1px solid #DDDDDD;
-    border-radius: 5px 5px 5px 5px;
-    padding: 1em;	
-}
-
-.select-box label{
-	margin-bottom:5px;
-	display: block;	
-}
-
-.select-box a{
-	display: block;
-  font-weight: bold;
-  padding: 0 0 10px;
-  text-align: justify;	
-}
-
-#choose_loc .btn {
-    display: inline-block;
-    font-size: 0.9em;
-    padding: 2px 8px;
-}
-
-#choose_loc .btn.active{
-	background: #3F7EC1;	
 }
 
 #print_control_items{
