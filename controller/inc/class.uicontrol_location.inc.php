@@ -29,6 +29,12 @@
 	*/
 	
 	phpgw::import_class('phpgwapi.yui');
+
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.socontrol_area');
 	
@@ -57,7 +63,7 @@
 		private $so_procedure;
 	
 		var $public_functions = array(
-										'index' => true,
+										'index'								=> true,
 										'view_locations_for_control' 		=> true,
 										'register_control_to_location' 		=> true,
 										'register_control_to_location_2'	=> true,
@@ -65,7 +71,9 @@
 										'get_locations_for_control' 		=> true,
 										'get_location_category'				=> true,
 										'get_district_part_of_town'			=> true,
-										'entity'							=> true
+										'entity'							=> true,
+										'index2'							=> true,
+										'get_category_by_entity'			=> true
 									);
 
 		function __construct()
@@ -973,7 +981,8 @@
 			return $this->yui_results($results);
 		}
 		
-		public function query(){
+		public function query()
+		{
 			$type_id = phpgw::get_var('type_id', 'int');
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control_id_init = phpgw::get_var('control_id_init', 'int');
@@ -1089,5 +1098,303 @@
 			array_unshift($part_of_town_list,$default_value);
 
 			return json_encode( $part_of_town_list );
+		}
+
+
+		/*
+
+		 * Return parts of town based on chosen district
+		 */
+		public function get_category_by_entity()
+		{
+			$entity_id		= phpgw::get_var('entity_id');
+			$entity			= CreateObject('property.soadmin_entity');
+
+			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
+
+/*			$default_value = array ('id'=>'','name'=>lang('select'));
+			array_unshift($category_list,$default_value);
+*/
+			return $category_list;
+		}
+
+		function index2()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$receipt = array();
+
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query2();
+			}
+
+			$msgbox_data = array();
+			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			{
+				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			}
+
+			$myColumnDefs = array();
+			$datavalues = array();
+			$myButtons	= array();
+
+			$datavalues[] = array
+			(
+				'name'				=> "0",
+				'values' 			=> $this->query2(),//json_encode(array()),
+				'total_records'		=> 0,
+				'permission'   		=> "''",
+				'is_paginator'		=> 0,
+				'edit_action'		=> "''",
+				'footer'			=> 0
+			);
+
+			$datatable = array
+			(
+				array
+				(
+				'key' => 'id',
+				'hidden' => true
+				),
+				array
+				(
+					'key' => 'user',
+					'label' => lang('user'),
+					'sortable' => false
+				),
+				array
+				(
+					'key' => 'ecodimb',
+					'label' => lang('dim b'),
+					'sortable' => false,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
+					'key'	=>	'role',
+					'label'	=>	lang('role'),
+					'formatter' => 'FormatterRight',
+					'sortable'	=>	true
+				),
+				array
+				(
+					'key' => 'default_user',
+					'label' => lang('default'),
+					'sortable'	=> false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'active_from',
+					'label' => lang('date from'),
+					'sortable'	=> true,
+					'formatter' => 'FormatterRight',
+				),
+				array
+				(
+					'key' => 'active_to',
+					'label' => lang('date to'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'add',
+					'label' => lang('add'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'delete',
+					'label' => lang('delete'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+				array
+				(
+					'key' => 'alter_date',
+					'label' => lang('alter_date'),
+					'sortable' => false,
+					'formatter' => 'FormatterCenter',
+				),
+			);
+
+			$myColumnDefs[0] = array
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode($datatable)
+			);	
+
+
+
+			$GLOBALS['phpgw']->translation->add_app('property');
+			$entity			= CreateObject('property.soadmin_entity');
+			$entity_list 	= $entity->read(array('allrows' => true));
+
+			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
+
+			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
+
+			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
+			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
+
+
+
+			array_unshift ($role_list ,array ('id'=>'','name'=>lang('select')));
+			array_unshift ($dimb_list ,array ('id'=>'','name'=>lang('select')));
+
+
+
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_area = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+
+								
+			$control_area_list = array();
+			foreach($control_area['cat_list'] as $cat_list)
+			{
+				$control_area_list[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+
+			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
+
+			$data = array
+			(
+				'td_count'						=> '""',
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
+				'myButtons'						=> $myButtons,
+
+				'msgbox_data'					=> $msgbox_data,
+				'filter_form' 					=> array
+													(
+														'control_area_list'	=> array('options' => $control_area_list),
+														'entity_list' 		=> array('options' => $entity_list),
+														'district_list' 	=> array('options' => $district_list),
+														'part_of_town_list'	=> array('options' => $part_of_town_list),
+													),
+				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_location.edit'))
+			);
+
+			$GLOBALS['phpgw']->jqcal->add_listener('query_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('query_end');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			phpgwapi_jquery::load_widget('core');
+
+			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
+			self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('control_location/register_control_to_component'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+		}
+	
+
+		public function query2()
+		{
+			$user_id =	phpgw::get_var('user_id', 'int');
+			$dimb_id =	phpgw::get_var('dimb_id', 'int');
+			$role_id =	phpgw::get_var('role_id', 'int');
+			$query_start =	phpgw::get_var('query_start');
+			$query_end =	phpgw::get_var('query_end');
+
+//			$this->bo->allrows = true;
+			$values = $this->bo->read(array('user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query_start' => $query_start, 'query_end' => $query_end));
+
+			foreach($values as &$entry)
+			{
+				if($entry['active_from'])
+				{
+					$default_user_checked = $entry['default_user'] == 1 ? 'checked = "checked"' : '';
+					$entry['default_user'] = "<input id=\"default_user\" type =\"checkbox\" $default_user_checked name=\"values[default_user][]\" value=\"{$entry['id']}\">";
+					$entry['delete'] = "<input id=\"delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$entry['id']}\">";
+					$entry['alter_date'] = "<input id=\"alter_date\" type =\"checkbox\" name=\"values[alter_date][]\" value=\"{$entry['id']}\">";
+					$entry['add'] = '';
+				}
+				else
+				{
+					$entry['default_user'] = '';
+					$entry['delete'] = '';
+					$entry['alter_date'] = '';
+					$entry['add'] = "<input id=\"add\" type =\"checkbox\" name=\"values[add][]\" value=\"{$entry['ecodimb']}_{$entry['role_id']}_{$entry['user_id']}\">";				
+				}
+				$results['results'][]= $entry;
+			}
+
+			return json_encode($values);
+		}
+
+		public function edit()
+		{
+			$user_id =	phpgw::get_var('user_id', 'int');
+			$dimb_id =	phpgw::get_var('dimb_id', 'int');
+			$role_id =	phpgw::get_var('role_id', 'int');
+			$query =	phpgw::get_var('query');
+
+			if($values = phpgw::get_var('values'))
+			{
+				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
+				{
+					$receipt['error'][]=true;
+					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
+				}
+				if(!$receipt['error'])
+				{
+					if($this->bo->edit($values))
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+				}
+			}
+
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$result['receipt'] = $receipt;
+				}
+				else
+				{
+					$result['receipt'] = array();
+				}
+				return $result;
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index2', 'user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query' => $query));
+			}
 		}
 	}
