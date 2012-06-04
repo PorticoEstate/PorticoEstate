@@ -76,7 +76,7 @@ function chooseLocation( label, value ){
 			
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
-				<div id="choose_loc">
+				<div id="choose-loc">
 					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
 							<input id="loc_type" type="hidden" name="loc_type" value="2" />
 					</label>
@@ -117,25 +117,6 @@ function chooseLocation( label, value ){
 				<xsl:call-template name="select_buildings_on_property" />
 			</div>
 			
-			<!-- 
- 				<select id="loc_1" class="choose_loc">
-					<xsl:for-each select="property_array">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<xsl:choose>
-							<xsl:when test="location_code = current_location/location_code">
-								<option value="{$loc_code}" selected="selected">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="{$loc_code}">
-									<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</select>				
-			-->
 			
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
@@ -172,7 +153,7 @@ function chooseLocation( label, value ){
 		</div>
 		 
 		<div id="cal_wrp">
-		<table id="calendar">
+		<table id="calendar" class="year">
 				<tr class="heading">
 						<th class="title"><span>Tittel</span></th>
 						<th class="assigned"><span>Tildelt</span></th>
