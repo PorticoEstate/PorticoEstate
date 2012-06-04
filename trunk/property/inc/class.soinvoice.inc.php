@@ -2039,7 +2039,7 @@
 			$value_set['oppsynsmannid']			= $order_info['janitor'];
 			$value_set['saksbehandlerid']		= $order_info['supervisor'];
 			$value_set['budsjettansvarligid']	= $order_info['budget_responsible'];
-
+			$value_set['project_id'] 			= execMethod('property.soXport.get_project',$order_id);
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id =" . (int)$line_id,__LINE__,__FILE__);
 			return $GLOBALS['phpgw']->db->transaction_commit();
