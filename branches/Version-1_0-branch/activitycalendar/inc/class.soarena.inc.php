@@ -289,13 +289,18 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	public function get_address($search)
 	{
 		$result_arr = array();
+	    $curr_index=0;
 		if($search)
 		{
 			$sql = "select * from fm_streetaddress where UPPER(descr) like UPPER('{$search}%')";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				//$result_arr = $this->db->f('name');
+				//if($curr_index == 0){
+				    //$result_arr[] = "<option value='0'>Velg gateadresse</option>";
+				//}
 				$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
+				//$curr_index++;
 			}
 		}
 		$result = implode(' ' , $result_arr);

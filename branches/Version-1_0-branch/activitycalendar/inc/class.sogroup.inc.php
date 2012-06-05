@@ -87,7 +87,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		if(isset($filters['new_groups'])){
 			$use_local_group = true;
 			unset($filter_clauses);
-			$filter_clauses[] = "activity_group.change_type = 'new'";
+			$filter_clauses[] = "activity_group.change_type = 'new' OR activity_group.change_type = 'change' ";
 			if(isset($filters[$this->get_id_field_name()])){
 				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 				$filter_clauses[] = "activity_group.id = {$id}";

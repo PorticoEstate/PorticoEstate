@@ -17,7 +17,7 @@
 </func:function>
 
 <xsl:template match="data">
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -31,7 +31,7 @@
 
 <xsl:template match="toolbar">
 	<div id="toolbar">
-		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
+		  <table class='yui-skin-sam'>
 			<tr>
 		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
@@ -49,8 +49,8 @@
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
-					<td valign="top" width="160px">
-						<div style="width:140px">
+					<td class="auto">
+						<div class="auto">
 							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
 							</input>
@@ -134,36 +134,6 @@
 						</xsl:for-each>
 					</select>
 					</td>
-<!--
-					<xsl:if test="onChangeSelect">
-						<script type="text/javascript">	
-							YAHOO.util.Event.onDOMReady(function() {
-							var elementid = "<xsl:value-of select="name"/>";
-							<![CDATA[
-								var oElement = document.getElementById(elementid);
-								function onChangeSelectCallback(e, oElement)
-								{
-									YAHOO.portico.dataSourceUrl;
-									
-									var myselect=document.getElementById(elementid);
-									for (var i=0; i<myselect.options.length; i++)
-									{
-										if (myselect.options[i].selected==true)
-										{
-											break;
-										}
-									}
-
-									strURL = YAHOO.portico.dataSourceUrl + '&' + elementid + '=' + myselect.options[i].value;
-									alert('datatable.xsl::' + strURL);
-									//alert("onChangeSelectCallback::Do something");
-								}
-								YAHOO.util.Event.addListener(oElement, "change", onChangeSelectCallback);
-							]]>
-							});
-						</script>
-					</xsl:if>
--->
 				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">
@@ -181,12 +151,12 @@
 		</xsl:for-each>
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
-				<thead style="background:none">
+				<thead>
 					<tr>
 						<xsl:for-each select="item">
 							<td>
 								<xsl:if test="name">
-									<label style='margin:auto 0.25em'>
+									<label>
 										<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
