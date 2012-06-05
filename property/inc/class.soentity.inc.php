@@ -225,6 +225,7 @@
 			$order			= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
 			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
@@ -524,9 +525,14 @@
 	//			$where= 'AND';
 			}
 
-			if ($district_id > 0 && $category['location_level'])
+			if ($district_id > 0 && $category['location_level'] && !$part_of_town_id)
 			{
 				$filtermethod .= " $where  fm_part_of_town.district_id='$district_id' ";
+				$where = 'AND';
+			}
+			else if ($part_of_town_id > 0 && $category['location_level'])
+			{
+				$filtermethod .= " $where fm_part_of_town.part_of_town_id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 
@@ -855,6 +861,7 @@
 			$order			= isset($data['order']) ? $data['order'] : '';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
 			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
@@ -1178,9 +1185,14 @@
 				$where= 'AND';
 			}
 
-			if ($district_id > 0 && $category['location_level'])
+			if ($district_id > 0 && $category['location_level'] && !$part_of_town_id)
 			{
 				$filtermethod .= " $where  fm_part_of_town.district_id='$district_id' ";
+				$where = 'AND';
+			}
+			else if ($part_of_town_id > 0 && $category['location_level'])
+			{
+				$filtermethod .= " $where  fm_part_of_town.part_of_town_id='$part_of_town_id' ";
 				$where = 'AND';
 			}
 
