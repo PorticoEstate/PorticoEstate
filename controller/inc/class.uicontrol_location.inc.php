@@ -62,20 +62,23 @@
 		private $so_check_item;
 		private $so_procedure;
 	
-		var $public_functions = array(
-										'index'								=> true,
-										'view_locations_for_control' 		=> true,
-										'register_control_to_location' 		=> true,
-										'register_control_to_location_2'	=> true,
-										'register_control_to_component'		=> true,
-										'get_locations_for_control' 		=> true,
-										'get_location_category'				=> true,
-										'get_district_part_of_town'			=> true,
-										'entity'							=> true,
-										'index2'							=> true,
-										'query2'							=> true,
-										'get_category_by_entity'			=> true
-									);
+		var $public_functions = array
+		(
+			'index'								=> true,
+			'view_locations_for_control' 		=> true,
+			'register_control_to_location' 		=> true,
+			'register_control_to_location_2'	=> true,
+			'register_control_to_component'		=> true,
+			'get_locations_for_control' 		=> true,
+			'get_location_category'				=> true,
+			'get_district_part_of_town'			=> true,
+			'entity'							=> true,
+			'index2'							=> true,
+			'query2'							=> true,
+			'get_category_by_entity'			=> true,
+			'get_entity_table_def'				=> true,
+			'get_locations'						=> true
+		);
 
 		function __construct()
 		{
@@ -1144,92 +1147,19 @@
 			$datavalues[] = array
 			(
 				'name'				=> "0",
-				'values' 			=> $this->query2(),//json_encode(array()),
+				'values' 			=> json_encode(array()),
 				'total_records'		=> 0,
 				'permission'   		=> "''",
-				'is_paginator'		=> 0,
+				'is_paginator'		=> 1,
 				'edit_action'		=> "''",
 				'footer'			=> 0
-			);
-
-			$datatable = array
-			(
-				array
-				(
-				'key' => 'id',
-				'hidden' => true
-				),
-				array
-				(
-					'key' => 'user',
-					'label' => lang('user'),
-					'sortable' => false
-				),
-				array
-				(
-					'key' => 'ecodimb',
-					'label' => lang('dim b'),
-					'sortable' => false,
-					'formatter' => 'FormatterRight',
-				),
-				array
-				(
-					'key'	=>	'role',
-					'label'	=>	lang('role'),
-					'formatter' => 'FormatterRight',
-					'sortable'	=>	true
-				),
-				array
-				(
-					'key' => 'default_user',
-					'label' => lang('default'),
-					'sortable'	=> false,
-					'formatter' => 'FormatterCenter',
-				),
-				array
-				(
-					'key' => 'active_from',
-					'label' => lang('date from'),
-					'sortable'	=> true,
-					'formatter' => 'FormatterRight',
-				),
-				array
-				(
-					'key' => 'active_to',
-					'label' => lang('date to'),
-					'sortable' => false,
-					'formatter' => 'FormatterCenter',
-				),
-				array
-				(
-					'key' => 'add',
-					'label' => lang('add'),
-					'sortable' => false,
-					'formatter' => 'FormatterCenter',
-				),
-				array
-				(
-					'key' => 'delete',
-					'label' => lang('delete'),
-					'sortable' => false,
-					'formatter' => 'FormatterCenter',
-				),
-				array
-				(
-					'key' => 'alter_date',
-					'label' => lang('alter_date'),
-					'sortable' => false,
-					'formatter' => 'FormatterCenter',
-				),
 			);
 
 			$myColumnDefs[0] = array
 			(
 				'name'		=> "0",
-				'values'	=>	json_encode($datatable)
+				'values'	=>	json_encode(array())
 			);	
-
-
 
 			$GLOBALS['phpgw']->translation->add_app('property');
 			$entity			= CreateObject('property.soadmin_entity');
@@ -1241,13 +1171,7 @@
 
 			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
-
-
-
-			array_unshift ($role_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift ($dimb_list ,array ('id'=>'','name'=>lang('select')));
-
-
+			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -1313,6 +1237,53 @@
 		}
 	
 
+		public function get_entity_table_def()
+		{
+			$entity_id			= phpgw::get_var('entity_id', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$boentity	= CreateObject('property.boentity',false, 'entity');
+			$boentity->read(array('dry_run' => true));
+			$uicols = $boentity->uicols;
+			$columndef = array();
+
+			$count_fields =count($uicols['name']);
+			for ($i=0;$i<$count_fields;$i++)
+			{
+				$columndef[] = array
+				(
+					'key' => $uicols['name'][$i],
+					'label' => $uicols['descr'][$i],
+					'sortable' => $uicols['sortable'][$i],
+					'formatter' => $uicols['formatter'][$i],
+					'hidden' => $uicols['input_type'][$i] == 'hidden' ? true : false			
+				);
+			}
+
+//_debug_array($columndef);
+			return $columndef;
+		}
+
+
+		public function get_locations()
+		{
+			$location_code = phpgw::get_var('location_code');
+			$child_level = phpgw::get_var('child_level', 'int', 'REQUEST', 1);
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+
+			$criteria = array
+			(
+				'location_code'		=> $location_code,
+				'child_level'		=> $child_level,
+				'field_name'		=> "loc{$child_level}_name",
+				'part_of_town_id'	=> $part_of_town_id
+			);
+	
+			$locations = execMethod('property.solocation.get_children',$criteria);
+			return $locations;
+		}
+
+
+
 		public function query2()
 		{
 			$entity_id			= phpgw::get_var('entity_id', 'int');
@@ -1328,10 +1299,11 @@
 			}
 
 			$boentity	= CreateObject('property.boentity',false, 'entity');
-//			$boentity->allrows = true;
+			$boentity->allrows = true;
 			
 			$values = $boentity->read();
 
+/*
 			foreach($values as &$entry)
 			{
 				if($entry['active_from'])
@@ -1351,7 +1323,7 @@
 				}
 				$results['results'][]= $entry;
 			}
-
+*/
 			return json_encode($values);
 		}
 

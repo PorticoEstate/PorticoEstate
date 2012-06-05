@@ -5,11 +5,11 @@ $(document).ready(function()
 		var control_area_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-        
+
 	//  	$("#hidden_control_area_id").val( control_area_id );
     //     var control_id_init = $("#hidden_control_id").val();
          var htmlString = "";
-         
+
          $.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -39,7 +39,7 @@ $(document).ready(function()
          				$("#control_id").html( htmlString );
 //						$("#hidden_control_id").val(-1); //reset
          			}
-			}  
+			}
 			});
 			
     });
@@ -49,16 +49,16 @@ $(document).ready(function()
 	$("#entity_id").change(function () {
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_category_by_entity', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-        
+
          var htmlString = "";
-         
+
          $.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
 			success: function(data) {
 				if( data != null){
-					htmlString  = "<option>Velg</option>"
+					htmlString  = "<option value=''>Velg</option>"
 					var obj = data;
 
 					$.each(obj, function(i)
@@ -75,14 +75,14 @@ $(document).ready(function()
 		  			});
 					 								
 					$("#cat_id").html( htmlString );
-					update_component_table();
+	//				update_component_table();
 					}
 					else
 					{
          				htmlString  += "<option>Ingen kontroller</option>"
          				$("#cat_id").html( htmlString );
          			}
-			}  
+			}
 			});
 			
     });
@@ -93,9 +93,9 @@ $(document).ready(function()
 		var district_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         
+
          var htmlString = "";
-         
+
          $.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -111,17 +111,89 @@ $(document).ready(function()
 		  			});
 					 								
 					$("#part_of_town_id").html( htmlString );
-					
-					update_component_table();
+         			$("#loc1").html( "<option value=''>Velg</option>" );
+         			$("#loc2").html( "<option value=''>Velg</option>" );
+				}
+				else
+				{
+         			htmlString  += "<option value=''>Velg</option>";
+         			$("#part_of_town_id").html( htmlString );
+         			$("#loc1").html( htmlString );
+         			$("#loc2").html( htmlString );
+         		}
+			}
+         });
+    });
+
+
+	$("#part_of_town_id").change(function ()
+	{
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:1, part_of_town_id: $(this).val()};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString  = "<option value=''>Velg</option>";
+
+         $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					var obj = data;
+						
+					$.each(obj, function(i)
+					{
+						htmlString  += "<option value='" + obj[i].id + "'>" +  obj[i].id + " " + obj[i].name + "</option>";
+		  			});
+					 								
+					$("#loc1").html( htmlString );
+         			$("#loc2").html( "<option value=''>Velg</option>" );
 					}
 					else
 					{
-         				htmlString  += "<option>Ingen kontroller</option>"
-         				$("#part_of_town_id").html( htmlString );
-         			}
-			}  
+         				htmlString  = "<option>Ingen</option>";
+         				$("#loc1").html( htmlString );
+	         			$("#loc2").html(htmlString);
+        			}
+			}
          });
+
     });
+
+	$("#loc1").change(function ()
+	{
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:2, location_code: $(this).val()};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString  = "<option value=''>Velg</option>";
+
+         $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					var obj = data;
+						
+					$.each(obj, function(i)
+					{
+						htmlString  += "<option value='" + obj[i].id + "'>" +  obj[i].id + " " + obj[i].name + "</option>";
+		  			});
+					 								
+					$("#loc2").html( htmlString );
+					}
+					else
+					{
+         				htmlString  = "<option>Ingen</option>";
+         				$("#loc2").html( htmlString );
+         			}
+			}
+         });
+
+    });
+
 
 
 	$("#control_id").change(function ()
@@ -131,6 +203,13 @@ $(document).ready(function()
 
 
 	$("#cat_id").change(function ()
+	{
+		get_table_def();
+    });
+
+
+
+	$("#search").click(function(e)
 	{
 		update_component_table();
     });
@@ -166,7 +245,7 @@ $(document).ready(function()
 					{
 		  			$(submitBnt).val("Feil ved lagring");					
 					}
-		  				 
+		  				
 		  		// Changes text on save button back to original
 		  		window.setTimeout(function() {
 						$(submitBnt).val('Lagre');
@@ -201,6 +280,42 @@ $(document).ready(function()
 	});
 });
 
+function get_table_def()
+{
+	var oArgs = {
+		menuaction:'controller.uicontrol_location.get_entity_table_def',
+		entity_id:$("#entity_id").val(),
+		cat_id:$("#cat_id").val()
+	};
+
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function(data) {
+			if( data != null)
+			{		
+				myColumnDefs = [];
+		        myColumnDefs.push(data);
+				update_component_table_def();
+//				update_component_table();
+			}
+			else
+			{
+				alert('error');
+			}
+		}
+	});
+
+}
+
+function update_component_table_def()
+{
+	pager = YAHOO.util.Dom.get("paging_0");
+	div   = YAHOO.util.Dom.get("datatable-container_0");
+	this.init_datatable(datatable[0],div,pager,myColumnDefs[0],0);
+}
 
 function update_component_table()
 {
@@ -210,9 +325,11 @@ function update_component_table()
 		cat_id:$("#cat_id").val(),
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
+		location_code:$("#loc1").val(),
 		control_id:$("#control_id").val()
 	};
-		execute_async(myDataTable_0,  oArgs);
-	$("#receipt").html('');
+
+	execute_async(myDataTable_0,  oArgs);
+//	$("#receipt").html('');
 }
 
