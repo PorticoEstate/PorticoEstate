@@ -8,6 +8,7 @@ services	frontend	no	Tjenester
 contract	frontend	no	Kontrakter
 contract_in	frontend	no	Innleiekontrakter
 contract_ex	frontend	no	Eksternleiekontrakter
+contract_documents	frontend	no	Kontraktsdokumenter
 helpdesk	frontend	no	Melding om avvik
 subject	frontend	no	Meldingstittel
 entry_date	frontend	no	Dato
@@ -130,3 +131,4 @@ remove_delegate_error	frontend	no	Fjerning av delegaten var mislykket
 message_empty	frontend	no	Meldingen kan ikke være tom
 upload_userdoc	frontend	no	Last opp brukerveiledning
 filename	frontend	no	Filnavn
+contracts	frontend	no	Kontrakt
