@@ -32,13 +32,13 @@
 </xsl:template>
 
 <xsl:template name="table_header_documents">
-	<tr class="th">
+	<th>
 		<xsl:for-each select="table_header" >
-			<td class="th_text">
+			<td>
 				<xsl:value-of select="header"/>
 			</td>
 		</xsl:for-each>
-	</tr>
+	</th>
 </xsl:template>
 
 <xsl:template name="values_documents">
