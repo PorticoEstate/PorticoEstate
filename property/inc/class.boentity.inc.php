@@ -43,6 +43,7 @@
 		var $allrows;
 		var $part_of_town_id;
 		var $location_code;
+		protected $xsl_rootdir;
 
 		/**
 		 * @var object $custom reference to custom fields object
@@ -175,6 +176,7 @@
 			{
 				$this->allrows = $allrows;
 			}
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
 
 		function save_sessiondata($data)
@@ -242,10 +244,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'),$this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'),$this->xsl_rootdir);
 				break;
 			}
 
@@ -260,10 +262,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'),$this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'),$this->xsl_rootdir);
 				break;
 			}
 

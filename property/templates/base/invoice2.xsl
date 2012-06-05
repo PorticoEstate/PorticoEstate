@@ -27,9 +27,9 @@
 	#voucher_id_filter { width: 800px; }
 	#dim_b { width: 200px; }
 	#dim_e { width: 200px; }
-	#period { width: 200px; }
+	#period { width: 80px; }
 	#periodization { width: 200px; }
-	#periodization_start { width: 200px; }
+	#periodization_start { width: 80px; }
 	#process_code { width: 200px; }
 	#tax_code { width: 200px; }
 	#approve_as { width: 200px; }
@@ -354,33 +354,37 @@
 			</td>
 		</tr>
 		<tr class ='row_on'>
-			<td>
-				<xsl:value-of select="php:function('lang', 'period')" />
-			</td>
-			<td>
-				<select id="period" name="values[period]">
-					<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-		<tr class ='row_on'>
-			<td>
-				<xsl:value-of select="php:function('lang', 'periodization')" />
-			</td>
-			<td>
-				<select id="periodization" name="values[periodization]">
-					<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-		<tr class ='row_on'>
-			<td>
-				<xsl:value-of select="php:function('lang', 'periodization start')" />
-			</td>
-			<td>
-				<select id="periodization_start" name="values[periodization_start]">
-					<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
-		  		</select>
+			<td colspan = "2">
+				<table>
+					<tr class ='row_on'>
+						<td>
+							<xsl:value-of select="php:function('lang', 'period')" />
+						</td>
+						<td>
+							<xsl:value-of select="php:function('lang', 'periodization')" />
+						</td>
+						<td>
+							<xsl:value-of select="php:function('lang', 'periodization start')" />
+						</td>
+					</tr>
+					<tr class ='row_on'>
+						<td>
+							<select id="period" name="values[period]">
+								<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
+					  		</select>
+						</td>
+						<td>
+							<select id="periodization" name="values[periodization]">
+								<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
+					  		</select>
+						</td>
+						<td>
+							<select id="periodization_start" name="values[periodization_start]">
+								<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
+					  		</select>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 		<tr class ='row_off'>

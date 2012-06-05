@@ -800,24 +800,10 @@
 
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
-/*
-			$prefs = $this->bocommon->create_preferences('property', $janitor_user_id);
-			if($prefs['email'])
-			{
-				$toarray[] = $prefs['email'];
-			}
-*/
 			$supervisor_user_id				= $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
 			if($supervisor_user_id)
 			{
 				$order_info['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
-/*
-				$prefs = $this->bocommon->create_preferences('property', $supervisor_user_id);
-				if($prefs['email'])
-				{
-					$toarray[] = $prefs['email'];
-				}
-*/
 			}
 
 			$budget_responsible_user_id			= $this->invoice->get_default_dimb_role_user(3, $order_info['dimb']);
@@ -831,17 +817,6 @@
 				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
 			}
 
-/*
-			$budget_responsible_user_id = $GLOBALS['phpgw']->accounts->name2id($order_info['budget_responsible']);
-			if($budget_responsible_user_id)
-			{
-				$prefs = $this->bocommon->create_preferences('property', $budget_responsible_user_id);
-				if($prefs['email'])
-				{
-					$toarray[] = $prefs['email'];
-				}
-			}
-*/
 			$order_info['toarray'] = $toarray;
 			return $order_info;
 		}

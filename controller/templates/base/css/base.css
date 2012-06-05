@@ -183,11 +183,13 @@ div.identifier-header label {
 
 .form-buttons {
     clear: both;
-    padding-top: 2em;
+    padding-top: 1em;
 }
+
 .form-buttons button {
     margin-right: .5em;
 }
+
 .form-buttons .cancel {
     margin-left: .6em;
 }
@@ -197,6 +199,7 @@ div.identifier-header label {
     display:none; 
     position:absolute; z-index:1;
 }
+
 #toolbar {
     width: 100%;
     background-color: #eee;
@@ -214,7 +217,6 @@ div.identifier-header label {
 table.datatableToolbar {
 	padding: .3em;
 }
-
 
 #controller_user_error {
     width: 100%;
@@ -395,10 +397,23 @@ h1 img, li img {
 	vertical-align: middle;
 }
 /* Set up common form styles.  TODO: needs refinement. */
+
+/* ======================================================================================================================
+																												CONTROLLER MODULE CSS
+ ======================================================================================================================== */
+
+/* ==========================================   SELECTORS, IDS AND CLASSES    =========================================== */
+
 input{
     margin: 0 13px 0 0;
     padding: 3px 6px;
 }
+
+input[type="radio"] {
+    margin: 0 5px 0 2px;
+    padding: 3px 6px;
+}
+
 input[type="submit"] {
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #4685C8;
@@ -408,9 +423,11 @@ input[type="submit"] {
     margin-top: 20px;
     padding: 5px 20px;
 }
+
 .row input[type="submit"] {
     padding: 2px 10px;
 }
+
 select{
 	padding: 3px 1px 3px 4px;
 }
@@ -418,30 +435,38 @@ select{
 fieldset {
 	border-bottom:0px solid #ccc;
 }
+
 textarea{
 	padding: 4px;	
 }
+
 h1 em {
 	font-style:italic;
 }
-a{
-	color: #0066CC;
+
+a {
+    color: #0066CC;
+    text-decoration: none;
 }
-div.info, div.error, div.warning {
+
+.info, .error, .warning {
 	font-weight: normal;
 	margin:20px;
 	padding:5px;
 	font-size:1.1em;
 	text-align: left;
 }
-p.message {
+
+.message {
 	margin: 5px;
 }
+
 .info {
 	background-color:#CCFFCC;
 	border:1px solid #00FF00;
 	color:black;
 }
+
 .warning {
 	background-color: #FEEFB3;
 	border:1px solid #9F6000;
@@ -450,9 +475,11 @@ p.message {
 .yui-calendar td.calcell {
 	border:0px !important;
 }
+
 .yui-skin-sam .yui-dt TABLE TH{
 	border: none !important;
 }
+
 .yui-skin-sam .yui-dt TABLE TD{
 	border: none !important;
 }
@@ -488,44 +515,50 @@ h1 img{
     margin:0 0 10px;
 }
 
-
 /* =======================================  CONTROL ITEM  ========================================= */
 
-#control_item_details{
-	background: none repeat scroll 0 0 #EDF5FF;
+#control_item_details {
+    background: none repeat scroll 0 0 #EDF5FF;
     border-color: #DBE5EF;
-    border-style: solid solid none;
-    border-width: 1px 1px 0;
+    border-style: solid;
+    border-width: 1px;
     clear: both;
     margin-top: 1em;
     overflow: hidden;
-    padding: 1em 1em 0;
-    width: 1150px;
+    padding: 1em;
+    width: 100%;
 }
+
 #control_item_details label{
 	margin-right: 10px;
 }
+
 #control_item_details label.top {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 7px;
 }
+
 #control_item_details .styleWrp {
     background: none repeat scroll 0 0 #F2F8FF;
     border: 1px solid #DBE5EF;
     border-radius: 5px 5px 5px 5px;
     padding: 10px;
 }
+
 #control_item_details dl.proplist dt, dl.proplist-col dt {
     font-size: 1em;
     font-weight: normal;
-    margin-top: 1.5em;
+    margin-bottom: 2em;
 }
+
 #control_item_details .control_item_type {
     margin-top: 0.5em;
 }
+
 #control_item_details .control_item_type .active {
     background: none repeat scroll 0 0 #0F6CCF;
 }
+
 #control_item_details input[type=radio] {
     display:none;
 }
@@ -536,14 +569,17 @@ h1 img{
 	margin-top: 2em;
 	display: none;
 }
+
 #add_control_item_option_panel label{
 	display: inline-block;
 	width: 85px; 
 }
+
 #add_control_item_option_panel input[type=text]{
 	display: inline-block;
 	width: 150px; 
 }
+
 #add_control_item_option_panel hr{
 	border: 1px solid #CCD2D9;
 }
@@ -551,20 +587,25 @@ h1 img{
 ul#control_item_options{
 	margin-bottom: 1em;
 }
+
 ul#control_item_options li {
     margin-bottom: 5px;
     margin-right: 5px;
 }
+
 ul#control_item_options li .order_nr{
     margin-left: 5px;
 }
+
 ul#control_item_options input[type="text"] {
     background: none repeat scroll 0 0 transparent;
     border: medium none;
 }
+
 ul#control_item_options label {
     margin-right: 10px;
 }
+
 ul#control_item_options .btn.delete {
     background: none repeat scroll 0 0 #EEEEEE;
     border: 1px solid #CCCCCC;
@@ -725,7 +766,6 @@ dl.proplist, dl.proplist-col {
 }
 
 #innertoolbar-button{
-	/*background: none repeat scroll 0 0 #CCCCCC;*/
     color: #111111;
 }
 
@@ -768,6 +808,7 @@ ul.row li{
     margin-bottom: 20px;
     padding: 15px;
 }
+
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #eee;
@@ -778,6 +819,7 @@ ul.row li{
     background: none repeat scroll 0 0 #FEFBF7;
     border: 1px solid #FEEDEA;
 }
+
 .box_header {
     background: none repeat scroll 0 0 #CFE6FF;
     border-color: #C7DCF2;
@@ -790,11 +832,13 @@ ul.row li{
     padding: 6px 0 6px 15px;
     text-align: left;
 }
+
 .box_header.ext {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EB9685;
     color: #FFFFFF;
 }
+
 .btn, .btn_m, .btn_sm {
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #428AD7;
@@ -802,23 +846,27 @@ ul.row li{
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 10px;
     padding: 5px 10px;
     text-decoration: none;
 }
+
 .btn_m{
     padding: 2px 10px;
     font-size: 12px;
 }
+
 .btn_sm{
     font-size: 11px;
     padding: 1px 4px;
 }
+
 .btn.cancel, .btn_m.cancel {
     background: none repeat scroll 0 0 #EEEEEE;
     border: 1px solid #CCCCCC;
     color: #333333;
 }
+
 .btn.focus, .btn_m.focus {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;
@@ -838,6 +886,7 @@ ul.row li{
 #main_content.groups{
 	cursor: default;	
 }
+
 #main_content h1{
 	margin-top:0;
 }
@@ -850,6 +899,7 @@ input.id {
     text-align: right;
     width: 50px;
 }
+
 input.date {
     width: 65px;
     text-align: right;
@@ -870,24 +920,30 @@ input.date {
     height: 20px;
     padding-left: 25px;
 }
+
 .check_list li.heading div {
     margin: 0 5px;
     padding: 2px;
 }
+
 .check_list li div.order_nr{
 	width:15px;
 }
+
 .check_list li div.status {
     padding-left: 10px;
     width: 50px;
 }
+
 .check_list li div.title{
     width: 600px;
     text-align:left;
 }
+
 .check_list li.heading div.title{
     text-align:center;
 }
+
 .check_list li{
 	overflow:hidden;
 }
@@ -901,6 +957,7 @@ input.date {
     clear: both;
     margin:0;
 }
+
 #check_list_details form .row {
     padding: 0.1em 0;
 }
@@ -910,14 +967,17 @@ input.date {
 	width:150px;
 	display: inline-block;
 }
+
 #check_list_details .comment {
     clear: both;
     float: left;
     margin-top: 20px;
 }
+
 #check_list_details .comment label {
     vertical-align: top;
 }
+
 #check_list_details textarea{
 	width:400px;
 	height:100px;
@@ -927,6 +987,7 @@ input.date {
     float: left;
     vertical-align: top;
 }
+
 #check_list_details .col_2 {
     margin-left: 15%;
     width: 19%;
@@ -938,6 +999,7 @@ input.date {
     font-weight: bold;
     width: 100px;
 }
+
 fieldset.tab_check_list_details {
     padding: 0 0 10px 0;
 }
@@ -949,16 +1011,16 @@ fieldset.check_item_details label{
 	vertical-align:top;
 	float:left;
 }
+
 fieldset.check_item_details h3 {
     font-size: 15px;
     font-weight: bold;
     margin: 10px 0;
 }
+
 h3.check_item_details{
 	margin-bottom:0;	
 }
-
-
 
 /* =======================================  CHECK ITEM  ========================================= */
 
@@ -972,45 +1034,50 @@ h3.check_item_details{
     height: 100px;
     margin-top: 6px;
     width: 63%;
-}.check_item label{
+}
+
+.check_item label{
 	width:150px;	
 }
+
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
 }
+
 #frm_save_check_items input[type="submit"]{
 	padding: 3px 30px;	
 }
+
 .form-buttons-top{
 	float: right;
 	margin-bottom:5px;
 }
+
 .form-buttons-top input[type="submit"]{
 	margin:0;
 }
+
 #frm_save_check_items h1 {
     float: left;
     margin: 5px;
 }
+
 ul.check_list {
 	width: 925px;	
 }
 
-/* ======================  CALENDAR ========================== */
-
-
-#control_plan .top h3{
-   margin:0;
-   font-size:19px;
-   overflow: hidden;
+/* ====================================  CALENDAR  ========================================= */
+#control_plan .top h3 {
+    float: left;
+    font-size: 19px;
+    margin: 0;
 }
+
 #control_plan .top h3 .year{
    margin-left:5px;
 }
-#control_plan .top form{
-   float:right;
-}
+
 #control_plan .middle {
     background: none repeat scroll 0 0 #EDF5FF;
     border-color: #DBE5EF;
@@ -1021,40 +1088,102 @@ ul.check_list {
     overflow: hidden;
     padding: 1em 1em 0;
 }
-/* ===  COLOR MAP === */
+
+/* =============================  SEARCH LOCATION BOX  ======================= */
+#search-location {
+    float: right;
+    margin-bottom: 10px;
+}
+
+#search-location-name { 
+	width: 16em; 
+}
+
+#choose-my-location {
+    float: right;
+    margin-right: 10px;
+}
+
+#choose-building {
+    float: left;
+}
+
+.month_view #choose-building {
+    clear:left;
+    margin-top: 1em;
+}
+
+.select-box { 
+ 		background: none repeat scroll 0 0 #FEFBF4;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    padding: 1em;	
+}
+
+.select-box label{
+	margin-bottom:5px;
+	display: block;	
+}
+
+.select-box a{
+	display: block;
+  font-weight: bold;
+  padding: 0 0 10px;
+  text-align: justify;	
+}
+
+#choose-loc .btn {
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 2px 8px;
+}
+
+#choose-loc .btn.active{
+	background: #3F7EC1;	
+}
+
+/* ==================  COLOR MAP ============================= */
 
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #F4EDE3;
-    border: 1px solid #F2E4CF;
+    background: none repeat scroll 0 0 #FEFBF4;
+    border: 1px solid #DDDDDD;
     border-radius: 5px 5px 5px 5px;
     float: right;
-    padding: 5px;
+    padding: 1em;
 }
+
 ul#icon_color_map li {
     font-size: 12px;
-    padding: 3px 10px;
+    padding: 3px 0;
 }
+
 ul#icon_color_map span{
 	margin-left: 10px;
 }
+
 #calendar {
     width: 100%
 }
+
 #calendar th {
     font-weight: bold;
     font-size:15px;
     background:none;
 }
+
 #calendar th, #calendar td {
     padding: 10px;
     text-align: center;
 }
+
 #calendar.month th, #calendar.month td {
     padding: 5px 3px;
 }
+
 #calendar .even {
     background: none repeat scroll 0 0 #DEEAF8;
 }
+
 #cal_wrp {
     border: 1px solid #DBE5EF;
     background: none repeat scroll 0 0 #EDF5FF;
@@ -1062,48 +1191,59 @@ ul#icon_color_map span{
     clear: both;
     padding: 1em;
 }
+
 .control_details_wrp div {
     float: left;
     height: 30px;
     padding: 0 10px;
     width: 100px;
 }
+
 #calendar .title, #calendar .assigned {
 	width: 150px;
 }
+
 #calendar .frequency {
     margin-right: 10px;
     width: 100px;
 }
+
 #calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location_name {
     text-align: left;
 }
+
 #calendar .frequency .pre {
     margin-right: 3px;
 }
+
 #calendar .frequency .val {
     text-transform: lowercase;
 }
+
 .cal_info_msg {
 	font-size: 16px;
     padding: 40px 20px;	
 }
+
 #showYear{
 	display:block;
 	font-weight: bold;
 	font-size: 14px;
 	float:left;
 }
+
 #showYear img {
     margin-right: 5px;
     vertical-align: bottom;
 }
+
 #calNav {
     clear: both;
     font-size: 14px;
     font-weight: bold;
     padding-top: 1em;
 }
+
 #calNav img{
     vertical-align:bottom;
 }
@@ -1113,9 +1253,11 @@ ul#icon_color_map span{
     float: right;
     padding-top: 5px;
 }
+
 #calNav a.showNext img{
     margin-left:5px;
 }
+
 #calNav a.showPrev {
     display: block;
     float: left;
@@ -1123,39 +1265,48 @@ ul#icon_color_map span{
     padding-top: 5px;
     vertical-align: sub;
 }
+
 #calNav a.showPrev img{
     margin-right:5px;
 }
+
 #calNav .current {
     display: block;
     float: left;
     font-size: 21px;
     padding-left: 500px;
 }
-/* ======================  CALENDAR INFO BOX ========================== */
+/* ===============================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
     color: #FFFFFF;
     display: block;
     font-size: 10px;
     font-weight: bold;
-    padding-left: 3px;
     text-align: center;
     text-decoration: none;
 }
+
+.ext_info{
+    display:none;
+}
+
 .info_box_wrp {
-	background: url("../../../images/status_icon_red_empty.png") no-repeat scroll 50% 50% transparent;
+    background: url("../../../images/status_icon_red_empty.png") no-repeat scroll 50% 50% transparent;
     height: 15px;
     position: relative;
     text-align: center;
     width: 15px;
 }
-#calendar.month a.view_info_box {
-    padding-left: 5px;
+
+.year .info_box_wrp {
+    width: 100%;
 }
+
 .days_wrp a.view_info_box {
     left: 8px;
 }
+
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #98B4D6;
@@ -1500,7 +1651,9 @@ li.check_item_case .col_3 {
 }
 
 /* ================================  FORM UPDATE CASE  ============================= */
-
+.frm_update_case{
+	display: none;
+}
 .frm_update_case label {
 	display: block;	
 }
@@ -1614,7 +1767,7 @@ div.controller_checklist {
 	border: 1px solid #ABABAB;
 }
 
-/* =====================  REGISTER CONTROL FOR LOCATION  ===================== */
+/* =====================  CONTROL LOCATION  ===================== */
 
 #choose_control{
 	margin: 10px;
@@ -1628,6 +1781,18 @@ div.controller_checklist {
     padding: 7px 0;
 }
 
+#control_area_list {
+	float:left;	
+}
+
+#data_paginator .error_msg{
+	margin-left:20px;
+}
+
+#locations-container{
+	margin:20px;
+}
+	
 /* ==========================  CONTROL DETAILS   ============================ */
 
 #control_details label {
@@ -1635,13 +1800,16 @@ div.controller_checklist {
     font-weight: bold;
     width: 100px;
 }
+
 #control_details #select_all{
 	margin-left: 660px;	
 }
+
 #control_details #location_form{
 	margin-left: 20px;
 	margin-bottom: 20px;	
 }
+
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
@@ -1649,7 +1817,14 @@ div.controller_checklist {
     vertical-align: baseline;
 }
 
+#repeat_interval{
+	width: 20px;	
+}
+	
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
+#control_group_tabview .yui-content{
+	padding: 10px;	
+}
 
 ul.control_groups li ul {
     margin-left: 1em;
@@ -1664,4 +1839,54 @@ ul.control_groups h3 {
 img#loading {
 	margin-left: 5px;
 	vertical-align: middle;
+}
+
+#print-control-items{
+	margin-top:20px;
+}
+
+#exec-print {
+	margin:20px 0 0 40px;
+}
+
+#yui-history-iframe { 
+	position:absolute;
+	top:0; 
+	left:0;
+	width:1px; 
+	height:1px;
+	visibility:hidden;
+}
+
+#control_group_id {
+	width: 250px;
+}
+
+#select-wrp {
+	margin: 10px;
+	padding: 10px;
+	width: 25%;
+}
+
+#queryForm{
+	margin: 20px; 
+	width: 65%;
+}
+
+table.yui-skin-sam {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+#details table{
+	padding: 10px;
+	margin: 10px;
+	text-align: left;
+	margin-left: 1em;	
+}
+
+#details table td{
+	text-align: left;
+	padding-right: 10px;	
 }

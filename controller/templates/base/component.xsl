@@ -30,7 +30,7 @@
 		</ul>
 	</div>
 	
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" ></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -44,7 +44,7 @@
 </xsl:template>
 
 <xsl:template match="form">
-	<form id="queryForm" style="margin: 20px; width: 65%;">
+	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 		</xsl:attribute>
@@ -63,7 +63,7 @@
 
 <xsl:template match="toolbar">
 	<div id="toolbar">
-		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
+		  <table class='yui-skin-sam'>
 			<tr>
 		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>

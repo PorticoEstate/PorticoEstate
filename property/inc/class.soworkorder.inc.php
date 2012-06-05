@@ -287,18 +287,31 @@
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
 
+				$cols .= ',fm_workorder.budget';
+				$cols_return[] = 'budget';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'budget';
+				$uicols['descr'][]			= lang('budget');
+				$uicols['statustext'][]		= lang('budget');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= false;
+
 				$cols .= ',fm_workorder.combined_cost';
 				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'combined_cost';
-				$uicols['descr'][]			= lang('Cost');
+				$uicols['descr'][]			= lang('sum orders');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
-				$uicols['sortable'][]		= true;
+				$uicols['sortable'][]		= false;
 
 				$cols .= ',fm_workorder.actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -437,6 +450,9 @@
 						break;
 					case 'ecodimb':
 						$order_field = ", fm_workorder.ecodimb";
+						break;
+					case 'budget':
+						$order_field = ", fm_workorder.budget";
 						break;
 					default:
 						$order_field = ", {$order}";
@@ -1217,9 +1233,9 @@
 			$value_set_invoice = array();
 			$value_set_invoice['spbudact_code'] = $workorder['b_account_id'];
 			$value_set_invoice['dime']			= $workorder['cat_id'];
+			$value_set_invoice['dimb']			= $workorder['ecodimb'];
 
 			$value_set_invoice	= $this->bocommon->validate_db_update($value_set_invoice);
-
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_invoice} WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
 
 /*			if($workorder['charge_tenant'])

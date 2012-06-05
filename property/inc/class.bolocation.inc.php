@@ -53,11 +53,12 @@
 
 		var $public_functions = array
 			(
-				'read'		=> true,
-				'read_single'	=> true,
-				'save'		=> true,
-				'delete'	=> true,
-				'check_perms'	=> true
+				'read'					=> true,
+				'read_single'			=> true,
+				'save'					=> true,
+				'delete'				=> true,
+				'check_perms'			=> true,
+				'get_locations_by_name'	=> true
 			);
 
 		function property_bolocation($session=false)
@@ -959,5 +960,21 @@ JS;
 		function prepare_attribute($values, $location, $view_only= false)
 		{
 			return $this->custom->prepare($values, 'property', $location, $view_only);
+		}
+
+		/**
+		 * Get location by name
+		 *
+		 * @return array array of hits
+		 */
+		public function get_locations_by_name()
+		{
+			$data = array
+			(
+				'level'			=> phpgw::get_var('level', 'int'),
+				'location_name' => phpgw::get_var('location_name')
+			);
+
+			return $this->so->get_locations_by_name($data);
 		}
 	}

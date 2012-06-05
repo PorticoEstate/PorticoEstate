@@ -867,6 +867,14 @@
 					'addition_percentage'	=> (int)$this->db->f('addition')
 				);
 			}
+
+			foreach ($budget as &$entry)
+			{
+				$this->db->query("SELECT sum(godkjentbelop) AS actual_cost FROM fm_ecobilag WHERE pmwrkord_code = '{$entry['workorder_id']}' GROUP BY pmwrkord_code");
+				$this->db->next_record();
+				$entry['actual_cost'] +=$this->db->f('actual_cost');
+			}
+
 			return $budget;
 		}
 
@@ -1542,9 +1550,12 @@
 				while ($this->db->next_record())
 				{
 					$year = substr( $this->db->f('periode'), 0, 4 );
+					if(!$year)
+					{
+						$year = date('Y');
+					}
 					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
 				}
-
 			}
 
 			$config = CreateObject('phpgwapi.config','property');

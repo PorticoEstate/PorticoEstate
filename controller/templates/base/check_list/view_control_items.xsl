@@ -34,7 +34,8 @@
 		</li>
 	</xsl:for-each>
 </ul>
-<a style="margin-top:20px;" id="print_control_items" class="btn" target="_blank">
+
+<a id="print-control-items" class="btn" target="_blank">
 	<xsl:attribute name="href">
 		<xsl:text>index.php?menuaction=controller.uicheck_list.print_check_list</xsl:text>
 		<xsl:text>&amp;check_list_id=</xsl:text>

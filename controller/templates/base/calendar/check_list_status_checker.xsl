@@ -68,14 +68,14 @@
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="info/check_list_id"/>
 				</xsl:attribute>
-					<span style="display:none"><xsl:value-of select="info/id"/></span>
+					<span class="ext_info"><xsl:value-of select="info/id"/></span>
 					<img height="15" src="controller/images/status_icon_dark_green.png" />
 				</a>
 			</td>
 		</xsl:when>
 		<xsl:when test="status = 'CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS'">
 			<td>
-				<div style="position:relative;">
+				<div class="info_box_wrp">
    					<div id="info_box"></div>
 					<a>
 					<xsl:attribute name="href">
@@ -83,7 +83,7 @@
 						<xsl:text>&amp;check_list_id=</xsl:text>
 						<xsl:value-of select="info/check_list_id"/>
 					</xsl:attribute>
-						<span style="display:none"><xsl:value-of select="info/id"/></span>
+						<span class="ext_info"><xsl:value-of select="info/id"/></span>
 						<img height="15" src="controller/images/status_icon_light_green.png" />
 					</a>
 				</div>
@@ -99,7 +99,7 @@
 							<xsl:text>&amp;check_list_id=</xsl:text>
 							<xsl:value-of select="info/check_list_id"/>
 						</xsl:attribute>
-						<span style="display:none">
+						<span class="ext_info">
 							<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
 							<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 						</span>
@@ -124,7 +124,7 @@
 							<xsl:text>&amp;month=</xsl:text>
 							<xsl:number />
 						</xsl:attribute>
-						<span style="display:none">
+						<span class="ext_info">
 							<xsl:text>&amp;check_list_id=</xsl:text><xsl:value-of select="info/check_list_id"/>
 							<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 						</span>

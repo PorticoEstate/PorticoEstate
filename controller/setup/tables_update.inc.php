@@ -678,3 +678,12 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.34';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.34';
+	function controller_upgrade0_1_34()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control', array(), 'location_code');
+				
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.35';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
