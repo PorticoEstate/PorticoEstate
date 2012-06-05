@@ -35,13 +35,14 @@ function checkNewArena()
 
 function get_address_search()
 {
-	var address = document.getElementById('address_txt').value;
+	var address = document.getElementById('address').value;
 	var div_address = document.getElementById('address_container');
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_start = "<select name=\"address\" id=\"address\" size=\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -58,13 +59,14 @@ var divcontent_end = "</select>";
 
 function get_address_search_arena()
 {
-	var address = document.getElementById('arena_address_txt').value;
+	var address = document.getElementById('arena_address').value;
 	var div_address = document.getElementById('arena_address_container');
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"arena_address\" id=\"arena_address\" size\"5\">";
+var divcontent_start = "<select name=\"arena_address_select\" id=\"arena_address\" size=\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -81,13 +83,14 @@ var divcontent_end = "</select>";
 
 function get_address_search_cp2()
 {
-	var address = document.getElementById('contact2_address_txt').value;
+	var address = document.getElementById('contact2_address').value;
 	var div_address = document.getElementById('contact2_address_container');
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"contact2_address\" id=\"address_cp2\" size\"5\">";
+var divcontent_start = "<select name=\"contact2_address_select\" id=\"address_cp2\" size=\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -100,6 +103,34 @@ var divcontent_end = "</select>";
 	}
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
+}
+
+function setAddressValue(field)
+{
+	if(field.name == 'contact2_address_select')
+	{
+    	var address = document.getElementById('contact2_address');
+    	var div_address = document.getElementById('contact2_address_container');
+    
+    	address.value=field.value;
+		div_address.style.display="none";
+	}
+	else if(field.name == 'arena_address_select')
+	{
+    	var address = document.getElementById('arena_address');
+    	var div_address = document.getElementById('arena_address_container');
+    
+    	address.value=field.value;
+		div_address.style.display="none";
+	}
+	else
+	{
+		var address = document.getElementById('address');
+		var div_address = document.getElementById('address_container');
+
+		address.value=field.value;
+		div_address.style.display="none";
+	}
 }
 
 function run_checks()
@@ -239,12 +270,10 @@ function allOK()
 				</dt>
 				<dd>
 					<?php
-					$current_district_ids = $activity->get_district();
-					$current_district_id_array=explode(",", $current_district_ids);
 					foreach($districts as $d)
 					{
 					?>
-						<input name="district[]" type="checkbox" value="<?php echo $d['part_of_town_id']?>" <?php echo (in_array($d['part_of_town_id'], $current_district_id_array) ? 'checked' : "")?>/><?php echo $d['name']?><br/>
+						<input name="district[]" type="checkbox" value="<?php echo $d['part_of_town_id']?>" /><?php echo $d['name']?><br/>
 					<?php
 					}
 					?>
@@ -303,7 +332,7 @@ function allOK()
 					<dt><label for="arena_name"><?php echo lang('name') ?></label></dt>
 					<dd><input type="text" name="arena_name" id="arena_name" /></dd>
 					<dt><label for="arena_address"><?php echo lang('address') ?></label></dt>
-					<dd><input type="text" name="arena_address_txt" id="arena_address_txt" onkeyup="javascript:get_address_search_arena()"/>
+					<dd><input type="text" name="arena_address" id="arena_address" onkeyup="javascript:get_address_search_arena()"/>
 					<div id="arena_address_container"></div>
 					<label for="arena_number">Nummer</label>
 					<input type="text" name="arena_number"/><br/>
@@ -335,7 +364,7 @@ function allOK()
 				</dd>
 				<dt>Kontaktinformasjon for kulturkontoret (*)</dt>
 				<dt><label for="contact2_address">Adresse</label>
-				<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
+				<dd><input type="text" name="contact2_address" id="contact2_address" onkeyup="javascript:get_address_search_cp2()"/>
 				<div id="contact2_address_container"></div></dd>
 				<dt><label for="contact2_number">Husnummer</label></dt>
 				<dd><input type="text" name="contact2_number"/></dd>
