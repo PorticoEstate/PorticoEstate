@@ -1,9 +1,11 @@
 <!-- $Id: procedure_item.xsl 8485 2012-01-05 08:21:03Z erikhl $ -->
 
 <xsl:template match="data">
-	<h3 style="margin:5px 0;">Prosedyre for <xsl:value-of select="control_procedure/title"/></h3>
 	
-	<div>
+<div id="procedures">
+	<h2>Prosedyre for <xsl:value-of select="control_procedure/title"/></h2>
+	
+
 		<a class="btn_m" id="print-control-items" target="_blank">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
@@ -17,27 +19,27 @@
 			</xsl:attribute>
 			Skriv ut prosedyre
 		</a>
-	</div>
+		
 	<xsl:if test="control_procedure/documents/child::node()">
-		<h4 style="margin:5px 0;">Dokumenter</h4>
+		<h4>Dokumenter</h4>
 		<xsl:for-each select="control_procedure/documents">
-			<div style="margin-left:10px;">
+			<div class="doc">
 				<xsl:variable name="doc_link"><xsl:value-of select='document_link'/></xsl:variable>
 				<span><a href="{$doc_link}"><xsl:value-of select="title"/></a></span>
-				<span style="margin-left:10px;"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
+				<span class="desc"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
 			</div>	
 		</xsl:for-each>
 	</xsl:if>
 	
-	<h3 style="margin:15px 0 3px 0;">Prosedyrer for grupper</h3>
+	<h3>Prosedyrer for grupper</h3>
 	
 	<ul id="groups">
 		<xsl:for-each select="group_procedures_array">
 			<li>
 				<h4><xsl:value-of select="procedure/title"/></h4>
-				<div style="margin-bottom:10px;">
+				<div class="group">
 					<span>Gruppe: </span><xsl:value-of select="control_group/group_name"/>
-					<a class="btn_sm" style="margin-left:5px;" id="print-control-items" target="_blank">
+					<a class="btn_sm" id="print-control-items" target="_blank">
 						<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uiprocedure.print_procedure</xsl:text>
 							<xsl:text>&amp;procedure_id=</xsl:text>
@@ -54,16 +56,17 @@
 					</a>
 				</div>
 				<xsl:if test="documents/child::node()">
-				<h4 style="margin:5px 0;">Dokumenter</h4>
+				<h4>Dokumenter</h4>
 					<xsl:for-each select="documents">
-						<div style="margin-left:10px;">
+						<div class="doc">
 							<xsl:variable name="doc_link"><xsl:value-of select='document_link'/></xsl:variable>
 							<span><a href="{$doc_link}"><xsl:value-of select="title"/></a></span>
-							<span style="margin-left:10px;"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
+							<span class="desc"><xsl:value-of select="description" disable-output-escaping="yes"/></span>
 						</div>	
 					</xsl:for-each>
 				</xsl:if>
 			</li>
 		</xsl:for-each>
 	</ul>
+</div>
 </xsl:template>

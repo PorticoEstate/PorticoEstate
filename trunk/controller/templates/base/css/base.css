@@ -1890,3 +1890,35 @@ table.yui-skin-sam {
 	text-align: left;
 	padding-right: 10px;	
 }
+
+#procedures h2, #procedures h4{
+	margin:5px 0;
+}
+
+#procedures .desc {
+	margin-left:10px;
+}
+
+#procedures h3 {
+	margin:15px 0 3px 0;
+}
+
+#procedures h4 .doc{
+	margin-left:10px;
+}
+
+#procedures #groups .group{
+	margin-left:10px;
+}
+
+#procedures #groups .group{
+	margin-left:10px;
+}
+
+#procedures #groups .group{
+	margin-bottom:10px;
+}
+
+#procedures .btn_sm {
+	margin-left:5px;
+}
