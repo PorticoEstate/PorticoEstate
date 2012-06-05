@@ -1922,3 +1922,15 @@ table.yui-skin-sam {
 #procedures .btn_sm {
 	margin-left:5px;
 }
+
+.yui-skin-sam td.auto{
+	width: 160px;	
+}
+
+.yui-skin-sam div.auto{
+	width: 140px;	
+}
+
+. yui-skin-sam thead{
+	background: none;	
+}
