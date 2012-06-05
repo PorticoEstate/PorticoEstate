@@ -122,6 +122,12 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'part of town')" />
 		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'property')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'building')" />
+		</td>
 		<td >
 			<xsl:value-of select="php:function('lang', 'search')" />
 		</td>
@@ -147,6 +153,16 @@
 			<xsl:apply-templates select="part_of_town_list/options"/>
 		  </select>
 		</td>		
+		<td>
+		  <select id="loc1" name="loc1">
+			<xsl:apply-templates select="loc1_list/options"/>
+		  </select>
+		</td>		
+		<td>
+		  <select id="loc2" name="loc2">
+			<xsl:apply-templates select="loc2_list/options"/>
+		  </select>
+		</td>
 		<td>
 			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
 			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
