@@ -81,8 +81,8 @@
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
-					<td width="160px">
-						<div style="width:140px">
+					<td>
+						<div>
 							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
 							</input>
