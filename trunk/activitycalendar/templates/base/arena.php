@@ -7,18 +7,18 @@
 
 function get_address_search()
 {
-	var address = document.getElementById('address_txt').value;
+	var address = document.getElementById('address').value;
 	var div_address = document.getElementById('address_container');
+	div_address.style.display="block";
 
 	url = "index.php?menuaction=activitycalendar.uiarena.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_start = "<select name=\"address_select\" id=\"address\" size=\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
-var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo lang('address_number') ?></label><input type=\"text\" name=\"address_no\" id=\"address_no\" size=\"6\"/>"
 	
 	var callback = {
 		success: function(response){
-					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end + divcontent_number; 
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -27,6 +27,16 @@ var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo la
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
 }
+
+function setAddressValue(field)
+{
+	var address = document.getElementById('address');
+	var div_address = document.getElementById('address_container');
+
+	address.value=field.value;
+	div_address.style.display="none";
+}
+
 </script>
 <?php echo activitycalendar_uicommon::get_page_message($message) ?>
 <div class="identifier-header">
@@ -75,8 +85,9 @@ var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo la
 					if ($editable)
 					{
 					?>
-					 	<input type="text" name="address" id="address_txt" value="<?php echo $arena->get_address() ?>" onkeyup="javascript:get_address_search()"/>
+					 	<input type="text" name="address" id="address" value="<?php echo $arena->get_address() ?>" onkeyup="javascript:get_address_search()"/>
 					 	<div id="address_container"></div>
+					 	<label for="address_number"><?php echo lang('address_number') ?></label><input type="text" name="address_no" id="address_no" size="6"/>
 					<?php
 					}
 					else

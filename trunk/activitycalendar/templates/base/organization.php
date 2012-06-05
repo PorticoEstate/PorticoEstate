@@ -98,15 +98,27 @@
 				<dd><input type="hidden" name="contact1_id" value="<?php echo $contactperson1->get_id();?>"/></dd>
 				<dt><label for="contact1_name">Navn</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact1_name" value="<?php echo $contactperson1->get_name();?>"/><br/>
+				<?php }else{?>
+					<?php echo $contactperson1->get_name();?>
+				<?php }?>
 				</dd>
 				<dt><label for="contact1_phone">Telefon</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact1_phone" value="<?php echo $contactperson1->get_phone();?>"/>
+				<?php }else{?>
+					<?php echo $contactperson1->get_phone();?>
+				<?php }?>
 				</dd>
 				<dt><label for="contact1_mail">E-post</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact1_email" value="<?php echo $contactperson1->get_email();?>"/>
+				<?php }else{?>
+					<?php echo $contactperson1->get_email();?>
+				<?php }?>
 				</dd>
 				<?php }?>
 				<?php if($contactperson2){?>
@@ -114,15 +126,27 @@
 				<dd><input type="hidden" name="contact2_id" value="<?php echo $contactperson2->get_id();?>"/></dd>
 				<dt><label for="contact1_name">Navn</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact2_name" value="<?php echo $contactperson2->get_name();?>"/><br/>
+				<?php }else{?>
+					<?php echo $contactperson2->get_name();?>
+				<?php }?>
 				</dd>
 				<dt><label for="contact1_phone">Telefon</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact2_phone" value="<?php echo $contactperson2->get_phone();?>"/>
+				<?php }else{?>
+					<?php echo $contactperson2->get_phone();?>
+				<?php }?>
 				</dd>
 				<dt><label for="contact1_mail">E-post</label></dt>
 				<dd>
+				<?php if($editable){?>
 					<input type="text" name="contact2_email" value="<?php echo $contactperson2->get_email();?>"/>
+				<?php }else{?>
+					<?php echo $contactperson2->get_email();?>
+				<?php }?>
 				</dd>
 				<?php }?>
 			</dl>
