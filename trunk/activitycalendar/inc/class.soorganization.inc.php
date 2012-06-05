@@ -649,7 +649,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$zip = $org_info['zip'];
 		if($zip && strlen($zip) > 5)
 		{
-			$zip_code = substr($zip,0,4);
+			$zip_code = substr($zip,0,5);
 			$city = substr($zip, 5);
 		}
 		else
