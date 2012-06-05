@@ -23,7 +23,7 @@
 			</form>
 		</div>
 		<div id="details">
-			<table cellpadding="10" cellspacing="10" align="left" style="margin-left: 1em;">
+			<table>
 				<xsl:call-template name="table_header_documents"/>
 				<xsl:call-template name="values_documents"/>
 			</table>
@@ -32,13 +32,13 @@
 </xsl:template>
 
 <xsl:template name="table_header_documents">
-	<tr class="th">
+	<th>
 		<xsl:for-each select="table_header" >
-			<td class="th_text" style="padding-right: 10px;">
+			<td>
 				<xsl:value-of select="header"/>
 			</td>
 		</xsl:for-each>
-	</tr>
+	</th>
 </xsl:template>
 
 <xsl:template name="values_documents">
@@ -46,13 +46,13 @@
 		<tr>
 			<xsl:for-each select="document" >
 				<xsl:variable name="doc_link"><xsl:value-of select='link'/></xsl:variable>
-				<td align="left" style="padding-right: 10px;">
+				<td>
 					<a href="{$doc_link}"><xsl:value-of select="title"/></a>
 				</td>
-				<td align="left" style="padding-right: 10px;">
+				<td>
 					<xsl:value-of select="name"/>
 				</td>
-				<td align="left" style="padding-right: 10px;">
+				<td>
 					<xsl:value-of select="description" disable-output-escaping="yes"/>
 				</td>
 			</xsl:for-each>

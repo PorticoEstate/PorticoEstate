@@ -1,5 +1,22 @@
 $(document).ready(function(){
 
+	// Changes location level between building and property in serch location select box
+	$("#choose-loc a").click(function(){
+		
+		$("#choose-loc a").removeClass("active");
+		$(this).addClass("active");
+		
+		var loc_type = $(this).attr("href");
+		
+		$("#loc_type").val( loc_type.substring(9, 10) );
+		$("#search-location-name").focus();
+
+		$( "#search-location-name" ).autocomplete( "search");
+		
+		return false;
+	});
+
+	// Changes control type location level between building and property in serch location select box
 	$(".control_item_type").click(function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
@@ -21,68 +38,10 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".choose_loc").live( "change", function () {
-		var thisSelectBox = $(this);
-		var loc_code = $(this).val();
-		var loc_id = $(this).attr("id");
-		var loc_arr = loc_id.split('_');
-		var loc_level = parseInt(loc_arr[1]);
-		var new_loc_id = "loc_" + (parseInt(loc_level)+1);
-		
-		var id = "";
-		var new_loc_code = "";
-		var level;
-		for(level = 1;level <= loc_level;level++){
-			id = "loc_" + level;
-			if(level > 1)
-				new_loc_code += "-" + $("#" + id).val();
-			else
-				new_loc_code += $("#" + id).val();
-		}
-		
-		if(!loc_code)
-		{
-			return false;
-		}
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:new_loc_code};
-		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function(data) {
-				if( data != null)
-				{
-					htmlString  = "<select class='choose_loc' name='" + new_loc_id  + "' id='" + new_loc_id  + "' >" +
-								  "<option value = ''>" + data.length + " lokasjone(r) funnet</option>";
-								  
-								  
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					htmlString += "</select>";
-					
-					$(thisSelectBox).after( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen lokasjoner</option>"
-					$(new_loc_id).html( htmlString );
-				}
-			} 
-		});	
-    });
-	
-	$("#choose_my_location").change(function () {
+	$(".selectLocation").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
-		 
+
 		 var period_type = $(thisForm).find("input[name='period_type']").val();
 		 var year = $(thisForm).find("input[name='year']").val();
 		 var month = $(thisForm).find("input[name='month']").val();
@@ -170,10 +129,11 @@ $(document).ready(function(){
 	
 	$("#control_area_list").change(function () {
 		var control_area_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
+		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
+	  	$("#hidden_control_area_id").val( control_area_id );
+         var control_id_init = $("#hidden_control_id").val();
          var htmlString = "";
          
          $.ajax({
@@ -186,17 +146,31 @@ $(document).ready(function(){
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
+
+						var selected = '';
+						if(obj[i].id == control_id_init)
+						{
+							selected = ' selected';
+						}
+							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
 		    			});
 					 				  				  
 					  $("#control_id").html( htmlString );
-					}else {
+					}
+					else
+					{
          		  		htmlString  += "<option>Ingen kontroller</option>"
          		  		$("#control_id").html( htmlString );
+				  		$("#hidden_control_id").val(-1); //reset
          		  	}
 			  }  
 			});
 			
+    });
+
+	$("#control_id").change(function () {
+		var control_id = $(this).val();
+  		$("#hidden_control_id").val( control_id );
     });
 
 	// file: uicheck_list.xsl
@@ -268,40 +242,6 @@ $(document).ready(function(){
 			});
 			
     });
-	
-	// When control area is selected, controls are fetched from db and control select list is populated
-/*	$("#control_group").change(function () {
-		 var control_group_id = $(this).val();
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_area_by_control_group', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_group_id=" + control_group_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Ingen kontrollområde</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
-		    			});
-					 				  				  
-					  $("#control_group_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontrollområder</option>"
-         		  		$("#control_group_id").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-*/
 	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
@@ -423,28 +363,6 @@ $(document).ready(function(){
 		$(this).parent().find("input[name=option_value]").val('');
 	});
 	
-	/*
-	$("#frm_add_control_item_option").live("submit", function(e){
-		e.preventDefault();
-alert("feil")
-		var thisForm = $(this);
-		var requestUrl = $(thisForm).attr("action");
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		  
-	    			  if(obj.status == "saved"){
-			    		$("#control_item_options").append("<li><label>Valgverdi</label>" + obj.saved_object.label + "</li>")
-	    			  }
-				  }
-				}
-			});
-	});
-	*/
 	/* =========================  CONTROL  =============================================== */
 	
 	// SAVE CONTROL DETAILS
@@ -612,11 +530,6 @@ alert("feil")
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-	
-	
-
-	
-	
 	
 	
 	//=======================================  CASE  ======================================

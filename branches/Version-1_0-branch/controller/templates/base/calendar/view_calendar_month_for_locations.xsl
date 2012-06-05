@@ -27,19 +27,14 @@
 			</form>
 		</div>
 		<div class="middle">
-			<xsl:call-template name="icon_color_map" />
 			
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;control_id=</xsl:text>
-					<xsl:value-of select="control/id"/>
-				</xsl:attribute>
-				Årsoversikt
-			</a>
-			<a style="display:block;font-weight: bold;font-size: 14px;float:left;">
+		<!-- =====================  ICON COLOR MAP  ================= -->
+		<xsl:call-template name="icon_color_map" />
+				
+				
+		<!-- =====================  CALENDAR NAVIGATION  ================= -->
+		<div id="calNav">
+			<a class="showPrev month">
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
@@ -52,6 +47,8 @@
 				Årsoversikt
 			</a>
 		</div>
+		
+		<!-- =====================  CALENDAR ================= -->
 		<div id="cal_wrp">
 			<table id="calendar" class="month">
 				<tr>

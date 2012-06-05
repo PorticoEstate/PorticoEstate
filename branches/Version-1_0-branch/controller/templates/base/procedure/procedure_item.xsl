@@ -158,7 +158,7 @@
 						</xsl:when>
 						<xsl:when test="inactive">
 							<xsl:variable name="lang_back"><xsl:value-of select="php:function('lang', 'back')" /></xsl:variable>
-							<input type="button" value="{$lang_back}" title="{$lang_back}" onclick="javascript: history.go(-1);" style="margin: 0 0 15px 15px; padding: 1px 15px;"/>
+							<input type="button" value="{$lang_back}" title="{$lang_back}" onclick="javascript: history.go(-1);" class="btn"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
@@ -169,7 +169,7 @@
 			</form>
 			<xsl:choose>
 				<xsl:when test="values != ''">
-					<table cellpadding="10" cellspacing="10" align="left" style="margin-left: 1em;">
+					<table>
 						<xsl:call-template name="table_header_history"/>
 						<xsl:call-template name="values_history"/>
 					</table>
@@ -180,13 +180,13 @@
 </xsl:template>
 
 <xsl:template name="table_header_history">
-		<tr class="th">
+		<th class="th">
 			<xsl:for-each select="table_header" >
-				<td class="th_text" style="padding-right: 10px;">
+				<td>
 					<xsl:value-of select="header"/>
 				</td>
 			</xsl:for-each>
-		</tr>
+		</th>
 	</xsl:template>
 
 	<xsl:template name="values_history">
@@ -194,16 +194,16 @@
 			<tr>
 				<xsl:for-each select="row" >
 					<xsl:variable name="proc_link"><xsl:value-of select='link'/></xsl:variable>
-					<td align="right" style="padding-right: 10px;">
+					<td>
 						<a href="{$proc_link}"><xsl:value-of select="revision_no"/></a>
 					</td>
-					<td align="left" style="padding-right: 10px;">
+					<td>
 						<xsl:value-of select="title"/>
 					</td>
-					<td align="left" style="padding-right: 10px;">
+					<td>
 						<xsl:value-of select="start_date"/>
 					</td>
-					<td align="left" style="padding-right: 10px;">
+					<td>
 						<xsl:value-of select="end_date"/>
 					</td>
 				</xsl:for-each>

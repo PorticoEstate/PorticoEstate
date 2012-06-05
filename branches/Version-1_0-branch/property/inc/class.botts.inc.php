@@ -63,8 +63,13 @@
 			'addfiles'		=> true,
 		);
 
-		function property_botts($session=false)
+		function __construct($session=false)
 		{
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] != 'property')
+			{
+				$GLOBALS['phpgw']->translation->add_app('property');
+			}
+
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->so 					= CreateObject('property.sotts');
 			$this->custom 				= & $this->so->custom;

@@ -21,7 +21,7 @@
 					 					<li class="check_item_case">
 					 				
 			 						<h4><span><xsl:value-of select="control_item/title"/></span></h4>
-						 			<span style="display:none;" class="control_item_type"><xsl:value-of select="control_item/type" /></span>
+						 			<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 						 			<ul>
 						 		
 						 			<xsl:for-each select="cases_array">
@@ -34,7 +34,7 @@
 											</div>
 											<!--  ==================== COL2: CASE CONTENT ===================== -->
 											<div class="col_2">
-												<form style="display:none;" class="frm_update_case">
+												<form class="frm_update_case">
 													<xsl:attribute name="action">
 														<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>
@@ -114,7 +114,7 @@
 						 				<xsl:when test="control_item/type = 'control_item_type_2'">
 						 					<h2>Målinger</h2>
 						 					<h4><span><xsl:value-of select="control_item/title"/></span></h4>
-									 		<span style="display:none;" class="control_item_type"><xsl:value-of select="control_item/type" /></span>
+									 		<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 									 		<ul>
 												<xsl:for-each select="cases_array">
 													<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
@@ -186,7 +186,7 @@
 															</div>
 														</div>
 														<!--  =================== UPDATE CASE FORM =================== -->
-													<form style="display:none;" class="frm_update_case">
+													<form class="frm_update_case">
 														<xsl:attribute name="action">
 															<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
 															<xsl:text>&amp;case_id=</xsl:text>
@@ -224,7 +224,7 @@
 															</input>
 														</div>
 														<!--  DESCRIPTION -->
-														<label style="font-weight: bold;">Beskrivelse:</label>
+														<label>Beskrivelse:</label>
 														<div class="row"> 
 															<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
 														</div>
@@ -259,7 +259,7 @@
 						 				<xsl:when test="control_item/type = 'control_item_type_3' or control_item/type = 'control_item_type_4'">
 						 					<h2>Målinger</h2>
 						 					<h4><span><xsl:value-of select="control_item/title"/></span></h4>
-									 		<span style="display:none;" class="control_item_type"><xsl:value-of select="control_item/type" /></span>
+									 		<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 									 		<ul>
 												<xsl:for-each select="cases_array">
 													<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
@@ -331,7 +331,7 @@
 															</div>
 														</div>
 														<!--  =================== UPDATE CASE FORM =================== -->
-													<form style="display:none;" class="frm_update_case">
+													<form class="frm_update_case">
 														<xsl:attribute name="action">
 															<xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
 															<xsl:text>&amp;case_id=</xsl:text>
@@ -374,7 +374,7 @@
 													   		</select>
 														</div>
 														<!--  DESCRIPTION -->
-														<label style="font-weight: bold;">Beskrivelse:</label>
+														<label>Beskrivelse:</label>
 														<div class="row"> 
 															<textarea name="case_descr"><xsl:value-of select="descr"/></textarea>
 														</div>

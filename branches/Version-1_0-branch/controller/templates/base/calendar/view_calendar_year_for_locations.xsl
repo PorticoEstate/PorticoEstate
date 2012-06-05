@@ -20,7 +20,7 @@
 			
 		</div>
 		<div id="cal_wrp">
-			<table id="calendar">
+			<table id="calendar" class="year">
 				<tr>
 					<th>
 						<span class="location_code">Lokasjonskode</span>
