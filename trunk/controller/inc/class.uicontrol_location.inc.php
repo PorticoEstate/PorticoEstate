@@ -73,6 +73,7 @@
 										'get_district_part_of_town'			=> true,
 										'entity'							=> true,
 										'index2'							=> true,
+										'query2'							=> true,
 										'get_category_by_entity'			=> true
 									);
 
@@ -1314,14 +1315,22 @@
 
 		public function query2()
 		{
-			$user_id =	phpgw::get_var('user_id', 'int');
-			$dimb_id =	phpgw::get_var('dimb_id', 'int');
-			$role_id =	phpgw::get_var('role_id', 'int');
-			$query_start =	phpgw::get_var('query_start');
-			$query_end =	phpgw::get_var('query_end');
+			$entity_id			= phpgw::get_var('entity_id', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
+			$control_id			= phpgw::get_var('control_id', 'int');
 
-//			$this->bo->allrows = true;
-			$values = $this->bo->read(array('user_id' => $user_id, 'dimb_id' => $dimb_id, 'role_id' => $role_id, 'query_start' => $query_start, 'query_end' => $query_end));
+
+			if(!$entity_id && !$cat_id)
+			{
+				return json_encode(array());
+			}
+
+			$boentity	= CreateObject('property.boentity',false, 'entity');
+//			$boentity->allrows = true;
+			
+			$values = $boentity->read();
 
 			foreach($values as &$entry)
 			{

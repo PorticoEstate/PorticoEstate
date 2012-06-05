@@ -133,7 +133,7 @@
 		  </select>
 		</td>		
 		<td>
-		  <select id="category_id" name="category_id">
+		  <select id="cat_id" name="cat_id">
 			<xsl:apply-templates select="category_list/options"/>
 		  </select>
 		</td>		
