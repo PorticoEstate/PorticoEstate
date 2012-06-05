@@ -285,7 +285,8 @@
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
 						$person_ids = $this->so_group->get_contacts($g_id);
-						$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
+						//$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
+						$person_arr = $this->so_contact->get_booking_contact_persons($g_id, true);
 						foreach($person_arr as $p)
 						{
 							//var_dump($p);
