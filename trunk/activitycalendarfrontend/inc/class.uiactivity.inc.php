@@ -583,7 +583,7 @@
 						$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
 						foreach($person_arr as $p)
 						{
-							$persons[] = $p;
+							$persons_array[] = $p;
 						}
 						$desc = $this->so_group->get_description($activity->get_group_id());
 						$group = $this->so_group->get_single($activity->get_group_id());
@@ -658,6 +658,8 @@
 												'activity' 	=> $activity,
 												'organization' => $organization,
 												'group' => $group,
+    											'contact1' => $persons_array[0],
+    											'contact2' => $persons_array[1],
 												'arenas' => $arenas,
 												'buildings' => $buildings,
 												'categories' => $categories,
@@ -684,6 +686,8 @@
 									(
 										'activity' 	=> $activity,
 										'organization' => $organization,
+									    'contact1' => $persons_array[0],
+										'contact2' => $persons_array[1],
 										'org_name' => $org_name,
 										'group' => $group,
 										'arenas' => $arenas,
@@ -711,6 +715,8 @@
 										'activity' 	=> $activity,
 										'organization' => $organization,
 										'group' => $group,
+										'contact1' => $persons_array[0],
+										'contact2' => $persons_array[1],
 										'arenas' => $arenas,
 										'buildings' => $buildings,
 										'categories' => $categories,

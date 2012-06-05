@@ -130,7 +130,9 @@
 				</dt>
 				<dd>
 					<?php echo $organization->get_name();?>
-					<a href="index.php?menuaction=activitycalendarfrontend.uiactivity.edit_organization_values&amp;organization_id=<?php echo $organization->get_id();?>"><?php echo lang('edit_organization');?></a>
+					<?php if(!$activity->get_new_org()){?>
+						<a href="index.php?menuaction=activitycalendarfrontend.uiactivity.edit_organization_values&amp;organization_id=<?php echo $organization->get_id();?>"><?php echo lang('edit_organization');?></a>
+					<?php }?>
 				</dd>
 				<dt>
 					<label for="group_id" id="group_label"><?php echo lang('group') ?></label>
