@@ -38,7 +38,7 @@
 	}
 	
 	/**
-	* Update frontend version from 0.1 to 0.2
+	* Update frontend version from 0.2 to 0.3
 	* Add new location as placeholders for functions and menues
 	* 
 	*/
@@ -51,7 +51,7 @@
 	}
 	
 	/**
-	* Update frontend version from 0.2 to 0.3
+	* Update frontend version from 0.3 to 0.4
 	* Add new location as placeholders for functions and menues
 	* 
 	*/
@@ -60,5 +60,18 @@
 	{
 		$GLOBALS['phpgw']->locations->add('.rental.contract_ex','contract_ex','frontend', false);
 		$GLOBALS['setup_info']['frontend']['currentver'] = '0.4';
+		return $GLOBALS['setup_info']['frontend']['currentver'];
+	}
+	
+	/**
+	* Update frontend version from 04 to 0.5
+	* Add new location as placeholders for functions and menues
+	* 
+	*/
+	$test[] = '0.4';
+	function frontend_upgrade0_4()
+	{
+		$GLOBALS['phpgw']->locations->add('.document.contracts','contract_documents','frontend', false);
+		$GLOBALS['setup_info']['frontend']['currentver'] = '0.5';
 		return $GLOBALS['setup_info']['frontend']['currentver'];
 	}

@@ -1791,12 +1791,21 @@
 
 		function get_children($criteria = '')
 		{
+			$join_method = '';
+			$filtermethod = '';
 			if(is_array($criteria))
 			{
-				$location_code 	= $criteria['location_code'];
-				$child_level	= $criteria['child_level'];
-				$id_field		= 'location_code';
-				$field_name		= $criteria['field_name'];
+				$location_code 		= $criteria['location_code'];
+				$child_level		= $criteria['child_level'];
+				$id_field			= 'location_code';
+				$field_name			= $criteria['field_name'];
+				$part_of_town_id	= $criteria['part_of_town_id'];
+				
+				if($part_of_town_id)
+				{
+					$join_method = "{$this->join} fm_part_of_town ON fm_part_of_town.part_of_town_id = fm_location1.part_of_town_id";
+					$filtermethod = 'AND fm_part_of_town.part_of_town_id =' . (int) $part_of_town_id;
+				}
 			}
 			else
 			{
@@ -1824,7 +1833,7 @@
 				return $values;
 			}
 			
-			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} WHERE location_code {$this->like} '{$location_code}%' ORDER BY {$field_name} ASC",__LINE__,__FILE__);
+			$this->db->query("SELECT $id_field AS id, {$field_name} AS name FROM fm_location{$child_level} {$join_method} WHERE location_code {$this->like} '{$location_code}%' {$filtermethod} ORDER BY {$field_name} ASC",__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
