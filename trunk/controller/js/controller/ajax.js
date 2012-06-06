@@ -1,5 +1,14 @@
 $(document).ready(function(){
 
+	
+	function ajaxRequest(request, callback_func, elem){
+		
+		
+	}
+	
+	
+	/* ================================  SEARCH LOCATION BOX  ========================== */
+	
 	// Changes location level between building and property in serch location select box
 	$("#choose-loc a").click(function(){
 		
@@ -16,27 +25,6 @@ $(document).ready(function(){
 		return false;
 	});
 
-	// Changes control type location level between building and property in serch location select box
-	$(".control_item_type").click(function(){
-		var thisBtn = $(this).find(".btn");
-		var thisRadio = $(this).find("input[type=radio]");
-		
-		// Clears active button and checked underlying radiobutton
-		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
-		$(".control_item_type").find(".btn").removeClass("active");
-		
-		// Makes button active and checkes underlying radiobutton
-		$(thisRadio).attr("checked", "checked");
-		$(thisBtn).addClass("active");
-		
-		var control_item_type = $(this).find("input[type=radio]").val();
-		
-		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
-			$("#add_control_item_option_panel").slideDown(500);
-		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
-			$("#add_control_item_option_panel").slideUp(500);
-		}
-	});
 	
 	$(".selectLocation").change(function () {
 		 var location_code = $(this).val();
@@ -61,6 +49,8 @@ $(document).ready(function(){
 		
 		 window.location.href = requestUrl;
     });
+	
+	/* ================================  CONTROL LOCATION ================================== */
 	
 	// Update location category based on location type
 	$("#type_id").change(function () {
@@ -95,36 +85,6 @@ $(document).ready(function(){
         	  }
 			});
 			
-    });
-	
-	//update part of town category based on district
-	$("#district_id").change(function () {
-		var district_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&district_id=" + district_id,
-			  success: function(data) {
-				  if( data != null){
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-					 				  				  
-					  $("#part_of_town_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontroller</option>"
-         		  		$("#part_of_town_id").html( htmlString );
-         		  	}
-			  }  
-         });
     });
 	
 	$("#control_area_list").change(function () {
@@ -168,11 +128,9 @@ $(document).ready(function(){
 			
     });
 
-	$("#control_id").change(function () {
-		var control_id = $(this).val();
-  		$("#hidden_control_id").val( control_id );
-    });
 
+	/* ================================  COMPONENT ================================== */
+	
 	// file: uicheck_list.xsl
 	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_group_area_list").change(function () {
@@ -180,8 +138,6 @@ $(document).ready(function(){
 	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
          var htmlString = "";
          
          $.ajax({
@@ -207,40 +163,34 @@ $(document).ready(function(){
 			
     });
 	
-	// When control area is selected, controls are fetched from db and control select list is populated
-	$("#control_area").change(function () {
-		 var control_area_id = $(this).val();
-		 if(control_area_id == '')
-			 control_area_id = "all";
-			 
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+	//update part of town category based on district
+	$("#district_id").change(function () {
+		var district_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
+         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          
          var htmlString = "";
          
          $.ajax({
 			  type: 'POST',
 			  dataType: 'json',
-			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  url: requestUrl + "&district_id=" + district_id,
 			  success: function(data) {
 				  if( data != null){
-					  htmlString  = "<option>Velg kontrollgruppe</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 		    			});
 					 				  				  
-					  $("#control_group").html( htmlString );
+					  $("#part_of_town_id").html( htmlString );
 					}else {
-         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
-         		  		$("#control_group").html( htmlString );
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#part_of_town_id").html( htmlString );
          		  	}
 			  }  
-			});
-			
+         });
     });
 	
 	// file: add_component_to_control.xsl
@@ -277,12 +227,13 @@ $(document).ready(function(){
 			
     });
 	
+	/* ================================  PROCEDURE ================================== */
+	
 	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
 		 
 		 var oArgs = {menuaction:'controller.uiprocedure.get_procedures'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -310,6 +261,42 @@ $(document).ready(function(){
 			});	
     });
 	
+	/* ================================  CONTROL AREA ================================== */
+	
+	// When control area is selected, control groups are fetched from db and control select list is populated
+	$("#control_area").change(function () {
+		 var control_area_id = $(this).val();
+		 if(control_area_id == '')
+			 control_area_id = "all";
+			 
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Velg kontrollgruppe</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
+         		  		$("#control_group").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	/* ================================  CONTROL GROUP ================================== */
 			
 	$("#frm_save_control_groups").submit(function(e){
@@ -324,6 +311,39 @@ $(document).ready(function(){
 	
 	/* ================================  CONTROL ITEM ================================== */
 	
+	if( $("#frm_control_items").length > 0 ){
+		var check_box_arr = $("#frm_control_items").find("input[type='checkbox']");
+		
+		$(check_box_arr).each(function(index) {
+			var check_box = check_box_arr[index];
+			
+			if( $(check_box).is(':checked') ){
+				var chbox_id = $(check_box).attr("id");
+				
+				var control_group_id = chbox_id.substring( chbox_id.indexOf("_")+1, chbox_id.indexOf(":") );
+				var control_item_id = chbox_id.substring( chbox_id.indexOf(":")+1,  chbox_id.length );
+				
+				$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
+			}
+		});
+	}
+	
+	
+	$("#frm_control_items input[type='checkbox']").click(function(){
+		var thisCbox = $(this);
+		
+		var chbox_id = $(thisCbox).attr("id");
+		
+		var control_group_id = chbox_id.substring( chbox_id.indexOf("_")+1, chbox_id.indexOf(":") );
+		var control_item_id = chbox_id.substring( chbox_id.indexOf(":")+1,  chbox_id.length );
+		
+		if ($("#hid_" + control_item_id).length > 0){
+			$("#hid_" + control_item_id).remove();
+		}else{
+			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
+		}
+	});
+	
 	$("#frm_control_items").submit(function(e){
 		var thisForm = $(this);
 		var num_checked = $(this).find("input:checked").length;
@@ -334,17 +354,31 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("#frm_save_control_details input").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
-		
-	$("#frm_save_control_details select").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
+	
 	
 	/* =========================  CONTROL OPTION ======================================== */
+	  
+	// Changes control type location level between building and property in search location select box
+	$(".control_item_type").click(function(){
+		var thisBtn = $(this).find(".btn");
+		var thisRadio = $(this).find("input[type=radio]");
+		
+		// Clears active button and checked underlying radiobutton
+		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
+		$(".control_item_type").find(".btn").removeClass("active");
+		
+		// Makes button active and checkes underlying radiobutton
+		$(thisRadio).attr("checked", "checked");
+		$(thisBtn).addClass("active");
+		
+		var control_item_type = $(this).find("input[type=radio]").val();
+		
+		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
+			$("#add_control_item_option_panel").slideDown(500);
+		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
+			$("#add_control_item_option_panel").slideUp(500);
+		}
+	});
 	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
 		e.preventDefault();
@@ -364,6 +398,21 @@ $(document).ready(function(){
 	});
 	
 	/* =========================  CONTROL  =============================================== */
+	
+	$("#control_id").change(function () {
+		var control_id = $(this).val();
+  		$("#hidden_control_id").val( control_id );
+    });
+
+	$("#frm_save_control_details input").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+		
+	$("#frm_save_control_details select").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
 	
 	// SAVE CONTROL DETAILS
 	$("#frm_save_control_details").submit(function(e){
