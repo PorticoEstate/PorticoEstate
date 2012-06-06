@@ -78,14 +78,15 @@ function checkNewGroup()
 
 function get_address_search()
 {
-	var address = document.getElementById('address_txt').value;
+	var address = document.getElementById('address').value;
 	var div_address = document.getElementById('address_container');
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
-var divcontent_end = "</select>";
+	var divcontent_start = "<select name=\"address_select\" id=\"address\" size=\"5\" onChange='setAddressValue(this)'>";
+	var divcontent_end = "</select>";
 	
 	var callback = {
 		success: function(response){
@@ -101,14 +102,15 @@ var divcontent_end = "</select>";
 
 function get_address_search_cp2()
 {
-	var address = document.getElementById('contact2_address_txt').value;
-	var div_address = document.getElementById('contact2_address_container');
+	var address = document.getElementById('contact2_address').value;
+	var div_address = document.getElementById('contact2_address_container');'
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"contact2_address\" id=\"address_cp2\" size\"5\">";
-var divcontent_end = "</select>";
+	var divcontent_start = "<select name=\"contact2_address_select\" id=\"address_cp2\" size=\"5\" onChange='setAddressValue(this)'>";
+	var divcontent_end = "</select>";
 	
 	var callback = {
 		success: function(response){
@@ -120,6 +122,26 @@ var divcontent_end = "</select>";
 	}
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
+}
+
+function setAddressValue(field)
+{
+	if(field.name == 'contact2_address_select')
+	{
+    	var address = document.getElementById('contact2_address');
+    	var div_address = document.getElementById('contact2_address_container');
+    
+    	address.value=field.value;
+		div_address.style.display="none";
+	}
+	else
+	{
+    	var address = document.getElementById('address');
+    	var div_address = document.getElementById('address_container');
+    
+    	address.value=field.value;
+		div_address.style.display="none";
+	}
 }
 
 function allOK()
@@ -234,7 +256,7 @@ function allOK()
 					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="special_adaptation" id="special_adaptation" />
+					<input type="checkbox" name="special_adaptation" id="special_adaptation" <?php echo $activity->get_special_adaptation() ? ' checked="checked"' : '' ?>/>
 				</dd>
 				<hr />
 				<h2><?php echo lang('where_when')?></h2>

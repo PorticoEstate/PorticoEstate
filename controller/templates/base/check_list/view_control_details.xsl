@@ -3,6 +3,8 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
+	<h2>Kontrolldetaljer</h2>
+	
 	<fieldset id="control_details">
 		<div class="row">
 			<label>Kontrollområde</label>

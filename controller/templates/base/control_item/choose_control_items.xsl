@@ -16,7 +16,7 @@
 			<xsl:variable name="control_group_ids"><xsl:value-of select="control_group_ids"/></xsl:variable>
 			<input type="hidden" name="control_group_ids" value="{control_group_ids}" />		
 			
-			<ul class="control_items">
+			
 				<xsl:for-each select="groups_with_control_items">
 					<ul class="expand_list">
 					<li>
@@ -46,7 +46,7 @@
 					</li>
 				</ul>
 				</xsl:for-each>
-			</ul>
+	
 			
 			<div>
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>

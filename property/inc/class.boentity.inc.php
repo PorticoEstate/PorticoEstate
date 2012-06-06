@@ -85,6 +85,7 @@
 			$order							= phpgw::get_var('order');
 			$filter							= phpgw::get_var('filter', 'int');
 			$district_id					= phpgw::get_var('district_id', 'int');
+			$part_of_town_id				= phpgw::get_var('part_of_town_id', 'int');
 			$status							= phpgw::get_var('status');
 			$start_date						= phpgw::get_var('start_date');
 			$end_date						= phpgw::get_var('end_date');
@@ -147,6 +148,10 @@
 			if(isset($_POST['district_id']) || isset($_GET['district_id']))
 			{
 				$this->district_id = $district_id;
+			}
+			if(isset($_POST['part_of_town_id']) || isset($_GET['part_of_town_id']))
+			{
+				$this->part_of_town_id = $part_of_town_id;
 			}
 			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
 			{
@@ -346,7 +351,7 @@
 			}
 
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id, 'part_of_town_id' => $this->part_of_town_id,
 				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'',
 				'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
 				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),

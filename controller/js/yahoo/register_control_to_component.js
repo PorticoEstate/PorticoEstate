@@ -18,6 +18,34 @@ var	myPaginator_0, myDataTable_0
 	}
 
 
+ 	function checkAll(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+
+		for(i=0;i<controls.length;i++)
+		{
+			if(!controls[i].disabled)
+			{
+//				if(myclass=="mychecks")
+				{
+					if(controls[i].checked)
+					{
+						controls[i].checked = false;
+					}
+					else
+					{
+						controls[i].checked = true;
+					}
+				}
+				//for the rest, always id checked
+//				else
+//				{
+//					controls[i].checked = true;
+//				}
+			}
+		}
+	}
+ 
  /********************************************************************************/
 
 

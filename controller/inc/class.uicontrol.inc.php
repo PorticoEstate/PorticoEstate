@@ -764,22 +764,18 @@
 			$value['ajax'] = array();
 			$value['actions'] = array();
 			$value['labels'] = array();
-			//$value['parameters'] = array();
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_control_details', 'id' => $value['control_id'])));
 			$value['labels'][] = lang('View control');
-			//$value['parameters'][] = "control_id";
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $value['control_id'])));
 			$value['labels'][] = lang('View locations for control');
-			//$value['parameters'][] = "control_id";
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
-			//$value['parameters'][] = "control_id";
 		}
 		
 		public function register_control_to_location()
@@ -826,11 +822,14 @@
 			$start_index	= phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field		= phpgw::get_var('sort');
+			
 			if($sort_field == null)
 			{
 				$sort_field = 'control_group_id';
 			}
+			
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			
 			//Create an empty result set
 			$records = array();
 			
@@ -843,18 +842,11 @@
 
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
-			//var_dump($result_objects);
 								
 			$results = array();
 			
 			foreach($result_objects as $control_obj)
 			{
-/*				$obj_serialized = $control_obj->serialize();
-				$obj_serialized['show_locations'] = array(
-					'href' => html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $result['location_id']))),
-					'label' => lang('show_controls_for_location')
-				);
-				$results['results'][] = $obj_serialized;*/
 				$results['results'][] = $control_obj->serialize();	
 			}
 			
@@ -863,7 +855,6 @@
 			$results['sort'] = $params['sort'];
 			$results['dir'] = $params['dir'];
 
-			//array_walk($results["results"], array($this, "add_actions"), array($type));
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view_control_details");
 			
 			foreach($results["results"] as &$res) {
