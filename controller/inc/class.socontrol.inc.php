@@ -253,7 +253,7 @@
 			}
 		}
 		
-		function register_control_to_location($control_id, $data)
+		public function register_control_to_location($control_id, $data)
 		{
 
 			$control_id = (int) $control_id;
@@ -296,6 +296,76 @@
 
 			return $this->db->transaction_commit();
 		}
+
+		public function check_control_component($control_id, $location_id, $component_id)
+		{
+			$control_id		= (int) $control_id;
+			$location_id	= (int) $location_id;
+			$component_id	= (int) $component_id;
+			$sql =  "SELECT * FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			return $this->db->next_record();
+		}
+
+		function register_control_to_component($data)
+		{
+
+			$delete_component = array();
+			$add_component = array();
+			$this->db->transaction_begin();
+
+			if(isset($data['register_component']) && is_array($data['register_component']))
+			{
+				foreach($data['register_component'] as $component_info)
+				{
+					$component_arr = explode('_', $component_info);
+					if(count($component_arr)!=3)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $component_arr[0];
+					$location_id	= (int) $component_arr[1];
+					$component_id	= (int) $component_arr[2];
+
+					if(!$control_id)
+					{
+						return false;
+					}
+
+					$sql =  "SELECT * FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+					$this->db->query($sql, __LINE__, __FILE__);
+			
+					if(!$this->db->next_record())
+					{
+						$sql =  "INSERT INTO controller_control_component_list (control_id, location_id, component_id) VALUES ( {$control_id}, {$location_id}, {$component_id})";
+						$this->db->query($sql);
+					}
+				}
+			}
+
+			if(isset($data['delete']) && is_array($data['delete']))
+			{
+				foreach($data['delete'] as $component_info)
+				{
+					$component_arr = explode('_', $component_info);
+					if(count($component_arr)!=3)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $component_arr[0];
+					$location_id	= (int) $component_arr[1];
+					$component_id	= (int) $component_arr[2];
+				
+					$sql =  "DELETE FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+					$this->db->query($sql);
+				}
+			}
+
+			return $this->db->transaction_commit();
+		}
+
 
 		function add_component_to_control($control_id, $component_id)
 		{

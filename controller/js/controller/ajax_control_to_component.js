@@ -238,13 +238,23 @@ $(document).ready(function()
 	  			if(obj.status == "updated")
 	  			{
 		  			$(submitBnt).val("Lagret");
-						var oArgs = {menuaction:'property.uidimb_role_user.query', dimb_id:$("#dimb_id").val(), user_id:$("#user_id").val(),role_id:$("#role_id").val(),query_start:$("#query_start").val(),query_end:$("#query_end").val()};
+
+					var oArgs = {
+						menuaction:'controller.uicontrol_location.query2',
+						entity_id:$("#entity_id").val(),
+						cat_id:$("#cat_id").val(),
+						district_id:$("#district_id").val(),
+						part_of_town_id:$("#part_of_town_id").val(),
+						location_code:$("#loc1").val(),
+						control_id:$("#control_id").val()
+						};
+	
 						execute_async(myDataTable_0,oArgs);
-					}
-					else
-					{
+				}
+				else
+				{
 		  			$(submitBnt).val("Feil ved lagring");					
-					}
+				}
 		  				
 		  		// Changes text on save button back to original
 		  		window.setTimeout(function() {

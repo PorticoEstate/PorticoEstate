@@ -179,14 +179,18 @@
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<div id="paging_0"/>
 	<div id="datatable-container_0"/>
-
-	<div id="data_paginator"/>
-	<div id="datatable-container"/>
 	
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 	<div class="row_on"><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
+
+  	<xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select')" /></xsl:variable>
+	<div class="row_on"><input type="button" name="select_add" id="frm_update_add" value="{$label_select_add}" onclick="checkAll('mychecks_add')"/></div>
+	
+  	<xsl:variable name="label_select_delete"><xsl:value-of select="php:function('lang', 'select delete')" /></xsl:variable>
+	<div class="row_on"><input type="button" name="select_add" id="frm_update_delete" value="{$label_select_delete}" onclick="checkAll('mychecks_delete')"/></div>
+	
 </xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">

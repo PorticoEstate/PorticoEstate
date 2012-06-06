@@ -687,3 +687,22 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.35';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	$test[] = '0.1.35';
+	function controller_upgrade0_1_35()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','location_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => false
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.36';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+

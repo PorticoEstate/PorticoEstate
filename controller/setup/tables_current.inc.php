@@ -152,6 +152,7 @@
 				'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => false),
 					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 					'component_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
 			'pk' => array('id'),
