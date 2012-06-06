@@ -75,16 +75,16 @@
 	}
 
 	.btn {
-	    background: none repeat scroll 0 0 #2647A0;
-	    border: 1px solid #173073;
-	    color: #FFFFFF;
-	    cursor: pointer;
-	    display: inline-block;
-	    font-family: arial;
-	    padding: 5px 20px;
-	    text-decoration: none;
-	    margin-top:20px;
-	}
+    background: none repeat scroll 0 0 #4F9AEA;
+    border: 1px solid #428AD7;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    text-decoration: none;
+}
 	
 	ol{
  		margin: 0;
