@@ -629,8 +629,27 @@
 
 			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
 
+			$tabs = array
+			( 
+				array
+				(
+					'label' => lang('View_locations_for_control'),
+					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
+				),
+				array
+				(
+					'label' => lang('Add_locations_for_control'),
+					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
+				),
+				array
+				(
+					'label' => lang('add components for control')
+				)
+			);
+					
 			$data = array
 			(
+				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'td_count'						=> '""',
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
@@ -647,6 +666,7 @@
 													),
 				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_location.edit_component'))
 			);
+
 
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -684,7 +704,7 @@
 			(
 				'key'		=> 'select',
 				'label'		=> lang('select'),
-				'sortable'	=> false,
+				'sortable'	=> true,
 				'formatter'	=> false,
 				'hidden'	=> false,
 				'formatter' => '',
@@ -749,7 +769,6 @@
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
-
 
 			if(!$entity_id && !$cat_id)
 			{
