@@ -722,19 +722,22 @@
 				'className' => ''
 			);
 
-			$count_fields =count($uicols['name']);
+			$count_fields = 16;//count($uicols['name']);
 
 			for ($i=0;$i<$count_fields;$i++)
 			{
-				$columndef[] = array
-				(
-					'key'		=> $uicols['name'][$i],
-					'label'		=> $uicols['descr'][$i],
-					'sortable'	=> $uicols['sortable'][$i],
-					'formatter'	=> $uicols['formatter'][$i],
-					'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-					'className'	=> $uicols['classname'][$i],
-				);
+				if( $uicols['name'][$i])
+				{
+					$columndef[] = array
+					(
+						'key'		=> $uicols['name'][$i],
+						'label'		=> $uicols['descr'][$i],
+						'sortable'	=> $uicols['sortable'][$i],
+						'formatter'	=> $uicols['formatter'][$i],
+						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
+						'className'	=> $uicols['classname'][$i],
+					);
+				}
 			}
 
 //_debug_array($columndef);
