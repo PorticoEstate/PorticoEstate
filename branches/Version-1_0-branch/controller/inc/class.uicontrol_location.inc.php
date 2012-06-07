@@ -76,7 +76,8 @@
 			'query2'							=> true,
 			'get_category_by_entity'			=> true,
 			'get_entity_table_def'				=> true,
-			'get_locations'						=> true
+			'get_locations'						=> true,
+			'get_location_type_category'		=> true
 		);
 
 		function __construct()
@@ -606,10 +607,12 @@
 			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
 
 			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
+			$location_type_list = execMethod('property.soadmin_location.select_location_type');
 
 			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
+			array_unshift($location_type_list ,array ('id'=>'','name'=>lang('select')));
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -659,10 +662,11 @@
 				'msgbox_data'					=> $msgbox_data,
 				'filter_form' 					=> array
 													(
-														'control_area_list'	=> array('options' => $control_area_list),
-														'entity_list' 		=> array('options' => $entity_list),
-														'district_list' 	=> array('options' => $district_list),
-														'part_of_town_list'	=> array('options' => $part_of_town_list),
+														'control_area_list'		=> array('options' => $control_area_list),
+														'entity_list' 			=> array('options' => $entity_list),
+														'district_list' 		=> array('options' => $district_list),
+														'part_of_town_list'		=> array('options' => $part_of_town_list),
+														'location_type_list'	=> array('options' => $location_type_list),
 													),
 				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_location.edit_component'))
 			);
@@ -690,6 +694,24 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
 		}
 	
+
+		public function get_location_type_category()
+		{
+			$location_type			= phpgw::get_var('location_type', 'int');
+
+			$values  = $this->bocommon->select_category_list(array
+					(
+						'format'=>'filter',
+					//	'selected' => $this->cat_id,
+						'type' =>'location',
+						'type_id' =>$location_type,
+						'order'=>'descr'
+					)
+				);
+
+			return $values;
+		}
+
 
 		public function get_entity_table_def()
 		{
@@ -722,19 +744,22 @@
 				'className' => ''
 			);
 
-			$count_fields =count($uicols['name']);
+			$count_fields = 16;//count($uicols['name']);
 
 			for ($i=0;$i<$count_fields;$i++)
 			{
-				$columndef[] = array
-				(
-					'key'		=> $uicols['name'][$i],
-					'label'		=> $uicols['descr'][$i],
-					'sortable'	=> $uicols['sortable'][$i],
-					'formatter'	=> $uicols['formatter'][$i],
-					'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-					'className'	=> $uicols['classname'][$i],
-				);
+				if( $uicols['name'][$i])
+				{
+					$columndef[] = array
+					(
+						'key'		=> $uicols['name'][$i],
+						'label'		=> $uicols['descr'][$i],
+						'sortable'	=> $uicols['sortable'][$i],
+						'formatter'	=> $uicols['formatter'][$i],
+						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
+						'className'	=> $uicols['classname'][$i],
+					);
+				}
 			}
 
 //_debug_array($columndef);
