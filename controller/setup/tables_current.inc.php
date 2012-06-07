@@ -231,7 +231,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_item_option', array(
+		'controller_control_item_option' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
 				'option_value' =>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
