@@ -1183,27 +1183,30 @@
 					);
 
 					$subject=lang('workorder %1 has been edited',$id);
-					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
-					$sms	= CreateObject('sms.sms');
-
-					foreach($notify_list as $entry)
+					if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 					{
-						if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
-						{
-							$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
-						}
-						else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
-						{
-							$sms->websend2pv($this->account,$entry['sms'],$sms_text);
-							$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
-							$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
-						}
-					}
-					unset($entry);
+						$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+						$sms	= CreateObject('sms.sms');
 
-					if($toarray_sms)
-					{
-						$historylog->add('MS',$id,implode(',',$toarray_sms));						
+						foreach($notify_list as $entry)
+						{
+							if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+							{
+								$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+							}
+							else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+							{
+								$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+								$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+								$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+							}
+						}
+						unset($entry);
+
+						if($toarray_sms)
+						{
+							$historylog->add('MS',$id,implode(',',$toarray_sms));						
+						}
 					}
 						
 					if ($toarray)
