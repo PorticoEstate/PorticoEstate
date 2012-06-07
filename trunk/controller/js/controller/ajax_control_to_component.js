@@ -88,6 +88,41 @@ $(document).ready(function()
     });
 
 
+	$("#location_type").change(function () {
+		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_type_category', location_type: $(this).val()};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString = "";
+
+         $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					var obj = data;
+						
+					$.each(obj, function(i)
+					{
+						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		  			});
+					 								
+					$("#location_type_category").html( htmlString );
+         			$("#loc1").html( "<option value=''>Velg</option>" );
+         			$("#loc2").html( "<option value=''>Velg</option>" );
+				}
+				else
+				{
+         			htmlString  += "<option value=''>Velg</option>";
+         			$("#part_of_town_id").html( htmlString );
+         			$("#loc1").html( htmlString );
+         			$("#loc2").html( htmlString );
+         		}
+			}
+         });
+    });
+
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();

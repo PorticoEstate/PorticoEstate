@@ -89,6 +89,12 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'control')" />
 		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location type')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location category')" />
+		</td>
 	</tr>
 	  <tr id="filter1">
 		<td>
@@ -96,11 +102,20 @@
 			<xsl:apply-templates select="control_area_list/options"/>
 		  </select>
 		</td>		
-		<td colspan='4'>
+		<td>
 		  <select id="control_id" name="control_id">
 			<xsl:apply-templates select="control/options"/>
 		  </select>
 		</td>		
+		<td >
+		  <select id="location_type" name="location_type">
+			<xsl:apply-templates select="location_type_list/options"/>
+		  </select>
+		</td>
+		<td >
+		  <select id="location_type_category" name="location_type_category">
+		  </select>
+		</td>
 	  </tr>
 	<tr>
 		<td>
