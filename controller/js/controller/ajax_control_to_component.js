@@ -123,6 +123,11 @@ $(document).ready(function()
          });
     });
 
+	$("#location_type_category").change(function () {
+		var level = $("#location_type").val();
+		update_loc(level);
+    });
+
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
@@ -324,6 +329,59 @@ $(document).ready(function()
 		});
 	});
 });
+
+
+function update_loc(level)
+{
+	var oArgs = {
+		menuaction:'property.bolocation.read',
+		cat_id:$("#location_type_category").val(),
+		district_id:$("#district_id").val(),
+		part_of_town_id:$("#part_of_town_id").val(),
+		location_code:$("#loc1").val(),
+		type_id:level
+	};
+
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString  = "<option value=''>Velg</option>";
+
+         $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function(data) {
+				if( data != null)
+				{
+					var obj = data;
+						
+					$.each(obj, function(i)
+					{
+						htmlString  += "<option value='" + obj[i].location_code + "'>" +  obj[i].location_code + " " + obj[i]["loc"+level+"_name"] + "</option>";
+		  			});
+					 								
+					$("#loc" + level).html( htmlString );
+					if(level == 1)
+					{
+	         			$("#loc2").html( "<option value=''>Velg Eiendom først</option>" );
+	         		}
+					if(level == 2)
+					{
+	         			$("#loc1").html( "" );
+	         		}
+				}
+				else
+				{
+         			htmlString  = "<option>Ingen</option>";
+         			$("#loc1").html( htmlString );
+	         		$("#loc2").html(htmlString);
+        		}
+			}
+         });
+
+
+
+}
 
 function get_table_def()
 {
