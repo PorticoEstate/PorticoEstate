@@ -1190,11 +1190,7 @@
 
 						foreach($notify_list as $entry)
 						{
-							if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
-							{
-								$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
-							}
-							else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+							if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
 							{
 								$sms->websend2pv($this->account,$entry['sms'],$sms_text);
 								$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
@@ -1209,6 +1205,16 @@
 						}
 					}
 						
+					reset($notify_list);
+					foreach($notify_list as $entry)
+					{
+						if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+						{
+							$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+						}
+					}
+					unset($entry);
+
 					if ($toarray)
 					{
 						$to = implode(';',$toarray);
