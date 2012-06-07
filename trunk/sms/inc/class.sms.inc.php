@@ -59,7 +59,7 @@
 		}
 		else
 		{
-			die("ERROR: No selected gateway module available - please contact system administrator");
+//			die("ERROR: No selected gateway module available - please contact system administrator");
 		}
 	}
 
