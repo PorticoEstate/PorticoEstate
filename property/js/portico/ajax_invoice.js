@@ -179,12 +179,16 @@ $(document).ready(function(){
 
 
 function update_voucher_filter(){
-	var janitor_lid = $("#janitor_lid").val();
-	var supervisor_lid = $("#supervisor_lid").val();
-	var budget_responsible_lid = $("#budget_responsible_lid").val();
-	var query = $("#query").val();
 
-	var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
+	var oArgs = {
+		menuaction:'property.uiinvoice2.get_vouchers',
+		janitor_lid: $("#janitor_lid").val(),
+		supervisor_lid: $("#supervisor_lid").val(),
+		budget_responsible_lid: $("#budget_responsible_lid").val(),
+		criteria: $("#criteria").val(),
+		query: $("#query").val()
+	};
+
 	var requestUrl = phpGWLink('index.php', oArgs, true);
       
 	var htmlString = "";
@@ -192,7 +196,7 @@ function update_voucher_filter(){
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
+		url: requestUrl,
 		success: function(data) {
 			if( data != null)
 			{

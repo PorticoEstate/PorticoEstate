@@ -2304,8 +2304,36 @@
 
 			if($data['query'])
 			{
-				$query = (int) $data['query'];
-				$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
+				switch ($data['criteria'])
+				{
+					case 'voucher_id':
+						$query = (int) $data['query'];
+						$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
+						break;
+					
+					case 'invoice_id':
+						$query = $data['query'];
+						$querymethod = " $where fakturanr = '{$query}'";
+						break;
+					
+					case 'order_id':
+						$query = $data['query'];
+						$querymethod = " $where pmwrkord_code = '{$query}'";
+						break;
+
+					case 'vendor_id':
+						$query = (int) $data['query'];
+						$querymethod = " $where (spvend_code = {$query} OR org_name {$this->like} '%{$data['query']}%')";
+						break;
+
+					case 'b_account':
+						$query =  $data['query'];
+						$querymethod = " $where spbudact_code = '{$query}'";
+						break;
+
+					default:
+				}
+				
 				$where = 'AND';
 			}
 
