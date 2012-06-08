@@ -352,6 +352,35 @@
 				'values'	=>	json_encode($datatable)
 			);	
 
+			$criteria_list = array
+			(
+				array
+				(
+					'id'	=> 'voucher_id',
+					'name'	=> lang('voucher id'),
+				),
+				array
+				(
+					'id'	=> 'invoice_id',
+					'name'	=> lang('invoice number'),
+				),
+				array
+				(
+					'id'	=> 'vendor_id',
+					'name'	=> lang('vendor'),
+				),
+				array
+				(
+					'id'	=> 'order_id',
+					'name'	=> lang('order id'),
+				),
+				array
+				(
+					'id'	=> 'b_account',
+					'name'	=> lang('budget account'),
+				),
+			);
+			
 			$data = array
 			(
 				'td_count'						=> '""',
@@ -379,6 +408,7 @@
 														'janitor_list' 				=> array('options' => $janitor_list),
 														'supervisor_list' 			=> array('options' => $supervisor_list),
 														'budget_responsible_list' 	=> array('options' => $budget_responsible_list),
+														'criteria_list'				=> array('options' => $criteria_list)
 													),
 				'filter_invoice' 					=> array
 													(
@@ -456,9 +486,10 @@
 			$janitor_lid			= phpgw::get_var('janitor_lid', 'string');
 			$supervisor_lid			= phpgw::get_var('supervisor_lid', 'string');
 			$budget_responsible_lid	= phpgw::get_var('budget_responsible_lid', 'string');
+			$criteria				= phpgw::get_var('criteria', 'string');
 			$query					= phpgw::get_var('query', 'string');
 
-			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid, 'budget_responsible_lid' =>$budget_responsible_lid, 'query' => $query ));
+			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid, 'budget_responsible_lid' =>$budget_responsible_lid, 'criteria' => $criteria, 'query' => $query ));
 
 			return $vouchers;
 		}
