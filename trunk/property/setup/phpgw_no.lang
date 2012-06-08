@@ -1353,6 +1353,7 @@ reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 residual demand	property	no	Rest behov
+reponse template	property	no	SMS::mal for standardtekster
 responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
