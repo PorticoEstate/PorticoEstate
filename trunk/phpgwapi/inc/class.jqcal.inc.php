@@ -62,6 +62,7 @@
 					changeMonth: true,
 					changeYear: true,
 					showOn: "button",
+					showButtonPanel:true,
 					buttonImage: "{$this->img_cal}",
 					buttonText: "{$this->lang_select_date}",
 					buttonImageOnly: true
