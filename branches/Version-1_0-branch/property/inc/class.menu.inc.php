@@ -720,12 +720,15 @@
 					);
 			}
 
-			$menus['navigation']['helpdesk']['children']['response_template'] = array
+			if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
+			{
+				$menus['navigation']['helpdesk']['children']['response_template'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'response_template') ),
 					'text'	=> lang('response template'),
 					'image'		=> array('property', 'helpdesk')
 				);
+			}
 
 			if ( $acl->check('.project', PHPGW_ACL_READ, 'property') )
 			{

@@ -1353,6 +1353,7 @@ reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 residual demand	property	no	Rest behov
+reponse template	property	no	SMS::mal for standardtekster
 responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
@@ -1416,6 +1417,7 @@ search by gaards nr. to show all entries, empty all fields and press the submit 
 search by location_code. to show all entries, empty all fields and press the submit button again	property	no	Søk etter lokaliseringskode
 search by property	property	no	søk ved eiendom
 search by seksjon. to show all entries, empty all fields and press the submit button again	property	no	Søk etter Seksjon
+search criteria	property	no	Søkekriterie
 search for history at this location	property	no	søk etter historikk for denne lokaliseringen
 search for investment entries	property	no	søk etter investeringsposter
 search for paid invoices	property	no	søk etter betalte bilag

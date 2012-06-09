@@ -169,7 +169,10 @@
 			<xsl:value-of select="php:function('lang', 'budget responsible')" />
 		</td>
 		<td>
-			<xsl:value-of select="php:function('lang', 'voucher id')" />
+			<xsl:value-of select="php:function('lang', 'search criteria')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'search')" />
 		</td>
 	</tr>
 	  <tr id="filters">
@@ -186,6 +189,11 @@
 		<td>
 		  <select id="budget_responsible_lid" name="budget_responsible_lid">
 			<xsl:apply-templates select="budget_responsible_list/options"/>
+		  </select>
+		</td>		
+		<td>
+		  <select id="criteria" name="criteria">
+			<xsl:apply-templates select="criteria_list/options"/>
 		  </select>
 		</td>		
 		<td>
@@ -277,28 +285,6 @@
 			  	</div>
 			</td>
 		</tr>
-<!--
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'amount')" />
-			</td>
-			<td>
-			  	<div id="amount">
-			  		<xsl:value-of select="voucher_info/generic/amount"/>
-			  	</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<xsl:value-of select="php:function('lang', 'approved amount')" />
-			</td>
-			<td>
-			  	<div id="approved_amount">
-			  		<xsl:value-of select="voucher_info/generic/approved_amount"/>
-			  	</div>
-			</td>
-		</tr>
--->
 		<tr class ='row_on'>
 			<td>
 				<xsl:value-of select="php:function('lang', 'currency')" />

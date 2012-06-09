@@ -1530,8 +1530,18 @@
 
 		function read_single_eav($data, $values = array())
 		{
-			$id			= (int)$data['id'];
-			$this->db->query("SELECT * FROM fm_bim_item WHERE id = {$id}");
+			if(isset($data['guid']) && $data['guid'])
+			{
+				$sql = "SELECT * FROM fm_bim_item WHERE guid = '{$data['guid']}'";
+			}
+			else
+			{
+				$id			= (int)$data['id'];
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}");
+				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";
+			}
+
+			$this->db->query($sql,__LINE__,__FILE__);
 
 			if($this->db->next_record())
 			{
