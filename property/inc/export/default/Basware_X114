@@ -846,11 +846,11 @@
 				$descr = '';
 				if($line['line_text'])
 				{
-					$descr = $line['line_text'];
+					$descr = substr($line['line_text'],0,60);
 				}
 				else if ($line['order_id'])
 				{
-					$descr = $order_info['title'];
+					$descr = substr($order_info['title'],0,60);
 				}
 
 				$accountline[] = array
