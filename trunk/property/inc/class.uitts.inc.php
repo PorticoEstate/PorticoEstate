@@ -884,8 +884,10 @@
 			$uicols['descr'][]	= lang('bgcolor');
 			$uicols['name'][] = 'subject';
 			$uicols['descr'][]	= lang('subject');
+/*
 			$uicols['name'][] = 'location_code';
 			$uicols['descr'][]	= lang('location code');
+*/
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
 
