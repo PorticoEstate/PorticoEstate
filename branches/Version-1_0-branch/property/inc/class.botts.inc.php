@@ -208,6 +208,13 @@
 		{
 			$columns = array();
 
+
+			$columns['location_code'] = array
+				(
+					'id' => 'location_code',
+					'name'=> lang('location code')
+				);
+
 			$columns['modified_date'] = array
 				(
 					'id'		=> 'modified_date',
