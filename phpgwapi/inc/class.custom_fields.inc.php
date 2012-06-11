@@ -276,7 +276,8 @@
 				'get_list_function'	=> $attrib['get_list_function'],
 				'get_list_function_input' => $attrib['get_list_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_list_function_input'])) : '',
 				'get_single_function'	=> $attrib['get_single_function'],
-				'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : ''
+				'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : '',
+				'short_description'			=> isset($attrib['short_description']) && $attrib['short_description'] ? (int) $attrib['short_description'] : false
 			);
 
 			if ( isset($attrib['search']) )
@@ -730,7 +731,8 @@
 					'get_list_function'		=> $attrib['get_list_function'],
 					'get_list_function_input' => $attrib['get_list_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_list_function_input'])) : '',
 					'get_single_function'		=> $attrib['get_single_function'],
-					'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : ''
+					'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : '',
+					'short_description'			=> isset($attrib['short_description']) && $attrib['short_description'] ? (int) $attrib['short_description'] : false
 				);
 
 				if($OldGroup != $attrib['group_id'])
@@ -1045,6 +1047,7 @@
 					'get_list_function_input' => $this->_db->f('get_list_function_input') ? unserialize($this->_db->f('get_list_function_input', true)) : '',
 					'get_single_function'		=> $this->_db->f('get_single_function'),
 					'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
+					'short_description'			=> $this->_db->f('short_description')
 
 				);
 			}
@@ -1229,16 +1232,16 @@
 				'get_list_function_input' => $this->_db->f('get_list_function_input') ? unserialize($this->_db->f('get_list_function_input', true)) : '',
 				'get_single_function'		=>$this->_db->f('get_single_function',true),
 				'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
-
-				'column_info'			=> array
-										(
-											'precision'	=> $this->_db->f('precision_'),
-											'scale'		=> $this->_db->f('scale'),
-											'default'	=> $this->_db->f('default_value', true),
-											// more duplicated values
-											'nullable'	=> $this->_db->f('nullable'),
-											'type'		=> $this->_db->f('datatype')
-										)
+				'short_description'			=> $this->_db->f('short_description'),
+				'column_info'				=> array
+											(
+												'precision'	=> $this->_db->f('precision_'),
+												'scale'		=> $this->_db->f('scale'),
+												'default'	=> $this->_db->f('default_value', true),
+												// more duplicated values
+												'nullable'	=> $this->_db->f('nullable'),
+												'type'		=> $this->_db->f('datatype')
+											)
 			);
 
 			if ( $inc_choices )
