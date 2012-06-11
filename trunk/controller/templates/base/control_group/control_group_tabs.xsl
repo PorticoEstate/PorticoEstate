@@ -16,8 +16,4 @@
 			</div>
 		</div>
 	</div>
-	<!--  script type="text/javascript">
-		var resource_id = <xsl:value-of select="resource/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Edit', 'Delete', 'Account', 'Role')"/>;
-	</script-->
 </xsl:template>
