@@ -143,8 +143,6 @@
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -185,8 +183,6 @@
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
@@ -448,7 +444,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.component_type_id, controller_control.component_id, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
+				$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -486,8 +482,6 @@
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control->set_control_area_name($category[0]['name']);
 	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
