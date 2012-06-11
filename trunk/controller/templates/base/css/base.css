@@ -497,7 +497,7 @@ h1 img{
     padding: 10px;
 }
 
-#control_item_details dl.proplist dt, dl.proplist-col dt {
+#control_item_details dl.proplist dt{
     font-size: 1em;
     font-weight: normal;
     margin-bottom: 2em;
@@ -1771,6 +1771,10 @@ div.controller_checklist {
     width: 100px;
 }
 
+#control_details .date {
+    margin-right:0;
+}
+
 #control_details #select_all{
 	margin-left: 660px;	
 }
@@ -1783,8 +1787,12 @@ div.controller_checklist {
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
+    margin-left: 5px;
     padding: 6px 10px;
     vertical-align: baseline;
+}
+.help_text.ext {
+    margin-left: 0;
 }
 
 #repeat_interval{
