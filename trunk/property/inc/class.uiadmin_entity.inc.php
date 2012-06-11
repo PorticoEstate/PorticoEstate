@@ -1847,6 +1847,8 @@
 			$uicols['descr'][7]	= lang('Search');
 			$uicols['name'][8]	= 'id';
 			$uicols['descr'][8]	= lang('id');
+			$uicols['name'][9]	= 'short_description';
+			$uicols['descr'][9]	= lang('short description');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
