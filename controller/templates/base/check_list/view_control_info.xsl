@@ -5,6 +5,7 @@
 <div id="main_content" class="medium">
 		
 	<script>
+	  
 		$(document).ready(function() {
 			var requestUrl = $("#view_control_details").attr("href");
 			load_tab(requestUrl);
