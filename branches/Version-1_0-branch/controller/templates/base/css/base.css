@@ -169,10 +169,8 @@ div.identifier-header label {
 }
 
 #toolbar {
-    width: 100%;
-    background-color: #eee;
-    border: 1px solid #bbb;
-    margin-bottom: 0em;
+    background-color: #DEEAF8;
+    border: 1px solid #C7D8EB;
     padding: 10px 30px;
 }
 
@@ -298,55 +296,58 @@ div.allocation-list
 }
 
 dl.controller-description {
-	width: 70%;
+  width: 70%;
 }
+
 dl.controller-description dt, dl.controller-description-edit {
-	width: 100%;
-	float:left;
-	font-weight:bold;
+  width: 100%;
+  float:left;
+  font-weight:bold;
 }
+
 dl.controller-description dd {
-	width: 100%;
-	border: 1px solid #ccc;
-	float: left;
-	background-color: white;
-	height: 100px;
-	overflow-y: scroll;
+  width: 100%;
+  border: 1px solid #ccc;
+  float: left;
+  background-color: white;
+  height: 100px;
+  overflow-y: scroll;
 }
+
 dl.controller-description-edit textarea {
-	width: 100%;
-	height: 100px;
-	border: 1px solid #ccc;
-	float: left;
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ccc;
+  float: left;
 }
 
 input#place {
-	width:60%;
+  width:60%;
 }
 
 input#address_1 {
-	width: 60%;
-	float:left;
+  width: 60%;
+  float:left;
 }
 
 input#house_number {
-	width: 20%;
-	float: left;
+  width: 20%;
+  float: left;
 }
 
 input.postcode {
-	width: 50px;
-	float: left;
+  width: 50px;
+  float: left;
 }
 
 .yui-navset {
-	clear: both;
-	margin-left: 2em;
-	margin-right: 2em;
+  clear: both;
+  margin-left: 2em;
+  margin-right: 2em;
 }
 
-h1 img, li img {
-	vertical-align: middle;
+h1 img, li img { 
+  vertical-align: middle;
 }
 /* Set up common form styles.  TODO: needs refinement. */
 
@@ -357,83 +358,99 @@ h1 img, li img {
 /* ==========================================   SELECTORS, IDS AND CLASSES    =========================================== */
 
 input{
-    margin: 0 13px 0 0;
-    padding: 3px 6px;
+  margin: 0 13px 0 0;
+  padding: 3px 6px;
 }
 
 input[type="radio"] {
-    margin: 0 5px 0 2px;
-    padding: 3px 6px;
+  margin: 0 5px 0 2px;
+  padding: 3px 6px;
 }
 
-input[type="submit"] {
-    background: none repeat scroll 0 0 #4F9AEA;
-    border: 1px solid #4685C8;
-    border-radius: 4px 4px 4px 4px;
-    color: #FFFFFF;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 5px 20px;
+#innertoolbar-button, input[type="submit"] {
+  background: none repeat scroll 0 0 #4F9AEA;
+  border: 1px solid #4685C8;
+  border-radius: 4px 4px 4px 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 5px 20px;
+}
+
+#innertoolbar-button {
+    font-size: 1em;
+    line-height: 1.2em;
+    min-height: 1.2em;
+    padding: 2px 15px;
 }
 
 .row input[type="submit"] {
-    padding: 2px 10px;
+  padding: 2px 10px;
 }
 
 select{
-	padding: 3px 1px 3px 4px;
+  padding: 3px 1px 3px 4px;
 }
 	
 fieldset {
-	border-bottom:0px solid #ccc;
+  border-bottom:0px solid #ccc;
 }
 
 textarea{
-	padding: 4px;	
+  padding: 4px;	
 }
 
 h1 em {
-	font-style:italic;
+  font-style:italic;
 }
 
 a {
-    color: #0066CC;
-    text-decoration: none;
+  color: #0066CC;
+  text-decoration: none;
 }
 
 .info, .error, .warning {
-	font-weight: normal;
-	margin:20px;
-	padding:5px;
-	font-size:1.1em;
-	text-align: left;
+  font-weight: normal;
+  margin:20px;
+  padding:5px;
+  font-size:1.1em;
+  text-align: left;
 }
 
 .message {
-	margin: 5px;
+  margin: 5px;
 }
 
 .info {
-	background-color:#CCFFCC;
-	border:1px solid #00FF00;
-	color:black;
+  background-color:#CCFFCC;
+  border:1px solid #00FF00;
+  color:black;
 }
 
 .warning {
-	background-color: #FEEFB3;
-	border:1px solid #9F6000;
-	color:#9F6000;
+  background-color: #FEEFB3;
+  border:1px solid #9F6000;
+  color:#9F6000;
 }
 .yui-calendar td.calcell {
-	border:0px !important;
+  border:0px !important;
 }
 
 .yui-skin-sam .yui-dt TABLE TH{
-	border: none !important;
+  border: none !important;
 }
 
-.yui-skin-sam .yui-dt TABLE TD{
-	border: none !important;
+.yui-skin-sam .yui-dt TABLE TD{ 
+  border: none !important;
+}
+
+.yui-skin-sam .yui-button .first-child {
+  border: 0;
+  margin:0;
+}
+.yui-skin-sam .yui-button {
+  background: none;
+  border:0;
+  margin: 0;
 }
 
 .datatable_container {
@@ -497,7 +514,7 @@ h1 img{
     padding: 10px;
 }
 
-#control_item_details dl.proplist dt, dl.proplist-col dt {
+#control_item_details dl.proplist dt{
     font-size: 1em;
     font-weight: normal;
     margin-bottom: 2em;
@@ -711,66 +728,62 @@ dl.proplist, dl.proplist-col {
 	 margin: 20px 0 0 20px;
 }
 
-.yui-skin-sam .yui-button button, .yui-skin-sam .yui-button a, .yui-skin-sam .yui-button a:visited {
- 	height: 24px;
-}
-
 #toolbar {
     padding: 10px;
 }
 
 #toolbar input[type="text"] {
-    font-size: 100%;
-    padding: 3px;
+  font-size: 100%;
+  padding: 3px;
 }
 
 #toolbar input[type="submit"] {
-    padding:0 8px;
-    margin-top:0;
-}
-
-#innertoolbar-button{
-    color: #111111;
+  padding:0 8px;
+  margin-top:0;
 }
 
 .yui-button.yui-link-button.new_button{
-	margin-left:30px;	
+  margin-left:30px;	
 }
 
 #view_check_lists {
-    padding: 30px;
-    width: 600px;
+  padding: 30px;
+  width: 600px;
 }
 
 ul.th {
-	font-weight: bold;
-	overflow:hidden;	
+  font-weight: bold;
+  overflow:hidden;	
 }
 
 ul.th li {
-    float: left;
-    margin-right: 20px;
-    padding: 3px 6px;
-    width: 100px;
+  float: left;
+  margin-right: 20px;
+  padding: 3px 6px;
+  width: 100px;
 }
 
 ul.row{
-	overflow: hidden;	
+  overflow: hidden;	
 }
 
 ul.row li{
-	float:left;	
-	margin-right: 20px;
-    padding: 3px 6px;
-    width: 100px;
+  float:left;	
+  margin-right: 20px;
+  padding: 3px 6px;
+  width: 100px;
 }
 
 /* =======================================  GENERAL CLASSES  ========================================= */
-.content_wrp {
- 	background: none repeat scroll 0 0 #EDF5FF;
-    border: 1px solid #eee;
-    margin-bottom: 20px;
-    padding: 15px;
+.content-wrp {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #eee;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.content-wrp .yui-skin-sam .yui-dt table {
+    border: 1px solid #CCCCCC;
 }
 
 .box {
@@ -853,6 +866,13 @@ ul.row li{
 
 #main_content h1{
 	margin-top:0;
+}
+
+.content-wrp{
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #DBE5EF;
+  margin-top: 1em;
+  padding: 1em;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
@@ -1126,7 +1146,8 @@ ul#icon_color_map span{
 }
 
 #calendar {
-    width: 100%
+    table-layout: fixed;
+    width: 100%;
 }
 
 #calendar th {
@@ -1498,13 +1519,6 @@ fieldset.location_details div{
 	margin:10px 0;
 }
 
-#create_message_dialog{
-	display:none;
-	position:absolute;
-	width: 600px;
-    z-index: 2;
-    background:#aaa;	
-}
 #curtain {
     background: none repeat scroll 0 0 #000000;
     display: none;
@@ -1771,6 +1785,10 @@ div.controller_checklist {
     width: 100px;
 }
 
+#control_details .date {
+    margin-right:0;
+}
+
 #control_details #select_all{
 	margin-left: 660px;	
 }
@@ -1783,8 +1801,12 @@ div.controller_checklist {
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
+    margin-left: 5px;
     padding: 6px 10px;
     vertical-align: baseline;
+}
+.help_text.ext {
+    margin-left: 0;
 }
 
 #repeat_interval{
@@ -1848,7 +1870,7 @@ img#loading {
 	width: 25%;
 }
 
-#queryForm{
+#control_location #queryForm{
 	margin: 20px; 
 	width: 65%;
 }

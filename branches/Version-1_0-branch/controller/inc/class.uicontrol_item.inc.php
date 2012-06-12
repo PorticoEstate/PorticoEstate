@@ -123,13 +123,7 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('New control item'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
-								'class' => 'new_item'
-							),
+							)
 						),
 					),
 				),
@@ -173,9 +167,8 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('datatable');
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
-//_debug_array($data);
-
-			self::render_template_xsl('datatable', $data);
+		
+			self::render_template_xsl( array( 'control_item/control_items_datatable', 'datatable' ), $data);
 		}
 
 		/**
@@ -198,109 +191,73 @@
 		public function edit()
 		{
 			$control_item_id = phpgw::get_var('id');
+			
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+			
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
+			$control_areas_array = $control_areas['cat_list'];
+
+			$control_groups_array = $this->so_control_group->get_control_group_array();
+			
+			/*
+			 * hack to fix display of &nbsp; char 
+			 */
+			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
+			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
+
+			$control_item_array = $control_item->toArray();
+			
+			$data = array
+			(
+				'editable' 				=> true,
+				'control_item'			=> $control_item_array,
+				'control_areas'			=> $control_areas_array,
+				'control_groups'		=> $control_groups_array,
+			);
+
+			$this->use_yui_editor(array('what_to_do','how_to_do'));
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+
+			self::render_template_xsl('control_item/control_item', $data);
+		}
 		
-			if(isset($control_item_id) && $control_item_id > 0)
-			{
-				$control_item = $this->so->get_single($control_item_id);
-			}
-			else
-			{
-				$control_item = new controller_control_item();
-			}
-
-			if(isset($_POST['save_control_item'])) // The user has pressed the save button
-			{
-				if(isset($control_item)) // Add new values to the control item
-				{
-					$what_to_do_txt = phpgw::get_var('what_to_do','html');
-					$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
-					$how_to_do_txt = phpgw::get_var('how_to_do','html');
-					$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
-					$control_item->set_title(phpgw::get_var('title'));
-					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
-					$control_item->set_type(phpgw::get_var('control_item_type'));
-					$control_item->set_what_to_do( $what_to_do_txt );
-					$control_item->set_how_to_do( $how_to_do_txt );
-					$control_item->set_control_group_id( phpgw::get_var('control_group') );
-					$control_item->set_control_area_id( phpgw::get_var('control_area') );
+		public function save()
+		{
+			$control_item_id = phpgw::get_var('id');
+			$what_to_do_txt = phpgw::get_var('what_to_do','html');
+			$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
+			$how_to_do_txt = phpgw::get_var('how_to_do','html');
+			$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
+			$control_item->set_title(phpgw::get_var('title'));
+			$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
+			$control_item->set_type(phpgw::get_var('control_item_type'));
+			$control_item->set_what_to_do( $what_to_do_txt );
+			$control_item->set_how_to_do( $how_to_do_txt );
+			$control_item->set_control_group_id( phpgw::get_var('control_group') );
+			$control_item->set_control_area_id( phpgw::get_var('control_area') );
 				
-					$control_item_id = $this->so->store($control_item);
-						
-					if($control_item_id > 0)
-					{
-						$message = lang('messages_saved_form');
-						
-						if($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'){
-							$option_values = phpgw::get_var('option_values');
+			$control_item_id = $this->so->store($control_item);
 				
-							foreach($option_values as $option_value){
-								$control_item_option = new controller_control_item_option($option_value, $control_item_id);
-								$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
-							}
-						}
+			if($control_item_id > 0)
+			{
+				$message = lang('messages_saved_form');
+				
+				if($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'){
+					$option_values = phpgw::get_var('option_values');
+		
+					foreach($option_values as $option_value){
+						$control_item_option = new controller_control_item_option($option_value, $control_item_id);
+						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
 					}
-					else
-					{
-						$ctrl_item_id = $this->so->add($control_item);
-						if($ctrl_item_id)
-						{
-							$message = lang('messages_saved_form');
-						}
-						else
-						{
-							$error = lang('messages_form_error');
-						}
-					}
-
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index', 'dir' => 'desc'));
 				}
 			}
-			else if(isset($_POST['cancel_control_item'])) // The user has pressed the cancel button
-			{
-				if(isset($control_item_id) && $control_item_id > 0)
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $control_item_id));
-				}
-				else
-				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index'));
-				}
-			}
-			else
-			{
-				// Sigurd: START as categories
-				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-				$cats->supress_info	= true;
-				
-				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-				$control_areas_array = $control_areas['cat_list'];
-
-				$control_groups_array = $this->so_control_group->get_control_group_array();
-				
-				/*
-				 * hack to fix display of &nbsp; char 
-				 */
-				$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
-				$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
-
-				$control_item_array = $control_item->toArray();
-				
-				$data = array
-				(
-					'editable' 				=> true,
-					'control_item'			=> $control_item_array,
-					'control_areas'			=> $control_areas_array,
-					'control_groups'		=> $control_groups_array,
-				);
-
-				$this->use_yui_editor(array('what_to_do','how_to_do'));
-				
-				self::add_javascript('controller', 'controller', 'jquery.js');
-				self::add_javascript('controller', 'controller', 'ajax.js');
-				self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-
-				self::render_template_xsl('control_item/control_item', $data);
-			}
+			
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index', 'dir' => 'desc'));
 		}
 
 		public function query()
@@ -327,6 +284,7 @@
 			{
 				$filters['control_areas'] = $ctrl_area; 
 			}
+			
 			$ctrl_group = phpgw::get_var('control_groups');
 			if(isset($ctrl_group) && $ctrl_group > 0)
 			{

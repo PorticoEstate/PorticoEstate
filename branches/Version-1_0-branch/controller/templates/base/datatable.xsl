@@ -16,7 +16,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template match="data">
+<xsl:template name="datatable">
 	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>

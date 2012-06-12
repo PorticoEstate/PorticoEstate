@@ -118,13 +118,7 @@
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('New control group'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add')),
-								'class' => 'new_item'
-							),
+							)
 						),
 					),
 				),
@@ -166,7 +160,7 @@
 			);
 //_debug_array($data);
 
-			self::render_template_xsl('datatable', $data);
+			self::render_template_xsl(array( 'control_group/control_groups_datatable', 'datatable' ), $data);
 		}
 
 		/**

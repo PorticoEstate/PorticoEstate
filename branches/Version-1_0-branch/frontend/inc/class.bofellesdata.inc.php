@@ -60,16 +60,32 @@
 	        
 			
 			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
+			if($db->Type == 'postgres')
+			{
+			    $sql = strtolower($sql);
+			}
 			$db->query($sql,__LINE__,__FILE__);
 						
 			while ($db->next_record())
 			{
-				$result_units[] = array(
-					"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
-					"ORG_NAME" => $db->f('ORG_NAVN'),
-					"UNIT_ID" => $db->f('RESULTATENHET'),
-					"LEADER" => false
-				);
+			    if($db->Type == 'postgres')
+			    {
+			        $result_units[] = array(
+    					"ORG_UNIT_ID" => (int)$db->f('org_enhet_id'),
+    					"ORG_NAME" => $db->f('org_navn'),
+    					"UNIT_ID" => $db->f('resultatenhet'),
+    					"LEADER" => false
+    				);    
+			    }
+			    else
+			    {
+    				$result_units[] = array(
+    					"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+    					"ORG_NAME" => $db->f('ORG_NAVN'),
+    					"UNIT_ID" => $db->f('RESULTATENHET'),
+    					"LEADER" => false
+    				);
+			    }
 			}
 			
 			return $result_units;
@@ -101,16 +117,32 @@
         	
         	$db = $this->get_db();
 			$db1 = $this->get_db();
+			//var_dump($db->Type);
+			if($db->Type == "postgres")
+			{
+			    $sql = strtolower($sql);
+			}
+			//var_dump($sql);
         	$db->query($sql,__LINE__,__FILE__);
         	
         	
         	
        		while ($db->next_record())
 			{
-				$identifier  = (int)$db->f('ORG_ENHET_ID');
-				$level = (int)$db->f('ORG_NIVAA','int');
-				$name = $db->f('ORG_NAVN');
-				$unit_id = $db->f('RESULTATENHET');
+			    if($db->Type == "postgres")
+			    {
+			        $identifier  = (int)$db->f('org_enhet_id');
+    				$level = (int)$db->f('org_nivaa','int');
+    				$name = $db->f('org_navn');
+    				$unit_id = $db->f('resultatenhet');
+			    }
+			    else
+			    {
+    				$identifier  = (int)$db->f('ORG_ENHET_ID');
+    				$level = (int)$db->f('ORG_NIVAA','int');
+    				$name = $db->f('ORG_NAVN');
+    				$unit_id = $db->f('RESULTATENHET');
+			    }
 				
 				switch($level)
 				{
@@ -122,20 +154,41 @@
 						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
 						
+        				if($db1->Type == "postgres")
+            			{
+            			    $sql = strtolower($sql);
+            			}
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
-							if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
-							{
-								$result_units[] = array(
-									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-									"ORG_NAME" => $db1->f('ORG_NAVN'),
-									"UNIT_ID" => $db1->f('RESULTATENHET'),
-									"LEADER" => true
-								);
-								
-								$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
-							}
+						    if($db1->Type == "postgres")
+			                {
+    							if(!isset($org_unit_ids[(int)$db1->f('org_enhet_id')]))
+    							{
+    								$result_units[] = array(
+    									"ORG_UNIT_ID" => (int)$db1->f('org_enhet_id'),
+    									"ORG_NAME" => $db1->f('org_navn'),
+    									"UNIT_ID" => $db1->f('resultatenhet'),
+    									"LEADER" => true
+    								);
+    								
+    								$org_unit_ids[(int)$db1->f('org_enhet_id')] = true;
+    							}
+			                }
+			                else
+			                {
+    			                if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
+    							{
+    								$result_units[] = array(
+    									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
+    									"ORG_NAME" => $db1->f('ORG_NAVN'),
+    									"UNIT_ID" => $db1->f('RESULTATENHET'),
+    									"LEADER" => true
+    								);
+    								
+    								$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
+    							}
+			                }
 						}
 						break;
 					case 3:	break;	// LEVEL: Seksjon (not in use)
@@ -184,11 +237,22 @@
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
 	        	$db = $this->get_db();
+	        	if($db->Type == "postgres")
+			    {
+			        $sql = strtolower($sql);
+			    }
 	        	$db->query($sql,__LINE__,__FILE__);
 	        	if($db->num_rows() > 0)
 	        	{
 	        		$db->next_record();
-	        		return 	$db->f('ORG_NAVN', true);
+	        	   	if($db->Type == "postgres")
+	        	   	{
+	        	   	    return 	$db->f('org_navn', true);
+	        	   	}
+			        else
+			        {
+	        		    return 	$db->f('ORG_NAVN', true);
+			        }
 	        	} 
         	}
         	else
@@ -206,13 +270,26 @@
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
 	        	$db = $this->get_db();
+        	    if($db->Type == "postgres")
+			    {
+			        $sql = strtolower($sql);
+			    }
 	        	$db->query($sql,__LINE__,__FILE__);
 	        	if($db->num_rows() > 0)
 	        	{
 	        		$db->next_record();
-	        		return 	array( 'UNIT_NAME' => $db->f('ORG_NAVN', true),
-	        						'UNIT_NUMBER' => $db->f('RESULTATENHET', true)
-	        		);
+	        		if($db->Type == "postgres")
+			        {
+			            return 	array( 'UNIT_NAME' => $db->f('org_navn', true),
+	        			    			'UNIT_NUMBER' => $db->f('resultatenhet', true)
+	        		    );
+			        }
+			        else
+			        {
+	        		    return 	array( 'UNIT_NAME' => $db->f('ORG_NAVN', true),
+	        			    			'UNIT_NUMBER' => $db->f('RESULTATENHET', true)
+	        		    );
+			        }
 	        	}
         	} 
         	else
@@ -233,16 +310,32 @@
 
         	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = '{$username}'";
         	$db = $this->get_db();
+            if($db->Type == "postgres")
+		    {
+		        $sql = strtolower($sql);
+		    }
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
         		$db->next_record();
-        		return array(
-        		 	'username' 	=> $db->f('BRUKERNAVN', true),
-        			'firstname'	=> $db->f('FORNAVN', true),
-        			'lastname'	=> $db->f('ETTERNAVN', true),
-        			'email'		=> $db->f('EPOST', true)
-        		);
+        		if($db->Type == "postgres")
+		        {
+        		    return array(
+        		 		'username' 	=> $db->f('brukernavn', true),
+        				'firstname'	=> $db->f('fornavn', true),
+        				'lastname'	=> $db->f('etternavn', true),
+        				'email'		=> $db->f('epost', true)
+        		    );
+		        }
+		        else
+        		{
+        		    return array(
+        		 		'username' 	=> $db->f('BRUKERNAVN', true),
+        				'firstname'	=> $db->f('FORNAVN', true),
+        				'lastname'	=> $db->f('ETTERNAVN', true),
+        				'email'		=> $db->f('EPOST', true)
+        		    );
+		        }
         	} 
         	else
         	{
