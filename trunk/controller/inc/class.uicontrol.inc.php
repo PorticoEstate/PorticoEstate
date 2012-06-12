@@ -256,7 +256,6 @@
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
-			
 			// END as categories
 		
 			if($control != null)
