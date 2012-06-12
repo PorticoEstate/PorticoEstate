@@ -1814,6 +1814,11 @@
 		{
 			$location_id = (int) $location_id;
 			$id = (int) $id;
+
+			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$type = (int)$this->db->f('type');
+
 			$location_name = str_replace('.', '_', $location_name);			
 
 			phpgw::import_class('phpgwapi.xmlhelper');
@@ -1848,7 +1853,7 @@
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
-			return $this->db->query("UPDATE fm_bim_item SET $value_set WHERE id = $id",__LINE__,__FILE__);
+			return $this->db->query("UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}",__LINE__,__FILE__);
 		}
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)
@@ -2007,6 +2012,8 @@
 			$cat_id		= (int) $cat_id;
 			$id			= (int) $id;
 
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");	
+
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
 			$category = $admin_entity->read_single_category($entity_id, $cat_id);
@@ -2015,7 +2022,10 @@
 
 			if($category['is_eav'])
 			{
-				$this->db->query("DELETE FROM fm_bim_item WHERE id = $id",__LINE__,__FILE__);
+				$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$type = (int)$this->db->f('type');
+				$this->db->query("DELETE FROM fm_bim_item WHERE id = $id AND type = {$type}",__LINE__,__FILE__);
 			}
 			else
 			{
@@ -2023,7 +2033,7 @@
 				$this->db->query("DELETE FROM $table WHERE id = $id",__LINE__,__FILE__);
 			}
 
-			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");			
+
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id ={$location2_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
