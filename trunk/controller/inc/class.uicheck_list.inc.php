@@ -381,29 +381,6 @@
 			self::render_template_xsl('create_case_messsage', $data);
 		}
 		
-		public function view_control_info(){
-			$check_list_id = phpgw::get_var('check_list_id');
-			
-			$check_list = $this->so->get_single($check_list_id);
-			$control = $this->so_control->get_single($check_list->get_control_id());
-			
-			$location_code = $check_list->get_location_code();  
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
-			$data = array
-			(
-				'location_array'				=> $location_array,
-				'control'								=> $control->toArray(),
-				'check_list'						=> $check_list->toArray(),
-				'role_array'						=> $role_array
-			);
-
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
-		}
-		
 		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
 		public function update_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -468,17 +445,37 @@
 			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
+		public function view_control_info(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so->get_single($check_list_id);
+			$control = $this->so_control->get_single($check_list->get_control_id());
+			
+			$location_code = $check_list->get_location_code();  
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'location_array'				=> $location_array,
+				'control'								=> $control->toArray(),
+				'check_list'						=> $check_list->toArray(),
+			);
+
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
+		}
+		
+		
 		function view_control_details(){
 			$control_id = phpgw::get_var('control_id');
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
-			
 			$data = array
 			(
 				'control'						=> $control->toArray(),
-				'procedures_array'	=> $procedures_array,
 			);
 			
 			self::render_template_xsl('check_list/view_control_details', $data);
