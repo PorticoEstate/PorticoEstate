@@ -563,7 +563,7 @@ $(document).ready(function(){
 			    				  
 			    			  // Changes text on save button back to original
 			    			  window.setTimeout(function() {
-								$(submitBnt).val('Lagre sjekkpunkt');
+								$(submitBnt).val('Lagre detaljer');
 								$(submitBnt).addClass("not_active");
 			    			  }, 1000);
 						  }
