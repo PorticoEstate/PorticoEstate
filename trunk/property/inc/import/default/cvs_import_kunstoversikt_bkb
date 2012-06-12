@@ -94,28 +94,25 @@
 				$address	= $this->db->db_addslashes(implode(" ", $address));
 			}
 
+			$loc3_data = explode('.',$data[3]);
+			$loc3_data2 = explode('.........',$data[3]);
+			$loc3_data3 = explode('.',$loc3_data2[1]);
 
-			$loc3_data = explode('.........',$data[3]);
-
-			$loc3_data2 = explode('.',$loc3_data[1] );
-
-			if(ctype_digit($loc3_data2[0]))
+			if(ctype_digit(rtrim($loc3_data[2],'00')))
 			{
-				$location_code .= '-' . sprintf("%02s",$loc3_data2[0]);
+				$location_code .= '-' . sprintf("%02s",rtrim($loc3_data[2],'00'));
+			}
+			else if (ctype_digit($loc3_data3[0]))
+			{
+				$location_code .= '-' . sprintf("%02s",$loc3_data3[0]);
 			}
 
-/*
-_debug_array($loc3_data2);
-_debug_array($location_code);
-die();
-*/
 			$_location_data = execMethod('property.solocation.read_single', $location_code );
-//_debug_array($data);
+
 			if(!$_location_data['loc1'])
 			{
 				$location_code = substr($byggid,0,4) . '-0' . substr($byggid,-1);
 			}
-
 
 			if(!$address)
 			{
@@ -179,7 +176,7 @@ die();
 				$ok = $this->_add_eav($id,$value_set);			
 			}
 			
-			return $ok;
+			return true;
 
 		}
 		
@@ -220,8 +217,6 @@ die();
 				$doc->formatOutput = true;
 				$xml = $doc->saveXML();
 
-//				_debug_array($xml);
-
 				$value_set = array
 				(
 					'xml_representation'	=> $this->db->db_addslashes($xml),
@@ -234,7 +229,7 @@ die();
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				return $this->db->query("UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}",__LINE__,__FILE__);
+				$sql = "UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}";
 			}
 			else
 			{
@@ -258,8 +253,6 @@ die();
 				$doc->formatOutput = true;
 			
 				$xml = $doc->saveXML();
-
-			//	_debug_array($xml);
 
 				if (function_exists('com_create_guid') === true)
 				{
@@ -286,10 +279,30 @@ die();
 					'user_id'				=> $this->account
 				);
 
-				return $this->db->query("INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
-				 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
-
+				$sql = "INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($values_insert)) . ')';
 			}
+
+			if($this->debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			if(!$request_ok)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
+				$ok = false;
+			}
+			return $ok;
 
 		}
 
@@ -326,12 +339,12 @@ die();
 
 			if(!$request_ok)
 			{
-				$this->messages[] = "Successfully imported location: Title ({$data[1]})";
+				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
 				$ok = true;
 			}
 			else
 			{
-				$this->errors[] = "Error importing location: Title ({$data[1]})";
+				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
 				$ok = false;
 			}
 			return $ok;
