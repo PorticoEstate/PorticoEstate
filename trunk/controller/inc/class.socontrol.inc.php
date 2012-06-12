@@ -523,8 +523,6 @@
 			//$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control->set_control_area_name($category[0]['name']);
-			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_type_label($control->get_repeat_type());
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
