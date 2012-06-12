@@ -115,6 +115,7 @@
      		$value_set['maal']					= $this->db->db_addslashes($data[10]);
      		$value_set['historikk']				= $this->db->db_addslashes($data[11]);
 			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
+     		$value_set['tilstandsgrad']			= (int)substr($data[12],0,1) + 1;
      		$value_set['paafort_text']			= $this->db->db_addslashes($data[13]);
 /*
 *    [0] => Identifikasjonsnr
