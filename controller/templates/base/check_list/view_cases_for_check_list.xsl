@@ -50,7 +50,7 @@
 				  url: requestUrl,
 				  success: function(data) {
 				  	$("#load_view_content").html(data);
-				  }
+				  },
 				  error: function(XMLHttpRequest, textStatus, errorThrown) {
         		if (XMLHttpRequest.status === 401) {
         	  	location.href = '/';
