@@ -118,13 +118,7 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('t_new_procedure'),
-								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
-								'class' => 'new_item'
-							),
+							)
 						),
 					),
 				),
@@ -166,7 +160,7 @@
 			);
 //_debug_array($data);
 
-			self::render_template_xsl('datatable', $data);
+			self::render_template_xsl(array( 'procedure/procedures_datatable', 'datatable' ), $data);
 		}
 
 		public function edit()
