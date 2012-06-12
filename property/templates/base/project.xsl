@@ -286,6 +286,22 @@ Returns mixed
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
+
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="php:function('lang', 'inherit location')"/>
+										</td>
+										<td>
+											<input type="checkbox" name="values[inherit_location]" value="1">
+												<xsl:if test="inherit_location = 1">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'inherit location')"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</tr>
 									<xsl:call-template name="location_form"/>
 								</xsl:when>
 								<xsl:otherwise>
