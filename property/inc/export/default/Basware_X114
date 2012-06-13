@@ -361,8 +361,8 @@
 		//			'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'external_ref'			=> $this->db->f('external_ref'),
 					'currency'				=> $this->db->f('currency'),
-		//			'process_log'			=> $this->db->f('process_log',true),
-		//			'process_code'			=> $this->db->f('process_code'),
+					'process_log'			=> $this->db->f('process_log',true),
+					'process_code'			=> $this->db->f('process_code'),
 
 				);
 			}
@@ -415,7 +415,9 @@
 				$BilagOverf['external_ref'],
 				$BilagOverf['belop'],
 				$BilagOverf['godkjentbelop'],
-				$BilagOverf['currency']
+				$BilagOverf['currency'],
+				$this->db->db_addslashes($BilagOverf['process_log']),
+				$BilagOverf['process_code'],
 			);
 
 			$values	= $this->db->validate_insert($values);
@@ -424,7 +426,7 @@
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,dime,mvakode,"
 			. " periode,periodization,periodization_start,merknad,line_text,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
-			. " item_type,item_id,external_ref,belop,godkjentbelop,currency)"
+			. " item_type,item_id,external_ref,belop,godkjentbelop,currency,process_log,process_code)"
 			. " VALUES ({$values})";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -744,7 +746,7 @@
 			$comment = array();
 			foreach ($oRsBilag as $line)
 			{
-				$comment[] = $line['process_log'];
+				$comment[] = "{$line['belop']}::{$line['process_log']}";
 
 				$BelopFelt = 'godkjentbelop';
 
