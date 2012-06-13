@@ -64,12 +64,12 @@
 												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
 												'image'	=> array('property', 'location_1')
 											),
-/*											'component_for_check_list' => array
+											'component_for_check_list' => array
 											(
 												'text'	=> lang('component'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_component.index') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.register_control_to_component') ),
 												'image'	=> array('property', 'entity_1')
-											)*/
+											)
 										)
 					),
 /*					'location_for_check_list' => array

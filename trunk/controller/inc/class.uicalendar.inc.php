@@ -309,6 +309,7 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
 			}
 			
 			if(empty($year)){
@@ -332,6 +333,17 @@
 					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
+				
+			    foreach($components_for_control_array as $component){
+					$curr_component_id = $component['component_id'];
+					
+					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_component_id, $year, true);
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
+				}
 			}else if($control->get_repeat_type() > 1){
 				foreach($locations_for_control_array as $location){
 					$curr_location_code = $location['location_code'];
@@ -345,6 +357,20 @@
 					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
 
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+				}
+				
+			    foreach($components_for_control_array as $component){
+					$curr_component_id = $component['component_id'];
+					
+					$repeat_type = $control->get_repeat_type();
+					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $curr_component_id, $from_date_ts, $to_date_ts, $repeat_type);	
+					
+					$check_lists_array = $component_with_check_lists["check_lists_array"];
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
+
+					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
 				}
 			}
 			
@@ -365,6 +391,7 @@
 				'control'			  	  						=> $control->toArray(),
 				'heading_array'		  	  				=> year_calendar::get_heading_array(),
 				'locations_with_calendar_array' => $locations_with_calendar_array,
+			    'components_with_calendar_array' => $components_with_calendar_array,
 				'date_format' 			  					=> $date_format,
 				'current_year'	  	  	  			=> $year,
 			);
@@ -386,6 +413,7 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
 			}
 
 			if(empty($year)){
@@ -462,7 +490,7 @@
 		}
 		
 		// Generates array of aggregated number of open cases for each month in time period 
-		function build_agg_open_cases_pr_month_array($control, $location_code, $year){
+		function build_agg_open_cases_pr_month_array($control, $location_code, $year, $component=false ){
 				
 			// Checks if control starts in the year that is displayed 
 			if( date("Y", $control->get_start_date()) == $year ){
@@ -496,7 +524,7 @@
 				$num_open_cases_for_control_array = array();
 				
 				// Fetches aggregate value for open cases in a month from db 	
-				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $month_start_ts, $month_end_ts );	
+				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $month_start_ts, $month_end_ts, $component );	
 				
 				// If there is a aggregated value for the month, add aggregated status object to agg_open_cases_pr_month_array
 				if( !empty($num_open_cases_for_control_array) ){
