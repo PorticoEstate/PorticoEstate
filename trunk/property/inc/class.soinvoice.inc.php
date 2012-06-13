@@ -916,7 +916,6 @@
 
 			$this->db->transaction_begin();
 
-			// Approval applies to all lines within voucher
 			if( $values['approve'] != $values['sign_orig'] )
 			{
 				switch ( $values['sign_orig'] )
@@ -948,12 +947,22 @@
 						break;
 				}
 
-				$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
-				$bilagsnr = (int)$this->db->f('bilagsnr');
-				$value_set	= $this->db->validate_update($value_set);
-				$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
+	//			$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
+	//			$this->db->query($sql,__LINE__,__FILE__);
+	//			$this->db->next_record();
+	//			$bilagsnr = (int)$this->db->f('bilagsnr');
+	//			$value_set	= $this->db->validate_update($value_set);
+	//			$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
+				
+				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
+				{
+					phpgwapi_cache::message_set( 'Mangler anviser','error');
+				}
+				else
+				{
+					$value_set	= $this->db->validate_update($value_set);
+					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+				}
 			}
 
 			$value_set = array
@@ -1959,14 +1968,19 @@
 					}
 				}
 
-				$value_set	= $this->db->validate_update($value_set);
-				return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
+				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
+				{
+					phpgwapi_cache::message_set( 'Mangler anviser','error');
+				}
+				else
+				{
+					$value_set	= $this->db->validate_update($value_set);
+					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
+				}
 			}
 
 			return false;
 		}
-
-
 
 
 		function get_order_info($order_id)
