@@ -349,7 +349,9 @@
 				$data['item_id'],
 				$data['external_ref'],
 				$data['currency'],
-				$data['manual_record']
+				$data['manual_record'],
+				$data['process_code'],
+				$this->db->db_addslashes($data['process_log']),
 			);
 
 			$values	= $this->db->validate_insert($values);
@@ -358,7 +360,7 @@
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,dime,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,line_text,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " currency,manual_record,belop,godkjentbelop,ordrebelop)"
+				. " currency,manual_record,process_code,process_log,belop,godkjentbelop,ordrebelop)"
 				. "VALUES ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
@@ -366,6 +368,7 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			
+/*
 			if($data['manual_record'] && ($data['process_log'] || $data['process_code']))
 			{
 				$valueset_log = array
@@ -382,7 +385,7 @@
 				$sql = "INSERT INTO fm_ecobilag_process_log (bilagsnr,process_code,process_log,user_id,entry_date) VALUES ({$values})";
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
-
+*/
 			return true;
 		}
 
@@ -438,12 +441,13 @@
 					'external_ref'			=> $this->db->f('external_ref'),
 					'kostra_id'				=> $this->db->f('kostra_id'),
 					'currency'				=> $this->db->f('currency'),
-	 	  			'process_log'			=> '', //Fetched below
-	 	  			'process_code'			=> ''
+	 	  			'process_log'			=> $this->db->f('process_log',true),
+	 	  			'process_code'			=> $this->db->f('process_code'),
 
 				);
 			}
 
+/*
  	  		if($voucher)
  	  		{
  		  		$sql= "SELECT * FROM fm_ecobilag_process_log WHERE bilagsnr = {$bilagsnr}";
@@ -458,7 +462,7 @@
 	 	  			$line['process_code'] = $process_code;
 	 	  		}
  	  		}
-
+*/
 			return $voucher;
     	}
 

@@ -302,6 +302,10 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#dim_a").val( voucher[0].dim_a );
 				$("#currency").html( voucher[0].currency );
 				
+				$("#process_log").html( data['generic'].process_log );
+
+//alert(data['generic'].process_log);
+/*
 				if(data['generic'].process_log != null)
 				{
 					$("#process_log").html( data['generic'].process_log );
@@ -310,6 +314,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					$("#process_log").html( '' );
 				}
+*/
 				$("#my_initials").val( data['generic'].my_initials );
 				$("#sign_orig").val( data['generic'].sign_orig );
 				$("#line_text").val( voucher[0].line_text );
