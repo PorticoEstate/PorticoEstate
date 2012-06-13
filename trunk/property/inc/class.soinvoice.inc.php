@@ -1450,8 +1450,8 @@
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'kostra_id'				=> $this->db->f('kostra_id'),
 						'currency'				=> $this->db->f('currency'),
-						'process_code'			=> '', //Fetched below
-						'process_log'			=> '',
+						'process_code'			=> $this->db->f('process_code'),
+						'process_log'			=> $this->db->f('process_log',true),
 						'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 						'saksigndato'			=> $this->db->f('saksigndato'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
@@ -1466,6 +1466,7 @@
 					);
 			}
 
+/*
  	  		if($values)
  	  		{
  		  		$bilagsnr = (int)$values[0]['voucher_id'];
@@ -1481,7 +1482,7 @@
 	 	  			$line['process_code'] = $process_code;
 	 	  		}
  	  		}
-
+*/
 			//_debug_array($values);
 			return $values;
 		}
@@ -2106,6 +2107,8 @@
 			$value_set_line['project_id']		= $data['project_group'];
 			$value_set_line['spbudact_code']	= $data['b_account_id'];
 			$value_set_line['line_text']		= $this->db->db_addslashes($data['line_text']);
+			$value_set_line['process_log']		= $this->db->db_addslashes($data['process_log']);
+			$value_set_line['process_code']		= $data['process_code'];
 
 			$value_set_line	= $this->db->validate_update($value_set_line);
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
@@ -2224,7 +2227,7 @@
 				}
 			}
 
-
+/*
 			if($data['process_log'] || $data['process_code'])
 			{
 				$valueset_log = array
@@ -2253,7 +2256,7 @@
 				}
 			}
 
-
+*/
 			if( isset($data['order_id']) && $data['order_id'])
 			{
 				if(isset($data['close_order']) && $data['close_order'])
