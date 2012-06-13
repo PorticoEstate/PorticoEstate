@@ -379,6 +379,11 @@
 					'id'	=> 'b_account',
 					'name'	=> lang('budget account'),
 				),
+				array
+				(
+					'id'	=> 'dimb',
+					'name'	=> lang('dimb'),
+				),
 			);
 			
 			$data = array

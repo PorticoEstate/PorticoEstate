@@ -2331,6 +2331,11 @@
 						$querymethod = " $where spbudact_code = '{$query}'";
 						break;
 
+					case 'dimb':
+						$query = (int) $data['query'];
+						$querymethod = " $where dimb = {$query}";
+						break;
+
 					default:
 				}
 				

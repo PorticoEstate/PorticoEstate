@@ -1373,7 +1373,7 @@
 				$location_types	= $admin_location->select_location_type();
 				$max_level = count($location_types);
 
-				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
+				$location_level = isset($project['location_data']['location_code']) && $project['inherit_location'] ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
 				$_location_data = array();
 
@@ -1396,7 +1396,7 @@
 				}
 				else
 				{
-					if(isset($project['location_data']) && $project['location_data'])
+					if(isset($project['location_data']) && $project['location_data'] && $project['inherit_location'])
 					{
 						$_location_data = $project['location_data'];
 					}
@@ -1416,7 +1416,7 @@
 					'lookup_type'		=> $location_template_type,
 					'lookup_entity'		=> $this->bocommon->get_lookup_entity('project'),
 					'entity_data'		=> (isset($values['p'])?$values['p']:''),
-					'filter_location'	=> $project['location_data']['location_code']
+					'filter_location'	=> $project['inherit_location'] ? $project['location_data']['location_code'] : false
 				));
 			}
 			else

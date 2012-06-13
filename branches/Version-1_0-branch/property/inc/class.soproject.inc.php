@@ -808,6 +808,7 @@
 						'ecodimb'				=> $this->db->f('ecodimb'),
 						'b_account_id'			=> $this->db->f('account_group'),
 						'contact_id'			=> $this->db->f('contact_id'),
+						'inherit_location'		=>  $this->db->f('inherit_location')
 					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
@@ -993,13 +994,14 @@
 					$this->account,
 					$project['ecodimb'],
 					$project['b_account_id'],
-					$project['contact_id']
+					$project['contact_id'],
+					$project['inherit_location']
 				);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['budget'])
@@ -1166,7 +1168,8 @@
 				'address'			=> $address,
 				'ecodimb'			=> $project['ecodimb'],
 				'account_group'		=> $project['b_account_id'],
-				'contact_id'		=> $project['contact_id']
+				'contact_id'		=> $project['contact_id'],
+				'inherit_location'	=> $project['inherit_location']
 			);
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $project['id']);

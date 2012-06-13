@@ -1865,6 +1865,7 @@
 
 			$data = array
 				(
+					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 					'suppresscoordination'				=> $suppresscoordination,

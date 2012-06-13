@@ -34,7 +34,7 @@ actual cost has been updated	property	no	Faktisk kostnad er oppdatert
 actual cost - paid so far	property	no	Faktisk betalt - pr dd
 add a apartment	property	no	Legg til leilighet
 add a attrib	property	no	Legg til en attibutt
-add a budget account	property	no	Legg til en budsjettkonto
+add a budget account	property	no	Legg til en kostnadsart
 add a budget query	property	no	Legg til en budsjettspørring
 add a building	property	no	legg til bygning
 add a category	property	no	Legg til en kategori
@@ -80,7 +80,7 @@ add a ticket	property	no	legg til melding
 add attribute	property	no	legg til attribute
 add a workorder	property	no	legg til bestilling
 add a workorder to this project	property	no	legg til en bestilling til dette prosjektet
-add budget account	property	no	Legg til budsjettkonto
+add budget account	property	no	Legg til kostnadsart
 add building	property	no	legg til bygning
 add category	property	no	Legg til kategori
 add common	property	no	Legg til felles
@@ -207,7 +207,7 @@ attributes for the standard	property	no	verdier for standard
 a unique code for this activity	property	no	En unik kode fo denne aktiviteten
 authorities demands	property	no	Myndighetskrav
 auto tax	property	no	Auto MVA
-b_account	property	no	Budsjett konto
+b_account	property	no	Kostnadsart
 back to admin	property	no	Tilbake til Admin
 back to calculation	property	no	Tilbake til kalkulasjon
 back to entity	property	no	Returner til entitet
@@ -231,11 +231,11 @@ branch	property	no	Fag
 b - responsible	property	no	Anviser
 bruks nr	property	no	bruks nr
 budget	property	no	Budsjett
-budget account	property	no	Budsjett konto
-budget account group	property	no	Konto gruppe
-budget account is missing:	property	no	Budsjett konto mangler
+budget account	property	no	Kostnadsart
+budget account group	property	no	Kontogruppe
+budget account is missing:	property	no	Kostnadsart mangler
 budget changed	property	no	Budsjett er endret
-budget code is missing from sub invoice in :	property	no	Budsjett konto mangler fra underbilag i :
+budget code is missing from sub invoice in :	property	no	Kostnadsart mangler fra underbilag i :
 budget cost	property	no	Budsjett-beløp
 budget_cost	property	no	Budsjett-beløp
 budget responsible	property	no	Anviser
@@ -316,7 +316,7 @@ click this link to edit the period	property	no	klikk denne linken for å rette p
 click this link to enter the list of sub-invoices	property	no	klikk her for å entre liste over underbilag
 click this link to select	property	no	Klikk her for å velge
 click this link to select apartment	property	no	klikk her for å velge leilighet
-click this link to select budget account	property	no	klikk her for å velge budsjett konto
+click this link to select budget account	property	no	klikk her for å velge kostnadsart
 click this link to select building	property	no	klikk her for å velge bygning
 click this link to select customer	property	no	Klikk her for å velge kunde
 click this link to select entrance	property	no	klikk her for å velge inngang
@@ -427,7 +427,7 @@ delete agreement group and all the activities associated with it!	property	no	Sl
 delete apartment	property	no	seltt leilighjet
 delete a single entry by passing the id.	property	no	slett en enkelt post ved å sende id
 delete async method	property	no	Slett async metode
-delete budget account	property	no	Slett budsjettkonto
+delete budget account	property	no	Slett kostnadsart
 delete building	property	no	slett bygning
 delete claim	property	no	Slett krav
 delete column	property	no	Slett kolonne
@@ -456,7 +456,7 @@ delete the actor	property	no	Slett aktør
 delete the agreement	property	no	Slett avtale
 delete the apartment	property	no	slett leilighet
 delete the attrib	property	no	slett attributt
-delete the budget account	property	no	Slett budsjettkonto
+delete the budget account	property	no	Slett kostnadsart
 delete the building	property	no	slett bygning
 delete the category	property	no	Slett kategori
 delete the claim	property	no	Slett krav
@@ -560,7 +560,7 @@ edit agreement	property	no	rette avtale
 edit agreement group	property	no	Rette avtale gruppe
 edit apartment	property	no	rette leilighet
 edit attribute	property	no	endre attributt
-edit budget account	property	no	Rette budsjettkonto
+edit budget account	property	no	Rette kostnadsart
 edit building	property	no	rette bygning
 edit categories	property	no	Endre kategorier
 edit category	property	no	Rette kategori
@@ -598,7 +598,7 @@ edit the agreement_group	property	no	Rette avtalegruppe
 edit the alarm	property	no	Rette alarm
 edit the apartment	property	no	rette leilighet
 edit the attrib	property	no	rette attributt
-edit the budget account	property	no	Rette budsjettkonto
+edit the budget account	property	no	Rette kostnadsart
 edit the building	property	no	rette bygning
 edit the category	property	no	Rette kategorien
 edit the claim	property	no	Rette kravet
@@ -652,7 +652,7 @@ enter a description of the request	property	no	Gi en beskrivelse av tilstanden
 enter a description of the standard	property	no	gi en beskrivelse av standarden
 enter a description of the status	property	no	Angi en beskrivelse av statusen
 enter a description the attribute	property	no	gi en beskrivelse av attributten
-enter a description the budget account	property	no	Angi en beskrivelse av budsjettkontoen
+enter a description the budget account	property	no	Angi en beskrivelse av kostnadsarten
 enter a description the category	property	no	Angi en beskrivelse av kategorien
 enter a description the method	property	no	Angi en beskrivelse av metoden
 enter a description the standard	property	no	gi en beskrivelse av  standarden
@@ -698,7 +698,7 @@ enter the attribute id	property	no	angi attributt ID
 enter the attribute value for this entity	property	no	angi attributt verdi for denne posten
 enter the billable hour for the task	property	no	Angi egne timer for oppgaven
 enter the budget	property	no	Angi budsjett
-enter the budget account	property	no	Angi budsjettkonto
+enter the budget account	property	no	Angi kostnadsart
 enter the category id	property	no	Angi kategori ID
 enter the cost per unit	property	no	angi kostnad pr enhet
 enter the date for this reading	property	no	Angi dato for denne avlesningen
@@ -955,7 +955,7 @@ list async method	property	no	List async-metode
 list attribute	property	no	List attributter
 listbox	property	no	ListBox
 list budget	property	no	Oversikt budsjett
-list budget account	property	no	list budsjett konto
+list budget account	property	no	list kostnadsart
 list building	property	no	list bygning
 list claim	property	no	Oversikt klage
 list config	property	no	List konfigurasjon
@@ -1223,7 +1223,7 @@ please enter precision as integer !	property	no	Angi heltall for presisjon
 please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	Angi detaljer
 please select a branch !	property	no	Velg fag
-please select a budget account !	property	no	Velg en budsjettkonto
+please select a budget account !	property	no	Velg en kostnadsart
 please select a budget reponsible!	property	no	Velg en anviser
 please select a building id !	property	no	Velg bygnings ID
 please select a category !	property	no	velg kategori
@@ -1576,7 +1576,7 @@ select the vendor the r_agreement belongs to.	property	no	Velg leverandør
 select the vendor the s_agreement belongs to.	property	no	Velg leverandør
 select the workorder hour category	property	no	Velg post-kategori
 select the year the selection belongs to	property	no	Velg år utvelgelsen gjelder
-select this budget account	property	no	velg budsjettkonto
+select this budget account	property	no	velg kostnadsart
 select this contact	property	no	Velg denne kontakten
 select this dates	property	no	Velg dato
 select this ns3420 - code	property	no	velg NS-kode
@@ -1834,7 +1834,7 @@ view template detail	property	no	vis mal-detaljer
 view tender	property	no	Vis beskrivelse
 view the apartment	property	no	vis leilighet
 view the attrib	property	no	vis attributt
-view the budget account	property	no	Vis budsjettkonto
+view the budget account	property	no	Vis kostnadsart
 view the building	property	no	vis bygning
 view the category	property	no	Vis kategorien
 view the claim	property	no	Vis kravet
@@ -1918,6 +1918,7 @@ usertype	common	no	Brukertype
 tenant	common	no	Leietaker
 internal	common	no	Intern
 in progress date	property	no	Påbegynt dato
+inherit location	property	no	Arve lokalisering til bestilling
 delivered date	property	no	Utført dato
 checklist	property	no	Sjekkliste
 closed date	property	no	Avsluttet dato

@@ -60,29 +60,29 @@
 
     public $public_functions = array
     (
-			'index'															=>	true,
-			'control_list'											=>	true,
-			'view'															=>	true,
-			'view_control_details'							=>	true,
-			'save_control_details'							=>	true,
-			'view_control_groups'								=>	true,
-			'save_control_groups'								=>	true,
-			'view_control_items'								=>	true,
-			'save_control_items'								=>	true,
-			'view_check_list'										=>	true,
-			'get_controls_by_control_area'		=>	true,
+			'index'													=>	true,
+			'control_list'									=>	true,
+			'view'													=>	true,
+			'view_control_details'					=>	true,
+			'save_control_details'					=>	true,
+			'view_control_groups'						=>	true,
+			'save_control_groups'						=>	true,
+			'view_control_items'						=>	true,
+			'save_control_items'						=>	true,
+			'view_check_list'								=>	true,
+			'get_controls_by_control_area'	=>	true,
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 			
-			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 
 			//if(!$manage)
 			
@@ -256,7 +256,6 @@
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
-			
 			// END as categories
 		
 			if($control != null)

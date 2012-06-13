@@ -51,8 +51,8 @@
 				
 		public $public_functions = array
 		(
-			'view_calendar_for_month'			=>	true,
-			'view_calendar_for_year'			=>	true,
+			'view_calendar_for_month'			      =>	true,
+			'view_calendar_for_year'			      =>	true,
 			'view_calendar_year_for_locations'	=>  true,
 			'view_calendar_month_for_locations'	=>  true
 		);
@@ -61,20 +61,20 @@
 		{
 			parent::__construct();
 			
-			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller'); //1 
+			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller'); //2 
+			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller'); //4 
+			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller'); //8 
 			
-			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller'); //16
 			
-			$this->so = CreateObject('controller.socheck_list');
-			$this->so_control = CreateObject('controller.socontrol');
-			$this->so_control_group = CreateObject('controller.socontrol_group');
-			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
-			$this->so_control_item = CreateObject('controller.socontrol_item');
-			$this->so_check_list = CreateObject('controller.socheck_list');
-			$this->so_check_item = CreateObject('controller.socheck_item');
+			$this->so 										= CreateObject('controller.socheck_list');
+			$this->so_control 						= CreateObject('controller.socontrol');
+			$this->so_control_group 			= CreateObject('controller.socontrol_group');
+			$this->so_control_group_list 	= CreateObject('controller.socontrol_group_list');
+			$this->so_control_item 				= CreateObject('controller.socontrol_item');
+			$this->so_check_list 					= CreateObject('controller.socheck_list');
+			$this->so_check_item 					= CreateObject('controller.socheck_item');
 			
 			self::set_active_menu('controller::location_check_list');
 		}
@@ -85,49 +85,27 @@
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
 			
-			$year = intval( $year );
-			$from_month = intval( $month );
-				
-			$from_date_ts = month_calendar::get_start_month_date_ts($year, $month);
-			$to_date_ts = month_calendar::get_end_month_date_ts($year, $month);
-															
-			$criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'type_id' => 1,
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
-		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
+			
+			// Validates month. If year is not set, current month in current year is chosen
+			$month = $this->validate_month($month);
+			
+			// Gets timestamp value of first day in month
+			$from_date_ts = month_calendar::get_start_month_date_ts($year, intval( $month ));
 
-			if(empty($location_code)){
-				$location_code = $my_locations[0]["location_code"];
-			}
+			// Gets timestamp value of first day in month
+			$to_date_ts = month_calendar::get_end_month_date_ts($year, intval( $month ));
+
+			// Validates location_code. If not set, first location among assigned locations
+			$location_code = $this->validate_location_code($location_code);
 			
-			$level = count(explode('-', $location_code));
-			
-			// Property level
-			if($level == 1){
-				$property_location_code = $location_code;
-			}
-			// Building level
-			else if($level > 1){
-				$split_loc_code_array = explode('-', $location_code);
-				$property_location_code = $split_loc_code_array[0];
-			}
-			
-			if($manage){
-				$criteria = array();
-				$criteria['location_code'] = $property_location_code;
-				$criteria['field_name'] = 'loc2_name';
-				$criteria['child_level'] = '2';
-				
-      	$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
-      }else{
-        $buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
-      }
+			$level = $this->get_location_level($location_code);
+						
+      $user_role = true;
+
+      // Fetches buildings on property
+      $buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
 			
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts);
@@ -149,14 +127,19 @@
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 		
 			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
-			 			
+			
+			// Gets array of locations assigned to current user
+			$my_locations = $this->get_my_assigned_locations();
+			
+			$heading_array = month_calendar::get_heading_array($year, $month);
+			
 			$data = array
 			(		
 				'buildings_on_property'		=> $buildings_on_property,
 				'my_locations'	  		  	=> $my_locations,
 				'property_array'	  	  	=> $property_array,
 				'current_location'		  	=> $location_array,
-				'heading_array'		  	  	=> month_calendar::get_heading_array($year, $month),
+				'heading_array'		  	  	=> $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  		=> $date_format,
 				'current_year' 			  		=> $year,
@@ -179,61 +162,33 @@
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			
-			// Array that should conatain control and calendar objects that will be sent to view
-			$controls_calendar_array = array();
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
 			
-			if(empty($year)){
-				$year = date("Y");
-			}
-			
-			$year = intval($year);
+			// Gets timestamp of first day in year
+			$from_date_ts = $this->get_start_date_year_ts($year);
 
-			$from_date_ts = strtotime("01/01/$year");
-			$to_year = $year + 1;
-			$to_date_ts = strtotime("01/01/$to_year");
+			// Gets timestamp of first day in next year
+			$to_date_ts = $this->get_end_date_year_ts($year);
+
+			// Array that will be populated with controls and calendar objects that will be sent to view
+			$controls_calendar_array = array();
 				
-      $criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
-				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
-		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
-            
-			if(empty($location_code)){
-				$location_code = $my_locations[0]["location_code"];
-			}
+     	// Validates location_code. If not set, first location among assigned locations
+			$location_code = $this->validate_location_code($location_code);
 			
-			$manage = true;
-	
-			$level = count(explode('-', $location_code));
-			
-			// Property level
-			if($level == 1){
-				$property_location_code = $location_code;
-			}
-			// Building level
-			else if($level > 1){
-				$split_loc_code_array = explode('-', $location_code);
-				$property_location_code = $split_loc_code_array[0];
-			}
-			
-			if($manage){
-				$criteria = array();
-				$criteria['location_code'] = $property_location_code;
-				$criteria['field_name'] = 'loc2_name';
-				$criteria['child_level'] = '2';
-				
-      	$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
-      }else{
-        $buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
-      }
+			$level = $this->get_location_level($location_code);
+						
+      $user_role = true;
+
+      // Fetches buildings on property
+      $buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
 			
 			// Fetches all controls for the location within time period
-			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, 	$repeat_type = null);
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			
+			// Fetches all controls for the components on location within time period
+			$controls_for_component_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
 			
 			$controls_calendar_array = array();
 			
@@ -246,7 +201,7 @@
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $location_code, $year);
 					
 					$year_calendar = new year_calendar($control, $year);
-					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
 						
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				}
@@ -278,12 +233,17 @@
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
+			// Gets array of locations assigned to current user
+			$my_locations = $this->get_my_assigned_locations();
+			
+			$heading_array = year_calendar::get_heading_array();
+			
 			$data = array
 			(
 				'buildings_on_property'		=> $buildings_on_property,
 				'my_locations'						=> $my_locations,
 				'current_location'  	  	=> $location_array,
-				'heading_array'		  	  	=> year_calendar::get_heading_array(),
+				'heading_array'		  	  	=> $heading_array,
 				'controls_calendar_array' => $controls_calendar_array,
 				'date_format' 			  		=> $date_format,
 				'current_year' 			  		=> $year,
@@ -309,15 +269,17 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
 			}
 			
-			if(empty($year)){
-				$year = intval( date("Y") );
-			}
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
 			
-			$from_date_ts = strtotime("01/01/$year");
-			$to_year = $year + 1;
-			$to_date_ts = strtotime("01/01/$to_year");
+			// Gets timestamp of first day in year
+			$from_date_ts = $this->get_start_date_year_ts($year);
+
+			// Gets timestamp of first day in next year
+			$to_date_ts = $this->get_end_date_year_ts($year);
 			
 			$locations_with_calendar_array = array();
 			
@@ -329,8 +291,30 @@
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_location_code, $year);
 					
 					$year_calendar = new year_calendar($control, $year);
-					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+				}
+				
+			    foreach($components_for_control_array as $component){
+					$curr_component_id = $component['component_id'];
+					
+					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_component_id, $year, true);
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
+				}
+				
+			    foreach($components_for_control_array as $component){
+					$curr_component_id = $component['component_id'];
+					
+					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_component_id, $year, true);
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
 				}
 			}else if($control->get_repeat_type() > 1){
 				foreach($locations_for_control_array as $location){
@@ -346,31 +330,40 @@
 
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
+				
+			  foreach($components_for_control_array as $component){
+					$curr_component_id = $component['component_id'];
+					
+					$repeat_type = $control->get_repeat_type();
+					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $curr_component_id, $from_date_ts, $to_date_ts, $repeat_type);	
+					
+					$check_lists_array = $component_with_check_lists["check_lists_array"];
+					
+					$year_calendar = new year_calendar($control, $year);
+					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
+
+					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
+				}
 			}
 			
-			$criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], //
-				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
-		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
+			// Gets array of locations assigned to current user
+			$my_locations = $this->get_my_assigned_locations();
+			
+			$heading_array = year_calendar::get_heading_array();
 			
 			$data = array
 			(
-				'my_locations'	  		  				=> $my_locations,
-				'control'			  	  						=> $control->toArray(),
-				'heading_array'		  	  				=> year_calendar::get_heading_array(),
-				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'date_format' 			  					=> $date_format,
-				'current_year'	  	  	  			=> $year,
+				'my_locations'	  		  					=> $my_locations,
+				'control'			  	  							=> $control->toArray(),
+				'heading_array'		  	  					=> $heading_array,
+				'locations_with_calendar_array' 	=> $locations_with_calendar_array,
+			  'components_with_calendar_array'	=> $components_with_calendar_array,
+				'date_format' 			  						=> $date_format,
+				'current_year'	  	  	  				=> $year,
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 
-											 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+											 								 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -386,18 +379,20 @@
 			if(is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+				$components_for_control_array = $this->so_control->get_components_for_control($control_id);
 			}
 
-			if(empty($year)){
-				$year = intval( date("Y") );
-			}
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
 			
-			if(empty($month)){
-				$month = date("n");
-			}
+			// Validates month. If year is not set, current month in current year is chosen
+			$month = $this->validate_month($month);
 			
-			$from_date_ts = month_calendar::get_start_month_date_ts($year, $month);
-			$to_date_ts = month_calendar::get_end_month_date_ts($year, $month);
+			// Gets timestamp value of first day in month
+			$from_date_ts = month_calendar::get_start_month_date_ts($year, intval( $month ));
+
+			// Gets timestamp value of first day in month
+			$to_date_ts = month_calendar::get_end_month_date_ts($year, intval( $month ));
 			
 			$locations_with_calendar_array = array();
 			
@@ -415,28 +410,22 @@
 				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 			}
 			
-			$criteria = array
-			(
-				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
-				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
-				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
-				'allrows' => false
-			);
-		
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities( $criteria );
+			// Gets array of locations assigned to current user
+			$my_locations = $this->get_my_assigned_locations();
  			
+			$heading_array = month_calendar::get_heading_array($year, $month);
+			
 			$data = array
 			(		
-				'control'	  		  			=> $control->toArray(),
-				'my_locations'	  		  		=> $my_locations,
-				'property_array'	  	  		=> $property_array,
-				'location_array'		  		=> $location_array,
-				'heading_array'		  	  		=> month_calendar::get_heading_array($year, $month),
+				'control'	  		  							=> $control->toArray(),
+				'my_locations'	  		  				=> $my_locations,
+				'property_array'	  	  				=> $property_array,
+				'location_array'		  					=> $location_array,
+				'heading_array'		  	  				=> $heading_array,
 				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'date_format' 			  		=> $date_format,
-				'current_month_nr' 			  	=> $month,
-				'current_year' 			  	  	=> $year,
+				'date_format' 			  					=> $date_format,
+				'current_month_nr' 			  			=> $month,
+				'current_year' 			  	  			=> $year,
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_checker', 
@@ -462,7 +451,7 @@
 		}
 		
 		// Generates array of aggregated number of open cases for each month in time period 
-		function build_agg_open_cases_pr_month_array($control, $location_code, $year){
+		function build_agg_open_cases_pr_month_array($control, $location_code, $year, $component=false ){
 				
 			// Checks if control starts in the year that is displayed 
 			if( date("Y", $control->get_start_date()) == $year ){
@@ -496,7 +485,7 @@
 				$num_open_cases_for_control_array = array();
 				
 				// Fetches aggregate value for open cases in a month from db 	
-				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $month_start_ts, $month_end_ts );	
+				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control( $control->get_id(), $location_code, $month_start_ts, $month_end_ts, $component );	
 				
 				// If there is a aggregated value for the month, add aggregated status object to agg_open_cases_pr_month_array
 				if( !empty($num_open_cases_for_control_array) ){
@@ -510,6 +499,106 @@
 			return $agg_open_cases_pr_month_array;
 		}
 		
+		function get_buildings_on_property($user_role, $location_code, $level){
+					
+			// Property level
+			if($level == 1){
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if($level > 1){
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}	
+		
+		  if($user_role){
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+				
+      	$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+      }else{
+        $buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+      }
+			
+      return $buildings_on_property;
+		}
+		
+		function get_location_level($location_code){
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
+		
+		function validate_location_code($location_code){
+			$criteria = array
+			(
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'type_id' => 1,
+				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+				'allrows' => false
+			);
+		
+			$location_finder = new location_finder();
+			$my_locations = $location_finder->get_responsibilities( $criteria );
+
+			if(empty($location_code)){
+				$location_code = $my_locations[0]["location_code"];
+			}
+			
+			return $location_code;
+		}
+		
+		function get_my_assigned_locations($location_code){
+			$criteria = array
+			(
+				'user_id' => $GLOBALS['phpgw_info']['user']['account_id'], // 
+				'type_id' => 1, // Nivå i bygningsregisteret 1:eiendom
+				'role_id' => 0, // For å begrense til en bestemt rolle - ellers listes alle roller for brukeren
+				'allrows' => false
+			);
+		
+			$location_finder = new location_finder();
+			$my_locations = $location_finder->get_responsibilities( $criteria );
+			
+			return $my_locations;
+		}
+		
+		function get_start_date_year_ts($year){
+			$start_date_year_ts = strtotime("01/01/$year");
+			
+			return $start_date_year_ts;
+		}
+		
+		function get_end_date_year_ts($year){
+			$to_year = $year + 1;
+			$end_date_year_ts = strtotime("01/01/$to_year");
+			
+			return $end_date_year_ts;
+		}
+		
+		function validate_year($validate_year){
+			
+			if( empty( $validate_year ) ){
+				$validate_year = date("Y");
+			}
+			
+			$validate_year = intval($validate_year);
+			
+			return $validate_year;
+		}
+		
+		function validate_month($month){
+			
+			if( empty( $month ) ){
+				$month = date("n");
+			}
+			
+			$month = intval($month);
+			
+			return $month;
+		}
 
 		public function query(){}
 	}

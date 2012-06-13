@@ -344,3 +344,7 @@ repeat_type_day	controller	no	Dag
 repeat_type_week	controller	no	Uke
 repeat_type_month	controller	no	Måned
 repeat_type_year	controller	no	År
+components for control	controller	no	Komponenter tilknyttet kontroll
+add components for control	controller	no	Legg til knytning mellom kontroll og komponent(er)
+location category	controller	no	Lokaliseringskategori
+select delete	controller	no	slett
