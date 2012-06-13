@@ -467,7 +467,6 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
-		
 		function view_control_details(){
 			$control_id = phpgw::get_var('control_id');
 			
