@@ -304,7 +304,6 @@ function update_form_values( line_id, voucher_id_orig ){
 				
 				$("#process_log").html( data['generic'].process_log );
 
-//alert(data['generic'].process_log);
 /*
 				if(data['generic'].process_log != null)
 				{
