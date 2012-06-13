@@ -405,6 +405,24 @@
 		</tr>
 		<tr class ='row_off'>
 			<td>
+				<xsl:value-of select="php:function('lang', 'budget account')" />
+			</td>
+			<td>
+			  	<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td>
+				<xsl:value-of select="php:function('lang', 'dim b')" />
+			</td>
+			<td>
+				<select id="dim_b" name="values[dim_b]">
+					<xsl:apply-templates select="voucher_info/generic/dimb_list/options"/>
+		  		</select>
+			</td>
+		</tr>
+		<tr class ='row_off'>
+			<td>
 				<xsl:value-of select="php:function('lang', 'invoice line text')" />
 			</td>
 			<td>
@@ -436,16 +454,6 @@
 		</tr>
 		<tr class ='row_off'>
 			<td>
-				<xsl:value-of select="php:function('lang', 'dim b')" />
-			</td>
-			<td>
-				<select id="dim_b" name="values[dim_b]">
-					<xsl:apply-templates select="voucher_info/generic/dimb_list/options"/>
-		  		</select>
-			</td>
-		</tr>
-		<tr class ='row_off'>
-			<td>
 					<xsl:value-of select="php:function('lang', 'dim a')" />
 			</td>
 			<td>
@@ -468,14 +476,6 @@
 			</td>
 			<td>
 			  	<input type="text" name="values[project_group]" id="project_group" value="{voucher_info/voucher/project_group}"/>
-			</td>
-		</tr>
-		<tr class ='row_off'>
-			<td>
-				<xsl:value-of select="php:function('lang', 'budget account')" />
-			</td>
-			<td>
-			  	<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
 			</td>
 		</tr>
 </xsl:template>
