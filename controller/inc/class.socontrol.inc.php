@@ -113,6 +113,24 @@
 			//return isset($result);
 		}
 
+		function get_controls_for_location($location_code, $from_date, $to_date, $repeat_type)
+		{
+		    $controls = array();
+		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type );
+		    $controls_comp = $this->get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type );
+		    
+		    foreach($controls_loc as $cl)
+		    {
+		        $controls[] = $cl;
+		    }
+		    foreach($controls_comp as $cc)
+		    {
+		        $controls[] = $cc;
+		    }
+		    
+		    return $controls;
+		}
+		
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
 		{
 			$controls_array = array();
@@ -128,9 +146,59 @@
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
-			
+			//var_dump($sql."<br/>");
 			$this->db->query($sql);
 
+			while($this->db->next_record()) {
+				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				
+				if($return_type == "return_object")
+					$controls_array[] = $control;
+				else
+					$controls_array[] = $control->toArray();
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+	    public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
+		{
+			$controls_array = array();
+			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+			
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name FROM controller_control_component_list ccl "; 
+			$sql .= "LEFT JOIN controller_control c on ccl.control_id=c.id ";
+			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
+			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
+			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
+			
+			if( is_numeric($repeat_type) )
+				$sql .= "AND c.repeat_type = $repeat_type ";
+			
+			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
+			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
+			//var_dump($sql."<br/>");
+			$this->db->query($sql);
+			
 			while($this->db->next_record()) {
 				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -212,11 +280,49 @@
 			while($this->db->next_record()) {
 				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
-				$location_code = $this->unmarshal($this->db->f('location_code', true), 'strign');
+				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
 				$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code, "loc1_name" => $location_array["loc1_name"]);
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+	    function get_components_for_control($control_id)
+		{
+			$controls_array = array();
+
+			$sql =  "SELECT c.id, c.title, ccl.component_id, bim_type.description, bim.location_code ";
+            $sql .= "FROM controller_control c, controller_control_component_list ccl, fm_bim_item bim, fm_bim_type bim_type "; 
+			$sql .= "WHERE ccl.control_id = $control_id ";
+            $sql .= "AND ccl.control_id = c.id ";
+			$sql .= "AND bim.id = ccl.component_id ";
+			$sql .= "AND bim_type.id = bim.type";
+
+			$this->db->query($sql);
+
+			while($this->db->next_record()) {
+				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
+				$title = $this->unmarshal($this->db->f('title', true), 'string');
+				$component_id = $this->unmarshal($this->db->f('component_id', true), 'int');
+				$component_type = $this->unmarshal($this->db->f('description', true), 'string');
+				$component_location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+				//$component_guid = $this->unmarshal($this->db->f('guid', true), 'string');
+				//$component_description = $this->getBimItemAttributeValue($component_guid, "beskrivelse");
+				//$component_name = $this->getBimItemAttributeValue($component_guid, "betegnelse");
+				//$component_author = $this->getBimItemAttributeValue($component_guid, "juridisk_person");
+				
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $component_location_code));
+				
+				$controls_array[] = array("id" => $control_id, "title" => $title, "component_id" => $component_id, "component_description" => $component_type, "component_location" => $location_array["loc1_name"]);
 			}
 
 			if( count( $controls_array ) > 0 ){
@@ -636,6 +742,7 @@
 		{
 			$columnAlias = "attribute_values";
 			$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
+			//var_dump($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 			if($this->db->num_rows() > 0)
 			{
