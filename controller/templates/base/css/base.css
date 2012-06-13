@@ -168,12 +168,6 @@ div.identifier-header label {
     position:absolute; z-index:1;
 }
 
-#toolbar {
-    background-color: #DEEAF8;
-    border: 1px solid #C7D8EB;
-    padding: 10px 30px;
-}
-
 #datatableToolbar {
 	background-color: white;
     margin-bottom: 0em;
@@ -729,7 +723,10 @@ dl.proplist, dl.proplist-col {
 }
 
 #toolbar {
-    padding: 10px;
+  display: inline-block;
+  padding: 10px;
+  background-color: #DEEAF8;
+  border: 1px solid #CEE3F9;
 }
 
 #toolbar input[type="text"] {

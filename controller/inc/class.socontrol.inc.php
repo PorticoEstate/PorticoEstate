@@ -180,7 +180,7 @@
 			}
 		}
 		
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = null, $return_type = "return_object")
 		{
 			$controls_array = array();
 			
@@ -192,15 +192,13 @@
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			$sql  .= "AND bim_item.location_code LIKE '$location_code%'";
 			
-			if( is_numeric($repeat_type) )
+			if( $repeat_type != null){
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			}
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
 			
-			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
-			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
-			//var_dump($sql."<br/>");
 			$this->db->query($sql);
 			
 			while($this->db->next_record()) {
