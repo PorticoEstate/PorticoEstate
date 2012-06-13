@@ -563,6 +563,7 @@
 
 		function register_control_to_component()
 		{
+		    self::set_active_menu('controller::control::component_for_check_list');
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$receipt = array();
 
@@ -634,7 +635,7 @@
 
 			$tabs = array
 			( 
-				array
+/*				array
 				(
 					'label' => lang('View_locations_for_control'),
 					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
@@ -643,7 +644,7 @@
 				(
 					'label' => lang('Add_locations_for_control'),
 					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
-				),
+				),*/
 				array
 				(
 					'label' => lang('add components for control')

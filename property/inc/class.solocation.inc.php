@@ -86,13 +86,26 @@
 							'entity_id'	=> $this->db->f('entity_id'),
 							'cat_id'	=> $this->db->f('id'),
 							'name'		=> $this->db->f('name'),
-							'descr'		=> $this->db->f('descr')
+							'descr'		=> $this->db->f('descr'),
+							'is_eav'	=> $this->db->f('is_eav')
 						);
 				}
 
 				foreach($category as $entry)
 				{
-					$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code $this->like '$location_code%'";
+					if($entry['is_eav'])
+					{
+						$location_id = $GLOBALS['phpgw']->locations->get_id($app, ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");	
+						$this->db->query("SELECT id as bim_type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+						$this->db->next_record();
+						$bim_type = (int)$this->db->f('bim_type');
+						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_code {$this->like} '$location_code%' AND type = {$bim_type}";					
+					}
+					else
+					{
+						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$this->like} '$location_code%'";
+					}
+
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
 					if($this->db->f('hits'))
@@ -1203,18 +1216,19 @@
 //			_debug_array($sql);
 			$cols_return	= $this->cols_return;
 
-			$this->db->next_record();
-
-			foreach ($cols_return as $col)
+			if($this->db->next_record())
 			{
-				$values[$col] = $this->db->f($col,true);
-			}
-
-			if ( isset($values['attributes']) && is_array($values['attributes']) )
-			{
-				foreach ( $values['attributes'] as &$attr )
+				foreach ($cols_return as $col)
 				{
-					$attr['value'] 	= $this->db->f($attr['column_name']);
+					$values[$col] = $this->db->f($col,true);
+				}
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					foreach ( $values['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
 				}
 			}
 
