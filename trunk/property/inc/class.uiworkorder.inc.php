@@ -1416,7 +1416,7 @@
 					'lookup_type'		=> $location_template_type,
 					'lookup_entity'		=> $this->bocommon->get_lookup_entity('project'),
 					'entity_data'		=> (isset($values['p'])?$values['p']:''),
-					'filter_location'	=> $project['location_data']['location_code']
+					'filter_location'	=> !$project['inherit_location'] ? $project['location_data']['location_code'] : false
 				));
 			}
 			else
