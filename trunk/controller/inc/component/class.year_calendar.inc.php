@@ -6,46 +6,43 @@ include_class('controller', 'check_list_status_manager', 'inc/helper/');
 	
 
 class year_calendar {
-	
-	private $period_start_date_ts;
-    private $period_end_date_ts;
+  private $period_start_date_ts;
+  private $period_end_date_ts;
 	private $year;
 	private $control;
 	private $calendar_array = array();
 	
-	public function __construct($control, $year){
-        $this->year = $year;
-        $this->control = $control;
+  public function __construct($control, $year){
+    $this->year = $year;
+    $this->control = $control;
         
-        $this->period_start_date_ts = strtotime("01/01/$year");
-		$to_year = $year + 1;
-		$this->period_end_date_ts = strtotime("01/01/$to_year");
+    $this->period_start_date_ts = strtotime("01/01/$year");
+    $to_year = $year + 1;
+    $this->period_end_date_ts = strtotime("01/01/$to_year");
         
-        $this->init_calendar();
-   	}
+    $this->init_calendar();
+  }
    	   	
 	function init_calendar(){
-
-		for($i = 1;$i <= 12;$i++){
-			$this->calendar_array[$i] = null;
-		}
+    for($i = 1;$i <= 12;$i++){
+		  $this->calendar_array[$i] = null;
+    }
 		
-		$date_generator = new date_generator($this->control->get_start_date(), $this->control->get_end_date(), $this->period_start_date_ts, $this->period_end_date_ts, $this->control->get_repeat_type(), $this->control->get_repeat_interval());
-		$dates_array = $date_generator->get_dates();
+    $date_generator = new date_generator($this->control->get_start_date(), $this->control->get_end_date(), $this->period_start_date_ts, $this->period_end_date_ts, $this->control->get_repeat_type(), $this->control->get_repeat_interval());
+    $dates_array = $date_generator->get_dates();
 		
-		// Inserts dates 
-		foreach($dates_array as $date){
+    // Inserts dates 
+    foreach($dates_array as $date){
+      $todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
 			
-			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
+      if($date < $todays_date){
+        $status = "CONTROL_NOT_DONE";
+      }else{
+        $status = "CONTROL_REGISTERED";
+      }
 			
-			if($date < $todays_date){
-				$status = "CONTROL_NOT_DONE";
-			}else{
-				$status = "CONTROL_REGISTERED";
-			}
-			
-			$this->calendar_array[ date("n", $date) ]["status"]  = $status;
-			$this->calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $this->control->get_id());
+      $this->calendar_array[ date("n", $date) ]["status"]  = $status;
+      $this->calendar_array[ date("n", $date) ]["info"]  = array("date" => $date, "control_id" => $this->control->get_id());
 		}
 	}
    	
@@ -63,7 +60,7 @@ class year_calendar {
 		return $this->calendar_array;
 	}
 	
-	public function build_agg_calendar( $agg_open_cases_pr_month_array ){
+	public function build_agg_month_calendar( $agg_open_cases_pr_month_array ){
 		
 		foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
 		{
