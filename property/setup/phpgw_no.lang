@@ -1330,6 +1330,7 @@ repeat	property	no	serie
 repeat type	property	no	type serie
 repeat day	property	no	gjenta dag
 request	property	no	Behov
+reset approval	property	no	Nullstill
 project.request	property	no	Behov
 request attributes	property	no	Behov::attributter
 request an email receipt	property	no	Be om kvittering

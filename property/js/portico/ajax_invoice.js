@@ -501,19 +501,28 @@ function update_form_values( line_id, voucher_id_orig ){
 				if(typeof(data['generic']['approve_list']['options']) != 'undefined')
 				{
 					var htmlString = "";
+					var htmlString2 = "<table><tr>";
 
 					var obj = data['generic']['approve_list']['options'];
-
 					$.each(obj, function(i) {
+						htmlString2  += "<td align=\"center\">" + obj[i].name + "</td>";
+		    		});
+					 htmlString2 += "</tr><tr>";
+					$.each(obj, function(i) {
+						var checked = '';
 						var selected = '';
 						if(typeof(obj[i].selected) != 'undefined' && obj[i].selected == 1)
 						{
 							selected = ' selected';
+							checked = "checked = \"checked\"";
 						}
 						htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-		    			});
+						htmlString2  += "<td align=\"center\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+		    		});
 
-					$("#approve_as").html( htmlString );
+					htmlString2 += "</tr></table>";
+					$("#approve_as2").html( htmlString2 );
+			//		$("#approve_as").html( htmlString );
 				}
 			}
 			else

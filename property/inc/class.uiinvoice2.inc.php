@@ -470,7 +470,7 @@
 					$_checked = 'checked="checked"';
 				}
 
-				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
+				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve_line]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				$entry['approved_amount_hidden'] = $entry['approved_amount'];
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
@@ -658,7 +658,7 @@
 				}
 
 				$voucher_info['generic']['approve_list'] = array('options' => $approve_list);
-				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('select')));
+				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('reset approval')));
 //---------end forward
 
 				$voucher_info['generic']['approved_amount'] = 0;

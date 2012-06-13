@@ -491,12 +491,15 @@
 				<xsl:value-of select="php:function('lang', 'approve as')"/>
 			</td>
 			<td class="th_text" valign="top" align="left">
+				<div id = "approve_as2"> </div>
+				<!--
 				<select id = "approve_as" name="values[approve]" with="40">
 					<xsl:attribute name="title">
 						<xsl:value-of select="php:function('lang', 'approve as')"/>
 					</xsl:attribute>
 					<xsl:apply-templates select="voucher_info/generic/approve_list/options"/>
 				</select>
+				-->
 			</td>
 		</tr>
 		<tr class ='row_off'>
