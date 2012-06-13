@@ -225,7 +225,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "WHERE cl.control_id = $control_id ";
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "ORDER BY cl.id;";
-		//var_dump($sql);
+
 		$this->db->query($sql);
 		
 		$check_list_id = 0;
