@@ -51,8 +51,8 @@
 				
 		public $public_functions = array
 		(
-			'view_calendar_for_month'			=>	true,
-			'view_calendar_for_year'			=>	true,
+			'view_calendar_for_month'			      =>	true,
+			'view_calendar_for_year'			      =>	true,
 			'view_calendar_year_for_locations'	=>  true,
 			'view_calendar_month_for_locations'	=>  true
 		);
@@ -165,10 +165,10 @@
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 			
-			// Gets timestamp value of first day in year
+			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
-			// Gets timestamp value of first day in next year
+			// Gets timestamp of first day in next year
 			$to_date_ts = $this->get_end_date_year_ts($year);
 
 			// Array that will be populated with controls and calendar objects that will be sent to view
@@ -186,6 +186,9 @@
 			
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			
+			// Fetches all controls for the components on location within time period
+			$controls_for_component_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
 			
 			$controls_calendar_array = array();
 			
@@ -272,10 +275,10 @@
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 			
-			// Gets timestamp value of first day in year
+			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
-			// Gets timestamp value of first day in next year
+			// Gets timestamp of first day in next year
 			$to_date_ts = $this->get_end_date_year_ts($year);
 			
 			$locations_with_calendar_array = array();
@@ -328,7 +331,7 @@
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
 				
-			    foreach($components_for_control_array as $component){
+			  foreach($components_for_control_array as $component){
 					$curr_component_id = $component['component_id'];
 					
 					$repeat_type = $control->get_repeat_type();
