@@ -182,6 +182,8 @@
 			}
 			$ok = true;
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event/yahoo-dom-event');
+			//Needed?
+			$GLOBALS['phpgw']->js->validate_file('yahoo', 'event-delegate/event-delegate-min');
 			foreach ( $load as $script )
 			{
 				$script_part = explode('-',$script);
