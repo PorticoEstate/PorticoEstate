@@ -36,20 +36,11 @@ YAHOO.example.DynamicData = function(myColumnDefs,requestUrl) {
         var startIndex = (oState.pagination) ? oState.pagination.recordOffset : 0;
         var results = (oState.pagination) ? oState.pagination.rowsPerPage : 25;
 
-        var total = YAHOO.util.Dom.get("total").value *1;
-        // Validate input
-        if(!YAHOO.lang.isNumber(total) || total < 0 || total > 1000) {
-            YAHOO.util.Dom.get("total").value = 0;
-            total = 0;
-            alert("Total must be between 0 and 1000.");
-        }
-
         // Build custom request
         return  "&order=" + sort +
                 "&sort=" + dir +
                 "&start=" + startIndex +
-                "&results=" + (startIndex + results) +
-                "&total=" + total;
+                "&results=" + (startIndex + results);
     };
 
     // DataTable configuration
@@ -58,7 +49,18 @@ YAHOO.example.DynamicData = function(myColumnDefs,requestUrl) {
         initialRequest: generateRequest(), // Initial request for first page of data
         dynamicData: true, // Enables dynamic server-driven data
         sortedBy : {key:"id", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow
-        paginator: new YAHOO.widget.Paginator({ rowsPerPage:25 }) // Enables pagination 
+        paginator: new YAHOO.widget.Paginator({ 
+				rowsPerPage: 10,
+//				alwaysVisible: true,
+//				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
+//				firstPageLinkLabel: "&lt;&lt; first",
+//				previousPageLinkLabel: "&lt; previous",
+//				nextPageLinkLabel: "next &gt;",
+//				lastPageLinkLabel: "last &gt;&gt;",
+				template			: "{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "shows_from {startRecord} to {endRecord} of_total {totalRecords}."
+
+        	}) // Enables pagination 
     };
     
     // DataTable instance
@@ -77,5 +79,37 @@ YAHOO.example.DynamicData = function(myColumnDefs,requestUrl) {
         
 };
 //YAHOO.util.Event.onDOMReady( YAHOO.example.DynamicData );
+
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+	}	
+
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
+
+
+ 	function checkAll(myclass)
+  	{
+		controls = YAHOO.util.Dom.getElementsByClassName(myclass);
+
+		for(i=0;i<controls.length;i++)
+		{
+			if(!controls[i].disabled)
+			{
+			
+				if(controls[i].checked)
+				{
+					controls[i].checked = false;
+				}
+				else
+				{
+					controls[i].checked = true;
+				}
+			}
+		}
+	}
 
 
