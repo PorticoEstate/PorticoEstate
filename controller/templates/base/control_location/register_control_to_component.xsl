@@ -64,6 +64,8 @@
 									<td colspan = '6'>
 										<xsl:apply-templates select="paging"/>
 										<xsl:apply-templates select="datatable"/>
+										<p>Total records (between 0 and 1000): <input type="text" id="total" value="1000"/> <input type="button" id="update" value="Update"/></p>
+										<div id="dynamicdata"></div>
 									</td>
 								</tr>
 							</table>

@@ -689,7 +689,8 @@
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
-			self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
+	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
+			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('control_location/register_control_to_component'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
@@ -803,10 +804,11 @@
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 			$boentity	= CreateObject('property.boentity',false, 'entity');
-			$boentity->allrows = true;
+//			$boentity->allrows = true;
 			
 			$values = $boentity->read();
 
+			$results = array();
 			foreach($values as &$entry)
 			{
 				$checked = '';
@@ -816,9 +818,17 @@
 					$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 				}
 				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
+				$results['records'][]= $entry;
 			}
 
-			return json_encode($values);
+			$results['recordsReturned'] = count($values);
+			$results['totalRecords'] = $boentity->total_records;
+			$results['startIndex'] = $this->start;
+			$results['sort'] = 'location_code';
+			$results['dir'] = "ASC";
+			$results['pageSize'] = 10;
+
+			return $results;
 		}
 
 		public function edit_component()
