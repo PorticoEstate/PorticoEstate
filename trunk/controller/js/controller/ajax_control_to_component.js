@@ -401,8 +401,8 @@ function get_table_def()
 			{		
 				myColumnDefs = [];
 		        myColumnDefs.push(data);
-				update_component_table_def();
-//				update_component_table();
+//				update_component_table_def();
+				update_component_table2();
 			}
 			else
 			{
@@ -412,6 +412,24 @@ function get_table_def()
 	});
 
 }
+
+
+function update_component_table2()
+{
+	var oArgs = {
+		menuaction:'controller.uicontrol_location.query2',
+		entity_id:$("#entity_id").val(),
+		cat_id:$("#cat_id").val(),
+		district_id:$("#district_id").val(),
+		part_of_town_id:$("#part_of_town_id").val(),
+		location_code:$("#loc1").val() != null ? $("#loc1").val():'',
+		control_id:$("#control_id").val() != null ? $("#control_id").val():''
+	};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	YAHOO.example.DynamicData(myColumnDefs[0],requestUrl);
+}
+
 
 function update_component_table_def()
 {
