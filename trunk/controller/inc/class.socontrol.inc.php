@@ -233,6 +233,58 @@
 				return null;
 			}
 		}
+		
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = null, $return_type = "return_object")
+		{
+			$controls_array = array();
+			
+			$sql   = "SELECT c.id as control_id, c.*, bim_item.id, xpath('/beskrivelse/text()', xml_representation), bim_item.location_code, bim_item.address ";
+			$sql  .= "FROM controller_control_component_list cl ";
+			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
+			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
+			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
+			$sql  .= "AND bim_item.type = bim_type.id ";
+			$sql  .= "AND bim_item.location_code LIKE '$location_code%'";
+			
+			if( $repeat_type != null){
+				$sql .= "AND c.repeat_type = $repeat_type ";
+			}
+			
+			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
+			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
+			
+			$this->db->query($sql);
+			
+			while($this->db->next_record()) {
+				$control = new controller_control($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				
+				if($return_type == "return_object")
+					$controls_array[] = $control;
+				else
+					$controls_array[] = $control->toArray();
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		function get_controls_by_control_area($control_area_id)
 		{
