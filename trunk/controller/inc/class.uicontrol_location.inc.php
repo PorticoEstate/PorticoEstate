@@ -799,16 +799,16 @@
 
 			if(!$entity_id && !$cat_id)
 			{
-				return json_encode(array());
+				$values = array();
 			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+				$boentity	= CreateObject('property.boentity',false, 'entity');
+				$boentity->results = phpgw::get_var('results', 'int');
+				$values = $boentity->read();
+			}		
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-			$boentity	= CreateObject('property.boentity',false, 'entity');
-//			$boentity->allrows = true;
-			
-			$values = $boentity->read();
-
-			$results = array();
 			foreach($values as &$entry)
 			{
 				$checked = '';
@@ -818,7 +818,6 @@
 					$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 				}
 				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
-				$results['records'][]= $entry;
 			}
 
 			$results['recordsReturned'] = count($values);
@@ -827,6 +826,7 @@
 			$results['sort'] = 'location_code';
 			$results['dir'] = "ASC";
 			$results['pageSize'] = 10;
+			$results['records'] = $values;
 
 			return $results;
 		}

@@ -62,10 +62,7 @@
 							<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
 										<xsl:apply-templates select="datatable"/>
-										<p>Total records (between 0 and 1000): <input type="text" id="total" value="1000"/> <input type="button" id="update" value="Update"/></p>
-										<div id="dynamicdata"></div>
 									</td>
 								</tr>
 							</table>
@@ -187,9 +184,8 @@
 
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<div id="paging_0"/>
-	<div id="datatable-container_0"/>
-	
+	<div id="dynamicdata"></div>
+
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
