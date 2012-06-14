@@ -113,11 +113,11 @@
 			//return isset($result);
 		}
 
-		function get_controls_for_location($location_code, $from_date, $to_date, $repeat_type)
+		function get_controls_for_location($location_code, $role_id, $from_date, $to_date, $repeat_type)
 		{
 		    $controls = array();
-		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type );
-		    $controls_comp = $this->get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type );
+		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
+		    $controls_comp = $this->get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
 		    
 		    foreach($controls_loc as $cl)
 		    {
@@ -131,7 +131,7 @@
 		    return $controls;
 		}
 		
-		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
+		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
 			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
@@ -143,6 +143,8 @@
 			
 			if( is_numeric($repeat_type) )
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			if( is_numeric($role_id))
+			    $sql .= "AND c.responsibility_id = $role_id ";
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
@@ -180,61 +182,10 @@
 			}
 		}
 		
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = null, $return_type = "return_object")
+	    public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
-			
-			$sql   = "SELECT c.id as control_id, c.*, bim_item.id, xpath('/beskrivelse/text()', xml_representation), bim_item.location_code, bim_item.address ";
-			$sql  .= "FROM controller_control_component_list cl ";
-			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
-			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
-			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
-			$sql  .= "AND bim_item.type = bim_type.id ";
-			$sql  .= "AND bim_item.location_code LIKE '$location_code%'";
-			
-			if( $repeat_type != null){
-				$sql .= "AND c.repeat_type = $repeat_type ";
-			}
-			
-			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
-			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
-			
-			$this->db->query($sql);
-			
-			while($this->db->next_record()) {
-				$control = new controller_control($this->unmarshal($this->db->f('control_id', true), 'int'));
-				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
-				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
-				
-				if($return_type == "return_object")
-					$controls_array[] = $control;
-				else
-					$controls_array[] = $control->toArray();
-			}
-
-			if( count( $controls_array ) > 0 ){
-				return $controls_array; 
-			}
-			else
-			{
-				return null;
-			}
-		}
-		
-	  public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
-	  {
-			$controls_array = array();
+			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name FROM controller_control_component_list ccl "; 
 			$sql .= "LEFT JOIN controller_control c on ccl.control_id=c.id ";
@@ -244,10 +195,12 @@
 			
 			if( is_numeric($repeat_type) )
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			if( is_numeric($role_id))
+			    $sql .= "AND c.responsibility_id = $role_id ";
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
-
+			//var_dump($sql."<br/>");
 			$this->db->query($sql);
 			
 			while($this->db->next_record()) {
