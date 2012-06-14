@@ -666,60 +666,60 @@ ul.items li.list_item{
 /* =======================================  EXPAND LIST  ========================================= */
 
 ul.expand_list h4 {
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-bottom: 6px;
-    margin-top: 0;
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  margin-top: 0;
 }
 ul.expand_list h4 img {
     height: 12px;
 }
 
 ul.expand_list li ul {
-    display:none;
-    margin-left:21px;
+  display:none;
+  margin-left:21px;
 }
 
 ul.expand_list li ul li {
-    margin-bottom: 3px;
-    padding: 3px;
+  margin-bottom: 3px;
+  padding: 3px;
 }
 
 ul.expand_list h4 span {
-    padding-left: 5px;
-    vertical-align: middle;
+  padding-left: 5px;
+  vertical-align: middle;
 }
 ul.expand_list .expand_item {
-    display: none;
+  display: none;
 }
 
 dl.proplist, dl.proplist-col {
-    margin: 0;
-    padding-left: 0;
+  margin: 0;
+  padding-left: 0;
 }
 
 .frm_save_order input[type='submit']{
-	margin: 10px 0 15px 0;
-    width: 120px;
+  margin: 10px 0 15px 0;
+  width: 120px;
 }
 .delete {
-    cursor: pointer;
-    margin-left: 5px;
+  cursor: pointer;
+  margin-left: 5px;
 }
 .yui-navset .yui-content.tab_content {
-	padding: 20px;
+  padding: 20px;
 }
 
 #datatable-container {
-    margin: 20px;
+  margin: 20px;
 }
 
 #paginator {
-	margin: 20px;
+  margin: 20px;
 }
 
 #paginator.top {
-	 margin: 20px 0 0 20px;
+  margin: 20px 0 0 20px;
 }
 
 #toolbar {

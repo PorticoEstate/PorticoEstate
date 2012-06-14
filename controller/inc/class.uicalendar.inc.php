@@ -190,8 +190,6 @@
 			// Fetches all controls for the components on location within time period
 			$controls_for_component_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
 			
-			print_r( $controls_for_component_array );
-			
 			$controls_calendar_array = array();
 			
 			// Loops through controls with repeat type day or week in controls_for_location_array
