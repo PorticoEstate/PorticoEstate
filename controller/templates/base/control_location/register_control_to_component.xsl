@@ -184,6 +184,7 @@
 
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
+	<div id="paging"></div>
 	<div id="dynamicdata"></div>
 
   	<xsl:call-template name="datasource-definition" />

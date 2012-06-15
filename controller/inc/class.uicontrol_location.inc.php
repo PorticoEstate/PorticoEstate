@@ -825,7 +825,8 @@
 			$results['startIndex'] = $this->start;
 			$results['sort'] = 'location_code';
 			$results['dir'] = "ASC";
-			$results['pageSize'] = 10;
+			$results['pageSize'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$results['activePage'] = floor($this->start / $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) + 1;
 			$results['records'] = $values;
 
 			return $results;
