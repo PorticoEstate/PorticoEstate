@@ -139,6 +139,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
 //						previousPageLinkLabel: "&lt; previous",
 //						nextPageLinkLabel: "next &gt;",
 //						lastPageLinkLabel: "last &gt;&gt;",
+//						template			: "{RowsPerPageDropdown} elements_pr_page. {CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
 						template			: "{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
 						pageReportTemplate	: "shows_from {startRecord} to {endRecord} of_total {totalRecords}."
 						}
@@ -156,7 +157,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
     };
     
     // DataTable instance
-    var myDataTable = new YAHOO.widget.DataTable("dynamicdata", myColumnDefs, myDataSource, myConfigs);
+    var myDataTable = new YAHOO.widget.DataTable("datatable-container", myColumnDefs, myDataSource, myConfigs);
     // Update totalRecords on the fly with values from server
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		YAHOO.PORTICO.requestUrl = requestUrl + oRequest;

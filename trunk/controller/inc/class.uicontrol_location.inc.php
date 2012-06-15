@@ -284,6 +284,7 @@
 					);		
 				}
 
+/*
 				$control_info = execMethod('controller.socontrol.get_single', $control_id);
 				if($control_info)
 				{
@@ -293,7 +294,7 @@
 						'title'	=> $control_info->get_title()
 					);
 				}
-
+*/
 				$tabs = array
 				( 
 					array
@@ -304,23 +305,14 @@
 					array
 					(
 						'label' => lang('Add_locations_for_control')
-					),
-					array
-					(
-						'label' => lang('add components for control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'))
 					)
-
 				);
 						
 				$data = array(
 					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 					'view'						=> "register_control_to_location",
 					'control_id'				=> $control_id,
-					'control_filters'			=> array(
-						'control_areas_array' 	=> $control_areas_array,
-						'control_array' 			=> $control_array
-					),
+					'control_areas_array'		=> $control_areas_array,
 					'filter_form' 				=> array(
 						'building_types' 			=> $building_types,
 						'category_types' 			=> $category_types,
@@ -655,12 +647,13 @@
 			(
 				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'td_count'						=> '""',
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+		//		'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
 				'myButtons'						=> $myButtons,
 
 				'msgbox_data'					=> $msgbox_data,
+				'control_area_list'		=> array('options' => $control_area_list),
 				'filter_form' 					=> array
 													(
 														'control_area_list'		=> array('options' => $control_area_list),
@@ -728,7 +721,7 @@
 			(
 				'key'		=> 'select',
 				'label'		=> lang('select'),
-				'sortable'	=> true,
+				'sortable'	=> false,
 				'formatter'	=> false,
 				'hidden'	=> false,
 				'formatter' => '',
@@ -796,6 +789,7 @@
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
+			$results 			= phpgw::get_var('results', 'int');
 
 			if(!$entity_id && !$cat_id)
 			{
@@ -805,7 +799,7 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$boentity	= CreateObject('property.boentity',false, 'entity');
-				$boentity->results = phpgw::get_var('results', 'int');
+				$boentity->results = $results;
 				$values = $boentity->read();
 			}		
 
@@ -820,22 +814,25 @@
 				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 			}
 
-			$results['recordsReturned'] = count($values);
-			$results['totalRecords'] = $boentity->total_records;
-			$results['startIndex'] = $this->start;
-			$results['sort'] = 'location_code';
-			$results['dir'] = "ASC";
-			$results['pageSize'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$results['activePage'] = floor($this->start / $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) + 1;
-			$results['records'] = $values;
+			
+			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$return_data['recordsReturned'] = count($values);
+			$return_data['totalRecords'] = $boentity->total_records;
+			$return_data['startIndex'] = $this->start;
+			$return_data['sort'] = 'location_code';
+			$return_data['dir'] = "ASC";
+			$return_data['pageSize'] = $results;
+			$return_data['activePage'] = floor($this->start / $results) + 1;
+			$return_data['records'] = $values;
 
-			return $results;
+			return $return_data;
 		}
 
 		public function edit_component()
 		{
 			if($values = phpgw::get_var('values'))
 			{
+_debug_Array($values);
 				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
 				{
 					$receipt['error'][]=true;

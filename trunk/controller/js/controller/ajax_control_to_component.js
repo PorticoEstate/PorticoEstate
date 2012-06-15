@@ -238,10 +238,10 @@ $(document).ready(function()
 
     });
 
-
-
 	$("#control_id").change(function ()
 	{
+		$("#control_id_hidden").val( $(this).val() );
+
 		update_component_table();
     });
 
@@ -261,6 +261,14 @@ $(document).ready(function()
 
 	$("#acl_form").live("submit", function(e){
 		e.preventDefault();
+		var control_id = $("#control_id_hidden").val();
+		
+		if(!control_id || control_id == null)
+		{
+			alert('du må velge kontroll');
+			return;
+		}
+
 		var thisForm = $(this);
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
@@ -393,8 +401,7 @@ function get_table_def()
 		success: function(data) {
 			if( data != null)
 			{		
-				myColumnDefs = [];
-				myColumnDefs.push(data);
+				myColumnDefs = data;
 				init_component_table();
 			}
 			else
@@ -416,11 +423,11 @@ function init_component_table()
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
 		location_code:$("#loc1").val() != null ? $("#loc1").val():'',
-		control_id:$("#control_id").val() != null ? $("#control_id").val():''
+		control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():''
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	YAHOO.PORTICO.init_datatable(myColumnDefs[0],requestUrl);
+	YAHOO.PORTICO.init_datatable(myColumnDefs,requestUrl);
 }
 
 
@@ -435,7 +442,7 @@ function update_component_table()
 			district_id:$("#district_id").val(),
 			part_of_town_id:$("#part_of_town_id").val(),
 			location_code:$("#loc1").val() != null ? $("#loc1").val():'',
-			control_id:$("#control_id").val() != null ? $("#control_id").val():''
+			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():''
 		};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
