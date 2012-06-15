@@ -24,6 +24,15 @@
 	<style type="text/css">
 		select { width: 100px; }
 	</style>
+	<div id="choose_control" class="select-box">
+		<label>Velg kontrollen du vil vise komponent for</label>
+		<select id="control_area_id" name="control_area_id">
+			<xsl:apply-templates select="control_area_list/options"/>
+		</select>		 
+		<select id="control_id" name="control_id">
+			<xsl:apply-templates select="control/options"/>
+		</select>
+	</div>
 
 <div class="yui-navset yui-navset-top" id="control_location_tabview">
 	<div class="identifier-header">
@@ -82,12 +91,14 @@
 	<td colspan = '6'>
 	<table>
 	<tr>
+<!--
 		<td>
 			<xsl:value-of select="php:function('lang', 'control area')" />
 		</td>
 		<td>
 			<xsl:value-of select="php:function('lang', 'control')" />
 		</td>
+-->
 		<td>
 			<xsl:value-of select="php:function('lang', 'location type')" />
 		</td>
@@ -96,6 +107,7 @@
 		</td>
 	</tr>
 	  <tr id="filter1">
+<!--
 		<td>
 		  <select id="control_area_id" name="control_area_id">
 			<xsl:apply-templates select="control_area_list/options"/>
@@ -105,8 +117,10 @@
 		  <select id="control_id" name="control_id">
 			<xsl:apply-templates select="control/options"/>
 		  </select>
-		</td>		
+		</td>
+-->
 		<td >
+		  <input id= "control_id_hidden" type="hidden" name="control_id"/>
 		  <select id="location_type" name="location_type">
 			<xsl:apply-templates select="location_type_list/options"/>
 		  </select>
@@ -135,9 +149,11 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'building')" />
 		</td>
+<!--
 		<td >
 			<xsl:value-of select="php:function('lang', 'search')" />
 		</td>
+-->
 	</tr>
 	  <tr id="filter2">
 		<td>
@@ -170,10 +186,12 @@
 			<xsl:apply-templates select="loc2_list/options"/>
 		  </select>
 		</td>
+<!--
 		<td>
 			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
 			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		</td>	  		
+		</td>	 
+--> 		
 	  </tr>
 	  </table>
 	  </td>
@@ -185,7 +203,7 @@
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
 	<div id="paging"></div>
-	<div id="dynamicdata"></div>
+	<div id="datatable-container"></div>
 
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
