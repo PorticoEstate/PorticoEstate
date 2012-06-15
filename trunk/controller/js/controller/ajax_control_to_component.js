@@ -75,7 +75,6 @@ $(document).ready(function()
 		  			});
 					 								
 					$("#cat_id").html( htmlString );
-	//				update_component_table();
 					}
 					else
 					{
@@ -163,6 +162,8 @@ $(document).ready(function()
          		}
 			}
          });
+
+		update_component_table();
     });
 
 
@@ -199,6 +200,7 @@ $(document).ready(function()
 			}
          });
 
+		update_component_table();
     });
 
 	$("#loc1").change(function ()
@@ -231,6 +233,8 @@ $(document).ready(function()
          			}
 			}
          });
+
+		update_component_table();
 
     });
 
@@ -279,17 +283,7 @@ $(document).ready(function()
 	  			{
 		  			$(submitBnt).val("Lagret");
 
-					var oArgs = {
-						menuaction:'controller.uicontrol_location.query2',
-						entity_id:$("#entity_id").val(),
-						cat_id:$("#cat_id").val(),
-						district_id:$("#district_id").val(),
-						part_of_town_id:$("#part_of_town_id").val(),
-						location_code:$("#loc1").val(),
-						control_id:$("#control_id").val()
-						};
-	
-						execute_async(myDataTable_0,oArgs);
+						YAHOO.PORTICO.update_datatable();
 				}
 				else
 				{
@@ -400,9 +394,8 @@ function get_table_def()
 			if( data != null)
 			{		
 				myColumnDefs = [];
-		        myColumnDefs.push(data);
-//				update_component_table_def();
-				update_component_table2();
+				myColumnDefs.push(data);
+				init_component_table();
 			}
 			else
 			{
@@ -414,7 +407,7 @@ function get_table_def()
 }
 
 
-function update_component_table2()
+function init_component_table()
 {
 	var oArgs = {
 		menuaction:'controller.uicontrol_location.query2',
@@ -427,30 +420,28 @@ function update_component_table2()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	YAHOO.example.DynamicData(myColumnDefs[0],requestUrl);
+	YAHOO.PORTICO.init_datatable(myColumnDefs[0],requestUrl);
 }
 
-
-function update_component_table_def()
-{
-	pager = YAHOO.util.Dom.get("paging_0");
-	div   = YAHOO.util.Dom.get("datatable-container_0");
-	this.init_datatable(datatable[0],div,pager,myColumnDefs[0],0);
-}
 
 function update_component_table()
 {
-	var oArgs = {
-		menuaction:'controller.uicontrol_location.query2',
-		entity_id:$("#entity_id").val(),
-		cat_id:$("#cat_id").val(),
-		district_id:$("#district_id").val(),
-		part_of_town_id:$("#part_of_town_id").val(),
-		location_code:$("#loc1").val(),
-		control_id:$("#control_id").val()
-	};
+	if($("#cat_id").val() != null)
+	{
+		var oArgs = {
+			menuaction:'controller.uicontrol_location.query2',
+			entity_id:$("#entity_id").val(),
+			cat_id:$("#cat_id").val(),
+			district_id:$("#district_id").val(),
+			part_of_town_id:$("#part_of_town_id").val(),
+			location_code:$("#loc1").val() != null ? $("#loc1").val():'',
+			control_id:$("#control_id").val() != null ? $("#control_id").val():''
+		};
 
-	execute_async(myDataTable_0,  oArgs);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		YAHOO.PORTICO.update_datatable(requestUrl);
+	}
 //	$("#receipt").html('');
 }
 
