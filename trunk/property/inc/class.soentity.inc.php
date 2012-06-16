@@ -219,6 +219,7 @@
 		protected function read_eav($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
 			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -613,24 +614,36 @@
 							case 'CH':
 								if(!$criteria_id)
 								{
-							//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
-									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[contains(.,'',$query,'')]' PASSING BY REF xml_representation)";
+									// from filter
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
 									$__querymethod = array(); // remove block
+
+									// from text-search
+									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''," . $this->db2->f('id') . ",'')]' PASSING BY REF xml_representation)";
+									}
 								}
 								break;
 							case 'R':
 							case 'LB':
 								if(!$criteria_id)
 								{
-									if(!$_joinmethod_datatype_custom)//only join once
-									{
-										$_joinmethod_datatype_custom[] = "{$this->join} phpgw_cust_choice ON phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id');
-									}
-	
-									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
 										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
 										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
-	
+
+									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}	
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -764,12 +777,12 @@
 			}
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
-
+//_debug_array($sql);
 			//SELECT id, cast (order_field[1] as text) as order_field_text FROM (SELECT id, xpath('address/text()', xml_representation) as order_field FROM fm_bim_item) as t ORDER BY order_field_text asc
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
@@ -855,6 +868,7 @@
 		function read($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
 			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -1204,8 +1218,9 @@
 
 			if ($location_code)
 			{
-				$filtermethod .= " $where $entity_table.location_code $this->like '$location_code%'";
-				$where= 'AND';			
+				$filtermethod .= " $where $entity_table.location_code {$this->like} '$location_code%'";
+				$where= 'AND';
+				$query = '';
 			}
 
 			if ($attrib_filter)
@@ -1402,7 +1417,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{

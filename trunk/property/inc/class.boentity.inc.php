@@ -43,6 +43,7 @@
 		var $allrows;
 		var $part_of_town_id;
 		var $location_code;
+		var $results;
 		protected $xsl_rootdir;
 
 		/**
@@ -352,7 +353,7 @@
 
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id, 'part_of_town_id' => $this->part_of_town_id,
-				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'',
+				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'', 'results' => $this->results,
 				'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
 				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
