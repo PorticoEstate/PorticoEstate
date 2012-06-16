@@ -241,6 +241,7 @@
 			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -689,6 +690,16 @@
 			}
 
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			if($control_registered)
+			{
+				$sql .= "{$this->join} controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
+				$sql_cnt_control_fields = ',control_id ';
+			}
+			else
+			{
+				$sql_cnt_control_fields = '';
+			}
+
 			if(isset($category['location_level']) && $category['location_level'])
 			{
 				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
@@ -727,7 +738,7 @@
 //_debug_array($_sql);die();			
 //			if(!$cache_info)
 			{
-				$sql_cnt = "SELECT DISTINCT fm_bim_item.id " . substr($_sql,strripos($_sql,'FROM'));
+				$sql_cnt = "SELECT DISTINCT fm_bim_item.id {$sql_cnt_control_fields}" . substr($_sql,strripos($_sql,'FROM'));
 				$sql2 = "SELECT count(*) as cnt FROM ({$sql_cnt}) as t";
 
 				$this->db->query($sql2,__LINE__,__FILE__);
@@ -744,6 +755,7 @@
 			}
 
 			$this->total_records	= $cache_info['total_records'];
+
 
 			if($dry_run)
 			{
