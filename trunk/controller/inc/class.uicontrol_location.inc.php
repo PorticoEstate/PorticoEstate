@@ -790,6 +790,7 @@
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
 			$results 			= phpgw::get_var('results', 'int');
+			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
 			if(!$entity_id && !$cat_id)
 			{
@@ -800,7 +801,7 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$boentity	= CreateObject('property.boentity',false, 'entity');
 				$boentity->results = $results;
-				$values = $boentity->read();
+				$values = $boentity->read(array('control_registered' => $control_registered));
 			}		
 
 			foreach($values as &$entry)
@@ -832,7 +833,6 @@
 		{
 			if($values = phpgw::get_var('values'))
 			{
-_debug_Array($values);
 				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
 				{
 					$receipt['error'][]=true;

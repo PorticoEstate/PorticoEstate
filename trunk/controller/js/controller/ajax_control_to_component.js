@@ -238,10 +238,21 @@ $(document).ready(function()
 
     });
 
+
+	$("#control_registered").change(function ()
+	{
+		update_component_table();
+    });
+
 	$("#control_id").change(function ()
 	{
 		$("#control_id_hidden").val( $(this).val() );
 
+		update_component_table();
+    });
+
+	$("#loc2").change(function ()
+	{
 		update_component_table();
     });
 
@@ -416,14 +427,32 @@ function get_table_def()
 
 function init_component_table()
 {
+	var control_registered = 0;
+	if (typeof($($("#control_registered")).attr("checked")) != 'udefined' && $($("#control_registered")).attr("checked") == 'checked')
+	{
+		control_registered = 1;
+	}
+
+	var location_code = '';
+		
+	if( $("#loc2").val() != null && $("#loc2").val())
+	{
+		location_code = $("#loc2").val();
+	}
+	else if ( $("#loc1").val() != null && $("#loc1").val())
+	{
+		location_code = $("#loc1").val();
+	}
+
 	var oArgs = {
 		menuaction:'controller.uicontrol_location.query2',
 		entity_id:$("#entity_id").val(),
 		cat_id:$("#cat_id").val(),
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
-		location_code:$("#loc1").val() != null ? $("#loc1").val():'',
-		control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():''
+		location_code:location_code,
+		control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
+		control_registered:control_registered
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -433,16 +462,35 @@ function init_component_table()
 
 function update_component_table()
 {
+
+	var control_registered = 0;
+	if (typeof($($("#control_registered")).attr("checked")) != 'udefined' && $($("#control_registered")).attr("checked") == 'checked')
+	{
+		control_registered = 1;
+	}
+
 	if($("#cat_id").val() != null)
 	{
+		var location_code = '';
+		
+		if( $("#loc2").val() != null && $("#loc2").val())
+		{
+			location_code = $("#loc2").val();
+		}
+		else if ( $("#loc1").val() != null && $("#loc1").val())
+		{
+			location_code = $("#loc1").val();
+		}
+		
 		var oArgs = {
 			menuaction:'controller.uicontrol_location.query2',
 			entity_id:$("#entity_id").val(),
 			cat_id:$("#cat_id").val(),
 			district_id:$("#district_id").val(),
 			part_of_town_id:$("#part_of_town_id").val(),
-			location_code:$("#loc1").val() != null ? $("#loc1").val():'',
-			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():''
+			location_code:location_code,
+			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
+			control_registered:control_registered
 		};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
