@@ -100,6 +100,9 @@
 		</td>
 -->
 		<td>
+			<xsl:value-of select="php:function('lang', 'registered')" />
+		</td>
+		<td>
 			<xsl:value-of select="php:function('lang', 'location type')" />
 		</td>
 		<td>
@@ -119,6 +122,10 @@
 		  </select>
 		</td>
 -->
+		<td >
+		  <input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
+		</td>
+
 		<td >
 		  <input id= "control_id_hidden" type="hidden" name="control_id"/>
 		  <select id="location_type" name="location_type">
@@ -222,7 +229,6 @@
 
 		<!--  DATATABLE DEFINITIONS-->
 		<script type="text/javascript">
-			var property_js = <xsl:value-of select="//property_js"/>;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
 			var myButtons = new Array();

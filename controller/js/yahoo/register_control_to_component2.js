@@ -106,7 +106,8 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
         // Access to values in the server response
         metaFields: {
             totalRecords: "totalRecords",
-            startIndex: "startIndex"
+            startIndex: "startIndex",
+            pageSize: "pageSize"
         }
     };
     
@@ -117,7 +118,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
         var sort = (oState.sortedBy) ? oState.sortedBy.key : "id";
         var dir = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc";
         var startIndex = (oState.pagination) ? oState.pagination.recordOffset : 0;
-        var results = (oState.pagination) ? oState.pagination.rowsPerPage : 10;
+        var results = (oState.pagination) ? oState.pagination.rowsPerPage : 0;
 
         // Build custom request
         return  "&order=" + sort +
@@ -132,7 +133,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
 						containers			: ['paging'],
 //						totalRecords		: mytotalRows,
 					    initialPage			: myinitialPage,
-						rowsPerPage: 10,
+						rowsPerPage			: 10,
 //						alwaysVisible: true,
 //						rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
 //						firstPageLinkLabel: "&lt;&lt; first",
@@ -162,6 +163,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
 		YAHOO.PORTICO.requestUrl = requestUrl + oRequest;
         oPayload.totalRecords = oResponse.meta.totalRecords;
+		oPayload.pagination.rowsPerPage = oResponse.meta.pageSize;
         oPayload.pagination.recordOffset = oResponse.meta.startIndex;
         return oPayload;
     };
