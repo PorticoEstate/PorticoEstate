@@ -241,14 +241,14 @@ $(document).ready(function()
 
 	$("#control_registered").change(function ()
 	{
-		update_component_table();
+		init_component_table();
     });
 
 	$("#control_id").change(function ()
 	{
 		$("#control_id_hidden").val( $(this).val() );
 
-		update_component_table();
+		init_component_table();
     });
 
 	$("#loc2").change(function ()
@@ -433,6 +433,14 @@ function init_component_table()
 		control_registered = 1;
 	}
 
+	
+	var cat_id = $("#cat_id").val() != null ? $("#cat_id").val():'';
+	
+	if(!cat_id)
+	{
+		return false;
+	}
+	
 	var location_code = '';
 		
 	if( $("#loc2").val() != null && $("#loc2").val())
@@ -447,7 +455,7 @@ function init_component_table()
 	var oArgs = {
 		menuaction:'controller.uicontrol_location.query2',
 		entity_id:$("#entity_id").val(),
-		cat_id:$("#cat_id").val(),
+		cat_id:cat_id,
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
 		location_code:location_code,
