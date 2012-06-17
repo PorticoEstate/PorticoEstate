@@ -801,7 +801,7 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$boentity	= CreateObject('property.boentity',false, 'entity');
 				$boentity->results = $results;
-				$values = $boentity->read(array('control_registered' => $control_registered));
+				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
 			}		
 
 			foreach($values as &$entry)
