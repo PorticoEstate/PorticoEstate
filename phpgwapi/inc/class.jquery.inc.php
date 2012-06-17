@@ -65,6 +65,23 @@
 					$load = array("js/jquery-1.7.2{$_type}", "js/jquery-ui-1.8.19.custom{$_type}", "development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}");
 					break;
 
+				case 'autocomplete':
+/*
+					$load = array
+					(
+						"js/jquery-1.7.2{$_type}",
+						'development-bundle/ui/minified/jquery.ui.core.min',
+						'development-bundle/ui/minified/jquery.ui.widget.min',
+						'development-bundle/ui/minified/jquery.ui.position.min',
+						'development-bundle/ui/minified/jquery.ui.autocomplete.min'
+					);
+*/
+					$load = array
+					(
+						"js/jquery-ui-1.8.19.custom{$_type}"
+					);
+					break;
+
 				default:
 					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);
