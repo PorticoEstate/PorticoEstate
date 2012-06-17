@@ -359,7 +359,7 @@
 				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
 				'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
 				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter, 'p_num' => $this->p_num,
-				'control_registered'=>isset($data['control_registered'])?$data['control_registered']:''));
+				'control_registered'=>isset($data['control_registered'])?$data['control_registered']:'','control_id'=>isset($data['control_id'])?$data['control_id']:''));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;

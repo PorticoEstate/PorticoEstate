@@ -242,6 +242,7 @@
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 			$control_registered= isset($data['control_registered']) ? $data['control_registered'] : '';
+			$control_id		= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -694,6 +695,8 @@
 			{
 				$sql .= "{$this->join} controller_control_component_list ON (fm_bim_item.id = controller_control_component_list.component_id  AND controller_control_component_list.location_id = fm_bim_type.location_id)";
 				$sql_cnt_control_fields = ',control_id ';
+				$filtermethod .= " $where  controller_control_component_list.control_id = $control_id";
+				$where = 'AND';
 			}
 			else
 			{
