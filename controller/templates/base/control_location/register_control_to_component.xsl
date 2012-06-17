@@ -108,6 +108,9 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'location category')" />
 		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'name')" />
+		</td>
 	</tr>
 	  <tr id="filter1">
 <!--
@@ -135,6 +138,10 @@
 		<td >
 		  <select id="location_type_category" name="location_type_category">
 		  </select>
+		</td>
+		<td >
+			<input type="text" value="" id="search-location-name" />
+			<input id= "search-location_code" type="hidden" name="search-location_code"/>
 		</td>
 	  </tr>
 	<tr>
@@ -217,7 +224,7 @@
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 	<div><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
 
-  	<xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select')" /></xsl:variable>
+  	<xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select add')" /></xsl:variable>
 	<div><input type="button" name="select_add" id="frm_update_add" value="{$label_select_add}" onclick="checkAll('mychecks_add')"/></div>
 	
   	<xsl:variable name="label_select_delete"><xsl:value-of select="php:function('lang', 'select delete')" /></xsl:variable>

@@ -678,8 +678,13 @@
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
+//			phpgwapi_yui::load_widget('autocomplete');
 
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
+			//FIXME
+//			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
+
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
 	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
