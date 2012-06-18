@@ -1,13 +1,13 @@
-YAHOO.namespace ("PORTICO");
+YAHOO.namespace('portico');
 
-YAHOO.PORTICO.requestUrl = null;
-YAHOO.PORTICO.DataTable = null;
-YAHOO.PORTICO.Paginator = null;
+YAHOO.portico.requestUrl = null;
+YAHOO.portico.DataTable = null;
+YAHOO.portico.Paginator = null;
 
 
-YAHOO.PORTICO.update_datatable = function(requestUrl) {
+YAHOO.portico.update_datatable = function(requestUrl) {
 
-	requestUrl = requestUrl ? requestUrl : YAHOO.PORTICO.requestUrl;
+	requestUrl = requestUrl ? requestUrl : YAHOO.portico.requestUrl;
 
 	var callback =
 	{
@@ -29,18 +29,18 @@ YAHOO.PORTICO.update_datatable = function(requestUrl) {
 			else
 			{
 
-				YAHOO.PORTICO.Paginator.setRowsPerPage(values_ds.recordsReturned,true);
+				YAHOO.portico.Paginator.setRowsPerPage(values_ds.recordsReturned,true);
 
 				//delete values of datatable
-				YAHOO.PORTICO.DataTable.getRecordSet().reset();
+				YAHOO.portico.DataTable.getRecordSet().reset();
 
 				//reset total records always to zero
-				YAHOO.PORTICO.Paginator.setTotalRecords(0,true);
+				YAHOO.portico.Paginator.setTotalRecords(0,true);
 /*
 				//change PaginatorŽs configuration.
 				if(path_values.allrows == 1 )
 				{
-					YAHOO.PORTICO.Paginator.set("rowsPerPage",values_ds.totalRecords)
+					YAHOO.portico.Paginator.set("rowsPerPage",values_ds.totalRecords)
 				}
 */
 				//obtain records of the last DS and add to datatable
@@ -49,29 +49,29 @@ YAHOO.PORTICO.update_datatable = function(requestUrl) {
 
 				if(record.length)
 				{
-					YAHOO.PORTICO.DataTable.addRows(record);
+					YAHOO.portico.DataTable.addRows(record);
 				}
 				else
 				{
-					YAHOO.PORTICO.DataTable.render();
+					YAHOO.portico.DataTable.render();
 				}
 
 				//update paginator with news values
-				YAHOO.PORTICO.Paginator.setTotalRecords(newTotalRecords,true);
+				YAHOO.portico.Paginator.setTotalRecords(newTotalRecords,true);
 
 				//update globals variables for pagination
 				myrowsPerPage = values_ds.recordsReturned;
 				mytotalRows = values_ds.totalRecords;
 
 				//update combo box pagination
-//				YAHOO.PORTICO.Paginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
+//				YAHOO.portico.Paginator.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
 
-				YAHOO.PORTICO.Paginator.setPage(values_ds.activePage,true); //true no fuerza un recarge solo cambia el paginator
+				YAHOO.portico.Paginator.setPage(values_ds.activePage,true); //true no fuerza un recarge solo cambia el paginator
 
 				//update "sortedBy" values
 
 				(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
-				YAHOO.PORTICO.DataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
+				YAHOO.portico.DataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
 			}
 		},
 		failure: function(o) {window.alert('Server or your connection is dead.')},
@@ -89,7 +89,7 @@ YAHOO.PORTICO.update_datatable = function(requestUrl) {
 	}
 };
 
-YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
+YAHOO.portico.init_datatable = function(myColumnDefs,requestUrl) {
 
 	fields = new Array();
 	for(i=0; i < myColumnDefs.length;i++)
@@ -127,26 +127,19 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
                 "&results=" + results;
     };
 
-	myinitialPage = 1 //+ startIndex/myrowsPerPage;
-
 	myPaginatorConfig = {
-						containers			: ['paging'],
-//						totalRecords		: mytotalRows,
-					    initialPage			: myinitialPage,
-						rowsPerPage			: 10,
-//						alwaysVisible: true,
-//						rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-//						firstPageLinkLabel: "&lt;&lt; first",
-//						previousPageLinkLabel: "&lt; previous",
-//						nextPageLinkLabel: "next &gt;",
-//						lastPageLinkLabel: "last &gt;&gt;",
-//						template			: "{RowsPerPageDropdown} elements_pr_page. {CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-						template			: "{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-						pageReportTemplate	: "shows_from {startRecord} to {endRecord} of_total {totalRecords}."
-						}
+		containers			: ['paging'],
+//		alwaysVisible		: true,
+//		rowsPerPageOptions	: [5, 10, 25, 50, 100, 200],
+	}
+
+	// from common.js
+	myPaginatorConfig = YAHOO.portico.lang('setupPaginator', myPaginatorConfig);
+//	myPaginatorConfig.template =  "{RowsPerPageDropdown} elements_pr_page. {CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}";
+	
 	myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
-	YAHOO.PORTICO.Paginator = myPaginator
+	YAHOO.portico.Paginator = myPaginator
 
     // DataTable configuration
     var myConfigs = {
@@ -161,14 +154,14 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", myColumnDefs, myDataSource, myConfigs);
     // Update totalRecords on the fly with values from server
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
-		YAHOO.PORTICO.requestUrl = requestUrl + oRequest;
+		YAHOO.portico.requestUrl = requestUrl + oRequest;
         oPayload.totalRecords = oResponse.meta.totalRecords;
 		oPayload.pagination.rowsPerPage = oResponse.meta.pageSize;
         oPayload.pagination.recordOffset = oResponse.meta.startIndex;
         return oPayload;
     };
 
-	YAHOO.PORTICO.DataTable = myDataTable;
+	YAHOO.portico.DataTable = myDataTable;
 
     return {
         ds: myDataSource,
@@ -176,7 +169,7 @@ YAHOO.PORTICO.init_datatable = function(myColumnDefs,requestUrl) {
     };
         
 };
-//YAHOO.util.Event.onDOMReady( YAHOO.PORTICO.init_datatable );
+//YAHOO.util.Event.onDOMReady( YAHOO.portico.init_datatable );
 
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{

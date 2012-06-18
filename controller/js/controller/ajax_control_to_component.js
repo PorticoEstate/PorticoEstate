@@ -343,7 +343,7 @@ $(document).ready(function()
 	  			{
 		  			$(submitBnt).val("Lagret");
 
-						YAHOO.PORTICO.update_datatable();
+						YAHOO.portico.update_datatable();
 				}
 				else
 				{
@@ -469,7 +469,7 @@ function get_table_def()
 function init_component_table()
 {
 	var control_registered = 0;
-	if (typeof($($("#control_registered")).attr("checked")) != 'udefined' && $($("#control_registered")).attr("checked") == 'checked')
+	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
 	{
 		control_registered = 1;
 	}
@@ -509,7 +509,7 @@ function init_component_table()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	YAHOO.PORTICO.init_datatable(myColumnDefs,requestUrl);
+	YAHOO.portico.init_datatable(myColumnDefs,requestUrl);
 }
 
 
@@ -517,7 +517,7 @@ function update_component_table()
 {
 
 	var control_registered = 0;
-	if (typeof($($("#control_registered")).attr("checked")) != 'udefined' && $($("#control_registered")).attr("checked") == 'checked')
+	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
 	{
 		control_registered = 1;
 	}
@@ -552,7 +552,7 @@ function update_component_table()
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-		YAHOO.PORTICO.update_datatable(requestUrl);
+		YAHOO.portico.update_datatable(requestUrl);
 	}
 //	$("#receipt").html('');
 }

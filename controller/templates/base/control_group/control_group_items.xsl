@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <xsl:template name="control_group_items" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
+<xsl:call-template name="yui_phpgw_i18n"/>
 <div class="identifier-header">
 </div>
 	<div>

@@ -394,11 +394,11 @@
 
 		public function add_yui_translation(&$data)
 		{
-			$this->add_template_file('yui_booking_i18n');
+			$this->add_template_file('yui_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
 			
-			$data['yui_booking_i18n'] = array(
+			$data['yui_phpgw_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
 					'WEEKDAYS_FULL' => json_encode(lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
