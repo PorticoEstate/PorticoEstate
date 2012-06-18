@@ -1584,6 +1584,20 @@
 							</input>
 						</td>
 					</tr>
+
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'short description')"/>
+						</td>
+						<td>
+							<input type="text" name="values[short_description]" value="{value_short_description}" size = "2" maxlength= "2">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'optional order of field in a short description')"/>
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'help message')"/>

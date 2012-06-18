@@ -6,13 +6,14 @@
 <script type="text/javascript">
 function get_address_search()
 {
-	var address = document.getElementById('address_txt').value;
+	var address = document.getElementById('address').value;
 	var div_address = document.getElementById('address_container');
+	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_start = "<select name=\"address_select\" id=\"address_select\" size\"5\">";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -25,6 +26,15 @@ var divcontent_end = "</select>";
 	}
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
+}
+
+function setAddressValue(field)
+{
+	var address = document.getElementById('address');
+	var div_address = document.getElementById('address_container');
+
+	address.value=field.value;
+	div_address.style.display="none";
 }
 
 function allOK()
@@ -359,6 +369,7 @@ div.error {
 						<dd><input type="text" name="phone" value="<?php echo $organization->get_phone()?>"/></dd>
 						<dt><label for="street">Gate</label></dt>
 						<dd><input type="text" name="address" id="address" value="<?php echo $organization->get_address()?>"/>
+						<div id="address_container"></div></dd>
 						<dt><label for="org_description">Beskrivelse</label></dt>
 						<dd><textarea rows="10" cols="100" name="org_description"><?php echo $organization->get_description()?></textarea></dd>
 					<hr/>

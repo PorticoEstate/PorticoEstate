@@ -15,6 +15,7 @@
 	$GLOBALS['phpgw']->locations->add('.rental.contract_ex','contract_ex','frontend', false);
 	$GLOBALS['phpgw']->locations->add('.document.drawings', 'drawings', 'frontend', false);
 	$GLOBALS['phpgw']->locations->add('.document.pictures', 'pictures', 'frontend', false);
+	$GLOBALS['phpgw']->locations->add('.document.contracts','contract_documents','frontend', false);
 	$GLOBALS['phpgw']->locations->add('.property.maintenance', 'maintenance', 'frontend', false);
 	$GLOBALS['phpgw']->locations->add('.property.refurbishment', 'refurbishment', 'frontend', false);
 	$GLOBALS['phpgw']->locations->add('.property.services', 'services', 'frontend', false);

@@ -33,6 +33,42 @@ var divcontent_end = "</select>";
 	
 }
 
+function get_address_search_cp2()
+{
+	var address = document.getElementById('contact_person_2_address').value;
+	var div_address = document.getElementById('contact2_address_container');
+	div_address.style.display="block";
+
+	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"contact2_address_select\" id=\"address_cp2\" size=\"5\" onChange='setAddressValue(this)'>";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+
+function setAddressValue(field)
+{
+	if(field.name == 'contact2_address_select')
+	{
+    	var address = document.getElementById('contact_person_2_address');
+    	var div_address = document.getElementById('contact2_address_container');
+    
+    	address.value=field.value;
+		div_address.style.display="none";
+	}
+}
+
 YAHOO.util.Event.onDOMReady(function()
 {
 	get_available_groups();
@@ -541,7 +577,8 @@ function allOK()
 					if ($editable)
 					{
 					?>
-						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="<?php echo $activity->get_contact_person_2_address() ?>" />
+						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="<?php echo $activity->get_contact_person_2_address() ?>" onkeyup="javascript:get_address_search_cp2()"/>
+						<div id="contact2_address_container"></div>
 					<?php
 					}
 					else

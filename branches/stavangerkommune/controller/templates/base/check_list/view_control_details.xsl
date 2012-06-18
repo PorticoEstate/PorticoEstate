@@ -3,14 +3,31 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
+	<h2>Kontrolldetaljer</h2>
+	
 	<fieldset id="control_details">
 		<div class="row">
 			<label>Kontrollområde</label>
+			
 			<xsl:choose>
 			<xsl:when test="editable">
 				<select id="control_area_id" name="control_area_id">
-					<xsl:apply-templates select="control_areas_array2/options"/>
-				</select>
+						<option value="">Velg kontrollområde</option>
+							<xsl:for-each select="control_areas_array">
+								<xsl:choose>
+									<xsl:when test="cat_id = $control_area_id">
+										<option value="{cat_id}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{cat_id}">
+											<xsl:value-of disable-output-escaping="yes" select="name"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>								
+							</xsl:for-each>
+						</select>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="control/control_area_name" />
@@ -87,7 +104,7 @@
 					</select>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="control/role_name" />
+					<xsl:value-of select="control/responsibility_name" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>

@@ -114,7 +114,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			//$filter_clauses[] = "org.id = {$id}";
 			unset($filter_clauses);
-			$filter_clauses[] = "org.change_type = 'new'";
+			$filter_clauses[] = "org.change_type = 'new' OR org.change_type = 'change' ";
 			if(isset($filters[$this->get_id_field_name()])){
 				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 				$filter_clauses[] = "org.id = {$id}";
@@ -649,7 +649,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$zip = $org_info['zip'];
 		if($zip && strlen($zip) > 5)
 		{
-			$zip_code = substr($zip,0,4);
+			$zip_code = substr($zip,0,5);
 			$city = substr($zip, 5);
 		}
 		else

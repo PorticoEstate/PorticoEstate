@@ -179,12 +179,16 @@ $(document).ready(function(){
 
 
 function update_voucher_filter(){
-	var janitor_lid = $("#janitor_lid").val();
-	var supervisor_lid = $("#supervisor_lid").val();
-	var budget_responsible_lid = $("#budget_responsible_lid").val();
-	var query = $("#query").val();
 
-	var oArgs = {menuaction:'property.uiinvoice2.get_vouchers'};
+	var oArgs = {
+		menuaction:'property.uiinvoice2.get_vouchers',
+		janitor_lid: $("#janitor_lid").val(),
+		supervisor_lid: $("#supervisor_lid").val(),
+		budget_responsible_lid: $("#budget_responsible_lid").val(),
+		criteria: $("#criteria").val(),
+		query: $("#query").val()
+	};
+
 	var requestUrl = phpGWLink('index.php', oArgs, true);
       
 	var htmlString = "";
@@ -192,7 +196,7 @@ function update_voucher_filter(){
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: requestUrl + "&janitor_lid=" + janitor_lid + "&supervisor_lid=" + supervisor_lid + "&budget_responsible_lid=" + budget_responsible_lid + "&query=" + query,
+		url: requestUrl,
 		success: function(data) {
 			if( data != null)
 			{
@@ -298,6 +302,9 @@ function update_form_values( line_id, voucher_id_orig ){
 				$("#dim_a").val( voucher[0].dim_a );
 				$("#currency").html( voucher[0].currency );
 				
+				$("#process_log").html( data['generic'].process_log );
+
+/*
 				if(data['generic'].process_log != null)
 				{
 					$("#process_log").html( data['generic'].process_log );
@@ -306,6 +313,7 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					$("#process_log").html( '' );
 				}
+*/
 				$("#my_initials").val( data['generic'].my_initials );
 				$("#sign_orig").val( data['generic'].sign_orig );
 				$("#line_text").val( voucher[0].line_text );
@@ -493,19 +501,28 @@ function update_form_values( line_id, voucher_id_orig ){
 				if(typeof(data['generic']['approve_list']['options']) != 'undefined')
 				{
 					var htmlString = "";
+					var htmlString2 = "<table><tr>";
 
 					var obj = data['generic']['approve_list']['options'];
-
 					$.each(obj, function(i) {
+						htmlString2  += "<td align=\"center\">" + obj[i].name + "</td>";
+		    		});
+					 htmlString2 += "</tr><tr>";
+					$.each(obj, function(i) {
+						var checked = '';
 						var selected = '';
 						if(typeof(obj[i].selected) != 'undefined' && obj[i].selected == 1)
 						{
 							selected = ' selected';
+							checked = "checked = \"checked\"";
 						}
 						htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-		    			});
+						htmlString2  += "<td align=\"center\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+		    		});
 
-					$("#approve_as").html( htmlString );
+					htmlString2 += "</tr></table>";
+					$("#approve_as2").html( htmlString2 );
+			//		$("#approve_as").html( htmlString );
 				}
 			}
 			else

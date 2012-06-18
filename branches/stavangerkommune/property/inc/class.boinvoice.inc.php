@@ -248,9 +248,18 @@
 
 		function period_list($selected='')
 		{
-			$year = date('Y');
+			$time = time();
+
+			if ( date('j',$time) < 7 ) //Day of the month without leading zeros
+			{
+				$time = $time - (7 * 24 * 3600);
+			}
+			
+			$month = date('n', $time);
+			$year = date('Y',$time);
+			$check_year = true;
 			$period_list = array();
-			for ($i=1; $i<=12; $i++)
+			for ($i=$month; $i<=12; $i++)
 			{
 				$period = sprintf("%s%02d",$year,$i);
 				$period_list[] = array
@@ -258,6 +267,13 @@
 					'id'	=> $period,
 					'name'	=> $period
 				);
+
+				if($check_year = true && $year != date('Y'))
+				{
+					$i = 0;
+					$year++;
+					$check_year = false;
+				}
 			}
 			foreach ($period_list as &$_period)
 			{

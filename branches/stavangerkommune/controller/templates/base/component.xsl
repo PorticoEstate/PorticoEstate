@@ -30,7 +30,7 @@
 		</ul>
 	</div>
 	
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" ></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -44,7 +44,7 @@
 </xsl:template>
 
 <xsl:template match="form">
-	<form id="queryForm" style="margin: 20px; width: 65%;">
+	<form id="queryForm">
 		<xsl:attribute name="method">
 			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 		</xsl:attribute>
@@ -63,7 +63,7 @@
 
 <xsl:template match="toolbar">
 	<div id="toolbar">
-		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
+		  <table class='yui-skin-sam'>
 			<tr>
 		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
@@ -72,7 +72,7 @@
 		
 			<xsl:choose>
 				<xsl:when test="type = 'date-picker'">
-					<td valign="top">
+					<td>
 					<div class="date-picker">
 					<input id="filter_{name}" name="filter_{name}" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
@@ -81,8 +81,8 @@
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
-					<td valign="top" width="160px">
-						<div style="width:140px">
+					<td>
+						<div>
 							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
 							</input>
@@ -147,7 +147,7 @@
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'filter'">
-					<td valign="top">
+					<td>
 					<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
 					
 					<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
@@ -183,12 +183,12 @@
 		</xsl:for-each>
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
-				<thead style="background:none">
+				<thead>
 					<tr>
 						<xsl:for-each select="item">
 							<td>
 								<xsl:if test="name">
-									<label style='margin:auto 0.25em'>
+									<label>
 										<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
@@ -237,84 +237,3 @@
 	</script>
 	 
 </xsl:template>
-<!-- 
-<xsl:template match="lists">
- 
-<div style="background: none repeat scroll 0 0 #EDF5FF;border: 1px solid #243356;margin: 20px;padding: 20px;">
--->
-		<!-- When control area is chosen an ajax request is executed. The operation fetches controls from db and populates the control list below.
-			 The ajax opearation is handled in file ajax.js 
-		 -->
-		 <!-- 
-		<select id="control_area_list" name="control_area_list">
-			<xsl:for-each select="control_area_list">
-				<xsl:variable name="control_area_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$control_area_id}">
-					<xsl:value-of select="title"/>
-				</option>			
-			</xsl:for-each>
-		</select>
-		
-		<select id="control_list" name="control_list">
-			<xsl:for-each select="control_list">
-				<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$control_id}">
-					<xsl:value-of select="title"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-	</div>
-	
-	<div style="background: none repeat scroll 0 0 #EDF5FF;border: 1px solid #243356;margin: 20px;padding: 20px;">
-		<select id="building_types" name="building_types">
-			<xsl:for-each select="building_types">
-				<xsl:variable name="building_type_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$building_type_id}">
-					<xsl:value-of select="name"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-		
-		<select id="category_types" name="category_types">
-			<xsl:for-each select="category_types">
-				<xsl:variable name="category_type_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$category_type_id}">
-					<xsl:value-of select="name"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-		
-		<select id="district_list" name="district_list">
-			<xsl:for-each select="district_list">
-				<xsl:variable name="district_list_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$district_list_id}">
-					<xsl:value-of select="name"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-		
-		<select id="part_of_town_list" name="part_of_town_list">
-			<xsl:for-each select="part_of_town_list">
-				<xsl:variable name="part_of_town_list_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$part_of_town_list_id}">
-					<xsl:value-of select="name"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-		<select id="responsibility_roles" name="responsibility_roles">
-			<xsl:for-each select="responsibility_roles_list">
-				<xsl:variable name="responsibility_roles_list_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$responsibility_roles_list_id}">
-					<xsl:value-of select="name"/>
-				</option>
-										
-			</xsl:for-each>
-		</select>
-	</div>
-</xsl:template>
--->

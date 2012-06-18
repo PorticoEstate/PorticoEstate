@@ -1,17 +1,10 @@
 <!-- $Id: control_group.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <!-- item  -->
 <xsl:template name="control_group" xmlns:php="http://php.net/xsl">
-<!-- <xsl:template match="data" xmlns:php="http://php.net/xsl">  -->
 
 <xsl:call-template name="yui_booking_i18n"/>
-<div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
-		<xsl:value-of select="php:function('lang', 'Control_group')" />
-</h1>
-</div>
 
-<div class="yui-content">
-		<div id="details">
+<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
@@ -92,8 +85,6 @@
 				</div>
 				
 			</form>
-						
-		</div>
 	</div>
 </xsl:template>
 	

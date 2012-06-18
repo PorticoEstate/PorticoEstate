@@ -6386,11 +6386,36 @@
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
-
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.645';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Add optional inheritance of location from project to order
+	*/
+	$test[] = '0.9.17.645';
+	function property_upgrade0_9_17_645()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','inherit_location',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true,
+			'default'	=> 1
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET inherit_location = 1",__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.646';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

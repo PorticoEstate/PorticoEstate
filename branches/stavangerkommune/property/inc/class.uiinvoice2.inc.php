@@ -352,6 +352,40 @@
 				'values'	=>	json_encode($datatable)
 			);	
 
+			$criteria_list = array
+			(
+				array
+				(
+					'id'	=> 'voucher_id',
+					'name'	=> lang('voucher id'),
+				),
+				array
+				(
+					'id'	=> 'invoice_id',
+					'name'	=> lang('invoice number'),
+				),
+				array
+				(
+					'id'	=> 'vendor_id',
+					'name'	=> lang('vendor'),
+				),
+				array
+				(
+					'id'	=> 'order_id',
+					'name'	=> lang('order id'),
+				),
+				array
+				(
+					'id'	=> 'b_account',
+					'name'	=> lang('budget account'),
+				),
+				array
+				(
+					'id'	=> 'dimb',
+					'name'	=> lang('dimb'),
+				),
+			);
+			
 			$data = array
 			(
 				'td_count'						=> '""',
@@ -379,6 +413,7 @@
 														'janitor_list' 				=> array('options' => $janitor_list),
 														'supervisor_list' 			=> array('options' => $supervisor_list),
 														'budget_responsible_list' 	=> array('options' => $budget_responsible_list),
+														'criteria_list'				=> array('options' => $criteria_list)
 													),
 				'filter_invoice' 					=> array
 													(
@@ -435,7 +470,7 @@
 					$_checked = 'checked="checked"';
 				}
 
-				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve]\" value=\"{$entry['id']}\">";
+				$entry['approve_line'] = "<input id=\"approve_line\" type =\"radio\" {$_checked} name=\"values[approve_line]\" value=\"{$entry['id']}\">";
 				$entry['split'] = "<input type =\"text\" name=\"values[split_amount][{$entry['id']}]\" value=\"\" size=\"8\">";
 				$entry['approved_amount_hidden'] = $entry['approved_amount'];
 				$entry['approved_amount'] = "<input type =\"text\" name=\"values[approved_amount][{$entry['id']}]\" value=\"{$entry['approved_amount']}\" size=\"8\">";
@@ -456,9 +491,10 @@
 			$janitor_lid			= phpgw::get_var('janitor_lid', 'string');
 			$supervisor_lid			= phpgw::get_var('supervisor_lid', 'string');
 			$budget_responsible_lid	= phpgw::get_var('budget_responsible_lid', 'string');
+			$criteria				= phpgw::get_var('criteria', 'string');
 			$query					= phpgw::get_var('query', 'string');
 
-			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid, 'budget_responsible_lid' =>$budget_responsible_lid, 'query' => $query ));
+			$vouchers = $this->bo->get_vouchers(array('janitor_lid' => $janitor_lid, 'supervisor_lid' => $supervisor_lid, 'budget_responsible_lid' =>$budget_responsible_lid, 'criteria' => $criteria, 'query' => $query ));
 
 			return $vouchers;
 		}
@@ -495,10 +531,10 @@
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$baseurl_invoice = isset($custom_config->config_data['common']['baseurl_invoice']) && $custom_config->config_data['common']['baseurl_invoice'] ? $custom_config->config_data['common']['baseurl_invoice'] : '';
 
-			$_last_period_last_year = (string)(date('Y') -1) . '12';
+//			$_last_period_last_year = (string)(date('Y') -1) . '12';
 			$period_list = $this->bo->period_list();
 			$periodization_start_list = $period_list;
-			array_unshift($period_list,array ('id'=> $_last_period_last_year,'name'=> $_last_period_last_year));
+//			array_unshift($period_list,array ('id'=> $_last_period_last_year,'name'=> $_last_period_last_year));
 
 			$period_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $period_list);
 			$periodization_start_list = $this->bocommon->select_list(isset($voucher[0]['period']) ? $voucher[0]['period'] : '', $periodization_start_list);
@@ -622,7 +658,7 @@
 				}
 
 				$voucher_info['generic']['approve_list'] = array('options' => $approve_list);
-				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('select')));
+				array_unshift ($voucher_info['generic']['approve_list']['options'],array ('id'=>'','name'=>lang('reset approval')));
 //---------end forward
 
 				$voucher_info['generic']['approved_amount'] = 0;

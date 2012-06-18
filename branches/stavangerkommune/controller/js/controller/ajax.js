@@ -1,137 +1,35 @@
 $(document).ready(function(){
 
-	/*	
-	$("#searchLocationName").bind("keyup", function(event) {
-		var thisTextField = $(this);
-	    var location_name = String.fromCharCode(event.which);
-	    var level = 1;
-	    var locationSearchString = $(this).val();
-	    
-	    var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
-		var baseUrl = phpGWLink('index.php', oArgs, false);
-		var requestUrl = baseUrl + "&location_name=" + locationSearchString + "&level=" + level + "&phpgw_return_as=json";
-		 
-	    $.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function(data) {
-				if( data )
-				{
-					var obj = data;
-					
-					var htmlString = "<ul id='suggestList'>";
-					$.each(obj, function(i) {
-						if(i % 2 == 0){
-							htmlString  += "<li class='even'><span>" + obj[i].name + "</span><span>" + obj[i].location_code + "</span></li>";	
-						}else{
-							htmlString  += "<li><span>" + obj[i].name + "</span><span>" + obj[i].location_code + "</span></li>";
-						}
-						
-					});
-					
-					htmlString += "</ul>";
-				}
-				
-				$("#searchLocationName").after(htmlString);
-				
-				var searchBoxTop = $("#searchLocationName").position().top;
-				var searchBoxHeight = $("#searchLocationName").height();
-				var searchBoxLeft = $("#searchLocationName").position().left;
-				
-				$("#suggestList").css("top", searchBoxTop + searchBoxHeight + 8);
-				$("#suggestList").css("left", searchBoxLeft);
-			}
-		});	
-	  });
 	
-	*/
+	function ajaxRequest(request, callback_func, elem){
+		
+		
+	}
 	
 	
+	/* ================================  SEARCH LOCATION BOX  ========================== */
 	
-	$(".control_item_type").click(function(){
-		var thisBtn = $(this).find(".btn");
-		var thisRadio = $(this).find("input[type=radio]");
+	// Changes location level between building and property in serch location select box
+	$("#choose-loc a").click(function(){
 		
-		// Clears active button and checked underlying radiobutton
-		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
-		$(".control_item_type").find(".btn").removeClass("active");
+		$("#choose-loc a").removeClass("active");
+		$(this).addClass("active");
 		
-		// Makes button active and checkes underlying radiobutton
-		$(thisRadio).attr("checked", "checked");
-		$(thisBtn).addClass("active");
+		var loc_type = $(this).attr("href");
 		
-		var control_item_type = $(this).find("input[type=radio]").val();
+		$("#loc_type").val( loc_type.substring(9, 10) );
+		$("#search-location-name").focus();
+
+		$( "#search-location-name" ).autocomplete( "search");
 		
-		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
-			$("#add_control_item_option_panel").slideDown(500);
-		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
-			$("#add_control_item_option_panel").slideUp(500);
-		}
+		return false;
 	});
+
 	
-	$(".choose_loc").live( "change", function () {
-		var thisSelectBox = $(this);
-		var loc_code = $(this).val();
-		var loc_id = $(this).attr("id");
-		var loc_arr = loc_id.split('_');
-		var loc_level = parseInt(loc_arr[1]);
-		var new_loc_id = "loc_" + (parseInt(loc_level)+1);
-		
-		var id = "";
-		var new_loc_code = "";
-		var level;
-		for(level = 1;level <= loc_level;level++){
-			id = "loc_" + level;
-			if(level > 1)
-				new_loc_code += "-" + $("#" + id).val();
-			else
-				new_loc_code += $("#" + id).val();
-		}
-		
-		if(!loc_code)
-		{
-			return false;
-		}
-		var oArgs = {menuaction:'registration.boreg.get_locations', location_code:new_loc_code};
-		var requestUrl = phpGWLink('registration/main.php', oArgs, true);
-      
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function(data) {
-				if( data != null)
-				{
-					htmlString  = "<select class='choose_loc' name='" + new_loc_id  + "' id='" + new_loc_id  + "' >" +
-								  "<option value = ''>" + data.length + " lokasjone(r) funnet</option>";
-								  
-								  
-					var obj = data;
-
-					$.each(obj, function(i) {
-						htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-		    			});
-
-					htmlString += "</select>";
-					
-					$(thisSelectBox).after( htmlString );
-				}
-				else
-				{
-					htmlString  += "<option>Ingen lokasjoner</option>"
-					$(new_loc_id).html( htmlString );
-				}
-			} 
-		});	
-    });
-	
-	$("#choose_my_location").change(function () {
+	$(".selectLocation").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
-		 
+
 		 var period_type = $(thisForm).find("input[name='period_type']").val();
 		 var year = $(thisForm).find("input[name='year']").val();
 		 var month = $(thisForm).find("input[name='month']").val();
@@ -151,6 +49,8 @@ $(document).ready(function(){
 		
 		 window.location.href = requestUrl;
     });
+	
+	/* ================================  CONTROL LOCATION ================================== */
 	
 	// Update location category based on location type
 	$("#type_id").change(function () {
@@ -187,6 +87,82 @@ $(document).ready(function(){
 			
     });
 	
+	$("#control_area_list").change(function () {
+		var control_area_id = $(this).val();
+		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+         
+	  	$("#hidden_control_area_id").val( control_area_id );
+         var control_id_init = $("#hidden_control_id").val();
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+
+						var selected = '';
+						if(obj[i].id == control_id_init)
+						{
+							selected = ' selected';
+						}
+							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
+		    			});
+					 				  				  
+					  $("#control_id").html( htmlString );
+					}
+					else
+					{
+         		  		htmlString  += "<option>Ingen kontroller</option>"
+         		  		$("#control_id").html( htmlString );
+				  		$("#hidden_control_id").val(-1); //reset
+         		  	}
+			  }  
+			});
+			
+    });
+
+
+	/* ================================  COMPONENT ================================== */
+	
+	// file: uicheck_list.xsl
+	// When control area is selected, controls are fetched from db and control select list is populated
+	$("#control_group_area_list").change(function () {
+		 var control_area_id = $(this).val();
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Velg kontroll</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
+         		  		$("#control_group_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
@@ -216,141 +192,6 @@ $(document).ready(function(){
 			  }  
          });
     });
-	
-	$("#control_area_list").change(function () {
-		var control_area_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_area_id=" + control_area_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Velg kontroll</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
-		    			});
-					 				  				  
-					  $("#control_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontroller</option>"
-         		  		$("#control_id").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-
-	// file: uicheck_list.xsl
-	// When control area is selected, controls are fetched from db and control select list is populated
-	$("#control_group_area_list").change(function () {
-		 var control_area_id = $(this).val();
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_area_id=" + control_area_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Velg kontroll</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
-		    			});
-					 				  				  
-					  $("#control_group_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
-         		  		$("#control_group_id").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-	
-	// When control area is selected, controls are fetched from db and control select list is populated
-	$("#control_area").change(function () {
-		 var control_area_id = $(this).val();
-		 if(control_area_id == '')
-			 control_area_id = "all";
-			 
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_area_id=" + control_area_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Velg kontrollgruppe</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
-		    			});
-					 				  				  
-					  $("#control_group").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
-         		  		$("#control_group").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-	
-	// When control area is selected, controls are fetched from db and control select list is populated
-/*	$("#control_group").change(function () {
-		 var control_group_id = $(this).val();
-	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_area_by_control_group', phpgw_return_as:'json'};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         //var requestUrl = "index.php?menuaction=controller.uicontrol_group.get_control_groups_by_control_area&phpgw_return_as=json"
-         
-         var htmlString = "";
-         
-         $.ajax({
-			  type: 'POST',
-			  dataType: 'json',
-			  url: requestUrl + "&control_group_id=" + control_group_id,
-			  success: function(data) {
-				  if( data != null){
-					  htmlString  = "<option>Ingen kontrollområde</option>"
-					  var obj = jQuery.parseJSON(data);
-						
-					  $.each(obj, function(i) {
-						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
-		    			});
-					 				  				  
-					  $("#control_group_id").html( htmlString );
-					}else {
-         		  		htmlString  += "<option>Ingen kontrollområder</option>"
-         		  		$("#control_group_id").html( htmlString );
-         		  	}
-			  }  
-			});
-			
-    });
-*/
 	
 	// file: add_component_to_control.xsl
 	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
@@ -386,12 +227,13 @@ $(document).ready(function(){
 			
     });
 	
+	/* ================================  PROCEDURE ================================== */
+	
 	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
 		 
 		 var oArgs = {menuaction:'controller.uiprocedure.get_procedures'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
-         //var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
          
          var htmlString = "";
          
@@ -419,6 +261,42 @@ $(document).ready(function(){
 			});	
     });
 	
+	/* ================================  CONTROL AREA ================================== */
+	
+	// When control area is selected, control groups are fetched from db and control select list is populated
+	$("#control_area").change(function () {
+		 var control_area_id = $(this).val();
+		 if(control_area_id == '')
+			 control_area_id = "all";
+			 
+	     var oArgs = {menuaction:'controller.uicontrol_group.get_control_groups_by_control_area', phpgw_return_as:'json'};
+		 var requestUrl = phpGWLink('index.php', oArgs, true);
+
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&control_area_id=" + control_area_id,
+			  success: function(data) {
+				  if( data != null){
+					  htmlString  = "<option>Velg kontrollgruppe</option>"
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].group_name + "</option>";
+		    			});
+					 				  				  
+					  $("#control_group").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen kontrollgrupper</option>"
+         		  		$("#control_group").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	/* ================================  CONTROL GROUP ================================== */
 			
 	$("#frm_save_control_groups").submit(function(e){
@@ -433,6 +311,39 @@ $(document).ready(function(){
 	
 	/* ================================  CONTROL ITEM ================================== */
 	
+	if( $("#frm_control_items").length > 0 ){
+		var check_box_arr = $("#frm_control_items").find("input[type='checkbox']");
+		
+		$(check_box_arr).each(function(index) {
+			var check_box = check_box_arr[index];
+			
+			if( $(check_box).is(':checked') ){
+				var chbox_id = $(check_box).attr("id");
+				
+				var control_group_id = chbox_id.substring( chbox_id.indexOf("_")+1, chbox_id.indexOf(":") );
+				var control_item_id = chbox_id.substring( chbox_id.indexOf(":")+1,  chbox_id.length );
+				
+				$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
+			}
+		});
+	}
+	
+	
+	$("#frm_control_items input[type='checkbox']").click(function(){
+		var thisCbox = $(this);
+		
+		var chbox_id = $(thisCbox).attr("id");
+		
+		var control_group_id = chbox_id.substring( chbox_id.indexOf("_")+1, chbox_id.indexOf(":") );
+		var control_item_id = chbox_id.substring( chbox_id.indexOf(":")+1,  chbox_id.length );
+		
+		if ($("#hid_" + control_item_id).length > 0){
+			$("#hid_" + control_item_id).remove();
+		}else{
+			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
+		}
+	});
+	
 	$("#frm_control_items").submit(function(e){
 		var thisForm = $(this);
 		var num_checked = $(this).find("input:checked").length;
@@ -443,17 +354,31 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("#frm_save_control_details input").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
-		
-	$("#frm_save_control_details select").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
+	
 	
 	/* =========================  CONTROL OPTION ======================================== */
+	  
+	// Changes control type location level between building and property in search location select box
+	$(".control_item_type").click(function(){
+		var thisBtn = $(this).find(".btn");
+		var thisRadio = $(this).find("input[type=radio]");
+		
+		// Clears active button and checked underlying radiobutton
+		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
+		$(".control_item_type").find(".btn").removeClass("active");
+		
+		// Makes button active and checkes underlying radiobutton
+		$(thisRadio).attr("checked", "checked");
+		$(thisBtn).addClass("active");
+		
+		var control_item_type = $(this).find("input[type=radio]").val();
+		
+		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
+			$("#add_control_item_option_panel").slideDown(500);
+		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
+			$("#add_control_item_option_panel").slideUp(500);
+		}
+	});
 	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
 		e.preventDefault();
@@ -472,29 +397,22 @@ $(document).ready(function(){
 		$(this).parent().find("input[name=option_value]").val('');
 	});
 	
-	/*
-	$("#frm_add_control_item_option").live("submit", function(e){
-		e.preventDefault();
-alert("feil")
-		var thisForm = $(this);
-		var requestUrl = $(thisForm).attr("action");
-		
-		$.ajax({
-			  type: 'POST',
-			  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-			  success: function(data) {
-				  if(data){
-	    			  var obj = jQuery.parseJSON(data);
-		    		  
-	    			  if(obj.status == "saved"){
-			    		$("#control_item_options").append("<li><label>Valgverdi</label>" + obj.saved_object.label + "</li>")
-	    			  }
-				  }
-				}
-			});
-	});
-	*/
 	/* =========================  CONTROL  =============================================== */
+	
+	$("#control_id").change(function () {
+		var control_id = $(this).val();
+  		$("#hidden_control_id").val( control_id );
+    });
+
+	$("#frm_save_control_details input").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+		
+	$("#frm_save_control_details select").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
 	
 	// SAVE CONTROL DETAILS
 	$("#frm_save_control_details").submit(function(e){
@@ -645,7 +563,7 @@ alert("feil")
 			    				  
 			    			  // Changes text on save button back to original
 			    			  window.setTimeout(function() {
-								$(submitBnt).val('Lagre sjekkpunkt');
+								$(submitBnt).val('Lagre detaljer');
 								$(submitBnt).addClass("not_active");
 			    			  }, 1000);
 						  }
@@ -661,11 +579,6 @@ alert("feil")
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		$(submitBnt).removeClass("not_active");
 	});
-	
-	
-
-	
-	
 	
 	
 	//=======================================  CASE  ======================================

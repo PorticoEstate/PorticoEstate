@@ -678,3 +678,58 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.34';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	$test[] = '0.1.34';
+	function controller_upgrade0_1_34()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control', array(), 'location_code');
+				
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.35';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
+
+	$test[] = '0.1.35';
+	function controller_upgrade0_1_35()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_component_list','location_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => false
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.36';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.36';
+	function controller_upgrade0_1_36()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','location_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.37';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.37';
+	function controller_upgrade0_1_37()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control', array(), 'component_type_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control', array(), 'component_id');
+				
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.38';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

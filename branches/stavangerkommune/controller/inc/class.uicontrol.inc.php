@@ -1,4 +1,4 @@
-<?php 
+<?php
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
@@ -28,64 +28,61 @@
  	* @version $Id$
 	*/	
 
-	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('property.boevent');
-	phpgw::import_class('controller.socontrol');
-	phpgw::import_class('controller.socontrol_group');
-	phpgw::import_class('controller.socontrol_area');
-	phpgw::import_class('controller.socontrol_item');
-	phpgw::import_class('controller.socontrol_item_list');
-	phpgw::import_class('controller.soprocedure');
+  phpgw::import_class('controller.uicommon');
+  phpgw::import_class('property.boevent');
+  phpgw::import_class('controller.socontrol');
+  phpgw::import_class('controller.socontrol_group');
+  phpgw::import_class('controller.socontrol_area');
+  phpgw::import_class('controller.socontrol_item');
+  phpgw::import_class('controller.socontrol_item_list');
+  phpgw::import_class('controller.soprocedure');
 	
-	phpgw::import_class('phpgwapi.yui');
+  phpgw::import_class('phpgwapi.yui');
 	
-	include_class('controller', 'control', 'inc/model/');
-	include_class('controller', 'control_area', 'inc/model/');
-	include_class('controller', 'control_item_list', 'inc/model/');
-	include_class('controller', 'control_group_list', 'inc/model/');
-	include_class('controller', 'check_item', 'inc/model/');
+  include_class('controller', 'control', 'inc/model/');
+  include_class('controller', 'control_area', 'inc/model/');
+  include_class('controller', 'control_item_list', 'inc/model/');
+  include_class('controller', 'control_group_list', 'inc/model/');
+  include_class('controller', 'check_item', 'inc/model/');
 	
-	class controller_uicontrol extends controller_uicommon
-	{
-		private $bo;
-		private $so;
-		private $so_procedure;
-		private $so_control_group;
-		private $so_control_area; 
-		private $so_control_item;
-		private $so_control_item_list;
-		private $so_control_group_list;
-		private $so_check_list_list;
-		private $so_check_item;
-		private $_category_acl;		
+  class controller_uicontrol extends controller_uicommon
+  {
+    private $bo;
+    private $so;
+    private $so_procedure;
+    private $so_control_group; 
+    private $so_control_area; 
+    private $so_control_item;
+    private $so_control_item_list;
+    private $so_control_group_list;
+    private $so_check_item;
+    private $_category_acl;		
 
-		public $public_functions = array
-		(
-			'index'								=>	true,
-			'control_list'						=>	true,
-			'view'								=>	true,
-			'view_control_details'				=>	true,
-			'save_control_details'				=>	true,
-			'view_control_groups'				=>	true,
-			'save_control_groups'				=>	true,
-			'view_control_items'				=>	true,
-			'save_control_items'				=>	true,
-			'view_check_list'					=>	true,
-			'generate_check_lists_for_control'	=>	true,
-			'view_check_lists_for_control'		=>	true,
-			'get_controls_by_control_area'		=>	true,
+    public $public_functions = array
+    (
+			'index'													=>	true,
+			'control_list'									=>	true,
+			'view'													=>	true,
+			'view_control_details'					=>	true,
+			'save_control_details'					=>	true,
+			'view_control_groups'						=>	true,
+			'save_control_groups'						=>	true,
+			'view_control_items'						=>	true,
+			'save_control_items'						=>	true,
+			'view_check_list'								=>	true,
+			'get_controls_by_control_area'	=>	true,
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$read        = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit         = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 			
-			$manage     = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 
 			//if(!$manage)
 			
@@ -188,13 +185,7 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('New control'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
-								'class' => 'new_item'
-							),
+							)
 						),
 					),
 				),
@@ -240,47 +231,8 @@
 					)
 				),
 			);
-/*	
- * 						,
-						array(
-							'key' => 'actions',
-							'hidden' => true
-						),
-						array(
-							'key' => 'labels',
-							'hidden' => true
-						),
-						array(
-							'key' => 'ajax',
-							'hidden' => true
-						)		
- * 
- * $parameters3 = array
-					(
-						'parameter' => array
-						(
-							array
-							(
-								'name'		=> 'search_for',
-								'source'	=> 'location_code'
-							),
-						)
-					);
-			$data['rowactions']['action'][] = array
-						(
-							'my_name'			=> 'view',
-							'text' 			=> lang('composites'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-							(
-								'menuaction'	  => 'rental.uicomposite.index',
-								'search_type'	  => 'location_id',
-								'populate_form'   => 'yes'
-							)),
-							'parameters'	=> $parameters3
-						);*/
-//_debug_array($data);	
 
-			self::render_template_xsl('datatable', $data);
+			self::render_template_xsl(array( 'control/controls_datatable', 'datatable' ), $data);
 		}
 		
 		/**
@@ -304,7 +256,6 @@
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
-			
 			// END as categories
 		
 			if($control != null)
@@ -323,13 +274,13 @@
 			
 			$data = array
 			(
-				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'						=> "control_details",
-				'editable' 					=> true,
-				'control'					=> ($control != null) ? $control->toArray() : null,
+				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'									=> "control_details",
+				'editable' 							=> true,
+				'control'								=> ($control != null) ? $control->toArray() : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
-				'role_array'				=> $role_array,
+				'role_array'						=> $role_array,
 				'repeat_type_array'			=> $repeat_type_array
 			);
 			
@@ -547,10 +498,10 @@
 					
 			$data = array
 			(
-				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
-				'view'						=> 'control_items',
-				'control_group_ids'			=> implode($control_group_ids, ","),
-				'control'				    => $control->toArray(),
+				'tabs'											=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
+				'view'											=> 'control_items',
+				'control_group_ids'					=> implode($control_group_ids, ","),
+				'control'				    				=> $control->toArray(),
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
@@ -764,22 +715,18 @@
 			$value['ajax'] = array();
 			$value['actions'] = array();
 			$value['labels'] = array();
-			//$value['parameters'] = array();
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_control_details', 'id' => $value['control_id'])));
 			$value['labels'][] = lang('View control');
-			//$value['parameters'][] = "control_id";
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $value['control_id'])));
 			$value['labels'][] = lang('View locations for control');
-			//$value['parameters'][] = "control_id";
 			
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicheck_list.add_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_check_list_to_location');
-			//$value['parameters'][] = "control_id";
 		}
 		
 		public function register_control_to_location()
@@ -826,11 +773,14 @@
 			$start_index	= phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field		= phpgw::get_var('sort');
+			
 			if($sort_field == null)
 			{
 				$sort_field = 'control_group_id';
 			}
+			
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			
 			//Create an empty result set
 			$records = array();
 			
@@ -843,18 +793,11 @@
 
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
-			//var_dump($result_objects);
 								
 			$results = array();
 			
 			foreach($result_objects as $control_obj)
 			{
-/*				$obj_serialized = $control_obj->serialize();
-				$obj_serialized['show_locations'] = array(
-					'href' => html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol.view_locations_for_control', 'id' => $result['location_id']))),
-					'label' => lang('show_controls_for_location')
-				);
-				$results['results'][] = $obj_serialized;*/
 				$results['results'][] = $control_obj->serialize();	
 			}
 			
@@ -863,7 +806,6 @@
 			$results['sort'] = $params['sort'];
 			$results['dir'] = $params['dir'];
 
-			//array_walk($results["results"], array($this, "add_actions"), array($type));
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view_control_details");
 			
 			foreach($results["results"] as &$res) {

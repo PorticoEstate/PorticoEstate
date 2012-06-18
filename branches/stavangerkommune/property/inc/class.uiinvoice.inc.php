@@ -227,8 +227,8 @@
 			if(!$end_date)
 			{
 				//-- fecha actual
+				$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,'01','01',date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$start_date = $end_date;
 			}
 			//-- edicion de registro
 			$values  = phpgw::get_var('values');
@@ -550,15 +550,6 @@
 					$field_invoice = array
 						(
 							array
-							( // imag calendar1
-								'type' => 'img',
-								'id'     => 'start_date-trigger',
-								'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-								'alt'	=> lang('Select date'),
-								'tab_index' => 1,
-								'style' => 'filter'
-							),
-							array
 							( // calendar1 start_date
 								'type' => 'text',
 								'name'     => 'start_date',
@@ -567,15 +558,6 @@
 								'size'    => 7,
 								'readonly' => 'readonly',
 								'tab_index' => 2,
-								'style' => 'filter'
-							),
-							array
-							( // imag calendar1
-								'type' => 'img',
-								'id'     => 'end_date-trigger',
-								'src'    => $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-								'alt'	=> lang('Select date'),
-								'tab_index' => 3,
 								'style' => 'filter'
 							),
 							array

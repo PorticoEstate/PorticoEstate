@@ -320,12 +320,6 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
 		
-		/**
-		 * Public function for displaying the edit check list form
-		 * 
-		 * @param HTTP:: check list id
-		 * @return data array
-		*/
 		function view_cases_for_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
@@ -339,8 +333,8 @@
 			
 			$data = array
 			(
-				'control' 			=> $control->toArray(),
-				'check_list' 		=> $check_list->toArray(),
+				'control' 				=> $control->toArray(),
+				'check_list' 			=> $check_list->toArray(),
 				'location_array'	=> $location_array,
 				'date_format' 		=> $date_format
 			);
@@ -355,14 +349,6 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-	
-		
-		/**
-		 * Public function for displaying the create message form
-		 * 
-		 * @param HTTP:: check list id 
-		 * @return data array
-		*/
 		function create_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 						
@@ -379,10 +365,10 @@
 			
 			$data = array
 			(
-				'location_array'		=> $location_array,
-				'control_array'			=> $control->toArray(),
+				'location_array'	=> $location_array,
+				'control_array'		=> $control->toArray(),
 				'check_list' 			=> $check_list_with_check_items,
-				'date_format' 			=> $date_format
+				'date_format' 		=> $date_format
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -393,59 +379,6 @@
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl('create_case_messsage', $data);
-		}
-		
-		/**
-		 * Public function for displaying the create message form
-		 * 
-		 * @param HTTP:: check list id 
-		 * @return data array
-		*/
-		public function view_control_info(){
-			$check_list_id = phpgw::get_var('check_list_id');
-			
-			$check_list = $this->so->get_single($check_list_id);
-			$control = $this->so_control->get_single($check_list->get_control_id());
-			
-			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-			
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-			$control_areas_array2 = array();
-			
-			foreach($control_areas['cat_list'] as $cat_list)
-			{
-				$control_areas_array2[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-
-			// Fetches prosedures that are related to first control area in list
-			$control_area_id = $control_areas_array2[1]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control_area_id);
-			$role_array = $this->so_control->get_roles();
-			
-			$location_code = $check_list->get_location_code();  
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
-			$data = array
-			(
-				'location_array'		=> $location_array,
-				'control'				=> $control->toArray(),
-				'check_list'			=> $check_list->toArray(),
-				'date_format' 			=> $date_format,
-				'control_areas_array2'	=> array('options' => $control_areas_array2),
-				'procedures_array'		=> $procedures_array,
-				'role_array'			=> $role_array
-			);
-
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
 		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
@@ -512,42 +445,42 @@
 			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
+		public function view_control_info(){
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so->get_single($check_list_id);
+			$control = $this->so_control->get_single($check_list->get_control_id());
+			
+			$location_code = $check_list->get_location_code();  
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'location_array'				=> $location_array,
+				'control'								=> $control->toArray(),
+				'check_list'						=> $check_list->toArray(),
+			);
+
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
+		}
+		
 		function view_control_details(){
 			$control_id = phpgw::get_var('control_id');
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			// Sigurd: START as categories
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-			$control_areas_array2 = array();
-			foreach($control_areas['cat_list'] as $cat_list)
-			{
-				$control_areas_array2[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-			// END as categories
-			$control_area_id = $control_areas_array2[1]['id'];
-			$procedures_array = $this->so_procedure->get_procedures_by_control_area($control_area_id);
-			$role_array = $this->so_control->get_roles();
-			
 			$data = array
 			(
-				'control'	=> $control->toArray(),
-				'procedures_array'			=> $procedures_array,
-				'role_array'				=> $role_array
+				'control'						=> $control->toArray(),
 			);
 			
 			self::render_template_xsl('check_list/view_control_details', $data);
 		}
 						
-		// Function that displays control groups and control items for a check list
+		// Displays control groups and control items for a check list
 		function register_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			
@@ -704,6 +637,7 @@
 			return json_encode( $check_list );
 		}
 		
+		// Returns open cases for a check list as JSON 
 		public function get_cases_for_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');

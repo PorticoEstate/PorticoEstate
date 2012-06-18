@@ -1183,29 +1183,38 @@
 					);
 
 					$subject=lang('workorder %1 has been edited',$id);
-					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
-					$sms	= CreateObject('sms.sms');
+					if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
+					{
+						$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+						$sms	= CreateObject('sms.sms');
 
+						foreach($notify_list as $entry)
+						{
+							if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+							{
+								$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+								$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+								$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+							}
+						}
+						unset($entry);
+
+						if($toarray_sms)
+						{
+							$historylog->add('MS',$id,implode(',',$toarray_sms));						
+						}
+					}
+						
+					reset($notify_list);
 					foreach($notify_list as $entry)
 					{
 						if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
 						{
 							$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
 						}
-						else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
-						{
-							$sms->websend2pv($this->account,$entry['sms'],$sms_text);
-							$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
-							$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
-						}
 					}
 					unset($entry);
 
-					if($toarray_sms)
-					{
-						$historylog->add('MS',$id,implode(',',$toarray_sms));						
-					}
-						
 					if ($toarray)
 					{
 						$to = implode(';',$toarray);
@@ -1364,7 +1373,7 @@
 				$location_types	= $admin_location->select_location_type();
 				$max_level = count($location_types);
 
-				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
+				$location_level = isset($project['location_data']['location_code']) && $project['inherit_location'] ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
 				$_location_data = array();
 
@@ -1387,7 +1396,7 @@
 				}
 				else
 				{
-					if(isset($project['location_data']) && $project['location_data'])
+					if(isset($project['location_data']) && $project['location_data'] && $project['inherit_location'])
 					{
 						$_location_data = $project['location_data'];
 					}
@@ -1407,7 +1416,7 @@
 					'lookup_type'		=> $location_template_type,
 					'lookup_entity'		=> $this->bocommon->get_lookup_entity('project'),
 					'entity_data'		=> (isset($values['p'])?$values['p']:''),
-					'filter_location'	=> $project['location_data']['location_code']
+					'filter_location'	=> $project['inherit_location'] ? $project['location_data']['location_code'] : false
 				));
 			}
 			else

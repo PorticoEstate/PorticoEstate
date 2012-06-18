@@ -72,7 +72,7 @@
 			$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 			$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
 			$paid 			= isset($data['paid'])?$data['paid']:'';
-			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : mktime(0,0,0,'01','01',date('Y'));
 			$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 			$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 			$loc1 			= isset($data['loc1'])?$data['loc1']:'';
@@ -916,7 +916,6 @@
 
 			$this->db->transaction_begin();
 
-			// Approval applies to all lines within voucher
 			if( $values['approve'] != $values['sign_orig'] )
 			{
 				switch ( $values['sign_orig'] )
@@ -948,12 +947,22 @@
 						break;
 				}
 
-				$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
-				$bilagsnr = (int)$this->db->f('bilagsnr');
-				$value_set	= $this->db->validate_update($value_set);
-				$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
+	//			$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
+	//			$this->db->query($sql,__LINE__,__FILE__);
+	//			$this->db->next_record();
+	//			$bilagsnr = (int)$this->db->f('bilagsnr');
+	//			$value_set	= $this->db->validate_update($value_set);
+	//			$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
+				
+				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
+				{
+					phpgwapi_cache::message_set( 'Mangler anviser','error');
+				}
+				else
+				{
+					$value_set	= $this->db->validate_update($value_set);
+					$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+				}
 			}
 
 			$value_set = array
@@ -1441,8 +1450,8 @@
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'kostra_id'				=> $this->db->f('kostra_id'),
 						'currency'				=> $this->db->f('currency'),
-						'process_code'			=> '', //Fetched below
-						'process_log'			=> '',
+						'process_code'			=> $this->db->f('process_code'),
+						'process_log'			=> $this->db->f('process_log',true),
 						'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 						'saksigndato'			=> $this->db->f('saksigndato'),
 						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
@@ -1457,6 +1466,7 @@
 					);
 			}
 
+/*
  	  		if($values)
  	  		{
  		  		$bilagsnr = (int)$values[0]['voucher_id'];
@@ -1472,7 +1482,7 @@
 	 	  			$line['process_code'] = $process_code;
 	 	  		}
  	  		}
-
+*/
 			//_debug_array($values);
 			return $values;
 		}
@@ -1959,13 +1969,97 @@
 					}
 				}
 
-				$value_set	= $this->db->validate_update($value_set);
-				return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
+				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
+				{
+					phpgwapi_cache::message_set( 'Mangler anviser','error');
+				}
+				else
+				{
+					$value_set	= $this->db->validate_update($value_set);
+					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}",__LINE__,__FILE__);
+				}
 			}
 
 			return false;
 		}
 
+
+		function get_order_info($order_id)
+		{
+			$order_info = array();
+			$toarray = array();
+			$order_id = (int) $order_id;
+			$sql = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_workorder.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
+			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			if(	$this->db->next_record())
+			{
+				$order_info['order_exist'] = true;
+			}
+			if ($this->db->f('location_code'))
+			{ 
+				$parts = explode('-',$this->db->f('location_code'));
+				$order_info['dima'] = implode('', $parts);
+				$order_info['loc1'] = $parts[0];
+			}
+
+			$order_info['vendor_id'] 			= $this->db->f('vendor_id');
+			$order_info['spbudact_code']		= $this->db->f('account_id');
+			$order_info['dimb']					= $this->db->f('ecodimb');
+			$order_info['dime']					= $this->db->f('category');
+			$order_info['title']				= $this->db->f('title',true);			
+
+			$janitor_user_id 					= $this->db->f('user_id');
+			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			$supervisor_user_id					= $this->get_default_dimb_role_user(2, $order_info['dimb']);
+			if($supervisor_user_id)
+			{
+				$order_info['supervisor']		= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+			}
+
+			$budget_responsible_user_id			= $this->get_default_dimb_role_user(3, $order_info['dimb']);
+			if($budget_responsible_user_id)
+			{
+				$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			}
+
+			if(!$order_info['budget_responsible'])
+			{
+				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
+			}
+
+			$order_info['toarray'] = $toarray;
+			return $order_info;
+		}
+
+
+		public function update_voucher_by_changed_order($line_id, $order_id)
+		{
+			$order_info = $this->get_order_info($order_id);
+			if (!$order_info['order_exist'])
+			{
+				phpgwapi_cache::message_set(lang('not a valid order'), 'error');
+				return false;
+			}
+
+			$GLOBALS['phpgw']->db->transaction_begin();
+			$value_set = array();
+			$value_set['pmwrkord_code']			= $order_id;
+			$value_set['dima'] 					= $order_info['dima'];
+			$value_set['dimb'] 					= $order_info['dimb'];
+			$value_set['dime'] 					= $order_info['dime'];
+			$value_set['loc1'] 					= $order_info['loc1'];
+			$value_set['line_text']				= $order_info['title'];
+			$value_set['spbudact_code']			= $order_info['spbudact_code'];
+			$value_set['oppsynsmannid']			= $order_info['janitor'];
+			$value_set['saksbehandlerid']		= $order_info['supervisor'];
+			$value_set['budsjettansvarligid']	= $order_info['budget_responsible'];
+			$value_set['project_id'] 			= execMethod('property.soXport.get_project',$order_id);
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE fm_ecobilag SET $value_set WHERE id =" . (int)$line_id,__LINE__,__FILE__);
+			return $GLOBALS['phpgw']->db->transaction_commit();
+
+		}
 
 		public function update_voucher2($data)
 		{
@@ -1974,6 +2068,23 @@
 				phpgwapi_cache::message_set(lang('select invoice'), 'error');
 				return false;
 			}
+
+			$this->db->query("SELECT pmwrkord_code as order_id FROM fm_ecobilag WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
+			$this->db->next_record();
+			if($data['order_id']!=$this->db->f('order_id'))
+			{
+				if($this->update_voucher_by_changed_order($data['line_id'], $data['order_id']))
+				{
+					phpgwapi_cache::message_set(lang('voucher info updated from order'), 'message');			
+					return true;
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('something went wrong'), 'error');
+					return false;				
+				}
+			}
+
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
 			
@@ -1995,7 +2106,9 @@
 			$value_set_line['mvakode']			= $data['tax_code'];
 			$value_set_line['project_id']		= $data['project_group'];
 			$value_set_line['spbudact_code']	= $data['b_account_id'];
-			$value_set_line['line_text']		= $data['line_text'];
+			$value_set_line['line_text']		= $this->db->db_addslashes($data['line_text']);
+			$value_set_line['process_log']		= $this->db->db_addslashes($data['process_log']);
+			$value_set_line['process_code']		= $data['process_code'];
 
 			$value_set_line	= $this->db->validate_update($value_set_line);
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_line} WHERE id = " . (int)$data['line_id'],__LINE__,__FILE__);
@@ -2079,7 +2192,7 @@
 
 					$value_set = array();
 
-					$skip_values = array('id','project_id', 'pmwrkord_code', 'spbudact_code', 'dima', 'dimb', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato');
+					$skip_values = array('id','project_id', 'pmwrkord_code', 'dima', 'dime', 'loc1', 'mvakode', 'dimd', 'merknad', 'line_text','oppsynsmannid','saksbehandlerid','oppsynsigndato','saksigndato','budsjettsigndato','process_code', 'process_log');
 
 					foreach($metadata as $_field)
 					{
@@ -2114,7 +2227,7 @@
 				}
 			}
 
-
+/*
 			if($data['process_log'] || $data['process_code'])
 			{
 				$valueset_log = array
@@ -2143,7 +2256,7 @@
 				}
 			}
 
-
+*/
 			if( isset($data['order_id']) && $data['order_id'])
 			{
 				if(isset($data['close_order']) && $data['close_order'])
@@ -2208,8 +2321,41 @@
 
 			if($data['query'])
 			{
-				$query = (int) $data['query'];
-				$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
+				switch ($data['criteria'])
+				{
+					case 'voucher_id':
+						$query = (int) $data['query'];
+						$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
+						break;
+					
+					case 'invoice_id':
+						$query = $data['query'];
+						$querymethod = " $where fakturanr = '{$query}'";
+						break;
+					
+					case 'order_id':
+						$query = $data['query'];
+						$querymethod = " $where pmwrkord_code = '{$query}'";
+						break;
+
+					case 'vendor_id':
+						$query = (int) $data['query'];
+						$querymethod = " $where (spvend_code = {$query} OR org_name {$this->like} '%{$data['query']}%')";
+						break;
+
+					case 'b_account':
+						$query =  $data['query'];
+						$querymethod = " $where spbudact_code = '{$query}'";
+						break;
+
+					case 'dimb':
+						$query = (int) $data['query'];
+						$querymethod = " $where dimb = {$query}";
+						break;
+
+					default:
+				}
+				
 				$where = 'AND';
 			}
 

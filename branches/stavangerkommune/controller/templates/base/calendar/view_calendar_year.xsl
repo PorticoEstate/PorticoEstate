@@ -1,33 +1,6 @@
 <!-- $Id$ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-
-
-<style>
-	.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
-	#searchLocationName { width: 25em; }
-	
-	
-	.ui-combobox {
-		position: relative;
-		display: inline-block;
-	}
-	.ui-button {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		margin-left: -1px;
-		padding: 0;
-		/* adjust styles for IE 6/7 */
-		*height: 1.7em;
-		*top: 0.1em;
-	}
-	.ui-autocomplete-input {
-		margin: 0;
-		padding: 0.3em;
-	}
-
-</style>
 	
 <script>
 <xsl:text>
@@ -37,14 +10,18 @@ $(document).ready(function(){
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, false);
 
-	$("#searchLocationName").autocomplete({
+	var location_type = $("#loc_type").val();
+
+	$("#search-location-name").autocomplete({
 		source: function( request, response ) {
+			location_type = $("#loc_type").val();
+		
 			$.ajax({
 				url: baseUrl,
 				dataType: "json",
 				data: {
 					location_name: request.term,
-					level: 1,
+					level: location_type,
 					phpgw_return_as: "json"
 				},
 				success: function( data ) {
@@ -63,12 +40,9 @@ $(document).ready(function(){
 		},
 		minLength: 1,
 		select: function( event, ui ) {
-			chooseLocation( ui.item.label, ui.item.value);
+		  chooseLocation( ui.item.label, ui.item.value);
 		}
 	});
-	
-	
-	
 });
 
 function chooseLocation( label, value ){
@@ -89,27 +63,60 @@ function chooseLocation( label, value ){
 
 	<div id="control_plan">
 		<div class="top">
-			<h1>Kontrollplan for bygg/eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
+			<xsl:choose>
+				<xsl:when test="location_level = 1">
+					<h1>Kontrollplan for eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
+				</xsl:when>
+				<xsl:otherwise>
+						<h1>Kontrollplan for bygg: <xsl:value-of select="current_location/loc2_name"/></h1>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<h3>Kalenderoversikt for <span class="year"><xsl:value-of select="current_year"/></span></h3>
 			
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
-			<div id="searchLocation">
-				<label>Søk etter andre bygg/eiendommer</label>
+			<div id="search-location" class="select-box">
+				<div id="choose-loc">
+					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
+							<input id="loc_type" type="hidden" name="loc_type" value="2" />
+					</label>
+				</div>
 				<input type="hidden" id="currentYear">
 					<xsl:attribute name="value">
 						<xsl:value-of select="current_year"/>
 					</xsl:attribute>
 				</input>
-				<input type="text" value="" id="searchLocationName" />
+				<input type="text" value="" id="search-location-name" />
 			</div>
-		</div>
-		<div class="middle">
 			
 			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
-			<div id="chooseBuilding">
-				<label>Velg et annet bygg på eiendommen</label>
+			<div id="choose-my-location" class="select-box">
+				<label>Velg et annet bygg du har ansvar for</label>
 				<xsl:call-template name="select_my_locations" />
 			</div>
+		</div>
+		
+		<div class="middle">
+		
+			<!-- =====================  CHOOSE ANOTHER BUILDING ON PROPERTY  ================= -->
+			<div id="choose-building" class="select-box">
+				<xsl:if test="location_level > 1">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+							<xsl:text>&amp;year=</xsl:text>
+							<xsl:value-of select="current_year"/>
+							<xsl:text>&amp;location_code=</xsl:text>
+							<xsl:value-of select="current_location/loc1"/>
+						</xsl:attribute>
+						Vis kontrollplan for eiendom
+					</a> 
+				</xsl:if>
+
+				<label>Velg et annet bygg på eiendommen</label>
+				<xsl:call-template name="select_buildings_on_property" />
+			</div>
+			
 			
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
@@ -146,7 +153,7 @@ function chooseLocation( label, value ){
 		</div>
 		 
 		<div id="cal_wrp">
-		<table id="calendar">
+		<table id="calendar" class="year">
 				<tr class="heading">
 						<th class="title"><span>Tittel</span></th>
 						<th class="assigned"><span>Tildelt</span></th>

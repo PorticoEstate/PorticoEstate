@@ -55,9 +55,6 @@
 		protected $costresponsibility_id;
 		protected $responsibility_id;
 		protected $responsibility_name;
-		protected $component_id;
-		protected $component_type_id;
-		//protected $location_code;
 		protected $control_area_id;
 		protected $control_area_name;
 
@@ -199,27 +196,6 @@
 		
 		public function get_responsibility_name() { return $this->responsibility_name; }
 		
-		public function set_component_id($component_id)
-		{
-			$this->component_id = $component_id;
-		}
-		
-		public function get_component_id() { return $this->component_id; }
-		
-		public function set_component_type_id($component_type_id)
-		{
-			$this->component_type_id = $component_type_id;
-		}
-		
-		public function get_component_type_id() { return $this->component_type_id; }
-		/*
-		public function set_location_code($location_code)
-		{
-			$this->location_code = $location_code;
-		}
-		
-		public function get_location_code() { return $this->location_code; }
-		*/
 		public function set_control_area_id($control_area_id)
 		{
 			$this->control_area_id = $control_area_id;

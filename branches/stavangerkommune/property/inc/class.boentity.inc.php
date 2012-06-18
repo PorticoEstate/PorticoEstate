@@ -43,6 +43,8 @@
 		var $allrows;
 		var $part_of_town_id;
 		var $location_code;
+		var $results;
+		protected $xsl_rootdir;
 
 		/**
 		 * @var object $custom reference to custom fields object
@@ -84,6 +86,7 @@
 			$order							= phpgw::get_var('order');
 			$filter							= phpgw::get_var('filter', 'int');
 			$district_id					= phpgw::get_var('district_id', 'int');
+			$part_of_town_id				= phpgw::get_var('part_of_town_id', 'int');
 			$status							= phpgw::get_var('status');
 			$start_date						= phpgw::get_var('start_date');
 			$end_date						= phpgw::get_var('end_date');
@@ -147,6 +150,10 @@
 			{
 				$this->district_id = $district_id;
 			}
+			if(isset($_POST['part_of_town_id']) || isset($_GET['part_of_town_id']))
+			{
+				$this->part_of_town_id = $part_of_town_id;
+			}
 			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
 			{
 				$this->criteria_id = $criteria_id;
@@ -175,6 +182,7 @@
 			{
 				$this->allrows = $allrows;
 			}
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
 
 		function save_sessiondata($data)
@@ -242,10 +250,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'),$this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'),$this->xsl_rootdir);
 				break;
 			}
 
@@ -260,10 +268,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'),$this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'),$this->xsl_rootdir);
 				break;
 			}
 
@@ -344,13 +352,14 @@
 			}
 
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'',
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id, 'part_of_town_id' => $this->part_of_town_id,
+				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'', 'results' => $this->results,
 				'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
 				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
 				'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
-				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter, 'p_num' => $this->p_num));
+				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter, 'p_num' => $this->p_num,
+				'control_registered'=>isset($data['control_registered'])?$data['control_registered']:'','control_id'=>isset($data['control_id'])?$data['control_id']:''));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;

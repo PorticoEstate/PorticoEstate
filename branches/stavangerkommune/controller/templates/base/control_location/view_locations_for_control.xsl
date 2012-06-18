@@ -22,43 +22,8 @@
 	<xsl:call-template name="common"/>
 
 	<div class="yui-content">
-		<div id="control_details">
-			<div id="choose_control">
-				
-				<!-- When control area is chosen, an ajax request is executed. 
-					 The operation fetches controls from db and populates the control list.
-					 The ajax operation is handled in ajax.js 
-				 --> 
-				 <select style="float:left;" id="control_area_list" name="control_area_list">
-					<option value="">Velg kontrollområde</option>
-					<xsl:for-each select="control_areas_array2">
-						<option value="{id}">
-							<xsl:value-of disable-output-escaping="yes" select="name"/>
-						</option>
-					</xsl:for-each>
-				  </select>
-				 
-				 <form id="loc_form" action="" method="GET">
-					<select id="control_id" name="control_id">
-						<xsl:choose>
-							<xsl:when test="control_array/child::node()">
-								<xsl:for-each select="control_array">
-									<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
-									<option value="{$control_id}">
-										<xsl:value-of select="title"/>
-									</option>
-								</xsl:for-each>
-							</xsl:when>
-							<xsl:otherwise>
-								<option>
-									Ingen kontroller
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</select>
-				</form>
-			</div>
-			
+		<div id="control_location">
+					
 			<div id="addedProperties">
 				<ul id="locations_for_control" name="locations_for_control">
 					<xsl:for-each select="locations_for_control">
@@ -71,7 +36,7 @@
 				</ul>
 			</div>
 			
-			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 			<input id="yui-history-field" type="hidden"/>
 			
 			<xsl:apply-templates select="locations_table"/>
@@ -84,7 +49,7 @@
 <xsl:template match="locations_table" xmlns:php="http://php.net/xsl">
 	
 	<div id="loc_paginator"/>
-	<div style="margin:20px;" id="locations-container"/>
+	<div id="locations-container"/>
   	<xsl:call-template name="locations-definition" />
 </xsl:template>
 

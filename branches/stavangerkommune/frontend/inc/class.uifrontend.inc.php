@@ -75,6 +75,7 @@
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
 			$this->header_state['use_fellesdata'] = $use_fellesdata;
 			$this->header_state['logo_path'] = $logo_path;
+			$this->header_state['form_action'] = $tabs[$selected]['link'];
 			
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
@@ -82,8 +83,8 @@
 			$param_only_org_unit = phpgw::get_var('org_enhet_id'); 	// Frontend access from rental module regarding specific organisational unit
 			
 			//Refresh organisation list
-			$refresh = phpgw::get_var('refresh'); 
-			
+			$refresh = phpgw::get_var('refresh','bool'); 
+
 			$property_locations_update = false;
 			
 			/* If the user has selected an organisational unit or all units */

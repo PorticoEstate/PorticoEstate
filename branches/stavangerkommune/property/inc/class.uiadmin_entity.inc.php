@@ -1847,6 +1847,8 @@
 			$uicols['descr'][7]	= lang('Search');
 			$uicols['name'][8]	= 'id';
 			$uicols['descr'][8]	= lang('id');
+			$uicols['name'][9]	= 'short_description';
+			$uicols['descr'][9]	= lang('short description');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -2417,7 +2419,8 @@
 				'value_get_list_function'			=> $values['get_list_function'],
 				'value_get_list_function_input'		=> print_r($values['get_list_function_input'],true),
 				'value_get_single_function'			=> $values['get_single_function'],
-				'value_get_single_function_input'	=> print_r($values['get_single_function_input'],true)
+				'value_get_single_function_input'	=> print_r($values['get_single_function_input'],true),
+				'value_short_description'			=> $values['short_description']
 			);
 
 			$appname = lang('entity');

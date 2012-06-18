@@ -3,6 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <div class="yui-navset yui-navset-top" id="control_tabview">
+
 	<xsl:choose>
 		<xsl:when test="view = 'control_details'">
 		<xsl:call-template name="yui_booking_i18n"/>

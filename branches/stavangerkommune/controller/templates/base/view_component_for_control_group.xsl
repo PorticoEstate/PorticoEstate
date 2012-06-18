@@ -22,13 +22,12 @@
 
 	<div class="yui-content">
 		<div id="control_details">
-			<div style="margin: 10px;padding: 10px; width: 25%;">
 				
 				<!-- When control area is chosen, an ajax request is executed. 
 					 The operation fetches controls groups from db and populates the control group list.
 					 The ajax operation is handled in ajax.js 
 				 --> 
-				 <select style="float:left;" id="control_group_area_list" name="control_group_area_list">
+				 <select id="control_group_area_list" name="control_group_area_list">
 					<xsl:for-each select="control_area_array">
 						<xsl:variable name="control_area_id"><xsl:value-of select="id"/></xsl:variable>
 						<option value="{$control_area_id}">
@@ -39,7 +38,7 @@
 				 
 				 <form id="loc_form" action="" method="GET">
 					<div id="control_group_id_div">
-						<select id="control_group_id" name="control_group_id" style="width: 250px;">
+						<select id="control_group_id" name="control_group_id">
 						<xsl:choose>
 							<xsl:when test="control_group_array/child::node()">
 								<xsl:for-each select="control_group_array">
@@ -58,7 +57,6 @@
 						</select>
 					</div>
 				</form>
-			</div>
 			
 			<div id="addedProperties">
 				<ul id="locations_for_control_group" name="locations_for_control_group">
@@ -72,7 +70,7 @@
 				</ul>
 			</div>
 			
-			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+			<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" ></iframe>
 			<input id="yui-history-field" type="hidden"/>
 			
 			<xsl:apply-templates select="locations_table"/>
@@ -84,7 +82,7 @@
 <xsl:template match="locations_table" xmlns:php="http://php.net/xsl">
 	
 	<div id="loc_paginator"/>
-	<div style="margin:20px;" id="locations-container"/>
+	<div id="locations-container"/>
   	<xsl:call-template name="locations-definition" />
 </xsl:template>
 

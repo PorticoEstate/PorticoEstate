@@ -113,7 +113,25 @@
 			//return isset($result);
 		}
 
-		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object")
+		function get_controls_for_location($location_code, $role_id, $from_date, $to_date, $repeat_type)
+		{
+		    $controls = array();
+		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
+		    $controls_comp = $this->get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
+		    
+		    foreach($controls_loc as $cl)
+		    {
+		        $controls[] = $cl;
+		    }
+		    foreach($controls_comp as $cc)
+		    {
+		        $controls[] = $cc;
+		    }
+		    
+		    return $controls;
+		}
+		
+		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
 			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
@@ -125,10 +143,12 @@
 			
 			if( is_numeric($repeat_type) )
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			if( is_numeric($role_id))
+			    $sql .= "AND c.responsibility_id = $role_id ";
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
-			
+			//var_dump($sql."<br/>");
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
@@ -143,9 +163,110 @@
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-		//		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				
+				if($return_type == "return_object")
+					$controls_array[] = $control;
+				else
+					$controls_array[] = $control->toArray();
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+	    public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
+		{
+			$controls_array = array();
+			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+			
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name FROM controller_control_component_list ccl "; 
+			$sql .= "LEFT JOIN controller_control c on ccl.control_id=c.id ";
+			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
+			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
+			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
+			
+			if( is_numeric($repeat_type) )
+				$sql .= "AND c.repeat_type = $repeat_type ";
+			if( is_numeric($role_id))
+			    $sql .= "AND c.responsibility_id = $role_id ";
+			
+			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
+			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
+			//var_dump($sql."<br/>");
+			$this->db->query($sql);
+			
+			while($this->db->next_record()) {
+				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				
+				if($return_type == "return_object")
+					$controls_array[] = $control;
+				else
+					$controls_array[] = $control->toArray();
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = null, $return_type = "return_object")
+		{
+			$controls_array = array();
+			
+			$sql   = "SELECT c.id as control_id, c.*, bim_item.id, xpath('/beskrivelse/text()', xml_representation), bim_item.location_code, bim_item.address ";
+			$sql  .= "FROM controller_control_component_list cl ";
+			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
+			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
+			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
+			$sql  .= "AND bim_item.type = bim_type.id ";
+			$sql  .= "AND bim_item.location_code LIKE '$location_code%'";
+			
+			if( $repeat_type != null){
+				$sql .= "AND c.repeat_type = $repeat_type ";
+			}
+			
+			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
+			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
+			
+			$this->db->query($sql);
+			
+			while($this->db->next_record()) {
+				$control = new controller_control($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -167,6 +288,7 @@
 
 		function get_controls_by_control_area($control_area_id)
 		{
+			$control_area_id = (int) $control_area_id;
 			$controls_array = array();
 
 			$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
@@ -185,9 +307,6 @@
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-			//	$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
@@ -217,7 +336,7 @@
 			while($this->db->next_record()) {
 				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
-				$location_code = $this->unmarshal($this->db->f('location_code', true), 'strign');
+				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
@@ -232,18 +351,57 @@
 				return null;
 			}
 		}
+		
+	    function get_components_for_control($control_id)
+		{
+			$controls_array = array();
+
+			$sql =  "SELECT c.id, c.title, ccl.component_id, bim_type.description, bim.location_code ";
+            $sql .= "FROM controller_control c, controller_control_component_list ccl, fm_bim_item bim, fm_bim_type bim_type "; 
+			$sql .= "WHERE ccl.control_id = $control_id ";
+            $sql .= "AND ccl.control_id = c.id ";
+			$sql .= "AND bim.id = ccl.component_id ";
+			$sql .= "AND bim_type.id = bim.type";
+
+			$this->db->query($sql);
+
+			while($this->db->next_record()) {
+				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
+				$title = $this->unmarshal($this->db->f('title', true), 'string');
+				$component_id = $this->unmarshal($this->db->f('component_id', true), 'int');
+				$component_type = $this->unmarshal($this->db->f('description', true), 'string');
+				$component_location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+				//$component_guid = $this->unmarshal($this->db->f('guid', true), 'string');
+				//$component_description = $this->getBimItemAttributeValue($component_guid, "beskrivelse");
+				//$component_name = $this->getBimItemAttributeValue($component_guid, "betegnelse");
+				//$component_author = $this->getBimItemAttributeValue($component_guid, "juridisk_person");
+				
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $component_location_code));
+				
+				$controls_array[] = array("id" => $control_id, "title" => $title, "component_id" => $component_id, "component_description" => $component_type, "component_location" => $location_array["loc1_name"]);
+			}
+
+			if( count( $controls_array ) > 0 ){
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		function get_control_location($control_id, $location_code)
 		{
+			$control_id = (int)$control_id;
 			$sql =  "SELECT * FROM controller_control_location_list WHERE control_id = $control_id AND location_code = '$location_code'";
 			
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			
 			if($this->db->next_record()){
-				$control_location = new controller_control_location($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_location = new controller_control_location($this->unmarshal($this->db->f('id'), 'int'));
 	
 				$control_location->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-				$control_location->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control_location->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 							
 				return $control_location;
 			}
@@ -253,12 +411,119 @@
 			}
 		}
 		
-		function register_control_to_location($control_id, $location_code)
+		public function register_control_to_location($control_id, $data)
 		{
-			$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) values($control_id, $location_code)";
+
+			$control_id = (int) $control_id;
+			$delete_location = array();
+			$add_location = array();
+			foreach($data['control_location_orig'] as $location_code)
+			{
+				if(!in_array($location_code, $data['control_location']))
+				{
+					$delete_location[] = $location_code;
+				}
+			}
+
+			foreach($data['control_location'] as $location_code)
+			{
+				if(!in_array($location_code, $data['control_location_orig']))
+				{
+					$add_location[] = $location_code;
+				}
+			}
+
+			$this->db->transaction_begin();
+			foreach ($delete_location as $location_code)
+			{
+				$sql =  "DELETE FROM controller_control_location_list  WHERE control_id = {$control_id} AND location_code = '{$location_code}'";
+				$this->db->query($sql);
+			}
+
+			foreach ($add_location as $location_code)
+			{
+				$sql =  "SELECT * FROM controller_control_location_list WHERE control_id = {$control_id} AND location_code = '$location_code'";
+				$this->db->query($sql, __LINE__, __FILE__);
 			
-			return $this->db->query($sql);
+				if(!$this->db->next_record())
+				{
+					$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) VALUES ( {$control_id}, '{$location_code}')";
+					$this->db->query($sql);
+				}
+			}
+
+			return $this->db->transaction_commit();
 		}
+
+		public function check_control_component($control_id, $location_id, $component_id)
+		{
+			$control_id		= (int) $control_id;
+			$location_id	= (int) $location_id;
+			$component_id	= (int) $component_id;
+			$sql =  "SELECT * FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			return $this->db->next_record();
+		}
+
+		function register_control_to_component($data)
+		{
+
+			$delete_component = array();
+			$add_component = array();
+			$this->db->transaction_begin();
+
+			if(isset($data['register_component']) && is_array($data['register_component']))
+			{
+				foreach($data['register_component'] as $component_info)
+				{
+					$component_arr = explode('_', $component_info);
+					if(count($component_arr)!=3)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $component_arr[0];
+					$location_id	= (int) $component_arr[1];
+					$component_id	= (int) $component_arr[2];
+
+					if(!$control_id)
+					{
+						return false;
+					}
+
+					$sql =  "SELECT * FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+					$this->db->query($sql, __LINE__, __FILE__);
+			
+					if(!$this->db->next_record())
+					{
+						$sql =  "INSERT INTO controller_control_component_list (control_id, location_id, component_id) VALUES ( {$control_id}, {$location_id}, {$component_id})";
+						$this->db->query($sql);
+					}
+				}
+			}
+
+			if(isset($data['delete']) && is_array($data['delete']))
+			{
+				foreach($data['delete'] as $component_info)
+				{
+					$component_arr = explode('_', $component_info);
+					if(count($component_arr)!=3)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $component_arr[0];
+					$location_id	= (int) $component_arr[1];
+					$component_id	= (int) $component_arr[2];
+				
+					$sql =  "DELETE FROM controller_control_component_list WHERE control_id = {$control_id} AND location_id = {$location_id} AND component_id = {$component_id}";
+					$this->db->query($sql);
+				}
+			}
+
+			return $this->db->transaction_commit();
+		}
+
 
 		function add_component_to_control($control_id, $component_id)
 		{
@@ -332,8 +597,6 @@
 			$condition =  join(' AND ', $clauses);
 
 			$tables = "controller_control";
-			//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
-			//$joins = " {$this->left_join} controller_control_area ON (controller_control.control_area_id = controller_control_area.id)";
 			$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
 			$joins .= " {$this->left_join} fm_responsibility_role ON (controller_control.responsibility_id = fm_responsibility_role.id)";
 
@@ -343,7 +606,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.component_type_id, controller_control.component_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
+				$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -381,9 +644,6 @@
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control->set_control_area_name($category[0]['name']);
 	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				//$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
@@ -425,9 +685,6 @@
 			//$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control->set_control_area_name($category[0]['name']);
-			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
-			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-	//		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_type_label($control->get_repeat_type());
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -541,6 +798,7 @@
 		{
 			$columnAlias = "attribute_values";
 			$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
+			//var_dump($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 			if($this->db->num_rows() > 0)
 			{

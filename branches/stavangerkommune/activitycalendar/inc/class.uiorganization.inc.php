@@ -171,13 +171,15 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$group_org_id = $sogroup->get_orgid_from_group($new_group_id);
 					
 					//get affected activities and update with new org id
-					$update_activities = $soactivity->get_activities_for_update($new_group_id, true);
+					$update_activities = $soactivity->get_activities_for_update($id, true);
+					var_dump($update_activities);
 					foreach($update_activities as $act)
 					{
 						$act->set_organization_id($group_org_id);
 						$act->set_group_id($new_group_id);
 						$act->set_new_org(false);
 						$soactivity->store($act);
+						var_dump($act);
 					}
 					
 					//set local group as stored
@@ -185,6 +187,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$group->set_transferred(true);
 					$sogroup->update_local($group);
 					$message = lang('messages_saved_form');
+					
+					$contact_persons = $socontact->get_booking_contact_persons($group->get_id(), true);
+        			$cp1 = $contact_persons[0];
+        			$cp2 = $contact_persons[1];
 				}
 				else
 				{
@@ -319,7 +325,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact2 = array();
 					$contact2['name'] = $contact2_name;
 					$contact2['phone'] = $contact2_phone;
-					$contact2['mail'] = $contact_mail_2;
+					$contact2['mail'] = $contact2_email;
 					$contact2['org_id'] = $new_org_id;
 					$so_activity->add_contact_person_org($contact2);
 					
@@ -444,6 +450,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
+		$socontact = activitycalendar_socontactperson::get_instance();
 		if($type)
 		{
 			if(isset($_POST['edit_group'])) // The user has pressed the save button
@@ -462,12 +469,17 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			if(count($group_array) > 0){
 				$keys = array_keys($group_array);
 				$group = $group_array[$keys[0]];
-				_debug_array($group);
+//				_debug_array($group);
 			}
+			$contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
+			$cp1 = $contact_persons[0];
+			$cp2 = $contact_persons[1];
 			
 			$data = array
 			(
 				'group' 	=> $group,
+				'contactperson1' => $cp1,
+				'contactperson2' => $cp2,
 				'cancel_link' => $cancel_link,
 				'message' => $message,
 				'errorMsgs' => $errorMsgs,
@@ -495,11 +507,15 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org = $org_array[$keys[0]];
 			}
 			
-			//var_dump($org);
+			$contact_persons = $socontact->get_local_contact_persons($org->get_id());
+			$cp1 = $contact_persons[0];
+			$cp2 = $contact_persons[1];
 			
 			$data = array
 			(
 				'organization' 	=> $org,
+				'contactperson1' => $cp1,
+				'contactperson2' => $cp2,
 				'cancel_link' => $cancel_link,
 				'message' => $message,
 				'errorMsgs' => $errorMsgs,

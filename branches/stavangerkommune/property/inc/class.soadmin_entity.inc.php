@@ -319,7 +319,7 @@
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
 
-			$category = array();
+			$categories = array();
 			while ($this->db2->next_record())
 			{
 				$id	= $this->db2->f('id');
@@ -1053,7 +1053,7 @@
 		 */
 		function convert_to_eav()
 		{
-			die('vent litt med denne');
+//			die('vent litt med denne');
 
 			phpgw::import_class('phpgwapi.xmlhelper');			
 			$this->type = 'entity';
