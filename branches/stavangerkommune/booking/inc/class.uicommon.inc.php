@@ -101,12 +101,15 @@
 			
 		private 
 			$ui_session_key,
-			$flash_msgs;
+			$flash_msgs,
+			$config;
 		
 		public function __construct()
 		{
 			$this->ui_session_key = $this->current_app().'_uicommon';
 			$this->restore_flash_msgs();
+			$this->config = CreateObject( 'phpgwapi.config', 'bookingfrontend' );
+			$this->config->read();
 			
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			self::set_active_menu('booking');
@@ -123,6 +126,13 @@
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
+
+			// Add configurable bookingfrontend template search path.
+			// This is being done here in booking because ui-classes in bookingfrontend inherit either directly or indirectly from this class.
+			if( strlen( $this->config->config_data['customtemplate'] ) ) {
+				array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $this->config->config_data['customtemplate'] );
+			}
+
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');

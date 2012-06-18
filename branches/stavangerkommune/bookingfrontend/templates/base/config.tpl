@@ -93,6 +93,12 @@
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_customtemplate}:
+			<br/> Custom template for frontend
+			</td>
+			<td><input name="newsettings[customtemplate]" value="{value_customtemplate}"/></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
