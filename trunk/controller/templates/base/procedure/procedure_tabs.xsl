@@ -2,7 +2,7 @@
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<xsl:call-template name="yui_booking_i18n"/>
+<xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top" id="procedure_tabview">
 	<xsl:choose>
 		<xsl:when test="view = 'view_procedure'">

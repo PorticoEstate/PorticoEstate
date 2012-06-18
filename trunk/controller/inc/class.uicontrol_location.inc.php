@@ -4,6 +4,7 @@
 	*
 	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
@@ -35,7 +36,7 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'check_list', 'inc/model/');
@@ -43,7 +44,7 @@
 	include_class('controller', 'status_checker', 'inc/helper/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 		
-	class controller_uicontrol_location extends controller_uicommon
+	class controller_uicontrol_location extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -673,14 +674,10 @@
 			$theme = 'ui-lightness';
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/development-bundle/themes/{$theme}/jquery.ui.autocomplete.css");
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-//			phpgwapi_yui::load_widget('autocomplete');
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -689,8 +686,7 @@
 	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
 			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('control_location/register_control_to_component'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
 	
 

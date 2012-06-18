@@ -19,8 +19,8 @@
 
 <!-- separate tabs and  inline tables-->
 
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_phpgw_i18n"/>
 	<style type="text/css">
 		select { width: 100px; }
 	</style>
@@ -63,7 +63,6 @@
 			</xsl:choose>
 				<div class="body">
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>
@@ -91,59 +90,6 @@
 	<td colspan = '6'>
 	<table>
 	<tr>
-<!--
-		<td>
-			<xsl:value-of select="php:function('lang', 'control area')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'control')" />
-		</td>
--->
-		<td>
-			<xsl:value-of select="php:function('lang', 'registered')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'location type')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'location category')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'name')" />
-		</td>
-	</tr>
-	  <tr id="filter1">
-<!--
-		<td>
-		  <select id="control_area_id" name="control_area_id">
-			<xsl:apply-templates select="control_area_list/options"/>
-		  </select>
-		</td>		
-		<td>
-		  <select id="control_id" name="control_id">
-			<xsl:apply-templates select="control/options"/>
-		  </select>
-		</td>
--->
-		<td >
-		  <input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
-		</td>
-
-		<td >
-		  <input id= "control_id_hidden" type="hidden" name="control_id"/>
-		  <select id="location_type" name="location_type">
-			<xsl:apply-templates select="location_type_list/options"/>
-		  </select>
-		</td>
-		<td >
-		  <select id="location_type_category" name="location_type_category">
-		  </select>
-		</td>
-		<td >
-			<input type="text" value="" id="search-location-name" />
-			<input id= "search-location_code" type="hidden" name="search-location_code"/>
-		</td>
-	  </tr>
 	<tr>
 		<td>
 			<xsl:value-of select="php:function('lang', 'entity')" />
@@ -206,6 +152,40 @@
 			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
 		</td>	 
 --> 		
+	  </tr>
+
+		<td>
+			<xsl:value-of select="php:function('lang', 'registered')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location type')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location category')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'name')" />
+		</td>
+	</tr>
+	  <tr id="filter1">
+		<td >
+		  <input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
+		</td>
+
+		<td >
+		  <input id= "control_id_hidden" type="hidden" name="control_id"/>
+		  <select id="location_type" name="location_type">
+			<xsl:apply-templates select="location_type_list/options"/>
+		  </select>
+		</td>
+		<td >
+		  <select id="location_type_category" name="location_type_category">
+		  </select>
+		</td>
+		<td  colspan = '2'>
+			<input type="text" value="" id="search-location-name" />
+			<input id= "search-location_code" type="hidden" name="search-location_code"/>
+		</td>
 	  </tr>
 	  </table>
 	  </td>

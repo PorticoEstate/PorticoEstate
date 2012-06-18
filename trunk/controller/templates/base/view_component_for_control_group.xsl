@@ -74,7 +74,7 @@
 			<input id="yui-history-field" type="hidden"/>
 			
 			<xsl:apply-templates select="locations_table"/>
-			<xsl:call-template name="yui_booking_i18n"/>
+			<xsl:call-template name="yui_phpgw_i18n"/>
 		</div>
 	</div>
 </xsl:template>

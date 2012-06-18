@@ -8,7 +8,7 @@ YAHOO.portico.js_alias_method_chain = function(constructor_func, func_name, new_
 
 YAHOO.portico.lang = function(section, config) {
 	config = config || {};
-	if (YAHOO && YAHOO.booking && YAHOO.portico.i18n && YAHOO.portico.i18n[section]) {
+	if (YAHOO && YAHOO.portico && YAHOO.portico.i18n && YAHOO.portico.i18n[section]) {
 		YAHOO.portico.i18n[section](config);
 	}
 	return config;
