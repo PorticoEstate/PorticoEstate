@@ -28,12 +28,12 @@
     * @version $Id$
     */	
 
-    phpgw::import_class('controller.uicommon');
+    phpgw::import_class('phpgwapi.uicommon');
     phpgw::import_class('controller.sodocument');
     phpgw::import_class('controller.soprocedure');
     include_class('controller', 'document', 'inc/model/');
 
-    class controller_uidocument extends controller_uicommon
+    class controller_uidocument extends phpgwapi_uicommon
     {
         private $so;
         private $so_procedure;

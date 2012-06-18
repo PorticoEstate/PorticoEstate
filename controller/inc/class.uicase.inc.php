@@ -29,7 +29,7 @@
 	*/
 	
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socase');
 	phpgw::import_class('controller.socheck_list');
 	phpgw::import_class('controller.socheck_item');
@@ -38,7 +38,7 @@
 	include_class('controller', 'check_item_case', 'inc/model/');
 	include_class('controller', 'status_checker', 'inc/helper/');
 			
-	class controller_uicase extends controller_uicommon
+	class controller_uicase extends phpgwapi_uicommon
 	{
 		private $so;
 		private $so_check_list;

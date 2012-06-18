@@ -30,11 +30,11 @@
 
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socontrol_area');
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicheck_list_for_component extends controller_uicommon
+	class controller_uicheck_list_for_component extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;

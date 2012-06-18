@@ -28,7 +28,7 @@
  	* @version $Id$
 	*/	
 
-  phpgw::import_class('controller.uicommon');
+  phpgw::import_class('phpgwapi.uicommon');
   phpgw::import_class('property.boevent');
   phpgw::import_class('controller.socontrol');
   phpgw::import_class('controller.socontrol_group');
@@ -45,7 +45,7 @@
   include_class('controller', 'control_group_list', 'inc/model/');
   include_class('controller', 'check_item', 'inc/model/');
 	
-  class controller_uicontrol extends controller_uicommon
+  class controller_uicontrol extends phpgwapi_uicommon
   {
     private $bo;
     private $so;
