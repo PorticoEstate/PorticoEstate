@@ -670,6 +670,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$theme = 'ui-lightness';
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/development-bundle/themes/{$theme}/jquery.ui.autocomplete.css");
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
@@ -682,9 +684,6 @@
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
-			//FIXME
-//			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
-
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
 	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
