@@ -28,12 +28,12 @@
  	* @version $Id: class.uicontrol_item.inc.php 9082 2012-03-29 12:58:24Z vator $
 	*/
 
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socontrol_item_option');
 		
 	include_class('controller', 'control_item_option', 'inc/model/');
 
-	class controller_uicontrol_item_option extends controller_uicommon
+	class controller_uicontrol_item_option extends phpgwapi_uicommon
 	{
 		private $so;
 		private $so_control_item;
