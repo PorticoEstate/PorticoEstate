@@ -52,6 +52,7 @@
 		var $public_functions = array
 		(
 			'index'								=> true,
+			'index2'								=> true,
 			'query'								=> true,
 			'edit'						 		=> true
 		);
@@ -189,6 +190,116 @@
 			}	
 		}
 	
+
+		function index2()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+			self::add_javascript('registration', 'yahoo', 'pending.index.js');
+
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
+			$status_list = array
+			(
+				array
+				(
+					'id'	=> 0,
+					'name'	=> lang('Select status')
+				),
+				array
+				(
+					'id'	=> 1,
+					'name'	=> lang('approved')
+				),
+				array
+				(
+					'id'	=> 2,
+					'name'	=> lang('pending')
+				),
+			);
+
+
+			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('New application'),
+								'href' => self::link(array('menuaction' => 'booking.uiapplication.add'))
+							),
+							array('type' => 'filter', 
+								'name' => 'reg_dla',
+                                'text' => lang('status').':',
+                                'list' => $status_list,
+							),
+							array('type' => 'text', 
+                                'text' => lang('searchfield'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'reg_id',
+							'label' => lang('id'),
+							'sortable'	=> true,
+							'formatter' => 'formatLinkPending'
+						),
+						array(
+							'key'	=>	'reg_lid',
+							'label'	=>	lang('user'),
+							'sortable'	=>	true
+						),
+						array(
+							'key' => 'reg_dla',
+							'label' => lang('time'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'reg_approved',
+							'label' => lang('approved'),
+							'sortable'	=> true,
+							'formatter' => 'FormatterCenter'
+						),
+						array(
+							'key' => 'location_code',
+							'label' => lang('location'),
+							'sortable'	=> false
+						),
+						array(
+								'key' => 'checked',
+								'label' => lang('approve'),
+								'sortable' => false,
+								'formatter' => 'formatterCheckPending',
+								'className' => 'mychecks'
+						),
+					)
+				),
+			);
+
+			self::render_template_xsl(array('datatable_common'), $data);
+		}
+
+
 
 		public function edit()
 		{
