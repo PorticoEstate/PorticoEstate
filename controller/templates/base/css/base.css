@@ -692,6 +692,10 @@ dl.proplist, dl.proplist-col {
   padding-left: 0;
 }
 
+#details .proplist dd, #details .proplist-col dd{
+  margin-bottom: 0.5em;
+}
+
 .frm_save_order input[type='submit']{
   margin: 10px 0 15px 0;
   width: 120px;
