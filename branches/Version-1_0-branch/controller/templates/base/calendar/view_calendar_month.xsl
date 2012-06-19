@@ -78,20 +78,23 @@ function chooseLocation( label, value ){
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
 				<div id="choose-loc">
-					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
-							<input id="loc_type" type="hidden" name="loc_type" value="2" />
-					</label>
-				</div>
-				<input type="hidden" id="currentYear">
+			    <input id="loc_type" type="hidden" name="loc_type" value="2" />
+					<input type="hidden" id="currentYear">
 					<xsl:attribute name="value">
 						<xsl:value-of select="current_year"/>
 					</xsl:attribute>
 				</input>
 				<input type="hidden" id="currentMonth">
-					<xsl:attribute name="value">
+				  <xsl:attribute name="value">
 						<xsl:value-of select="current_month_nr"/>
 					</xsl:attribute>
 				</input>
+					<label>Søk etter</label>
+					<span>
+						<a href="loc_type_2" class="btn first active">Bygg</a>
+						<a href="loc_type_1" class="btn">Eiendom</a>
+					</span>
+				</div>
 				<input type="text" value="" id="search-location-name" />
 			</div>
 		

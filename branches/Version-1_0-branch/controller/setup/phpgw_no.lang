@@ -197,6 +197,7 @@ property_id	controller	no	BKB Identifikator
 property	controller	no	Eiendom
 quarterly	controller	no	Kvartalvis
 recurrence	controller	no	Gjentakelse
+registered	controller	no	Registrert
 remove	controller	no	Fjern
 controller	controller	no	Kontroll
 reports	controller	no	Rapporter
@@ -334,7 +335,7 @@ select value	controller	no	Velg
 component_for_control_group	controller	no	Utstyr tilknyttet kontrollgrupper
 View_component_for_control_group	controller	no	Vis knytning mot utstyr
 Add_component_for_control_group	controller	no	Legg til knytning mot utstyr
-show_controls_for_location	controller	no	Vis lokasjoner
+show_controls_for_location	controller	no	Vis lokasjoner/ komponenter
 Property name	controller	no	Lokasjonsnavn
 Address	controller	no	Adresse
 Zip code	controller	no	Postnummer
@@ -347,4 +348,5 @@ repeat_type_year	controller	no	År
 components for control	controller	no	Komponenter tilknyttet kontroll
 add components for control	controller	no	Legg til knytning mellom kontroll og komponent(er)
 location category	controller	no	Lokaliseringskategori
-select delete	controller	no	slett
+select add	controller	no	Velg for å legge til
+select delete	controller	no	Velg for sletting

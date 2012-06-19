@@ -77,15 +77,18 @@ function chooseLocation( label, value ){
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
 				<div id="choose-loc">
-					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
-							<input id="loc_type" type="hidden" name="loc_type" value="2" />
-					</label>
+					<input id="loc_type" type="hidden" name="loc_type" value="2" />
+					<input type="hidden" id="currentYear">
+					  <xsl:attribute name="value">
+						  <xsl:value-of select="current_year"/>
+					  </xsl:attribute>
+				  </input>
+					<label>Søk etter</label>
+					<span>
+						<a href="loc_type_2" class="btn first active">Bygg</a>
+						<a href="loc_type_1" class="btn">Eiendom</a>
+					</span>
 				</div>
-				<input type="hidden" id="currentYear">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_year"/>
-					</xsl:attribute>
-				</input>
 				<input type="text" value="" id="search-location-name" />
 			</div>
 			
@@ -202,8 +205,11 @@ function chooseLocation( label, value ){
 							<td class="frequency">
 				      			<span>
 					      			<xsl:choose>
-					      				<xsl:when test="control/repeat_interval = 1">
+					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
 					      					<span class="pre">Hver</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+					      					<span class="pre">Hvert</span>
 					      				</xsl:when>
 					      				<xsl:when test="control/repeat_interval = 2">
 					      					<span class="pre">Annenhver</span>
@@ -228,6 +234,85 @@ function chooseLocation( label, value ){
 				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<xsl:for-each select="components_calendar_array">
+		
+		<tr>
+		
+		<td>
+			<h3><xsl:value-of select="component/location_code"/></h3>
+		</td>
+			<xsl:for-each select="controls_calendar">
+			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+			  	
+			  		<tr>
+			  		
+			  
+			  						
+						<xsl:choose>
+					        <xsl:when test="(position() mod 2) != 1">
+					            <xsl:attribute name="class">odd</xsl:attribute>
+					        </xsl:when>
+					        <xsl:otherwise>
+					            <xsl:attribute name="class">even</xsl:attribute>
+					        </xsl:otherwise>
+					    </xsl:choose>
+							<td class="title">
+				      			<span><xsl:value-of select="control/title"/></span>
+							</td>
+							<td class="assigned">
+				      			<span><xsl:value-of select="control/responsibility_name"/></span>
+							</td>
+							<td class="frequency">
+				      			<span>
+					      			<xsl:choose>
+					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+					      					<span class="pre">Hver</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+					      					<span class="pre">Hvert</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval = 2">
+					      					<span class="pre">Annenhver</span>
+					      				</xsl:when>
+					      				<xsl:when test="control/repeat_interval > 2">
+					      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+					      				</xsl:when>
+					      			</xsl:choose>
+					      			
+					      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+				      			</span>
+							</td>
+							<xsl:for-each select="calendar_array">
+								<xsl:call-template name="check_list_status_checker" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+								</xsl:call-template>
+							</xsl:for-each>
+					</tr>	
+				</xsl:for-each>	
+			
+		</tr>
+		
+		</xsl:for-each>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	</table>
 	</div>
 </div>

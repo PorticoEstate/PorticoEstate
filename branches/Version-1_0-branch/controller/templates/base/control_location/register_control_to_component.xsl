@@ -19,11 +19,20 @@
 
 <!-- separate tabs and  inline tables-->
 
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_phpgw_i18n"/>
 	<style type="text/css">
 		select { width: 100px; }
 	</style>
+	<div id="choose_control" class="select-box">
+		<label>Velg kontrollen du vil vise komponent for</label>
+		<select id="control_area_id" name="control_area_id">
+			<xsl:apply-templates select="control_area_list/options"/>
+		</select>		 
+		<select id="control_id" name="control_id">
+			<xsl:apply-templates select="control/options"/>
+		</select>
+	</div>
 
 <div class="yui-navset yui-navset-top" id="control_location_tabview">
 	<div class="identifier-header">
@@ -54,7 +63,6 @@
 			</xsl:choose>
 				<div class="body">
 					<div id="voucher_details">
-						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>
@@ -62,7 +70,6 @@
 							<table align = "center" width="95%">
 								<tr>
 									<td colspan = '6'>
-										<xsl:apply-templates select="paging"/>
 										<xsl:apply-templates select="datatable"/>
 									</td>
 								</tr>
@@ -83,40 +90,6 @@
 	<td colspan = '6'>
 	<table>
 	<tr>
-		<td>
-			<xsl:value-of select="php:function('lang', 'control area')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'control')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'location type')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'location category')" />
-		</td>
-	</tr>
-	  <tr id="filter1">
-		<td>
-		  <select id="control_area_id" name="control_area_id">
-			<xsl:apply-templates select="control_area_list/options"/>
-		  </select>
-		</td>		
-		<td>
-		  <select id="control_id" name="control_id">
-			<xsl:apply-templates select="control/options"/>
-		  </select>
-		</td>		
-		<td >
-		  <select id="location_type" name="location_type">
-			<xsl:apply-templates select="location_type_list/options"/>
-		  </select>
-		</td>
-		<td >
-		  <select id="location_type_category" name="location_type_category">
-		  </select>
-		</td>
-	  </tr>
 	<tr>
 		<td>
 			<xsl:value-of select="php:function('lang', 'entity')" />
@@ -136,9 +109,11 @@
 		<td>
 			<xsl:value-of select="php:function('lang', 'building')" />
 		</td>
+<!--
 		<td >
 			<xsl:value-of select="php:function('lang', 'search')" />
 		</td>
+-->
 	</tr>
 	  <tr id="filter2">
 		<td>
@@ -171,10 +146,46 @@
 			<xsl:apply-templates select="loc2_list/options"/>
 		  </select>
 		</td>
+<!--
 		<td>
 			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
 			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		</td>	  		
+		</td>	 
+--> 		
+	  </tr>
+
+		<td>
+			<xsl:value-of select="php:function('lang', 'registered')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location type')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'location category')" />
+		</td>
+		<td>
+			<xsl:value-of select="php:function('lang', 'name')" />
+		</td>
+	</tr>
+	  <tr id="filter1">
+		<td >
+		  <input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
+		</td>
+
+		<td >
+		  <input id= "control_id_hidden" type="hidden" name="control_id"/>
+		  <select id="location_type" name="location_type">
+			<xsl:apply-templates select="location_type_list/options"/>
+		  </select>
+		</td>
+		<td >
+		  <select id="location_type_category" name="location_type_category">
+		  </select>
+		</td>
+		<td  colspan = '2'>
+			<input type="text" value="" id="search-location-name" />
+			<input id= "search-location_code" type="hidden" name="search-location_code"/>
+		</td>
 	  </tr>
 	  </table>
 	  </td>
@@ -185,15 +196,15 @@
 
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<div id="paging_0"/>
-	<div id="datatable-container_0"/>
-	
+	<div id="paging"></div>
+	<div id="datatable-container"></div>
+
   	<xsl:call-template name="datasource-definition" />
 	<div id="receipt"></div>
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 	<div><input type="submit" name="update_acl" id="frm_update_acl" value="{$label_submit}"/></div>
 
-  	<xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select')" /></xsl:variable>
+  	<xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select add')" /></xsl:variable>
 	<div><input type="button" name="select_add" id="frm_update_add" value="{$label_select_add}" onclick="checkAll('mychecks_add')"/></div>
 	
   	<xsl:variable name="label_select_delete"><xsl:value-of select="php:function('lang', 'select delete')" /></xsl:variable>
@@ -205,7 +216,6 @@
 
 		<!--  DATATABLE DEFINITIONS-->
 		<script type="text/javascript">
-			var property_js = <xsl:value-of select="//property_js"/>;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
 			var myButtons = new Array();

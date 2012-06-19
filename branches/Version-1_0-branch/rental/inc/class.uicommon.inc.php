@@ -4,34 +4,12 @@
 	define("RENTAL_TEMPLATE_PATH", "rental/templates/base/");
 	
 	
-	/**
-	 * Cherry pick selected values into a new array
-	 * 
-	 * @param array $array    input array
-	 * @param array $keys     array of keys to pick
-	 *
-	 * @return array containg values from $array for the keys in $keys.
-	 */
-	
-
-	function extract_values($array, $keys)
-	{
-		$result = array();
-		foreach($keys as $key)
-		{
-			if(in_array($key, array_keys($array)))
-			{
-				$result[$key] = $array[$key];
-			}
-		}
-		return $result;
-	}
-	
+/*	//Not used
 	function array_set_default(&$array, $key, $value)
 	{
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
-	
+*/	
 	define('MANAGER','MANAGER');
 	define('EXECUTIVE_OFFICER','EXECUTIVE_OFFICER');
 	define('ADMINISTRATOR','ADMINISTRATOR');
@@ -229,11 +207,35 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
         }
         	
+
+		/**
+		 * Cherry pick selected values into a new array
+		 * 
+		 * @param array $array    input array
+		 * @param array $keys     array of keys to pick
+		 *
+		 * @return array containg values from $array for the keys in $keys.
+		 */
+	
+
+		function extract_values($array, $keys)
+		{
+			$result = array();
+			foreach($keys as $key)
+			{
+				if(in_array($key, array_keys($array)))
+				{
+					$result[$key] = $array[$key];
+				}
+			}
+			return $result;
+		}
+
         public function check_active($url)
 		{
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$activate = extract_values($_POST, array("status", "activate_id"));
+				$activate = $this->extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
 				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
 			}

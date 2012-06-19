@@ -22,7 +22,7 @@
 
 	<div class="yui-content">
 		<div id="control_group_details">
-			<xsl:call-template name="yui_booking_i18n"/>
+			<xsl:call-template name="yui_phpgw_i18n"/>
 			<xsl:apply-templates select="control_group_filters" />
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="paging"/>
