@@ -56,8 +56,8 @@ class year_calendar {
     	
 			$month_nr = date("n", $date_ts);
       
-      $this->calendar_array[ $month_nr ]["status"]  = $check_list_status_info->get_status();
-      $this->calendar_array[ $month_nr ]["info"]  = $check_list_status_info->serialize();
+      $this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
+      $this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
 		}
 	}
    	
@@ -69,8 +69,8 @@ class year_calendar {
 
 			$month_nr = date("n", $check_list_status_info->get_deadline_date_ts());
 			
-			$this->calendar_array[ $month_nr ]["status"]  = $check_list_status_info->get_status();
-			$this->calendar_array[ $month_nr ]["info"]  = $check_list_status_info->serialize();
+			$this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
+			$this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
 		}
 		
 		return $this->calendar_array;
