@@ -530,7 +530,7 @@
 			}
 			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
-			$results['sort'] = 'location_code';
+			$results['sort'] = 'reg_lid';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
 //			array_walk($results['results'], array($this, 'add_links'), array($type));
