@@ -15,10 +15,8 @@ class year_calendar {
   public function __construct($control, $year){
     $this->year = $year;
     $this->control = $control;
-        
-    $this->period_start_date_ts = strtotime("01/01/$year");
-    $to_year = $year + 1;
-    $this->period_end_date_ts = strtotime("01/01/$to_year");
+    $this->period_start_date_ts = $this->get_start_date_year_ts($year);
+    $this->period_end_date_ts = $this->get_start_date_year_ts($year+1);
         
     $this->init_calendar();
   }
@@ -82,5 +80,11 @@ class year_calendar {
 		}
 		
 		return $heading_array;
+	}
+	
+	public static function get_start_date_year_ts($year){
+	  $start_date_year_ts = strtotime("01/01/$year");
+			
+		return $start_date_year_ts;
 	}
 }

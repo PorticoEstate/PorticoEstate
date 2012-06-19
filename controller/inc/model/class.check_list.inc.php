@@ -47,6 +47,7 @@
 		protected $completed_date;
 		protected $location_code;
 		protected $component_id;
+		protected $location_id;
 		
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
@@ -136,6 +137,13 @@
 		}
 		
 		public function get_component_id() { return $this->component_id; }
+		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+		
+		public function get_location_id() { return $this->location_id; }
 
 		public function get_num_open_cases() { return $this->num_open_cases; }
 		
@@ -170,6 +178,7 @@
 				'completed_date' => $this->get_completed_date(),
 				'location_code' => $this->get_location_code(),
 				'component_id' => $this->get_component_id(),
+				'location_id' => $this->get_location_id(),
 				'num_open_cases' => $this->get_num_open_cases()
 			);
 		}
