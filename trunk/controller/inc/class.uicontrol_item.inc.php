@@ -123,7 +123,13 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							)
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('New control item'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
+								'class' => 'new_item'
+							),
 						),
 					),
 				),
