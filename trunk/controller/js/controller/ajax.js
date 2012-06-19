@@ -380,6 +380,10 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("#control_item_options li .delete").live("click", function(e){
+		$(this).closest("li").fadeOut();
+	});
+	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
 		e.preventDefault();
 		

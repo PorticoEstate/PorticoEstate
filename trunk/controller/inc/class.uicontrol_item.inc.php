@@ -191,6 +191,7 @@
 		public function edit()
 		{
 			$control_item_id = phpgw::get_var('id');
+			$control_item = $this->so->get_single( $control_item_id ); 
 			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -200,15 +201,13 @@
 			$control_areas_array = $control_areas['cat_list'];
 
 			$control_groups_array = $this->so_control_group->get_control_group_array();
-			
-			/*
-			 * hack to fix display of &nbsp; char 
-			 */
+
+			// Hack to fix display of &nbsp; char
 			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
 			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
 
 			$control_item_array = $control_item->toArray();
-			
+
 			$data = array
 			(
 				'editable' 				=> true,

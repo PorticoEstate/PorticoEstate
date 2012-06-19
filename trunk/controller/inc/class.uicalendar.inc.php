@@ -256,22 +256,13 @@
 
 					  $controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				  }else {
-				    $repeat_type = 2;
-						
 				    // Fetches control ids with check lists for specified time period
-						$control_id_with_check_list_array = $this->so->get_check_lists_for_component($component->get_type(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+						$control_id_with_check_list_array = $this->so->get_check_lists_for_component($component->get_type(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type = ">=2");
 
 						// Loops through all controls for location and populates controls with check lists
 						$controls_for_component_array = $this->populate_controls_with_check_lists($controls_for_component_array, $control_id_with_check_list_array);
 						
-						$repeat_type = 3;
-						// Fetches control ids with check lists for specified time period
-						$control_id_with_check_list_array = $this->so->get_check_lists_for_component($component->get_type(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
-						
-						// Loops through all controls for location and populates controls with check lists
-						$controls_for_component_array = $this->populate_controls_with_check_lists($controls_for_component_array, $control_id_with_check_list_array);
-			
-						$year_calendar = new year_calendar($control, $year);
+						$year_calendar = new year_calendar($control, $year, $component, null, "component");
 						$calendar_array = $year_calendar->build_calendar( $control->get_check_lists_array() );
 														
 						$controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
@@ -280,7 +271,7 @@
 			
 			  $components_calendar_array[] = array("component" => $component->toArray(), "controls_calendar" => $controls_components_calendar_array);
 			}
-			//print_r($components_calendar_array);
+			print_r($components_calendar_array);
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
