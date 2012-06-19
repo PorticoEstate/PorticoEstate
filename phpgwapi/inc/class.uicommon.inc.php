@@ -77,7 +77,6 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('controller/templates/base/css/base.css');
-			self::add_javascript('controller', 'yahoo', 'common.js');
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
@@ -89,6 +88,8 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
+
+			self::add_javascript('phpgwapi', 'yahoo', 'common.js');
 
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 
