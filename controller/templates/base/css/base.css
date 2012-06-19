@@ -820,7 +820,6 @@ ul.row li{
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    margin-right: 10px;
     padding: 5px 10px;
     text-decoration: none;
 }
@@ -1076,8 +1075,9 @@ ul.check_list {
     margin-bottom: 10px;
 }
 
-#search-location-name { 
-	width: 16em; 
+#search-location-name {
+    margin: 2px 0 0;
+    width: 16em;
 }
 
 #choose-my-location {
@@ -1119,8 +1119,15 @@ ul.check_list {
     padding: 2px 8px;
 }
 
+#choose-loc .btn.first {
+    margin-right: 0.3em;
+}
+
 #choose-loc .btn.active{
 	background: #3F7EC1;	
+}
+#choose-loc label {
+	display: inline-block;
 }
 
 /* ==================  COLOR MAP ============================= */
