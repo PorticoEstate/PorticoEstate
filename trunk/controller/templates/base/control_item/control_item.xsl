@@ -100,6 +100,8 @@
 								<!-- ==============  FORM FOR SAVING OPTION VALUES FOR LIST  =============  -->
 								<div id="add_control_item_option_panel">
 									<hr />
+									
+									<h2 class="type"></h2>
 									<h3>Legg til verdier som listen skal inneholde</h3>
 									
 									<input type="hidden" name="control_item_id">
