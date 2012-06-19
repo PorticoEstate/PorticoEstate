@@ -1796,6 +1796,10 @@ div.controller_checklist {
 	margin-bottom: 20px;	
 }
 
+#control_details .proplist-col dd{
+	margin-bottom: 1em;	
+}
+
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
@@ -1814,6 +1818,14 @@ div.controller_checklist {
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
 #control_group_tabview .yui-content{
 	padding: 10px;	
+}
+
+#frm_save_control_groups .itemlist {
+		margin-bottom: 1em;
+}
+
+#frm_save_control_groups .itemlist li{
+		margin-bottom: 0.5em;
 }
 
 ul.control_groups li ul {
