@@ -374,6 +374,12 @@ $(document).ready(function(){
 		var control_item_type = $(this).find("input[type=radio]").val();
 		
 		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
+			if(control_item_type == "control_item_type_3"){
+			  $("#add_control_item_option_panel").find(".type").text("Nedtrekksliste");	
+			}else{
+			  $("#add_control_item_option_panel").find(".type").text("Radioknapper");
+			}
+			
 			$("#add_control_item_option_panel").slideDown(500);
 		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
 			$("#add_control_item_option_panel").slideUp(500);
