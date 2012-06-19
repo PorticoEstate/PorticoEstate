@@ -428,7 +428,7 @@
 							}
 						}
 
-						$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app['name']] = filectime($appfile);
+						$GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app] = filectime($appfile);
 					}
 
 					foreach($raw as $app_name => $ids)

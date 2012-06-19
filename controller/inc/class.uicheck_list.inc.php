@@ -29,7 +29,7 @@
 	*/
 	
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socontrol_area');
 	phpgw::import_class('controller.socheck_list');
 	
@@ -39,7 +39,7 @@
 	include_class('controller', 'status_checker', 'inc/helper/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 	
-	class controller_uicheck_list extends controller_uicommon
+	class controller_uicheck_list extends phpgwapi_uicommon
 	{
 		private $so;
 		private $so_control_area;

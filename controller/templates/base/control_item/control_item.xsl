@@ -3,7 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
+<xsl:call-template name="yui_phpgw_i18n"/>
 
 <div id="main_content">
 
@@ -28,7 +28,7 @@
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="{control_item/id}">
 			</input>
-			<dl class="proplist-col">
+			<dl class="proplist">
 				<dt>
 					<label for="title">Tittel</label>
 					<xsl:choose>

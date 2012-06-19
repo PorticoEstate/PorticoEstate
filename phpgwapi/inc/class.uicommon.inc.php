@@ -1,10 +1,11 @@
 <?php
 	/**
-	* phpGroupWare - controller: a part of a Facilities Management System.
+	* phpGroupWare
 	*
 	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -23,84 +24,18 @@
 	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package property
-	* @subpackage controller
- 	* @version $Id$
+	* @package phpgwapi
+	* @subpackage utilities
+ 	* @version $Id: class.uicommon.inc.php 9470 2012-05-31 11:10:20Z vator $
 	*/	
 
 	phpgw::import_class('phpgwapi.yui');
 
-	/**
-	 * Cherry pick selected values into a new array
-	 * 
-	 * @param array $array	input array
-	 * @param array $keys	 array of keys to pick
-	 *
-	 * @return array containg values from $array for the keys in $keys.
-	 */
-	function extract_values($array, $keys, $options = array())
-	{
-		static $default_options = array(
-			'prefix' => '',
-			'suffix' => '', 
-			'preserve_prefix' => false,
-			'preserve_suffix' => false
-		);
-
-		$options = array_merge($default_options, $options);
-
-		$result = array();
-		foreach($keys as $write_key)
-		{
-			$array_key = $options['prefix'].$write_key.$options['suffix'];
-			if(isset($array[$array_key])) {
-				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = $array[$array_key];
-			}
-		}
-		return $result;
-	}
-
-	function array_set_default(&$array, $key, $value)
-	{
-		if(!isset($array[$key])) $array[$key] = $value;
-	}
-
-	/**
-	 * Reformat an ISO timestamp into norwegian format
-	 * 
-	 * @param string $date	date
-	 *
-	 * @return string containg timestamp in norwegian format
-	 */
-	function pretty_timestamp($date)
-	{
-		if (empty($date)) return "";
-
-		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
-		{
-			$date = $date[0]->nodeValue;
-		}
-		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
-
-		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		if($match[4]) 
-		{
-			$dateformat .= ' H:i';
-			$timestamp = mktime($match[5], $match[6], 0, $match[2], $match[3], $match[1]);
-		}
-		else
-		{
-			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
-		}
-		$text = date($dateformat,$timestamp);
-
-		return $text;
-	}
 
 	/**
 	 * Generates a javascript translator object/hash for the specified fields.
 	 */
-	function js_lang()
+/*	function js_lang()
 	{
 		$keys = func_get_args();
 		$strings = array();
@@ -110,39 +45,21 @@
 		}
 		return json_encode($strings);
 	}
-
-	/**
-	 * Creates an array of translated strings.
-	 */
-	function lang_array()
-	{
-		$keys = func_get_args();
-		foreach($keys as &$key)
-		{
-			$key = lang($key);
-		}
-		return $keys;
-	}
-
-	abstract class controller_uicommon
+*/
+	abstract class phpgwapi_uicommon
 	{
 		const UI_SESSION_FLASH = 'flash_msgs';
 
 		protected
 			$filesArray;
 
+/*
 		protected static 
 			$old_exception_handler;
-
+*/
 		private 
 			$ui_session_key,
 			$flash_msgs;
-
-
-		const LOCATION_ROOT = '.';
-		const LOCATION_SUPERUSER = '.usertype.superuser';
-//		const LOCATION_ADMINISTRATOR = '.RESPONSIBILITY.ADMIN';
-		const LOCATION_USER = '.usertype.user';
 
 		public $dateFormat;
 
@@ -152,7 +69,7 @@
 
 		public function __construct()
 		{
-			self::set_active_menu('controller');
+		//	self::set_active_menu('controller');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -180,12 +97,6 @@
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
 
-			$this->type_of_user = array(
-				MANAGER => $this->isManager(),
-				EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
-				ADMINISTRATOR => $this->isAdministrator()
-			);
-			//var_dump($this->type_of_user);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
@@ -250,56 +161,15 @@
 			$this->add_js_event('load', $js);
 		}
 
-		/**
-		 * Permission check. Proxy method for method check in phpgwapi->acl
-		 * 
-		 * @param $location
-		 * @param $permission
-		 * @return true if check is ok, false othewise
-		 */
-		protected function hasPermissionOn($location = controller_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
-			return $this->acl->check($location,$permission,'controller');
-		}
-
-
-		/**
-		 * Check to see if this user is an administrator
-		 * 
-		 * @return true if private permission on root, false otherwise
-		 */
-		protected function isAdministrator(){
-			return $this->acl->check(controller_uicommon::LOCATION_ROOT,PHPGW_ACL_PRIVATE,'controller');
-		}
-
-		/**
-		 * Check to see if the user is an executive officer
-		 * 
-		 * @return true if at least add permission on fields of responsibilities (locations: .RESPONSIBIITY.*)
-		 */
-		protected function isExecutiveOfficer(){
-			return (
-				$this->acl->check(controller_uicommon::LOCATION_SUPERUSER,PHPGW_ACL_ADD,'controller')	||
-				$this->acl->check(controller_uicommon::LOCATION_USER,PHPGW_ACL_ADD,'controller')
-			);
-		}
-
-		/**
-		 * Check to see if the user is a manager
-		 * 
-		 * @return true if no read,add,delete,edit permission on fields of responsibilities (locations: .RESPONSIBILITY.*)
-		 */
-		protected function isManager(){
-			return !$this->isExecutiveOfficer();
-		}
-
-		public static function process_controller_unauthorized_exceptions()
+/*
+		public static function process_unauthorized_exceptions()
 		{
-			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_controller_unauthorized_exception'));
+			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_unauthorized_exception'));
 		}
 
-		public static function handle_controller_unauthorized_exception(Exception $e)
+		public static function handle_unauthorized_exception(Exception $e)
 		{
-			if ($e instanceof controller_unauthorized_exception)
+			if ($e instanceof unauthorized_exception)
 			{
 				$message = htmlentities('HTTP/1.0 401 Unauthorized - '.$e->getMessage(), null, self::encoding());
 				header($message);
@@ -308,7 +178,7 @@
 				call_user_func(self::$old_exception_handler, $e);
 			}
 		}
-
+*/
 		public function link($data)
 		{
 			return $GLOBALS['phpgw']->link('/index.php', $data);
@@ -392,17 +262,37 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
+		/**
+		 * Creates an array of translated strings.
+		 */
+		function lang_array()
+		{
+			$keys = func_get_args();
+			foreach($keys as &$key)
+			{
+				$key = lang($key);
+			}
+			return $keys;
+		}
+
 		public function add_yui_translation(&$data)
 		{
-			$this->add_template_file('yui_booking_i18n');
+			$this->add_template_file('yui_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
-			
-			$data['yui_booking_i18n'] = array(
+			$first = lang('first');
+			$last = lang('last');
+			$showing_items = lang('showing items');
+			$of = lang('of');
+			$to = lang('to');
+			$shows_from = lang('shows from');
+			$of_total = lang('of total');
+
+			$data['yui_phpgw_i18n'] = array(
 				'Calendar' => array(
-					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
-					'WEEKDAYS_FULL' => json_encode(lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
-					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
+					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
+					'WEEKDAYS_FULL' => json_encode($this->lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
+					'MONTHS_LONG' => json_encode($this->lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 				),
 				'DataTable' => array(
 					'MSG_EMPTY' => json_encode(lang('No records found.')),
@@ -414,9 +304,13 @@
 					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
 				),
 				'setupPaginator' => array(
-					'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
+					'pageReportTemplate' => json_encode("{$showing_items} {startRecord} - {endRecord} {$of} {totalRecords}"),
 					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
 					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
+					'firstPageLinkLabel' => json_encode("&lt;&lt; {$first}"),
+					'lastPageLinkLabel' => json_encode("{$last} &gt;&gt;"),
+					'template' => json_encode("{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"),
+					'pageReportTemplate' => json_encode("{$shows_from} {startRecord} {$to} {endRecord} {$of_total} {totalRecords}.")
 				),
 				'common' => array(
 					'LBL_NAME' => json_encode(lang('Name')),
@@ -451,17 +345,6 @@
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			$this->add_template_file($files);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
-		}
-
-  
-		public function check_active($url)
-		{
-			if($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
-				$activate = extract_values($_POST, array("status", "activate_id"));
-				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
-				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
-			}
 		}
 
 		// Add link key to a result array

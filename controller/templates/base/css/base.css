@@ -127,12 +127,6 @@ dl.proplist-col {
     margin: 1em 0;
     padding-left: 2em;
 }
-dl.proplist dt,
-dl.proplist-col dt { 
-    font-weight: bolder; 
-    font-size: 90%; 
-    margin: .8em 0 .1em 0;
-}
 
 dl.proplist-col,
 dl.form-col {
@@ -666,60 +660,64 @@ ul.items li.list_item{
 /* =======================================  EXPAND LIST  ========================================= */
 
 ul.expand_list h4 {
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-bottom: 6px;
-    margin-top: 0;
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  margin-top: 0;
 }
 ul.expand_list h4 img {
     height: 12px;
 }
 
 ul.expand_list li ul {
-    display:none;
-    margin-left:21px;
+  display:none;
+  margin-left:21px;
 }
 
 ul.expand_list li ul li {
-    margin-bottom: 3px;
-    padding: 3px;
+  margin-bottom: 3px;
+  padding: 3px;
 }
 
 ul.expand_list h4 span {
-    padding-left: 5px;
-    vertical-align: middle;
+  padding-left: 5px;
+  vertical-align: middle;
 }
 ul.expand_list .expand_item {
-    display: none;
+  display: none;
 }
 
 dl.proplist, dl.proplist-col {
-    margin: 0;
-    padding-left: 0;
+  margin: 0;
+  padding-left: 0;
+}
+
+#details .proplist dd, #details .proplist-col dd{
+  margin-bottom: 0.5em;
 }
 
 .frm_save_order input[type='submit']{
-	margin: 10px 0 15px 0;
-    width: 120px;
+  margin: 10px 0 15px 0;
+  width: 120px;
 }
 .delete {
-    cursor: pointer;
-    margin-left: 5px;
+  cursor: pointer;
+  margin-left: 5px;
 }
 .yui-navset .yui-content.tab_content {
-	padding: 20px;
+  padding: 20px;
 }
 
 #datatable-container {
-    margin: 20px;
+  margin: 20px;
 }
 
 #paginator {
-	margin: 20px;
+  margin: 20px;
 }
 
 #paginator.top {
-	 margin: 20px 0 0 20px;
+  margin: 20px 0 0 20px;
 }
 
 #toolbar {
@@ -820,7 +818,6 @@ ul.row li{
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    margin-right: 10px;
     padding: 5px 10px;
     text-decoration: none;
 }
@@ -1076,8 +1073,9 @@ ul.check_list {
     margin-bottom: 10px;
 }
 
-#search-location-name { 
-	width: 16em; 
+#search-location-name {
+    margin: 2px 0 0;
+    width: 16em;
 }
 
 #choose-my-location {
@@ -1119,8 +1117,15 @@ ul.check_list {
     padding: 2px 8px;
 }
 
+#choose-loc .btn.first {
+    margin-right: 0.3em;
+}
+
 #choose-loc .btn.active{
 	background: #3F7EC1;	
+}
+#choose-loc label {
+	display: inline-block;
 }
 
 /* ==================  COLOR MAP ============================= */
@@ -1795,6 +1800,10 @@ div.controller_checklist {
 	margin-bottom: 20px;	
 }
 
+#control_details .proplist-col dd{
+	margin-bottom: 1em;	
+}
+
 .help_text {
     background: none repeat scroll 0 0 #CCDBED;
     display: none;
@@ -1813,6 +1822,14 @@ div.controller_checklist {
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
 #control_group_tabview .yui-content{
 	padding: 10px;	
+}
+
+#frm_save_control_groups .itemlist {
+		margin-bottom: 1em;
+}
+
+#frm_save_control_groups .itemlist li{
+		margin-bottom: 0.5em;
 }
 
 ul.control_groups li ul {

@@ -4,6 +4,7 @@
 	*
 	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
@@ -35,7 +36,7 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'check_list', 'inc/model/');
@@ -43,7 +44,7 @@
 	include_class('controller', 'status_checker', 'inc/helper/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 		
-	class controller_uicontrol_location extends controller_uicommon
+	class controller_uicontrol_location extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -284,6 +285,7 @@
 					);		
 				}
 
+/*
 				$control_info = execMethod('controller.socontrol.get_single', $control_id);
 				if($control_info)
 				{
@@ -293,7 +295,7 @@
 						'title'	=> $control_info->get_title()
 					);
 				}
-
+*/
 				$tabs = array
 				( 
 					array
@@ -304,23 +306,14 @@
 					array
 					(
 						'label' => lang('Add_locations_for_control')
-					),
-					array
-					(
-						'label' => lang('add components for control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'))
 					)
-
 				);
 						
 				$data = array(
 					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 					'view'						=> "register_control_to_location",
 					'control_id'				=> $control_id,
-					'control_filters'			=> array(
-						'control_areas_array' 	=> $control_areas_array,
-						'control_array' 			=> $control_array
-					),
+					'control_areas_array'		=> $control_areas_array,
 					'filter_form' 				=> array(
 						'building_types' 			=> $building_types,
 						'category_types' 			=> $category_types,
@@ -655,12 +648,13 @@
 			(
 				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'td_count'						=> '""',
-				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+		//		'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
 				'myButtons'						=> $myButtons,
 
 				'msgbox_data'					=> $msgbox_data,
+				'control_area_list'		=> array('options' => $control_area_list),
 				'filter_form' 					=> array
 													(
 														'control_area_list'		=> array('options' => $control_area_list),
@@ -677,22 +671,22 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$theme = 'ui-lightness';
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/development-bundle/themes/{$theme}/jquery.ui.autocomplete.css");
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
-			self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
+	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
+			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('control_location/register_control_to_component'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
 	
 
@@ -727,7 +721,7 @@
 			(
 				'key'		=> 'select',
 				'label'		=> lang('select'),
-				'sortable'	=> true,
+				'sortable'	=> false,
 				'formatter'	=> false,
 				'hidden'	=> false,
 				'formatter' => '',
@@ -795,17 +789,20 @@
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
+			$results 			= phpgw::get_var('results', 'int');
+			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
 			if(!$entity_id && !$cat_id)
 			{
-				return json_encode(array());
+				$values = array();
 			}
-
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-			$boentity	= CreateObject('property.boentity',false, 'entity');
-			$boentity->allrows = true;
-			
-			$values = $boentity->read();
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+				$boentity	= CreateObject('property.boentity',false, 'entity');
+				$boentity->results = $results;
+				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
+			}		
 
 			foreach($values as &$entry)
 			{
@@ -818,7 +815,18 @@
 				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 			}
 
-			return json_encode($values);
+			
+			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$return_data['recordsReturned'] = count($values);
+			$return_data['totalRecords'] = $boentity->total_records;
+			$return_data['startIndex'] = $this->start;
+			$return_data['sort'] = 'location_code';
+			$return_data['dir'] = "ASC";
+			$return_data['pageSize'] = $results;
+			$return_data['activePage'] = floor($this->start / $results) + 1;
+			$return_data['records'] = $values;
+
+			return $return_data;
 		}
 
 		public function edit_component()

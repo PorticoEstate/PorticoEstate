@@ -19,7 +19,7 @@
 <xsl:template name="datatable">
 	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 	<input id="yui-history-field" type="hidden"/>
-	<xsl:call-template name="yui_booking_i18n"/>
+	<xsl:call-template name="yui_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
 	<xsl:apply-templates select="paging"/>
 	<div id="list_flash">

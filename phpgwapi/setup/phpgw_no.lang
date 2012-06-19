@@ -39,6 +39,7 @@ files	common	no	Filer
 filter	common	no	Filter
 first name	common	no	Fornavn
 first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
+first	common	no	Første
 friday	common	no	Fredag
 frontend	common	no	Frontend
 ftp	common	no	FTP
@@ -59,6 +60,7 @@ june	common	no	Juni
 last name	common	no	Etternavn
 last name of the user, eg. %1	common	no	Etternavn til bruker, %1
 last page	common	no	siste side
+last	common	no	Siste
 login	common	no	Login
 logout	common	no	Logg ut
 low	common	no	Lav
@@ -70,11 +72,14 @@ name	common	no	Navn
 name of the user, eg. %1	common	no	Fullt navn på bruker, %1
 new entry added sucessfully	common	no	Ny entry er lagt til
 next page	common	no	neste side
+next	common	no	Neste
 no	common	no	Nei
 none	common	no	Ikke angitt
 normal	common	no	Normal
 november	common	no	November
 october	common	no	Oktober
+of total	common	no	Av totalt
+of	common	no	av
 ok	common	no	OK
 only yours	common	no	kun dine
 page prepared in %1 seconds.	common	no	Side produsert på %1 sekunder
@@ -83,6 +88,7 @@ password has been updated	common	no	Passord har blitt oppdatert
 powered by phpgroupware version %1	common	no	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
 preferences	common	no	Innstillinger
 previous page	common	no	Forrige side
+prev	common	no	Forrige
 priority	common	no	Prioritet
 private	common	no	Privat
 rename	common	no	Endre navn
@@ -95,6 +101,8 @@ session has been killed	common	no	Session har blitt avsluttet
 show all	common	no	vis alle
 showing %1	common	no	showing %1
 showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
+showing items	common	no	Viser
+shows from	common	no	Viser fra
 site configuration	common	no	Konfigurasjon av moduler
 sorry, there was a problem processing your request.	common	no	Beklager, der var problemer ved din forespørsel.
 submit	common	no	Submit
@@ -105,6 +113,7 @@ the api requires an upgrade	common	no	API må oppdateres
 this application is current	common	no	Denne modulen er oppdatert
 this application requires an upgrade	common	no	Denne modulen må oppdateres
 time	common	no	Tid
+to	common	no	til
 total	common	no	Total
 tuesday	common	no	Tirsdag
 updated	common	no	Oppdatert

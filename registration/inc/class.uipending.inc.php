@@ -27,9 +27,9 @@
 	*/
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('registration.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 
-	class registration_uipending extends registration_uicommon
+	class registration_uipending extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
