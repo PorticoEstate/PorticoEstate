@@ -564,7 +564,7 @@ class controller_socheck_list extends controller_socommon
 		return $controls_array;
 	}
 	
-	function get_check_lists_for_component( $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type ){
+	function get_check_lists_for_component( $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type_expr = null ){
 		$sql = 	"SELECT c.id as c_id, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id, cl.location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
@@ -573,8 +573,8 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "WHERE cl.location_id = $location_id ";
 		$sql .= "AND cl.component_id = $component_id ";
 		
-		if( is_numeric($repeat_type) )
-			$sql .= "AND c.repeat_type = $repeat_type ";
+		if( $repeat_type != null )
+			$sql .= "AND c.repeat_type $repeat_type_expr ";
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";

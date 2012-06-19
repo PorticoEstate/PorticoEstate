@@ -28,7 +28,7 @@
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="{control_item/id}">
 			</input>
-			<dl class="proplist-col">
+			<dl class="proplist">
 				<dt>
 					<label for="title">Tittel</label>
 					<xsl:choose>

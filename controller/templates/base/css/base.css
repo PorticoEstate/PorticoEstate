@@ -127,12 +127,6 @@ dl.proplist-col {
     margin: 1em 0;
     padding-left: 2em;
 }
-dl.proplist dt,
-dl.proplist-col dt { 
-    font-weight: bolder; 
-    font-size: 90%; 
-    margin: .8em 0 .1em 0;
-}
 
 dl.proplist-col,
 dl.form-col {
