@@ -31,10 +31,8 @@
 	include_class('controller', 'model', 'inc/model/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 
-	class controller_control extends controller_model
+	class controller_component extends controller_model
 	{
-		public static $so;
-		
 		protected $type;
 		protected $id;
 		protected $guid;
@@ -44,7 +42,7 @@
 		protected $address;
 		
 		// Objects
-		protected $controls_list_array = array();
+		protected $controls_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -103,12 +101,12 @@
 		
 		public function get_address() { return $this->address; }
 		
-		public function set_controls_list_array($controls_list_array)
+		public function set_controls_array($controls_array)
 		{
-			$this->controls_list_array = $controls_list_array;
+			$this->controls_array = $controls_array;
 		}
 		
-		public function get_controls_list_array() { return $this->controls_list_array; }
+		public function get_controls_array() { return $this->controls_array; }
 		
 		public function serialize()
 		{
