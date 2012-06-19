@@ -28,7 +28,7 @@
  	* @version $Id$
 	*/	
 
-	phpgw::import_class('controller.uicommon');
+  phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socheck_list');
 	
 	include_class('controller', 'check_list', 'inc/model/');
@@ -39,7 +39,7 @@
 	include_class('controller', 'year_calendar', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 		
-	class controller_uicalendar extends controller_uicommon
+	class controller_uicalendar extends phpgwapi_uicommon
 	{
 		private $so;
 		private $so_control;
