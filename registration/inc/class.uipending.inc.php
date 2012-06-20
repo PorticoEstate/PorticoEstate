@@ -186,7 +186,8 @@
 				phpgwapi_yui::load_widget('paginator');
 
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-				self::render_template_xsl(array('pending_users', 'common'), $data);
+//				self::render_template_xsl(array('pending_users', 'common'), $data);
+				self::render_template_xsl(array('pending_users'), $data);
 			}	
 		}
 	
@@ -225,14 +226,21 @@
 
 
 			$data = array(
+				'js_lang'	=>js_lang('edit', 'add'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
 								'type' => 'link',
-								'value' => lang('New application'),
-								'href' => self::link(array('menuaction' => 'booking.uiapplication.add'))
+								'value' => lang('invert checkboxes'),
+								'href' => "javascript:checkAll('mychecks')"
 							),
+							array(
+								'type' => 'link',
+								'value' => lang('save'),
+								'href' => "javascript:onSave()"
+							),
+							
 							array('type' => 'filter', 
 								'name' => 'reg_dla',
                                 'text' => lang('status').':',
@@ -250,7 +258,8 @@
 							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_showall'))
+							//	'href' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json', 'all'))
 							),
 						),
 					),
@@ -278,7 +287,7 @@
 							'key' => 'reg_approved',
 							'label' => lang('approved'),
 							'sortable'	=> true,
-							'formatter' => 'FormatterCenter'
+							'formatter' => "''"
 						),
 						array(
 							'key' => 'location_code',
@@ -295,6 +304,7 @@
 					)
 				),
 			);
+//_debug_array($data);die();
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
