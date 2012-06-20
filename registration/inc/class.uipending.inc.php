@@ -80,6 +80,10 @@
 
 		function index()
 		{
+
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
 			if($values = phpgw::get_var('values'))
 			{
 				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
@@ -186,7 +190,6 @@
 				phpgwapi_yui::load_widget('paginator');
 
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-//				self::render_template_xsl(array('pending_users', 'common'), $data);
 				self::render_template_xsl(array('pending_users'), $data);
 			}	
 		}
