@@ -95,3 +95,6 @@
 		mydiv.style.display = "none";
 	}
 
+	YAHOO.util.Event.addListener(window, "load", function() {
+	    YAHOO.portico.inlineTableHelper('datatable-container', main_source, YAHOO.portico.columnDefs);
+	});

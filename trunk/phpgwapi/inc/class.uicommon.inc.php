@@ -32,20 +32,6 @@
 	phpgw::import_class('phpgwapi.yui');
 
 
-	/**
-	 * Generates a javascript translator object/hash for the specified fields.
-	 */
-/*	function js_lang()
-	{
-		$keys = func_get_args();
-		$strings = array();
-		foreach($keys as $key)
-		{
-			$strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key);
-		}
-		return json_encode($strings);
-	}
-*/
 	abstract class phpgwapi_uicommon
 	{
 		const UI_SESSION_FLASH = 'flash_msgs';
