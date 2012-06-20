@@ -16,6 +16,14 @@
 </func:function>
 
 <xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="js_lang != ''">
+			<script>
+				var lang = <xsl:value-of select="js_lang"/>;
+			</script>
+		</xsl:when>
+	</xsl:choose>
+
 	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_phpgw_i18n"/>
