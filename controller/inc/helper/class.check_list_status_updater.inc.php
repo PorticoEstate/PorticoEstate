@@ -5,7 +5,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 
-	class status_checker {
+	class check_list_status_updater {
 		
 		public function __construct()
 		{

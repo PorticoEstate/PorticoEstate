@@ -36,7 +36,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
-	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 	
 	class controller_uicheck_list extends phpgwapi_uicommon
@@ -295,9 +295,9 @@
 		function edit_check_list(){
 			$check_list_id = phpgw::get_var('check_list_id');
 
-			$status_checker = new status_checker();
-			$status_checker->update_check_list_status( $check_list_id );
-				
+			$cl_status_updater = new check_list_status_updater();
+			$cl_status_updater->update_check_list_status( $check_list_id );
+		
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
@@ -313,8 +313,6 @@
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));	
 			}
 			
-			
-						
 			$data = array
 			(
 				'control' 				=> $control->toArray(),

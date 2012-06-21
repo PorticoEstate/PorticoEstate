@@ -36,7 +36,7 @@
 	phpgw::import_class('controller.socontrol');
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
-	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 			
 	class controller_uicase extends phpgwapi_uicommon
 	{
@@ -133,8 +133,8 @@
 			$case_id = $this->so->store($case);
 			
 			if($case_id > 0){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "saved" ) );
 			}
@@ -162,8 +162,8 @@
 			$case = $this->so->get_single($case_id);
 			
 			if($case_id > 0){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				$check_item = $this->so_check_item->get_single($case->get_check_item_id());
 				$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
@@ -376,8 +376,8 @@
 				$check_list_id = $check_item->get_check_list_id(); 
 				
 				// Updates number of open cases for check list 
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );	
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );	
 			}
 		}
 		
@@ -389,8 +389,8 @@
 			$status = $this->so->delete($case_id);
 		
 			if($status){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "deleted" ) );
 			}
@@ -410,8 +410,8 @@
 			$case_id = $this->so->store($case);
 					
 			if($case_id > 0){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "true" ) );
 			}
@@ -431,8 +431,8 @@
 			$case_id = $this->so->store($case);
 					
 			if($case_id > 0){
-				$status_checker = new status_checker();
-				$status_checker->update_check_list_status( $check_list_id );
+				$cl_status_updater = new check_list_status_updater();
+				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "true" ) );
 			}
