@@ -28,8 +28,7 @@ class year_calendar {
    	   	
   /* Initializes calendar by setting status for each month in calendar array. 
    * 	- CONTROL_NOT_DONE if month date is in the past 
-   * 	- CONTROL_REGISTERED if month date is in the future
-   */ 
+   * 	- CONTROL_REGISTERED if month date is in the future */ 
 	function init_calendar(){
     for($i = 1;$i <= 12;$i++){
 		  $this->calendar_array[$i] = null;
@@ -47,11 +46,19 @@ class year_calendar {
 		
     // Inserts dates 
     foreach($dates_array as $date_ts){
-    	
     	$check_list = new controller_check_list();
     	$check_list->set_deadline( $date_ts );
+    	$check_list->set_control_id( $this->control->get_id() );
     	
-    	$check_list_status_manager = new check_list_status_manager( $check_list );
+    	if($this->type == "component"){
+    		$check_list->set_component_id( $this->component->get_id() );
+    		$check_list->set_location_id( $this->component->get_type() );
+    		$check_list_status_manager = new check_list_status_manager( $check_list, "component" );
+    	}else {
+    		$check_list->set_location_code( $this->location_code );
+    		$check_list_status_manager = new check_list_status_manager( $check_list, "location" );
+    	} 
+    	
 			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
     	
 			$month_nr = date("n", $date_ts);
