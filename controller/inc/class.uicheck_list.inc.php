@@ -191,44 +191,34 @@
 		 * @return data array
 		*/
 		function add_check_list(){
-			$location_code = phpgw::get_var('location_code');
+			$type = phpgw::get_var('type');
 			$control_id = phpgw::get_var('control_id');
-			$date = phpgw::get_var('date');
+			$deadline_ts = phpgw::get_var('deadline_ts');
+			
+			$check_list = new controller_check_list();
+			$check_list->set_control_id($control_id);
+			$check_list->set_deadline($deadline_ts);
+			
+			if($type == "component"){
+				$location_id = phpgw::get_var('location_id');
+				$check_list->set_location_id($location_id);
+				$component_id = phpgw::get_var('component_id');
+				$check_list->set_component_id($component_id);
+			}else{
+				$location_code = phpgw::get_var('location_code');	
+			}
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			if($date == null || $date == ''){
-				$todays_date = mktime(0,0,0, date("m"), date("d"), date("Y"));
-				$period_start_date = $todays_date;
-				
-				if( $control->get_repeat_type() == 1 )
-				{
-					$period_end_date = mktime(0,0,0, date("m")+1, date("d"), date("Y"));
-				}else if( $control->get_repeat_type() == 2 )
-				{
-					$period_end_date = mktime(0,0,0, date("m"), date("d"), date("Y") + 1);
-				}else if( $control->get_repeat_type() == 3 )
-				{
-					$period_end_date = mktime(0,0,0, date("m"), date("d"), date("Y") + $control->get_repeat_interval());				
-				}
-				
-				$date_generator = new date_generator($control->get_start_date(), $control->get_end_date(), $period_start_date, $period_end_date, $control->get_repeat_type(), $control->get_repeat_interval());
-							
-				$calendar_array = $date_generator->get_dates();
-			}
-			else
-			{
-				$calendar_array[] = $date;
-			}			
-
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
 				'location_array'	=> $location_array,
-				'control'			=> $control->toArray(),
-				'deadline'			=> $calendar_array[0],
-				'date_format' 		=> $date_format			
+				'control'					=> $control->toArray(),
+				'date_format' 		=> $date_format,
+				'check_list' 			=> $check_list->toArray(),
+				'type'			 			=> $type
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -248,25 +238,28 @@
 		 * @return data array
 		*/
 		function save_check_list(){
-			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
 			$status = (int)phpgw::get_var('status');
-
+			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
-			
 			$comment = phpgw::get_var('comment', 'string');
-							
-			if($planned_date != '')
+			
+			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			
+			if($planned_date != ''){
 				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-
-			if($deadline_date != '')
-				$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			}else{
+				$planned_date_ts = 0;
+			} 
 			
-			if($completed_date != '')
+			if($completed_date != ''){
 				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-			
+			}else{
+				$completed_date_ts = 0;
+			}		
+
 			$check_list = new controller_check_list();
 			$check_list->set_location_code($location_code);
 			$check_list->set_control_id($control_id);
@@ -276,9 +269,21 @@
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
 			
+			if($type == "component"){
+				$location_id = phpgw::get_var('location_id');
+				$component_id = phpgw::get_var('component_id');
+				$check_list->set_location_id( $location_id );
+				$check_list->set_component_id( $component_id );
+			}else {
+				$location_code = phpgw::get_var('location_code');
+				$check_list->set_location_code( $location_code );
+			}
+			
 			$check_list_id = $this->so->store($check_list);
 			
-			$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));
+			if( $check_list_id > 0 ){
+				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));	
+			}
 		}
 		
 		/**
@@ -294,18 +299,26 @@
 			$status_checker->update_check_list_status( $check_list_id );
 				
 			$check_list = $this->so->get_single($check_list_id);
-			
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$location_code = $check_list->get_location_code();
+			
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0){
+				
+			}else{
+				$location_code = $check_list->get_location_code();
 	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));	
+			}
+			
+			
 						
 			$data = array
 			(
-				'control' 			=> $control->toArray(),
-				'check_list' 		=> $check_list->toArray(),
+				'control' 				=> $control->toArray(),
+				'check_list' 			=> $check_list->toArray(),
 				'location_array'	=> $location_array,
 				'date_format' 		=> $date_format
 			);

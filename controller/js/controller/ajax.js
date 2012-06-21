@@ -517,7 +517,6 @@ $(document).ready(function(){
 	
 	// ADD CHECKLIST
 	$("#frm_add_check_list").live("submit", function(e){
-		
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
 		var completedDateVal = $("#completed_date").val();

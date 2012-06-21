@@ -124,6 +124,17 @@ function chooseLocation( label, value ){
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			
+				<select>
+					<xsl:for-each select="roles_array">
+						<xsl:variable name="role_id"><xsl:value-of select="id"/></xsl:variable>
+						<option value="{$role_id}">
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			
+			
+			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<div id="calNav">
 				<a class="showPrev">
@@ -169,7 +180,7 @@ function chooseLocation( label, value ){
 									<xsl:text>&amp;year=</xsl:text>
 									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;location_code=</xsl:text>
-									<xsl:value-of select="current_location/location_code"/>
+									<xsl:value-of select="//current_location/location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
@@ -234,21 +245,46 @@ function chooseLocation( label, value ){
 				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
+		</table>
 		
+		<h2>Komponenter</h2>
+		
+		<table id="calendar" class="year">
+				<tr class="heading">
+						<th class="title"><span>Tittel</span></th>
+						<th class="assigned"><span>Tildelt</span></th>
+						<th class="frequency"><span>Frekvens</span></th>
+					<xsl:for-each select="heading_array">
+						<th>
+							<a>
+								<xsl:attribute name="href">
+									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+									<xsl:text>&amp;year=</xsl:text>
+									<xsl:value-of select="//current_year"/>
+									<xsl:text>&amp;location_code=</xsl:text>
+									<xsl:value-of select="current_location/location_code"/>
+									<xsl:text>&amp;month=</xsl:text>
+									<xsl:number/>
+								</xsl:attribute>
+								
+								<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
+								<xsl:value-of select="php:function('lang', $month_str)" />
+							</a>				
+						</th>
+					</xsl:for-each>
+				</tr>
 		<xsl:for-each select="components_calendar_array">
 		
 		<tr>
-		
 		<td>
 			<h3><xsl:value-of select="component/location_code"/></h3>
 		</td>
 			<xsl:for-each select="controls_calendar">
+			
+				
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			  	
 			  		<tr>
-			  		
-			  
-			  						
 						<xsl:choose>
 					        <xsl:when test="(position() mod 2) != 1">
 					            <xsl:attribute name="class">odd</xsl:attribute>
@@ -295,24 +331,7 @@ function chooseLocation( label, value ){
 		
 		</xsl:for-each>
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			
 	</table>
 	</div>
 </div>
