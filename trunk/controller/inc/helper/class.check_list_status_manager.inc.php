@@ -57,13 +57,13 @@
 				{
 					$status = "CONTROL_PLANNED";
 				}
+				else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() < $todays_date_ts )
+				{
+					$status = "CONTROL_NOT_DONE_WITH_CHECKLIST";
+				}
 				else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts )
 				{
 					$status = "CONTROL_NOT_DONE_WITH_PLANNED_DATE";
-				}
-				else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() < $todays_date_ts )
-				{
-					$status = "CONTROL_NOT_DONE";
 				}
 				else if( $this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_completed_date() > $this->check_list->get_deadline() & $this->check_list->get_num_open_cases() == 0)
 				{
