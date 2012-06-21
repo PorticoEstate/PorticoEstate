@@ -53,7 +53,7 @@ class controller_socheck_list extends controller_socommon
 	
 	public function get_single($check_list_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
-		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, ci.id as ci_id, control_item_id, "; 
+		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id, "; 
 		$sql .= "check_list_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
@@ -75,6 +75,7 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+				$check_list->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));	
 				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));	
 			}
@@ -810,6 +811,7 @@ class controller_socheck_list extends controller_socommon
 			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
 			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+			$control->set_location_id($this->unmarshal($this->db->f('location_id', true), 'string'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 		}
@@ -833,24 +835,22 @@ class controller_socheck_list extends controller_socommon
 				'status'
 		);
 				
-		$check_list->set_status(1);
 		$values = array(
 			$this->marshal($check_list->get_control_id(), 'int'),
 			$this->marshal($check_list->get_comment(), 'string'),
 			$this->marshal($check_list->get_deadline(), 'int'),
 			$this->marshal($check_list->get_planned_date(), 'int'),
 			$this->marshal($check_list->get_completed_date(), 'int'),
-			444,
-			$this->marshal(sds, 'string'),
-			intval(77),
-			$this->marshal(88, 'int'),
+			$this->marshal($check_list->get_component_id(), 'int'),
+			$this->marshal($check_list->get_location_code(), 'string'),
+			$this->marshal($check_list->get_num_open_cases(), 'int'),
+			$this->marshal($check_list->get_num_pending_cases(), 'int'),
+			$this->marshal($check_list->get_location_id(), 'int'),
 			$check_list->get_status()
 		);
-				
-		//$result = $this->db->query('INSERT INTO controller_check_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
-		$result = $this->db->query('INSERT INTO controller_check_list (control_id,comment,deadline,planned_date,completed_date,component_id,location_code,num_open_cases,num_pending_cases,location_id,status) values(4,' . 4 . ',4,4,4,4,' . 4 . ',4,4,2,4)');
-		//$result = $this->db->query('INSERT INTO controller_check_list values(' . 84 . ',4,' . 4 . ',4,4,4,4,' . 4 . ',4,4,2,4)');
 		
+		$result = $this->db->query('INSERT INTO controller_check_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+			
 		return isset($result) ? $this->db->get_last_insert_id('controller_check_list', 'id') : 0;
 	}
 	
