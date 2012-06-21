@@ -771,10 +771,11 @@
 		{
 			$project_id = (int) $project_id;
 			$project = array();
-			$sql = "SELECT * from fm_project WHERE id={$project_id}";
+			$sql = "SELECT * FROM fm_project WHERE id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$project = array();
 			if ($this->db->next_record())
 			{
 				$project = array
@@ -823,6 +824,14 @@
 				$location_code = $this->db->f('location_code');
 				$project['power_meter']		= $this->get_power_meter($location_code);
 			}
+
+			if($project)
+			{
+				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = $project_id",__LINE__,__FILE__);
+				$this->db->next_record();
+				$project['budget'] =(int)$this->db->f('sum_budget');
+			}
+
 			//_debug_array($project);
 			return $project;
 		}
@@ -1366,6 +1375,8 @@
 
 			if ($old_budget != $new_budget)
 			{
+				$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int)$project['id'],__LINE__,__FILE__);
+
 				$historylog->add('B',$project['id'],$project['budget'], $old_budget);
 			}
 
@@ -1631,7 +1642,7 @@
 			{
 				$year = $this->db->f('year');
 				$_actual_cost = isset($cost_info[$year]['actual_cost']) &&  $cost_info[$year]['actual_cost'] ? $cost_info[$year]['actual_cost'] : 0;
-				$_sum_orders = isset($cost_info[$year]['sum_orders']) &&  $cost_info[$year]['sum_orders'] ? $cost_info[$year]['sum_orders'] : 0;
+				$_sum_orders = isset($cost_info[$year]['sum_orders']) &&  $cost_info[$year]['sum_orders'] > 0 ? $cost_info[$year]['sum_orders'] : 0;
 				if(isset($cost_info[$year]))
 				{
 					unset($cost_info[$year]);
@@ -1650,6 +1661,7 @@
 					'modified_date'		=> $this->db->f('modified_date')
 				);
 			}
+
 			if($cost_info && count($cost_info))
 			{
 				foreach($cost_info as $year => $cost_info)
@@ -1668,8 +1680,6 @@
 					);
 				}
 			}
-//_debug_array($values);
-//die();
 
 			if($values)
 			{

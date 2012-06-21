@@ -143,26 +143,36 @@
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			$user_contacts = array();
 
+			$socommon			= CreateObject('property.socommon');
+			$prefs = array();
 			foreach($accounts as $account)
 			{
 				if(isset($account->person_id) && $account->person_id)
 				{
 					$user_contacts[] = $account->person_id;
+
+					$prefs[$account->person_id] = $socommon->create_preferences('property',$account->id);
 				}
 			}
+
+//_debug_array($prefs);die();
 			foreach($contacts as &$contact)
 			{
 				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
 
 				if ( is_array($comms) && count($comms) )
 				{
-					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
-					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
-					$contact['mobile'] = isset($comms[$contact['contact_id']]['mobile (cell) phone']) ?  $comms[$contact['contact_id']]['mobile (cell) phone'] : '';
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) && $comms[$contact['contact_id']]['work email'] ? $comms[$contact['contact_id']]['work email'] :$prefs[$contact['contact_id']]['email'];
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) && $comms[$contact['contact_id']]['work phone'] ?  $comms[$contact['contact_id']]['work phone'] : '';
+					$contact['mobile'] = isset($comms[$contact['contact_id']]['mobile (cell) phone']) &&  $comms[$contact['contact_id']]['mobile (cell) phone'] ?  $comms[$contact['contact_id']]['mobile (cell) phone'] : $prefs[$contact['contact_id']]['cellphone'];
 				}
 				if (in_array($contact['contact_id'], $user_contacts) )
 				{
 					$contact['is_user'] = 'X';
+
+					$contact['email'] = isset($contact['email']) && $contact['email'] ? $contact['email'] :$prefs[$contact['contact_id']]['email'];
+					$contact['wphone'] = isset($contact['wphone']) && $contact['wphone'] ?  $contact['wphone'] : '';
+					$contact['mobile'] = isset($contact['mobile']) && $contact['mobile'] ?  $contact['mobile'] : $prefs[$contact['contact_id']]['cellphone'];
 				}
 			}
 

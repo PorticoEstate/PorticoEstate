@@ -2217,6 +2217,7 @@
 
 					if(!$receipt['error']) // all ok
 					{
+						execMethod('property.soXport.update_actual_cost_from_archive',array($values['order_id'] => true));
 						$redirect = true;
 					}
 				}
