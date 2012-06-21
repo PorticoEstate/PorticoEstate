@@ -108,12 +108,29 @@
 				);
 			}
 
+			$contacts = CreateObject('phpgwapi.contacts');
+
+			$socommon			= CreateObject('property.socommon');
+
+
 			foreach ($values as &$entry)
 			{
 				$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$entry['contact_id']);
+
 				$entry['email'] = $comms[$entry['contact_id']]['work email'];
 				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];
 				$entry['is_active_text'] = $entry['is_active'] ? $lang_yes : $lang_no;
+
+				$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id = " . (int) $entry['contact_id'];
+				$this->_db->query($sql,__LINE__,__FILE__);
+				if($this->_db->next_record())
+				{
+					$account_id		= $this->_db->f('account_id');
+					$prefs = $socommon->create_preferences('property',$account_id);		
+
+					$entry['email'] = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
+					$entry['sms'] = isset($entry['sms']) && $entry['sms'] ?  $entry['sms'] : $prefs['cellphone'];
+				}
 			}
 
 			return $values;

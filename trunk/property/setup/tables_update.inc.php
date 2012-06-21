@@ -6420,3 +6420,46 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Add update values
+	*/
+	$test[] = '0.9.17.646';
+	function property_upgrade0_9_17_646()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT project_id, sum(budget) AS sum_budget FROM fm_project_budget GROUP BY project_id",__LINE__,__FILE__);
+
+		$values = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$values[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('project_id'),
+				'budget'		=> (int)$GLOBALS['phpgw_setup']->oProc->f('sum_budget')
+			);
+		}
+
+		foreach ($values as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET budget = {$entry['budget']} WHERE id =  {$entry['id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM fm_workorder",__LINE__,__FILE__);
+
+		$orders = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[$GLOBALS['phpgw_setup']->oProc->f('id')] = true;
+		}
+
+		execMethod('property.soXport.update_actual_cost_from_archive',$orders);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.647';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
