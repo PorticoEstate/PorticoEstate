@@ -79,6 +79,7 @@ class year_calendar {
 			$this->calendar_array[ $month_nr ]["status"] = $check_list_status_info->get_status();
 			$this->calendar_array[ $month_nr ]["info"]   = $check_list_status_info->serialize();
 		}
+		print_r( $this->calendar_array );
 		
 		return $this->calendar_array;
 	}
