@@ -261,6 +261,7 @@
 				
 				//$location_id = $component->get_type();
 				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$filters = array("short_description" => "IS NOT NULL");
 				$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 			
 				print_r( $attributes['attributes'][1] );
