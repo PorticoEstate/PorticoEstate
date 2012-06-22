@@ -958,11 +958,19 @@
 				{
 					if($value)
 					{
-						$condition[] = "$column = '{$value}'";
+						switch($value)
+						{
+							case 'IS NOT NULL':
+								$condition[] = "{$column} IS NOT NULL";
+								break;
+							default:
+								$condition[] = "{$column} = '{$value}'";							
+						}
+
 					}
 					else
 					{
-						$condition[] = "$column IS NULL";					
+						$condition[] = "{$column} IS NULL";					
 					}
 				}
 
