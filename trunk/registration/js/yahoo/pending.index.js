@@ -1,3 +1,4 @@
+	var main_source;
 	var oArgs_edit = {menuaction:'registration.uipending.edit'};
 	var edit_Url = phpGWLink('index.php', oArgs_edit);
 
@@ -98,3 +99,4 @@
 	YAHOO.util.Event.addListener(window, "load", function() {
 	    YAHOO.portico.inlineTableHelper('datatable-container', main_source, YAHOO.portico.columnDefs);
 	});
+
