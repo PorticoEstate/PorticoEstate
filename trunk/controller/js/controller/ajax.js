@@ -6,7 +6,6 @@ $(document).ready(function(){
 		
 	}
 	
-	
 	/* ================================  SEARCH LOCATION BOX  ========================== */
 	
 	// Changes location level between building and property in serch location select box
@@ -49,6 +48,22 @@ $(document).ready(function(){
 		
 		 window.location.href = requestUrl;
     });
+	
+	$("#filter-repeat_type").change(function () {
+      var repeat_type = $(this).val();
+	  var thisForm = $(this).closest("form");
+		 
+	  $(thisForm).find("input[name=repeat_type]").val(repeat_type);
+	  $(thisForm).submit();
+	});
+	
+	$("#filter-role").change(function () {
+	  var role = $(this).val();
+	  var thisForm = $(this).closest("form");
+		
+	  $(thisForm).find("input[name=role]").val(role);
+	  $(thisForm).submit();
+	});
 	
 	/* ================================  CONTROL LOCATION ================================== */
 	
