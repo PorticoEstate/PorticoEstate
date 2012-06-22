@@ -257,9 +257,10 @@
 			// COMPONENTS
 			foreach($components_with_controls_array as $component){
 				
-				$location_id = 2295; //Eksempel: Valglokaler
+				//$location_id = 2295; //Eksempel: Valglokaler
 				
-				//$location_id = $component->get_type();
+				$location_id = $component->get_location_id();
+				echo " location_id: " . $location_id;
 				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$filters = array("short_description" => "IS NOT NULL");
 				$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);

@@ -236,7 +236,7 @@
 			$sql  .= "bim_item.type as component_type, bim_item.id as component_id, bim_item.location_code, bim_item.address, ";
 			//$sql  .= "cast(xpath('*/text()', xml_representation) as text[]) AS xml ";
 			//$sql  .= "xpath('/', bim_item.xml_representation) as xml ";
-			$sql  .= "bim_item.xml_representation as xml ";
+			$sql  .= "bim_item.xml_representation as xml, cl.location_id ";
 			$sql  .= "FROM controller_control_component_list cl ";
 			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
 			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
@@ -276,6 +276,7 @@
 					$component = new controller_component();
 					$component->set_type($this->unmarshal($this->db->f('component_type', true), 'int'));
 					$component->set_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+					$component->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
 					$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
