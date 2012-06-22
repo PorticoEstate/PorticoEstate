@@ -256,17 +256,17 @@
 			
 			// COMPONENTS
 			foreach($components_with_controls_array as $component){
-				/*
-				$location_id = 2295;//Eksempel:kunst
+				
+				$location_id = 2295; //Eksempel: Valglokaler
 				
 				//$location_id = $component->get_type();
 				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 			
-				print_r($attributes);
+				print_r( $attributes['attributes'][1] );
 			
-				$attributes['attributes'] = "short_description";
-				
+				$fields['attributes']= $attributes[0][0];
+				//print_r($fields);
 				$params = array
 				(
 					'location_id' => $component->get_type(),
@@ -274,8 +274,8 @@
 				);
 			
 				$prop_array = execMethod('property.soentity.read_single_eav', $params, $attributes);
-				print_r($prop_array);
-*/
+				//print_r($prop_array);
+
 				$controls_for_component_array = $component->get_controls_array(); 
 				$controls_components_calendar_array = array();
 				
