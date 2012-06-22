@@ -35,6 +35,7 @@
 	{
 		protected $type;
 		protected $id;
+		protected $location_id;
 		protected $guid;
 		protected $xml;
 		// Not a table column
@@ -66,6 +67,13 @@
 		}
 		
 		public function get_id() { return $this->id; }
+		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+		
+		public function get_location_id() { return $this->location_id; }
 		
 		public function set_guid($guid)
 		{
