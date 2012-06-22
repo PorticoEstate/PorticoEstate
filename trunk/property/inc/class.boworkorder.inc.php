@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $order_sent_adress; // in case we want to resend the order as an reminder
+		var $allrows;
 
 		var $public_functions = array
 			(
@@ -80,6 +81,7 @@
 			$b_account			= phpgw::get_var('b_account');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$criteria_id		= phpgw::get_var('criteria_id', 'int');
+			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start		= $start ? $start : 0;
 			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
@@ -448,6 +450,10 @@
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
+			if(isset($this->allrows) && $this->allrows)
+			{
+				$data['allrows'] = true;
+			}
 
 			$workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,

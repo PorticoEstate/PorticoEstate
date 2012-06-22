@@ -41,6 +41,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $allrows;
 
 		var $public_functions = array
 			(
@@ -77,6 +78,7 @@
 			$wo_hour_cat_id			= phpgw::get_var('wo_hour_cat_id', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$criteria_id			= phpgw::get_var('criteria_id', 'int');
+			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
 
@@ -401,6 +403,11 @@
 
 		function read($data = array())
 		{
+			if(isset($this->allrows) && $this->allrows)
+			{
+				$data['allrows'] = true;
+			}
+
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
