@@ -185,6 +185,8 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
+			$role = phpgw::get_var('role');
+			$repeat_type = phpgw::get_var('repeat_type');
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
@@ -209,10 +211,10 @@
       $buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
 			
 			// Fetches all controls for the location within time period
-			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 			
 			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 		
 			$controls_calendar_array = array();
 			
@@ -254,6 +256,26 @@
 			
 			// COMPONENTS
 			foreach($components_with_controls_array as $component){
+				/*
+				$location_id = 2295;//Eksempel:kunst
+				
+				//$location_id = $component->get_type();
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+			
+				print_r($attributes);
+			
+				$attributes['attributes'] = "short_description";
+				
+				$params = array
+				(
+					'location_id' => $component->get_type(),
+					'id' => $component->get_id()
+				);
+			
+				$prop_array = execMethod('property.soentity.read_single_eav', $params, $attributes);
+				print_r($prop_array);
+*/
 				$controls_for_component_array = $component->get_controls_array(); 
 				$controls_components_calendar_array = array();
 				
@@ -295,7 +317,13 @@
 			$heading_array = year_calendar::get_heading_array();
 			
 			$roles_array = $this->so_control->get_roles();
-			
+			$repeat_type_array = array(
+									array('id' 	=> "0", 'value'	=> "Dag"),
+									array('id' 	=> "1", 'value'	=> "Uke"),
+									array('id' 	=> "2", 'value'	=> "Måned"),
+									array('id' 	=> "3", 'value'	=> "År")
+								);
+								
 			$data = array
 			(
 				'buildings_on_property'			=> $buildings_on_property,
@@ -307,7 +335,8 @@
 				'date_format' 			  			=> $date_format,
 				'current_year' 			  			=> $year,
 				'location_level'		  			=> $level,
-				'roles_array'		  					=> $roles_array
+				'roles_array'		  					=> $roles_array,
+				'repeat_type_array'		  		=> $repeat_type_array
 			);
 			
 			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 
