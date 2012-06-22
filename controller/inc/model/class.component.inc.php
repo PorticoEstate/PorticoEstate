@@ -37,6 +37,8 @@
 		protected $id;
 		protected $guid;
 		protected $xml;
+		// Not a table column
+		protected $xml_short_desc;
 		protected $location_code;
 		protected $loc_1;
 		protected $address;
