@@ -405,10 +405,6 @@
 //				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 			}
 
-			if($dry_run)
-			{
-				return array();
-			}
 
 			$location_table = 'fm_project';
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
@@ -661,6 +657,11 @@
 			}
 
 			$workorder_list = array();
+
+			if($dry_run)
+			{
+				return $workorder_list;
+			}
 
 			$sql_end =   str_replace('SELECT DISTINCT fm_workorder.id',"SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
 //	_debug_array($sql_end);die();
