@@ -6351,7 +6351,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Update property version from 0.9.17.644 to 0.9.17.645
 	* Add view on fm_ecobilag
 	*/
 	$test[] = '0.9.17.644';
@@ -6394,7 +6394,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Update property version from 0.9.17.645 to 0.9.17.646
 	* Add optional inheritance of location from project to order
 	*/
 	$test[] = '0.9.17.645';
@@ -6421,8 +6421,8 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.643 to 0.9.17.644
-	* Add update values
+	* Update property version from 0.9.17.646 to 0.9.17.647
+	* Update values
 	*/
 	$test[] = '0.9.17.646';
 	function property_upgrade0_9_17_646()
@@ -6463,3 +6463,54 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.647 to 0.9.17.648
+	* Update values
+	*/
+	$test[] = '0.9.17.647';
+	function property_upgrade0_9_17_647()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_department',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'parent_id' => array('type' => 'int','precision' => '4','nullable' => true),
+					'name' => array('type' => 'varchar','precision' => '60','nullable' => False),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_on' => array('type' => 'int','precision' => 4,'nullable' => true)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_department  (id, name, created_on, created_by) VALUES (1, 'Department'," . time() . ",6 ) ",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb','department',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecodimb SET department = 1",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb','department',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.648';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
