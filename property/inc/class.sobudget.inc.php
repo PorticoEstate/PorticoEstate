@@ -532,6 +532,7 @@
 			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$details		= isset($data['details']) ? $data['details'] : '';
 			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
+			$department		= isset($data['department'])  && $data['department'] ? (int)$data['department'] : 0;
 
 			if(!$year)
 			{
@@ -550,9 +551,15 @@
 
 			$where = 'WHERE';
 
+			$cat_ids = array();
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$cat_ids = $this->get_sub_cats($cat_id);
+			}
+
+			if($cat_ids)
+			{
+				$filtermethod .= " $where fm_project.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -566,6 +573,23 @@
 			{
 				$filtermethod .= " $where fm_workorder.ecodimb={$dimb_id}";
 				$where = 'AND';
+			}
+
+			$_department_dimb = array();
+			if ($department > 0)
+			{
+				$_department_dimb[] = -1;//block in case no one found
+				$this->db->query("SELECT id FROM fm_ecodimb WHERE department = $department ",__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$_department_dimb[] = $this->db->f('id');
+				}
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_workorder.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
 			}
 
 			if ($grouping > 0)
@@ -630,9 +654,9 @@
 
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_tts_tickets.cat_id = " . (int)$cat_id;
+				$filtermethod .= " $where fm_tts_tickets.cat_id IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -646,6 +670,12 @@
 			{
 				$filtermethod .= " $where fm_tts_tickets.ecodimb={$dimb_id}";
 				$where = 'AND';
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_tts_tickets.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
 			}
 
 			if ($grouping > 0)
@@ -728,6 +758,12 @@
  */
 			}
 
+			if($cat_ids)
+			{
+				$filtermethod .= " $where fm_budget.category IN (". implode(',', $cat_ids) . ')';
+				$where = 'AND';
+			}
+
 			if ($district_id > 0)
 			{
 				$filtermethod .= " $where district_id='$district_id' ";
@@ -739,6 +775,13 @@
 				$filtermethod .= " $where ecodimb={$dimb_id}";
 				$where = 'AND';
 			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
+			}
+
 
 			if( $details )
 			{
@@ -770,9 +813,9 @@
 			$filtermethod = '';
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_workorder.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -793,6 +836,13 @@
 				$filtermethod .= " $where dimb={$dimb_id}";
 				$where = 'AND';
 			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where dimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
+			}
+
 
 			$start_periode = date('Ym',mktime(2,0,0,1,1,$year));
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
@@ -861,9 +911,9 @@
 			$filtermethod = " fm_s_agreement_budget.year = $year";
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_s_agreement.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_s_agreement.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -877,6 +927,12 @@
 			{
 				$filtermethod .= " $where fm_s_agreement_budget.ecodimb={$dimb_id}";
 				$where = 'AND';
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
 			}
 
 			$sql = "SELECT sum(budget) as budget, count(fm_s_agreement.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, fm_s_agreement_budget.ecodimb"
@@ -937,9 +993,9 @@
 			$filtermethod = '';
 			$where = 'WHERE';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_s_agreement.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_s_agreement.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -955,7 +1011,11 @@
 				$where = 'AND';
 			}
 
-
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';		
+			}
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilag.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
 				. " FROM fm_ecobilag"

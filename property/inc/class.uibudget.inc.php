@@ -1047,13 +1047,16 @@
 				$default_value = array ('id'=>'','name'=>lang('no grouping'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
-				foreach($values_combo_box[4] as & $_dimb)
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'department'));
+				array_unshift ($values_combo_box[4], array ('id'=>'','name'=>lang('department')));
+
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[5] as & $_dimb)
 				{
 					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
 				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
-				array_unshift ($values_combo_box[4],$default_value);
+				array_unshift ($values_combo_box[5],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -1141,12 +1144,24 @@
 								array
 								( //boton 	USER
 									//	'id' => 'btn_user_id',
+									'id' => 'sel_department',
+									'name' => 'department',
+									'value'	=> lang('department'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[4],
+									'onchange'=> 'onChangeSelect("department");',
+									'tab_index' => 5
+								),
+								array
+								( //boton 	USER
+									//	'id' => 'btn_user_id',
 									'id' => 'sel_dimb_id',
 									'name' => 'dimb_id',
 									'value'	=> lang('dimb'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[4],
+									'values' => $values_combo_box[5],
 									'onchange'=> 'onChangeSelect("dimb_id");',
 									'tab_index' => 5
 								),
@@ -1538,7 +1553,7 @@
 
 					'lang_year'						=> lang('year'),
 					'lang_year_statustext'			=> lang('Budget year'),
-					'year'							=> $this->bocommon->select_list($values['year'],$this->bo->get_year_list()),
+					'year'							=> $this->bocommon->select_list($values['year']?$values['year']:date('Y'),$this->bo->get_year_list()),
 
 					'lang_district'					=> lang('District'),
 					'lang_no_district'				=> lang('no district'),

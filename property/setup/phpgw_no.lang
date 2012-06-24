@@ -502,6 +502,7 @@ delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett bestilling
 delivered	property	no	Levert
 delivery address	property	no	Leveringsadresse
+department	property	no	Avdeling
 deposit claim	property	no	Krav mot depositum
 deposition	property	no	Avsetning
 description	property	no	Beskrivelse
