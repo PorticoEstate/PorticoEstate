@@ -968,6 +968,21 @@
 			'fk' => array(),
 			'uc' => array()
 		),
+		'fm_department' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => true),
+				'name' => array('type' => 'varchar','precision' => '60','nullable' => False),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'modified_on' => array('type' => 'int','precision' => 4,'nullable' => true)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
 		'fm_ecoart' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -1165,11 +1180,12 @@
 		'fm_ecodimb' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '25','nullable' => False)
+				'descr' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'department' => array('type' => 'int','precision' => '4','nullable' => False),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
-			'fk' => array(),
+			'fk' => array('fm_department' => array('department' => 'id')),
 			'uc' => array()
 		),
 		'fm_ecodimb_role' => array(

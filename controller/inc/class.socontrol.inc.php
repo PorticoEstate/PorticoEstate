@@ -228,13 +228,15 @@
 			}
 		}
 		
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = null, $return_type = "return_object")
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
 			$sql  .= "bim_item.type as component_type, bim_item.id as component_id, bim_item.location_code, bim_item.address, ";
-			$sql  .= "xpath('descendant-or-self::*/beskrivelse/text()', bim_item.xml_representation) as xml ";
+			//$sql  .= "cast(xpath('*/text()', xml_representation) as text[]) AS xml ";
+			//$sql  .= "xpath('/', bim_item.xml_representation) as xml ";
+			$sql  .= "bim_item.xml_representation as xml, cl.location_id ";
 			$sql  .= "FROM controller_control_component_list cl ";
 			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
 			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
@@ -242,10 +244,13 @@
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			$sql  .= "AND bim_item.location_code LIKE '$location_code%' ";
 			
-			if( $repeat_type != null){
+			if( is_numeric($repeat_type)){
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			
+			if( is_numeric($role_id)){
+			    $sql .= "AND c.responsibility_id = $role_id ";
+			}
+			    
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date) ";
 			
@@ -271,6 +276,7 @@
 					$component = new controller_component();
 					$component->set_type($this->unmarshal($this->db->f('component_type', true), 'int'));
 					$component->set_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+					$component->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
 					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
 					$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));

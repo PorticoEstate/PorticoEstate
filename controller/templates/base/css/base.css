@@ -365,10 +365,14 @@ input[type="radio"] {
 }
 
 #innertoolbar-button {
-    font-size: 1em;
-    line-height: 1.2em;
-    min-height: 1.2em;
-    padding: 2px 15px;
+  font-size: 1em;
+  line-height: 1.2em;
+  min-height: 1.2em;
+  padding: 2px 15px;
+}
+
+a#innertoolbar-button {
+  padding: 3px 15px;
 }
 
 .row input[type="submit"] {
@@ -432,9 +436,10 @@ a {
 }
 
 .yui-skin-sam .yui-button .first-child {
-  border: 0;
-  margin:0;
+    border: 0 none;
+    margin: 0 10px 0 0;
 }
+
 .yui-skin-sam .yui-button {
   background: none;
   border:0;
@@ -1018,9 +1023,10 @@ h3.check_item_details{
 	width:150px;	
 }
 
-.new_item a#innertoolbar-button{
-	background: grey;
-	font-weight: bold;
+.new_item a#innertoolbar-button {
+    background: none repeat scroll 0 0 grey;
+    border: 1px solid #666666;
+    font-weight: bold;
 }
 
 #frm_save_check_items input[type="submit"]{
@@ -1047,24 +1053,24 @@ ul.check_list {
 
 /* ====================================  CALENDAR  ========================================= */
 #control_plan .top h3 {
-    float: left;
-    font-size: 19px;
-    margin: 0;
+  float: left;
+  font-size: 19px;
+  margin: 0;
 }
 
 #control_plan .top h3 .year{
-   margin-left:5px;
+  margin-left:5px;
 }
 
 #control_plan .middle {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border-color: #DBE5EF;
-    border-style: solid solid none;
-    border-width: 1px 1px 0;
-    clear: both;
-    margin-top: 1em;
-    overflow: hidden;
-    padding: 1em 1em 0;
+  background: none repeat scroll 0 0 #EDF5FF;
+  border-color: #DBE5EF;
+  border-style: solid solid none;
+  border-width: 1px 1px 0;
+  clear: both;
+  margin-top: 1em;
+  overflow: hidden;
+  padding: 1em 1em 0;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -1079,12 +1085,31 @@ ul.check_list {
 }
 
 #choose-my-location {
-    float: right;
-    margin-right: 10px;
+  float: right;
+  margin-right: 10px;
 }
 
 #choose-building {
+  float: left;
+}
+
+#filters {
+    clear: left;
     float: left;
+    margin-top: 1em;
+}
+
+#filters.select-box {
+  background: none repeat scroll 0 0 #DEEAF8;
+  border: 1px solid #BDD3ED;
+}
+
+#filters .filter {
+    float: left;
+}
+
+#filters .filter.first {
+    margin-right: 1em;
 }
 
 .month_view #choose-building {

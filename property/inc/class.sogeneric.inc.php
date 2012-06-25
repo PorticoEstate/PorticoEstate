@@ -481,6 +481,21 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name'			=> 'department',
+								'descr'			=> lang('department'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'department',	'selected' => '##department##')
+								)
 							)
 						),
 						'custom_criteria' => array
@@ -1492,6 +1507,57 @@
 							'entry_date'	=> array('add'	=> 'time()'),
 							'modified_date'	=> array('edit'	=> 'time()'),
 						)
+					);
+				break;
+
+			case 'department':
+
+				$info = array
+					(
+						'table' 			=> 'fm_department',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 60,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'			=> 'parent_id',
+								'descr'			=> lang('parent'),
+								'type'			=> 'select',
+								'sortable'		=> true,
+								'nullable'		=> true,
+								'filter'		=> false,
+								'role'			=> 'parent',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'department', 'role' => 'parent', 'selected' => '##parent_id##')
+								)
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('department'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection' 	=> 'admin::property::accounting::department',
+						'default'			=> array
+							(
+								'created_by' 	=> array('add'		=> '$this->account'),
+								'created_on'	=> array('add'		=> 'time()'),
+								'modified_by' 	=> array('edit'	=> '$this->account'),
+								'modified_on'	=> array('edit'	=> 'time()'),
+							),
+						'check_grant'		=> false	
 					);
 				break;
 

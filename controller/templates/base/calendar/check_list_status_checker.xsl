@@ -9,12 +9,24 @@
 			<a>
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
-					<xsl:text>&amp;date=</xsl:text>
-					<xsl:value-of select="info/date"/>
+					<xsl:text>&amp;deadline_ts=</xsl:text>
+					<xsl:value-of select="info/deadline_date_ts"/>
 					<xsl:text>&amp;control_id=</xsl:text>
 					<xsl:value-of select="info/control_id"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:value-of select="$location_code"/>
+					<xsl:text>&amp;type=</xsl:text>
+					<xsl:value-of select="info/type"/>
+					<xsl:choose>
+					  <xsl:when test="info/type = 'component'">
+					  	<xsl:text>&amp;location_id=</xsl:text>
+							<xsl:value-of select="info/location_id"/>
+							<xsl:text>&amp;component_id=</xsl:text>
+							<xsl:value-of select="info/component_id"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+							<xsl:text>&amp;location_code=</xsl:text>
+							<xsl:value-of select="info/location_code"/>  
+					  </xsl:otherwise>
+					</xsl:choose>
 				</xsl:attribute>
 				<img height="15" src="controller/images/status_icon_yellow_ring.png" />
 			</a>
@@ -37,12 +49,36 @@
 				<a>
 					<xsl:attribute name="href">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.add_check_list</xsl:text>
-						<xsl:text>&amp;date=</xsl:text>
-						<xsl:value-of select="info/date"/>
+						<xsl:text>&amp;deadline_ts=</xsl:text>
+						<xsl:value-of select="info/deadline_date_ts"/>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="info/control_id"/>
-						<xsl:text>&amp;location_code=</xsl:text>
-						<xsl:value-of select="$location_code"/>
+						<xsl:text>&amp;type=</xsl:text>
+						<xsl:value-of select="info/type"/>
+						<xsl:choose>
+						  <xsl:when test="info/type = 'component'">
+						  	<xsl:text>&amp;location_id=</xsl:text>
+								<xsl:value-of select="info/location_id"/>
+								<xsl:text>&amp;component_id=</xsl:text>
+								<xsl:value-of select="info/component_id"/>
+						  </xsl:when>
+						  <xsl:otherwise>
+								<xsl:text>&amp;location_code=</xsl:text>
+								<xsl:value-of select="info/location_code"/>  
+						  </xsl:otherwise>
+					  </xsl:choose>
+					</xsl:attribute>
+					<img height="15" src="controller/images/status_icon_red_cross.png" />
+				</a>
+			</td>
+		</xsl:when>
+		<xsl:when test="status = 'CONTROL_NOT_DONE_WITH_CHECKLIST'">
+			<td>
+				<a>
+					<xsl:attribute name="href">
+						<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+						<xsl:text>&amp;check_list_id=</xsl:text>
+						<xsl:value-of select="info/check_list_id"/>
 					</xsl:attribute>
 					<img height="15" src="controller/images/status_icon_red_cross.png" />
 				</a>
@@ -116,9 +152,9 @@
 					 	<xsl:attribute name="href">
 							<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 							<xsl:text>&amp;control_id=</xsl:text>
-							<xsl:value-of select="//control/id"/>
+							<xsl:value-of select="info/control_id"/>
 							<xsl:text>&amp;location_code=</xsl:text>
-							<xsl:value-of select="//current_location/location_code"/>
+							<xsl:value-of select="info/location_code"/>
 							<xsl:text>&amp;year=</xsl:text>
 							<xsl:value-of select="//current_year"/>
 							<xsl:text>&amp;month=</xsl:text>

@@ -52,6 +52,7 @@
 		var $public_functions = array
 		(
 			'index'								=> true,
+			'index2'								=> true,
 			'query'								=> true,
 			'edit'						 		=> true
 		);
@@ -79,6 +80,10 @@
 
 		function index()
 		{
+
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
 			if($values = phpgw::get_var('values'))
 			{
 				$values['pending_users'] = isset($values['pending_users']) && $values['pending_users'] ? array_unique($values['pending_users']) : array();
@@ -185,10 +190,129 @@
 				phpgwapi_yui::load_widget('paginator');
 
 				self::add_javascript('registration', 'yahoo', 'pending.index.js');
-				self::render_template_xsl(array('pending_users', 'common'), $data);
+				self::render_template_xsl(array('pending_users'), $data);
 			}	
 		}
 	
+
+		function index2()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+			self::add_javascript('registration', 'yahoo', 'pending.index.js');
+
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
+			$status_list = array
+			(
+				array
+				(
+					'id'	=> 0,
+					'name'	=> lang('Select status')
+				),
+				array
+				(
+					'id'	=> 1,
+					'name'	=> lang('approved')
+				),
+				array
+				(
+					'id'	=> 2,
+					'name'	=> lang('pending')
+				),
+			);
+
+
+			$data = array(
+				'js_lang'	=>js_lang('edit', 'add'),
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('invert checkboxes'),
+								'href' => "javascript:checkAll('mychecks')"
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('save'),
+								'href' => "javascript:onSave()"
+							),
+							
+							array('type' => 'filter', 
+								'name' => 'reg_dla',
+                                'text' => lang('status').':',
+                                'list' => $status_list,
+							),
+							array('type' => 'text', 
+                                'text' => lang('searchfield'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_showall'))
+							//	'href' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json', 'all'))
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'reg_id',
+							'label' => lang('id'),
+							'sortable'	=> true,
+							'formatter' => 'formatLinkPending'
+						),
+						array(
+							'key'	=>	'reg_lid',
+							'label'	=>	lang('user'),
+							'sortable'	=>	true
+						),
+						array(
+							'key' => 'reg_dla',
+							'label' => lang('time'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'reg_approved',
+							'label' => lang('approved'),
+							'sortable'	=> true,
+							'formatter' => "''"
+						),
+						array(
+							'key' => 'location_code',
+							'label' => lang('location'),
+							'sortable'	=> false
+						),
+						array(
+								'key' => 'checked',
+								'label' => lang('approve'),
+								'sortable' => false,
+								'formatter' => 'formatterCheckPending',
+								'className' => 'mychecks'
+						),
+					)
+				),
+			);
+//_debug_array($data);die();
+
+			self::render_template_xsl(array('datatable_common'), $data);
+		}
+
+
 
 		public function edit()
 		{
@@ -419,7 +543,7 @@
 			}
 			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
-			$results['sort'] = 'location_code';
+			$results['sort'] = 'reg_lid';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 					
 //			array_walk($results['results'], array($this, 'add_links'), array($type));

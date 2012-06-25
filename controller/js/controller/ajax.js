@@ -6,7 +6,6 @@ $(document).ready(function(){
 		
 	}
 	
-	
 	/* ================================  SEARCH LOCATION BOX  ========================== */
 	
 	// Changes location level between building and property in serch location select box
@@ -49,6 +48,22 @@ $(document).ready(function(){
 		
 		 window.location.href = requestUrl;
     });
+	
+	$("#filter-repeat_type").change(function () {
+      var repeat_type = $(this).val();
+	  var thisForm = $(this).closest("form");
+		 
+	  $(thisForm).find("input[name=repeat_type]").val(repeat_type);
+	  $(thisForm).submit();
+	});
+	
+	$("#filter-role").change(function () {
+	  var role = $(this).val();
+	  var thisForm = $(this).closest("form");
+		
+	  $(thisForm).find("input[name=role]").val(role);
+	  $(thisForm).submit();
+	});
 	
 	/* ================================  CONTROL LOCATION ================================== */
 	
@@ -374,6 +389,12 @@ $(document).ready(function(){
 		var control_item_type = $(this).find("input[type=radio]").val();
 		
 		if(control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4"){
+			if(control_item_type == "control_item_type_3"){
+			  $("#add_control_item_option_panel").find(".type").text("Nedtrekksliste");	
+			}else{
+			  $("#add_control_item_option_panel").find(".type").text("Radioknapper");
+			}
+			
 			$("#add_control_item_option_panel").slideDown(500);
 		}else if(control_item_type == "control_item_type_1" | control_item_type == "control_item_type_2"){
 			$("#add_control_item_option_panel").slideUp(500);
@@ -511,7 +532,6 @@ $(document).ready(function(){
 	
 	// ADD CHECKLIST
 	$("#frm_add_check_list").live("submit", function(e){
-		
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
 		var completedDateVal = $("#completed_date").val();

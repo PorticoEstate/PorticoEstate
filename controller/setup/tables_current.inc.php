@@ -64,13 +64,13 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'status' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'status' => array('type' => 'int','precision' => '2','nullable' => false),
 				'comment' => array('type' => 'text', 'nullable' => True),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => false),
+				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
