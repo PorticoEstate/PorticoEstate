@@ -1182,6 +1182,15 @@
 						}
 					}
 
+					if(isset($values['cat_id']) && $values['cat_id'])
+					{
+						$_category = $this->cats->return_single($values['cat_id']);
+						if(!$_category[0]['active'])
+						{
+							$receipt['error'][]=array('msg'=>lang('invalid category'));
+						}
+					}
+
 					if(!$values['coordinator'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a coordinator !'));

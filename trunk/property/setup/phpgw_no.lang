@@ -885,6 +885,7 @@ input text	property	no	ledetekst
 input text not entered!	property	no	Input tekst er ikke angitt!
 input type	property	no	input type
 input name	property	no	input navn
+invalid category	property	no	Ugyldig kategori
 select value	property	no	Angi verdi
 selected mail addresses	property	no	Valgte adresser
 insert the date for the acquisition	property	no	angi dato for anskaffelsen
