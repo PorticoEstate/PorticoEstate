@@ -33,8 +33,6 @@
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>
-	<!-- IMPORTANT!!! Loads YUI javascript -->
-	<xsl:call-template name="common"/>
 
 	<div class="yui-content">
 		<div id="control_details">
@@ -136,7 +134,7 @@
 		var main_pag = 'data_paginator';
 		var related_table = new Array('users_table');
 	
-		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
+//		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
 		
 	</script>
 	 

@@ -305,7 +305,7 @@
 
 		function read($data= array())
 		{
-			if(isset($this->allrows))
+			if(isset($this->allrows) && $this->allrows)
 			{
 				$data['allrows'] = true;
 			}

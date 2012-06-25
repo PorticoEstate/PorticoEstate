@@ -45,11 +45,23 @@
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
 		<form id="frm_add_check_list" action="index.php?menuaction=controller.uicheck_list.save_check_list" method="post">
-			<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-		
 			<input type="hidden" name="control_id" value="{$control_id}" />
-			<input type="hidden" name="location_code" value="{$location_code}" />
+			<xsl:variable name="type"><xsl:value-of select="type"/></xsl:variable>
+			<input type="hidden" name="type" value="{$type}" />
+			
+			<xsl:choose>
+				<xsl:when test="type = 'component'">
+					<xsl:variable name="location_id"><xsl:value-of select="check_list/location_id"/></xsl:variable>
+					<input type="hidden" name="location_id" value="{$location_id}" />
+					<xsl:variable name="component_id"><xsl:value-of select="check_list/component_id"/></xsl:variable>
+					<input type="hidden" name="component_id" value="{$component_id}" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
+					<input type="hidden" name="location_code" value="{$location_code}" />
+				</xsl:otherwise>
+			</xsl:choose>
 			
 			<fieldset>
 				<div class="row">
@@ -62,7 +74,7 @@
 				<div class="row">
 					<label>Fristdato</label>
 					<input type="text" id="deadline_date" name="deadline_date" class="date">
-				      <xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(deadline))"/></xsl:attribute>
+				      <xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
 				    </input>
 			    </div>
 				<div class="row">

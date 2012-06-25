@@ -71,6 +71,10 @@
 			{
 				return $this->db->db_addslashes($value);
 			}
+			else if($type == 'string' & $value == '')
+			{
+				return 'NULL';
+			}
 
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}

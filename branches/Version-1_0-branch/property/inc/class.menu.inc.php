@@ -201,6 +201,11 @@
 							'text'	=> lang('budget account'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'budget_account') )
 						),
+						'department'	=> array
+						(
+							'text'	=> lang('department'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'department') )
+						),
 						'accounting_dimb'	=> array
 						(
 							'text'	=> lang('Accounting dim b'),

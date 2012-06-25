@@ -124,6 +124,27 @@
 				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			}
 			
+			// COMPONENTS
+			foreach($components_with_controls_array as $component){
+				$controls_for_component_array = $component->get_controls_array(); 
+				$controls_components_calendar_array = array();
+				
+			  foreach($controls_for_component_array as $control){
+			    // Fetches control ids with check lists for specified time period
+					$control_id_with_check_list_array = $this->so->get_check_lists_for_component($component->get_type(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type = ">=2");
+
+					// Loops through all controls for location and populates controls with check lists
+					$controls_for_component_array = $this->populate_controls_with_check_lists($controls_for_component_array, $control_id_with_check_list_array);
+
+					$year_calendar = new year_calendar( $control, $year, $component, null, "component" );
+					$calendar_array = $year_calendar->build_calendar( $control->get_check_lists_array() );
+														
+					$controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+			  }
+			  
+			  $components_calendar_array[] = array("component" => $component->toArray(), "controls_calendar" => $controls_components_calendar_array);
+			}
+			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 		
 			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
@@ -132,6 +153,8 @@
 			$my_locations = $this->get_my_assigned_locations();
 			
 			$heading_array = month_calendar::get_heading_array($year, $month);
+			
+			$roles_array = $this->so_control->get_roles();
 			
 			$data = array
 			(		
@@ -145,6 +168,7 @@
 				'current_year' 			  		=> $year,
 				'current_month_nr' 		  	=> $month,
 				'location_level'		  		=> $level,
+				'roles_array'		  				=> $roles_array,
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -161,6 +185,8 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
+			$role = phpgw::get_var('role');
+			$repeat_type = phpgw::get_var('repeat_type');
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
@@ -185,10 +211,10 @@
       $buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
 			
 			// Fetches all controls for the location within time period
-			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 			
 			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type = null);
+			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 		
 			$controls_calendar_array = array();
 			
@@ -211,24 +237,17 @@
 				}
 			}
 			
-			$repeat_type = 2;
+			$repeat_type_expr = ">=2";
 			// Fetches control ids with check lists for specified time period
-			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts, $repeat_type);
+			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts, $repeat_type_expr);
 			
 			// Loops through all controls for location and populates controls with check lists
 			$controls_for_location_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
 			
-			$repeat_type = 3;
-			// Fetches control ids with check lists for specified time period
-			$control_id_with_check_list_array = $this->so->get_check_lists_for_location_2($location_code, $from_date_ts, $to_date_ts, $repeat_type);
-			
-			// Loops through all controls for location and populates controls with check lists
-			$controls_for_location_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
-
 			foreach($controls_for_location_array as $control){
 				if($control->get_repeat_type() == 2 | $control->get_repeat_type() == 3){
 					
-					$year_calendar = new year_calendar($control, $year);
+					$year_calendar = new year_calendar($control, $year, null, $location_code, "location" );
 					$calendar_array = $year_calendar->build_calendar( $control->get_check_lists_array() );
 											
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
@@ -238,11 +257,31 @@
 			// COMPONENTS
 			foreach($components_with_controls_array as $component){
 				
+				//$location_id = 2295; //Eksempel: Valglokaler
+				
+				$location_id = $component->get_location_id();
+				echo " location_id: " . $location_id;
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$filters = array("short_description" => "IS NOT NULL");
+				$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+			
+				print_r( $attributes['attributes'][1] );
+			
+				$fields['attributes']= $attributes[0][0];
+				//print_r($fields);
+				$params = array
+				(
+					'location_id' => $component->get_type(),
+					'id' => $component->get_id()
+				);
+			
+				$prop_array = execMethod('property.soentity.read_single_eav', $params, $attributes);
+				//print_r($prop_array);
+
 				$controls_for_component_array = $component->get_controls_array(); 
 				$controls_components_calendar_array = array();
 				
 			  foreach($controls_for_component_array as $control){
-			   
 				  if($control->get_repeat_type() == 0 | $control->get_repeat_type() == 1){
 				  	$cl_criteria = new controller_check_list();
 						$cl_criteria->set_control_id( $control->get_id() );
@@ -261,18 +300,17 @@
 
 						// Loops through all controls for location and populates controls with check lists
 						$controls_for_component_array = $this->populate_controls_with_check_lists($controls_for_component_array, $control_id_with_check_list_array);
-						
-						$year_calendar = new year_calendar($control, $year, $component, null, "component");
+
+						$year_calendar = new year_calendar( $control, $year, $component, null, "component" );
 						$calendar_array = $year_calendar->build_calendar( $control->get_check_lists_array() );
 														
 						$controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			  	}
 			  }
-			
+			  
 			  $components_calendar_array[] = array("component" => $component->toArray(), "controls_calendar" => $controls_components_calendar_array);
 			}
-			print_r($components_calendar_array);
-			
+		
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
 			// Gets array of locations assigned to current user
@@ -280,6 +318,14 @@
 			
 			$heading_array = year_calendar::get_heading_array();
 			
+			$roles_array = $this->so_control->get_roles();
+			$repeat_type_array = array(
+									array('id' 	=> "0", 'value'	=> "Dag"),
+									array('id' 	=> "1", 'value'	=> "Uke"),
+									array('id' 	=> "2", 'value'	=> "Måned"),
+									array('id' 	=> "3", 'value'	=> "År")
+								);
+								
 			$data = array
 			(
 				'buildings_on_property'			=> $buildings_on_property,
@@ -291,6 +337,8 @@
 				'date_format' 			  			=> $date_format,
 				'current_year' 			  			=> $year,
 				'location_level'		  			=> $level,
+				'roles_array'		  					=> $roles_array,
+				'repeat_type_array'		  		=> $repeat_type_array
 			);
 			
 			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 

@@ -8,7 +8,7 @@ View control item	controller	no	Vis kontrollpunkt
 control_item_type_1	controller	no	Ved innskriving av kommentar i et kommentarfelt
 control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
 control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
-control_item_type_4	controller	no	Ved valg av verdi fra Radioknapper
+control_item_type_4	controller	no	Ved valg av verdi fra radioknapper
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
 Calendar_overview	controller	no	Kontrollplan

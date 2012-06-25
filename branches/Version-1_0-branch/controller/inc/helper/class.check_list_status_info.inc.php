@@ -31,12 +31,16 @@
 	class check_list_status_info
 	{		
 		private $check_list_id;
+		private $control_id;
 		private $status;
 		private $status_text;
 		private $deadline_date_ts;
 		private $deadline_date_txt;
 		private $info_text;
 		private $location_code;
+		private $component_id;
+		private $location_id;
+		private $type;
 		private $num_open_cases;
 			
 		public function __construct(){}
@@ -47,6 +51,13 @@
 		}
 		
 		public function get_check_list_id() { return $this->check_list_id; }
+		
+		public function set_control_id($control_id)
+		{
+			$this->control_id = $control_id;
+		}
+		
+		public function get_control_id() { return $this->control_id; }
 		
 		public function set_status($status)
 		{
@@ -90,6 +101,27 @@
 		
 		public function get_location_code() { return $this->location_code; }
 		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+		
+		public function get_location_id() { return $this->location_id; }
+		
+		public function set_component_id($component_id)
+		{
+			$this->component_id = $component_id;
+		}
+		
+		public function get_component_id() { return $this->component_id; }
+		
+		public function get_type() { return $this->type; }
+		
+		public function set_type($type)
+		{
+			$this->type = $type;
+		}
+		
 		public function set_num_open_cases($num_open_cases)
 		{
 			$this->num_open_cases = $num_open_cases;
@@ -102,12 +134,16 @@
 		{
 			return array(
 				'check_list_id' => $this->get_check_list_id(),
+				'control_id' => $this->get_control_id(),
 				'status' => $this->get_status(),
 				'status_text' => $this->get_status_text(),
 				'deadline_date_ts' => $this->get_deadline_date_ts(),
 				'deadline_date_txt' => $this->get_deadline_date_txt(),
 				'info_text' => $this->get_info_text(),
 				'location_code' => $this->get_location_code(),
+				'location_id' => $this->get_location_id(),
+				'component_id' => $this->get_component_id(),
+				'type' => $this->get_type(),
 				'num_open_cases' => $this->get_num_open_cases()
 			);
 		}

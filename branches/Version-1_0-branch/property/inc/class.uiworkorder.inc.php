@@ -1046,6 +1046,15 @@
 					$receipt['error'][]=array('msg'=>lang('Rig addition') . ': ' . lang('Please enter an integer !'));
 				}
 
+				if(isset($values['cat_id']) && $values['cat_id'])
+				{
+					$_category = $this->cats->return_single($values['cat_id']);
+					if(!$_category[0]['active'])
+					{
+						$receipt['error'][]=array('msg'=>lang('invalid category'));
+					}
+				}
+
 				if(isset($values['addition_percentage']) && $values['addition_percentage'] && !ctype_digit($values['addition_percentage']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Percentage addition') . ': ' . lang('Please enter an integer !'));
@@ -2217,6 +2226,7 @@
 
 					if(!$receipt['error']) // all ok
 					{
+						execMethod('property.soXport.update_actual_cost_from_archive',array($values['order_id'] => true));
 						$redirect = true;
 					}
 				}

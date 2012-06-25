@@ -1,3 +1,4 @@
+/*$Id: yui_booking_i18n.xsl 8267 2011-12-11 12:27:18Z sigurdne $*/
 YAHOO.namespace('portico');
 
 YAHOO.portico.js_alias_method_chain = function(constructor_func, func_name, new_feature_name, feature_impl_func) {
@@ -557,7 +558,7 @@ YAHOO.portico.setupDatePickerHelper = function(field, args) {
 	}
 };
 
-// Executed on all portico.uicommon-based pages
+// Executed on all booking.uicommon-based pages
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.portico.setupDatePickers(); 
 });
@@ -605,7 +606,7 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 		Panel = YAHOO.widget.Panel,
 		Lang = YAHOO.lang;
 
-	var CSS_PREFIX = 'portico_number_range_';
+	var CSS_PREFIX = 'booking_number_range_';
  
 	var InputNumberRange = function(oConfigs) {
 		InputNumberRange.superclass.constructor.call(this, document.createElement('span'), oConfigs);
