@@ -67,6 +67,9 @@
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
+
+
+			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');
@@ -374,7 +377,7 @@
 
 			return array(   
 				'ResultSet' => array(
-					'totalRecords' 		=> $results['total_records'],
+					'totalResultsAvailable'	=> $results['total_records'],
 					'recordsReturned'	=> count($results['results']),
 					'startIndex' 		=> $results['start'], 
 					'sortKey' 			=> $results['sort'], 
@@ -383,6 +386,7 @@
 				)   
 			);  
 		}
+
 
 		public function use_yui_editor($targets)
 		{
