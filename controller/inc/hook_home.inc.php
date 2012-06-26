@@ -69,7 +69,7 @@
 	$controls_for_location_array = array();
 	foreach($my_locations as $location)
 	{
-	    $controls_for_location_array[] = array($location["location_code"], $so_control->get_controls_for_location($location["location_code"], $location["role_id"], $from_date_ts, $to_date_ts, $repeat_type ));
+	  $controls_for_location_array[] = array($location["location_code"], $so_control->get_controls_for_location($location["location_code"], $location["role_id"], $from_date_ts, $to_date_ts, $repeat_type ));
 	}
 	
 
@@ -160,7 +160,7 @@
 	$styling .= "<style> .home_portal_content a{color:#0066CC;text-decoration: none;text-transform: uppercase;} .home_portal{margin: 20px 10px 0;} "; 
 	$styling .= " .home-box {background: none repeat scroll 0 0 #EDF5FF; border-color: #DBE5EF; border-radius: 4px; margin: 20px;}";
 	$styling .= " .home-box .home_portal{margin: 0;border: 1px solid #DEEAF8;} .home_portal_content{padding:10px;} ";
-	$styling .= " .home_portal_title h2{ background: #DEEAF8; margin: 0; padding: 5px;} .home_portal_content ul li{padding: 3px;}";
+	$styling .= " .home_portal_title h2{ background: #DEEAF8; margin: 0; padding: 5px 10px;} .home_portal_content ul li{padding: 3px;}";
 	$styling .= " .home_portal_content .title{display:inline-block;width:300px;} .home_portal_content .control-area{display:inline-block;width:200px;}";
 	$styling .= " .home_portal_content .control{display:inline-block;width:300px;} .home_portal_content .date{display:inline-block;width:300px;}";
 	$styling .= "</style>"; 
