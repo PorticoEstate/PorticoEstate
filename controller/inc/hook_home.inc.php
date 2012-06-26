@@ -69,7 +69,20 @@
 	$controls_for_location_array = array();
 	foreach($my_locations as $location)
 	{
-	  $controls_for_location_array[] = array($location["location_code"], $so_control->get_controls_for_location($location["location_code"], $location["role_id"], $from_date_ts, $to_date_ts, $repeat_type ));
+	    $controls = array();
+	    $controls_loc = $so_control->get_controls_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, '', $location["role_id"] );
+	    $controls_comp = $so_control->get_controls_for_components_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, '', $location["role_id"] );
+	    
+	    foreach($controls_loc as $cl)
+	    {
+	        $controls[] = $cl;
+	    }
+	    foreach($controls_comp as $cc)
+	    {
+	        $controls[] = $cc;
+	    }
+	    
+        $controls_for_location_array[] = array($location["location_code"], $controls);
 	}
 	
 
