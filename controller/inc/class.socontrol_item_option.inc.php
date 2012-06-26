@@ -96,6 +96,21 @@
 			return $control_item_option;
 		}
 		
+		/**
+		 * Get a static reference to the storage object associated with this model object
+		 * 
+		 * @return the storage object
+		 */
+		public static function get_so()
+		{
+			if (self::$so == null)
+			{
+				self::$so = CreateObject('controller.socontrol_item_option');
+			}
+			
+			return self::$so;
+		}
+		
 		function get_id_field_name(){}
 		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
 		function populate(int $object_id, &$object){}
