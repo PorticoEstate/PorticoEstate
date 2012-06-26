@@ -53,7 +53,8 @@
 			'query'	=>	true,
 			'edit'	=>	true,
 			'view'	=>	true,
-			'add'	=>	true,
+			'add'		=>	true,
+			'save'	=>	true,
 			'display_control_items'	=> true,
 			'delete_item_list'	=> true
 		);
@@ -217,9 +218,9 @@
 			$data = array
 			(
 				'editable' 				=> true,
-				'control_item'			=> $control_item_array,
-				'control_areas'			=> $control_areas_array,
-				'control_groups'		=> $control_groups_array,
+				'control_item'		=> $control_item_array,
+				'control_areas'		=> $control_areas_array,
+				'control_groups'	=> $control_groups_array,
 			);
 
 			$this->use_yui_editor(array('what_to_do','how_to_do'));
@@ -234,37 +235,91 @@
 		public function save()
 		{
 			$control_item_id = phpgw::get_var('id');
+			$title = phpgw::get_var('title');
+			$required = phpgw::get_var('required') == 'on' ? true : false;
+			$type = phpgw::get_var('control_item_type');
+			$control_group_id = phpgw::get_var('control_group');
+			$control_area_id = phpgw::get_var('control_area');
+			$type = phpgw::get_var('control_item_type');
 			$what_to_do_txt = phpgw::get_var('what_to_do','html');
 			$what_to_do_txt = str_replace("&nbsp;", " ", $what_to_do_txt);
 			$how_to_do_txt = phpgw::get_var('how_to_do','html');
 			$how_to_do_txt = str_replace("&nbsp;", " ", $how_to_do_txt);
-			$control_item->set_title(phpgw::get_var('title'));
-			$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
-			$control_item->set_type(phpgw::get_var('control_item_type'));
-			$control_item->set_what_to_do( $what_to_do_txt );
-			$control_item->set_how_to_do( $how_to_do_txt );
-			$control_item->set_control_group_id( phpgw::get_var('control_group') );
-			$control_item->set_control_area_id( phpgw::get_var('control_area') );
-				
-			$control_item_id = $this->so->store($control_item);
-				
+
 			if($control_item_id > 0)
 			{
-				$message = lang('messages_saved_form');
+				$control_item = $this->so->get_single( $control_item_id );
+			}
+			else
+			{
+				$control_item = new controller_control_item();
+			} 
+			
+			$control_item->set_title($title);
+			$control_item->set_required($required);
+			$control_item->set_control_group_id($control_group_id);
+			$control_item->set_control_area_id($control_area_id);
+			$control_item->set_type($type);
+			$control_item->set_what_to_do($what_to_do_txt);
+			$control_item->set_how_to_do($how_to_do_txt);
+
+			$saved_control_item_id = $this->so->store($control_item);
 				
+			if($saved_control_item_id > 0)
+			{
 				if($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'){
 					$option_values = phpgw::get_var('option_values');
 		
 					foreach($option_values as $option_value){
-						$control_item_option = new controller_control_item_option($option_value, $control_item_id);
+						$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
 						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
 					}
 				}
 			}
 			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.index', 'dir' => 'desc'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $saved_control_item_id));
 		}
 
+		/**
+		 * Public method. Called when a user wants to view information about a control item.
+		 * @param HTTP::id	the control_item ID
+		 */
+		public function view()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			//Retrieve the control_item object
+			$control_item_id = (int)phpgw::get_var('id');
+		
+			if(isset($control_item_id) && $control_item_id > 0)
+			{
+				$control_item = $this->so->get_single($control_item_id);
+			}
+			else
+			{
+				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+				return;
+			}
+	
+			$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
+			$control_item->set_control_area_name($category[0]['name']);
+			
+			/*
+			 * hack to fix display of &nbsp; char 
+			 */
+			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
+			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
+			
+			$control_item_array = $control_item->toArray();
+
+			$data = array
+			(
+				'value_id'			=> !empty($control_item) ? $control_item->get_id() : 0,
+				'control_item'	=> $control_item_array,
+			);
+
+			self::render_template_xsl('control_item/control_item', $data);
+		}
+		
 		public function query()
 		{
 			$params = array(
@@ -348,63 +403,4 @@
 
 			return $this->yui_results($results);
 		}
-
-		/**
-		 * Public method. Called when a user wants to view information about a control item.
-		 * @param HTTP::id	the control_item ID
-		 */
-		public function view()
-		{
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
-			//Retrieve the control_item object
-			$control_item_id = (int)phpgw::get_var('id');
-			if(isset($_POST['edit_control_item']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.edit', 'id' => $control_item_id));
-			}
-			else
-			{
-				if(isset($control_item_id) && $control_item_id > 0)
-				{
-					$control_item = $this->so->get_single($control_item_id);
-				}
-				else
-				{
-					$this->render('permission_denied.php',array('error' => lang('invalid_request')));
-					return;
-				}
-				//var_dump($control_item);
-
-				if($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-				
-				$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
-				$control_item->set_control_area_name($category[0]['name']);
-				
-				/*
-				 * hack to fix display of &nbsp; char 
-				 */
-				$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
-				$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
-				
-				$control_item_array = $control_item->toArray();
-
-				$data = array
-				(
-					'value_id'				=> !empty($control_item) ? $control_item->get_id() : 0,
-					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
-					'control_item'			=> $control_item_array,
-				);
-
-
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control item');
-
-				self::render_template_xsl('control_item/control_item', $data);
-			}
-		}
-
-
 	}

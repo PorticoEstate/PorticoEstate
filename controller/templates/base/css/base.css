@@ -492,9 +492,9 @@ h1 img{
 }
 
 #control_item_details label {
-    display: block;
-    margin-bottom: 2px;
-    margin-right: 10px;
+  display: block;
+  margin-bottom: 2px;
+  margin-right: 10px;
 }
 
 #control_item_details label.line{
@@ -524,7 +524,8 @@ h1 img{
 }
 
 #control_item_details .control_item_type .active {
-    background: none repeat scroll 0 0 #0F6CCF;
+    background: none repeat scroll 0 0 #F57056;
+    border: 1px solid #CB563F;
 }
 
 #control_item_details input[type=radio] {
@@ -873,11 +874,11 @@ ul.row li{
 	margin-top:0;
 }
 
-.content-wrp{
+.content-wrp {
   background: none repeat scroll 0 0 #EDF5FF;
   border: 1px solid #DBE5EF;
   margin-top: 1em;
-  padding: 1em;
+  padding: 0;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */

@@ -15,17 +15,9 @@
 		<h1><xsl:value-of select="php:function('lang', 'View control item')" /></h1>
 	</xsl:otherwise>
 </xsl:choose>
-
-<ul class="check_list">
-	<xsl:for-each select="check_list_array">
-		<li>
-			<span>Tittel:</span><xsl:value-of select="title"/><span>Start dato:</span><xsl:value-of select="start_date"/>
-		</li>
-	</xsl:for-each>
-</ul>
 	
 	<div id="control_item_details">
-		<form action="#" method="post">
+		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
 			<input type="hidden" name="id" value="{control_item/id}">
 			</input>
 			<dl class="proplist">
