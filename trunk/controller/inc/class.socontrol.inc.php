@@ -110,7 +110,7 @@
 			}
 		}
 
-		function get_controls_for_location($location_code, $role_id, $from_date, $to_date, $repeat_type)
+/*		function get_controls_for_location($location_code, $role_id, $from_date, $to_date, $repeat_type)
 		{
 		    $controls = array();
 		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
@@ -127,6 +127,7 @@
 		    
 		    return $controls;
 		}
+*/
 		
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
@@ -196,7 +197,7 @@
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
-
+			
 			$this->db->query($sql);
 			
 			while($this->db->next_record()) {
@@ -257,7 +258,7 @@
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date) ";
 			
 			$sql  .= "ORDER BY bim_item.id ";
-			 
+			 var_dump($sql);
 			$this->db->query($sql);
 			
 			$component_id = 0;
