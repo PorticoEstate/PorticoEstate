@@ -181,6 +181,10 @@
 
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+	//		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'generic.index', 'property' );
+
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
 			$this->save_sessiondata();
@@ -299,13 +303,15 @@
 			}
 
 
-			$data['datatable']['source'] = self::link(array('menuaction'	=> 'property.uigeneric.index',
+			$data['datatable']['source'] = self::link(array('menuaction'	=> 'property.uigeneric_test.index',
 						'appname'			=> $this->appname,
 						'type'				=> $this->type,
 						'type_id'			=> $this->type_id,
 						'phpgw_return_as'	=> 'json'
 			));
 
+
+//			$data['datatable']['source'] = self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json'));
 
 //			$data['js_lang'] = js_lang('edit', 'add');
 
@@ -407,13 +413,19 @@
 					'key'		=> $uicols['name'][$i],
 					'label'		=> $uicols['descr'][$i],
 					'sortable'	=> $uicols['sortable'][$i],
-		//			'formatter'	=> $uicols['formatter'][$i],
+			//		'formatter'	=> isset($uicols['formatter'][$i]) && $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""',
 					'className'	=> $uicols['classname'][$i],
+					'resizeable'=> true,
 					'hidden'	=> $uicols['input_type'][$i]=='hidden'
 				);
-
-		//		$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 			}
+
+			$data['datatable']['field'][] = array
+			(
+				'key' => 'link',
+				'hidden' => true
+			);
+
 
 			$appname			=  $this->location_info['name'];
 			$function_msg		= lang('list %1', $appname);
@@ -424,18 +436,10 @@
 				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 			}
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
-			$GLOBALS['phpgw']->css->validate_file('property');
-			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->css->add_external_file('booking/templates/base/css/base.css');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'generic.index', 'property' );
-
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
@@ -443,64 +447,35 @@
 
 		function index_json()
 		{
-			$datatable = array();
+			$this->bo->order	= phpgw::get_var('sort');
+			$this->bo->sort		= phpgw::get_var('dir');
+			$this->bo->start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
 			$values = $this->bo->read();
 			$uicols = $this->bo->uicols;
+
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			$datatable = array();
 
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
-			if (isset($values) AND is_array($values))
+			foreach($values as $entry)
 			{
-				foreach($values as $entry)
+				for ($k=0;$k<$count_uicols_name;$k++)
 				{
-					for ($k=0;$k<$count_uicols_name;$k++)
+					if($uicols['input_type'][$k]!='hidden')
 					{
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= $entry[$uicols['name'][$k]];
-							$datatable['rows']['row'][$j]['column'][$k]['format']		= $uicols['datatype'][$k];
-						}
+						$datatable['rows']['row'][$j]['column'][$k]['name'] 		= $uicols['name'][$k];
+						$datatable['rows']['row'][$j]['column'][$k]['value']		= $entry[$uicols['name'][$k]];
+						$datatable['rows']['row'][$j]['column'][$k]['format']		= $uicols['datatype'][$k];
 					}
-					$j++;
 				}
+				$j++;
 			}
 
 
-			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
-			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($values);
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
-			if ( ($this->start == 0) && (!$this->order))
-			{
-				$datatable['sorting']['order'] 			=  $this->location_info['id']['name']; // name key Column in myColumnDef
-				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-			}
-			else
-			{
-				$datatable['sorting']['order']			= $this->order; // name of column of Database
-				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
-			}
-
-
-
-			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			//values for Pagination
-			$json = array
-				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-				);
-
-			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
 				foreach( $datatable['rows']['row'] as $row )
@@ -534,6 +509,36 @@
 			{
 				$json['rights'] = $datatable['rowactions']['action'];
 			}
+
+
+
+			
+			// Pagination and sort values
+
+			if ( ($this->bo->start == 0) && (!$this->bo->order))
+			{
+				$order 			=  $this->location_info['id']['name']; // name key Column in myColumnDef
+				$sort 			= 'asc'; // ASC / DESC
+			}
+			else
+			{
+				$order			= $this->bo->order; // name of column of Database
+				$sort 			= $this->bo->sort; // ASC / DESC
+			}
+
+
+
+
+			$results['results']= $values;
+			$results['total_records'] = $this->bo->total_records;
+			$results['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$results['start'] = $this->bo->start;
+			$results['sort'] = $order;
+			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
+					
+			array_walk($results['results'], array($this, "_add_links"), "property.uigeneric_test.edit");
+
+			return $this->yui_results($results);
 
 		}
 
