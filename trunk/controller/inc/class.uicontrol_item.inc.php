@@ -291,32 +291,29 @@
 		
 			if(isset($control_item_id) && $control_item_id > 0)
 			{
-				$control_item = $this->so->get_single_with_options($control_item_id, "return_array");
+				$control_item_array = $this->so->get_single_with_options($control_item_id, "return_array");
 			}
 			else
 			{
 				$this->render('permission_denied.php',array('error' => lang('invalid_request')));
 				return;
 			}
-	
-			print_r($control_item_array);
 			
-			$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
-			$control_item->set_control_area_name($category[0]['name']);
+			$category = execMethod('phpgwapi.categories.return_single', $control_item_array['control_area_id']);
+			$control_item_array['control_area_name'] = $category[0]['name'];
 			
 			/* Hack to fix display of &nbsp; char */
-			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
-			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
+			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
+			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
 			
-			$control_item_array = $control_item->toArray();
-
 			$data = array
 			(
 				'value_id'			=> !empty($control_item) ? $control_item->get_id() : 0,
 				'control_item'	=> $control_item_array,
+				'view'					=> true
 			);
 			
-			//self::render_template_xsl('control_item/control_item', $data);
+			self::render_template_xsl('control_item/control_item', $data);
 		}
 		
 		public function query()

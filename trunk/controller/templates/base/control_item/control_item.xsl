@@ -63,6 +63,20 @@
 					<div class="styleWrp">
 						<xsl:variable name="control_item_type"><xsl:value-of select="control_item/type" /></xsl:variable>
 						<xsl:choose>
+							<xsl:when test="view">
+							
+								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
+								<xsl:value-of select="php:function('lang', $lang_type)" />
+								
+								<h3>Verdier i liste</h3>
+								
+								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
+								<ul>
+								<xsl:for-each select="control_item/options_array">
+									<li><xsl:value-of select="option_value" /></li>
+								</xsl:for-each>
+								</ul>
+							</xsl:when>
 							<xsl:when test="editable">
 							
 								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
@@ -213,8 +227,14 @@
 						<input type="submit" name="cancel_control_item" value="{$lang_cancel}" title = "{$lang_cancel}" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-						<input type="submit" name="edit_control_item" value="{$lang_edit}" title = "{$lang_edit}" />
+						<a class="btn">
+							<xsl:attribute name="href">
+								<xsl:text>index.php?menuaction=controller.uicontrol_item.edit</xsl:text>
+								<xsl:text>&amp;id=</xsl:text>
+								<xsl:value-of select="control_item/id"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'edit')" />
+						</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
