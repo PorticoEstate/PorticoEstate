@@ -148,19 +148,22 @@
 			return $control_item;
 		}
 		
-		public function get_single_with_options($id){
+		public function get_single_with_options($id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
 			$sql .= "FROM controller_control_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
 			$sql .= "WHERE ci.id = $id";
-											
+
+			echo "I get_single_with_options";
+			
 			$this->db->query($sql);
 			
 			$counter = 0;
 			$control_item = null;
-			while ($this->db->next_record()) {
-				
-				if( $counter == 0 ){
+			while ($this->db->next_record()) 
+			{
+				if( $counter == 0 )
+				{
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
@@ -173,21 +176,37 @@
 					$control_item->set_control_area_name($category[0]['name']);
 					$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				}
-				
-				if($this->db->f('cio_id', true) != ''){
+
+				if($this->db->f('cio_id', true) != '')
+				{
 					$control_item_option = new controller_control_item_option();
 					$control_item_option->set_id($this->unmarshal($this->db->f('cio_id', true), 'int'));
 					$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
 					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
 				
-					$options_array[] = $control_item_option->toArray();
+					if($return_type == "return_object")
+					{
+						$options_array[] = $control_item_option->toArray();
+					}
+					else
+					{
+						$options_array[] = $control_item_option;
+					}
 				}
-				
+			
 				$counter++;
 			}
+			
 			$control_item->set_options_array( $options_array );
 			
-			return $control_item->toArray();
+			if($return_type == "return_object")
+			{
+				return $control_item;
+			}
+			else
+			{
+				return $control_item->toArray();
+			}
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
