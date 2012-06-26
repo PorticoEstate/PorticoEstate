@@ -125,84 +125,16 @@ function chooseLocation( label, value ){
 			<xsl:call-template name="icon_color_map" />
 					
 			<!-- =====================  FILTERS  ================= -->
-			<form id="filters" class="select-box" action="index.php?menuaction=controller.uicalendar.view_calendar_for_year" method="post">
-				<input type="hidden" name="year">
-					<xsl:attribute name="value">
-					<xsl:value-of select="current_year"/>
-					</xsl:attribute>
-				</input>
-				<input type="hidden" name="location_code">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_location/location_code"/>
-						</xsl:attribute>
-				</input>
-				<input type="hidden" name="repeat_type">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_repeat_type"/>
-					</xsl:attribute>
-				</input>
-				<input type="hidden" name="role">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_role"/>
-					</xsl:attribute>
-				</input>
-				
-				<div class="filter first">
-					<label>Filtrer på rolle</label>
-					<select id="filter-role">
-						<xsl:for-each select="roles_array">
-							<xsl:variable name="role_id"><xsl:value-of select="id"/></xsl:variable>
-							<option value="{$role_id}">
-								<xsl:value-of disable-output-escaping="yes" select="name"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
-				<div class="filter">
-				<label>Filtrer på frekvenstype</label>
-					<select class="required" id="filter-repeat_type" name="repeat_type">
-						<option value="" selected="selected" >Velg frekvenstype</option>
-						<xsl:for-each select="repeat_type_array">
-							<option value="{id}">
-								<xsl:value-of disable-output-escaping="yes" select="value"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
-			</form>
+			<xsl:call-template name="calendar_filters" >
+				<xsl:with-param name="view_period">year</xsl:with-param>
+			</xsl:call-template>
 			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<div id="calNav">
-				<a class="showPrev">
-					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="current_year - 1"/>
-						<xsl:text>&amp;location_code=</xsl:text>
-						<xsl:value-of select="current_location/location_code"/>
-					</xsl:attribute>
-					<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
-					<xsl:value-of select="current_year - 1"/>
-				</a>
-				<span class="current">
-						<xsl:value-of select="current_year"/>
-				</span>
-				<a class="showNext">
-						<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="current_year + 1"/>
-						<xsl:text>&amp;location_code=</xsl:text>
-						<xsl:value-of select="current_location/location_code"/>
-					</xsl:attribute>
-					<xsl:value-of select="current_year + 1"/>
-					<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
-				</a>
-			</div>
-			
+			<xsl:call-template name="nav_calendar_year" />
 		</div>
 		 
 		<div id="cal_wrp">
+		<h2>Bygg/eiendom</h2>
 		<table id="calendar" class="year">
 				<tr class="heading">
 						<th class="title"><span>Tittel</span></th>
@@ -283,14 +215,23 @@ function chooseLocation( label, value ){
 		</xsl:choose>
 		</table>
 		
-		<h2>Komponenter</h2>
+		<h2 class="components">Komponenter</h2>
 		
+		
+				
+				
+		<xsl:for-each select="components_calendar_array">
+		
+		
+		  
+			    <h3><xsl:value-of select="component/xml_short_desc"/></h3>
+		  
 		<table id="calendar" class="year">
 				<tr class="heading">
 						<th class="title"><span>Tittel</span></th>
 						<th class="assigned"><span>Tildelt</span></th>
 						<th class="frequency"><span>Frekvens</span></th>
-					<xsl:for-each select="heading_array">
+					<xsl:for-each select="//heading_array">
 						<th>
 							<a>
 								<xsl:attribute name="href">
@@ -298,7 +239,7 @@ function chooseLocation( label, value ){
 									<xsl:text>&amp;year=</xsl:text>
 									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;location_code=</xsl:text>
-									<xsl:value-of select="current_location/location_code"/>
+									<xsl:value-of select="//current_location/location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
@@ -309,14 +250,6 @@ function chooseLocation( label, value ){
 						</th>
 					</xsl:for-each>
 				</tr>
-				
-				
-		<xsl:for-each select="components_calendar_array">
-		  <tr>
-		    <td>
-			    <h3><xsl:value-of select="component/xml"/></h3>
-		    </td>
-		  </tr>
 		
 			<xsl:for-each select="controls_calendar">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
@@ -362,12 +295,9 @@ function chooseLocation( label, value ){
 								</xsl:call-template>
 							</xsl:for-each>
 					</tr>	
-				</xsl:for-each>	
-		
+				</xsl:for-each>
+				</table>	
 		</xsl:for-each>
-		
-			
-	</table>
 	</div>
 </div>
 </div>

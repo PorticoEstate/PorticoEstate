@@ -41,7 +41,7 @@
 					</xsl:choose>
 				</dt>
 				<dt>
-					<label for="required">Skal det være obligatorisk å sjekke kontrollpunktet</label>
+					<label for="required" class="line">Skal det være obligatorisk å sjekke kontrollpunktet</label>
 					<xsl:variable name="required_item"><xsl:value-of select="control_item/required" /></xsl:variable>
 					<xsl:choose>
 						<xsl:when test="editable">
@@ -188,33 +188,28 @@
 				</dt>	
 				<dt>
 					<label for="what_to_do">Hva skal utføres</label>
-				</dt>
-				<dd>
-				<xsl:choose>
-					<xsl:when test="editable">
-						<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
+					<xsl:choose>
+						<xsl:when test="editable">
+							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
+								<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
+							</textarea>
+						</xsl:when>
+						<xsl:otherwise>
 							<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
-						</textarea>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
-					</xsl:otherwise>
-				</xsl:choose>
-				</dd>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dt>
 				<dt>
 					<label for="how_to_do">Utførelsesbeskrivelse</label>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60"><xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" /></textarea>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</dt>
-				<dd>
-				<xsl:choose>
-					<xsl:when test="editable">
-						<textarea name="how_to_do" id="how_to_do" rows="5" cols="60"><xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" /></textarea>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
-					</xsl:otherwise>
-				</xsl:choose>
-				</dd>
-							
 			</dl>
 			
 			<div class="form-buttons">

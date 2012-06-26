@@ -244,10 +244,12 @@
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			$sql  .= "AND bim_item.location_code LIKE '$location_code%' ";
 			
-			if( is_numeric($repeat_type)){
+			if( is_numeric($repeat_type))
+			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if( is_numeric($role_id)){
+			if( is_numeric($role_id))
+			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}
 			    
@@ -260,15 +262,21 @@
 			
 			$component_id = 0;
 			$component = null;
-			while($this->db->next_record()) {
-				if( $this->db->f('component_id', true) != $component_id ){
-					if($component_id != 0){
+			while($this->db->next_record()) 
+			{
+				if( $this->db->f('component_id', true) != $component_id )
+				{
+					if($component_id != 0)
+					{
 						$component->set_controls_array($controls_array);
 						$controls_array = array();
 						
-						if($return_type == "return_array"){
+						if($return_type == "return_array")
+						{
 							$components_array[] = $component->toArray();
-						}else{
+						}
+						else
+						{
 							$components_array[] = $component;
 						}
 					}
@@ -300,23 +308,34 @@
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
 				if($return_type == "return_object")
+				{
 					$controls_array[] = $control;
+				}
 				else
+				{
 					$controls_array[] = $control->toArray();
-								
+				}
+							
 				$component_id = $component->get_id();
 			}
 					
-			if($component != null){
+			if($component != null)
+			{
 				$component->set_controls_array($controls_array);
 				
 				if($return_type == "return_array")
+				{
 					$components_array[] = $component->toArray();
+				}
 				else
+				{
 					$components_array[] = $component;
+				}
 				
 				return $components_array;
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -329,7 +348,8 @@
 			$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record()) 
+			{
 				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
@@ -348,9 +368,12 @@
 				$controls_array[] = $control->toArray();
 			}
 
-			if( count( $controls_array ) > 0 ){
+			if( count( $controls_array ) > 0 )
+			{
 				return $controls_array; 
-			}else {
+			}
+			else 
+			{
 				return null;
 			}
 		}

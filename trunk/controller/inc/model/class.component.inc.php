@@ -82,13 +82,19 @@
 		
 		public function get_guid() { return $this->guid; }
 		
-		
 		public function set_xml($xml)
 		{
 			$this->xml = $xml;
 		}
 		
 		public function get_xml() { return $this->xml; }
+		
+		public function set_xml_short_desc($xml_short_desc)
+		{
+			$this->xml_short_desc = $xml_short_desc;
+		}
+		
+		public function get_xml_short_desc() { return $this->xml_short_desc; }
 		
 		public function set_location_code($location_code)
 		{
