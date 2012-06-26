@@ -189,7 +189,7 @@
 								array(
 								'type' => 'link',
 								'value' => lang('New control'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol.add')),
 								'class' => 'new_item'
 							),
 						),

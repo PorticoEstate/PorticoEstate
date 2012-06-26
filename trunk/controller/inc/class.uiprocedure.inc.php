@@ -122,7 +122,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('t_new_procedure'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.add')),
+								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
 								'class' => 'new_item'
 							),
 						),
