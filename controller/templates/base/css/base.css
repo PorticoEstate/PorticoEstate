@@ -1031,8 +1031,9 @@ h3.check_item_details{
 }
 
 .new_item a#innertoolbar-button {
-  background: none repeat scroll 0 0 #F57056;
-  border: 1px solid #CB563F;
+    background: none repeat scroll 0 0 #FCF0DD;
+    border: 1px solid #CDBFAC;
+    color: #333333;
 }
 
 #frm_save_check_items input[type="submit"]{
