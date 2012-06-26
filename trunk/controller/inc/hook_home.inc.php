@@ -314,13 +314,16 @@
 					}
 					else
 					{
-						$next_date = "Fristdato: " . date('d/m/Y', $check_list->get_deadline());
-						$portalbox2_data[] = array
-						($check_list->get_deadline(), array
-						(
-							'text' => "{$location_name} - {$control_area_name} - {$current_control["title"]} :: {$next_date}",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list->get_id()))
-						));					    
+					    if(!$check_list->get_planned_date())
+					    {
+    						$next_date = "Fristdato: " . date('d/m/Y', $check_list->get_deadline());
+    						$portalbox2_data[] = array
+    						($check_list->get_deadline(), array
+    						(
+    							'text' => "{$location_name} - {$control_area_name} - {$current_control["title"]} :: {$next_date}",
+    							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list->get_id()))
+    						));
+					    }					    
 					}
 				}
 			}
