@@ -63,11 +63,11 @@ YAHOO.portico.initializeDataTable = function()
     if(baseUrl[baseUrl.length - 1] != '&') {
         baseUrl += '&';
     }
-    
+
     if (YAHOO.portico.initialSortedBy) {
-      baseUrl += 'sort=' + YAHOO.portico.initialSortedBy.key + '&dir=' + YAHOO.portico.initialSortedBy.dir;
+//      baseUrl += 'sort=' + YAHOO.portico.initialSortedBy.key + '&dir=' + YAHOO.portico.initialSortedBy.dir;
     } else {
-      baseUrl += 'sort=' + fields[0];
+//      baseUrl += 'sort=' + fields[0];
     }
 	
 	  baseUrl += '&results=' + pag.getRowsPerPage() + '&';
@@ -97,6 +97,23 @@ YAHOO.portico.initializeDataTable = function()
         History.navigate("state", newState);
     };
     myDataTable.sortColumn = handleSorting;
+
+	/* from Property*/
+	myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+	/* from Property*/
+	myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
+
+	for(var i=0; i < YAHOO.portico.columnDefs.length;i++)
+	{
+		if( YAHOO.portico.columnDefs[i].sortable )
+		{
+			YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner' , 'div' )[i].style.background  = '#D8D8DA url(phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0 -100px';
+		}
+		//title columns alwyas center
+//		YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
+	}
+
 
     var handlePagination = function(state) {
         var sortedBy  = this.get("sortedBy");

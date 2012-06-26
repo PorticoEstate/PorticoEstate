@@ -232,12 +232,13 @@
 			YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{
+						resizeable: true,
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
 					    </xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
+						<xsl:if test="hidden=1">
 						hidden: true,
 					    </xsl:if>
 						<xsl:if test="formatter">
