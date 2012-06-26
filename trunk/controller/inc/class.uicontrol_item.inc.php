@@ -286,13 +286,12 @@
 		 */
 		public function view()
 		{
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			//Retrieve the control_item object
 			$control_item_id = (int)phpgw::get_var('id');
 		
 			if(isset($control_item_id) && $control_item_id > 0)
 			{
-				$control_item = $this->so->get_single($control_item_id);
+				$control_item = $this->so->get_single_with_options($control_item_id, "return_array");
 			}
 			else
 			{
@@ -300,12 +299,12 @@
 				return;
 			}
 	
+			print_r($control_item_array);
+			
 			$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
 			$control_item->set_control_area_name($category[0]['name']);
 			
-			/*
-			 * hack to fix display of &nbsp; char 
-			 */
+			/* Hack to fix display of &nbsp; char */
 			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
 			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
 			
@@ -316,8 +315,8 @@
 				'value_id'			=> !empty($control_item) ? $control_item->get_id() : 0,
 				'control_item'	=> $control_item_array,
 			);
-
-			self::render_template_xsl('control_item/control_item', $data);
+			
+			//self::render_template_xsl('control_item/control_item', $data);
 		}
 		
 		public function query()
