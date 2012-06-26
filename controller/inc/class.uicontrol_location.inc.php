@@ -112,7 +112,7 @@
 			self::set_active_menu('controller::control::location_for_check_list');
 		}	
 	
-		function index()
+		function index_old()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
@@ -137,19 +137,10 @@
 
 			$tabs = array
 			(
-				array
-				(
-					'label' => lang('View_locations_for_control')
-				),
-				 array
+			 array
 				(
 					'label' => lang('Add_locations_for_control'),
 					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
-				),
-				array
-				(
-					'label' => lang('add components for control'),
-					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'))
 				)
 			);
 			
@@ -207,7 +198,7 @@
 			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
 		}
 		
-		function register_control_to_location()
+		function index()
 		{
 			$control_id = phpgw::get_var('control_id');
 			if(phpgw::get_var('save_location'))
@@ -219,15 +210,6 @@
 
 				$ok = $this->so_control->register_control_to_location($control_id, $values);
 
-/*				if($ok)
-				{
-					return json_encode( array( "status" => "saved" ) );
-				}
-				else
-				{
-					return json_encode( array( "status" => "not_saved" ) );
-				}
-*/
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location', 'control_id' => $control_id));
 
 			}
@@ -285,24 +267,8 @@
 					);		
 				}
 
-/*
-				$control_info = execMethod('controller.socontrol.get_single', $control_id);
-				if($control_info)
-				{
-					$control_array = array
-					(
-						'id' => $control_id,
-						'title'	=> $control_info->get_title()
-					);
-				}
-*/
 				$tabs = array
 				( 
-					array
-					(
-						'label' => lang('View_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
-					),
 					array
 					(
 						'label' => lang('Add_locations_for_control')
@@ -389,8 +355,6 @@
 			}		
 		}
 		
-
-
 		// Returns locations for a control
 		public function get_locations_for_control()
 		{

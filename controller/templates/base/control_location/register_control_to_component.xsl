@@ -21,19 +21,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_phpgw_i18n"/>
-	<style type="text/css">
-		select { width: 100px; }
-	</style>
-	<div id="choose_control" class="select-box">
-		<label>Velg kontrollen du vil vise komponent for</label>
-		<select id="control_area_id" name="control_area_id">
-			<xsl:apply-templates select="control_area_list/options"/>
-		</select>		 
-		<select id="control_id" name="control_id">
-			<xsl:apply-templates select="control/options"/>
-		</select>
-	</div>
-
+	
 <div class="yui-navset yui-navset-top" id="control_location_tabview">
 	<div class="identifier-header">
 		<h1><xsl:value-of select="php:function('lang', 'components for control')"/></h1>
@@ -62,7 +50,21 @@
 				</xsl:when>
 			</xsl:choose>
 				<div class="body">
-					<div id="voucher_details">
+							
+				<style type="text/css">
+						select { width: 100px; }
+					</style>
+					<div id="choose_control">
+						<label>Velg kontrollen du vil vise komponent for</label>
+						<select id="control_area_id" name="control_area_id">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>		 
+						<select id="control_id" name="control_id">
+							<xsl:apply-templates select="control/options"/>
+						</select>
+					</div>
+				
+					<div id="choose-location">
 						<table align = "center" width="95%">
 							<xsl:apply-templates select="filter_form" />
 						</table>

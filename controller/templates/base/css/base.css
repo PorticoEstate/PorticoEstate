@@ -491,8 +491,14 @@ h1 img{
     width: 100%;
 }
 
-#control_item_details label{
-	margin-right: 10px;
+#control_item_details label {
+    display: block;
+    margin-bottom: 2px;
+    margin-right: 10px;
+}
+
+#control_item_details label.line{
+	display: inline-block;
 }
 
 #control_item_details label.top {
@@ -1008,15 +1014,15 @@ h3.check_item_details{
 /* =======================================  CHECK ITEM  ========================================= */
 
 .check_item div{
-    margin: 5px 0;
-    clear:left;
+  margin: 5px 0;
+  clear:left;
 }
 
 .check_item textarea {
-    display: block;
-    height: 100px;
-    margin-top: 6px;
-    width: 63%;
+  display: block;
+  height: 100px;
+  margin-top: 6px;
+  width: 63%;
 }
 
 .check_item label{
@@ -1024,9 +1030,8 @@ h3.check_item_details{
 }
 
 .new_item a#innertoolbar-button {
-    background: none repeat scroll 0 0 grey;
-    border: 1px solid #666666;
-    font-weight: bold;
+  background: none repeat scroll 0 0 #F57056;
+  border: 1px solid #CB563F;
 }
 
 #frm_save_check_items input[type="submit"]{
@@ -1056,10 +1061,7 @@ ul.check_list {
   float: left;
   font-size: 19px;
   margin: 0;
-}
-
-#control_plan .top h3 .year{
-  margin-left:5px;
+  padding: 0;
 }
 
 #control_plan .middle {
@@ -1071,6 +1073,28 @@ ul.check_list {
   margin-top: 1em;
   overflow: hidden;
   padding: 1em 1em 0;
+}
+
+#control_plan h2 {
+  background: none repeat scroll 0 0 #FFFFFF;
+  color: #000000;
+  display: inline-block;
+  font-size: 23px;
+  padding: 0.2em 0.5em;
+}
+
+#control_plan h2.components {
+  margin-top: 40px;
+}
+
+#control_plan h3 {
+    padding-left: 1em;
+}
+
+#cal-filters {
+  clear: left;
+  float: left;
+  margin-top: 1em;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -1096,19 +1120,18 @@ ul.check_list {
 #filters {
     clear: left;
     float: left;
-    margin-top: 1em;
 }
 
-#filters.select-box {
+#cal-filters.select-box {
   background: none repeat scroll 0 0 #DEEAF8;
   border: 1px solid #BDD3ED;
 }
 
-#filters .filter {
+#cal-filters .filter {
     float: left;
 }
 
-#filters .filter.first {
+#cal-filters .filter.first {
     margin-right: 1em;
 }
 
@@ -1156,11 +1179,11 @@ ul.check_list {
 /* ==================  COLOR MAP ============================= */
 
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #FEFBF4;
-    border: 1px solid #DDDDDD;
-    border-radius: 5px 5px 5px 5px;
-    float: right;
-    padding: 1em;
+  background: none repeat scroll 0 0 #FEFBF4;
+  border: 1px solid #DDDDDD;
+  border-radius: 5px 5px 5px 5px;
+  float: right;
+  padding: 1em;
 }
 
 ul#icon_color_map li {
@@ -1173,35 +1196,42 @@ ul#icon_color_map span{
 }
 
 #calendar {
-    table-layout: fixed;
-    width: 100%;
+  table-layout: fixed;
+  width: 100%;
 }
 
 #calendar th {
-    font-weight: bold;
-    font-size:15px;
-    background:none;
+  font-weight: bold;
+  font-size:15px;
+  background:none;
 }
 
 #calendar th, #calendar td {
-    padding: 10px;
-    text-align: center;
+  padding: 10px;
+  text-align: center;
 }
 
 #calendar.month th, #calendar.month td {
-    padding: 5px 3px;
+  padding: 5px 3px;
 }
 
 #calendar .even {
-    background: none repeat scroll 0 0 #DEEAF8;
+  background: none repeat scroll 0 0 #DEEAF8;
+}
+
+#calendar h3 {
+  padding-left: 1em;
+  text-align: left;
 }
 
 #cal_wrp {
-    border: 1px solid #DBE5EF;
     background: none repeat scroll 0 0 #EDF5FF;
     border-top: none;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: #DBE5EF;
     clear: both;
-    padding: 1em;
+    padding: 0 1em 1em;
 }
 
 .control_details_wrp div {
@@ -1366,32 +1396,46 @@ a.view_info_box {
   	margin-left: 14px;
     margin-top: 5px;	
 }
+
 #data_paginator, #loc_paginator{
 	margin:8px;	
 	clear:left;
 }
+
 ul#filters li, ul#search_list li{
 	float:left;	
 }
+
 ul#filters input[type="text"], ul#filters select {
     margin-right: 5px;
     padding: 3px;
 }
+
 #choose_control select {
+    float: left;
     margin-right: 5px;
 }
+
+#choose_control form {
+    float: left;
+}
+
 ul#search_list input[type="submit"] {
     margin: 0;
     padding: 2px 15px;
 }
+
 ul#search_list input[type="text"] {
     margin: 0 5px 0 0;
     padding: 3px;
 }
-#queryForm{
-	overflow:hidden;
-	margin: 20px;
+
+#queryForm {
+    clear: both;
+    margin: 20px;
+    overflow: hidden;
 }
+
 fieldset.add_check_list div{
 	padding:2px; 
 }
@@ -1777,12 +1821,27 @@ div.controller_checklist {
 /* =====================  CONTROL LOCATION  ===================== */
 
 #choose_control {
-    float: right;
-    width: 500px;
+  float: left;
+  margin: 20px;
+  width: 500px;
+}
+#choose_control label {
+  display: block;
+  font-size: 17px;
+  margin: 5px 0;
 }
 
 #choose_control select {
-    width: 245px;
+  width: 245px;
+}
+#choose-location {
+	clear:both;
+}
+
+#choose-location label{
+  display: block;
+  font-size: 17px;
+  margin: 5px 0;
 }
 
 .error_msg {
@@ -1804,16 +1863,26 @@ div.controller_checklist {
 	margin:20px;
 }
 	
+#select_all {
+	float: right;
+	margin-right: 805px;	
+}
+
+#save_location {
+	margin-left:20px;
+	margin-bottom:20px;
+}
+	
 /* ==========================  CONTROL DETAILS   ============================ */
 
 #control_details label {
-    display: inline-block;
-    font-weight: bold;
-    width: 100px;
+  display: inline-block;
+  font-weight: bold;
+  width: 100px;
 }
 
 #control_details .date {
-    margin-right:0;
+  margin-right:0;
 }
 
 #control_details #select_all{
@@ -1830,11 +1899,11 @@ div.controller_checklist {
 }
 
 .help_text {
-    background: none repeat scroll 0 0 #CCDBED;
-    display: none;
-    margin-left: 5px;
-    padding: 6px 10px;
-    vertical-align: baseline;
+  background: none repeat scroll 0 0 #CCDBED;
+  display: none;
+  margin-left: 5px;
+  padding: 6px 10px;
+  vertical-align: baseline;
 }
 .help_text.ext {
     margin-left: 0;
