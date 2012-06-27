@@ -320,7 +320,7 @@
 						($current_date, array
 						(
 							'text' => "<span class='title'>{$location_name}</span><span class='control-area'>{$control_area_name}</span> <span class='control'>{$current_control["title"]}</span> <span class='date'>{$next_date}</span>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
+							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'deadline_ts' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
 						));
 					}
 					else
@@ -345,7 +345,7 @@
 				($current_date, array
 				(
 					'text' => "<span class='title'>{$location_name}</span><span class='control-area'>{$control_area_name}</span> <span class='control'>{$current_control["title"]}</span> <span class='date'>{$next_date}</span>",
-					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'date' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
+					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'deadline_ts' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
 				));					
 			}
 		}
