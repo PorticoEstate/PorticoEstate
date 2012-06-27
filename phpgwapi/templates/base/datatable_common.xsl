@@ -229,6 +229,15 @@
 					</xsl:if>
 	        </xsl:if>
 
+			<xsl:choose>
+				<xsl:when test="//datatable/actions">
+		        	YAHOO.portico.actions = <xsl:value-of select="//datatable/actions"/>;
+				</xsl:when>
+				<xsl:otherwise>
+					YAHOO.portico.actions = [];
+				</xsl:otherwise>
+			</xsl:choose>
+
 			YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{

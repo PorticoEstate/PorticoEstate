@@ -98,10 +98,147 @@ YAHOO.portico.initializeDataTable = function()
     };
     myDataTable.sortColumn = handleSorting;
 
-	/* from Property*/
+	/* Start from Property*/
+
+  /********************************************************************************
+ *
+ */
+	var onContextMenuBeforeShow = function(p_sType, p_aArgs)
+	{
+		var prefixSelected = '';
+		var oTarget = this.contextEventTarget;
+		if (this.getRoot() == this)
+		{
+			if(oTarget.tagName != "TD")
+			{
+				oTarget = YAHOO.util.Dom.getAncestorByTagName(oTarget, "td");
+			}
+			oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
+			oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
+			oSelectedTR.style.color = "black";
+			YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
+		}
+	}
+
+
+ /********************************************************************************
+ *
+ */
+	var onContextMenuHide = function(p_sType, p_aArgs)
+	{
+		var prefixSelected = '';
+		if (this.getRoot() == this && oSelectedTR)
+		{
+			oSelectedTR.style.backgroundColor  = "" ;
+			oSelectedTR.style.color = "";
+			YAHOO.util.Dom.removeClass(oSelectedTR, prefixSelected);
+		}
+	}
+ /********************************************************************************
+ *
+ */
+	var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
+	{
+		var task = p_aArgs[1];
+			if(task)
+			{
+				// Extract which TR element triggered the context menu
+				var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
+				if(elRow)
+				{
+					var oRecord = p_myDataTable.getRecord(elRow);
+					var url = YAHOO.portico.actions[task.groupIndex].action;
+					var sUrl = "";
+					var vars2 = "";
+
+					if(YAHOO.portico.actions[task.groupIndex].parameters!=null)
+					{
+						for(f=0; f<YAHOO.portico.actions[task.groupIndex].parameters.parameter.length; f++)
+						{
+							param_name = YAHOO.portico.actions[task.groupIndex].parameters.parameter[f].name;
+							param_source = YAHOO.portico.actions[task.groupIndex].parameters.parameter[f].source;
+							vars2 = vars2 + "&"+param_name+"=" + oRecord.getData(param_source);
+						}
+						sUrl = url + vars2;
+					}
+					if(YAHOO.portico.actions[task.groupIndex].parameters.parameter.length > 0)
+					{
+						//nothing
+					}
+					else //for New
+					{
+						sUrl = url;
+					}
+					//Convert all HTML entities to their applicable characters
+
+					sUrl=YAHOO.portico.html_entity_decode(sUrl);
+
+					// look for the word "DELETE" in URL
+					if(YAHOO.portico.substr_count(sUrl,'delete')>0)
+					{
+						confirm_msg = YAHOO.portico.actions[task.groupIndex].confirm_msg;
+						if(confirm(confirm_msg))
+						{
+							sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
+							delete_record(sUrl);
+						}
+					}
+					else
+					{
+						if(YAHOO.portico.substr_count(sUrl,'target=_blank')>0)
+						{
+							window.open(sUrl,'_blank');
+						}
+						else if(YAHOO.portico.substr_count(sUrl,'target=_lightbox')>0)
+						{
+							//have to be defined as a local function. Example in invoice.list_sub.js
+							//console.log(sUrl); // firebug
+							showlightbox(sUrl);
+						}
+						else if(YAHOO.portico.substr_count(sUrl,'target=_tinybox')>0)
+						{
+							//have to be defined as a local function. Example in invoice.list_sub.js
+							//console.log(sUrl); // firebug
+							showtinybox(sUrl);
+						}
+						else
+						{
+							window.open(sUrl,'_self');
+						}
+					}
+				}
+			}
+	};
+ /********************************************************************************
+ *
+ */
+	var GetMenuContext = function()
+	{
+		var opts = new Array();
+		var p=0;
+		for(var k =0; k < YAHOO.portico.actions.length; k ++)
+		{
+			if(YAHOO.portico.actions[k].my_name != 'add')
+			{	opts[p]=[{text: YAHOO.portico.actions[k].text}];
+				p++;
+			}
+		}
+		return opts;
+   }
+
+
 	myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
-	/* from Property*/
+
 	myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
+	myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
+	myContextMenu.addItems(GetMenuContext());
+
+	myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
+	myContextMenu.subscribe("hide", onContextMenuHide);
+	//Render the ContextMenu instance to the parent container of the DataTable
+	myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+	myContextMenu.render("datatable-container");
 
 
 	for(var i=0; i < YAHOO.portico.columnDefs.length;i++)
@@ -114,6 +251,7 @@ YAHOO.portico.initializeDataTable = function()
 //		YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
 	}
 
+	/* End from Property*/
 
     var handlePagination = function(state) {
         var sortedBy  = this.get("sortedBy");
@@ -122,6 +260,7 @@ YAHOO.portico.initializeDataTable = function()
      };
     pag.unsubscribe("changeRequest", myDataTable.onPaginatorChangeRequest);
     pag.subscribe("changeRequest", handlePagination, myDataTable, true);
+
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
 		oPayload.pagination = { 
@@ -185,11 +324,52 @@ YAHOO.portico.initializeDataTable = function()
 	
 	var initialRequest = History.getBookmarkedState("state") || getState();
 	History.register("state", initialRequest, handleHistoryNavigation);
+/*
 	History.onReady(function() {
 		var state = YAHOO.util.History.getCurrentState('state');
 		handleHistoryNavigation(state);
 	});
+
+*/
 	History.initialize("yui-history-field", "yui-history-iframe");
+
+
 };
 
+
+	onDownloadClick = function()
+	{
+		var state = YAHOO.util.History.getCurrentState('state');
+alert(state);
+		//store actual values
+		actuall_funct = path_values.menuaction;
+
+		if(config_values.particular_download)
+		{
+			path_values.menuaction = config_values.particular_download;
+		}
+		else
+		{
+			donwload_func = path_values.menuaction;
+			// modify actual function for "download" in path_values
+			// for example: property.uilocation.index --> property.uilocation.download
+			tmp_array= donwload_func.split(".")
+			tmp_array[2]="download"; //set function DOWNLOAD
+			donwload_func = tmp_array.join('.');
+			path_values.menuaction=donwload_func;
+		}
+
+		ds_download = phpGWLink('index.php',path_values);
+		//show all records since the first
+		ds_download+="&allrows=1&start=0";
+		//return to "function index"
+		path_values.menuaction=actuall_funct;
+		window.open(ds_download,'window');
+   }
+
+
+
+
 YAHOO.util.Event.addListener(window, "load", YAHOO.portico.initializeDataTable);
+
+

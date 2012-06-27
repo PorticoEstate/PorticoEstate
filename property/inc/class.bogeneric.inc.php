@@ -42,7 +42,7 @@
 		var $cat_id;
 		var $location_info = array();
 		var $appname;
-
+		var $allrows;
 
 		function __construct($session=false)
 		{
