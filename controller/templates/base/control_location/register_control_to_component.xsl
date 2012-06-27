@@ -45,10 +45,10 @@
 				<div class="body">
 							
 				<style type="text/css">
-						select { width: 100px; }
+					
 					</style>
 					<div id="choose_control">
-						<label>Velg kontrollen du vil vise komponent for</label>
+						<h4>Velg kontrollen du vil vise komponent for</h4>
 						<select id="control_area_id" name="control_area_id">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>		 
@@ -58,17 +58,10 @@
 					</div>
 				
 					<div id="choose-location">
-					
 							<xsl:apply-templates select="filter_form" />
 					
 					  	<form action="{update_action}" name="acl_form" id="acl_form" method="post">
-							<table align = "center" width="95%">
-								<tr>
-									<td colspan = '6'>
-										<xsl:apply-templates select="datatable"/>
-									</td>
-								</tr>
-							</table>
+									<xsl:apply-templates select="datatable"/>
 						</form>
 					</div>
 				</div>
@@ -81,56 +74,80 @@
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
-	
-			<label>Velg komponenter som du vil knytte til kontrollen</label>
-	
-			<input id= "control_id_hidden" type="hidden" name="control_id"/>
-	
-			<xsl:value-of select="php:function('lang', 'entity')" />
-			<select id="entity_id" name="entity_id">
-				<xsl:apply-templates select="entity_list/options"/>
-		  </select>
-		  
-			<xsl:value-of select="php:function('lang', 'category')" />
-			<select id="cat_id" name="cat_id">
-				<xsl:apply-templates select="category_list/options"/>
-		  </select>
-		  
-			<xsl:value-of select="php:function('lang', 'district')" />
-			<select id="district_id" name="district_id">
-				<xsl:apply-templates select="district_list/options"/>
-		  </select>
-		  
-			<xsl:value-of select="php:function('lang', 'part of town')" />
-			<select id="part_of_town_id" name="part_of_town_id">
-				<xsl:apply-templates select="part_of_town_list/options"/>
-		  </select>
-			
-			<xsl:value-of select="php:function('lang', 'property')" />
-			<select id="loc1" name="loc1">
-				<xsl:apply-templates select="loc1_list/options"/>
-		  </select>
-		  
-			<xsl:value-of select="php:function('lang', 'building')" />
-		  <select id="loc2" name="loc2">
-				<xsl:apply-templates select="loc2_list/options"/>
-		  </select>
-
-			<xsl:value-of select="php:function('lang', 'name')" />
-
-			<xsl:value-of select="php:function('lang', 'registered')" />
-		  <input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
-
-			<xsl:value-of select="php:function('lang', 'location type')" />
-		  <select id="location_type" name="location_type">
-				<xsl:apply-templates select="location_type_list/options"/>
-		  </select>
-
-			<xsl:value-of select="php:function('lang', 'location category')" />
-		  <select id="location_type_category" name="location_type_category"></select>
-
+	<h4>Velg komponenter som du vil knytte til kontrollen</h4>
+	<fieldset id="comp-filters">
+		<input id= "control_id_hidden" type="hidden" name="control_id"/>
+		
+		<div class="select-box">
+			<label><xsl:value-of select="php:function('lang', 'registered')" /></label>
+	  	<input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
+	  </div>
+	  
+		<div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'entity')" /></label>
+				<select id="entity_id" name="entity_id">
+					<xsl:apply-templates select="entity_list/options"/>
+			  </select>
+		  </div>
+		  <div class="filter">
+			  <label><xsl:value-of select="php:function('lang', 'category')" /></label>
+				<select id="cat_id" name="cat_id">
+					<xsl:apply-templates select="category_list/options"/>
+			  </select>
+		  </div>
+	  </div>
+		
+		<div class="select-box">
+			<div class="filter">
+	  		<label><xsl:value-of select="php:function('lang', 'district')" /></label>
+				<select id="district_id" name="district_id">
+					<xsl:apply-templates select="district_list/options"/>
+			  </select>
+	  	</div>
+		  <div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'part of town')" /></label>
+				<select id="part_of_town_id" name="part_of_town_id">
+					<xsl:apply-templates select="part_of_town_list/options"/>
+			  </select>
+			</div>
+	  </div>
+		
+		<div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'property')" /></label>
+				<select id="loc1" name="loc1">
+					<xsl:apply-templates select="loc1_list/options"/>
+			  </select>
+	  	</div>
+		  <div class="filter">
+		  	<label><xsl:value-of select="php:function('lang', 'building')" /></label>
+			  <select id="loc2" name="loc2">
+					<xsl:apply-templates select="loc2_list/options"/>
+			  </select>
+			</div>
+	  </div>
+	  
+	  <div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location type')" /></label>
+			  <select id="location_type" name="location_type">
+					<xsl:apply-templates select="location_type_list/options"/>
+			  </select>
+			</div>
+		  <div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location category')" /></label>
+			  <select id="location_type_category" name="location_type_category"></select>
+			</div>
+	  </div>
+	  
+	  <div class="select-box">
+			<label>Søk etter eiendom/bygg/rom</label>
 			<input type="text" value="" id="search-location-name" />
 			<input id= "search-location_code" type="hidden" name="search-location_code"/>
+		</div>
+		
+	</fieldset>
 </xsl:template>
 
 
