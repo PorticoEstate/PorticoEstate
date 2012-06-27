@@ -41,7 +41,7 @@
 			The ajax opearation is handled in ajax.js 
 		-->
 		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div>
-		 <label>Velg kontroll</label> 
+		 <h4>Velg kontroll</h4> 
 		 <select id="control_area_list" name="control_area_list">
 			<option value="">Velg kontrollområde</option>
 			<xsl:for-each select="control_areas_array">
@@ -92,7 +92,7 @@
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<div id="choose-location">
-		<label>Velg bygg/eiendom</label>
+		<h4>Velg bygg/eiendom</h4>
 	  <ul id="filters">
 	  	<li>
 			<input type="hidden" id="hidden_control_id" name="control_id">
