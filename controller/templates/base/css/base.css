@@ -1854,6 +1854,10 @@ div.controller_checklist {
     margin: 20px;
 }
 
+#queryForm #choose-location {
+    margin: 0;
+}
+
 #choose-location h4{
   display: block;
   font-size: 17px;

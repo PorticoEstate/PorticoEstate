@@ -235,8 +235,6 @@
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
 			$sql  .= "bim_item.type as component_type, bim_item.id as component_id, bim_item.location_code, bim_item.address, ";
-			//$sql  .= "cast(xpath('*/text()', xml_representation) as text[]) AS xml ";
-			//$sql  .= "xpath('/', bim_item.xml_representation) as xml ";
 			$sql  .= "bim_item.xml_representation as xml, cl.location_id ";
 			$sql  .= "FROM controller_control_component_list cl ";
 			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
@@ -258,7 +256,7 @@
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date) ";
 			
 			$sql  .= "ORDER BY bim_item.id ";
-			 var_dump($sql);
+			 
 			$this->db->query($sql);
 			
 			$component_id = 0;
