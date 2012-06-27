@@ -9,9 +9,6 @@
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Periode: <xsl:value-of select="current_year"/></h3>
 			
-			<!-- =====================  SELECT MY LOCATIONS  ================= -->
-			<xsl:call-template name="select_my_locations" />
-			
 		</div>
 		<div class="middle">
 		
@@ -20,12 +17,13 @@
 			
 		</div>
 		<div id="cal_wrp">
+		<h2>Bygg/Eiendom</h2>
 			<table id="calendar" class="year">
 				<tr>
-					<th>
+					<th class="title">
 						<span class="location_code">Lokasjonskode</span>
 					</th>
-					<th>
+					<th class="title">
 						<span class="location_name">Lokasjonsnavn</span>
 					</th>
 					<xsl:for-each select="heading_array">
@@ -62,7 +60,7 @@
 					        </xsl:otherwise>
 					    </xsl:choose>
 				    
-						<td>
+						<td class="title">
 							<xsl:value-of select="location/location_code"/>
 						</td>
 						<td class="location_name">
@@ -86,11 +84,11 @@
 		<div id="cal_wrp">
 			<table id="calendar" class="year">
 				<tr>
-					<th>
-						<span class="location_code">Lokasjon</span>
+					<th class="location_name">
+						<span>Lokasjon</span>
 					</th>
-					<th>
-						<span class="location_name">Komponenttype</span>
+					<th class="component_type">
+						<span>Komponenttype</span>
 					</th>
 					<xsl:for-each select="heading_array">
 						<th>
@@ -111,6 +109,8 @@
 						</th>
 					</xsl:for-each>
 				</tr>
+				
+			<h2 class="components">Komponenter</h2>
 			
 			<xsl:choose>
 				<xsl:when test="components_with_calendar_array/child::node()">
@@ -126,7 +126,7 @@
 					        </xsl:otherwise>
 					    </xsl:choose>
 				    
-						<td>
+						<td class="title">
 							<xsl:value-of select="component/component_location"/>
 						</td>
 						<td class="location_name">
