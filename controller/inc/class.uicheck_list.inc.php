@@ -556,10 +556,10 @@
 			
 			$data = array
 			(
-				'control' 							=> $control->toArray(),
-				'check_list' 						=> $check_list->toArray(),
-				'location_array'					=> $location_array,
-				'control_groups_with_items_array' 	=> $control_groups_with_items_array
+				'control' 												=> $control->toArray(),
+				'check_list' 											=> $check_list->toArray(),
+				'location_array'									=> $location_array,
+				'control_groups_with_items_array' => $control_groups_with_items_array
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -601,9 +601,9 @@
 
 			$data = array
 			(
-				'closed_check_items_and_cases'			=> $closed_check_items_and_cases,
+				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
 				'closed_check_items_and_measurements'	=> $closed_check_items_and_measurements,
-				'check_list' 							=> $check_list->toArray()
+				'check_list' 													=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
