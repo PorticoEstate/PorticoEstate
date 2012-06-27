@@ -240,8 +240,11 @@
 					$cl_criteria->set_control_id($control->get_id());
 					$cl_criteria->set_location_code($location_code);
 					
+					$from_month = $this->get_start_month_for_control($control);
+					$to_month = $this->get_end_month_for_control($control);
+					
 					// Loops through controls and populates aggregate open cases pr month array.
-					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year);
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
 					$year_calendar = new year_calendar($control, $year);
 					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
@@ -267,8 +270,6 @@
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				}
 			}
-			
-			//print_r( $components_with_controls_array );
 			
 			// COMPONENTS
 			foreach($components_with_controls_array as $component)
@@ -305,7 +306,10 @@
 						$cl_criteria->set_component_id( $component->get_id() );
 				  	$cl_criteria->set_location_id( $component->get_type() );
 				  	
-					  $agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year);
+				  	$from_month = $this->get_start_month_for_control($control);
+						$to_month = $this->get_end_month_for_control($control);
+									  	
+					  $agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
 					  $year_calendar = new year_calendar($control, $year);
 					  $calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
@@ -338,6 +342,7 @@
 			$heading_array = year_calendar::get_heading_array();
 			
 			$roles_array = $this->so_control->get_roles();
+			
 			$repeat_type_array = array(
 									array('id' 	=> "0", 'value'	=> "Dag"),
 									array('id' 	=> "1", 'value'	=> "Uke"),
@@ -404,9 +409,12 @@
 					$cl_criteria = new controller_check_list();
 					$cl_criteria->set_control_id( $control->get_id() );
 					$cl_criteria->set_location_code( $curr_location_code );
+					
+					$from_month = $this->get_start_month_for_control($control);
+					$to_month = $this->get_end_month_for_control($control);
 				  	
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
-					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year);
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
 					$year_calendar = new year_calendar($control, $year);
 					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
@@ -415,10 +423,19 @@
 				
 			  foreach($components_for_control_array as $component)
 			  {
-					$curr_component_id = $component['component_id'];
+					$component_id = $component['component_id'];
+					$location_id = $component['location_id'];
 					
+					$cl_criteria = new controller_check_list();
+					$cl_criteria->set_control_id( $control->get_id() );
+					$cl_criteria->set_component_id( $component_id);
+				  $cl_criteria->set_location_id( $location_id );
+				  	
+				  $from_month = $this->get_start_month_for_control($control);
+					$to_month = $this->get_end_month_for_control($control);
+				
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
-					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($control, $curr_component_id, $year, true);
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
 					$year_calendar = new year_calendar($control, $year);
 					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
@@ -446,9 +463,10 @@
 			  foreach($components_for_control_array as $component)
 			  {
 					$curr_component_id = $component['component_id'];
+					$curr_location_id = $component['location_id'];
 					
 					$repeat_type = $control->get_repeat_type();
-					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $curr_component_id, $from_date_ts, $to_date_ts, $repeat_type);	
+					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $curr_location_id, $curr_component_id, $from_date_ts, $to_date_ts, $repeat_type);	
 					
 					$check_lists_array = $component_with_check_lists["check_lists_array"];
 					
@@ -570,27 +588,8 @@
 		}
 		
 		// Generates array of aggregated number of open cases for each month in time period 
-		function build_agg_open_cases_pr_month_array( $cl_criteria, $year )
+		function build_agg_open_cases_pr_month_array( $cl_criteria, $year, $from_month, $to_month )
 		{
-			// Checks if control starts in the year that is displayed 
-			if( date("Y", $control->get_start_date()) == $year )
-			{
-				$from_month = date("n", $control->get_start_date());	
-			}
-			else
-			{
-				$from_month = 1;
-			}
-			
-			// Checks if control ends in the year that is displayed
-			if( date("Y", $control->get_end_date()) == $year )
-			{
-				$to_month = date("n", $control->get_end_date());
-			}
-			else
-			{
-				$to_month = 12;
-			}
 					
 			$agg_open_cases_pr_month_array = array();
 			
@@ -650,6 +649,36 @@
       return $buildings_on_property;
 		}
 		
+		function get_start_month_for_control($control)
+		{
+		  // Checks if control starts in the year that is displayed 
+			if( date("Y", $control->get_start_date()) == $year )
+			{
+				$from_month = date("n", $control->get_start_date());	
+			}
+			else
+			{
+				$from_month = 1;
+			}
+			
+			return $from_month;
+		}
+		
+		function get_end_month_for_control($control)
+		{	
+			// Checks if control ends in the year that is displayed
+			if( date("Y", $control->get_end_date()) == $year )
+			{
+				$to_month = date("n", $control->get_end_date());
+			}
+			else
+			{
+				$to_month = 12;
+			}
+			
+			return $to_month;
+	  }
+			
 		function get_location_level($location_code)
 		{
 			$level = count(explode('-', $location_code));
