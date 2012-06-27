@@ -1860,10 +1860,6 @@ div.controller_checklist {
   margin: 5px 0;
 }
 
-#comp-filters {
-  padding: 10px 0;
-}
-
 #comp-filters label {
   font-size: 1em;
   font-weight: bold;
@@ -1873,7 +1869,7 @@ div.controller_checklist {
     background: none repeat scroll 0 0 #DEEAF8;
     border: 1px solid #BDD3ED;
     float: left;
-    height: 50px;
+    height: 40px;
     margin-right: 5px;
 }
 
