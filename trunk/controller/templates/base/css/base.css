@@ -1103,6 +1103,11 @@ ul.check_list {
   margin-top: 1em;
 }
 
+#cal_wrp h3 {
+    font-size: 1.4em;
+    margin-bottom: 5px;
+}
+
 /* =============================  SEARCH LOCATION BOX  ======================= */
 #search-location {
     float: right;
