@@ -577,17 +577,15 @@
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, 'return_array');
 
 			foreach($open_check_items_and_cases as $key => $check_item){
-				
-				$check_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
-				$check_item['control_item']['options_array'] = $check_item_with_options['options_array'];
-				
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id'], "return_array");
+				$check_item['control_item']['options_array'] = $control_item_with_options['options_array'];
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-			
+
 			$data = array
 			(
-				'open_check_items_and_cases'		=> $open_check_items_and_cases,
-				'check_list' 						=> $check_list->toArray()
+				'open_check_items_and_cases'	=> $open_check_items_and_cases,
+				'check_list' 									=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			

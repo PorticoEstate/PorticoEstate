@@ -1500,6 +1500,8 @@ ul.check_items h5{
 	font-size: 13px;
 }
 
+/* ======================== TAB MENU ========================== */
+
 .tab_menu a {
     background: none repeat scroll 0 0 #F9F5F0;
     border: 1px solid #F0F0F0;
@@ -1519,6 +1521,12 @@ ul.check_items h5{
 }
 .tab_menu a, .tab_menu a.active{
 	border-bottom: 0;	
+}
+
+#tab_content {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #DBE5EF;
+  padding: 0 20px 20px;
 }
 
 /* ======================== CHECK LIST MENU ========================== */
