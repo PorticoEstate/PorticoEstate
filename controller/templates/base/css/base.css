@@ -1826,7 +1826,7 @@ div.controller_checklist {
   float: left;
   margin: 20px;
   width: 500px;
-}
+}	
 #choose_control label {
   display: block;
   font-size: 17px;
@@ -1836,8 +1836,10 @@ div.controller_checklist {
 #choose_control select {
   width: 245px;
 }
+
 #choose-location {
-	clear:both;
+    clear: both;
+    margin: 20px;
 }
 
 #choose-location label{
