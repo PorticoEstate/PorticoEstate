@@ -109,6 +109,7 @@
 
 		function download()
 		{
+			$this->bo->allrows = true;
 			$list = $this->bo->read();
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
@@ -192,71 +193,9 @@
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$this->type}";
 
 
-			$data = array(
-				'js_lang'	=>js_lang('edit', 'add'),
-				'form' => array
-				(
-					'toolbar' => array
-					(
-						'item' => array
-						(
-							array
-							(
-								'type' => 'text', 
-                                'text' => lang('searchfield'),
-								'name' => 'query'
-							),
-							array
-							(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-							array
-							(
-								'type' => 'link',
-								'value' => lang('add'),
-								'href' => self::link(array('menuaction'	=> 'property.uigeneric.edit',
-												'appname'		=> $this->appname,
-												'type'			=> $this->type,
-												'type_id'		=> $this->type_id))
-							),
-							array
-							(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_showall'))
-							//	'href' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json', 'all'))
-							),
-							array
-							(
-								'type' => 'link',
-								'value' => lang('download'),
-								'href' => "javascript:alert('download')"
-							),
-						),
-					),
-				),
-			);
+			$item = array();
 
 
-			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
-			{
-				$data['form']['toolbar']['item'][] =  array
-					(
-						'type'=> 'link',
-						'href' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-						array
-						(
-							'menuaction' => 'property.uigeneric.columns',
-							'appname'		=> $this->appname,
-							'type'			=> $this->type,
-							'type_id'		=> $this->type_id
-						)
-					)."','','width=350,height=370')",
-					'value' => lang('columns'),
-				);
-			}
 
 			foreach ( $this->location_info['fields'] as $field )
 			{
@@ -291,17 +230,82 @@
 					$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
 					array_unshift ($list, $default_value);
 
-					$data['form']['toolbar']['item'][] = array
-						(
-							'type'	=> 'filter',
-							'name'	=> $field['name'],
-							'text'	=> $field['descr'],
-							'list'	=> $list
-						);
-
+					$item[] = array
+					(
+						'type'	=> 'filter',
+						'name'	=> $field['name'],
+						'text'	=> $field['descr'],
+						'list'	=> $list
+					);
 				}
 			}
 
+
+
+			$item[] = array
+				(
+					'type' => 'text', 
+					'text' => lang('searchfield'),
+					'name' => 'query'
+				);
+			$item[] = array
+				(
+					'type' => 'submit',
+					'name' => 'search',
+					'value' => lang('Search')
+				);
+			$item[] = array
+				(
+					'type' => 'link',
+					'value' => lang('add'),
+					'href' => self::link(array('menuaction'	=> 'property.uigeneric.edit',
+								'appname'		=> $this->appname,
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id))
+				);
+			$item[] = array
+				(
+					'type' => 'link',
+					'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+					'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_showall'))
+				//	'href' => self::link(array('menuaction' => 'registration.uipending.index2', 'phpgw_return_as' => 'json', 'all'))
+				);
+			$item[] = array
+				(
+					'type' => 'link',
+					'value' => lang('download'),
+					'href' => 'javascript:onDownloadClick()'
+				);
+
+			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
+			{
+				$item[] =  array
+					(
+						'type'=> 'button',
+						'onClick' => "javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+						array
+						(
+							'menuaction' => 'property.uigeneric.columns',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)
+					)."','','width=350,height=370')",
+					'value' => lang('columns'),
+				);
+			}
+
+
+			$data = array(
+				'js_lang'	=>js_lang('edit', 'add'),
+				'form' => array
+				(
+					'toolbar' => array
+					(
+						'item' => $item
+					),
+				),
+			);
 
 			$data['datatable']['source'] = self::link(array('menuaction'	=> 'property.uigeneric_test.index',
 						'appname'			=> $this->appname,
@@ -317,90 +321,6 @@
 
 			$values = $this->bo->read(array('dry_run' => true));
 			$uicols = $this->bo->uicols;
-
-
-			$data['rowactions']['action'] = array();
-
-			$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> $this->location_info['id']['name'],
-							'source'	=>  $this->location_info['id']['name']
-						),
-					)
-				);
-
-			if($this->acl_edit)
-			{
-				$data['rowactions']['action'][] = array
-					(
-						'my_name' 		=> 'edit',
-						'statustext' 	=> lang('edit the entry'),
-						'text'			=> lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
-							'appname'			=> $this->appname,
-							'type'				=> $this->type,
-							'type_id'			=> $this->type_id
-						)),
-						'parameters'	=> $parameters
-					);
-				$data['rowactions']['action'][] = array
-					(
-						'my_name'		=> 'edit',
-						'text' 			=> lang('open edit in new window'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
-							'appname'		=> $this->appname,
-							'type'				=> $this->type,
-							'type_id'			=> $this->type_id,
-							'target'			=> '_blank'
-						)),
-						'parameters'	=> $parameters
-					);
-			}
-
-			if($this->acl_delete)
-			{
-				$data['rowactions']['action'][] = array
-					(
-						'my_name' 		=> 'delete',
-						'statustext' 	=> lang('delete the entry'),
-						'text'			=> lang('delete'),
-						'confirm_msg'	=> lang('do you really want to delete this entry'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'property.uigeneric.delete',
-							'appname'		=> $this->appname,
-							'type'			=> $this->type,
-							'type_id'		=> $this->type_id
-						)),
-						'parameters'	=> $parameters
-					);
-			}
-			unset($parameters);
-
-			if($this->acl_add)
-			{
-				$data['rowactions']['action'][] = array
-					(
-						'my_name' 			=> 'add',
-						'statustext' 	=> lang('add'),
-						'text'			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
-							'appname'		=> $this->appname,
-							'type'			=> $this->type,
-							'type_id'		=> $this->type_id
-						))
-					);
-			}
 
 
 
@@ -426,6 +346,7 @@
 				'hidden' => true
 			);
 
+			$data['datatable']['actions'] = $this->get_actions();
 
 			$appname			=  $this->location_info['name'];
 			$function_msg		= lang('list %1', $appname);
@@ -504,14 +425,6 @@
 				}
 			}
 
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json['rights'] = $datatable['rowactions']['action'];
-			}
-
-
-
 			
 			// Pagination and sort values
 
@@ -541,6 +454,96 @@
 			return $this->yui_results($results);
 
 		}
+
+		protected function get_actions()
+		{
+
+			$action = array();
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> $this->location_info['id']['name'],
+							'source'	=>  $this->location_info['id']['name']
+						),
+					)
+				);
+
+			if($this->acl_edit)
+			{
+				$action[] = array
+					(
+						'my_name' 		=> 'edit',
+						'statustext' 	=> lang('edit the entry'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'			=> $this->appname,
+							'type'				=> $this->type,
+							'type_id'			=> $this->type_id
+						)),
+						'parameters'	=> $parameters
+					);
+				$action[] = array
+					(
+						'my_name'		=> 'edit',
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'				=> $this->type,
+							'type_id'			=> $this->type_id,
+							'target'			=> '_blank'
+						)),
+						'parameters'	=> $parameters
+					);
+			}
+
+			if($this->acl_delete)
+			{
+				$action[] = array
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the entry'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uigeneric.delete',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> $parameters
+					);
+			}
+			unset($parameters);
+
+			if($this->acl_add)
+			{
+				$action[] = array
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> isset($this->location_info['edit_action']) &&  $this->location_info['edit_action'] ?  $this->location_info['edit_action'] : 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						))
+					);
+			}
+
+			return json_encode($action);
+		}
+
 
 		function edit()
 		{
