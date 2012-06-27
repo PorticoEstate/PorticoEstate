@@ -382,11 +382,11 @@
 					'startIndex' 		=> $results['start'], 
 					'sortKey' 			=> $results['sort'], 
 					'sortDir' 			=> $results['dir'], 
-					'Result' 			=> $results['results']
+					'Result' 			=> $results['results'],
+					'actions'			=> $results['actions']
 				)   
 			);  
 		}
-
 
 		public function use_yui_editor($targets)
 		{
