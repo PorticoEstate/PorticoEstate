@@ -296,7 +296,7 @@ function chooseLocation( label, value ){
 		</xsl:for-each>
 		</xsl:when>
 			<xsl:otherwise>
-				<p>Ingen kontroller for komponenter tilknyttet lokasjon</p>
+				<p class="no-comp-msg">Ingen komponenter tilknyttet kontroll</p>
 			</xsl:otherwise>
 			</xsl:choose>
 	</div>

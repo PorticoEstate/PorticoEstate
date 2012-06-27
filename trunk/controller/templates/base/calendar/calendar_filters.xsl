@@ -46,20 +46,38 @@
 		<select id="filter-role">
 			<xsl:for-each select="roles_array">
 				<xsl:variable name="role_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$role_id}">
-					<xsl:value-of disable-output-escaping="yes" select="name"/>
-				</option>
+				<xsl:choose>
+					<xsl:when test="$role_id = //current_role">
+						<option value="{$role_id}" selected="selected">
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+					</xsl:when>
+					<xsl:otherwise>
+						<option value="{$role_id}">
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:for-each>
 		</select>
 	</div>
 	<div class="filter">
 	<label>Filtrer på frekvenstype</label>
-		<select class="required" id="filter-repeat_type" name="repeat_type">
-			<option value="" selected="selected" >Velg frekvenstype</option>
+		<select id="filter-repeat_type" name="repeat_type">
+			<option value="">Velg frekvenstype</option>
 			<xsl:for-each select="repeat_type_array">
-				<option value="{id}">
+				<xsl:choose>
+					<xsl:when test="id = //current_repeat_type">
+						<option value="{id}" selected="selected">
 					<xsl:value-of disable-output-escaping="yes" select="value"/>
 				</option>
+					</xsl:when>
+					<xsl:otherwise>
+						<option value="{id}">
+							<xsl:value-of disable-output-escaping="yes" select="value"/>
+						</option>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:for-each>
 		</select>
 	</div>

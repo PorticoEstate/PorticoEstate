@@ -2104,8 +2104,8 @@ p.no_items_msg {
 	padding: 5px;	
 }
 
-.home-box {
-	background: none repeat scroll 0 0 #EDF5FF;
-  border-color: #DBE5EF;
-  border-radius: 4px;	
+.no-comp-msg {
+	font-size: 16px;
+  padding-left: 85px;	
 }
+
