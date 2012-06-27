@@ -534,6 +534,8 @@ $(document).ready(function(){
 	$("#frm_add_check_list").live("submit", function(e){
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
+		var plannedDateVal = $("#planned_date").val();
+		var plannedDateRow = $("#planned_date").closest(".row");
 		var completedDateVal = $("#completed_date").val();
 		var completedDateRow = $("#completed_date").closest(".row");
 		
@@ -542,6 +544,10 @@ $(document).ready(function(){
 			e.preventDefault();
 			// Displays error message above completed date
 			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+		}else if(statusFieldVal == 0 & plannedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");
 		}		
 	});	
 	

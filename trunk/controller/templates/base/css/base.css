@@ -1371,11 +1371,11 @@ a.view_info_box {
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #98B4D6;
-    display: none;
+    display: block;
     float: none;
     font-size: 12px;
-    height: 200px;
     left: 40px;
+    overflow: hidden;
     padding: 10px;
     position: absolute;
     text-align: left;
@@ -1383,28 +1383,34 @@ a.view_info_box {
     width: 400px;
     z-index: 1;
 }
+
 #info_box h3 {
  	background: none repeat scroll 0 0 #D1E3F8;
     margin: 0 0 10px;
     padding: 5px 0;
     text-align: center;
 }
+
 #info_box h5 {
     font-size: 13px;
     font-weight: bold;
     margin: 0 0 4px;
     text-align: left;
 }
+
 #info_box .check_item {
  	width: 100% 	
 }
+
 #info_box .check_item label{
  	display:inline;
  	margin-left:20px; 	
 }
+
 #info_box .case {
  	text-align:left; 	
 }
+
 .empty_list{
 	font-size: 16px;
     font-weight: bold;
@@ -2105,7 +2111,7 @@ p.no_items_msg {
 }
 
 .no-comp-msg {
-	font-size: 16px;
-  padding-left: 85px;	
+  font-size: 16px;
+  padding-left: 12px;
 }
 

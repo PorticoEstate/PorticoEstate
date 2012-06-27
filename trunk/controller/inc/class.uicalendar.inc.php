@@ -212,14 +212,13 @@
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
-echo " repeat type: " . $repeat_type;
+
 			// Validates year. 
 			$repeat_type = $this->validate_repeat_type($repeat_type);
 			
 			// Validates role. 
 			$role = $this->validate_role($role);
 			
-			echo " repeat type: " . $repeat_type;
 			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
