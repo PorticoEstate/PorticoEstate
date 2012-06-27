@@ -1371,7 +1371,7 @@ a.view_info_box {
 #info_box {
     background: none repeat scroll 0 0 #EDF5FF;
     border: 1px solid #98B4D6;
-    display: block;
+    display: none;
     float: none;
     font-size: 12px;
     left: 40px;
