@@ -68,14 +68,14 @@
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
 								<xsl:value-of select="php:function('lang', $lang_type)" />
 								
-								<h3>Verdier i liste</h3>
-								
-								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
-								<ul>
-								<xsl:for-each select="control_item/options_array">
-									<li><xsl:value-of select="option_value" /></li>
-								</xsl:for-each>
-								</ul>
+								<xsl:if test="control_item/options_array/child::node()">								
+									<h3>Verdier i liste</h3>
+									<ul>
+									<xsl:for-each select="control_item/options_array">
+										<li><xsl:value-of select="option_value" /></li>
+									</xsl:for-each>
+									</ul>
+								</xsl:if>
 							</xsl:when>
 							<xsl:when test="editable">
 							

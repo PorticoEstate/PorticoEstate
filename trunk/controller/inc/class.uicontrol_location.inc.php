@@ -111,7 +111,7 @@
 			
 			self::set_active_menu('controller::control::location_for_check_list');
 		}	
-	
+	/*
 		function index_old()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -197,7 +197,7 @@
 
 			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
 		}
-		
+		*/
 		function index()
 		{
 			$control_id = phpgw::get_var('control_id');
@@ -210,7 +210,7 @@
 
 				$ok = $this->so_control->register_control_to_location($control_id, $values);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location', 'control_id' => $control_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index', 'control_id' => $control_id));
 
 			}
 			else
