@@ -1260,6 +1260,10 @@ ul#icon_color_map span{
 	width: 150px;
 }
 
+#calendar .location_name, #calendar .component_type {
+	width: 150px;
+}
+
 #calendar .frequency {
     margin-right: 10px;
     width: 100px;
