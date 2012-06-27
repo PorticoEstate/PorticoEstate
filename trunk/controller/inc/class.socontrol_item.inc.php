@@ -149,9 +149,10 @@
 		}
 		
 		public function get_single_with_options($id, $return_type = "return_object"){
-			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
+			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
 			$sql .= "FROM controller_control_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
+			$sql .= "LEFT JOIN controller_control_group as cg ON ci.control_group_id = cg.id ";
 			$sql .= "WHERE ci.id = $id";
 
 			$this->db->query($sql);
@@ -168,7 +169,7 @@
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-					$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
+					$control_item->set_control_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 					$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id')));
 					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
 					$control_item->set_control_area_name($category[0]['name']);
