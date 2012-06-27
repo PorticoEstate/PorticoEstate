@@ -84,12 +84,20 @@
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
+			$role = phpgw::get_var('role');
+			$repeat_type = phpgw::get_var('repeat_type');
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 			
 			// Validates month. If year is not set, current month in current year is chosen
 			$month = $this->validate_month($month);
+			
+			// Validates year. 
+			$repeat_type = $this->validate_repeat_type($repeat_type);
+			
+			// Validates role. 
+			$role = $this->validate_role($role);
 			
 			// Gets timestamp value of first day in month
 			$from_date_ts = month_calendar::get_start_month_date_ts($year, intval( $month ));
@@ -179,7 +187,9 @@
 				'current_month_nr' 		  	=> $month,
 				'location_level'		  		=> $level,
 				'roles_array'		  				=> $roles_array,
-				'repeat_type_array'		  	=> $repeat_type_array
+				'repeat_type_array'		  	=> $repeat_type_array,
+				'current_role' 						=> $role,
+				'current_repeat_type' 		=> $repeat_type
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -202,7 +212,14 @@
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
+echo " repeat type: " . $repeat_type;
+			// Validates year. 
+			$repeat_type = $this->validate_repeat_type($repeat_type);
 			
+			// Validates role. 
+			$role = $this->validate_role($role);
+			
+			echo " repeat type: " . $repeat_type;
 			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
@@ -246,7 +263,7 @@
 					// Loops through controls and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar($control, $year);
+					$year_calendar = new year_calendar($control, $year, null, $location_code, "location");
 					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
 						
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
@@ -362,7 +379,9 @@
 				'current_year' 			  			=> $year,
 				'location_level'		  			=> $level,
 				'roles_array'		  					=> $roles_array,
-				'repeat_type_array'		  		=> $repeat_type_array
+				'repeat_type_array'		  		=> $repeat_type_array,
+				'current_role' 							=> $role,
+				'current_repeat_type' 			=> $repeat_type
 			);
 			
 			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 
@@ -768,6 +787,26 @@
 			$validate_year = intval($validate_year);
 			
 			return $validate_year;
+		}
+		
+		function validate_repeat_type($validate_repeat_type)
+		{
+			if( $validate_repeat_type != 0 & (empty( $validate_repeat_type ) | ($validate_repeat_type > 3)) )
+			{
+				$validate_repeat_type = '';
+			}
+			
+			return $validate_repeat_type;
+		}
+		
+	  function validate_role($validate_role)
+		{
+			if( empty( $validate_role ) | (!is_numeric($validate_role)) | ($validate_role < 1) )
+			{
+				$validate_role = '';
+			}
+			
+			return $validate_role;
 		}
 		
 		function validate_month($month)
