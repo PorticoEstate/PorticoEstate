@@ -73,7 +73,7 @@ function chooseLocation( label, value ){
 			</xsl:choose>
 						
 			<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
-			<h3>Kalenderoversikt for <xsl:value-of select="php:function('lang', $month_str)" /><span class="year"><xsl:value-of select="current_year"/></span></h3>
+			<h3>Kalenderoversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">

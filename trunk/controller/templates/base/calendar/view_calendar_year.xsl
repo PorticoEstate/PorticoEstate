@@ -216,7 +216,8 @@ function chooseLocation( label, value ){
 		</table>
 		
 		<h2 class="components">Komponenter</h2>
-		
+		<xsl:choose>
+				<xsl:when test="components_calendar_array/child::node()">
 		<xsl:for-each select="components_calendar_array">
 		  
 			    <h3><xsl:value-of select="component/xml_short_desc"/></h3>
@@ -293,6 +294,11 @@ function chooseLocation( label, value ){
 				</xsl:for-each>
 				</table>	
 		</xsl:for-each>
+		</xsl:when>
+			<xsl:otherwise>
+				<p>Ingen kontroller for komponenter tilknyttet lokasjon</p>
+			</xsl:otherwise>
+			</xsl:choose>
 	</div>
 </div>
 </div>

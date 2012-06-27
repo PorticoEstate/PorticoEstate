@@ -410,14 +410,14 @@
 			}
 		}
 		
-	    function get_components_for_control($control_id)
+	  function get_components_for_control($control_id)
 		{
 			$controls_array = array();
 
-			$sql =  "SELECT c.id, c.title, ccl.component_id, bim_type.description, bim.location_code ";
+			$sql =  "SELECT c.id, c.title, ccl.component_id, ccl.location_id, bim_type.description, bim.location_code ";
       $sql .= "FROM controller_control c, controller_control_component_list ccl, fm_bim_item bim, fm_bim_type bim_type "; 
 			$sql .= "WHERE ccl.control_id = $control_id ";
-            $sql .= "AND ccl.control_id = c.id ";
+      $sql .= "AND ccl.control_id = c.id ";
 			$sql .= "AND bim.id = ccl.component_id ";
 			$sql .= "AND bim_type.id = bim.type";
 
@@ -427,6 +427,7 @@
 				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
 				$component_id = $this->unmarshal($this->db->f('component_id', true), 'int');
+				$location_id = $this->unmarshal($this->db->f('location_id', true), 'int');
 				$component_type = $this->unmarshal($this->db->f('description', true), 'string');
 				$component_location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 				//$component_guid = $this->unmarshal($this->db->f('guid', true), 'string');
@@ -436,7 +437,7 @@
 				
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $component_location_code));
 				
-				$controls_array[] = array("id" => $control_id, "title" => $title, "component_id" => $component_id, "component_description" => $component_type, "component_location" => $location_array["loc1_name"]);
+				$controls_array[] = array("id" => $control_id, "title" => $title, "component_id" => $component_id, "location_id" => $location_id, "component_description" => $component_type, "component_location" => $location_array["loc1_name"]);
 			}
 
 			if( count( $controls_array ) > 0 ){

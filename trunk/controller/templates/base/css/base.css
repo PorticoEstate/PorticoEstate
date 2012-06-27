@@ -1070,6 +1070,10 @@ ul.check_list {
   padding: 0;
 }
 
+#control_plan .top h3 .month {
+  margin-right: 5px;
+}
+
 #control_plan .middle {
   background: none repeat scroll 0 0 #EDF5FF;
   border-color: #DBE5EF;

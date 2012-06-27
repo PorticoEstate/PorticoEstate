@@ -659,13 +659,14 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	// Fetches check lists for component and control id
-	function get_check_lists_for_control_and_component( $control_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null ){
+	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null ){
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
-		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
+		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
 		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.component_id = {$component_id} ";
+		$sql .= "AND cl.location_id = {$location_id} ";
 		
 		if( $repeat_type != null )
 			$sql .= "AND c.repeat_type = $repeat_type ";
@@ -682,6 +683,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
 			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));	
 			$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id', true), 'int'));
+			$check_list->set_location_id($this->unmarshal($this->db->f('cl_location_id', true), 'int'));
 			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));
