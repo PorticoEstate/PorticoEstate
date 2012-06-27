@@ -355,6 +355,10 @@ input[type="radio"] {
   padding: 3px 6px;
 }
 
+input[type="checkbox"] {
+  margin: 5px;
+}
+
 #innertoolbar-button, input[type="submit"] {
   background: none repeat scroll 0 0 #4F9AEA;
   border: 1px solid #4685C8;
@@ -1835,7 +1839,7 @@ div.controller_checklist {
   margin: 20px;
   width: 500px;
 }	
-#choose_control label {
+#choose_control h4 {
   display: block;
   font-size: 17px;
   margin: 5px 0;
@@ -1850,10 +1854,36 @@ div.controller_checklist {
     margin: 20px;
 }
 
-#choose-location label{
+#choose-location h4{
   display: block;
   font-size: 17px;
   margin: 5px 0;
+}
+
+#comp-filters {
+  padding: 10px 0;
+}
+
+#comp-filters label {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#comp-filters .select-box {
+    background: none repeat scroll 0 0 #DEEAF8;
+    border: 1px solid #BDD3ED;
+    float: left;
+    height: 50px;
+    margin-right: 5px;
+}
+
+#comp-filters .filter {
+    float: left;
+}
+
+
+#choose-location #datatable-container{
+  margin: 20px 0;
 }
 
 .error_msg {
