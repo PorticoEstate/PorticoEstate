@@ -786,16 +786,6 @@ ul.row li{
 }
 
 /* =======================================  GENERAL CLASSES  ========================================= */
-.content-wrp {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #eee;
-  margin-bottom: 20px;
-  padding: 15px;
-}
-
-.content-wrp .yui-skin-sam .yui-dt table {
-    border: 1px solid #CCCCCC;
-}
 
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -879,10 +869,14 @@ ul.row li{
 }
 
 .content-wrp {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #DBE5EF;
-  margin-top: 1em;
-  padding: 0;
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DEE1E4;
+    margin-top: 1em;
+    padding: 0;
+}
+
+.content-wrp .yui-skin-sam .yui-dt table {
+    border: 1px solid #CCCCCC;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */

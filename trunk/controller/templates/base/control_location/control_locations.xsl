@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <xsl:template name="control_locations" xmlns:php="http://php.net/xsl">
 
-<div class="yui-content">
+<div class="content-wrp">
 	<div>
 		  
 	   <!-- ===========================  CHOOSE CONTROL LOCATIONS  =============================== -->

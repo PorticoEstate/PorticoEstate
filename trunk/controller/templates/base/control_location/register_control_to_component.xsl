@@ -32,7 +32,7 @@
 </xsl:template>
 
 <xsl:template name="register_control_to_component" xmlns:php="http://php.net/xsl">
-	<div class="yui-content">
+	<div class="content-wrp">
 		<div id="invoice-layout">
 				<div class="header">
 					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
