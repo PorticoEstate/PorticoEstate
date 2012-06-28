@@ -21,7 +21,7 @@
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
-	<div class="yui-content">
+	<div class="content-wrp">
 		<div id="control_details">
 			<div id="choose_control">
 				
