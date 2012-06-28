@@ -306,6 +306,7 @@
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
 				if($return_type == "return_object")
