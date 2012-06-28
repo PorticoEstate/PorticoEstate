@@ -83,8 +83,6 @@
 			if(isset($result)) {
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item', 'id');
-				// Forward this request to the update method
-				//return $this->update($control_item);
 			}
 			else
 			{
@@ -116,7 +114,14 @@
 			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			if(isset($result)) {
+				// return the new control item ID
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/**
@@ -148,46 +153,70 @@
 			return $control_item;
 		}
 		
-		public function get_single_with_options($id){
-			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
+		public function get_single_with_options($id, $return_type = "return_object"){
+			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
 			$sql .= "FROM controller_control_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
+			$sql .= "LEFT JOIN controller_control_group as cg ON ci.control_group_id = cg.id ";
 			$sql .= "WHERE ci.id = $id";
-											
+
 			$this->db->query($sql);
 			
 			$counter = 0;
 			$control_item = null;
-			while ($this->db->next_record()) {
-				
-				if( $counter == 0 ){
+			while ($this->db->next_record()) 
+			{
+				if( $counter == 0 )
+				{
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-					$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
+					$control_item->set_control_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 					$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id')));
 					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
 					$control_item->set_control_area_name($category[0]['name']);
 					$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				}
 				
-				if($this->db->f('cio_id', true) != ''){
+				if($this->db->f('cio_id', true) != '')
+				{
 					$control_item_option = new controller_control_item_option();
 					$control_item_option->set_id($this->unmarshal($this->db->f('cio_id', true), 'int'));
 					$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
 					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-				
-					$options_array[] = $control_item_option->toArray();
+
+					if($return_type == "return_object")
+					{
+						$options_array[] = $control_item_option;
+					}
+					else
+					{
+						$options_array[] = $control_item_option->toArray();
+					}
 				}
-				
+			
 				$counter++;
 			}
+			
 			$control_item->set_options_array( $options_array );
 			
-			return $control_item->toArray();
+			if($return_type == "return_object")
+			{
+				return $control_item;
+			}
+			else
+			{
+				return $control_item->toArray();
+			}
+		}
+		
+		function delete_option_values($control_item_id)
+		{
+			$sql  = "delete from controller_control_item_option where control_item_id=$control_item_id";
+			$this->db->query($sql);
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())

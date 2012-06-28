@@ -212,6 +212,7 @@
 </xsl:template>
 
 <xsl:template match="datatable">
+	<div id="message"/>
     <div id="paginator"/>
     <div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
@@ -229,15 +230,25 @@
 					</xsl:if>
 	        </xsl:if>
 
+			<xsl:choose>
+				<xsl:when test="//datatable/actions">
+		        	YAHOO.portico.actions = <xsl:value-of select="//datatable/actions"/>;
+				</xsl:when>
+				<xsl:otherwise>
+					YAHOO.portico.actions = [];
+				</xsl:otherwise>
+			</xsl:choose>
+
 			YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{
+						resizeable: true,
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
 					    </xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
+						<xsl:if test="hidden=1">
 						hidden: true,
 					    </xsl:if>
 						<xsl:if test="formatter">

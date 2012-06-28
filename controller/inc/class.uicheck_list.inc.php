@@ -331,7 +331,8 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
 		
-		function view_cases_for_check_list(){
+		function view_cases_for_check_list()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
@@ -360,7 +361,8 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
-		function create_case_message(){
+		function create_case_message()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 						
 			$check_list_with_check_items = $this->so->get_single_with_check_items($check_list_id);
@@ -393,7 +395,8 @@
 		}
 		
 		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
-		public function update_check_list(){
+		public function update_check_list()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$status = (int)phpgw::get_var('status');
 			$comment = phpgw::get_var('comment');
@@ -428,7 +431,8 @@
 				return json_encode( array( "status" => "not_updated" ) );
 		}
 		
-		public function print_check_list(){
+		public function print_check_list()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so->get_single($check_list_id);
 			
@@ -456,7 +460,8 @@
 			self::render_template_xsl('check_list/print_check_list', $data);
 		}
 		
-		public function view_control_info(){
+		public function view_control_info()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
@@ -478,7 +483,8 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
 		
-		function view_control_details(){
+		function view_control_details()
+		{
 			$control_id = phpgw::get_var('control_id');
 			
 			$control = $this->so_control->get_single($control_id);
@@ -492,7 +498,8 @@
 		}
 						
 		// Displays control groups and control items for a check list
-		function register_case(){
+		function register_case()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
@@ -507,7 +514,8 @@
 			{	
 				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
 
-				if(count($saved_control_items) > 0){				
+				if(count($saved_control_items) > 0)
+				{				
 					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 				}
 			}
@@ -556,10 +564,10 @@
 			
 			$data = array
 			(
-				'control' 							=> $control->toArray(),
-				'check_list' 						=> $check_list->toArray(),
-				'location_array'					=> $location_array,
-				'control_groups_with_items_array' 	=> $control_groups_with_items_array
+				'control' 												=> $control->toArray(),
+				'check_list' 											=> $check_list->toArray(),
+				'location_array'									=> $location_array,
+				'control_groups_with_items_array' => $control_groups_with_items_array
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -569,31 +577,32 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
 		}
 		
-		function view_open_cases(){
+		function view_open_cases()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, 'return_array');
 
-			foreach($open_check_items_and_cases as $key => $check_item){
-				
-				$check_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
-				$check_item['control_item']['options_array'] = $check_item_with_options['options_array'];
-				
+			foreach($open_check_items_and_cases as $key => $check_item)
+			{
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id'], "return_array");
+				$check_item['control_item']['options_array'] = $control_item_with_options['options_array'];
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-			
+
 			$data = array
 			(
-				'open_check_items_and_cases'		=> $open_check_items_and_cases,
-				'check_list' 						=> $check_list->toArray()
+				'open_check_items_and_cases'	=> $open_check_items_and_cases,
+				'check_list' 									=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			
 		}
 		
-		function view_closed_cases(){
+		function view_closed_cases()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
 			$check_list = $this->so->get_single($check_list_id);
@@ -603,15 +612,16 @@
 
 			$data = array
 			(
-				'closed_check_items_and_cases'			=> $closed_check_items_and_cases,
+				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
 				'closed_check_items_and_measurements'	=> $closed_check_items_and_measurements,
-				'check_list' 							=> $check_list->toArray()
+				'check_list' 													=> $check_list->toArray()
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
 		}
 		
-		function view_control_items(){
+		function view_control_items()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so->get_single($check_list_id);
 						

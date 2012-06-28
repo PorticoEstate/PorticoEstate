@@ -49,6 +49,8 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
+	/* ================================  FILTERS  ================================== */
+	
 	$("#filter-repeat_type").change(function () {
       var repeat_type = $(this).val();
 	  var thisForm = $(this).closest("form");
@@ -374,7 +376,7 @@ $(document).ready(function(){
 	/* =========================  CONTROL OPTION ======================================== */
 	  
 	// Changes control type location level between building and property in search location select box
-	$(".control_item_type").click(function(){
+	$(".control_item_type").live("click", function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
 		
@@ -402,7 +404,7 @@ $(document).ready(function(){
 	});
 	
 	$("#control_item_options li .delete").live("click", function(e){
-		$(this).closest("li").fadeOut();
+		$(this).closest("li").remove();
 	});
 	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
@@ -411,15 +413,22 @@ $(document).ready(function(){
 		var listValue = $(this).parent().find("input[name=option_value]").val();
 		var order_nr = 1;
 		
-		if($("ul#control_item_options").children().length == 0){
-			order_nr = 1;
-		}else{
-			order_nr = $("ul#control_item_options").find("li").last().find(".order_nr").text();
-			order_nr++;
-		}
+		if(listValue.length > 0){
 		
-		$("ul#control_item_options").append("<li><label>Listeverdi<span class='order_nr'>" + order_nr + "</span></label><input type='text' name='option_values[]' value='" + listValue + "' /><span class='btn delete'>Slett</span></li>")
-		$(this).parent().find("input[name=option_value]").val('');
+			$("#add_control_item_option_panel .input_error_msg").remove();
+			
+		  if($("ul#control_item_options").children().length == 0){
+			order_nr = 1;
+		  }else{
+		    order_nr = $("ul#control_item_options").find("li").last().find(".order_nr").text();
+			order_nr++;
+		  }
+			
+		  $("ul#control_item_options").append("<li><label>Listeverdi<span class='order_nr'>" + order_nr + "</span></label><input type='text' name='option_values[]' value='" + listValue + "' /><span class='btn delete'>Slett</span></li>")
+		  $(this).parent().find("input[name=option_value]").val('');
+		}else{
+			$(this).closest(".row").before("<div class='input_error_msg'>Listeverdien kan ikke være tom</div>");
+		}
 	});
 	
 	/* =========================  CONTROL  =============================================== */
@@ -534,6 +543,8 @@ $(document).ready(function(){
 	$("#frm_add_check_list").live("submit", function(e){
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
+		var plannedDateVal = $("#planned_date").val();
+		var plannedDateRow = $("#planned_date").closest(".row");
 		var completedDateVal = $("#completed_date").val();
 		var completedDateRow = $("#completed_date").closest(".row");
 		
@@ -542,6 +553,10 @@ $(document).ready(function(){
 			e.preventDefault();
 			// Displays error message above completed date
 			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+		}else if(statusFieldVal == 0 & plannedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");
 		}		
 	});	
 	
