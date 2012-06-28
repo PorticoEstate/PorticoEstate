@@ -212,6 +212,7 @@
 </xsl:template>
 
 <xsl:template match="datatable">
+	<div id="message"/>
     <div id="paginator"/>
     <div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />

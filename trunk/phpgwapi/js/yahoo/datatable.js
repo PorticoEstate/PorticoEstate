@@ -251,6 +251,69 @@ YAHOO.portico.initializeDataTable = function()
 //		YAHOO.util.Dom.getElementsByClassName( 'yui-dt-resizerliner', 'div' )[0].style.textAlign = 'center';
 	}
 
+
+	var delete_record = function(sUrl)
+	{
+		var callback =	{	success: function(o){
+									message_delete = o.responseText.toString().replace("\"","").replace("\"","");
+									//shown message if delete records
+									delete_content_div("message",1);
+									if(message_delete != "")
+									{
+								 		oDiv=document.createElement("DIV");
+								 		txtNode = document.createTextNode(message_delete);
+								 		oDiv.appendChild(txtNode);
+								 		oDiv.style.color = '#009900';
+								 		oDiv.style.fontWeight = 'bold';
+								 		div_message.appendChild(oDiv);
+								 		message_delete = "";
+									}
+
+									var state = YAHOO.util.History.getCurrentState('state');
+									handleHistoryNavigation(state);
+									},
+							failure: function(o){window.alert('Server or your connection is dead.')},
+							timeout: 10000
+						};
+		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback);
+	}
+
+ /********************************************************************************
+ * Delete all message un DIV 'message'
+ * type == 1	always delete div content
+ * type == 2	depende of if exists  "values_ds.message" values
+ */
+	var delete_content_div = function(mydiv,type)
+	{
+		div_message= YAHOO.util.Dom.get(mydiv);
+		//flag borrar
+		borrar = false;
+		//depende of values_ds.message
+		if(type == 2)
+		{
+			//FIXME
+			if(window.values_ds.message && window.values_ds.message.length)
+			{
+				//delete content
+				borrar = true;
+			}
+		}
+
+		//always delete div content
+		if(type == 1 || borrar)
+		{
+			if ( div_message.hasChildNodes() )
+			{
+				while ( div_message.childNodes.length >= 1 )
+			    {
+			        div_message.removeChild( div_message.firstChild );
+			    }
+			}
+		}
+	}
+
+
+
 	/* End from Property*/
 
     var handlePagination = function(state) {
@@ -340,33 +403,34 @@ YAHOO.portico.initializeDataTable = function()
 	onDownloadClick = function()
 	{
 		var state = YAHOO.util.History.getCurrentState('state');
-alert(state);
-		//store actual values
-		actuall_funct = path_values.menuaction;
+		uri = parseUri(YAHOO.portico.dataSourceUrl);
 
-		if(config_values.particular_download)
+		var oArgs = uri.queryKey;
+		oArgs.phpgw_return_as = '';
+		oArgs.click_history = '';
+
+		donwload_func = oArgs.menuaction;
+		// modify actual function for "download" in path_values
+		// for example: property.uilocation.index --> property.uilocation.download
+		tmp_array= donwload_func.split(".")
+		tmp_array[2]="download"; //set function DOWNLOAD
+		donwload_func = tmp_array.join('.');
+		oArgs.menuaction=donwload_func;
+		oArgs.allrows=1;
+		oArgs.start=0;
+
+
+		if(typeof(config_values) != 'undefined' && config_values.particular_download != 'undefined' && config_values.particular_download)
 		{
-			path_values.menuaction = config_values.particular_download;
-		}
-		else
-		{
-			donwload_func = path_values.menuaction;
-			// modify actual function for "download" in path_values
-			// for example: property.uilocation.index --> property.uilocation.download
-			tmp_array= donwload_func.split(".")
-			tmp_array[2]="download"; //set function DOWNLOAD
-			donwload_func = tmp_array.join('.');
-			path_values.menuaction=donwload_func;
+			oArgs.menuaction = config_values.particular_download;
 		}
 
-		ds_download = phpGWLink('index.php',path_values);
-		//show all records since the first
-		ds_download+="&allrows=1&start=0";
-		//return to "function index"
-		path_values.menuaction=actuall_funct;
-		window.open(ds_download,'window');
+		var requestUrl = phpGWLink('index.php', oArgs);
+		
+		requestUrl += '&' + state;
+
+		window.open(requestUrl,'window');
    }
-
 
 
 
