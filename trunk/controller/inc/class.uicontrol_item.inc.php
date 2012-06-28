@@ -198,7 +198,17 @@
 		public function edit()
 		{
 			$control_item_id = phpgw::get_var('id');
-			$control_item = $this->so->get_single( $control_item_id ); 
+			
+			$control_item_array = array();
+			if($control_item_id > 0)
+			{
+				$control_item_array = $this->so->get_single_with_options( $control_item_id , "return_array"); 
+			}
+			else
+			{
+				$control_item = new controller_control_item();
+			  $control_item_array = $control_item->toArray();
+			}
 			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -210,10 +220,8 @@
 			$control_groups_array = $this->so_control_group->get_control_group_array();
 
 			// Hack to fix display of &nbsp; char
-			$control_item->set_what_to_do(str_replace("&nbsp;", " ",$control_item->get_what_to_do()));
-			$control_item->set_how_to_do(str_replace('&nbsp;', ' ', $control_item->get_how_to_do()));
-
-			$control_item_array = $control_item->toArray();
+			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
+			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
 
 			$data = array
 			(
@@ -264,16 +272,16 @@
 			$control_item->set_how_to_do($how_to_do_txt);
 
 			$saved_control_item_id = $this->so->store($control_item);
-				
-			if($saved_control_item_id > 0)
+
+			$this->so->delete_option_values( $saved_control_item_id );
+			
+			if(($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
 			{
-				if($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'){
-					$option_values = phpgw::get_var('option_values');
-		
-					foreach($option_values as $option_value){
-						$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
-						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
-					}
+				$option_values = phpgw::get_var('option_values');
+				
+				foreach($option_values as $option_value){
+					$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
+					$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
 				}
 			}
 			

@@ -374,7 +374,7 @@ $(document).ready(function(){
 	/* =========================  CONTROL OPTION ======================================== */
 	  
 	// Changes control type location level between building and property in search location select box
-	$(".control_item_type").click(function(){
+	$(".control_item_type").live("click", function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
 		
@@ -402,7 +402,7 @@ $(document).ready(function(){
 	});
 	
 	$("#control_item_options li .delete").live("click", function(e){
-		$(this).closest("li").fadeOut();
+		$(this).closest("li").remove();
 	});
 	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
