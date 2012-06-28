@@ -2117,3 +2117,13 @@ p.no_items_msg {
   padding-left: 12px;
 }
 
+.option-list-heading {
+	margin-bottom: 5px;	
+}
+
+.option-list{
+	margin-top: 5px;	
+}
+.option-list{
+	padding-left:10px;	
+}

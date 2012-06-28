@@ -68,8 +68,8 @@
 								<xsl:value-of select="php:function('lang', $lang_type)" />
 								
 								<xsl:if test="control_item/options_array/child::node()">								
-									<h3>Verdier i liste</h3>
-									<ul>
+									<h4 class="option-list-heading">Verdier i liste</h4>
+									<ul class="option-list">
 									<xsl:for-each select="control_item/options_array">
 										<li><xsl:value-of select="option_value" /></li>
 									</xsl:for-each>
