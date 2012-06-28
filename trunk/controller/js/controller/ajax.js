@@ -413,15 +413,22 @@ $(document).ready(function(){
 		var listValue = $(this).parent().find("input[name=option_value]").val();
 		var order_nr = 1;
 		
-		if($("ul#control_item_options").children().length == 0){
-			order_nr = 1;
-		}else{
-			order_nr = $("ul#control_item_options").find("li").last().find(".order_nr").text();
-			order_nr++;
-		}
+		if(listValue.length > 0){
 		
-		$("ul#control_item_options").append("<li><label>Listeverdi<span class='order_nr'>" + order_nr + "</span></label><input type='text' name='option_values[]' value='" + listValue + "' /><span class='btn delete'>Slett</span></li>")
-		$(this).parent().find("input[name=option_value]").val('');
+			$("#add_control_item_option_panel .input_error_msg").remove();
+			
+		  if($("ul#control_item_options").children().length == 0){
+			order_nr = 1;
+		  }else{
+		    order_nr = $("ul#control_item_options").find("li").last().find(".order_nr").text();
+			order_nr++;
+		  }
+			
+		  $("ul#control_item_options").append("<li><label>Listeverdi<span class='order_nr'>" + order_nr + "</span></label><input type='text' name='option_values[]' value='" + listValue + "' /><span class='btn delete'>Slett</span></li>")
+		  $(this).parent().find("input[name=option_value]").val('');
+		}else{
+			$(this).closest(".row").before("<div class='input_error_msg'>Listeverdien kan ikke være tom</div>");
+		}
 	});
 	
 	/* =========================  CONTROL  =============================================== */
