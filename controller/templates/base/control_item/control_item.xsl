@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+	<!-- $Id$ -->
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
@@ -18,8 +18,7 @@
 	
 	<div id="control_item_details">
 		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
-			<input type="hidden" name="id" value="{control_item/id}">
-			</input>
+			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
 				<dt>
 					<label for="title">Tittel</label>
