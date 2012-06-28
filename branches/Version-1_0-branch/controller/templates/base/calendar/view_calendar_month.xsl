@@ -73,7 +73,7 @@ function chooseLocation( label, value ){
 			</xsl:choose>
 						
 			<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
-			<h3>Kalenderoversikt for <xsl:value-of select="php:function('lang', $month_str)" /><span class="year"><xsl:value-of select="current_year"/></span></h3>
+			<h3>Kalenderoversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
@@ -98,10 +98,43 @@ function chooseLocation( label, value ){
 				<input type="text" value="" id="search-location-name" />
 			</div>
 		
-			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
+			<!-- =====================  SELECT LIST FOR MY ASSIGNED LOCATIONS  ================= -->
 			<div id="choose-my-location" class="select-box">
 				<label>Velg et annet bygg du har ansvar for</label>
-				<xsl:call-template name="select_my_locations" />
+				
+				<form action="#">
+					<input type="hidden" name="period_type" value="view_month" />
+					<input type="hidden" name="year">
+				      <xsl:attribute name="value">
+				      	<xsl:value-of select="current_year"/>
+				      </xsl:attribute>
+					</input>
+					<input type="hidden" name="month">
+				      <xsl:attribute name="value">
+				      	<xsl:value-of select="current_month_nr"/>
+				      </xsl:attribute>
+					</input>
+								
+					<select id="choose_my_location" class="selectLocation">
+						<option>Velg bygg</option>
+						<xsl:for-each select="my_locations">
+								<xsl:choose>
+									<xsl:when test="location_code = //current_location/location_code">
+										<option selected="SELECTED">
+											<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>	
+											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option>
+											<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>	
+											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>
+						</xsl:for-each>
+					</select>					
+				</form>
 			</div>
 		</div>
 		<div class="middle">
@@ -117,56 +150,6 @@ function chooseLocation( label, value ){
 			</xsl:attribute>
 			<img height="20" src="controller/images/left_arrow_simple_light_blue.png" />Årsoversikt
 		</a>
-			
-		<!-- =====================  COLOR ICON MAP  ================= -->
-		<xsl:call-template name="icon_color_map" />
-		
-		<!-- =====================  FILTERS  ================= -->
-			<form id="filters" class="select-box" action="index.php?menuaction=controller.uicalendar.view_calendar_for_year" method="post">
-				<input type="hidden" name="year">
-					<xsl:attribute name="value">
-					<xsl:value-of select="current_year"/>
-					</xsl:attribute>
-				</input>
-				<input type="hidden" name="location_code">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_location/location_code"/>
-						</xsl:attribute>
-				</input>
-				<input type="hidden" name="repeat_type">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_repeat_type"/>
-					</xsl:attribute>
-				</input>
-				<input type="hidden" name="role">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_role"/>
-					</xsl:attribute>
-				</input>
-				
-				<div class="filter first">
-					<label>Filtrer på rolle</label>
-					<select id="filter-role">
-						<xsl:for-each select="roles_array">
-							<xsl:variable name="role_id"><xsl:value-of select="id"/></xsl:variable>
-							<option value="{$role_id}">
-								<xsl:value-of disable-output-escaping="yes" select="name"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
-				<div class="filter">
-				<label>Filtrer på frekvenstype</label>
-					<select class="required" id="filter-repeat_type" name="repeat_type">
-						<option value="" selected="selected" >Velg frekvenstype</option>
-						<xsl:for-each select="repeat_type_array">
-							<option value="{id}">
-								<xsl:value-of disable-output-escaping="yes" select="value"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
-			</form>
 		
 		<!-- =====================  CHOOSE ANOTHER BUILDING ON PROPERTY  ================= -->
 			<div id="choose-building" class="select-box">
@@ -187,80 +170,16 @@ function chooseLocation( label, value ){
 				<xsl:call-template name="select_buildings_on_property" />
 			</div>
 			
-			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<div id="calNav">
-				<xsl:choose>
-					<xsl:when test="current_month_nr > 1">
-						<a class="showPrev month">
-							<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-								<xsl:text>&amp;year=</xsl:text>
-								<xsl:value-of select="current_year"/>
-								<xsl:text>&amp;month=</xsl:text>
-								<xsl:value-of select="current_month_nr - 1"/>
-								<xsl:text>&amp;location_code=</xsl:text>
-								<xsl:value-of select="//current_location/location_code"/>
-							</xsl:attribute>
-							<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
-							<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr - 1"/> capitalized</xsl:variable>
-							<xsl:value-of select="php:function('lang', $month_str)" />
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a class="showPrev month">
-							<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-								<xsl:text>&amp;year=</xsl:text>
-								<xsl:value-of select="current_year - 1"/>
-								<xsl:text>&amp;month=12</xsl:text>
-								<xsl:text>&amp;location_code=</xsl:text>
-								<xsl:value-of select="//current_location/location_code"/>
-							</xsl:attribute>
-							<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
-							<xsl:variable name="month_str">month 12 capitalized</xsl:variable>
-							<xsl:value-of select="php:function('lang', $month_str)" />
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
+			<!-- =====================  COLOR ICON MAP  ================= -->
+			<xsl:call-template name="icon_color_map" />
+		
+			<!-- =====================  FILTERS  ================= -->
+			<xsl:call-template name="calendar_filters" >
+				<xsl:with-param name="view_period">month</xsl:with-param>
+			</xsl:call-template>
 				
-				<span class="current">
-					<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
-					<xsl:value-of select="php:function('lang', $month_str)" />
-				</span>
-				<xsl:choose>
-					<xsl:when test="12 > current_month_nr">
-						<a class="showNext">
-							<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-								<xsl:text>&amp;year=</xsl:text>
-								<xsl:value-of select="current_year"/>
-								<xsl:text>&amp;month=</xsl:text>
-								<xsl:value-of select="current_month_nr + 1"/>
-								<xsl:text>&amp;location_code=</xsl:text>
-								<xsl:value-of select="//current_location/location_code"/>
-							</xsl:attribute>
-							<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr + 1"/> capitalized</xsl:variable>
-							<xsl:value-of select="php:function('lang', $month_str)" />
-							<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a class="showNext">
-							<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-								<xsl:text>&amp;year=</xsl:text>
-								<xsl:value-of select="current_year + 1"/>
-								<xsl:text>&amp;month=1</xsl:text>
-								<xsl:text>&amp;location_code=</xsl:text>
-								<xsl:value-of select="//current_location/location_code"/>
-							</xsl:attribute>
-							<xsl:variable name="month_str">month 1 capitalized</xsl:variable>
-							<xsl:value-of select="php:function('lang', $month_str)" />
-							<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->
+			<xsl:call-template name="nav_calendar_month" />
 		</div>
 			
 		<div id="cal_wrp">

@@ -185,7 +185,13 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							)
+							),
+								array(
+								'type' => 'link',
+								'value' => lang('New control'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
+								'class' => 'new_item'
+							),
 						),
 					),
 				),

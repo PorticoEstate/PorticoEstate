@@ -32,13 +32,14 @@
 </xsl:template>
 
 <xsl:template name="table_header_documents">
-	<th>
+	<tr>
 		<xsl:for-each select="table_header" >
-			<td>
+			<th>
 				<xsl:value-of select="header"/>
-			</td>
+			</th>
 		</xsl:for-each>
-	</th>
+		<td>&nbsp;</td>
+	</tr>
 </xsl:template>
 
 <xsl:template name="values_documents">
@@ -46,6 +47,7 @@
 		<tr>
 			<xsl:for-each select="document" >
 				<xsl:variable name="doc_link"><xsl:value-of select='link'/></xsl:variable>
+				<xsl:variable name="delete_doc_link"><xsl:value-of select='delete_link'/></xsl:variable>
 				<td>
 					<a href="{$doc_link}"><xsl:value-of select="title"/></a>
 				</td>
@@ -54,6 +56,9 @@
 				</td>
 				<td>
 					<xsl:value-of select="description" disable-output-escaping="yes"/>
+				</td>
+				<td>
+					<a href="{$delete_doc_link}">Fjern dokument</a>
 				</td>
 			</xsl:for-each>
 		</tr>

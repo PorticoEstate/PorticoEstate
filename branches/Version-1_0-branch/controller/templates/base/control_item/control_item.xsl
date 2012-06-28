@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+	<!-- $Id$ -->
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
@@ -15,19 +15,10 @@
 		<h1><xsl:value-of select="php:function('lang', 'View control item')" /></h1>
 	</xsl:otherwise>
 </xsl:choose>
-
-<ul class="check_list">
-	<xsl:for-each select="check_list_array">
-		<li>
-			<span>Tittel:</span><xsl:value-of select="title"/><span>Start dato:</span><xsl:value-of select="start_date"/>
-		</li>
-	</xsl:for-each>
-</ul>
 	
 	<div id="control_item_details">
-		<form action="#" method="post">
-			<input type="hidden" name="id" value="{control_item/id}">
-			</input>
+		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
+			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
 				<dt>
 					<label for="title">Tittel</label>
@@ -41,7 +32,7 @@
 					</xsl:choose>
 				</dt>
 				<dt>
-					<label for="required">Skal det være obligatorisk å sjekke kontrollpunktet</label>
+					<label for="required" class="line">Skal det være obligatorisk å sjekke kontrollpunktet</label>
 					<xsl:variable name="required_item"><xsl:value-of select="control_item/required" /></xsl:variable>
 					<xsl:choose>
 						<xsl:when test="editable">
@@ -71,51 +62,140 @@
 					<div class="styleWrp">
 						<xsl:variable name="control_item_type"><xsl:value-of select="control_item/type" /></xsl:variable>
 						<xsl:choose>
+							<xsl:when test="view">
+								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
+								<xsl:value-of select="php:function('lang', $lang_type)" />
+								
+								<xsl:if test="control_item/options_array/child::node()">								
+									<h4 class="option-list-heading">Verdier i liste</h4>
+									<ul class="option-list">
+									<xsl:for-each select="control_item/options_array">
+										<li><xsl:value-of select="option_value" /></li>
+									</xsl:for-each>
+									</ul>
+								</xsl:if>
+							</xsl:when>
 							<xsl:when test="editable">
 							
 								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
-								<xsl:for-each select="control_item/control_item_types">
-									
-									<xsl:variable name="classes">
-										<xsl:choose>
-											<xsl:when test="position() = 1">
-												btn active
-											</xsl:when>
-											<xsl:otherwise>
-												btn
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:variable>
-									
-									<div class="control_item_type">
-										<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
-										<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+								<xsl:choose>
+								<xsl:when test="control_item/type = ''">
+										<xsl:for-each select="control_item/control_item_types">
+											<xsl:variable name="classes">
+												<xsl:choose>
+													<xsl:when test="position() = 1">
+														btn active
+													</xsl:when>
+													<xsl:otherwise>
+														btn
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:variable>
 										
-										<input class="{$classes}" type="button" value="Velg" />
-										<input type="radio" name="control_item_type" value="{$current_control_item_type}" />
-										<xsl:value-of select="php:function('lang', $lang_type)" />
-									</div>
-								</xsl:for-each>
+										<div class="control_item_type">
+											<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
+											<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+											
+											<input class="{$classes}" type="button" value="Velg" />
+											<input type="radio" name="control_item_type" value="{$current_control_item_type}" />
+											<xsl:value-of select="php:function('lang', $lang_type)" />
+										</div>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+										<xsl:for-each select="control_item/control_item_types">
+											<xsl:variable name="current_type"><xsl:value-of select="." /></xsl:variable>
+											
+												<xsl:choose>
+													<xsl:when test="//control_item/type = $current_type">
+														<div class="control_item_type">
+															<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
+															<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+															
+															<input class="btn active" type="button" value="Velg" />
+															<input type="radio" name="control_item_type" value="{$current_control_item_type}" checked="checked"/>
+															<xsl:value-of select="php:function('lang', $lang_type)" />
+														</div>
+													</xsl:when>
+													<xsl:otherwise>
+														<div class="control_item_type">
+															<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
+															<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+															
+															<input class="btn" type="button" value="Velg" />
+															<input type="radio" name="control_item_type" value="{$current_control_item_type}" />
+															<xsl:value-of select="php:function('lang', $lang_type)" />
+														</div>
+													</xsl:otherwise>
+												</xsl:choose>
+																					
+									</xsl:for-each>
+								</xsl:otherwise>
+								</xsl:choose>
+								
 								
 								<!-- ==============  FORM FOR SAVING OPTION VALUES FOR LIST  =============  -->
-								<div id="add_control_item_option_panel">
-									<hr />
-									
-									<h2 class="type"></h2>
-									<h3>Legg til verdier som listen skal inneholde</h3>
-									
-									<input type="hidden" name="control_item_id">
-										<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
-									</input>
+								<xsl:choose>
+								<xsl:when test="control_item/options_array/child::node()">
+									<div id="add_control_item_option_panel"  style="display:block;">
+										<hr />
 										
-									<ul id="control_item_options"></ul>
-									
-									<div id="add_control_item_list_value" class="row">
-										<label>Ny listeverdi</label>
-										<input type="text" name="option_value" />
-										<input class="btn" type="button" value="Legg til" />
+										<xsl:choose>
+											<xsl:when test="//control_item/type = 'control_item_type_3'">
+												<h2 class="type">Nedtrekksliste</h2>	
+											</xsl:when>
+											<xsl:otherwise>
+												<h2 class="type">Radioknapper</h2>
+											</xsl:otherwise>
+										</xsl:choose>
+										
+										<h3>Legg til verdier som listen skal inneholde</h3>
+	
+										<input type="hidden" name="control_item_id">
+											<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
+										</input>
+										
+										<ul id="control_item_options">
+										
+											<xsl:for-each select="control_item/options_array">
+												<li>
+													<label>Listeverdi<span class="order_nr"><xsl:number /></span></label>
+													<xsl:variable name="option_value"><xsl:value-of select="option_value" /></xsl:variable>
+													<input type="text" name="option_values[]" value="{$option_value}" />
+													<span class="btn delete">Slett</span>
+												</li>
+											</xsl:for-each>
+										</ul>
+	
+										<div id="add_control_item_list_value" class="row">
+											<label>Ny listeverdi</label>
+											<input type="text" name="option_value" />
+											<input class="btn" type="button" value="Legg til" />
+										</div>
 									</div>
-								</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div id="add_control_item_option_panel">
+										<hr />
+										
+										<h2 class="type"></h2>
+										<h3>Legg til verdier som listen skal inneholde</h3>
+	
+										<input type="hidden" name="control_item_id">
+											<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
+										</input>
+										
+										<ul id="control_item_options"></ul>
+	
+										<div id="add_control_item_list_value" class="row">
+											<label>Ny listeverdi</label>
+											<input type="text" name="option_value" />
+											<input class="btn" type="button" value="Legg til" />
+										</div>
+									</div>
+								</xsl:otherwise>
+								</xsl:choose>
+									
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
@@ -188,33 +268,28 @@
 				</dt>	
 				<dt>
 					<label for="what_to_do">Hva skal utføres</label>
-				</dt>
-				<dd>
-				<xsl:choose>
-					<xsl:when test="editable">
-						<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
+					<xsl:choose>
+						<xsl:when test="editable">
+							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
+								<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
+							</textarea>
+						</xsl:when>
+						<xsl:otherwise>
 							<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
-						</textarea>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
-					</xsl:otherwise>
-				</xsl:choose>
-				</dd>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dt>
 				<dt>
 					<label for="how_to_do">Utførelsesbeskrivelse</label>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60"><xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" /></textarea>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</dt>
-				<dd>
-				<xsl:choose>
-					<xsl:when test="editable">
-						<textarea name="how_to_do" id="how_to_do" rows="5" cols="60"><xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" /></textarea>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
-					</xsl:otherwise>
-				</xsl:choose>
-				</dd>
-							
 			</dl>
 			
 			<div class="form-buttons">
@@ -226,8 +301,14 @@
 						<input type="submit" name="cancel_control_item" value="{$lang_cancel}" title = "{$lang_cancel}" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-						<input type="submit" name="edit_control_item" value="{$lang_edit}" title = "{$lang_edit}" />
+						<a class="btn">
+							<xsl:attribute name="href">
+								<xsl:text>index.php?menuaction=controller.uicontrol_item.edit</xsl:text>
+								<xsl:text>&amp;id=</xsl:text>
+								<xsl:value-of select="control_item/id"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'edit')" />
+						</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
