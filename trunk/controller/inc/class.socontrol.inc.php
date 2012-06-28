@@ -235,11 +235,12 @@
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
 			$sql  .= "bim_item.type as component_type, bim_item.id as component_id, bim_item.location_code, bim_item.address, ";
-			$sql  .= "bim_item.xml_representation as xml, cl.location_id ";
+			$sql  .= "bim_item.xml_representation as xml, cl.location_id, fm_responsibility_role.name AS responsibility_name ";
 			$sql  .= "FROM controller_control_component_list cl ";
 			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
 			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
 			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
+			$sql  .= "JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			$sql  .= "AND bim_item.location_code LIKE '$location_code%' ";
 			
@@ -301,6 +302,7 @@
 				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
