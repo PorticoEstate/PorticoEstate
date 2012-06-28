@@ -49,6 +49,8 @@ $(document).ready(function(){
 		 window.location.href = requestUrl;
     });
 	
+	/* ================================  FILTERS  ================================== */
+	
 	$("#filter-repeat_type").change(function () {
       var repeat_type = $(this).val();
 	  var thisForm = $(this).closest("form");

@@ -411,7 +411,7 @@
 				</ul>
 			</xsl:when>
 			<xsl:otherwise>
-				<p>Ingen åpne målinger</p>
+				<p>Ingen åpne saker eller målinger</p>
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>

@@ -1344,6 +1344,8 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
+    height: 15px;
+    padding-top: 1px;
     text-align: center;
     text-decoration: none;
 }
