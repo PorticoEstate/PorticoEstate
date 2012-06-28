@@ -585,7 +585,7 @@
 				'className' => ''
 			);
 
-			$count_fields = 16;//count($uicols['name']);
+			$count_fields = count($uicols['name']);
 
 			for ($i=0;$i<$count_fields;$i++)
 			{
