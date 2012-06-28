@@ -83,8 +83,6 @@
 			if(isset($result)) {
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item', 'id');
-				// Forward this request to the update method
-				//return $this->update($control_item);
 			}
 			else
 			{
@@ -116,7 +114,14 @@
 			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			if(isset($result)) {
+				// return the new control item ID
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/**
@@ -206,6 +211,12 @@
 			{
 				return $control_item->toArray();
 			}
+		}
+		
+		function delete_option_values($control_item_id)
+		{
+			$sql  = "delete from controller_control_item_option where control_item_id=$control_item_id";
+			$this->db->query($sql);
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
