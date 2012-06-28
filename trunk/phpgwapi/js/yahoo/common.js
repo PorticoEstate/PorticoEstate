@@ -896,7 +896,7 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 				return m2;
 			}
 		});
-}
+};
 
 
 	YAHOO.portico.substr_count =  function ( haystack, needle, offset, length )
@@ -920,5 +920,5 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 			}
 		}
 		return cnt;
-	}
+	};
 
