@@ -866,9 +866,10 @@
 				. " GROUP BY fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-
+//_debug_array($sql);
 			while ($this->db->next_record())
 			{
+//continue;
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 				$sum_actual_cost += $_actual_cost;
@@ -895,6 +896,7 @@
 
 			while ($this->db->next_record())
 			{
+//continue;
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 				$sum_actual_cost += $_actual_cost;

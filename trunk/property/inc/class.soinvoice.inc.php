@@ -197,6 +197,7 @@
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
 				$sql_count = 'SELECT count(bilagsnr) as cnt, sum(godkjentbelop) AS sum_amount FROM (SELECT DISTINCT bilagsnr, sum(godkjentbelop) as godkjentbelop '. substr($sql2,strripos($sql2,'FROM')) .' GROUP BY bilagsnr) AS t';
+		//_debug_array($sql_count);
 				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records 		= $this->db->f('cnt');
