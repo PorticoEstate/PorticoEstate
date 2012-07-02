@@ -1610,6 +1610,52 @@
 			return	$values;
 		}
 
+		public function get_short_description($data = array() )
+		{
+			$location_id	= (int)$data['location_id'];
+			$id				= (int)$data['id'];
+			
+			if(!$location_id && !$id)
+			{
+				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");	
+			}
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$filters = array("short_description" => "IS NOT NULL");
+			$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'short_description', true, true,$filters);
+
+			$params = array
+			(
+				'location_id'	=> $location_id,
+				'id'			=> $id
+			);
+
+			if( substr($system_location['location'], 1, 6) == 'entity' )
+			{
+				$type					= explode('.',$system_location['location']);
+				$params['entity_id']	= $type[2];
+				$params['cat_id']		= $type[3];
+			}
+			else
+			{
+				throw new Exception("property_soentity::get_short_description() - entity not found");	
+			}
+
+			$prop_array = $this->read_single($params, $attributes);
+
+			$_short_description = array();
+			foreach ($prop_array['attributes'] as $attribute)
+			{
+				$short_description[] = "{$attribute['input_text']}: {$attribute['value']}";
+			}
+			
+			$short_description = implode(', ', $short_description);
+
+			return $short_description;
+		}
+
+
 		function check_entity($entity_id,$cat_id,$num)
 		{
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
