@@ -48,16 +48,15 @@
 		private $so_check_item;
 		
 		var $public_functions = array(
-									'register_case' 			=> true,
-									'save_case' 				=> true,
-									'create_case_message' 		=> true,
+									'register_case' 				=> true,
+									'save_case' 						=> true,
+									'create_case_message' 	=> true,
 									'view_case_message' 		=> true,
-									'register_case_message' 	=> true,
-									'register_measurement_case' => true,
-									'updateStatusForCases' 		=> true,
-									'delete_case' 				=> true,
-									'close_case' 				=> true,
-									'open_case' 				=> true
+									'send_case_message' 		=> true,
+									'updateStatusForCases' 	=> true,
+									'delete_case' 					=> true,
+									'close_case' 						=> true,
+									'open_case' 						=> true
 								);
 
 		function __construct()
@@ -209,7 +208,6 @@
 				$component_array = $component->toArray();
 							
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
@@ -217,7 +215,9 @@
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 			}
-										
+
+			$level = $this->get_location_level();
+			
 			$data = array
 			(
 				'categories'						=> $categories,
@@ -229,7 +229,8 @@
 				'date_format' 					=> $date_format,
 				'location_array'				=> $location_array,
 				'component_array'				=> $component_array,
-				'type' 									=> $type
+				'type' 									=> $type,
+				'location_level' 				=> $level
 			);
 			
 			if(count( $buildings_array ) > 0){
@@ -248,7 +249,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/create_case_message'), $data);
 		}
 		
-		function register_case_message(){
+		function send_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
@@ -294,13 +295,13 @@
 			
 			$ticket = array
 			(
-				'origin_id' 		=> $location_id,
+				'origin_id' 			=> $location_id,
 				'origin_item_id'	=> $check_list_id, 
 				'location_code' 	=> $location_code,
-				'cat_id'			=> $message_cat_id,
-				'priority'			=> $priority, //valgfri (1-3)
-				'title'				=> $message_title,
-				'details'			=> $message_details,
+				'cat_id'					=> $message_cat_id,
+				'priority'				=> $priority, //valgfri (1-3)
+				'title'						=> $message_title,
+				'details'					=> $message_details,
 				'file_input_name'	=> 'file' // navn på felt som inneholder fil
 			);
 			
@@ -457,25 +458,12 @@
 			}
 		}
 		
-		function get_building_location_code($location_code)
+		function get_location_level($location_code)
 		{
-			if( strlen( $location_code ) == 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 2);
-				$building_location_code = $location_code_arr[0];
-			}
-			else if( strlen( $location_code ) > 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 3);
-				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
-			}
-			else
-			{
-				$building_location_code = $location_code;
-			}
-			
-			return $building_location_code; 
-		}
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
 		
 		public function query(){}
 	}
