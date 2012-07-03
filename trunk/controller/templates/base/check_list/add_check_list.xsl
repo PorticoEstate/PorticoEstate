@@ -33,7 +33,14 @@
 					<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
 				</xsl:when>
 				<xsl:otherwise>
-					<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
+					<xsl:choose>
+						<xsl:when test="location_level = 1">
+							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+						</xsl:when>
+						<xsl:otherwise>
+								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
