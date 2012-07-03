@@ -610,8 +610,8 @@
 			// Fetches aggregate value for open cases in each month in time period
 			for($from_month; $from_month <= $to_month; $from_month++)
 			{
-				$month_start_ts = $this->get_month_start_date_ts($year, $from_month);
-				$month_end_ts   = $this->get_month_start_date_ts($year, $from_month+1);
+				$month_start_ts = $this->get_month_start_ts($year, $from_month);
+				$month_end_ts   = $this->get_month_start_ts($year, $from_month+1);
 				
 				$num_open_cases_for_control_array = array();
 				
