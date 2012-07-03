@@ -655,6 +655,10 @@ ul.items li.list_item{
 	padding: 5px;
 }
 
+#control_items form{
+	margin-bottom: 20px;
+}
+
 /* =======================================  DRAG LIST  ========================================= */
 
 .drag_group{
