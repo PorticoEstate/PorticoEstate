@@ -94,7 +94,7 @@ function chooseLocation( label, value ){
 			
 			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
 			<div id="choose-my-location" class="select-box">
-				<label>Velg et annet bygg du har ansvar for</label>
+				<label>Velg et annet bygg/eiendom du har ansvar for</label>
 				<xsl:call-template name="select_my_locations" />
 			</div>
 		</div>
@@ -162,18 +162,16 @@ function chooseLocation( label, value ){
 			
 			<xsl:choose>
 				<xsl:when test="controls_calendar_array/child::node()">
-				
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-			  	
 			  		<tr>				
-						<xsl:choose>
-					        <xsl:when test="(position() mod 2) != 1">
-					            <xsl:attribute name="class">odd</xsl:attribute>
-					        </xsl:when>
-					        <xsl:otherwise>
-					            <xsl:attribute name="class">even</xsl:attribute>
-					        </xsl:otherwise>
+							<xsl:choose>
+						    <xsl:when test="(position() mod 2) != 1">
+						     <xsl:attribute name="class">odd</xsl:attribute>
+						    </xsl:when>
+						    <xsl:otherwise>
+						    	<xsl:attribute name="class">even</xsl:attribute>
+						    </xsl:otherwise>
 					    </xsl:choose>
 							<td class="title">
 				      			<span><xsl:value-of select="control/title"/></span>
@@ -182,31 +180,31 @@ function chooseLocation( label, value ){
 				      			<span><xsl:value-of select="control/responsibility_name"/></span>
 							</td>
 							<td class="frequency">
-				      			<span>
-					      			<xsl:choose>
-					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
-					      					<span class="pre">Hver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
-					      					<span class="pre">Hvert</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval = 2">
-					      					<span class="pre">Annenhver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval > 2">
-					      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
-					      				</xsl:when>
-					      			</xsl:choose>
-					      			
-					      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
-				      			</span>
+		      			<span>
+			      			<xsl:choose>
+			      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+			      					<span class="pre">Hver</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+			      					<span class="pre">Hvert</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval = 2">
+			      					<span class="pre">Annenhver</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval > 2">
+			      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+			      				</xsl:when>
+			      			</xsl:choose>
+			      			
+			      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+		      			</span>
 							</td>
 							<xsl:for-each select="calendar_array">
 								<xsl:call-template name="check_list_status_checker" >
 									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
 								</xsl:call-template>
 							</xsl:for-each>
-					</tr>	
+						</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
@@ -219,84 +217,85 @@ function chooseLocation( label, value ){
 		<xsl:choose>
 				<xsl:when test="components_calendar_array/child::node()">
 		<xsl:for-each select="components_calendar_array">
+		  <h3><xsl:value-of select="component/xml_short_desc"/></h3>
 		  
-			    <h3><xsl:value-of select="component/xml_short_desc"/></h3>
-		  
-		<table id="calendar" class="year">
-				<tr class="heading">
-						<th class="title"><span>Tittel</span></th>
-						<th class="assigned"><span>Tildelt</span></th>
-						<th class="frequency"><span>Frekvens</span></th>
-					<xsl:for-each select="//heading_array">
-						<th>
-							<a>
-								<xsl:attribute name="href">
-									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="//current_year"/>
-									<xsl:text>&amp;location_code=</xsl:text>
-									<xsl:value-of select="//current_location/location_code"/>
-									<xsl:text>&amp;month=</xsl:text>
-									<xsl:number/>
-								</xsl:attribute>
-								
-								<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
-								<xsl:value-of select="php:function('lang', $month_str)" />
-							</a>				
-						</th>
+			<table id="calendar" class="year">
+					<tr class="heading">
+							<th class="title"><span>Tittel</span></th>
+							<th class="assigned"><span>Tildelt</span></th>
+							<th class="frequency"><span>Frekvens</span></th>
+						<xsl:for-each select="//heading_array">
+							<th>
+								<a>
+									<xsl:attribute name="href">
+										<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+										<xsl:text>&amp;year=</xsl:text>
+										<xsl:value-of select="//current_year"/>
+										<xsl:text>&amp;location_code=</xsl:text>
+										<xsl:value-of select="//current_location/location_code"/>
+										<xsl:text>&amp;month=</xsl:text>
+										<xsl:number/>
+									</xsl:attribute>
+									
+									<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
+									<xsl:value-of select="php:function('lang', $month_str)" />
+								</a>				
+							</th>
+						</xsl:for-each>
+					</tr>
+			
+				<xsl:for-each select="controls_calendar">
+				  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+				  	
+				  		<tr>
+							<xsl:choose>
+						        <xsl:when test="(position() mod 2) != 1">
+						            <xsl:attribute name="class">odd</xsl:attribute>
+						        </xsl:when>
+						        <xsl:otherwise>
+						            <xsl:attribute name="class">even</xsl:attribute>
+						        </xsl:otherwise>
+						    </xsl:choose>
+								<td class="title">
+					      			<span><xsl:value-of select="control/title"/></span>
+								</td>
+								<td class="assigned">
+					      			<span><xsl:value-of select="control/responsibility_name"/></span>
+								</td>
+								<td class="frequency">
+					      			<span>
+						      			<xsl:choose>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+						      					<span class="pre">Hver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+						      					<span class="pre">Hvert</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 2">
+						      					<span class="pre">Annenhver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval > 2">
+						      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+						      				</xsl:when>
+						      			</xsl:choose>
+						      			
+						      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+					      			</span>
+								</td>
+								<xsl:for-each select="calendar_array">
+									<xsl:call-template name="check_list_status_checker" >
+										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+									</xsl:call-template>
+								</xsl:for-each>
+						</tr>	
 					</xsl:for-each>
-				</tr>
-		
-			<xsl:for-each select="controls_calendar">
-			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-			  	
-			  		<tr>
-						<xsl:choose>
-					        <xsl:when test="(position() mod 2) != 1">
-					            <xsl:attribute name="class">odd</xsl:attribute>
-					        </xsl:when>
-					        <xsl:otherwise>
-					            <xsl:attribute name="class">even</xsl:attribute>
-					        </xsl:otherwise>
-					    </xsl:choose>
-							<td class="title">
-				      			<span><xsl:value-of select="control/title"/></span>
-							</td>
-							<td class="assigned">
-				      			<span><xsl:value-of select="control/responsibility_name"/></span>
-							</td>
-							<td class="frequency">
-				      			<span>
-					      			<xsl:choose>
-					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
-					      					<span class="pre">Hver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
-					      					<span class="pre">Hvert</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval = 2">
-					      					<span class="pre">Annenhver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval > 2">
-					      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
-					      				</xsl:when>
-					      			</xsl:choose>
-					      			
-					      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
-				      			</span>
-							</td>
-							<xsl:for-each select="calendar_array">
-								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-								</xsl:call-template>
-							</xsl:for-each>
-					</tr>	
-				</xsl:for-each>
 				</table>	
 		</xsl:for-each>
 		</xsl:when>
 			<xsl:otherwise>
-				<p class="no-comp-msg">Ingen komponenter tilknyttet kontroll</p>
+				<div id="calendar">
+					<p class="no-comp-msg">Ingen komponenter tilknyttet kontroll</p>
+				</div>
 			</xsl:otherwise>
 			</xsl:choose>
 	</div>

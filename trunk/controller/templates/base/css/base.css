@@ -894,7 +894,22 @@ input.date {
 }
 
 /* =======================================  CHECK LIST  ========================================= */
+#check-list-heading .box-1 {
+	float:left; 
+	width:71%;
+}
 
+#check-list-heading .box-2 {
+	float:right; 
+	width:25%;
+}
+
+#check-list-heading .box-2 a{
+	font-weight: normal;
+  padding: 0 0 5px;
+  text-align: center;
+}
+		
 .check_list li div {
     float: left;
     margin: 5px;
@@ -1082,7 +1097,7 @@ ul.check_list {
 #control_plan h2 {
   background: none repeat scroll 0 0 #FFFFFF;
   color: #000000;
-  display: inline-block;
+  float: left;
   font-size: 23px;
   padding: 0.2em 0.5em;
 }
@@ -1102,8 +1117,9 @@ ul.check_list {
 }
 
 #cal_wrp h3 {
-    font-size: 1.4em;
-    margin-bottom: 5px;
+  clear: both;
+  font-size: 1.4em;
+  margin-bottom: 5px;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -1168,6 +1184,10 @@ ul.check_list {
   text-align: justify;	
 }
 
+.select-box a.last{
+  padding: 0;
+}
+
 #choose-loc .btn {
     display: inline-block;
     font-size: 0.9em;
@@ -1205,6 +1225,7 @@ ul#icon_color_map span{
 }
 
 #calendar {
+  clear: both;
   table-layout: fixed;
   width: 100%;
 }
@@ -1550,9 +1571,11 @@ ul.check_items h5{
 
 /* ======================== CHECK LIST MENU ========================== */
 #check_list_menu {
+    clear: both;
     margin: 0 0 20px;
     overflow: hidden;
 }
+
 #check_list_menu a {
     background: none repeat scroll 0 0 #F4EDE3;
     border: 1px solid #EDE4D8;
@@ -1566,16 +1589,20 @@ ul.check_items h5{
     text-decoration: none;
     width: 185px;
 }
+
 #check_list_menu a.active {
  	background: none repeat scroll 0 0 #CAE3FB;
     border: 1px solid #CAE3FB;
 }
+
 #check_list_menu .left_btns {
     float: left;
 }
+
 #check_list_menu .right_btns {
     float: right;
 }
+
 #check_list_menu .right_btns a {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;

@@ -100,7 +100,7 @@ function chooseLocation( label, value ){
 		
 			<!-- =====================  SELECT LIST FOR MY ASSIGNED LOCATIONS  ================= -->
 			<div id="choose-my-location" class="select-box">
-				<label>Velg et annet bygg du har ansvar for</label>
+				<label>Velg et annet bygg/eiendom du har ansvar for</label>
 				
 				<form action="#">
 					<input type="hidden" name="period_type" value="view_month" />
@@ -183,6 +183,9 @@ function chooseLocation( label, value ){
 		</div>
 			
 		<div id="cal_wrp">
+		
+			<!-- ================================  BUILDINGS TABLE  ====================================  -->
+			<h2>Bygg/eiendom</h2>
 			<table id="calendar" class="month">
 				<tr class="heading">
 					<th class="title"><span>Tittel</span></th>
@@ -194,59 +197,126 @@ function chooseLocation( label, value ){
 				</tr>
 				<xsl:choose>	
 					<xsl:when test="controls_calendar_array/child::node()">
-			  	<xsl:for-each select="controls_calendar_array">
-
-					<tr>				
-					<xsl:choose>
-				        <xsl:when test="(position() mod 2) != 1">
-				            <xsl:attribute name="class">odd</xsl:attribute>
-				        </xsl:when>
-				        <xsl:otherwise>
-				            <xsl:attribute name="class">even</xsl:attribute>
-				        </xsl:otherwise>
-				    </xsl:choose>
-					
-						<td class="title">
-			      			<span><xsl:value-of select="control/title"/></span>
-						</td>
-						<td class="assigned">
-			      			<span><xsl:value-of select="control/responsibility_name"/></span>
-						</td>
-						<td class="frequency">
-			      			<span>
-				      			<xsl:choose>
-				      				<xsl:when test="control/repeat_interval = 1">
-				      					<span class="pre">Hver</span>
-				      				</xsl:when>
-				      				<xsl:when test="control/repeat_interval = 2">
-				      					<span class="pre">Annenhver</span>
-				      				</xsl:when>
-				      				<xsl:when test="control/repeat_interval > 2">
-				      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
-				      				</xsl:when>
-				      			</xsl:choose>
-				      			
-				      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
-			      			</span>
-						</td>
-				
-				<xsl:for-each select="calendar_array">
-					
-					<xsl:call-template name="check_list_status_checker" >
-						<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-					</xsl:call-template>
-					
-				</xsl:for-each>
-				</tr>
-				</xsl:for-each>
-				
-					</xsl:when>
-					<xsl:otherwise>
-						<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
-					</xsl:otherwise>
-				</xsl:choose>
-			
+			  		<xsl:for-each select="controls_calendar_array">
+							<tr>				
+							<xsl:choose>
+						        <xsl:when test="(position() mod 2) != 1">
+						            <xsl:attribute name="class">odd</xsl:attribute>
+						        </xsl:when>
+						        <xsl:otherwise>
+						            <xsl:attribute name="class">even</xsl:attribute>
+						        </xsl:otherwise>
+						    </xsl:choose>
+							
+								<td class="title">
+					      			<span><xsl:value-of select="control/title"/></span>
+								</td>
+								<td class="assigned">
+					      			<span><xsl:value-of select="control/responsibility_name"/></span>
+								</td>
+								<td class="frequency">
+					      			<span>
+						      			<xsl:choose>
+						      				<xsl:when test="control/repeat_interval = 1">
+						      					<span class="pre">Hver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 2">
+						      					<span class="pre">Annenhver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval > 2">
+						      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+						      				</xsl:when>
+						      			</xsl:choose>
+						      			
+						      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+					      			</span>
+								</td>
+						
+							<xsl:for-each select="calendar_array">
+								<xsl:call-template name="check_list_status_checker" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+								</xsl:call-template>
+							</xsl:for-each>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
+				</xsl:otherwise>
+			</xsl:choose>
 			</table>
+		
+		<!-- ================================  COMPONENTS TABLE  ====================================  -->
+		<h2 class="components">Komponenter</h2>
+		<xsl:choose>
+				<xsl:when test="components_calendar_array/child::node()">
+		<xsl:for-each select="components_calendar_array">
+		  <h3><xsl:value-of select="component/xml_short_desc"/></h3>
+		  
+			<table id="calendar" class="month">
+					<tr class="heading">
+							<th class="title"><span>Tittel</span></th>
+							<th class="assigned"><span>Tildelt</span></th>
+							<th class="frequency"><span>Frekvens</span></th>
+					<xsl:for-each select="//heading_array">
+						<th><span><xsl:value-of select="."/></span></th>
+					</xsl:for-each>
+					</tr>
+			
+				<xsl:for-each select="controls_calendar">
+				  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+				  	
+				  		<tr>
+							<xsl:choose>
+						        <xsl:when test="(position() mod 2) != 1">
+						            <xsl:attribute name="class">odd</xsl:attribute>
+						        </xsl:when>
+						        <xsl:otherwise>
+						            <xsl:attribute name="class">even</xsl:attribute>
+						        </xsl:otherwise>
+						    </xsl:choose>
+								<td class="title">
+					      			<span><xsl:value-of select="control/title"/></span>
+								</td>
+								<td class="assigned">
+					      			<span><xsl:value-of select="control/responsibility_name"/></span>
+								</td>
+								<td class="frequency">
+					      			<span>
+						      			<xsl:choose>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+						      					<span class="pre">Hver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+						      					<span class="pre">Hvert</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 2">
+						      					<span class="pre">Annenhver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval > 2">
+						      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+						      				</xsl:when>
+						      			</xsl:choose>
+						      			
+						      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+					      			</span>
+								</td>
+								<xsl:for-each select="calendar_array">
+									<xsl:call-template name="check_list_status_checker" >
+										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+									</xsl:call-template>
+								</xsl:for-each>
+						</tr>	
+					</xsl:for-each>
+				</table>	
+		</xsl:for-each>
+		</xsl:when>
+			<xsl:otherwise>
+				<div id="calendar">
+					<p class="no-comp-msg">Ingen komponenter tilknyttet kontroll</p>
+				</div>
+			</xsl:otherwise>
+			</xsl:choose>
 		</div>
 	</div>
 </div>
