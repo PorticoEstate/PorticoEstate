@@ -15,15 +15,12 @@
 					<xsl:for-each select="open_check_items_and_cases">
 						<xsl:choose>
 							<xsl:when test="control_item/type = 'control_item_type_1'">
-			 					<h2>Saker</h2>
 			 					<xsl:choose>
 			 						<xsl:when test="cases_array/child::node()">
 					 					<li class="check_item_case">
-					 				
 			 						<h4><span><xsl:value-of select="control_item/title"/></span></h4>
 						 			<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 						 			<ul>
-						 		
 						 			<xsl:for-each select="cases_array">
 										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
 											<li>
@@ -112,8 +109,7 @@
 										</xsl:choose>
 										</xsl:when>
 						 				<xsl:when test="control_item/type = 'control_item_type_2'">
-						 					<h2>Målinger</h2>
-						 					<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+						 					<h4><span><xsl:value-of select="control_item/title"/></span>(Måling)</h4>
 									 		<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 									 		<ul>
 												<xsl:for-each select="cases_array">
@@ -257,8 +253,7 @@
 											</ul>
 						 				</xsl:when>
 						 				<xsl:when test="control_item/type = 'control_item_type_3' or control_item/type = 'control_item_type_4'">
-						 					<h2>Målinger</h2>
-						 					<h4><span><xsl:value-of select="control_item/title"/></span></h4>
+						 				<h4><span><xsl:value-of select="control_item/title"/></span>(Måling)</h4>
 									 		<span class="control_item_type ext_info"><xsl:value-of select="control_item/type" /></span>
 									 		<ul>
 												<xsl:for-each select="cases_array">
