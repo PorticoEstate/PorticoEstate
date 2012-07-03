@@ -4,10 +4,67 @@
 
 <div id="main_content" class="medium">
 	
-		<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
-		<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
+	<div id="check-list-heading">
+		<div class="box-1">
+			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+			<xsl:choose>
+				<xsl:when test="type = 'component'">
+					<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="location_level = 1">
+							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+						</xsl:when>
+						<xsl:otherwise>
+								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		<div class="box-2 select-box">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (år)
+			</a>
+			<a class="last">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;month=</xsl:text>
+					<xsl:value-of select="current_month_nr"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (måned)
+			</a>
+		</div>
 		
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 		<xsl:call-template name="check_list_tab_menu" />
+	</div>
 	
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
 		<h3 class="box_header ext">Registrer melding</h3>
@@ -15,13 +72,27 @@
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				
-				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.register_case_message" method="post">
+				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="index.php?menuaction=controller.uicase.send_case_message" method="post">
 					<input>
 						<xsl:attribute name="name">check_list_id</xsl:attribute>
 					    <xsl:attribute name="type">hidden</xsl:attribute>
 					    <xsl:attribute name="value">
 					    	<xsl:value-of select="check_list/id"/>
 					    </xsl:attribute>
+					</input>
+						<input>
+						<xsl:attribute name="name">location_code</xsl:attribute>
+					    <xsl:attribute name="type">hidden</xsl:attribute>
+					    <xsl:attribute name="value">
+							<xsl:choose>
+							  <xsl:when test="type = 'component'">
+								  <xsl:value-of select="component_array/location_code"/>
+								</xsl:when>
+								<xsl:otherwise>
+								  <xsl:value-of select="location_array/location_code"/>
+								</xsl:otherwise>
+							</xsl:choose>
+					  </xsl:attribute>
 					</input>
 					
 					<!-- === TITLE === -->
@@ -30,28 +101,6 @@
 						<input name="message_title" type="text" class="required" />
 					</div>
 									
-					<!-- ==================  BYGG  ===================== -->
-					<div class="row">
-						<xsl:choose>
-							<xsl:when test="buildings_array/child::node()">
-								<label>Bygg:</label>
-								<select id="building_id" name="building_id" class="required">
-										<option value="0">
-											Velg bygning
-										</option>
-										<xsl:for-each select="buildings_array">
-											<option value="{id}">
-												<xsl:value-of disable-output-escaping="yes" select="name"/>
-											</option>
-										</xsl:for-each>
-									</select>
-							</xsl:when>
-							<xsl:otherwise>
-								<label>Bygg:</label> <xsl:value-of select="building/loc1_name"/>	
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-					
 					<!-- === CATEGORY === -->
 					<div class="row">
 						<label>Kategori:</label>

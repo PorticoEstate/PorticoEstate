@@ -20,7 +20,7 @@
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
-	<div class="yui-content">
+	<div class="content-wrp">
 		<div>
 			<xsl:call-template name="yui_phpgw_i18n"/>
 			<xsl:call-template name="control_filters" />

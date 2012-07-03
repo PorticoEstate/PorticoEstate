@@ -655,6 +655,10 @@ ul.items li.list_item{
 	padding: 5px;
 }
 
+#control_items form{
+	margin-bottom: 20px;
+}
+
 /* =======================================  DRAG LIST  ========================================= */
 
 .drag_group{
@@ -786,16 +790,6 @@ ul.row li{
 }
 
 /* =======================================  GENERAL CLASSES  ========================================= */
-.content-wrp {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #eee;
-  margin-bottom: 20px;
-  padding: 15px;
-}
-
-.content-wrp .yui-skin-sam .yui-dt table {
-    border: 1px solid #CCCCCC;
-}
 
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -879,10 +873,14 @@ ul.row li{
 }
 
 .content-wrp {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #DBE5EF;
-  margin-top: 1em;
-  padding: 0;
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DEE1E4;
+    margin-top: 1em;
+    padding: 0;
+}
+
+.content-wrp .yui-skin-sam .yui-dt table {
+    border: 1px solid #CCCCCC;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
@@ -900,7 +898,22 @@ input.date {
 }
 
 /* =======================================  CHECK LIST  ========================================= */
+#check-list-heading .box-1 {
+	float:left; 
+	width:71%;
+}
 
+#check-list-heading .box-2 {
+	float:right; 
+	width:25%;
+}
+
+#check-list-heading .box-2 a{
+	font-weight: normal;
+  padding: 0 0 5px;
+  text-align: center;
+}
+		
 .check_list li div {
     float: left;
     margin: 5px;
@@ -1088,7 +1101,7 @@ ul.check_list {
 #control_plan h2 {
   background: none repeat scroll 0 0 #FFFFFF;
   color: #000000;
-  display: inline-block;
+  float: left;
   font-size: 23px;
   padding: 0.2em 0.5em;
 }
@@ -1108,8 +1121,9 @@ ul.check_list {
 }
 
 #cal_wrp h3 {
-    font-size: 1.4em;
-    margin-bottom: 5px;
+  clear: both;
+  font-size: 1.4em;
+  margin-bottom: 5px;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -1174,6 +1188,10 @@ ul.check_list {
   text-align: justify;	
 }
 
+.select-box a.last{
+  padding: 0;
+}
+
 #choose-loc .btn {
     display: inline-block;
     font-size: 0.9em;
@@ -1211,6 +1229,7 @@ ul#icon_color_map span{
 }
 
 #calendar {
+  clear: both;
   table-layout: fixed;
   width: 100%;
 }
@@ -1556,9 +1575,11 @@ ul.check_items h5{
 
 /* ======================== CHECK LIST MENU ========================== */
 #check_list_menu {
+    clear: both;
     margin: 0 0 20px;
     overflow: hidden;
 }
+
 #check_list_menu a {
     background: none repeat scroll 0 0 #F4EDE3;
     border: 1px solid #EDE4D8;
@@ -1572,16 +1593,20 @@ ul.check_items h5{
     text-decoration: none;
     width: 185px;
 }
+
 #check_list_menu a.active {
  	background: none repeat scroll 0 0 #CAE3FB;
     border: 1px solid #CAE3FB;
 }
+
 #check_list_menu .left_btns {
     float: left;
 }
+
 #check_list_menu .right_btns {
     float: right;
 }
+
 #check_list_menu .right_btns a {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;

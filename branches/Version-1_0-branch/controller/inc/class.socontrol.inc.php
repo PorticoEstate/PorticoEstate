@@ -109,25 +109,6 @@
 				return 0;
 			}
 		}
-
-/*		function get_controls_for_location($location_code, $role_id, $from_date, $to_date, $repeat_type)
-		{
-		    $controls = array();
-		    $controls_loc = $this->get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
-		    $controls_comp = $this->get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, '', $role_id );
-		    
-		    foreach($controls_loc as $cl)
-		    {
-		        $controls[] = $cl;
-		    }
-		    foreach($controls_comp as $cc)
-		    {
-		        $controls[] = $cc;
-		    }
-		    
-		    return $controls;
-		}
-*/
 		
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
@@ -862,8 +843,9 @@
 			$joins = " {$this->left_join} controller_control_component_list ON (c.id = controller_control_component_list.control_id)";
 			$joins .= " {$this->left_join} fm_bim_item ON (controller_control_component_list.component_id = fm_bim_item.id)";
 			$joins .= " {$this->left_join} fm_bim_type ON (fm_bim_item.type= fm_bim_type.id)";
-			//$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+
 			$sql  = "SELECT c.id AS control_id, c.title AS control_title, fm_bim_type.name AS type_name, fm_bim_item.id AS bim_id, fm_bim_item.guid as bim_item_guid FROM controller_control c {$joins} {$limit}";
+			
 			$controlArray = array();
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i=1;
@@ -879,7 +861,7 @@
 
 			return $controlArray;
 		}
-
+		
 		public function getBimItemAttributeValue($bimItemGuid, $attribute) 
 		{
 			$columnAlias = "attribute_values";
@@ -893,6 +875,8 @@
 				return preg_split('/,/', $result);
 			}
 		}
+		
+		
 		
 		public function getLocationCodeFromControl($control_id)
 		{

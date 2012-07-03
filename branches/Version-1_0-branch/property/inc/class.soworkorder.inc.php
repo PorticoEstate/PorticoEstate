@@ -326,6 +326,17 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= true;
 
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'diff';
+				$uicols['descr'][]			= lang('difference');
+				$uicols['statustext'][]		= lang('difference');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= 'myFormatCount2';
+				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= '';
+
 				$joinmethod .= " {$this->left_join} fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
 
@@ -700,6 +711,8 @@
 				{
 					$workorder[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
+				$workorder['budget'] = $workorder['combined_cost'];
+				$workorder['combined_cost'] = $workorder['combined_cost'] - $workorder['actual_cost'];
 				$workorder['grants'] = (int)$this->grants[$this->db->f('project_owner')];
 
 				$location_code=	$this->db->f('location_code');
@@ -723,10 +736,24 @@
 					$workorder['actual_cost']	+= $_actual_cost;
 				}
 
-				if($workorder['combined_cost'] < 0)
+
+
+				if($workorder['budget'] > 0)
 				{
-					$workorder['combined_cost'] = 0;
+					if($workorder['combined_cost'] < 0)
+					{
+						$workorder['combined_cost'] = 0;
+					}
 				}
+				else
+				{
+					if($workorder['combined_cost'] > 0)
+					{
+						$workorder['combined_cost'] = 0;
+					}
+				}
+
+				$workorder['diff'] =  $workorder['budget'] - $workorder['combined_cost'] - $workorder['actual_cost'];
 			}
 
 			return $workorder_list;
@@ -794,6 +821,7 @@
 						'contract_sum'			=> $this->db->f('contract_sum'),
 						'approved'				=> $this->db->f('approved'),
 						'mail_recipients'		=> explode(',', trim($this->db->f('mail_recipients'),',')),
+						'actual_cost'			=> $this->db->f('actual_cost')
 					);
 			}
 

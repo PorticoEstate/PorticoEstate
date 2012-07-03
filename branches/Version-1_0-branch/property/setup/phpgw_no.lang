@@ -513,7 +513,7 @@ deviation	property	no	Avvik
 deviation has been added	property	no	Avvik er lagt til
 deviation has been edited	property	no	Avvik er rettet
 deviation id	property	no	Avvik ID
-difference	property	no	Differanse
+difference	property	no	Rest
 dim a	property	no	Dim A
 dim a is missing	property	no	Dim A mangler
 dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i :
@@ -1666,7 +1666,7 @@ subject changed	property	no	Emne er endret
 subject has been updated	property	no	Overskrift er oppdatert
 submit the search string	property	no	Send søkestrengen
 sum estimated cost	property	no	Sum estimert kostnad
-sum orders	property	no	Forpliktet, ikke betalt
+sum orders	property	no	Forpliktet
 sum	property	no	Sum
 sum calculation	property	no	Sum kalkulasjon
 sum deviation	property	no	Sum avvik

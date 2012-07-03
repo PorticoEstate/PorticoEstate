@@ -13,10 +13,10 @@ class year_calendar {
 	private $type;
 	private $component;
 	private $location_code;
-	
 	private $calendar_array = array();
 	
-  public function __construct($control, $year, $component, $location_code, $type){
+  public function __construct($control, $year, $component, $location_code, $type)
+  {
     $this->year = $year;
     $this->control = $control;
     $this->component = $component;
@@ -29,8 +29,10 @@ class year_calendar {
   /* Initializes calendar by setting status for each month in calendar array. 
    * 	- CONTROL_NOT_DONE if month date is in the past 
    * 	- CONTROL_REGISTERED if month date is in the future */ 
-	function init_calendar(){
-    for($i = 1;$i <= 12;$i++){
+	function init_calendar()
+	{
+    for($i = 1;$i <= 12;$i++)
+    {
 		  $this->calendar_array[$i] = null;
     }
 		
@@ -45,16 +47,20 @@ class year_calendar {
     $dates_array = $date_generator->get_dates();
 		
     // Inserts dates 
-    foreach($dates_array as $date_ts){
+    foreach($dates_array as $date_ts)
+    {
     	$check_list = new controller_check_list();
     	$check_list->set_deadline( $date_ts );
     	$check_list->set_control_id( $this->control->get_id() );
     	
-    	if($this->type == "component"){
+    	if($this->type == "component")
+    	{
     		$check_list->set_component_id( $this->component->get_id() );
-    		$check_list->set_location_id( $this->component->get_type() );
+    		$check_list->set_location_id( $this->component->get_location_id() );
     		$check_list_status_manager = new check_list_status_manager( $check_list, "component" );
-    	}else {
+    	}
+    	else 
+    	{
     		$check_list->set_location_code( $this->location_code );
     		$check_list_status_manager = new check_list_status_manager( $check_list, "location" );
     	} 
@@ -68,9 +74,10 @@ class year_calendar {
 		}
 	}
    	
-	public function build_calendar( $check_lists_array ){
-		
-		foreach($check_lists_array as $check_list){
+	public function build_calendar( $check_lists_array )
+	{
+		foreach($check_lists_array as $check_list)
+		{
 			$check_list_status_manager = new check_list_status_manager( $check_list );
 			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 
 
@@ -83,7 +90,8 @@ class year_calendar {
 		return $this->calendar_array;
 	}
 	
-	public function build_agg_month_calendar( $agg_open_cases_pr_month_array ){
+	public function build_agg_month_calendar( $agg_open_cases_pr_month_array )
+	{
 		
 		foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
 		{
