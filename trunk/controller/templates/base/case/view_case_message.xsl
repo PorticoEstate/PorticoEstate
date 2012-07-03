@@ -5,7 +5,21 @@
 <div id="main_content" class="medium">
 	
 	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
-	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
+	<xsl:choose>
+			<xsl:when test="type = 'component'">
+				<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="location_level = 1">
+						<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+					</xsl:when>
+					<xsl:otherwise>
+							<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
 	
 	<xsl:call-template name="check_list_tab_menu" />
 	
@@ -21,12 +35,7 @@
 				</xsl:attribute>
 		      	Vis melding
 	   		</a>
-		
-			<!-- ===  BYGG  === -->
-			<div class="row">
-				<label>Bygg:</label><span><xsl:value-of select="location_array/loc1_name"/></span>
-			</div>
-			
+				
 		    <!-- === TITLE === -->
 		    <div class="row">				
 				<label>Tittel på melding:</label><span><xsl:value-of select="message_ticket/subject"/></span>

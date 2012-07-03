@@ -43,7 +43,7 @@
 					    <xsl:attribute name="value">
 							<xsl:choose>
 							  <xsl:when test="type = 'component'">
-								  <xsl:value-of select="location_array/location_code"/>
+								  <xsl:value-of select="component_array/location_code"/>
 								</xsl:when>
 								<xsl:otherwise>
 								  <xsl:value-of select="location_array/location_code"/>
