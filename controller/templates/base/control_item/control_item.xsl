@@ -81,25 +81,29 @@
 								<xsl:choose>
 								<xsl:when test="control_item/type = ''">
 										<xsl:for-each select="control_item/control_item_types">
-											<xsl:variable name="classes">
 												<xsl:choose>
 													<xsl:when test="position() = 1">
-														btn active
+														<div class="control_item_type">
+															<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
+															<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+															
+															<input class="btn active" type="button" value="Velg" />
+															<input type="radio" name="control_item_type" value="{$current_control_item_type}" checked="checked"/>
+															<xsl:value-of select="php:function('lang', $lang_type)" />
+														</div>
 													</xsl:when>
 													<xsl:otherwise>
-														btn
+														<div class="control_item_type">
+															<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
+															<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
+															
+															<input class="btn" type="button" value="Velg" />
+															<input type="radio" name="control_item_type" value="{$current_control_item_type}" />
+															<xsl:value-of select="php:function('lang', $lang_type)" />
+														</div>
 													</xsl:otherwise>
 												</xsl:choose>
-											</xsl:variable>
-										
-										<div class="control_item_type">
-											<xsl:variable name="lang_type"><xsl:value-of select="." /></xsl:variable>
-											<xsl:variable name="current_control_item_type"><xsl:value-of select="." /></xsl:variable>
-											
-											<input class="{$classes}" type="button" value="Velg" />
-											<input type="radio" name="control_item_type" value="{$current_control_item_type}" />
-											<xsl:value-of select="php:function('lang', $lang_type)" />
-										</div>
+									
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>

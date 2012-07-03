@@ -5,7 +5,7 @@ controller	common	no	Kontroll
 Register control item	controller	no	Legg til nytt kontrollpunkt
 Edit control item	controller	no	Endre kontrollpunkt
 View control item	controller	no	Vis kontrollpunkt
-control_item_type_1	controller	no	Ved innskriving av kommentar i et kommentarfelt
+control_item_type_1	controller	no	Ved innskriving av kommentar
 control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
 control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
 control_item_type_4	controller	no	Ved valg av verdi fra radioknapper
