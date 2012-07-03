@@ -416,7 +416,7 @@ class controller_socheck_list extends controller_socommon
 		    $sql .= "WHERE cl.location_code = '{$cl_criteria->get_location_code()}' ";
 		}
 		
-		$sql .= "AND c.id = $control_id ";
+		$sql .= "AND c.id = $cl_criteria->get_control_id ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.deadline >= $from_date_ts AND $to_date_ts > cl.deadline ";
 		$sql .= "GROUP BY c.id";
