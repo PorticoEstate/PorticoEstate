@@ -1588,15 +1588,15 @@
 			{
 				$year = date('Y');//$this->db->f('year');
 
-				if($this->db->f('contract_sum') > 0)
+				if(abs($this->db->f('contract_sum')) > 0)
 				{
 					$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 				}
-				else if($this->db->f('calculation') > 0)
+				else if(abs($this->db->f('calculation')) > 0)
 				{
 					$_amount = $this->db->f('calculation') * $tax;
 				}
-				else if($this->db->f('budget') > 0)
+				else if(abs($this->db->f('budget')) > 0)
 				{
 					$_amount = $this->db->f('budget');
 				}
@@ -1621,7 +1621,6 @@
 				$project_budget[$this->db->f('year')] = (int)$this->db->f('budget');
 			}
 			
-
 			foreach ($project_budget as $year => $budget)
 			{
 				if(isset($orders[$year]))
@@ -1634,7 +1633,7 @@
 					{
 						$_sum_orders += $order['amount'];
 						$_sum_orders -= $order['actual_cost'];
-						
+
 						if($budget > 0)
 						{
 							$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
@@ -1667,13 +1666,12 @@
 
 				$sort_year[] = $year;
 			}
-				
+
 			unset($order);
 			unset($order_id);
 			unset($year);
 
 			reset($orders);
-
 
 			//remaining
 			foreach ($orders as $year => $_orders)
