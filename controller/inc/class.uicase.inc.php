@@ -36,6 +36,7 @@
 	phpgw::import_class('controller.socontrol');
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
+	include_class('controller', 'component', 'inc/model/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 			
 	class controller_uicase extends phpgwapi_uicommon
@@ -83,17 +84,7 @@
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
-						
-			/*
-			
-			$db_check_item = $this->so_check_item->get_db();
-			$db_check_item->transaction_begin();
-
-			$db_check_item->transaction_commit();
-			$db_check_item->transaction_abort();
-			
-			*/
-			
+							
 			// Makes a check item if there isn't already made one  
 			if($check_item == null){
 				$new_check_item = new controller_check_item();
@@ -185,35 +176,60 @@
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
-			
+
 			$location_code = $check_list->get_location_code();
 
 			$level = count(explode('-',location_code));
-			
+
 			if($level == 1)
 				$buildings_array = execMethod('property.solocation.get_children',$location_code);
-			
+
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$building = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
+
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
 			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$component_id = $check_list->get_component_id();
 			
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    					
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+							
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+										
 			$data = array
 			(
-				'location_array'	=> $location_array,
-				'categories'			=> $categories,
-				'check_list'			=> $check_list->toArray(),
-				'control'				=> $control->toArray(),
+				'categories'						=> $categories,
+				'check_list'						=> $check_list->toArray(),
+				'control'								=> $control->toArray(),
 				'check_items_and_cases'	=> $check_items_and_cases,
-				'buildings_array'		=> $buildings_array,
-				'building'				=> $building,
-				'date_format' 			=> $date_format
+				'buildings_array'				=> $buildings_array,
+				'building'							=> $building,
+				'date_format' 					=> $date_format,
+				'location_array'				=> $location_array,
+				'component_array'				=> $component_array,
+				'type' 									=> $type
 			);
 			
 			if(count( $buildings_array ) > 0){
@@ -439,6 +455,26 @@
 			else{
 				return json_encode( array( "status" => "false" ) );
 			}
+		}
+		
+		function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
 		}
 		
 		public function query(){}
