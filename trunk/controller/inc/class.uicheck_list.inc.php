@@ -447,45 +447,6 @@
 			self::render_template_xsl('create_case_messsage', $data);
 		}
 		
-		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
-		/*
-		public function update_check_list()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			$status = (int)phpgw::get_var('status');
-			$comment = phpgw::get_var('comment');
-			$deadline_date = phpgw::get_var('deadline_date');
-			$completed_date = phpgw::get_var('completed_date');
-			$planned_date = phpgw::get_var('planned_date');
-
-			if($planned_date != ''){
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-			}else{
-				$planned_date_ts = 0;
-			} 
-			
-			if($completed_date != ''){
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-			}else{
-				$completed_date_ts = 0;
-			}
-			
-			// Fetches check_list from DB
-			$update_check_list = $this->so->get_single($check_list_id);
-			$update_check_list->set_status( $status );
-			$update_check_list->set_comment( $comment );
-			$update_check_list->set_completed_date( $completed_date_ts );
-			$update_check_list->set_planned_date( $planned_date_ts );
-
-			$check_list_id = $this->so->update( $update_check_list );
-			
-			if($check_list_id > 0)
-				return json_encode( array( "status" => "updated" ) );
-			else
-				return json_encode( array( "status" => "not_updated" ) );
-		}
-		*/
-		
 		public function print_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -614,15 +575,40 @@
 			}
 			=====================================================================*/
 			//_debug_array($control_group_check_items);
-					
-			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
 			
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+					
 			$data = array
 			(
-				'control' 												=> $control->toArray(),
-				'check_list' 											=> $check_list->toArray(),
-				'location_array'									=> $location_array,
-				'control_groups_with_items_array' => $control_groups_with_items_array
+				'control' 													=> $control->toArray(),
+				'check_list' 												=> $check_list->toArray(),
+				'location_array'										=> $location_array,
+				'component_array'										=> $component_array,
+				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
+				'type' 															=> $type
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
