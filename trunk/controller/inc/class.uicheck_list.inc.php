@@ -214,17 +214,21 @@
 				
 				$component_array = $component->toArray();
 				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$type = "component";
 			}
 			else
 			{
 				$location_code = phpgw::get_var('location_code');	
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$level = $this->get_location_level($location_code);
+				$type = "location";
 			}
 			
 			$control = $this->so_control->get_single($control_id);
 			
 			$year = date("Y", $deadline_ts);
 			$month = date("n", $deadline_ts);
+		
 			
 			$data = array
 			(
@@ -236,7 +240,8 @@
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,
-				'building_location_code' 	=> $building_location_code
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -356,10 +361,13 @@
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
+				$level = $this->get_location_level($location_code);
 			}
 			
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
+			
+			
 			
 			$data = array
 			(
@@ -371,7 +379,8 @@
 				'type' 										=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,
-				'building_location_code' 	=> $building_location_code
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -396,12 +405,15 @@
 	
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
+			$level = $this->get_location_level($location_code);
+			
 			$data = array
 			(
 				'control' 				=> $control->toArray(),
 				'check_list' 			=> $check_list->toArray(),
 				'location_array'	=> $location_array,
-				'date_format' 		=> $date_format
+				'date_format' 		=> $date_format,
+				'location_level' 	=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -485,12 +497,14 @@
 			
 			$location_code = $check_list->get_location_code();  
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$level = $this->get_location_level($location_code);
 			
 			$data = array
 			(
 				'location_array'				=> $location_array,
 				'control'								=> $control->toArray(),
 				'check_list'						=> $check_list->toArray(),
+				'location_level'				=> $level,
 			);
 
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -600,6 +614,8 @@
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 			}
+			
+			$level = $this->get_location_level($location_code);
 					
 			$data = array
 			(
@@ -608,7 +624,8 @@
 				'location_array'										=> $location_array,
 				'component_array'										=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
-				'type' 															=> $type
+				'type' 															=> $type,
+				'location_level' 										=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -728,6 +745,13 @@
 			
 			return $building_location_code; 
 		}
+		
+		function get_location_level($location_code)
+		{
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
 		
 		public function query(){}
 	}
