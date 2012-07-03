@@ -176,17 +176,8 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 
-			$location_code = $check_list->get_location_code();
-
-			$level = count(explode('-',location_code));
-
-			if($level == 1)
-				$buildings_array = execMethod('property.solocation.get_children',$location_code);
-
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			$building = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
@@ -224,15 +215,13 @@
 				'check_list'						=> $check_list->toArray(),
 				'control'								=> $control->toArray(),
 				'check_items_and_cases'	=> $check_items_and_cases,
-				'buildings_array'				=> $buildings_array,
-				'building'							=> $building,
 				'date_format' 					=> $date_format,
 				'location_array'				=> $location_array,
 				'component_array'				=> $component_array,
 				'type' 									=> $type,
 				'location_level' 				=> $level
 			);
-			
+						
 			if(count( $buildings_array ) > 0){
 				$data['buildings_array']  = $buildings_array;
 			}else{
@@ -261,12 +250,8 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list->get_location_code();
-				 
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-
 			$message_details = "Kontroll: " .  $control->get_title() . "\n";
 			
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -332,13 +317,7 @@
 						
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
-			
-			$location_code = $check_list->get_location_code();
-				 
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-
+		
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id, "return_array");
 						
 			$botts = CreateObject('property.botts',true);
@@ -348,17 +327,45 @@
 			
 			$category = $catsObj->return_single($message_ticket["cat_id"]);
 			
+			$component_id = $check_list->get_component_id();
+			
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    					
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+							
+				$type = 'component';
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+			
+			
+			
 			$data = array
 			(
-				'control'							=> $control->toArray(),
-				'message_ticket_id'					=> $message_ticket_id,
+				'control'									=> $control->toArray(),
+				'message_ticket_id'				=> $message_ticket_id,
 				'message_ticket'					=> $message_ticket,
-				'category'							=> $category[0]['name'],
+				'category'								=> $category[0]['name'],
 				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
 				'control_array'						=> $control->toArray(),
-				'check_list'						=> $check_list->toArray(),
-				'check_items_and_cases'				=> $check_items_and_cases,
-				'date_format' 						=> $date_format
+				'check_list'							=> $check_list->toArray(),
+				'check_items_and_cases'		=> $check_items_and_cases,
+				'date_format' 						=> $date_format,
+				'type'				 						=> $type
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
