@@ -399,21 +399,49 @@
 			$control = $this->so_control->get_single($check_list->get_control_id());
 				
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$location_code = $check_list->get_location_code();
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}	
 			
 			$level = $this->get_location_level($location_code);
 			
 			$data = array
 			(
-				'control' 				=> $control->toArray(),
-				'check_list' 			=> $check_list->toArray(),
-				'location_array'	=> $location_array,
-				'date_format' 		=> $date_format,
-				'location_level' 	=> $level
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'date_format' 						=> $date_format,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
-			
+
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
