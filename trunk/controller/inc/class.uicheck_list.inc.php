@@ -367,8 +367,6 @@
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 			
-			
-			
 			$data = array
 			(
 				'control' 								=> $control->toArray(),
@@ -425,7 +423,7 @@
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
-		
+		/*
 		function create_case_message()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -435,11 +433,33 @@
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list_with_check_items["location_code"];  
-				 
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}
+			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
@@ -458,7 +478,7 @@
 			
 			self::render_template_xsl('create_case_messsage', $data);
 		}
-		
+		*/
 		public function print_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
