@@ -198,6 +198,7 @@
     		$component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
 							
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
 				$type = 'component';
 			}
 			else
@@ -209,17 +210,23 @@
 
 			$level = $this->get_location_level();
 			
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+			
 			$data = array
 			(
-				'categories'						=> $categories,
-				'check_list'						=> $check_list->toArray(),
-				'control'								=> $control->toArray(),
-				'check_items_and_cases'	=> $check_items_and_cases,
-				'date_format' 					=> $date_format,
-				'location_array'				=> $location_array,
-				'component_array'				=> $component_array,
-				'type' 									=> $type,
-				'location_level' 				=> $level
+				'categories'							=> $categories,
+				'check_list'							=> $check_list->toArray(),
+				'control'									=> $control->toArray(),
+				'check_items_and_cases'		=> $check_items_and_cases,
+				'date_format' 						=> $date_format,
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'building_location_code'	=> $building_location_code,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'type' 										=> $type,
+				'location_level' 					=> $level
 			);
 						
 			if(count( $buildings_array ) > 0){
@@ -343,6 +350,7 @@
 				$component_array = $component->toArray();
 							
 				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
@@ -351,7 +359,9 @@
 				$type = 'location';
 			}
 			
-			
+			$level = $this->get_location_level($location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
 			
 			$data = array
 			(
@@ -364,8 +374,12 @@
 				'control_array'						=> $control->toArray(),
 				'check_list'							=> $check_list->toArray(),
 				'check_items_and_cases'		=> $check_items_and_cases,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
 				'date_format' 						=> $date_format,
-				'type'				 						=> $type
+				'type'				 						=> $type,
+				'building_location_code' 	=> $building_location_code,
+				'location_level'				 	=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -470,7 +484,27 @@
 			$level = count(explode('-', $location_code));
 
 			return $level;
-		}	
+		}
+
+		function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
+		}
 		
 		public function query(){}
 	}
