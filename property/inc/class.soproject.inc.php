@@ -231,7 +231,7 @@
 				$cols_return[] 				= 'budget';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'budget';
-				$uicols['descr'][]			= lang('Project budget');
+				$uicols['descr'][]			= lang('budget');
 				$uicols['statustext'][]		= lang('Project budget');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
@@ -244,7 +244,7 @@
 //				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'combined_cost';
-				$uicols['descr'][]			= lang('Sum workorder');
+				$uicols['descr'][]			= lang('sum orders');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
@@ -266,18 +266,18 @@
 
 //				$cols .= ',planned_cost';
 //				$cols_return[] = 'planned_cost';
-/*
+
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'planned_cost';
-				$uicols['descr'][]			= lang('planned cost');
-				$uicols['statustext'][]		= lang('ordered minus paid');
+				$uicols['name'][]			= 'diff';
+				$uicols['descr'][]			= lang('difference');
+				$uicols['statustext'][]		= lang('difference');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= '';
-*/
+
 				$cols.= ",$entity_table.user_id";
 
 //				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
@@ -677,15 +677,15 @@
 							$_sum = 0;
 							$closed = true;
 						}
-						else if($this->db->f('contract_sum') > 0)
+						else if(abs($this->db->f('contract_sum')) > 0)
 						{
 							$_sum = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 						}
-						else if($this->db->f('calculation') > 0)
+						else if(abs($this->db->f('calculation')) > 0)
 						{
 							$_sum = $this->db->f('calculation');
 						}
-						else if($this->db->f('budget') > 0)
+						else if(abs($this->db->f('budget')) > 0)
 						{
 							$_sum = $this->db->f('budget');
 						}
@@ -722,11 +722,24 @@
 						$project['actual_cost']		+= $_actual_cost;
 					}
 
-					if($project['combined_cost'] < 0)
+					if($project['budget'] > 0)
 					{
-						$project['combined_cost'] = 0;
+						if($project['combined_cost'] < 0)
+						{
+							$project['combined_cost'] = 0;
+						}
 					}
+					else
+					{
+						if($project['combined_cost'] > 0)
+						{
+							$project['combined_cost'] = 0;
+						}
+					}
+
+					$project['diff'] =  $project['budget'] - $project['combined_cost'] - $project['actual_cost'];
 				}
+
 				unset($project);
 
 				$_datatype = array();
@@ -1702,6 +1715,12 @@
 			if($values)
 			{
 				array_multisort($sort_year, SORT_ASC, $values);
+			}
+
+
+			foreach ($values as &$entry)
+			{
+				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
 			}
 
 //_debug_array( $values);die();
