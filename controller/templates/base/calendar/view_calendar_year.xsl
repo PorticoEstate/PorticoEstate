@@ -215,8 +215,8 @@ function chooseLocation( label, value ){
 		
 		<h2 class="components">Komponenter</h2>
 		<xsl:choose>
-				<xsl:when test="components_calendar_array/child::node()">
-		<xsl:for-each select="components_calendar_array">
+			<xsl:when test="components_calendar_array/child::node()">
+			<xsl:for-each select="components_calendar_array">
 		  <h3><xsl:value-of select="component/xml_short_desc"/></h3>
 		  
 			<table id="calendar" class="year">
