@@ -52,37 +52,36 @@
 		private $so_control_item_list;
 	
 		var $public_functions = array(
-										'index' 						=> true,
-										'add_check_list' 				=> true,
-										'save_check_list' 				=> true,
-										'edit_check_list' 				=> true,
+										'index' 										=> true,
+										'add_check_list' 						=> true,
+										'save_check_list' 					=> true,
+										'edit_check_list' 					=> true,
 										'create_case_message' 			=> true,
-										'view_control_info' 			=> true,
-										'view_cases_for_check_list'		=> true,
-										'update_check_list'				=> true,
-										'print_check_list'				=> true,
-										'register_case'					=> true,
-										'view_open_cases'				=> true,
-										'view_closed_cases'				=> true,
+										'view_control_info' 				=> true,
+										'view_cases_for_check_list'	=> true,
+										'print_check_list'					=> true,
+										'register_case'							=> true,
+										'view_open_cases'						=> true,
+										'view_closed_cases'					=> true,
 										'view_control_details'			=> true,
-										'view_control_items'			=> true,
-										'get_check_list_info'			=> true, 
-										'get_cases_for_check_list'		=> true
+										'view_control_items'				=> true,
+										'get_check_list_info'				=> true, 
+										'get_cases_for_check_list'	=> true
 									);
 
 		function __construct()
 		{
 			parent::__construct();
 
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
-			$this->so_control 			= CreateObject('controller.socontrol');
-			$this->so					= CreateObject('controller.socheck_list');
-			$this->so_control_item		= CreateObject('controller.socontrol_item');
-			$this->so_check_item		= CreateObject('controller.socheck_item');
-			$this->so_procedure			= CreateObject('controller.soprocedure');
-			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
-			$this->so_control_group		= CreateObject('controller.socontrol_group');
-			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
+			$this->so_control_area 				= CreateObject('controller.socontrol_area');
+			$this->so_control 						= CreateObject('controller.socontrol');
+			$this->so											= CreateObject('controller.socheck_list');
+			$this->so_control_item				= CreateObject('controller.socontrol_item');
+			$this->so_check_item					= CreateObject('controller.socheck_item');
+			$this->so_procedure						= CreateObject('controller.soprocedure');
+			$this->so_control_group_list 	= CreateObject('controller.socontrol_group_list');
+			$this->so_control_group				= CreateObject('controller.socontrol_group');
+			$this->so_control_item_list 	= CreateObject('controller.socontrol_item_list');
 
 			self::set_active_menu('controller::control::check_list');
 		}	
@@ -185,7 +184,7 @@
 		}
 		
 		/**
-		 * Public function for displaying the add check list form  
+		 * Public function for displaying the add check list form
 		 * 
 		 * @param HTTP:: location code, control id, date
 		 * @return data array
@@ -199,26 +198,50 @@
 			$check_list->set_control_id($control_id);
 			$check_list->set_deadline($deadline_ts);
 			
-			if($type == "component"){
+			if($type == "component")
+			{
 				$location_id = phpgw::get_var('location_id');
 				$check_list->set_location_id($location_id);
 				$component_id = phpgw::get_var('component_id');
 				$check_list->set_component_id($component_id);
-			}else{
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				
+				$component_array = $component->toArray();
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$type = "component";
+			}
+			else
+			{
 				$location_code = phpgw::get_var('location_code');	
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$level = $this->get_location_level($location_code);
+				$type = "location";
 			}
 			
 			$control = $this->so_control->get_single($control_id);
 			
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$year = date("Y", $deadline_ts);
+			$month = date("n", $deadline_ts);
+		
 			
 			$data = array
 			(
-				'location_array'	=> $location_array,
-				'control'					=> $control->toArray(),
-				'date_format' 		=> $date_format,
-				'check_list' 			=> $check_list->toArray(),
-				'type'			 			=> $type
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'control'									=> $control->toArray(),
+				'date_format' 						=> $date_format,
+				'check_list' 							=> $check_list->toArray(),
+				'type'			 							=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -237,7 +260,8 @@
 		 * @param HTTP:: location code, control id, status etc.. (check list details) 
 		 * @return data array
 		*/
-		function save_check_list(){
+		function save_check_list()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$status = (int)phpgw::get_var('status');
 			$type = phpgw::get_var('type');
@@ -245,7 +269,8 @@
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
-			
+			$return_format = phpgw::get_var('phpgw_return_as');
+						
 			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
 			
 			if($planned_date != ''){
@@ -281,9 +306,19 @@
 			
 			$check_list_id = $this->so->store($check_list);
 			
-			if( $check_list_id > 0 ){
+			
+			if( ($check_list_id > 0) & ($return_format != 'json') )
+			{
 				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));	
 			}
+			else if( ($check_list_id > 0) & ($return_format == 'json') )
+			{
+				return json_encode( array( "status" => "updated" ) );
+			}
+			else
+			{
+				return json_encode( array( "status" => "not_updated" ) );
+			} 
 		}
 		
 		/**
@@ -305,20 +340,45 @@
 			
 			$component_id = $check_list->get_component_id();
 
-			if($component_id > 0){
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
 				
-			}else{
-				$location_code = $check_list->get_location_code();
-	
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));	
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
 			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}
+			
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
 			
 			$data = array
 			(
-				'control' 				=> $control->toArray(),
-				'check_list' 			=> $check_list->toArray(),
-				'location_array'	=> $location_array,
-				'date_format' 		=> $date_format
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'date_format' 						=> $date_format,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -339,18 +399,53 @@
 			$control = $this->so_control->get_single($check_list->get_control_id());
 				
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$location_code = $check_list->get_location_code();
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}	
 			
+			$level = $this->get_location_level($location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+							
 			$data = array
 			(
-				'control' 				=> $control->toArray(),
-				'check_list' 			=> $check_list->toArray(),
-				'location_array'	=> $location_array,
-				'date_format' 		=> $date_format
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'date_format' 						=> $date_format,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month
 			);
-			
+
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
@@ -360,7 +455,7 @@
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
-		
+		/*
 		function create_case_message()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -370,11 +465,33 @@
 			$control_id = $check_list_with_check_items["control_id"];
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list_with_check_items["location_code"];  
-				 
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}
+			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 			
 			$data = array
 			(
@@ -393,44 +510,7 @@
 			
 			self::render_template_xsl('create_case_messsage', $data);
 		}
-		
-		// Saves a check list that already exists. Returns status for update as a JSON array with values update/not updated  
-		public function update_check_list()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			$status = (int)phpgw::get_var('status');
-			$comment = phpgw::get_var('comment');
-			$deadline_date = phpgw::get_var('deadline_date');
-			$completed_date = phpgw::get_var('completed_date');
-			$planned_date = phpgw::get_var('planned_date');
-
-			if($planned_date != ''){
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-			}else{
-				$planned_date_ts = 0;
-			} 
-			
-			if($completed_date != ''){
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-			}else{
-				$completed_date_ts = 0;
-			}
-			
-			// Fetches check_list from DB
-			$update_check_list = $this->so->get_single($check_list_id);
-			$update_check_list->set_status( $status );
-			$update_check_list->set_comment( $comment );
-			$update_check_list->set_completed_date( $completed_date_ts );
-			$update_check_list->set_planned_date( $planned_date_ts );
-
-			$check_list_id = $this->so->update( $update_check_list );
-			
-			if($check_list_id > 0)
-				return json_encode( array( "status" => "updated" ) );
-			else
-				return json_encode( array( "status" => "not_updated" ) );
-		}
-		
+		*/
 		public function print_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -467,14 +547,47 @@
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
-			$location_code = $check_list->get_location_code();  
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}
+			
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
 			
 			$data = array
 			(
-				'location_array'				=> $location_array,
-				'control'								=> $control->toArray(),
-				'check_list'						=> $check_list->toArray(),
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'date_format' 						=> $date_format,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
 			);
 
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -559,15 +672,48 @@
 			}
 			=====================================================================*/
 			//_debug_array($control_group_check_items);
-					
-			$location_array = execMethod( 'property.bolocation.read_single', array('location_code' => $check_list->get_location_code()) );
 			
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+			
+			$level = $this->get_location_level($location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+							
 			$data = array
 			(
-				'control' 												=> $control->toArray(),
-				'check_list' 											=> $check_list->toArray(),
-				'location_array'									=> $location_array,
-				'control_groups_with_items_array' => $control_groups_with_items_array
+				'control' 													=> $control->toArray(),
+				'check_list' 												=> $check_list->toArray(),
+				'location_array'										=> $location_array,
+				'component_array'										=> $component_array,
+				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
+				'type' 															=> $type,
+				'location_level' 										=> $level,
+				'building_location_code' 						=> $building_location_code,
+				'current_year' 											=> $year,
+				'current_month_nr' 									=> $month
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -667,6 +813,33 @@
 			
 			return json_encode( $check_items_with_cases );
 		}
+		
+		function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
+		}
+		
+		function get_location_level($location_code)
+		{
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
 		
 		public function query(){}
 	}

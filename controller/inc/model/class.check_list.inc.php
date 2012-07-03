@@ -169,17 +169,22 @@
 		public function serialize()
 		{
 			return array(
-				'id' => $this->get_id(),
-				'control_id' => $this->get_control_id(),
-				'status' => $this->get_status(),
-				'comment' => $this->get_comment(),
-				'deadline' => $this->get_deadline(),
-				'planned_date' => $this->get_planned_date(),
-				'completed_date' => $this->get_completed_date(),
-				'location_code' => $this->get_location_code(),
-				'component_id' => $this->get_component_id(),
-				'location_id' => $this->get_location_id(),
-				'num_open_cases' => $this->get_num_open_cases()
+				'id' 							=> $this->get_id(),
+				'control_id' 			=> $this->get_control_id(),
+				'status' 					=> $this->get_status(),
+				'comment' 				=> $this->get_comment(),
+				'deadline' 				=> $this->get_deadline(),
+				'planned_date' 		=> $this->get_planned_date(),
+				'completed_date' 	=> $this->get_completed_date(),
+				'location_code' 	=> $this->get_location_code(),
+				'component_id' 		=> $this->get_component_id(),
+				'location_id' 		=> $this->get_location_id(),
+				'num_open_cases' 	=> $this->get_num_open_cases()
 			);
+		}
+		
+		public function validate(){
+			
+		
 		}
 	}

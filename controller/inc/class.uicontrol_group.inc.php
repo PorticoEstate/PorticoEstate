@@ -49,13 +49,13 @@
 
 		public $public_functions = array
 		(
-			'index'									=>	true,
-			'query'									=>	true,
-			'edit'									=>	true,
-			'view'									=>	true,
-			'add'									=>	true,
-			'save_group_and_item_order'				=>	true,
-			'get_control_groups_by_control_area' 	=> true
+			'index'																=>	true,
+			'query'																=>	true,
+			'edit'																=>	true,
+			'view'																=>	true,
+			'add'																	=>	true,
+			'save_group_and_item_order'						=>	true,
+			'get_control_groups_by_control_area' 	=>  true
 		);
 
 		public function __construct()

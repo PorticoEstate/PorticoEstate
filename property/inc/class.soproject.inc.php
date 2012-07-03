@@ -231,7 +231,7 @@
 				$cols_return[] 				= 'budget';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'budget';
-				$uicols['descr'][]			= lang('Project budget');
+				$uicols['descr'][]			= lang('budget');
 				$uicols['statustext'][]		= lang('Project budget');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
@@ -244,7 +244,7 @@
 //				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'combined_cost';
-				$uicols['descr'][]			= lang('Sum workorder');
+				$uicols['descr'][]			= lang('sum orders');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
@@ -266,18 +266,18 @@
 
 //				$cols .= ',planned_cost';
 //				$cols_return[] = 'planned_cost';
-/*
+
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'planned_cost';
-				$uicols['descr'][]			= lang('planned cost');
-				$uicols['statustext'][]		= lang('ordered minus paid');
+				$uicols['name'][]			= 'diff';
+				$uicols['descr'][]			= lang('difference');
+				$uicols['statustext'][]		= lang('difference');
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= '';
-*/
+
 				$cols.= ",$entity_table.user_id";
 
 //				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
@@ -677,15 +677,15 @@
 							$_sum = 0;
 							$closed = true;
 						}
-						else if($this->db->f('contract_sum') > 0)
+						else if(abs($this->db->f('contract_sum')) > 0)
 						{
 							$_sum = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 						}
-						else if($this->db->f('calculation') > 0)
+						else if(abs($this->db->f('calculation')) > 0)
 						{
 							$_sum = $this->db->f('calculation');
 						}
-						else if($this->db->f('budget') > 0)
+						else if(abs($this->db->f('budget')) > 0)
 						{
 							$_sum = $this->db->f('budget');
 						}
@@ -722,11 +722,24 @@
 						$project['actual_cost']		+= $_actual_cost;
 					}
 
-					if($project['combined_cost'] < 0)
+					if($project['budget'] > 0)
 					{
-						$project['combined_cost'] = 0;
+						if($project['combined_cost'] < 0)
+						{
+							$project['combined_cost'] = 0;
+						}
 					}
+					else
+					{
+						if($project['combined_cost'] > 0)
+						{
+							$project['combined_cost'] = 0;
+						}
+					}
+
+					$project['diff'] =  $project['budget'] - $project['combined_cost'] - $project['actual_cost'];
 				}
+
 				unset($project);
 
 				$_datatype = array();
@@ -1543,23 +1556,23 @@
 			$sql = "SELECT id AS order_id FROM fm_workorder WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$orders = array();
+			$_orders = array();
 			while ($this->db->next_record())
 			{
-				$orders[] = $this->db->f('order_id');
+				$_orders[] = $this->db->f('order_id');
 			}
 
-			$actual_cost = array();
-			foreach($orders as $order)
+			foreach($_orders as $_order)
 			{
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$order}' GROUP BY periode ORDER BY periode ASC ";
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$_order}' GROUP BY periode ORDER BY periode ASC ";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
 					$year = substr( $this->db->f('periode'), 0, 4 );
-					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
+					$orders[$year][$_order]['actual_cost'] += $this->db->f('actual_cost');
 				}
 
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilag WHERE pmwrkord_code = '{$order}' GROUP BY periode ORDER BY periode ASC ";
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilag WHERE pmwrkord_code = '{$_order}' GROUP BY periode ORDER BY periode ASC ";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
@@ -1568,7 +1581,7 @@
 					{
 						$year = date('Y');
 					}
-					$cost_info[$year]['actual_cost'] += $this->db->f('actual_cost');
+					$orders[$year][$_order]['actual_cost'] += $this->db->f('actual_cost');
 				}
 			}
 
@@ -1584,20 +1597,19 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 
 
-			$orders = array();
 			while ($this->db->next_record())
 			{
-				$year = $this->db->f('year');
+				$year = date('Y');//$this->db->f('year');
 
-				if($this->db->f('contract_sum') > 0)
+				if(abs($this->db->f('contract_sum')) > 0)
 				{
 					$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
 				}
-				else if($this->db->f('calculation') > 0)
+				else if(abs($this->db->f('calculation')) > 0)
 				{
 					$_amount = $this->db->f('calculation') * $tax;
 				}
-				else if($this->db->f('budget') > 0)
+				else if(abs($this->db->f('budget')) > 0)
 				{
 					$_amount = $this->db->f('budget');
 				}
@@ -1606,31 +1618,9 @@
 					$_amount = 0;
 				}
 
-				$orders[] = array
-				(
-					'order_id'	=> $this->db->f('id'),
-					'year'		=> $year,
-					'amount'	=> $_amount
-				);
+				$orders[$year][$this->db->f('id')]['amount'] = $_amount;
 			}
 
-			foreach ($orders as $order)
-			{
-				$cost_info[$year]['sum_orders'] += $order['amount'];
-				$sql = "SELECT godkjentbelop as amount FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$order['order_id']}'";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
-				{
-					$cost_info[$year]['sum_orders'] -= $this->db->f('amount');
-				}
-
-				$sql = "SELECT godkjentbelop as amount FROM fm_ecobilag WHERE pmwrkord_code = '{$order['order_id']}'";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
-				{
-					$cost_info[$year]['sum_orders'] -= $this->db->f('amount');
-				}
-			}
 
 			$sort_year = array();
 			$values = array();
@@ -1638,47 +1628,88 @@
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$project_budget = array();
 			while ($this->db->next_record())
 			{
-				$year = $this->db->f('year');
-				$_actual_cost = isset($cost_info[$year]['actual_cost']) &&  $cost_info[$year]['actual_cost'] ? $cost_info[$year]['actual_cost'] : 0;
-				$_sum_orders = isset($cost_info[$year]['sum_orders']) &&  $cost_info[$year]['sum_orders'] > 0 ? $cost_info[$year]['sum_orders'] : 0;
-				if(isset($cost_info[$year]))
+				$project_budget[$this->db->f('year')] = (int)$this->db->f('budget');
+			}
+			
+			foreach ($project_budget as $year => $budget)
+			{
+				if(isset($orders[$year]))
 				{
-					unset($cost_info[$year]);
+					
+					$_sum_orders = 0;
+					$_actual_cost= 0;
+
+					foreach ($orders[$year] as $order_id => $order)
+					{
+						$_sum_orders += $order['amount'];
+						$_sum_orders -= $order['actual_cost'];
+
+						if($budget > 0)
+						{
+							$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
+						}
+						else // income
+						{
+							$_sum_orders = $_sum_orders < 0 ? $_sum_orders : 0;						
+						}
+						
+						$_actual_cost += $order['actual_cost'];
+					}
+
+					unset($orders[$year]);
+
+				}
+				else
+				{
+					$_sum_orders = 0;
+					$_actual_cost = 0;
 				}
 
-				$sort_year[] = $year;
 				$values[] = array
 				(
 					'project_id'		=> $project_id,
-					'year'				=> $this->db->f('year'),
-					'budget'			=> (int)$this->db->f('budget'),
+					'year'				=> $year,
+					'budget'			=> $budget,
 					'sum_orders'		=> $_sum_orders,
 					'actual_cost'		=> $_actual_cost,
-					'user_id'			=> $this->db->f('user_id'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'modified_date'		=> $this->db->f('modified_date')
 				);
+
+				$sort_year[] = $year;
 			}
 
-			if($cost_info && count($cost_info))
+			unset($order);
+			unset($order_id);
+			unset($year);
+
+			reset($orders);
+
+			//remaining
+			foreach ($orders as $year => $_orders)
 			{
-				foreach($cost_info as $year => $cost_info)
+				$_sum_orders = 0;
+				$_actual_cost = 0;
+
+				foreach ($_orders as $order_id => $order)
 				{
-					$sort_year[] = $year;
-					$values[] = array
-					(
-						'project_id'		=> $project_id,
-						'year'				=> $year ,
-						'budget'			=> 0,
-						'sum_orders'		=> isset($cost_info['sum_orders']) && $cost_info['sum_orders'] > 0 ? $cost_info['sum_orders'] : 0,
-						'actual_cost'		=> isset($cost_info['actual_cost']) && $cost_info['actual_cost'] ? $cost_info['actual_cost'] : 0,
-						'user_id'			=> 0,
-						'entry_date'		=> 0,
-						'modified_date'		=> 0
-					);
+					$_sum_orders += $order['amount'];
+					$_sum_orders -= $order['actual_cost'];
+					$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
+					$_actual_cost += $order['actual_cost'];
 				}
+
+				$values[] = array
+				(
+					'project_id'		=> $project_id,
+					'year'				=> $year,
+					'budget'			=> 0,
+					'sum_orders'		=> $_sum_orders,
+					'actual_cost'		=> $_actual_cost,
+				);
+
+				$sort_year[] = $year;
 			}
 
 			if($values)
@@ -1686,6 +1717,13 @@
 				array_multisort($sort_year, SORT_ASC, $values);
 			}
 
+
+			foreach ($values as &$entry)
+			{
+				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
+			}
+
+//_debug_array( $values);die();
 			return $values;
 		}
 

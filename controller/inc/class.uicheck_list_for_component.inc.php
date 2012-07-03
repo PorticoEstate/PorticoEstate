@@ -263,7 +263,6 @@
 				)
 			);
 
-
 			phpgwapi_yui::load_widget('paginator');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -473,7 +472,6 @@
 				else
 					$ifc = false;
 			}
-
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
 			if(count($bim_types)>0)

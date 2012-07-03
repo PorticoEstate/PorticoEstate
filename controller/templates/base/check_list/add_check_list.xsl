@@ -25,9 +25,64 @@
 <!-- ==================  ADD CHECKLIST  ========================= -->
 
 <div id="main_content" class="medium">
-	
-	<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
-	<h2>Bygg: <xsl:value-of select="location_array/loc1_name"/></h2>
+	<div id="check-list-heading">
+		<div class="box-1">
+			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+			<xsl:choose>
+				<xsl:when test="type = 'component'">
+					<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="location_level = 1">
+							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+						</xsl:when>
+						<xsl:otherwise>
+								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		<div class="box-2 select-box">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (år)
+			</a>
+			<a class="last">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;month=</xsl:text>
+					<xsl:value-of select="current_month_nr"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (måned)
+			</a>
+		</div>
+	</div>
 		
 	<div id="check_list_menu">
 		<a href="#" class="active">

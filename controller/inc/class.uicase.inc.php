@@ -36,6 +36,7 @@
 	phpgw::import_class('controller.socontrol');
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
+	include_class('controller', 'component', 'inc/model/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 			
 	class controller_uicase extends phpgwapi_uicommon
@@ -47,16 +48,15 @@
 		private $so_check_item;
 		
 		var $public_functions = array(
-									'register_case' 			=> true,
-									'save_case' 				=> true,
-									'create_case_message' 		=> true,
+									'register_case' 				=> true,
+									'save_case' 						=> true,
+									'create_case_message' 	=> true,
 									'view_case_message' 		=> true,
-									'register_case_message' 	=> true,
-									'register_measurement_case' => true,
-									'updateStatusForCases' 		=> true,
-									'delete_case' 				=> true,
-									'close_case' 				=> true,
-									'open_case' 				=> true
+									'send_case_message' 		=> true,
+									'updateStatusForCases' 	=> true,
+									'delete_case' 					=> true,
+									'close_case' 						=> true,
+									'open_case' 						=> true
 								);
 
 		function __construct()
@@ -83,17 +83,7 @@
 			$control = $this->so_control->get_single( $control_id );
 			
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
-						
-			/*
-			
-			$db_check_item = $this->so_check_item->get_db();
-			$db_check_item->transaction_begin();
-
-			$db_check_item->transaction_commit();
-			$db_check_item->transaction_abort();
-			
-			*/
-			
+							
 			// Makes a check item if there isn't already made one  
 			if($check_item == null){
 				$new_check_item = new controller_check_item();
@@ -185,37 +175,60 @@
 
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
-			
-			$location_code = $check_list->get_location_code();
 
-			$level = count(explode('-',location_code));
-			
-			if($level == 1)
-				$buildings_array = execMethod('property.solocation.get_children',$location_code);
-			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			$building = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-			
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
 			$categories	= $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
 
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			$component_id = $check_list->get_component_id();
+			
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    					
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+							
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$type = 'component';
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+
+			$level = $this->get_location_level();
+			
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
 			
 			$data = array
 			(
-				'location_array'	=> $location_array,
-				'categories'			=> $categories,
-				'check_list'			=> $check_list->toArray(),
-				'control'				=> $control->toArray(),
-				'check_items_and_cases'	=> $check_items_and_cases,
-				'buildings_array'		=> $buildings_array,
-				'building'				=> $building,
-				'date_format' 			=> $date_format
+				'categories'							=> $categories,
+				'check_list'							=> $check_list->toArray(),
+				'control'									=> $control->toArray(),
+				'check_items_and_cases'		=> $check_items_and_cases,
+				'date_format' 						=> $date_format,
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'building_location_code'	=> $building_location_code,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'type' 										=> $type,
+				'location_level' 					=> $level
 			);
-			
+						
 			if(count( $buildings_array ) > 0){
 				$data['buildings_array']  = $buildings_array;
 			}else{
@@ -232,7 +245,7 @@
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/create_case_message'), $data);
 		}
 		
-		function register_case_message(){
+		function send_case_message(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
@@ -244,12 +257,8 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
-			$location_code = $check_list->get_location_code();
-				 
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-
 			$message_details = "Kontroll: " .  $control->get_title() . "\n";
 			
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -278,13 +287,13 @@
 			
 			$ticket = array
 			(
-				'origin_id' 		=> $location_id,
+				'origin_id' 			=> $location_id,
 				'origin_item_id'	=> $check_list_id, 
 				'location_code' 	=> $location_code,
-				'cat_id'			=> $message_cat_id,
-				'priority'			=> $priority, //valgfri (1-3)
-				'title'				=> $message_title,
-				'details'			=> $message_details,
+				'cat_id'					=> $message_cat_id,
+				'priority'				=> $priority, //valgfri (1-3)
+				'title'						=> $message_title,
+				'details'					=> $message_details,
 				'file_input_name'	=> 'file' // navn på felt som inneholder fil
 			);
 			
@@ -315,13 +324,7 @@
 						
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
-			
-			$location_code = $check_list->get_location_code();
-				 
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-
+		
 			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id, "return_array");
 						
 			$botts = CreateObject('property.botts',true);
@@ -331,17 +334,52 @@
 			
 			$category = $catsObj->return_single($message_ticket["cat_id"]);
 			
+			$component_id = $check_list->get_component_id();
+			
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+						
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    					
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+							
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+			
+			$level = $this->get_location_level($location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+			
 			$data = array
 			(
-				'control'							=> $control->toArray(),
-				'message_ticket_id'					=> $message_ticket_id,
+				'control'									=> $control->toArray(),
+				'message_ticket_id'				=> $message_ticket_id,
 				'message_ticket'					=> $message_ticket,
-				'category'							=> $category[0]['name'],
+				'category'								=> $category[0]['name'],
 				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
 				'control_array'						=> $control->toArray(),
-				'check_list'						=> $check_list->toArray(),
-				'check_items_and_cases'				=> $check_items_and_cases,
-				'date_format' 						=> $date_format
+				'check_list'							=> $check_list->toArray(),
+				'check_items_and_cases'		=> $check_items_and_cases,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'date_format' 						=> $date_format,
+				'type'				 						=> $type,
+				'building_location_code' 	=> $building_location_code,
+				'location_level'				 	=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -439,6 +477,33 @@
 			else{
 				return json_encode( array( "status" => "false" ) );
 			}
+		}
+		
+		function get_location_level($location_code)
+		{
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}
+
+		function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
 		}
 		
 		public function query(){}
