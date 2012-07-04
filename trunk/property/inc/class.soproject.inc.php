@@ -1621,7 +1621,6 @@
 				$orders[$year][$this->db->f('id')]['amount'] = $_amount;
 			}
 
-
 			$sort_year = array();
 			$values = array();
 
@@ -1634,21 +1633,30 @@
 				$project_budget[$this->db->f('year')] = (int)$this->db->f('budget');
 			}
 			
+//_debug_array($orders);die();
 			foreach ($project_budget as $year => $budget)
 			{
+				$_sum_orders = 0;
+				$_actual_cost = 0;
+
 				if(isset($orders[$year]))
 				{
-					
-					$_sum_orders = 0;
-					$_actual_cost= 0;
-
 					foreach ($orders[$year] as $order_id => $order)
 					{
 						$_sum_orders += $order['amount'];
-						$_sum_orders -= $order['actual_cost'];
+			//			$_sum_orders -= $order['actual_cost'];
 
 						if($budget > 0)
 						{
+							if($order['actual_cost'] > 0)
+							{
+								$_sum_orders -= $order['actual_cost'];
+							}
+							else
+							{
+								$_sum_orders += $order['actual_cost'];							
+							}
+
 							$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
 						}
 						else // income
@@ -1660,12 +1668,6 @@
 					}
 
 					unset($orders[$year]);
-
-				}
-				else
-				{
-					$_sum_orders = 0;
-					$_actual_cost = 0;
 				}
 
 				$values[] = array
@@ -1679,7 +1681,7 @@
 
 				$sort_year[] = $year;
 			}
-
+//_debug_array($values);die();
 			unset($order);
 			unset($order_id);
 			unset($year);
