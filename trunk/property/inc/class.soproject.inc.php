@@ -1555,24 +1555,28 @@
 
 			$sql = "SELECT id AS order_id FROM fm_workorder WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$orders = array();
+
 			$_orders = array();
 			while ($this->db->next_record())
 			{
 				$_orders[] = $this->db->f('order_id');
 			}
 
-			foreach($_orders as $_order)
+
+			$orders = array();
+			if($_orders)
 			{
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilagoverf WHERE pmwrkord_code = '{$_order}' GROUP BY periode ORDER BY periode ASC ";
+				$_order_filter = implode(',', $_orders);
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, pmwrkord_code AS order, periode FROM fm_ecobilagoverf WHERE pmwrkord_code IN ({$_order_filter}) GROUP BY pmwrkord_code, periode ORDER BY periode ASC ";
+
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
 					$year = substr( $this->db->f('periode'), 0, 4 );
-					$orders[$year][$_order]['actual_cost'] += $this->db->f('actual_cost');
+					$orders[$year][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
 				}
 
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, periode FROM fm_ecobilag WHERE pmwrkord_code = '{$_order}' GROUP BY periode ORDER BY periode ASC ";
+				$sql = "SELECT sum(godkjentbelop) AS actual_cost, pmwrkord_code AS order, periode FROM fm_ecobilag WHERE pmwrkord_code IN ({$_order_filter}) GROUP BY pmwrkord_code, periode ORDER BY pmwrkord_code, periode ASC ";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
@@ -1581,7 +1585,7 @@
 					{
 						$year = date('Y');
 					}
-					$orders[$year][$_order]['actual_cost'] += $this->db->f('actual_cost');
+					$orders[$year][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
 				}
 			}
 
@@ -1633,7 +1637,6 @@
 				$project_budget[$this->db->f('year')] = (int)$this->db->f('budget');
 			}
 			
-//_debug_array($orders);die();
 			foreach ($project_budget as $year => $budget)
 			{
 				$_sum_orders = 0;
@@ -1661,6 +1664,15 @@
 						}
 						else // income
 						{
+							if($order['actual_cost'] > 0)
+							{
+								$_sum_orders += $order['actual_cost'];
+							}
+							else
+							{
+								$_sum_orders -= $order['actual_cost'];							
+							}
+
 							$_sum_orders = $_sum_orders < 0 ? $_sum_orders : 0;						
 						}
 						
