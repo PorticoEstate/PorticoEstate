@@ -635,14 +635,14 @@
 				$_hits = $this->db->f('hits');
 				$sum_hits += $_hits;
 
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_combined_cost;
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_combined_cost;
+				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
-			//_debug_array($obligations);die();
+//			_debug_array($obligations);
 
 			//----------- ad hoc order
 			$filtermethod = "WHERE fm_tts_tickets.vendor_id > 0 AND budget > 0";
@@ -701,8 +701,8 @@
 				$_hits = $this->db->f('hits');
 				$sum_hits += $_hits;
 
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
+				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -854,7 +854,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 			
-//-------start check paid-----------
+//-------start check paid workorder-----------
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
 				. " FROM fm_ecobilagoverf"
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
@@ -873,6 +873,7 @@
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 				$sum_actual_cost += $_actual_cost;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] -= $_actual_cost;
 				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[(int)$this->db->f('district_id')] = true;
@@ -881,7 +882,7 @@
 		
 //-------end check paid-----------
 
-//-------start check active invoices-----------
+//-------start check active invoices, workorder-----------
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
 				. " FROM fm_ecobilag"
 				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
@@ -900,6 +901,7 @@
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 				$sum_actual_cost += $_actual_cost;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] -= $_actual_cost;
 				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[(int)$this->db->f('district_id')] = true;
@@ -962,7 +964,7 @@
 			}
 
 
-//-------start check paid-----------
+//-------start check paid service agreement-----------
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilagoverf.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
 				. " FROM fm_ecobilagoverf"
@@ -990,7 +992,7 @@
 
 //-------end check paid-----------
 
-//-------start check active invoices-----------
+//-------start check active invoices service agreement-----------
 
 			$filtermethod = '';
 			$where = 'WHERE';
