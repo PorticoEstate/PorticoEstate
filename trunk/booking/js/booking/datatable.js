@@ -168,10 +168,10 @@ YAHOO.booking.initializeDataTable = function()
 	
 	var initialRequest = History.getBookmarkedState("state") || getState();
 	History.register("state", initialRequest, handleHistoryNavigation);
-	History.onReady(function() {
-		var state = YAHOO.util.History.getCurrentState('state');
-		handleHistoryNavigation(state);
-	});
+//	History.onReady(function() {
+//		var state = YAHOO.util.History.getCurrentState('state');
+//		handleHistoryNavigation(state);
+//	});
 	History.initialize("yui-history-field", "yui-history-iframe");
 };
 
