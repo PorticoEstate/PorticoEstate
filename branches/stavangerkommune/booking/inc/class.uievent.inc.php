@@ -94,6 +94,10 @@
 							'label' => lang('Activity'),
 						),
 						array(
+							'key' => 'customer_organization_name',
+							'label' => lang('Organization'),
+						),
+						array(
 							'key' => 'contact_name',
 							'label' => lang('Contact'),
 						),
