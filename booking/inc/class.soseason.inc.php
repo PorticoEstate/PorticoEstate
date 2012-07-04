@@ -190,6 +190,8 @@
 				"bb_season s2 JOIN bb_season_resource AS sr2 ON(s2.id=sr2.season_id) ".
 				"WHERE (s1.from_ <= s2.to_) AND (s2.from_ <= s1.to_) ".
 				"AND sr1.resource_id=sr2.resource_id ".
+				"AND s1.active=1".
+				"AND s2.active=1".
 				"AND s1.id=$season_id";
 
 			$this->db->query("SELECT 1 FROM bb_season_boundary AS sb1 ".
