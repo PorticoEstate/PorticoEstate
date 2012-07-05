@@ -807,3 +807,17 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.40';
+	function controller_upgrade0_1_40()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+	$GLOBALS['phpgw_setup']->oProc->DropTable('controller_control_area');
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.41';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
