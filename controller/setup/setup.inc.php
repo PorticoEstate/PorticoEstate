@@ -45,7 +45,6 @@
 		'controller_check_item',
 		'controller_check_list',
 		'controller_procedure',
-		'controller_control_area',
 		'controller_control_group_list',
 		'controller_control_location_list',
 		'controller_control_component_list',
