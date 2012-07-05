@@ -511,6 +511,10 @@
 
 					foreach($data['entity_data'] as $_entity_id => $_entity_info)				
 					{
+						if(!$_entity_id)
+						{
+							continue;
+						}
 						$entity_lookup = $soadmin_entity->read_single($_entity_id);
 						$data['lookup_entity'][] = array
 						(
