@@ -215,6 +215,9 @@
 				$cols_return[] 				= 'ecodimb';
 				$cols.= ",fm_workorder.contract_sum";
 				$cols_return[] 				= 'contract_sum';
+				$cols.= ",fm_workorder.approved";
+				$cols_return[] 				= 'approved';
+
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
@@ -460,6 +463,9 @@
 						break;
 					case 'budget':
 						$order_field = ", fm_workorder.budget";
+						break;
+					case 'approved':
+						$order_field = ", fm_workorder.approved";
 						break;
 					default:
 						$order_field = ", {$order}";
