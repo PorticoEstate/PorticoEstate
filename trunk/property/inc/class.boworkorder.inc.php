@@ -229,6 +229,13 @@
 					'sortable'	=> true
 				);
 
+			$columns['approved'] = array
+				(
+					'id'		=> 'approved',
+					'name'		=> lang('approved'),
+					'sortable'	=> true
+				);
+
 			return $columns;
 		}
 
