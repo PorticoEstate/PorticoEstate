@@ -402,6 +402,11 @@
 							'text'	=> lang('Workorder Detail Categories'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'wo_hours') )
 						),
+						'workorder_recalculate'	=> array
+						(
+							'text'	=> lang('Workorder recalculate actual cost'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate') )
+						),
 						'ticket'	=> array
 						(
 							'text'	=> lang('helpdesk'),

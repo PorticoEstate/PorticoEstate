@@ -805,4 +805,14 @@
 			}
 			return $ser_list;
 		}
+
+		/**
+		* Recalculate actual cost from payment history for all workorders
+		*
+		* @return void
+		*/
+		function recalculate()
+		{
+			$this->so->recalculate();
+		}
 	}

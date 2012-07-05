@@ -1512,4 +1512,23 @@
 				$this->db->transaction_commit();
 			}
 		}
+
+		/**
+		* Recalculate actual cost from payment history for all workorders
+		*
+		* @return void
+		*/
+
+		function recalculate()
+		{
+			$this->db->query("SELECT id FROM fm_workorder",__LINE__,__FILE__);
+
+			$orders = array();
+			while ($this->db->next_record())
+			{
+				$orders[$this->db->f('id')] = true;
+			}
+
+			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
+		}
 	}

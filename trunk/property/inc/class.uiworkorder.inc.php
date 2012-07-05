@@ -66,7 +66,8 @@
 				'delete'		=> true,
 				'view_file'		=> true,
 				'columns'		=> true,
-				'add_invoice'	=> true
+				'add_invoice'	=> true,
+				'recalculate'	=> true
 			);
 
 		function property_uiworkorder()
@@ -2391,6 +2392,48 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/button/assets/skins/sam/button.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
+		}
+
+		function recalculate()
+		{
+			if ( !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>8, 'acl_location'=> $this->acl_location));
+			}
+
+			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
+
+			$link_data = array
+			(
+				'menuaction' => 'property.uiworkorder.index'
+			);
+
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			{
+				$this->bo->recalculate();
+				$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
+
+			$data = array
+				(
+					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'delete_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.recalculate')),
+					'lang_confirm_msg'			=> lang('do you really want to recalculate all actual cost for all workorders'),
+					'lang_yes'					=> lang('yes'),
+					'lang_yes_statustext'		=> lang('recalculate'),
+					'lang_no_statustext'		=> lang('Back to the list'),
+					'lang_no'					=> lang('no')
+				);
+
+			$appname					= lang('workorder');
+			$function_msg				= lang('delete workorder');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
+		
 		}
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
