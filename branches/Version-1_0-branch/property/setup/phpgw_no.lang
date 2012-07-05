@@ -27,11 +27,11 @@ activity has been saved	property	no	Aktivitet er lagret
 activity id	property	no	Aktivitet ID
 activity num	property	no	Aktivitet num
 actor	property	no	Aktør
-actual cost	property	no	Faktisk kostnad
-actual_cost	property	no	Faktisk kostnad
-actual cost changed	property	no	Faktisk kostnad er endret
-actual cost has been updated	property	no	Faktisk kostnad er oppdatert
-actual cost - paid so far	property	no	Faktisk betalt - pr dd
+actual cost	property	no	Betalt
+actual_cost	property	no	Betalt
+actual cost changed	property	no	Betalt sum er endret
+actual cost has been updated	property	no	Betalt sum er oppdatert
+actual cost - paid so far	property	no	Betalt sum - pr dd
 add a apartment	property	no	Legg til leilighet
 add a attrib	property	no	Legg til en attibutt
 add a budget account	property	no	Legg til en kostnadsart
@@ -682,7 +682,7 @@ enter a standard prefix for the id of the equipments	property	no	Angi et standar
 enter a statustext for the inputfield in forms	property	no	Angi en statustekst for inputfeltet
 enter a value for the labour cost	property	no	angi arbeids kostnader
 enter a value for the material cost	property	no	angi materialkostnader
-Enter actual cost	property	no	Angi faktisk kostnad
+Enter actual cost	property	no	Angi betalt sum
 enter building id	property	no	angi bygnings ID
 enter document name	property	no	angi dokument ID
 enter document title	property	no	angi dokument tittel

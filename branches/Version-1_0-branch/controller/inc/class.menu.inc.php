@@ -83,14 +83,14 @@
 						'text'	=> lang('Control_group'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group.index') ),
 						'image'	=> array('property', 'location_1'),
-/*						'children' => array(
+						'children' => array(
 											'component_for_control_group' => array
 											(
 												'text'	=> lang('component'),
 												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group_component.index') ),
 												'image'	=> array('property', 'entity_1')
 											)
-										)*/
+										)
 					),
 					'procedure' => array
 					(

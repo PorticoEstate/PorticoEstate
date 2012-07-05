@@ -343,67 +343,6 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
-	/* 
-	 * TROR IKKE VI BRUKER DENNE: TORSTEIN 18.06.2012
-	 function get_agg_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $control_id = 0 ){
-				
-		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(cl.num_open_cases) ";
-		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
-		$sql .= "WHERE cl.location_code = '{$location_code}' ";
-		
-		if($control_id > 0)
-		{
-			$sql .= "AND c.id = {$control_id} ";
-		}
-		
-		$sql .= "AND c.repeat_type < 2 ";
-		$sql .= "AND cl.control_id = c.id ";
-		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
-		$sql .= "GROUP BY c.id, title, start_date, end_date, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
-		$sql .= "ORDER BY c.id";
-
-		$this->db->query($sql);
-		
-		$control_id = 0;
-		$controls_array = array();
-		$check_list_array = array();
-		while ($this->db->next_record()) {
-			
-			if( $this->db->f('c_id', true) != $control_id ){
-				if($control_id != 0){
-					$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
-					$check_list_array = array();
-				}
-				
-				$control_array = array(
-																"id" 			  			=> $this->unmarshal($this->db->f('c_id', true), 'int'),
-																"title" 		  		=> $this->unmarshal($this->db->f('title', true), 'string'),
-																"repeat_type" 	  => $this->unmarshal($this->db->f('repeat_type', true), 'int'),
-																"repeat_interval" => $this->unmarshal($this->db->f('repeat_interval', true), 'int'),
-																"start_date" 			=> $this->unmarshal($this->db->f('start_date', true), 'int'),
-																"end_date" 				=> $this->unmarshal($this->db->f('end_date', true), 'int')
-															);
-			}
-
-			$check_list_array[] = array(
-										"cl_id" 	=> $this->db->f('cl_id', true),
-										"deadline" 	=> $this->db->f('deadline', true),
-										"count" 	=> $this->db->f('count', true)
-									);
-			
-			$control_id = $this->db->f('c_id', true);
-		}		
-		
-		if( !empty( $control_array ) ){
-			$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
-			
-			return $controls_array;
-		}else {
-			return null;
-		}	
-	}
-*/ 
-	
 	function get_num_open_cases_for_control( $cl_criteria, $from_date_ts, $to_date_ts ){
 		
 		$sql = 	"SELECT c.id as c_id, sum(cl.num_open_cases) as count ";

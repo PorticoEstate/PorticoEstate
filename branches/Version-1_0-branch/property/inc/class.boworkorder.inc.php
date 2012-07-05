@@ -229,6 +229,13 @@
 					'sortable'	=> true
 				);
 
+			$columns['approved'] = array
+				(
+					'id'		=> 'approved',
+					'name'		=> lang('approved'),
+					'sortable'	=> true
+				);
+
 			return $columns;
 		}
 
@@ -804,5 +811,15 @@
 				$user['selected'] = $user['id'] == $selected ? true : false;
 			}
 			return $ser_list;
+		}
+
+		/**
+		* Recalculate actual cost from payment history for all workorders
+		*
+		* @return void
+		*/
+		function recalculate()
+		{
+			$this->so->recalculate();
 		}
 	}
