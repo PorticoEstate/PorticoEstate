@@ -215,6 +215,9 @@
 				$cols_return[] 				= 'ecodimb';
 				$cols.= ",fm_workorder.contract_sum";
 				$cols_return[] 				= 'contract_sum';
+				$cols.= ",fm_workorder.approved";
+				$cols_return[] 				= 'approved';
+
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
@@ -460,6 +463,9 @@
 						break;
 					case 'budget':
 						$order_field = ", fm_workorder.budget";
+						break;
+					case 'approved':
+						$order_field = ", fm_workorder.approved";
 						break;
 					default:
 						$order_field = ", {$order}";
@@ -1511,5 +1517,24 @@
 			{
 				$this->db->transaction_commit();
 			}
+		}
+
+		/**
+		* Recalculate actual cost from payment history for all workorders
+		*
+		* @return void
+		*/
+
+		function recalculate()
+		{
+			$this->db->query("SELECT id FROM fm_workorder",__LINE__,__FILE__);
+
+			$orders = array();
+			while ($this->db->next_record())
+			{
+				$orders[$this->db->f('id')] = true;
+			}
+
+			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
 		}
 	}

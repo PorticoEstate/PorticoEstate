@@ -1664,13 +1664,7 @@
 			}
 
 			$value_remainder = $values['sum'];
-			if(isset($values['sum_workorder_actual_cost']))
-			{
-				$value_remainder = $values['sum'] - $values['sum_workorder_actual_cost'];
-			}
-			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
-			$value_remainder = number_format($value_remainder, 0, ',', ' ');
-//			$values['planned_cost']  = number_format($values['planned_cost'], 0, ',', ' ');
+
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
@@ -1690,8 +1684,15 @@
 				foreach($content_budget as & $b_entry)
 				{
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
+					$value_remainder -= $b_entry['sum_orders'];
+					$value_remainder -= $b_entry['actual_cost'];
 				}
 			}
+
+			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
+			$value_remainder = number_format($value_remainder, 0, ',', ' ');
+
+
 //_debug_array($content_budget);die();
 			$datavalues[0] = array
 				(
@@ -1733,9 +1734,10 @@
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+												//		array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												//		array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+												//		array('key' => 'contract_sum','label'=>lang('contract sum'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 												//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
