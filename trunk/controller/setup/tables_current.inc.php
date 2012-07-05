@@ -114,16 +114,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_area' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'title' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'controller_control_group_list' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
