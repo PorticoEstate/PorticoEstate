@@ -1649,9 +1649,9 @@
 						$_sum_orders += $order['amount'];
 			//			$_sum_orders -= $order['actual_cost'];
 
-						if($budget > 0)
+						if($budget >= 0)
 						{
-							if($order['actual_cost'] > 0)
+							if($order['actual_cost'] >= 0)
 							{
 								$_sum_orders -= $order['actual_cost'];
 							}
@@ -1664,7 +1664,7 @@
 						}
 						else // income
 						{
-							if($order['actual_cost'] > 0)
+							if($order['actual_cost'] >= 0)
 							{
 								$_sum_orders += $order['actual_cost'];
 							}
@@ -1701,6 +1701,7 @@
 			reset($orders);
 
 			//remaining
+//_debug_array($orders);
 			foreach ($orders as $year => $_orders)
 			{
 				$_sum_orders = 0;
@@ -1709,8 +1710,18 @@
 				foreach ($_orders as $order_id => $order)
 				{
 					$_sum_orders += $order['amount'];
-					$_sum_orders -= $order['actual_cost'];
-					$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
+					
+					if($order['actual_cost'] > 0 && ($order['amount'] - $order['actual_cost']) > 0)
+					{
+						$_sum_orders -= $order['actual_cost'];
+						$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
+					}
+					else if($order['actual_cost'] < 0 && ($order['amount'] - $order['actual_cost']) < 0)//income
+					{
+						$_sum_orders -= $order['actual_cost'];
+						$_sum_orders = $_sum_orders < 0 ? $_sum_orders : 0;
+					}
+
 					$_actual_cost += $order['actual_cost'];
 				}
 
