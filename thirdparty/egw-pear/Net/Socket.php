@@ -19,7 +19,10 @@
 //
 // $Id: Socket.php,v 1.28 2006/12/13 21:32:03 cweiske Exp $
 
-require_once 'PEAR.php';
+if(!include_once 'PEAR.php')
+{
+	throw new Exception('missing pear package to run felamimail');
+}
 
 define('NET_SOCKET_READ',  1);
 define('NET_SOCKET_WRITE', 2);
