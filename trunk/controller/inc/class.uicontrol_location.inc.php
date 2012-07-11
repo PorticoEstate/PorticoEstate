@@ -411,9 +411,6 @@
 
 			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
 
-/*			$default_value = array ('id'=>'','name'=>lang('select'));
-			array_unshift($category_list,$default_value);
-*/
 			return $category_list;
 		}
 
