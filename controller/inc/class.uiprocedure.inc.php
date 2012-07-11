@@ -60,12 +60,12 @@
 		{
 			parent::__construct();
 
-			$this->so = CreateObject('controller.soprocedure');
+			$this->so = CreateObject('controller.soprocedure');			
 			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			
 			$config	= CreateObject('phpgwapi.config','controller');
@@ -76,7 +76,6 @@
 
 		public function index()
 		{
-			//self::set_active_menu('controller::control_item2::control_item_list2');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -164,7 +163,6 @@
 					)
 				),
 			);
-//_debug_array($data);
 
 			self::render_template_xsl(array( 'procedure/procedures_datatable', 'datatable' ), $data);
 		}
