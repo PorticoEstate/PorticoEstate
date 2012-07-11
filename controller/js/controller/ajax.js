@@ -48,25 +48,7 @@ $(document).ready(function(){
 		
 		 window.location.href = requestUrl;
     });
-	
-	/* ================================  FILTERS  ================================== */
-	
-	$("#filter-repeat_type").change(function () {
-      var repeat_type = $(this).val();
-	  var thisForm = $(this).closest("form");
-		 
-	  $(thisForm).find("input[name=repeat_type]").val(repeat_type);
-	  $(thisForm).submit();
-	});
-	
-	$("#filter-role").change(function () {
-	  var role = $(this).val();
-	  var thisForm = $(this).closest("form");
 		
-	  $(thisForm).find("input[name=role]").val(role);
-	  $(thisForm).submit();
-	});
-	
 	/* ================================  CONTROL LOCATION ================================== */
 	
 	// Update location category based on location type
@@ -142,7 +124,6 @@ $(document).ready(function(){
          		  	}
 			  }  
 			});
-			
     });
 
 
@@ -280,7 +261,8 @@ $(document).ready(function(){
 	
 	/* ================================  CONTROL AREA ================================== */
 	
-	// When control area is selected, control groups are fetched from db and control select list is populated
+	/* POPULATE CONTROL GROUP SELECT LIST 
+	 * Fetches control groups from db from selected control area populates control group select list */
 	$("#control_area").change(function () {
 		 var control_area_id = $(this).val();
 		 if(control_area_id == '')
@@ -327,7 +309,7 @@ $(document).ready(function(){
 	});
 	
 	/* ================================  CONTROL ITEM ================================== */
-	
+		
 	if( $("#frm_control_items").length > 0 ){
 		var check_box_arr = $("#frm_control_items").find("input[type='checkbox']");
 		
@@ -375,7 +357,7 @@ $(document).ready(function(){
 	
 	/* =========================  CONTROL OPTION ======================================== */
 	  
-	// Changes control type location level between building and property in search location select box
+	// SHOW CONTROL OPTION PANEL
 	$(".control_item_type").live("click", function(){
 		var thisBtn = $(this).find(".btn");
 		var thisRadio = $(this).find("input[type=radio]");
@@ -402,11 +384,13 @@ $(document).ready(function(){
 			$("#add_control_item_option_panel").slideUp(500);
 		}
 	});
-	
+
+	// DELETE CONTROL OPTION FROM CHOSEN LIST
 	$("#control_item_options li .delete").live("click", function(e){
 		$(this).closest("li").remove();
 	});
-	
+
+	// ADD OPTION VALUE TO OPTION LIST	
 	$("#add_control_item_list_value input[type=button]").live("click", function(e){
 		e.preventDefault();
 		
@@ -431,88 +415,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	/* =========================  CONTROL  =============================================== */
-	
-	$("#control_id").change(function () {
-		var control_id = $(this).val();
-  		$("#hidden_control_id").val( control_id );
-    });
-
-	$("#frm_save_control_details input").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
-		
-	$("#frm_save_control_details select").focus(function(e){
-		$("#frm_save_control_details").find(".focus").removeClass("focus");
-		$(this).addClass("focus");
-	});
-	
-	// SAVE CONTROL DETAILS
-	$("#frm_save_control_details").submit(function(e){
-		
-		var thisForm = $(this);
-
-		var $required_input_fields = $(this).find(".required");
-		var status = true;
-	
-		// Checking that required fields (fields with class required) is not null
-	    $required_input_fields.each(function() {
-	    	
-	    	if($(this).val() == ''){
-	    		var nextElem = $(this).next();
-	    		
-	    		if( !$(nextElem).hasClass("input_error_msg") )
-	    			$(this).after("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");
-	    			    		
-	    		status = false;
-	    	}else{
-	    		var nextElem = $(this).next();
-
-	    		if( $(nextElem).hasClass("input_error_msg") )
-	    			$(nextElem).remove();
-	    	}
-	    });	
-
-	    if( status ){
-    		var saved_control_area_id = $(thisForm).find("input[name='saved_control_area_id']").val();
-    		var new_control_area_id = $("#control_area_id").val();
-
-    		if(saved_control_area_id != '' & saved_control_area_id != new_control_area_id)
-    		{
-    			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
-    								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
-    			if (!answer){
-    				e.preventDefault();
-    			}
-    		}
-	    }else{
-	    	e.preventDefault();
-	    }
-	    	
-	});
-	
-	/* HELP TEXT */
-	$("#control_details input").focus(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeIn(300);
-	});
-	
-	$("#control_details input").focusout(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeOut(300);
-	});
-	
-	$("#control_details select").focus(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeIn(300);
-	});
-	
-	$("#control_details select").focusout(function(e){
-		var wrpElem = $(this).parents("dd");
-		$(wrpElem).find(".help_text").fadeOut(300);
-	});
-	
+	/* Virker som at denne ikke er i bruk. Torstein: 11.07.12
 	$(".frm_save_control_item").live("click", function(e){
 		e.preventDefault();
 		var thisForm = $(this);
@@ -536,6 +439,90 @@ $(document).ready(function(){
 				}
 			});
 	});
+	*/
+	
+	
+	/* =========================  CONTROL  ===================== */
+	
+	// SAVE CONTROL DETAILS
+	$("#frm_save_control_details").submit(function(e){
+		
+		var thisForm = $(this);
+		var $required_input_fields = $(this).find(".required");
+		var status = true;
+	
+		// Checking that required fields (fields with class required) is not null
+	    $required_input_fields.each(function() {
+	    	
+	    	if($(this).val() == ''){
+	    		var nextElem = $(this).next();
+	    		if( !$(nextElem).hasClass("input_error_msg") )
+	    			$(this).after("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");
+	    			    		
+	    		status = false;
+	    	}else{
+	    		var nextElem = $(this).next();
+	    		if( $(nextElem).hasClass("input_error_msg") )
+	    			$(nextElem).remove();
+	    	}
+	    });	
+
+	    if( status ){
+    		var saved_control_area_id = $(thisForm).find("input[name='saved_control_area_id']").val();
+    		var new_control_area_id = $("#control_area_id").val();
+
+    		if(saved_control_area_id != '' & saved_control_area_id != new_control_area_id)
+    		{
+    			var answer = confirm("Du har endret kontrollområde til kontrollen. " +
+    								 "Hvis du lagrer vil kontrollgrupper og kontrollpunkter til kontrollen bli slettet.")
+    			if (!answer){
+    				e.preventDefault();
+    			}
+    		}
+	    }else{
+	    	e.preventDefault();
+	    }
+	    	
+	});
+	
+	// HELP TEXT ON SAVING CONTROL DETAILS 
+	$("#control_details input").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
+	});
+	
+	$("#control_details input").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
+	$("#control_details select").focus(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeIn(300);
+	});
+	
+	$("#control_details select").focusout(function(e){
+		var wrpElem = $(this).parents("dd");
+		$(wrpElem).find(".help_text").fadeOut(300);
+	});
+	
+	// CONTROL DETAILS ON FOCUS FIELDS 
+	$("#frm_save_control_details input").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+		
+	$("#frm_save_control_details select").focus(function(e){
+		$("#frm_save_control_details").find(".focus").removeClass("focus");
+		$(this).addClass("focus");
+	});
+	
+	
+
+	$("#control_id").change(function () {
+		var control_id = $(this).val();
+  		$("#hidden_control_id").val( control_id );
+    });
 	
 	//=====================================  CHECKLIST  ================================
 	
@@ -912,7 +899,24 @@ $(document).ready(function(){
 	
 	/* ==================================  CALENDAR ===================================== */ 
 	
-	// Fetches info about a check list on hover status image icon
+	// CALENDAR FILTERS  
+	$("#filter-repeat_type").change(function () {
+      var repeat_type = $(this).val();
+	  var thisForm = $(this).closest("form");
+		 
+	  $(thisForm).find("input[name=repeat_type]").val(repeat_type);
+	  $(thisForm).submit();
+	});
+	
+	$("#filter-role").change(function () {
+	  var role = $(this).val();
+	  var thisForm = $(this).closest("form");
+		
+	  $(thisForm).find("input[name=role]").val(role);
+	  $(thisForm).submit();
+	});
+	
+	// SHOW INFO BOX: Fetches info about a check list on hover image icon
 	$('a.view_info_box').bind('contextmenu', function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
@@ -957,13 +961,12 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	// HIDE INFO BOX
 	$("a.view_info_box").mouseout(function(){
 		var infoBox = $(this).parent().find("#info_box");
 		
 		$(infoBox).hide();
 	});
-		
-	
 });
 
 function clear_form( form ){
