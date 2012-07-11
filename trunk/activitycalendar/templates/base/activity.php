@@ -179,11 +179,25 @@ function allOK()
 					<?php
 						if($activity->get_group_id())
 						{
-							echo activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
+						    if($activity->get_new_group())
+						    {
+							    echo activitycalendar_sogroup::get_instance()->get_description_local($activity->get_group_id());
+						    }
+						    else
+						    {
+						        echo activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
+						    }
 						}
 						else if($activity->get_organization_id())
 						{
-							echo activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
+						    if($activity->get_new_org())
+						    {
+							    echo activitycalendar_soorganization::get_instance()->get_description_local($activity->get_organization_id());
+						    }
+						    else
+						    {
+						        echo activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
+						    }
 						}
 					 ?>
 				</dd>
@@ -499,9 +513,16 @@ function allOK()
 				</dt>
 				<dd>
 					<?php
-					$current_group_id = $activity->get_group_id();
 					if ($editable)
 					{
+					    $current_group_id = $activity->get_group_id();
+					    if($activity->get_new_group())
+					    {
+					        echo "<input type=\"hidden\" name=\"group_id\" id=\"group_id\" value=\"".$local_group->get_id()."\" />";
+					        echo $local_group->get_name();
+					    }
+					    else
+					    {
 						?>
 						<div id="group_select">
 							<select name="group_id" id="group_id">
@@ -510,7 +531,8 @@ function allOK()
 						</div>
 						<?php if($current_group_id){?>
 							<br/><?php echo lang('edit_contact_info')?> <a href="index.php?menuaction=booking.uigroup.show&id=<?php echo $current_group_id ?>"><?php echo lang('edit_contact_info_group')?></a>
-						<?php }?>
+						<?php }
+						}?>
 						<?php
 					?>
 					<?php
@@ -518,7 +540,14 @@ function allOK()
 					else
 					{
 						if($activity->get_group_id()){
-							echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+						    if($activity->get_new_group())
+						    {
+						        echo activitycalendar_sogroup::get_instance()->get_group_name_local($activity->get_group_id());
+						    }
+						    else
+						    {
+							    echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+						    }
 						}
 					}
 					?>
@@ -535,7 +564,14 @@ function allOK()
 					<?php
 						if($activity->get_group_id())
 						{
-							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+						    if($activity->get_new_group())
+						    {
+						        echo $contpers_so->get_group_contact_name_local($activity->get_contact_person_1());
+						    }
+						    else
+						    {
+							    echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+						    }
 						}
 						else if($activity->get_organization_id())
 						{
@@ -555,7 +591,14 @@ function allOK()
 					<?php
 						if($activity->get_group_id())
 						{
-							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+						    if($activity->get_new_group())
+						    {
+						        echo $contpers_so->get_group_contact_name_local($activity->get_contact_person_2());
+						    }
+						    else
+						    {
+							    echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+						    }
 						}
 						else if($activity->get_organization_id())
 						{

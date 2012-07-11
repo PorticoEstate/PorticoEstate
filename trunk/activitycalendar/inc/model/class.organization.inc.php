@@ -121,6 +121,36 @@
 		
 		public function get_original_org_id() { return $this->original_org_id; }
 		
+	    public function set_addressnumber($addressnumber)
+		{
+			$this->addressnumber = $addressnumber;
+		}
+	
+		public function get_addressnumber()
+		{
+			return $this->addressnumber;
+		}
+		
+	    public function set_zip_code($zip_code)
+		{
+			$this->zip_code = $zip_code;
+		}
+	
+		public function get_zip_code()
+		{
+			return $this->zip_code;
+		}
+		
+	    public function set_city($city)
+		{
+			$this->city = $city;
+		}
+	
+		public function get_city()
+		{
+			return $this->city;
+		}
+		
 		public function serialize()
 		{
 			$so_org = activitycalendar_soorganization::get_instance();
@@ -134,6 +164,9 @@
 				'email'	=>	$this->get_email(),
 				'phone'	=>	$this->get_phone(),
 				'address'	=>	$this->get_address(),
+			    'addressnumber'	=>	$this->get_addressnumber(),
+			    'zip_code'	=>	$this->get_zip_code(),
+			    'city'	=>	$this->get_city(),
 				'show_in_portal' => $this->get_show_in_portal(),
 				'change_type' => lang($this->get_change_type()),
 				'transferred' => $this->get_transferred(),

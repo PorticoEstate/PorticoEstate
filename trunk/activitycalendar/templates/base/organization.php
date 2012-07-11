@@ -153,7 +153,6 @@
 			<div class="form-buttons">
 				<?php
 					if ($editable) {
-						echo '<input type="submit" name="save_organization" value="' . lang('save') . '"/>';
 						if($organization->get_original_org_id() && $organization->get_original_org_id() > 0)
 						{
 							echo '<input type="submit" name="update_organization" value="' . lang('update_org') . '"/>';

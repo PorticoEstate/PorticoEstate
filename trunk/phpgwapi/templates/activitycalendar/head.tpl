@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!-- BEGIN head -->
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=7, IE=8, IE=9, IE=10" >
 		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
 		<meta name="description" content="phpGroupWare">
 		<meta name="keywords" content="phpGroupWare">
