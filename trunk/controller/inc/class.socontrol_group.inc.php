@@ -50,11 +50,11 @@
 		}
 
 		/**
-		 * Function for adding a new control group to the database.
+		 * Insert new control group to the database.
 		 *
-		 * @param controller_control_group $control_group the control group to be added
-		 * @return int id of the new control group object
-		 */
+		 * @param $control_group the control group to be inserted
+		 * @return id of inserted control group, 0 if not successful
+		*/
 		function add(&$control_group)
 		{
 			$cols = array(
@@ -86,12 +86,11 @@
 		}
 
 		/**
-		 * Update the database values for an existing activity object.
+		 * Update a existing control group in database.
 		 *
-		 * @param $activity the activity to be updated
-		 * @return boolean true if successful, false otherwise
-		 */
-
+		 * @param $control_group the control group to be updated
+		 * @return id of updated control group, 0 if not successful
+		*/
 		function update($control_group)
 		{
 			$id = intval($control_group->get_id());
@@ -109,10 +108,10 @@
 		}
 
 		/**
-		 * Get single procedure
+		 * Get a single control group object
 		 * 
-		 * @param	$id	id of the procedure to return
-		 * @return a controller_procedure
+		 * @param	$id	id of the control group to return
+		 * @return control group object
 		 */
 		function get_single($id)
 		{
@@ -152,10 +151,8 @@
 		{
 			$results = array();
 
-			//$condition = $this->get_conditions($query, $filters,$search_option);
 			$order = $sort ? "ORDER BY $sort $dir ": '';
 
-			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 			$sql = "SELECT * FROM controller_control_group $order";
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -206,25 +203,12 @@
 				return $results;
 		}
 
-		function get_control_groups_as_objects($control_area_id, $limit)
-		{
-			$results = array();
-
-			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-
-			while ($this->db->next_record()) {
-				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
-				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
-				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
-
-				$results[] = $control_group;
-			}
-
-			return $results;
-		}
-
+		/**
+		 * Get an array of control groups within specified control area
+		 * 
+		 * @param $control_area_id control area
+		 * @return array of control groups
+		 */
 		function get_control_groups_as_array($control_area_id)
 		{
 			$results = array();
@@ -303,9 +287,6 @@
 			$tables = "controller_control_group";
 			$joins = "	{$this->left_join} fm_building_part ON (building_part_id = fm_building_part.id)";
 			$joins .= "	{$this->left_join} controller_procedure ON (controller_control_group.procedure_id = controller_procedure.id)";
-//			$joins .= "	{$this->left_join} controller_control_area ON (controller_control_group.control_area_id = controller_control_area.id)";
-			//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
-			//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 
 			if($return_count) // We should only return a count
 			{
@@ -315,12 +296,9 @@
 			{
 				$cols .= "controller_control_group.id, group_name, controller_control_group.procedure_id, controller_control_group.control_area_id as control_area_id, ";
 				$cols .= "building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title "; 
-				//$cols .= "controller_control_area.title as control_area_name ";
 			}
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
@@ -336,14 +314,19 @@
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
-				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 			}
-			//var_dump($control_group);
+
 			return $control_group;
 		}
-		
+
+		/**
+		 * Get an array of control groups within specified control area
+		 * 
+		 * @param $control_area_id control area
+		 * @return array of control group as arrays
+		 */
 		function get_control_groups_by_control_area($control_area_id)
 		{
 			$controls_array = array();
@@ -360,7 +343,6 @@
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
-				//$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
@@ -376,6 +358,12 @@
 			}
 		}
 		
+		/**
+		 * Get array with control area id and related category
+		 * 
+		 * @param $control_group_id control group
+		 * @return array of info of control area id and related category
+		*/
 		function get_control_areas_by_control_group($control_group_id)
 		{
 			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id=$control_group_id";
@@ -410,12 +398,13 @@
 			}
 
 			$joins = " {$this->left_join} controller_control_group ON (controller_control_group_component_list.control_group_id = controller_control_group.id)";
-			$joins .= " {$this->left_join} fm_bim_item ON (controller_control_group_component_list.component_id = fm_bim_item.id)";
+			$joins .= " {$this->left_join} fm_bim_item ON (controller_control_group_component_list.location_id = fm_bim_item.id)";
 			$joins .= " {$this->left_join} fm_bim_type ON (fm_bim_item.type= fm_bim_type.id)";
-			//$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+
 			$sql  = "SELECT controller_control_group.id AS control_group_id, controller_control_group.group_name AS control_group_name, fm_bim_type.name AS type_name, fm_bim_item.id AS bim_id, fm_bim_item.guid as bim_item_guid FROM controller_control_group_component_list {$joins} {$limit}";
+			
 			$controlGroupArray = array();
-			//var_dump($sql);
+			
 			$this->db->query($sql, __LINE__, __FILE__);
 			$i=1;
 			while($this->db->next_record())
@@ -431,9 +420,16 @@
 			return $controlGroupArray;
 		}
 		
+		/**
+		 * Inserts a control group component list to database
+		 * 
+		 * @param $control_group_id control group
+		 * @param $component id component id
+		 * @return void
+		 */
 		function add_component_to_control_group($control_group_id, $component_id)
 		{
-			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, component_id) values($control_group_id, $component_id)";
+			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, location_id) values($control_group_id, $location_id)";
 			$this->db->query($sql);
 		}
 		
@@ -452,6 +448,12 @@
 			return $results;
 		}
 		
+		/**
+		 * Get component_ids from control group component list 
+		 * 
+		 * @param $control_group_id control group
+		 * @return void
+		*/
 		function get_components_for_control_group($control_group_id)
 		{
 			$results = array();
