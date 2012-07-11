@@ -1,0 +1,36 @@
+compose	messenger	sv	Skriv
+compose global message	admin	sv	Skriv globalt meddelande
+compose message	messenger	sv	Skriv meddelande
+delete a message.	messenger	sv	Radera ett meddelande.
+delete selected	messenger	sv	Radera vald
+forward	messenger	sv	Vidarebefordra
+forward a message	messenger	sv	Vidarebefordra ett meddelande
+forward a message to another user.	messenger	sv	Vidarebefordra ett meddelande till en annan användare.
+forwarded	messenger	sv	Vidarebefordrad
+from	messenger	sv	Från
+global message	messenger	sv	Globalt meddelande
+i can't find the username %1 on the system	messenger	sv	Jag kan inte hitta användarnamnet %1 i systemet
+inbox	messenger	sv	Inkorg
+message from	messenger	sv	Meddelande från
+messenger	common	sv	Messenger
+new	messenger	sv	Nytt
+read a list of messages.	messenger	sv	Läs en lista på meddelanden.
+read a single message.	messenger	sv	Läs ett enstaka meddelande.
+read message	messenger	sv	Läs meddelande
+replied	messenger	sv	Besvarad
+reply	messenger	sv	Besvara
+reply to a message	messenger	sv	Besvara ett meddelande
+reply to a received message.	messenger	sv	Besvara ett mottaget meddelande
+send	messenger	sv	Skicka
+send a global message.	messenger	sv	Skicka ett globalt meddelande
+send a message to a single recipient.	messenger	sv	Skicka ett meddelande till en mottagare.
+send message to	messenger	sv	Skicka meddelande till
+sorry, %1's account is not currently active	messenger	sv	Tyvärr, %1's konto är inte aktivt just nu
+update a message status	messenger	sv	Uppdatera status för ett meddelande
+you didn't enter anything for the message	messenger	sv	Du har inte fyllt i något i meddelandet
+you have %1 new message	messenger	sv	Du har %1 nytt meddelande
+you have %1 new messages	messenger	sv	Du har %1 nya meddelanden
+you have no messages	messenger	sv	Du har inga meddelanden
+you must enter a subject	messenger	sv	Du måste ange en rubrik
+you must enter the username this message is for	messenger	sv	Du måste ange användarnamnet som meddelandet ska skickas till
+

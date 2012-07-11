@@ -1,0 +1,12 @@
+ZA	Heritage Day	24	9	0	0	0
+ZA	Day of Reconciliation	16	12	0	0	0
+ZA	Christmass Day	25	12	0	0	0
+ZA	Day of Goodwill	26	12	0	0	0
+ZA	New Year\'s Day	1	1	0	0	0
+ZA	Human Rights Day	21	3	0	0	0
+ZA	Good Friday	0	0	0	0	0
+ZA	Family Day	16	4	0	0	0
+ZA	Freedom Day	27	4	0	0	0
+ZA	Worker\'s Day	0	5	1	1	0
+ZA	Youth Day	16	6	0	0	0
+ZA	Women\'s Day	9	8	0	0	0

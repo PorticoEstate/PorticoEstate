@@ -1,0 +1,78 @@
+div.layout-center div.panel div.body
+{
+	padding: 1em;
+}
+div.layout-center div.panel div.body table
+{
+	margin: 0em 0em 0.2em 0em;
+}
+
+div.layout-center div.panel div.body table td
+{
+	padding-right: 0.4em;
+	border: none;
+}
+
+div.layout-center div.panel div.body table tr.th td, div.layout-center div.panel div.body table tr.row_on td, div.layout-center div.panel div.body table tr.row_off td
+{
+	padding: 0.2em 0.4em;
+}
+
+div.layout-center div.panel div.body table td.th_text
+{
+	color: #666;
+	font-weight: bold;
+	border: 1px solid #c0c0c0;
+	border-bottom: 1px solid #808080;
+}
+
+div.layout-center div.panel div.body table tr.row_on td, div.layout-center div.panel div.body table tr.row_off td
+{
+	border: 1px solid #c0c0c0;
+}
+
+div.layout-center div.panel div.body table tr.row_on
+{
+	background: #fafafa;
+}
+
+div.layout-center div.panel div.body table tr.row_on:hover, div.layout-center div.panel div.body table tr.row_off:hover
+{
+	background: #add8e6;
+}
+
+div.layout-center div.panel div.body div table {
+	border: 1px solid #c0c0c0;
+}
+
+div.layout-center div.panel div.body div table td {
+	padding: 0.2em 0.4em;
+	vertical-align: middle;
+}
+div.layout-center div.panel div.body div table td.th_text {
+	border: none;
+}
+
+div.layout-center div.panel div.body div table tr.row_on td, div.layout-center div.panel div.body div table tr.row_off td {
+	border: none;
+	background: #fff;
+}
+
+div.layout-center div.panel div.body div table tr.row_off td {
+	background: #eee;
+}
+
+div.layout-center div.panel div.body div table tr td input,
+div.layout-center div.panel div.body div table tr td select,
+div.layout-center div.panel div.body div table tr td textarea
+{
+	margin: 0;
+}
+
+div.layout-center div.panel div.body table.tabletab,
+div.layout-center div.panel div.body table.tabletab th,
+div.layout-center div.panel div.body table.tabletab table
+{
+	border: none;
+}
+

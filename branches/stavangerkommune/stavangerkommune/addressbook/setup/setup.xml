@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<phpgw_setup>
+	<name>addressbook</name>
+	<title>Addressbook</title>
+	<version>1.9</version>
+	<depends>
+		<on>
+			<app>api</app>
+			<version>1.9</version>
+		</on>
+	</depends>
+</phpgw_setup>

@@ -1,0 +1,539 @@
+about %1	common	pt	Sobre %1
+access	common	pt	Acesso
+access not permitted	common	pt	Acesso não autorizado
+account has been created	common	pt	Conta foi criada
+account has been deleted	common	pt	Conta foi removida
+account has been updated	common	pt	Conta foi atualizada
+acl	common	pt	ACL
+action	common	pt	Ação
+active	common	pt	Ativo
+add	common	pt	Adicionar
+add %1 category for	common	pt	Adicionar %1 categoria para
+add category	common	pt	Adicionar categoria
+add sub	common	pt	Adicionar sub
+addressbook	common	pt	Contatos
+admin	common	pt	Administrador
+administration	common	pt	Administração
+afghanistan	common	pt	AFGHANISTAN
+albania	common	pt	ALBANIA
+algeria	common	pt	ALGERIA
+all	common	pt	Todos
+american samoa	common	pt	AMERICAN SAMOA
+andorra	common	pt	ANDORRA
+angola	common	pt	ANGOLA
+anguilla	common	pt	ANGUILLA
+antarctica	common	pt	ANTARCTICA
+antigua and barbuda	common	pt	ANTIGUA AND BARBUDA
+apply	common	pt	Aplicar
+april	common	pt	Abril
+are you sure you want to delete this entry ?	common	pt	Você tem certeza que deseja remover esta entrada ?
+argentina	common	pt	ARGENTINA
+armenia	common	pt	ARMENIA
+aruba	common	pt	ARUBA
+august	common	pt	Agosto
+australia	common	pt	AUSTRALIA
+austria	common	pt	AUSTRIA
+author	common	pt	Autor
+autosave default category	common	pt	Autosave Default Category
+azerbaijan	common	pt	AZERBAIJAN
+back	common	pt	Voltar
+bad login or password	common	pt	Login ou senha incorreta
+bahamas	common	pt	BAHAMAS
+bahrain	common	pt	BAHRAIN
+bangladesh	common	pt	BANGLADESH
+barbados	common	pt	BARBADOS
+belarus	common	pt	BELARUS
+belgium	common	pt	BELGIUM
+belize	common	pt	BELIZE
+benin	common	pt	BENIN
+bermuda	common	pt	BERMUDA
+bhutan	common	pt	BHUTAN
+blocked, too many attempts	common	pt	Bloqueado, muitas tentativas
+bolivia	common	pt	BOLIVIA
+bosnia and herzegovina	common	pt	BOSNIA AND HERZEGOVINA
+botswana	common	pt	BOTSWANA
+bouvet island	common	pt	BOUVET ISLAND
+brazil	common	pt	BRAZIL
+british indian ocean territory	common	pt	BRITISH INDIAN OCEAN TERRITORY
+brunei darussalam	common	pt	BRUNEI DARUSSALAM
+bulgaria	common	pt	BULGARIA
+burkina faso	common	pt	BURKINA FASO
+burundi	common	pt	BURUNDI
+cambodia	common	pt	CAMBODIA
+cameroon	common	pt	CAMEROON
+canada	common	pt	CANADA
+cancel	common	pt	Cancelar
+cape verde	common	pt	CAPE VERDE
+categories	common	pt	Categorias
+categories for	common	pt	categorias para
+category	common	pt	Categoria
+category %1 has been added !	common	pt	Categoria %1 foi adicionada !
+category %1 has been updated !	common	pt	Categoria %1 foi atualizada !
+cayman islands	common	pt	CAYMAN ISLANDS
+central african republic	common	pt	CENTRAL AFRICAN REPUBLIC
+chad	common	pt	CHAD
+change	common	pt	Alterar
+charset	common	pt	utf-8
+chile	common	pt	CHILE
+china	common	pt	CHINA
+choose the category	common	pt	Selecione a categoria
+choose the parent category	common	pt	Selecione a categoria pai
+christmas island	common	pt	CHRISTMAS ISLAND
+clear	common	pt	Limpar
+clear form	common	pt	Limpar Formulário
+close	common	pt	Fechar
+cocos (keeling) islands	common	pt	COCOS (KEELING) ISLANDS
+colombia	common	pt	COLOMBIA
+comoros	common	pt	COMOROS
+congo	common	pt	CONGO
+congo, the democratic republic of the	common	pt	CONGO, THE DEMOCRATIC REPUBLIC OF THE
+cook islands	common	pt	COOK ISLANDS
+copy	common	pt	Copiar
+costa rica	common	pt	COSTA RICA
+cote d ivoire	common	pt	COTE D IVOIRE
+create	common	pt	Criar
+created by	common	pt	Criado Por
+croatia	common	pt	CROATIA
+cuba	common	pt	CUBA
+currency	common	pt	Moeda
+current	common	pt	Atual
+current users	common	pt	Usuários atuais
+cyprus	common	pt	CYPRUS
+czech republic	common	pt	CZECH REPUBLIC
+date	common	pt	Data
+date due	common	pt	Data Planejada
+december	common	pt	Dezembro
+default category	common	pt	Categoria Padrão
+delete	common	pt	Remover
+denmark	common	pt	DENMARK
+description	common	pt	Descrição
+detail	common	pt	Detalhe
+details	common	pt	Detalhes
+disabled	common	pt	Desabilitar
+display monday first	common	pt	Exibir Segunda primeiro
+display sunday first	common	pt	Exibir Domingo primeiro
+djibouti	common	pt	DJIBOUTI
+do you also want to delete all subcategories ?	common	pt	Você também deseja remover todas subcategorias ?
+domain	common	pt	Domínio
+domain name for mail-address, eg. "%1"	common	pt	domain name for mail-address, eg. "%1"
+domestic	common	pt	Doméstico
+dominica	common	pt	DOMINICA
+dominican republic	common	pt	DOMINICAN REPUBLIC
+done	common	pt	OK
+drag to move	common	pt	Drag to move
+e-mail	common	pt	E-Mail
+east timor	common	pt	EAST TIMOR
+ecuador	common	pt	ECUADOR
+edit	common	pt	Editar
+edit %1 category for	common	pt	Edit %1 category for
+edit categories	common	pt	Editar Categorias
+edit category	common	pt	Editar categoria
+egypt	common	pt	EGYPT
+el salvador	common	pt	EL SALVADOR
+email	common	pt	E-Mail
+email-address of the user, eg. "%1"	common	pt	endereço de e-mail do usuário, como "%1"
+enabled	common	pt	Habilitar
+end date	common	pt	Data de Fim
+end time	common	pt	Hora de Fim
+entry has been deleted sucessfully	common	pt	Entrada foi removida com sucesso
+entry updated sucessfully	common	pt	Entrada foi atualizada com sucesso
+equatorial guinea	common	pt	EQUATORIAL GUINEA
+eritrea	common	pt	ERITREA
+error	common	pt	Erro
+error creating %1 %2 directory	common	pt	Error creating %1 %2 directory
+error deleting %1 %2 directory	common	pt	Error deleting %1 %2 directory
+error renaming %1 %2 directory	common	pt	Error renaming %1 %2 directory
+estonia	common	pt	ESTONIA
+ethiopia	common	pt	ETHIOPIA
+falkland islands (malvinas)	common	pt	FALKLAND ISLANDS (MALVINAS)
+faroe islands	common	pt	FAROE ISLANDS
+fax number	common	pt	fax number
+february	common	pt	Fevereiro
+fields	common	pt	Campos
+fiji	common	pt	FIJI
+files	common	pt	Files
+filter	common	pt	Filtro
+finland	common	pt	FINLAND
+first name	common	pt	Primeiro nome
+first name of the user, eg. "%1"	common	pt	first name of the user, eg. "%1"
+first page	common	pt	Primeira página
+firstname	common	pt	Primeiro nome
+fixme!	common	pt	CORRIGIR!
+force selectbox	common	pt	Force SelectBox
+france	common	pt	FRANCE
+french guiana	common	pt	FRENCH GUIANA
+french polynesia	common	pt	FRENCH POLYNESIA
+french southern territories	common	pt	FRENCH SOUTHERN TERRITORIES
+friday	common	pt	Sexta
+ftp	common	pt	FTP
+fullname	common	pt	Nome completo
+gabon	common	pt	GABON
+gambia	common	pt	GAMBIA
+general menu	common	pt	Menu Geral
+georgia	common	pt	GEORGIA
+germany	common	pt	GERMANY
+ghana	common	pt	GHANA
+gibraltar	common	pt	GIBRALTAR
+global	common	pt	Global
+global public	common	pt	Público para todos
+go today	common	pt	Go Hoje
+grant access	common	pt	Configurar permissão
+greece	common	pt	GREECE
+greenland	common	pt	GREENLAND
+grenada	common	pt	GRENADA
+group	common	pt	Grupo
+group access	common	pt	Acesso do Grupo
+group has been added	common	pt	Grupo foi adicionado
+group has been deleted	common	pt	Grupo foi removido
+group has been updated	common	pt	Grupo foi atualizado
+group name	common	pt	nome do grupo
+group public	common	pt	Grupo Público
+groups	common	pt	Grupos
+groups with permission for %1	common	pt	Grupos com permissão para %1
+groups without permission for %1	common	pt	Grupos sem permissão para %1
+guadeloupe	common	pt	GUADELOUPE
+guam	common	pt	GUAM
+guatemala	common	pt	GUATEMALA
+guinea	common	pt	GUINEA
+guinea-bissau	common	pt	GUINEA-BISSAU
+guyana	common	pt	GUYANA
+haiti	common	pt	HAITI
+heard island and mcdonald islands	common	pt	HEARD ISLAND AND MCDONALD ISLANDS
+help	common	pt	Ajuda
+high	common	pt	Alto
+highest	common	pt	Highest
+holy see (vatican city state)	common	pt	HOLY SEE (VATICAN CITY STATE)
+home	common	pt	Início
+honduras	common	pt	HONDURAS
+hong kong	common	pt	HONG KONG
+hungary	common	pt	HUNGARY
+iceland	common	pt	ICELAND
+india	common	pt	INDIA
+indonesia	common	pt	INDONESIA
+international	common	pt	Internacional
+invalid ip address	common	pt	Endereço IP inválido
+invalid password	common	pt	Senha inválida
+iran, islamic republic of	common	pt	IRAN, ISLAMIC REPUBLIC OF
+iraq	common	pt	IRAQ
+ireland	common	pt	IRELAND
+israel	common	pt	ISRAEL
+it has been more then %1 days since you changed your password	common	pt	It has been more then %1 days since you changed your password
+it is recommended that you run setup to upgrade your tables to the current version	common	pt	It is recommended that you run setup to upgrade your tables to the current version.
+italy	common	pt	ITALY
+jamaica	common	pt	JAMAICA
+january	common	pt	January
+japan	common	pt	JAPAN
+jordan	common	pt	JORDAN
+july	common	pt	Julho
+june	common	pt	Junho
+kazakstan	common	pt	KAZAKSTAN
+kenya	common	pt	KENYA
+keywords	common	pt	Palavras-chave
+kiribati	common	pt	KIRIBATI
+korea, democratic peoples republic of	common	pt	KOREA, DEMOCRATIC PEOPLES REPUBLIC OF
+korea, republic of	common	pt	KOREA, REPUBLIC OF
+kuwait	common	pt	KUWAIT
+kyrgyzstan	common	pt	KYRGYZSTAN
+language	common	pt	Idioma
+lao peoples democratic republic	common	pt	LAO PEOPLES DEMOCRATIC REPUBLIC
+last name	common	pt	Último nome
+last name of the user, eg. "%1"	common	pt	last name of the user, eg. "%1"
+last page	common	pt	Última página
+lastname	common	pt	Último nome
+latvia	common	pt	LATVIA
+lebanon	common	pt	LEBANON
+lesotho	common	pt	LESOTHO
+liberia	common	pt	LIBERIA
+libyan arab jamahiriya	common	pt	LIBYAN ARAB JAMAHIRIYA
+license	about	pt	Licença
+liechtenstein	common	pt	LIECHTENSTEIN
+list	common	pt	Listar
+lithuania	common	pt	LITHUANIA
+local	common	pt	Local
+login	common	pt	Login
+loginid	common	pt	LoginID
+logout	common	pt	Sair
+low	common	pt	Baixo
+lowest	common	pt	Lowest
+luxembourg	common	pt	LUXEMBOURG
+macau	common	pt	MACAU
+macedonia, the former yugoslav republic of	common	pt	MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+madagascar	common	pt	MADAGASCAR
+mail domain, eg. "%1"	common	pt	mail domain, eg. "%1"
+main category	common	pt	Categoria Pricipal
+main screen	common	pt	Janela Principal
+maintainer	about	pt	Mantenedor
+malawi	common	pt	MALAWI
+malaysia	common	pt	MALAYSIA
+maldives	common	pt	MALDIVES
+mali	common	pt	MALI
+malta	common	pt	MALTA
+manual	common	pt	Manual
+march	common	pt	Março
+marshall islands	common	pt	MARSHALL ISLANDS
+martinique	common	pt	MARTINIQUE
+mauritania	common	pt	MAURITANIA
+mauritius	common	pt	MAURITIUS
+may	common	pt	Maio
+mayotte	common	pt	MAYOTTE
+medium	common	pt	Médio
+menu	common	pt	Menu
+message	common	pt	Mensagem
+mexico	common	pt	MEXICO
+micronesia, federated states of	common	pt	MICRONESIA, FEDERATED STATES OF
+moldova, republic of	common	pt	MOLDOVA, REPUBLIC OF
+monaco	common	pt	MONACO
+monday	common	pt	Segunda
+mongolia	common	pt	MONGOLIA
+montserrat	common	pt	MONTSERRAT
+morocco	common	pt	MOROCCO
+mozambique	common	pt	MOZAMBIQUE
+myanmar	common	pt	MYANMAR
+name	common	pt	Nome
+name of the user, eg. "%1"	common	pt	nome do usuário,como "%1"
+namibia	common	pt	NAMIBIA
+nauru	common	pt	NAURU
+nepal	common	pt	NEPAL
+netherlands	common	pt	NETHERLANDS
+netherlands antilles	common	pt	NETHERLANDS ANTILLES
+never	common	pt	Nunca
+new caledonia	common	pt	NEW CALEDONIA
+new entry added sucessfully	common	pt	Nova entrada adicionada com sucesso
+new main category	common	pt	Nova categoria principal
+new value	common	pt	Nova Valor
+new zealand	common	pt	NEW ZEALAND
+next	common	pt	Próximo
+next month (hold for menu)	common	pt	Próximo mês (aguarde para menu)
+next page	common	pt	Next page
+next year (hold for menu)	common	pt	Próximo ano (aguarde para menu)
+nicaragua	common	pt	NICARAGUA
+niger	common	pt	NIGER
+nigeria	common	pt	NIGERIA
+niue	common	pt	NIUE
+no	common	pt	Não
+no entries found, try again ...	common	pt	nenhuma entrada encontrada, tente novamente ...
+no history for this record	common	pt	Sem histórico para este registro
+no subject	common	pt	Sem Assunto
+none	common	pt	Nenhum
+norfolk island	common	pt	NORFOLK ISLAND
+normal	common	pt	Normal
+northern mariana islands	common	pt	NORTHERN MARIANA ISLANDS
+norway	common	pt	NORWAY
+not assigned	common	pt	sem atribuição
+note	common	pt	Nota
+notes	common	pt	Notas
+notify window	common	pt	Janela de Notificação
+november	common	pt	Novembro
+october	common	pt	Outubro
+ok	common	pt	OK
+old value	common	pt	Valor Antigo
+oman	common	pt	OMAN
+on *nix systems please type: %1	common	pt	Em sistemas *nix digite: %1
+only private	common	pt	apenas privado
+only yours	common	pt	apenas os seus
+open notify window	common	pt	Abrir janela de notificação
+open popup window	common	pt	Abrir jenala popup
+original	common	pt	Original
+other	common	pt	Outro
+overview	common	pt	Visão Geral
+owner	common	pt	Dono
+pakistan	common	pt	PAKISTAN
+palau	common	pt	PALAU
+palestinian territory, occupied	common	pt	PALESTINIAN TERRITORY, OCCUPIED
+panama	common	pt	PANAMA
+papua new guinea	common	pt	PAPUA NEW GUINEA
+paraguay	common	pt	PARAGUAY
+parcel	common	pt	Parcel
+parent category	common	pt	Categoria Pai
+password	common	pt	Senha
+password could not be changed	common	pt	Senha não pode ser alterada
+password has been updated	common	pt	Senha foi atualizada
+pattern for search in addressbook	common	pt	Padrão para busca nos Contatos
+pattern for search in calendar	common	pt	Padrão para busca no Calendário
+pattern for search in projects	common	pt	Padrão para busca nos Projetos
+permissions to the files/users directory	common	pt	permissões para pasta de arquivos/usuários
+personal	common	pt	Pessoal
+peru	common	pt	PERU
+philippines	common	pt	PHILIPPINES
+phone number	common	pt	número de telefone
+pitcairn	common	pt	PITCAIRN
+please %1 by hand	common	pt	Por favor, %1 manualmente
+please enter a name	common	pt	Digite um nome !
+please run setup to become current	common	pt	Please run setup to become current
+please select	common	pt	Por favor, selecione 
+please set your global preferences	common	pt	Por favor, defina suas preferências globais
+please set your preferences for this application	common	pt	Por favor, defina suas preferências para esta aplicação
+please wait...	common	pt	Por favor, aguarde...
+poland	common	pt	POLAND
+portugal	common	pt	PORTUGAL
+postal	common	pt	Postal
+powered by phpgroupware version %1	common	pt	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
+preferences	common	pt	Preferências
+prev. month (hold for menu)	common	pt	Mên anterior (aguarde para menu)
+prev. year (hold for menu)	common	pt	Ano anterior (agurade para menu)
+previous page	common	pt	Página Anterior
+print	common	pt	Imprimir
+priority	common	pt	Prioridade
+private	common	pt	Privado
+project	common	pt	Projeto
+public	common	pt	Público
+puerto rico	common	pt	PUERTO RICO
+qatar	common	pt	QATAR
+read	common	pt	Ler
+read this list of methods.	common	pt	Ler esta lista de métodos.
+register_globals = %1	common	en	register_globals = %1
+register_globals_off	common	pt	This application has been tested to work with register_globals = off in your php.ini.  This application should work with most PHP 4.1.0+ servers.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	pt	This application has not been tested to work with register_globals = off in your php.ini.  This application requires register_globals = on to be set in your php.ini.  For more information regarding the potential problem of using register_globals = on, see <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+reject	common	pt	Rejeitar
+rename	common	pt	Renomear
+returns a full list of accounts on the system.  warning: this is return can be quite large	common	pt	Returns a full list of accounts on the system.  Warning: This is return can be quite large
+returns an array of todo items	common	pt	Returns an array of todo items
+returns struct of users application access	common	pt	Returns struct of users application access
+reunion	common	pt	REUNION
+romania	common	pt	ROMANIA
+russian federation	common	pt	RUSSIAN FEDERATION
+rwanda	common	pt	RWANDA
+saint helena	common	pt	SAINT HELENA
+saint kitts and nevis	common	pt	SAINT KITTS AND NEVIS
+saint lucia	common	pt	SAINT LUCIA
+saint pierre and miquelon	common	pt	SAINT PIERRE AND MIQUELON
+saint vincent and the grenadines	common	pt	SAINT VINCENT AND THE GRENADINES
+samoa	common	pt	SAMOA
+san marino	common	pt	SAN MARINO
+sao tome and principe	common	pt	SAO TOME AND PRINCIPE
+saturday	common	pt	Sábado
+saudi arabia	common	pt	SAUDI ARABIA
+save	common	pt	Salvar
+search	common	pt	Buscar
+section	common	pt	Seção
+select	common	pt	Selecione
+select category	common	pt	Selecione Categoria
+select date	common	pt	Selecione data
+select group	common	pt	Selecione grupo
+select one	common	pt	Selecione um
+select user	common	pt	Selecione usuário
+send	common	pt	Enviar
+senegal	common	pt	SENEGAL
+september	common	pt	Setembro
+server %1 has been added	common	pt	Servidor %1 foi adicionado
+server name	common	pt	Nome do servidor
+session has been killed	common	pt	Sessão foi terminada
+setup	common	pt	Setup
+seychelles	common	pt	SEYCHELLES
+show all	common	pt	exibir todos
+showing %1	common	pt	exibindo %1
+showing %1 - %2 of %3	common	pt	exibindo %1 - %2 de %3
+sierra leone	common	pt	SIERRA LEONE
+singapore	common	pt	SINGAPORE
+slovakia	common	pt	SLOVAKIA
+slovenia	common	pt	SLOVENIA
+solomon islands	common	pt	SOLOMON ISLANDS
+somalia	common	pt	SOMALIA
+sorry, your login has expired	login	pt	Desculpe, seu login expirou
+south africa	common	pt	SOUTH AFRICA
+south georgia and the south sandwich islands	common	pt	SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+spain	common	pt	SPAIN
+sri lanka	common	pt	SRI LANKA
+start date	common	pt	Data de Início
+start time	common	pt	Hora de Início
+status	common	pt	Status
+subject	common	pt	Assunto
+submit	common	pt	Enviar
+substitutions and their meanings:	common	pt	Substituições e suas mensagens:
+sudan	common	pt	SUDAN
+sunday	common	pt	Domingo
+suriname	common	pt	SURINAME
+svalbard and jan mayen	common	pt	SVALBARD AND JAN MAYEN
+swaziland	common	pt	SWAZILAND
+sweden	common	pt	SWEDEN
+switzerland	common	pt	SWITZERLAND
+syrian arab republic	common	pt	SYRIAN ARAB REPUBLIC
+taiwan, province of china	common	pt	TAIWAN, PROVINCE OF CHINA
+tajikistan	common	pt	TAJIKISTAN
+tanzania, united republic of	common	pt	TANZANIA, UNITED REPUBLIC OF
+thailand	common	pt	THAILAND
+the api is current	common	pt	A PAI é atualmente
+the api requires an upgrade	common	pt	A API precisa ser atualizada
+the following applications require upgrades	common	pt	As seguintes aplicações precisam ser atualziadas
+the mail server returned	common	pt	O servidor de e-mail retornou
+this application is current	common	pt	Esta aplicação está atualmente
+this application requires an upgrade	common	pt	Esta aplicação precisa de uma atualização
+this name has been used already	common	pt	Este nome já foi usado !
+thursday	common	pt	Quinta
+time	common	pt	Hora
+time zone	common	pt	Timezone
+time zone offset	common	pt	Time zone offset
+title	common	pt	Título
+to correct this error for the future you will need to properly set the	common	pt	Para corrigir este erro, futuramente você precisará configurar o
+to go back to the msg list, click <a href= %1 >here</a>	common	pt	Para voltar para a lista de mensagens, clique <a href="%1">aqui</a>
+today	common	pt	Hoje
+todays date, eg. "%1"	common	pt	Data de hoje, como "%1"
+toggle first day of week	common	pt	Toggle first day of week
+togo	common	pt	TOGO
+tokelau	common	pt	TOKELAU
+tonga	common	pt	TONGA
+total	common	pt	Total
+trinidad and tobago	common	pt	TRINIDAD AND TOBAGO
+tuesday	common	pt	Terça
+tunisia	common	pt	TUNISIA
+turkey	common	pt	TURKEY
+turkmenistan	common	pt	TURKMENISTAN
+turks and caicos islands	common	pt	TURKS AND CAICOS ISLANDS
+tuvalu	common	pt	TUVALU
+uganda	common	pt	UGANDA
+ukraine	common	pt	UKRAINE
+united arab emirates	common	pt	UNITED ARAB EMIRATES
+united kingdom	common	pt	UNITED KINGDOM
+united states	common	pt	UNITED STATES
+united states minor outlying islands	common	pt	UNITED STATES MINOR OUTLYING ISLANDS
+unknown	common	pt	Indefinido
+update	common	pt	Atualizar
+url	common	pt	URL
+uruguay	common	pt	URUGUAY
+use button to search for	common	pt	use Botão para buscar
+use button to search for address	common	pt	use o Botão para buscar Contatos
+use button to search for calendarevent	common	pt	use o Botão para buscar Eventos
+use button to search for project	common	pt	use o Botão para buscar Projetos
+user	common	pt	Usuário
+user accounts	common	pt	contas de usuários
+user groups	common	pt	grupos de usários
+username	common	pt	Nome de usuário
+users	common	pt	usuários
+users choice	common	pt	Opções dos Usuários 
+uzbekistan	common	pt	UZBEKISTAN
+vanuatu	common	pt	VANUATU
+venezuela	common	pt	VENEZUELA
+version	common	pt	Versão
+viet nam	common	pt	VIET NAM
+view	common	pt	Ver
+virgin islands, british	common	pt	VIRGIN ISLANDS, BRITISH
+virgin islands, u.s.	common	pt	VIRGIN ISLANDS, U.S.
+wallis and futuna	common	pt	WALLIS AND FUTUNA
+wednesday	common	pt	Quarta
+welcome	common	pt	Bem-vindo
+western sahara	common	pt	WESTERN SAHARA
+which groups	common	pt	Quais grupos
+wk	common	pt	qua
+written by:	common	pt	Escrito por:
+year	common	pt	Ano
+yemen	common	pt	YEMEN
+yes	common	pt	Sim
+you are required to change your password during your first login	common	pt	You are required to change your password during your first login
+you are running a newer version of phpgroupware than your database is setup for	common	pt	You are running a newer version of phpGroupWare than your database is setup for.
+you have been successfully logged out	login	pt	Você foi desconectado com sucesso
+you have not entered a title	common	pt	Você não digitou um título
+you have not entered a valid date	common	pt	Você não digitou uma data válida
+you have not entered a valid time of day	common	pt	Você não digitou uma hora do dia válida
+you have not entered participants	common	pt	Você não digitou participantes
+you have selected an invalid date	common	pt	Você selecionou uma data inválida !
+you have selected an invalid main category	common	pt	Você selecionou uma categoria inválida !
+you have successfully logged out	common	pt	Você foi desconectado com sucesso
+your message could <b>not</b> be sent!<br />	common	pt	Sua mensagem <b>não</b> pode ser enviada!<br />
+your message has been sent	common	pt	Sua mensagem foi enviada
+your search returned %1 matchs	common	pt	sua busca retorno %1 resultados
+your search returned 1 match	common	pt	sua busca retornou 1 resultado
+your session could not be verified.	login	pt	Sua sessão não pode ser verificada.
+your settings have been updated	common	pt	Suas configurações foram atualizadas
+yugoslavia	common	pt	YUGOSLAVIA
+zambia	common	pt	ZAMBIA
+zimbabwe	common	pt	ZIMBABWE

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:odm="http://product.corel.com/CGS/11/cddns/" xml:space="preserve" width="300px" height="159px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd"
+     viewBox="0 0 300 160">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#FFFFFF;stroke-width:2;stroke-linejoin:round}
+    .fil3 {fill:#000000;fill-rule:evenodd}
+    .fil2 {fill:#6C7EB7}
+    .fil0 {fill:url(#id0)}
+    .fil1 {fill:url(#id1)}
+   ]]>
+  </style>
+  <linearGradient id="id0" gradientUnits="userSpaceOnUse" x1="150" y1="84" x2="299" y2="84">
+   <stop offset="0" style="stop-color:#687197"/>
+   <stop offset="0.509804" style="stop-color:#656E94"/>
+   <stop offset="1" style="stop-color:#000000"/>
+  </linearGradient>
+  <radialGradient id="id1" gradientUnits="userSpaceOnUse" cx="16" cy="0" r="107" fx="16" fy="0">
+   <stop offset="0" style="stop-color:#DDDCE9"/>
+   <stop offset="1" style="stop-color:#687197"/>
+  </radialGradient>
+ </defs>
+ <g id="Layer 1">
+  <path class="fil0" d="M150 158c82,0 149,-35 149,-78 0,-31 -35,-58 -85,-71l-64 149z"/>
+  <path class="fil1" d="M150 158c-33,0 -64,-6 -89,-16 -36,-14 -60,-37 -60,-62 0,-43 67,-78 149,-78 23,0 45,2 64,7l-64 149z"/>
+  <ellipse class="fil2" cx="150" cy="80" rx="143" ry="73"/>
+  <path class="fil3 str0" d="M116 104l16 -81 19 0 -4 21 18 0c16,1 22,9 20,19l-7 41 -20 0 7 -37c1,-5 1,-8 -6,-8l-15 0 -9 45 -19 0z"/>
+  <path class="fil3 str0" d="M45 125l16 -81 37 0c16,1 24,9 24,23 0,24 -19,38 -36,37l-18 0 -4 21 -19 0zm27 -36l5 -30 13 0c7,0 12,3 12,9 -1,17 -9,20 -18,21l-12 0z"/>
+  <path class="fil3 str0" d="M179 125l15 -81 38 0c16,1 24,9 24,23 -1,24 -20,38 -37,37l-17 0 -4 21 -19 0zm26 -36l6 -30 12 0c8,0 13,3 12,9 0,17 -8,20 -18,21l-12 0z"/>
+ </g>
+</svg>

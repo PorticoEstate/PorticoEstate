@@ -1,0 +1,381 @@
+<?php
+	/**
+	* phpGroupWare - property: a Facilities Management System.
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package property
+	* @subpackage import
+ 	* @version $Id: Import_fra_BKK_csv,v 1.8 2007/03/18 16:33:16 sigurdne Exp $
+	*/
+
+	/**
+	 * Description
+	 * @package property
+	 */
+
+	class import_conv
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id = -1;
+		var $spbudact_code='12304121';
+		var $mvakode=0;
+		var $kildeid=1;
+		var $splitt=0;
+		var $type = 'fixed';
+		var $header_count = 1;
+		var $soXport;
+		var $invoice;
+		var $meter_table;
+		var $bilagsnr_0 = 0;
+		var $bilagsnr_1 = 0;
+		var $bilagsnr_2 = 0;
+
+		var $import = array(
+			'Bestilling' => 'pmwrkord_code', 
+			'Fakt. Nr' => 'fakturanr',
+			'Måler nr' => 'maalernr',
+			'Konto' => 'spbudact_code',
+			'Objekt' => 'dima',
+			'Omr' => 'omraade',
+			'Adresse' => 'stedsnavn',
+			'MVA' => 'mvakode',
+			'Tjeneste'=> 'kostra_id',
+			'Belop [kr]' => 'belop'
+			);
+
+		var $header = array('Fakt. Nr','Måler nr','Konto','Objekt','MVA','Belop [kr]','Omr','Adresse');
+
+		var $import_bkk = array('kundenr','under_fakturanr','Utskriftsdato','Forfdato','Maalepunktid',
+			'stedsnavn','Girobeloep','maalernr','kunde_navn');
+	
+
+		var $import_bkk_offset = array(
+			'kundenr' => 0, 
+			'under_fakturanr' => 1,
+			'Utskriftsdato' => 2,
+			'Forfdato' => 3,
+			'Maalepunktid' => 4,
+			'stedsnavn' => 8,
+			'Girobeloep' => 14,
+			'maalernr' => 19, 
+			'kunde_navn' => 6
+			);
+
+		function import_conv()
+		{
+			$this->soXport 		= CreateObject('property.soXport');	
+			$this->invoice 		= CreateObject('property.boinvoice');
+			$this->config = CreateObject('phpgwapi.config','property');
+			$this->config->read_repository();
+			$this->meter_table = $this->config->config_data['meter_table'];
+
+			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->join				= & $this->db->join;
+			$this->left_join		= & $this->db->left_join;
+			$this->like				= & $this->db->like;
+			$this->datetimeformat	= $this->db->datetime_format();
+			$this->dateformat		= $this->db->date_format();
+		}
+
+		function import($invoice_common,$download)
+		{
+
+			$tsvfile	= $invoice_common['tsvfile'];
+			$conv_type	= $invoice_common['conv_type'];
+
+			if(!$buffer[0]['kidnr'] = $invoice_common['kid_nr'])
+			{
+				echo '<b>KID-nummer mangler</b><br><br>';
+				return;
+			}
+			$valid_data= False;
+			$buffer = array();
+			$fp = fopen($tsvfile,'rb');
+			$column_header = true;
+			$this->id = -1;
+			while ($data = fgetcsv($fp,8000,";"))
+			{
+				$num = count($this->import_bkk);
+				
+				$this->currentrecord = array();
+				for ($c=0; $c<$num; $c++ )
+				{
+					//Send name/value pairs along with the buffer
+					if ($data[14] && !$column_header)
+					{
+						$value=$data[$this->import_bkk_offset[$this->import_bkk[$c]]];
+						$name=$this->import_bkk[$c];
+						if ($name=='Maalepunktid')
+						{
+							$name='anleggsnr';
+			//				$value= '7070575000' . $value;
+						}
+						if ($name=='Girobeloep')
+						{
+							$name='belop';							
+							$valid_data= True;				
+						}
+						$this->import_new_attrib($name,$value,$invoice_common);
+					}
+				}
+				if ($valid_data)
+				{
+					$buffer = $this->import_end_record($buffer,$invoice_common);
+					$valid_data= False;
+				}
+				
+				unset($column_header);
+				$this->id++;
+			}
+
+			fclose($fp);
+
+
+			if(!$download)
+			{
+				$buffer = $this->import_end_file($buffer);
+			}
+
+			$this->header = array('Fakt. Nr','Måler nr','Konto','Objekt','MVA','Tjeneste','Belop [kr]','Omr','Adresse');
+			return $buffer;
+		}
+		
+
+		function import_new_attrib($name,$value,$invoice_common)
+		{
+
+			$value = trim($value);
+		//	$value = str_replace('\n','<BR>',$value);
+		//	$value = str_replace('\r','',$value);
+
+			$this->currentrecord += array($name => $value);
+		}
+
+		function import_end_record($buffer,$invoice_common)
+		{
+			$buffer[$this->id]='';
+			while ( list($name, $value) = each($this->currentrecord))
+			{
+				$invoice_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear']));
+
+				if($invoice_common['num_days'])
+				{
+					$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear'])+(86400*$invoice_common['num_days']));
+				}
+				else
+				{
+					$payment_date = date($this->dateformat,mktime(2,0,0,$invoice_common['emonth'],$invoice_common['eday'],$invoice_common['eyear']));			
+				}
+
+				if($name=='belop')
+				{
+					$value = str_replace('kr','',$value);
+					$value = str_replace(' ','',$value);
+					$value = str_replace(',','.',$value);
+
+
+					if($value < 0)
+					{
+						$buffer[$this->id]['artid'] = 2;					
+						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_2();
+					}
+					else
+					{
+						$buffer[$this->id]['artid'] = $invoice_common['art'];
+						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_1();
+					}
+
+					if( $invoice_common['art'] == 2 ) // kreditnota
+					{
+						$value = -1 * abs($value);
+					}
+
+					$godkjentbelop=$value;
+				}
+
+				if($name=='anleggsnr')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nanleggsnr: {$value}";					
+					$maalerinfo=$this->anleggsnr_to_objekt($value,$this->meter_table);
+					$dima=$maalerinfo['dima'];
+					$loc1=$maalerinfo['loc1'];
+					$omraade=$maalerinfo['district'];
+
+					if($invoice_common['auto_tax'])
+					{
+						$mvakode=$this->soXport->auto_tax($loc1);
+						
+						if($mvakode)
+						{
+							$buffer[$this->id]['mvakode'] = $mvakode;
+						}
+						else
+						{
+							$buffer[$this->id]['mvakode'] = $this->mvakode;
+						}
+					}
+					else
+					{
+						$buffer[$this->id]['mvakode'] = $this->mvakode;
+					}
+
+				}
+				if($name=='maalernr')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nmaalernr: {$value}";
+				}
+				if($name=='under_fakturanr')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nFakturanr: {$value}";
+				}
+				if($name=='kundenr')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nKundenr: {$value}";
+				}
+				if($name=='kunde_navn')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nKundenavn: {$value}";					
+				}
+				if($name=='stedsnavn')
+				{
+					$buffer[$this->id]['merknad'] .= "\r\nAdresse: {$value}";
+				}
+
+				$buffer[$this->id][$name] = $value;
+				$buffer[$this->id]['fakturanr'] = $invoice_common['invoice_num'];
+				$buffer[$this->id]['dima'] = $dima;
+				$buffer[$this->id]['loc1'] = $loc1;
+				$buffer[$this->id]['omraade'] = $omraade;
+				$buffer[$this->id]['splitt'] = $this->splitt;
+				$buffer[$this->id]['kildeid'] = $this->kildeid;
+				$buffer[$this->id]['spbudact_code'] = $this->spbudact_code;
+				$buffer[$this->id]['kidnr'] = $invoice_common['kid_nr'];
+				$buffer[$this->id]['typeid'] = $invoice_common['type'];
+				$buffer[$this->id]['fakturadato'] = $invoice_date;
+				$buffer[$this->id]['forfallsdato'] = $payment_date;
+				$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d",$invoice_common['smonth']);
+				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
+
+				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;
+				$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
+				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
+				$buffer[$this->id]['oppsynsmannid'] = $invoice_common['janitor'];
+				$buffer[$this->id]['saksbehandlerid'] = $invoice_common['supervisor'];
+				$buffer[$this->id]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
+
+				if($invoice_common['auto_tax'])
+				{
+					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
+					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
+					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
+				}
+			}
+
+			return $buffer;
+		}
+
+
+		function anleggsnr_to_objekt($anleggsnr,$meter_table)
+		{
+			$sql = "SELECT {$meter_table}.ext_meter_id,{$meter_table}.loc1,{$meter_table}.loc2,{$meter_table}.loc3,fm_part_of_town.district_id "
+			. " FROM {$meter_table} {$this->join} fm_location1 ON {$meter_table}.loc1 = fm_location1.loc1 $this->join "
+  		          . " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id WHERE {$meter_table}.ext_system_id2 {$this->like} '%{$anleggsnr}'";
+//	_debug_array($sql);
+			$this->db->query($sql);
+
+			$this->db->next_record();
+			$loc1 = $this->db->f('loc1');
+			$loc2 = $this->db->f('loc2');
+	//		$loc3 = $this->db->f('loc3');
+
+			$maalerinfo['loc1']=$loc1;
+			$maalerinfo['dima']=$loc1.$loc2;//.$loc3;
+			$maalerinfo['maalernr']=$this->db->f('ext_meter_id');
+			$maalerinfo['district']=$this->db->f('district_id');
+			return $maalerinfo;
+		}
+
+		function import_end_file($buffer)
+		{
+			$num	= $this->soXport->add($buffer);
+			
+			$_bilagsnr = array();
+			if($this->bilagsnr_1)
+			{
+				$_bilagsnr[] = $this->bilagsnr_1;
+			}
+			if($this->bilagsnr_2)
+			{
+				$_bilagsnr[] = $this->bilagsnr_2;
+			}
+			
+			$bilagsnr = max($_bilagsnr);
+			$this->db->query("UPDATE fm_idgenerator SET VALUE ={$bilagsnr} WHERE name = 'Bilagsnummer'");
+
+			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. implode(',', $_bilagsnr));
+			return $receipt;
+		}
+
+		protected function next_bilagsnr_1()
+		{
+			if ($this->bilagsnr_1)
+			{
+				return $this->bilagsnr_1;
+			}
+			else
+			{
+				if(!$this->bilagsnr_0)
+				{
+					$this->bilagsnr_0 = $this->invoice->next_bilagsnr();
+					$this->bilagsnr_1 = $this->bilagsnr_0;
+				}
+				else
+				{
+					$this->bilagsnr_1 = $this->bilagsnr_0 + 1;				
+				}
+
+				return $this->bilagsnr_1;
+			}
+		}
+
+		protected function next_bilagsnr_2()
+		{
+			if ($this->bilagsnr_2)
+			{
+				return $this->bilagsnr_2;
+			}
+			else
+			{
+				if(!$this->bilagsnr_0)
+				{
+					$this->bilagsnr_0 = $this->invoice->next_bilagsnr();
+					$this->bilagsnr_2 = $this->bilagsnr_0;
+				}
+				else
+				{
+					$this->bilagsnr_2 = $this->bilagsnr_0 + 1;				
+				}
+
+				return $this->bilagsnr_2;
+			}
+		}
+	}

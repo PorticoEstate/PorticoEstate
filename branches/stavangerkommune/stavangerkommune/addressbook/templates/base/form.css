@@ -1,0 +1,34 @@
+input[type="submit"].button_style, input[type="button"].button_style {
+	color: #555;
+	margin-left: 1px;
+	margin-right: 1px;
+
+	background-color: #ddd;
+	border:1px #888 solid;
+        border-bottom-width: 0px;
+	padding: 1px;
+	width: 85px;
+}
+
+input[type="submit"].button_style_sel, input[type="button"].button_style_sel {
+	color: #555;
+	margin-left: 1px;
+	margin-right: 1px;
+
+	/*background-color: #e5e5e5;*/
+	border:1px #888 solid;
+        border-bottom-width: 0px;
+	padding: 1px;
+	width: 85px;
+}
+
+input[type="submit"]:hover.button_style, input[type="button"]:hover.button_style {
+	background-color: #eee;
+	color: #36c;
+}
+
+input[type="submit"]:active.button_style, input[type="button"]:active.button_style {
+	background-color: #eee;
+	color: #9ac;
+}
+
