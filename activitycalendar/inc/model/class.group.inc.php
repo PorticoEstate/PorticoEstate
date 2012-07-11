@@ -13,6 +13,7 @@
 		protected $shortname;
 		protected $change_type;
 		protected $transferred;
+		protected $original_group_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -80,6 +81,13 @@
 		}
 		
 		public function get_transferred() { return $this->transferred; }
+		
+	    public function set_original_group_id($original_group_id)
+		{
+			$this->original_group_id = $original_group_id;
+		}
+		
+		public function get_original_group_id() { return $this->original_group_id; }
 		
 		public function serialize()
 		{

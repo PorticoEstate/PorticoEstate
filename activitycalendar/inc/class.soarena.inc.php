@@ -127,6 +127,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$columns[] = 'arena.id';
 			$columns[] = 'arena.arena_name';
 			$columns[] = 'arena.address';
+			$columns[] = 'arena.addressnumber';
+			$columns[] = 'arena.zip_code';
+			$columns[] = 'arena.city';
 			$columns[] = 'arena.internal_arena_id';
 			$columns[] = 'arena.active';
 			
@@ -158,6 +161,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 
 			$arena->set_arena_name($this->unmarshal($this->db->f('arena_name'), 'string'));
 			$arena->set_address($this->unmarshal($this->db->f('address'), 'string'));
+			$arena->set_addressnumber($this->unmarshal($this->db->f('addressnumber'), 'string'));
+			$arena->set_zip_code($this->unmarshal($this->db->f('zip_code'), 'string'));
+			$arena->set_city($this->unmarshal($this->db->f('city'), 'string'));
 			$arena->set_internal_arena_id($this->unmarshal($this->db->f('internal_arena_id'), 'int'));
 			$arena->set_active($this->unmarshal($this->db->f('active'), 'bool'));
 		}
@@ -259,6 +265,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		$values = array(
 			'arena_name = '		. $this->marshal($arena->get_arena_name(), 'string'),
 			'address = '     . $this->marshal($arena->get_address(), 'string'),
+    		'addressnumber = '     . $this->marshal($arena->get_addressnumber(), 'string'),
+    		'zip_code = '     . $this->marshal($arena->get_zip_code(), 'string'),
+    		'city = '     . $this->marshal($arena->get_city(), 'string'),
 			'internal_arena_id =  '     . $this->marshal($arena->get_internal_arena_id(), 'int'),
 			'active = '     . $this->marshal(($arena->is_active() ? 'true' : 'false'), 'bool'),
 		);

@@ -81,7 +81,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		unset($org_info);
 		unset($contact1);
 		unset($contact2);
-		if($type)
+/*		if($type)
 		{
 			$sogroup = activitycalendar_sogroup::get_instance();
 			$soactivity = activitycalendar_soactivity::get_instance();
@@ -172,7 +172,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					
 					//get affected activities and update with new org id
 					$update_activities = $soactivity->get_activities_for_update($id, true);
-					var_dump($update_activities);
 					foreach($update_activities as $act)
 					{
 						$act->set_organization_id($group_org_id);
@@ -217,7 +216,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			
 		}
 		else
-		{
+		{*/
 			//var_dump('org');
 			$so_org = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
@@ -230,7 +229,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			//var_dump($org);
 			$districts = $so_activity->get_districts();
 			
-			if(isset($_POST['save_organization'])) // The user has pressed the save button
+/*			if(isset($_POST['save_organization'])) // The user has pressed the save button
 			{
 				$org->set_organization_number(phpgw::get_var('orgno'));
 				$org->set_district(phpgw::get_var('org_district'));
@@ -268,7 +267,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
 			}
-			else if(isset($_POST['store_organization'])) // The user has pressed the store button
+			else*/
+			if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
@@ -334,8 +334,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					//get affected activities and update with new org id
 					$update_activities = $so_activity->get_activities_for_update($id);
 					//var_dump($update_activities);
-					foreach($update_activities as $act)
+					foreach($update_activities as $act_id)
 					{
+					    $act = $so_activity->get_single($act_id);
 						$act->set_organization_id($new_org_id);
 						$act->set_new_org(false);
 						$so_activity->store($act);
@@ -441,7 +442,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			);
 			
 			return $this->render('organization.php', $data);
-		}
+//		}
 	}
 	
 	public function show()
@@ -451,7 +452,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$type = phpgw::get_var('type');
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
 		$socontact = activitycalendar_socontactperson::get_instance();
-		if($type)
+/*		if($type)
 		{
 			if(isset($_POST['edit_group'])) // The user has pressed the save button
 			{
@@ -488,7 +489,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			return $this->render('group.php', $data);
 		}
 		else
-		{
+		{*/
 			//var_dump('org');
 			if(isset($_POST['edit_organization'])) // The user has pressed the save button
 			{
@@ -523,7 +524,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			);
 			
 			return $this->render('organization.php', $data);
-		}
+		//}
 	}
 	
 	
