@@ -1078,9 +1078,11 @@ ul.check_list {
 
 /* ====================================  CALENDAR  ========================================= */
 #control_plan .top h3 {
+  clear: left;
   float: left;
   font-size: 19px;
-  margin: 0;
+  margin-bottom: 1em;
+  margin-top: 0;
   padding: 0;
 }
 
@@ -1280,8 +1282,9 @@ ul#icon_color_map span{
 	width: 150px;
 }
 
-#calendar .location_name, #calendar .component_type {
+#calendar .location-name, #calendar .component-type {
 	width: 150px;
+	text-align: left;
 }
 
 #calendar .frequency {
@@ -1289,7 +1292,7 @@ ul#icon_color_map span{
     width: 100px;
 }
 
-#calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location_name {
+#calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location-name {
     text-align: left;
 }
 

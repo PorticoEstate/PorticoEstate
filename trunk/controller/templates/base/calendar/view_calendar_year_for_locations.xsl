@@ -21,10 +21,10 @@
 			<table id="calendar" class="year">
 				<tr>
 					<th class="title">
-						<span class="location_code">Lokasjonskode</span>
+						<span class="location-code">Lokasjonskode</span>
 					</th>
 					<th class="title">
-						<span class="location_name">Lokasjonsnavn</span>
+						<span class="location-name">Lokasjonsnavn</span>
 					</th>
 					<xsl:for-each select="heading_array">
 						<th>
@@ -32,7 +32,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="current_year"/>
+									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
@@ -63,7 +63,7 @@
 						<td class="title">
 							<xsl:value-of select="location/location_code"/>
 						</td>
-						<td class="location_name">
+						<td class="location-name">
 							<xsl:value-of select="location/loc1_name"/>
 						</td>
 							
@@ -80,14 +80,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</table>
-	</div>
-		<div id="cal_wrp">
+
 			<table id="calendar" class="year">
 				<tr>
-					<th class="location_name">
+					<th class="location-name">
 						<span>Lokasjon</span>
 					</th>
-					<th class="component_type">
+					<th class="component-type">
 						<span>Komponenttype</span>
 					</th>
 					<xsl:for-each select="heading_array">
@@ -96,7 +95,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="current_year"/>
+									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
@@ -126,11 +125,11 @@
 					        </xsl:otherwise>
 					    </xsl:choose>
 				    
-						<td class="title">
-							<xsl:value-of select="component/component_location"/>
+						<td class="location-name">
+							<xsl:value-of select="component/xml_short_desc"/>
 						</td>
-						<td class="location_name">
-							<xsl:value-of select="component/component_description"/>
+						<td class="component-type">
+							<xsl:value-of select="component/type_str"/>
 						</td>
 							
 						<xsl:for-each select="calendar_array">

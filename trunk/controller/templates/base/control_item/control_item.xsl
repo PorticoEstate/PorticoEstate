@@ -24,7 +24,13 @@
 					<label for="title">Tittel</label>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input type="text" name="title" id="title" value="{control_item/title}" size="80"/>
+							<xsl:if test="control_item/error_msg_array/title != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/title" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<input type="" name="title" id="title" size="80"  class="required">
+								<xsl:attribute name="value"><xsl:value-of select="control_item/title"/></xsl:attribute>
+							</input>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control_item/title"/>
@@ -37,7 +43,7 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<xsl:choose>
-								<xsl:when test="$required_item=1">
+								<xsl:when test="$required_item = 1">
 									<input type="checkbox" name="required" id="required" checked="true"/>
 								</xsl:when>
 								<xsl:otherwise>
@@ -47,7 +53,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="$required_item=1">
+								<xsl:when test="$required_item = 1">
 									<input type="checkbox" name="required" id="required" checked="true" disabled="true"/>
 								</xsl:when>
 								<xsl:otherwise>
@@ -165,7 +171,7 @@
 												<li>
 													<label>Listeverdi<span class="order_nr"><xsl:number /></span></label>
 													<xsl:variable name="option_value"><xsl:value-of select="option_value" /></xsl:variable>
-													<input type="text" name="option_values[]" value="{$option_value}" />
+													<input type="" name="option_values[]" value="{$option_value}" />
 													<span class="btn delete">Slett</span>
 												</li>
 											</xsl:for-each>
@@ -173,7 +179,7 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="text" name="option_value" />
+											<input type="" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
@@ -193,7 +199,7 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="text" name="option_value" />
+											<input type="" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
@@ -215,6 +221,10 @@
 						<label for="control_area">Kontrollområde</label>
 						<xsl:choose>
 							<xsl:when test="editable">
+								<xsl:if test="control_item/error_msg_array/control_area_id != ''">
+									<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/control_area_id" /></xsl:variable>
+									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+								</xsl:if>
 								<select class="required" id="control_area" name="control_area">
 								<option value="">Velg kontrollområde</option>
 									<xsl:for-each select="control_areas">
@@ -274,7 +284,11 @@
 					<label for="what_to_do">Hva skal utføres</label>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
+							<xsl:if test="control_item/error_msg_array/what_to_do != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/what_to_do" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60" class="required">
 								<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
 							</textarea>
 						</xsl:when>
@@ -287,7 +301,13 @@
 					<label for="how_to_do">Utførelsesbeskrivelse</label>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60"><xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" /></textarea>
+							<xsl:if test="control_item/error_msg_array/how_to_do != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/how_to_do" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60" class="required">
+								<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
+							</textarea>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
@@ -307,8 +327,8 @@
 					<xsl:otherwise>
 						<a class="btn">
 							<xsl:attribute name="href">
-								<xsl:text>index.php?menuaction=controller.uicontrol_item.edit</xsl:text>
-								<xsl:text>&amp;id=</xsl:text>
+								<xsl:>index.php?menuaction=controller.uicontrol_item.edit</xsl:>
+								<xsl:>&amp;id=</xsl:>
 								<xsl:value-of select="control_item/id"/>
 							</xsl:attribute>
 							<xsl:value-of select="php:function('lang', 'edit')" />
