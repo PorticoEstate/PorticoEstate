@@ -1,0 +1,249 @@
+<?php
+	/**
+	* phpGroupWare - property: a Facilities Management System.
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package property
+	* @subpackage import
+ 	* @version $Id: Import_fra_Kemner_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
+	*/
+
+	/**
+	 * Description
+	 * @package property
+	 */
+
+	class import_conv
+	{
+		var $spbudact_code='11954111';
+		var $dimb=99;
+		var $mvakode=0;
+		var $kildeid=1;
+		var $splitt=0;
+		var $soXport;
+		var $invoice;
+
+		var $import = array(
+			'Bilagsnr' => 'bilagsnr', 
+			'Fakturanr' => 'fakturanr', 
+			'Gnr/Bnr-seksjon' => 'gid',
+			'Konto' => 'spbudact_code',
+			'Objekt' => 'dima', //objectclass: organizationalPerson
+			'DimB' => 'dimb',
+			'KID' => 'kidnr',
+			'MVA' => 'mvakode',
+			'Tjeneste'=> 'kostra_id',
+			'Belop [kr]' => 'belop',
+			'Referanse' => 'referanse',
+			'BOEI Gateadresse' => 'boei_gateadresse',
+			'Saksbehandler'	=>'saksbehandlerid'
+			);
+
+		var $header = array('Bilagsnr','Fakturanr','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse','Saksbehandler');
+
+		function import_conv()
+		{
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->soXport 		= CreateObject($this->currentapp.'.soXport');	
+			$this->invoice 		= CreateObject($this->currentapp.'.boinvoice');
+			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->dateformat	= $this->bocommon->dateformat;
+			$this->datetimeformat	= $this->bocommon->datetimeformat;
+		}
+
+		function import($invoice_common,$download)
+		{
+			$tsvfile	= $invoice_common['tsvfile'];
+			$bilagsnr = $this->invoice->next_bilagsnr();
+
+			$buffer = array();
+
+			set_time_limit(300);
+
+			$reader = new XMLReader();
+			$reader->open($tsvfile);
+
+			$i = 0;
+			while ($reader->read())
+			{
+				if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'Invoice')
+				{
+					//print $reader->readOuterXML() . "\n";
+					$xml = new DOMDocument('1.0', 'utf-8');
+					$xml->formatOutput = true;
+					$domnode = $reader->expand();
+					$xml->appendChild($domnode);
+					unset($domnode);
+					$fakturanr = $xml->getElementsByTagName('InvoiceNo')->item(0)->nodeValue;
+					$fakturadato = date($this->dateformat,strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
+					$forfallsdato = date($this->dateformat,strtotime($xml->getElementsByTagName('DueDate')->item(0)->nodeValue));
+					$periode = date('Ym',strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
+
+					$Gnr 		= $xml->getElementsByTagName('Text1')->item(0)->nodeValue;
+					$Bnr 		= $xml->getElementsByTagName('Text2')->item(0)->nodeValue;
+					$sekjonnr 	= $xml->getElementsByTagName('Text4')->item(0)->nodeValue;
+					$belop 		= $xml->getElementsByTagName('TotalInclTax')->item(0)->nodeValue;
+					$kidnr 		= $xml->getElementsByTagName('BacsId')->item(0)->nodeValue;
+					$item_id	= '1201' . $xml->getElementsByTagName('HeaderText')->item(0)->nodeValue;
+					
+					$Link1 		= $xml->getElementsByTagName('Link1')->item(0)->nodeValue;
+					$TextLink1 		= $xml->getElementsByTagName('TextLink1')->item(0)->nodeValue;
+
+					$ShipTo 	= $xml->getElementsByTagName('ShipTo')->item(0);
+					$xpath		= new DOMXpath($xml);
+					$address = $xpath->query("AddressInfo/Address", $ShipTo)->item(0)->nodeValue;
+
+					$details 	= $xml->getElementsByTagName('Details');
+
+					$Products = $xpath->query("Detail/Products", $details->item(0));	
+
+					$length = $Products->length;
+					$merknad = '';
+					for($j=0; $j<$length; $j++)
+					{
+
+						$merknad .= $xpath->query("SellerProductDescr", $Products->item($j))->item(0)->nodeValue . "\n";
+						$merknad .= $xpath->query("UnitCode", $Products->item($j))->item(0)->nodeValue . "\t";
+						$merknad .= $xpath->query("Quantity", $Products->item($j))->item(0)->nodeValue . "\t";
+						$merknad .= $xpath->query("Price", $Products->item($j))->item(0)->nodeValue . "\n";
+		
+						$Info = $xpath->query("ProductSpecification/Info", $Products->item($j));
+						for($k=0; $k<($Info->length-1); $k++)
+						{
+							$merknad .= trim($Info->item($k)->nodeValue) . "\n";
+		
+						}
+				
+					}
+					$merknad  .= "\n" . $TextLink1;
+					$merknad  .= "\n" . $Link1;
+					unset($xml);
+					unset($xpath);
+//		print_r($merknad);
+
+					if( $invoice_common['art'] == 2 ) // kreditnota
+					{
+						$belop = -1 * abs($belop);
+					}
+
+					$buffer[$i]['fakturanr'] = $fakturanr;
+					$buffer[$i]['periode'] = $periode;
+					$buffer[$i]['forfallsdato'] = $forfallsdato;
+					$buffer[$i]['fakturadato'] = $fakturadato;
+					$buffer[$i]['belop'] = $belop;
+					$buffer[$i]['godkjentbelop'] = $belop;
+					
+					$buffer[$i]['kidnr'] = $kidnr;
+					$buffer[$i]['gid'] = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
+					$buffer[$i]['bilagsnr'] = $bilagsnr;
+
+					if(isset($invoice_common['dim_b']) && $invoice_common['dim_b'])
+					{
+						$buffer[$i]['dimb'] = $invoice_common['dim_b'];
+					}
+					else
+					{
+						$buffer[$i]['dimb'] = $this->dimb;
+					}
+
+					$buffer[$i]['item_type'] = 1;
+					$buffer[$i]['item_id'] = $item_id;
+
+			        //Finn dima fra Boei
+					$gabinfo = $this->soXport->gabnr_to_objekt($Gnr,$Bnr,$sekjonnr);
+					$buffer[$i]['dima'] = $gabinfo['dima'];
+					$buffer[$i]['loc1'] = $gabinfo['loc1'];
+					$buffer[$i]['mvakode'] = $this->mvakode;
+
+					if($gabinfo['loc1'] && (isset($invoice_common['auto_tax']) && $invoice_common['auto_tax']))
+					{
+						$mvakode=$this->soXport->auto_tax($gabinfo['loc1']);
+					
+						if($mvakode)
+						{
+							$buffer[$i]['mvakode'] = $mvakode;
+						}
+					}
+
+					if(isset($invoice_common['auto_tax']) && $invoice_common['auto_tax'])
+					{
+						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'] ,$this->spbudact_code);
+						$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'] ,$invoice_common['vendor_id']);
+					}
+
+					$buffer[$i]['kostra_id'] = $this->soXport->get_kostra_id($gabinfo['loc1']);
+					
+					//finn boei gateadresse for kontroll
+					$boei_gateadresse=$this->soXport->dima_to_address($gabinfo['dima']);
+					$buffer[$i]['boei_gateadresse'] = $boei_gateadresse;
+
+					$buffer[$i]['referanse'] = $address;                
+
+					//FIXME - hardcoded for now
+					switch($gabinfo['district_id'])
+					{
+						case '1':
+							$saksbehandlerid = 'ho1330';
+							break;
+						case '2':
+							$saksbehandlerid = 'jl9258';
+							break;
+						case '3':
+							$saksbehandlerid = 'shl5631';
+							break;
+						default:
+							$saksbehandlerid = $invoice_common['supervisor'];
+					}
+
+					$buffer[$i]['merknad'] = 'Kemner adr: '.$address."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n" .$merknad;
+					$buffer[$i]['splitt'] = $this->splitt;
+					$buffer[$i]['kildeid'] = $this->kildeid;
+					$buffer[$i]['spbudact_code'] = $this->spbudact_code;
+					$buffer[$i]['typeid'] = $invoice_common['type'];
+					$buffer[$i]['regtid'] = date($this->datetimeformat);
+					$buffer[$i]['artid'] = $invoice_common['art'];
+					$buffer[$i]['spvend_code'] = $invoice_common['vendor_id'];
+					$buffer[$i]['oppsynsmannid'] = $invoice_common['janitor'];
+					$buffer[$i]['saksbehandlerid'] = $saksbehandlerid;
+					$buffer[$i]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
+//_debug_array($bilagsnr);
+					$bilagsnr++;
+					$i++;
+				}
+			}
+			$reader->close();
+
+			if(!$download)
+			{
+				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
+			}
+
+			return $buffer;
+		}
+
+		function import_end_file($buffer,$bilagsnr)
+		{
+			$num	= $this->soXport->add($buffer);
+			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $bilagsnr);
+			return $receipt;
+		}
+	}

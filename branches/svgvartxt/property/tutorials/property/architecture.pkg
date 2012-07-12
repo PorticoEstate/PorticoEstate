@@ -1,0 +1,736 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>Architecture</refname>
+  <refpurpose>fundamental physical objects,actors, their conditions, relations and operations</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <author>
+   Sigurd Nes
+   <authorblurb>
+    {@link mailto:sigurdne@online.no sigurdne@online.no}
+   </authorblurb>
+  </author>
+ </refsynopsisdiv>
+ {@toc}
+ <refsect1 id="{@id property.software.architecture}">
+  <title>Intro</title>
+  <para>The database is in general buildt on some fundamental physical
+  objects,actors, their conditions, relations and operations.
+  </para>
+   <itemizedlist>
+    <listitem><para>
+     <emphasis>Locations</emphasis> - which is organized in a highly
+     customizable hierarchy</para>
+    </listitem>
+    <listitem><para><emphasis>Entities</emphasis> - is a generic class of
+    objects, that can be defined as reports, equipment and so on  - which can be linked to
+    locations or other entities</para>
+    </listitem>
+    <listitem><para><emphasis>Actors</emphasis></para>
+     <itemizedlist>
+      <listitem><simpara>Tenants/User of location</simpara>
+      </listitem>
+      <listitem><simpara>Vendors</simpara>
+      </listitem>
+      <listitem><simpara>Owners</simpara>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+    <listitem><para><emphasis>Operation/events</emphasis></para>
+     <itemizedlist>
+      <listitem><simpara>Request for action of any kind</simpara>
+      </listitem>
+      <listitem><simpara>Workorders - organized into projects</simpara>
+      </listitem>
+      <listitem><simpara>Service agreements</simpara>
+      </listitem>
+      <listitem><simpara>Payments/Cashflow</simpara>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+   <para>The program-logic that operates on the database is programmed
+   in different layers - which have similar typical tasks</para>
+   <itemizedlist>
+    <listitem><simpara><emphasis role="bold">so</emphasis> - storage object -
+    this layer interacts with the database - and the <quote>bo</quote>
+    layer</simpara>
+    </listitem>
+    <listitem><simpara><emphasis role="bold">bo</emphasis> - business object -
+    this layer manipulate the data relivered from <quote>so</quote>.</simpara>
+    </listitem>
+    <listitem><simpara><emphasis role="bold">ui</emphasis> - user interface -
+    this layer prepares the dataset (array) delivered to the XSLT
+    engine  from the <quote>bo</quote> - layer.</simpara>
+    </listitem>
+   </itemizedlist>
+ </refsect1>
+
+
+
+ <refsect1 id="{@id property.software.metadata}">
+  <title>Meta-database</title>
+  <para>
+    Both the <!-- <link linkend="property.software.location">location hierarchy</link> --> {@tutorial architecture.pkg#property.software.location} - and the 
+    <!-- <link linkend="property.software.entities">entities</link> --> {@tutorial architecture.pkg#property.software.entities} are organized in a
+   meta-database which contain information of tables, columns, relations and
+   attributes
+   <footnote>
+    <para>
+     alfanumeric values, dates,lookup from addressbook - and values available as multiple choices
+    </para>
+   </footnote>
+  </para>
+   <para>The database queries and name of columns to return (visible
+   and hidden) is dynamicly created on the fly the first
+   time - and stored in a cache table (fm_cache) for later use to save processing
+   overhead.</para>
+  <refsect2 id="{@id property.software.metadata.location}">
+   <title>Location</title>
+   <table>
+    <title>
+     <quote>location</quote> meta-data tables</title>
+    <tgroup cols="2">
+     <thead>
+      <row>
+       <entry>Table</entry>
+       <entry>Information</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>fm_location_type</entry>
+       <entry>Location hierarchy level Id's - and the name of each level</entry>
+      </row>
+      <row>
+       <entry>fm_location_attrib</entry>
+       <entry>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Column names and definitions for for the database tables
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Form input text
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Form input-field status text
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Configuration of input - field - type:
+          </para>
+          <itemizedlist>
+           <listitem>
+            <para>
+             Text box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Text area
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             List box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             check box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             radio buttons
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Date validation field
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Contact - lookup field
+            </para>
+           </listitem>
+          </itemizedlist>
+         </listitem>
+        </itemizedlist>
+       </entry>
+      </row>
+      <row>
+       <entry>fm_location_choice</entry>
+       <entry>Possible values for attributes for radio, check boxes and list boxes</entry>
+      </row>
+      <row>
+       <entry>fm_location_config</entry>
+       <entry>Defines which level in the location-hierarchy to connect <quote>property owner</quote>, <quote>part_of_town</quote>, <quote>street</quote> and <quote>tenant</quote>
+       </entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+   <para></para>
+   <para>
+    Each level in the hierarchy has it owns table - named as
+    location&lt;level&gt; - and is referencing its parent table by foreign keys
+   </para>
+   <para>
+    Each level is also referencing a category-table - which is named
+    fm_location&lt;level&gt;_category
+   </para>
+  </refsect2>
+  <refsect2 id="{@id property.software.metadata.entity}">
+   <title>Entity</title>
+   <para>
+    Similar to the 
+    <!-- <link linkend="property.software.metadata.location">location</link> -->
+    {@tutorial architecture.pkg#property.software.metadata.location} - entities has their own tables - but in this case the entities are
+    separated by type and category - as entity_&lt;type&gt;_&lt;category&gt;
+   </para>
+   <table>
+    <title>
+     <quote>Entity</quote> meta-data tables</title>
+    <tgroup cols="2">
+     <thead>
+      <row>
+       <entry>
+       Table</entry>
+       <entry>
+Information</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>fm_entity
+      </entry>
+       <entry>
+        <para>
+         Definition of top-level Entity types - and whether this entity type
+         should:
+        </para>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Appear in localization lookup-forms
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Be subject to documentation records
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Be accessible in lookup forms for other (specified) entity-types
+          </para>
+         </listitem>
+        </itemizedlist>
+       </entry>
+      </row>
+      <row>
+       <entry>fm_entity_lookup</entry>
+       <entry>
+        <para>
+         Configuration table for whether this entity type should:
+        </para>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Be included in registration forms for:
+          </para>
+          <itemizedlist>
+           <listitem>
+            <para>
+             project
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             ticket
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             document
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             drawing
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             meter
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             request
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             investment
+            </para>
+           </listitem>
+          </itemizedlist>
+         </listitem>
+         <listitem>
+          <para>
+           Whether a new record of this entity type can be started from:
+          </para>
+          <itemizedlist>
+           <listitem>
+            <para>
+             A ticket in the help desk
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             A request
+            </para>
+           </listitem>
+          </itemizedlist>
+         </listitem>
+        </itemizedlist>
+       </entry>
+      </row>
+      <row>
+       <entry>fm_entity_category</entry>
+       <entry>
+        <itemizedlist>
+         <listitem>
+          <para>
+           defines the entity category
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           whether file-uploads is allowed
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Whether tracking is enabled in help-desk
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Whether there is lookup links from location details
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Whether tenants is enabled in location-lookup-form
+          </para>
+         </listitem>
+        </itemizedlist>
+       </entry>
+      </row>
+      <row>
+       <entry>fm_entity_attribute</entry>
+       <entry>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Column names and definitions for for the database tables (per
+           category)
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Form input text
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Form input-field status text
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           Configuration of input - field - type:
+          </para>
+          <itemizedlist>
+           <listitem>
+            <para>
+             Text box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Text area
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             List box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             check box
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             radio buttons
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Date validation field
+            </para>
+           </listitem>
+           <listitem>
+            <para>
+             Contact - lookup field
+            </para>
+           </listitem>
+          </itemizedlist>
+         </listitem>
+        </itemizedlist>
+       </entry>
+      </row>
+      <row>
+       <entry>fm_entity_choice</entry>
+       <entry>Possible values for attributes for radio, check boxes and list boxes</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </refsect2>
+ </refsect1>
+
+
+
+ <refsect1 id="{@id property.software.location}">
+  <title>Location</title>
+  <para>
+   <quote>Location</quote>
+   is a physical part of the property - it is common to organize the locations
+   in a hierarchical structure with
+   <quote>part-of</quote>
+   relations
+  </para>
+  <example>
+
+  <title>location hierarchy</title>
+
+<programlisting>
+  <emphasis role="underline">  Name                            Level</emphasis>
+  -- Property                       1
+     /-- Building                   2
+       /-- Entrance                 3
+         /-- Apartment              4
+           /-- Room                 5
+  </programlisting>
+
+  </example>
+  <para>
+   The hierarchy is configurable in both width and depth - that is: one can
+   define as many levels as one like - and each level can also have as many
+   attributes as one would like
+  </para>
+  <figure>
+   <title>Location structure</title>
+   <graphic fileref="./location_conf.gif"/>
+  </figure>
+  <example>
+
+  <title>location hierarchy with configurable external relations</title>
+
+<programlisting>
+  <emphasis role="underline">  Name                            Level    Relation</emphasis>
+  -- Property                      1  &lt;--- Owner,part of town
+    /-- Building                   2 
+      /-- Entrance                 3  &lt;--- Street
+        /-- Apartment              4  &lt;--- Tenant
+          /-- Room                 5 
+	
+  </programlisting>
+
+  </example>
+  <para>
+   Each level has a primary key - composed by the foreign key to the parent -
+   and this levels ID. In addition - there is a
+   <quote>superkey</quote>
+   named
+   <emphasis>location_code</emphasis>
+   for indexing and searching across the hierarchy
+  </para>
+  <example>
+
+  <title>Different keys for level 4:  Apartment </title>
+
+   <para>
+    <table>
+     <title>part of the table location4</title>
+     <tgroup cols="5">
+      <thead>
+       <row>
+        <entry>location_code</entry>
+        <entry>loc1</entry>
+        <entry>loc2</entry>
+        <entry>loc3</entry>
+        <entry>loc4</entry>       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry>5000-01-01-001</entry>
+        <entry>5000</entry>
+        <entry>01</entry>
+        <entry>01</entry>
+        <entry>001</entry>
+      </row>
+      </tbody>
+     </tgroup>
+    </table>
+  </para>
+<programlisting>
+Primary key: loc1 + loc2 + loc3 + loc4
+Foreign key: loc1 + loc2 + loc3
+Superkey   : Location_code
+</programlisting>
+
+  </example>
+<para>When querying location on a certain level - it is joined with all
+    its ancestors to make inherited information available.</para>
+ </refsect1>
+
+
+ <refsect1 id="{@id property.software.entities}">
+  <title>Entities</title>
+  <subtitle>all imaginary objects - as equipment, components, reports etc.</subtitle>
+  <para>Entities is a generic class of objects that all have in common
+    that they can be placed in a <!-- <link linkend="property.software.location">location</link> --> {@tutorial architecture.pkg#property.software.location}
+    and/or linked to other (only one) entities.</para>
+   <para>Entities are organized in class of entitity and entity
+  category: each entity_category is represented by their own table</para>
+   <example>
+    <title>Structure of entities at the BBB implementation</title>
+    <orderedlist numeration="arabic">
+     <listitem>
+      <para>Equipment</para>
+      <orderedlist numeration="arabic">
+       <listitem>
+        <para>Elevator</para>
+       </listitem>
+       <listitem>
+         <para>Fire alarm central</para>
+       </listitem>
+       <listitem>
+         <para>Cable TV</para>
+       </listitem>
+       <listitem>
+         <para>Building components</para>
+       </listitem>
+       <listitem>
+         <para>Drawings</para>
+       </listitem>
+       <listitem>
+         <para>Key system</para>
+       </listitem>
+      </orderedlist>
+     </listitem>
+     <listitem>
+      <para>Reports</para>
+      <orderedlist numeration="arabic">
+       <listitem>
+        <para>Condition report</para>
+       </listitem>
+       <listitem>
+        <para>Insurance damage</para>
+       </listitem>
+       <listitem>
+        <para>Elevator control report</para>
+       </listitem>
+      </orderedlist>
+     </listitem>
+    </orderedlist>
+    <para><emphasis>Reports</emphasis> are configured to be linked to both
+    <emphasis>Equipment</emphasis> and <emphasis>location</emphasis>
+    &mdash; that is: One can write reports on both
+    <emphasis>Equipment</emphasis> and
+    <emphasis>location</emphasis>.</para>
+    <para>The table representing the category
+    <emphasis>elevator</emphasis> in the entity-class <emphasis>Equipment</emphasis> is
+    here named <emphasis>fm_entity_1_1</emphasis></para>
+   </example>
+   <para>Information about the different attributes and their datatypes
+    is held by the <!-- <link linkend="property.software.metadata">metadatabase</link> --> {@tutorial architecture.pkg#property.software.metadata}</para>
+   </refsect1>
+
+ <refsect1 id="{@id property.software.contacts}">
+  <title>Contacts / vendors</title>
+  <para>Vendors are organized as contacts in the standard addressbook application
+  of phpgroupware and categorized in groups by maintenance district in
+  which they have contracts</para><para>Each Vendor can be member of
+  several categories</para>
+
+  <figure>
+   <title>Lookup vendor</title>
+   <graphic fileref="./lookup_vendor.png"/>
+  </figure>
+
+ </refsect1>
+ <refsect1 id="{@id property.software.prizebook}">
+  <title>Prize book per vendor</title>
+  <para>The prizebook is organized in
+  <emphasis>activities</emphasis><footnote><para>Or items/ what to deliver</para>
+    </footnote><footnote><para>Accessible from the calculation of
+  orders - if a vendor is chosen</para>
+    </footnote>as the most detailed level</para>
+  <para>Each vendor delivers a set of activities - tied up in an
+  <emphasis>agreement</emphasis></para>
+  <figure>
+   <title>ER Prizebook</title>
+   <graphic fileref="./prizebook.png"/>
+  </figure>
+
+<para>During the agreement  period - each prize is subject to be altered by index. The index
+  history is stored</para>
+  <figure>
+   <title>Prize index</title>
+   <graphic fileref="./prizebook_index.png"/>
+  </figure>
+ </refsect1>
+ 
+
+ <refsect1 id="{@id property.software.helpdesk}">
+  <title>Help desk</title>
+  <para>The HelpDesk submodule is a hacked version of the
+  phpgroupware's standard
+  Trouble Ticket System application. The main differences is that the
+  tickets are fixed to a location or entity - and that one is able to
+    start projects and <!-- <link linkend="property.software.entities">entities</link> --> {@tutorial architecture.pkg#property.software.entities}
+    (i.e. reports) from a ticket - which
+  enhance the trace-ability <footnote><para>Links are generated from the
+  ticket to the project/entity - and from the project/entity back to the ticket</para>
+    </footnote></para>
+     <para>The owner a of ticket is notified by mail when the ticket
+  is updated.</para>
+  <figure>
+   <title>Principle HelpDesk</title>
+   <graphic fileref="./tts_use.png"/>
+  </figure>
+ </refsect1> 
+ <refsect1 id="{@id property.software.acc}">
+  <title>Access control / security</title>
+  <para>There is two level of permissions</para>
+   <orderedlist>
+    <listitem><simpara>Granting users
+     rights<footnote><para>Read,add,edit,delete and manage. For the
+     location <emphasis>invoice</emphasis> there is in addition three
+     different roles to controle granting for payment</para>
+     </footnote>at sub-module locations</simpara>
+    </listitem>
+    <listitem><simpara>Granting other users of the system rights to your records</simpara>
+    </listitem>
+   </orderedlist>
+   <para>The granting of rights can both be given to users and groups
+   of users.</para>
+  <figure>
+   <title>Granting permission</title>
+   <graphic fileref="./admin_access.png"/>
+  </figure>
+ </refsect1>
+ <refsect1 id="{@id property.software.projects}">
+  <title>Projects</title>
+   <para>A project is a collection of orders/contracts. The project is
+   linked to a location or entity (equipment). Projects is separated
+   in orders/contracts that could be subject to bidding contest
+   amongst vendors. Each order is linked to its parent project and to
+   a vendor - and consists of a serie of work-descriptions to perform and / or
+   items to deliver.
+   </para>
+   <para>An order can be defined as simple as a brief description of
+    simple tasks - or  as a detailed complex tender document with a
+    full blown deviation auditing system up per record in the contract
+   </para>
+   <para>The perspective of the projects is from the receiver of
+   the product delivered</para>
+  <figure>
+   <title>Project structure</title>
+   <graphic fileref="./project_structure.png"/>
+  </figure>
+  <para></para>
+ </refsect1>
+ <refsect1 id="{@id property.software.deviation}">
+  <title>Deviation</title>
+  <para>This is a log of how the contract is implemented during the  project.
+   Each record in the contract can be altered by series of pairs of amount/comments. 
+   Along with the date to keep track of the development of the
+   project economy and altered demands
+  </para>
+ </refsect1>
+ <refsect1 id="{@id property.software.invoice}">
+  <title>Electronic invoice handling</title>
+  <para>The potential of the FM-system is optimized if integrated with the organizations accounting system</para>
+   <para>The FM-system serves as a pre-accounting-buffer-system which
+  delivers acquisition-data to the accounting system when orders is
+  placed.</para>
+ <para>There is several approaches to deal with
+  incoming invoices:</para>
+   <itemizedlist>
+    <listitem><simpara>Manual registration (punching) of invoices into the
+    accounting system</simpara></listitem>
+    <listitem><simpara>Import of datafiles/OCR<footnote><para>Optical Character Recognition</para>
+     </footnote>-scanning of invoices into the FM-system - where invoices
+    are matched against orders before approved for payment and
+    exported to the accounting system</simpara>
+    </listitem>
+    <listitem><simpara>Import of datafiles/OCR-scanning of invoices into the accounting system before either:</simpara>
+     <itemizedlist>
+      <listitem><simpara>approval for payment / syncronisation with FM-system</simpara>
+      </listitem>
+      <listitem><simpara>syncronisation with FM-system / approval for payment
+      / syncronisation with accounting system</simpara>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+   <para>The FM-system supports import of
+   cvs-files<footnote><para>MsExcel spreadsheets saved as cvs</para>
+    </footnote>, flatfiles, BBS-files<footnote><para>A proprietary
+   file format for data exchange for the Norwegian banking
+   payment and clearance house (BBS)</para>
+    </footnote>and XML-files</para>
+   <para>Accounting systems tend to be very strict regarding direct
+   access to the database - thus in most cases a XML-file transfer is the
+   most practical solution</para>
+ </refsect1>
+ <refsect1 id="{@id property.software.gab}">
+  <title>Gab-register (w/link to GIS-map)</title>
+  <para>In Norway there is a property (estate) ownership register called GAB - best
+  translated to property,address and building.The GAB-identity of a
+  property serves as a key to look up different types of maps
+  accessible over the internet. This ID also serves as a key to match
+  invoices from public services to the right property location.</para>
+ </refsect1>
+ <refsect1 id="{@id property.software.documentation}">
+  <title>Documentation</title>
+  <para></para>
+ </refsect1>
+ <refsect1 id="{@id property.software.drawing}">
+  <title>Drawing register</title>
+  <para></para>
+ </refsect1>
+ <refsect1 id="{@id property.software.depreciation}">
+  <title>Value Depreciation</title>
+  <para></para>
+ </refsect1>
+ 
+
+
+</refentry>

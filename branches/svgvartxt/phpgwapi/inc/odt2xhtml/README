@@ -1,0 +1,18 @@
+*** English ***
+Odt2Xhtml is a class PHP to transform ODT files in XHTML files, W3C Compliant.
+Is writing in PHP, version  5. 
+It use the lib PCLZip.
+
+*** Espanol ***
+Odt2Xhtml es un class PHP quien permite de transformar los ficheros ODT en ficheros XHTML,
+con conformidad W3C. Esta escrita en PHP, version 5.
+Usa la libreria PCLZip.
+
+*** Francais ***
+Odt2Xhtml est une class PHP pour convertir les fichiers ODT en fichiers XHTML,
+en conformite W3C. Elle est ecrite en PHP5. 
+Elle utilise la bibliotheque PCLZip.
+
+*** Copyright ***
+Licence GNU/LGPL
+

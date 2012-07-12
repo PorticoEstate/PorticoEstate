@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Problems</h2>
+				<p>
+					<b>First read, check and understand the 
+					<a href="../php-configuration.html">PHP Configuration documentation</a></b>
+				</p>
+				<p>
+					A collection of problems from users that cover a wide variety of subjects 
+					(many having nothing to do with phpgroupware)
+				</p>
+				</p>
+					If you decide to post to the <a href="http://support.phpgroupware.org/lists">mailing
+					lists</a> or <a href="http://support.phpgroupware.org">the irc forum</a> with
+					a problem, please include the name and version number of:
+				</p>
+				<ul>
+					<li>name and version of your webserver (on redhat/fedora/mandrake the default 
+						webserver is apache, get the version rpm -qa | grep httpd)</li>
+					<li>name and version of your database (on redhat etc rpm -qa | grep mysql 
+						or rpm -qa | grep postgresql)</p>
+					<li>version of php (on redhat etc rpm -qa | grep php)</li>
+					<li>version of phpgw (the login-box gives u the version and it 
+						might also be on the bottom of other screens), and 
+						the source of the version</li>
+				</ul>
+				<p>
+					We're just adding to these as they come up .. so be patient
+				</p>
+				<p>
+					Before posting double check that you have 
+					<b>READ AND FOLLOWED THE PREVIOUS SECTIONS OF THIS DOCUMENT !!</b>
+				</p>
+				<h3>PHP</h3>
+				<p>
+					most people can get apache and php installed but many people 
+					then run into problems
+				</p>
+				<ul>
+					<li>php pages display as source code .. look into the php 
+						settings you should have in httpd.conf</li>
+					<li>make sure you have installed php-imap (you need php-imap 
+						in order to connect to an imap server from php) and php-pgsql 
+						and php-mysql (you need one of these in order to connect to 
+						your database server) if you intend to use any of 
+						them (they're usually separate software packages)</li>
+				</ul>
+				<h3>Email</h3>
+				<p>
+					System setup for Email gets so many problems that it gets it's 
+					own section: <a href="http://docs.phpgroupware.org/app-email-faq">email-FAQ</a>.
+					Here's some general info to get you started.
+				</p>
+				<ul>
+					<li>imap and pop3 is for recieving, smtp is for sending</li>
+					<li>can't send or can't receive. Before you do anything else, 
+						please check your server settings in Admin, Email, Site Configuration 
+						and also try to use email through another email client program</li>
+					<li>small size limit on email (0.5 MB). For apache 2 and up, there is a 
+						setting in php.conf that says LimitRequestBody 524288 which is 
+						512k, change it to a higher size (for 8meg LimitRequestBody 8388608) 
+						and restart your apache webserver</li>
+					<li>email app folder list includes .dot files in my home directory. 
+						Look into your imap setup and make sure your email server 
+						is putting you email in a subdir of your home directory, not your 
+						home directory itself</li>
+					<li>sometimes I get Variable passed to each() error on 
+						class.mail_dcom_imap_sock.inc.php, and sometimes it works 
+						fine - socket support isn't finished, install php-imap</li>
+				</ul>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>
+
+

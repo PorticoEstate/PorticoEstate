@@ -1,0 +1,167 @@
+%1 - %2 of %3	addressbook	nl	%1 -2 %2 van %3
+%1 - %2 of %3 user accounts	addressbook	nl	%1 - %2 van %3 gebruikersacounts
+%1 records imported	addressbook	nl	%1 records geïmporteerd
+%1 records read (not yet imported, you may go %2back%3 and uncheck test import)	addressbook	nl	%1 records gelezen (nog niet geïmporteerd, u kunt nu %2terug%3 en Test Import uitzetten)
+&lt;b&gt;no conversion type &amp;lt;none&amp;gt; could be located.&lt;/b&gt;  please choose a conversion type from the list	addressbook	nl	&lt;b&gt;Geen conversie type &amp;lg;none&amp;gt; kon gevonden worden.&lt;/b&gt; Kies een conversietype van de lijst.
+@-eval() is only availible to admins!!!	addressbook	nl	@-eval() is alleen beschikbaar voor admins!!!
+add a single entry by passing the fields.	addressbook	nl	Voegt een entry toe door de velden door te geven.
+add custom field	addressbook	nl	Toevoegen Eigen Veld
+add new	addressbook	nl	Toevoegen nieuw
+address	addressbook	nl	Adres
+address book	common	nl	Adresboek
+address book - vcard in	addressbook	nl	Adresboek -VCard in
+address book - view	addressbook	nl	Adresboek - weergave
+address data for	addressbook	nl	Adresgegevens voor
+address line 2	addressbook	nl	Adresregel 2
+address line 3	addressbook	nl	Adresregel 3
+address type	addressbook	nl	Adres Type
+addressbook	common	nl	Adresboek
+addressbook preferences	addressbook	nl	Adresboek voorkeuren
+addressbook-fieldname	addressbook	nl	Adresboek Veldnaam
+addvcard	addressbook	nl	VCard toevoegen
+all	addressbook	nl	Alle
+alt. csv import	addressbook	nl	Alt. CSV Import
+are you sure you want to delete this field?	addressbook	nl	Weet u zeker dat u dit veld wilt verwijderen?
+bbs phone	addressbook	nl	BBS Telefoon
+birthday	common	nl	Verjaardag
+birthdays	common	nl	Verjaardagen
+blank	addressbook	nl	Blanco
+business	common	nl	Zakelijk
+business address type	addressbook	nl	Zakelijkadres Type
+business city	addressbook	nl	Zaken Stad
+business country	addressbook	nl	Zaken Land
+business email	addressbook	nl	Zaken E-mail
+business email type	addressbook	nl	Zaken E-mail Type
+business fax	addressbook	nl	Zaken Fax
+business phone	addressbook	nl	Zaken Telefoon
+business state	addressbook	nl	Zaken Staat
+business street	addressbook	nl	Zaken Straat
+business zip code	addressbook	nl	Zaken Postcode
+car phone	addressbook	nl	Autotelefoon
+cell phone	addressbook	nl	Mobiele Telefoon
+city	common	nl	Stad
+communication data for	addressbook	nl	Communicatie Data voor
+company	common	nl	Bedrijf
+company name	common	nl	Bedrijfsnaam
+contact	common	nl	Contact
+contact application	admin	nl	Contact applicatie
+contact settings	admin	nl	Contact Instellingen
+copied by %1, from record #%2.	addressbook	nl	Gecopïeerd door %1, van record #%2.
+country	common	nl	Land
+csv-fieldname	addressbook	nl	CSV-Veldnaam
+csv-filename	addressbook	nl	CSV-Bestandsnaam
+current	addressbook	nl	Huidige
+custom	addressbook	nl	Eigen
+custom fields	addressbook	nl	Eigen Velden
+debug output in browser	addressbook	nl	Debug uitvoer naar browser
+defaul	addressbook	nl	Standaard
+default filter	addressbook	nl	Standaard Filter
+delete a single entry by passing the id.	addressbook	nl	Verwijer een enkele invoer door de id door te geven.
+department	common	nl	Afdeling
+domestic	addressbook	nl	Binnenlands
+download	addressbook	nl	Download
+e-mail	addressbook	nl	E-mail
+edit custom field	addressbook	nl	Bewerk Eigen Veld
+edit custom fields	admin	nl	Bewerk Eigen Velden
+empty	addressbook	nl	Leeg
+export contacts	addressbook	nl	Contacten Exporteren
+export file name	addressbook	nl	naam Exportbestand
+export from addressbook	addressbook	nl	Exporteer vanuit Adresboek
+extra	addressbook	nl	Extra
+fax	addressbook	nl	Fax
+fax number	common	nl	fax nummer
+field %1 has been added !	addressbook	nl	Veld %1 is toegevoegd!
+field %1 has been updated !	addressbook	nl	Veld %1 is aangepast!
+field name	addressbook	nl	Veldnaam
+fields to show in address list	addressbook	nl	Velden te tonen in adreslijst
+fieldseparator	addressbook	nl	Veldscheiding
+first name	addressbook	nl	Voornaam
+full name	addressbook	nl	Volledige Naam
+general data	addressbook	nl	Algemene Gegevens
+geo	addressbook	nl	GEO
+grant addressbook access	common	nl	Adresboek toegang toestaan
+home address type	addressbook	nl	Huisadres Type
+home city	addressbook	nl	Thuis stad
+home country	addressbook	nl	Thuis land
+home email	addressbook	nl	Thuis E-mail
+home email type	addressbook	nl	Thuis E-mail Type
+home phone	addressbook	nl	Thuis Telefoon
+home state	addressbook	nl	Thuis Provincie
+home street	addressbook	nl	Thuis Straat
+home zip code	addressbook	nl	Thuis Postcode
+import	addressbook	nl	Importeren
+import contacts	addressbook	nl	Contacten Importeren
+import csv-file into addressbook	addressbook	nl	Importeer CSV-bestand in Adresboek
+import file	addressbook	nl	Importbestand
+import from ldif, csv, or vcard	addressbook	nl	Importeer vanuit LDIF, CSV of VCard
+import from outlook	addressbook	nl	Importeer vanuit Outlook
+international	addressbook	nl	Internationaal
+isdn phone	addressbook	nl	ISDN Telefoon
+label	addressbook	nl	Label
+last name	addressbook	nl	Achternaam
+ldap context for contacts	admin	nl	LDAP context voor contacten
+ldap host for contacts	admin	nl	LDAP host voor contacten
+ldap root dn for contacts	admin	nl	LDAP root dn voor contacten
+ldap root pw for contacts	admin	nl	LDAP root pw foro contacten
+ldif	addressbook	nl	LDIF
+line 2	addressbook	nl	Regel 2
+message phone	addressbook	nl	Berichten Telefoon
+middle name	addressbook	nl	Midden Naam
+mobile	addressbook	nl	Mobiel
+mobile phone	addressbook	nl	Mobiele Telefoon
+modem phone	addressbook	nl	Modem Telefoon
+no vcard	addressbook	nl	Geen VCard
+notes	addressbook	nl	Opmerkingen
+number of records to read (&lt;=200)	addressbook	nl	Aantal record te lezen (&lt;=200)
+organizations data	addressbook	nl	Organisatie Gegevens
+orgs	addressbook	nl	Orgs
+other data for	addressbook	nl	Andere Gegevens over
+other number	addressbook	nl	Ander nummer
+other phone	addressbook	nl	Andere Telefoon
+pager	common	nl	Buzzer
+parcel	addressbook	nl	Pakket
+person extra fields for	addressbook	nl	Persoon extra velden voor
+phone	addressbook	nl	Telefoon
+phone number	common	nl	telefoon nummer
+phone numbers	common	nl	Telefoonnummers
+please enter a name for that field !	addressbook	nl	Voor een naam in voor dat veld!
+postal	common	nl	Post
+pref	addressbook	nl	voork
+preferred	addressbook	nl	Voorkeur
+prefix	addressbook	nl	Voorvoegsel
+public key	addressbook	nl	Publieke Sleutel
+read a list of entries.	addressbook	nl	Lees een lijst van invoeren
+read a single entry by passing the id and fieldlist.	addressbook	nl	Lees een enkele entry door de id en veldlijst in te geven
+record access	addressbook	nl	Record-toegang
+record owner	addressbook	nl	Record-eigenaar
+remove	addressbook	nl	Verwijder
+retrieve contacts	admin	nl	opvragen contacten
+rl	addressbook	nl	URL
+select fields	addressbook	nl	selecteer velden
+select where you want to store	admin	nl	Selecteer waar u wilt opslaan
+show birthday reminders on main screen	addressbook	nl	Verjaardagsherinneringen weergeven op hoofdscherm
+startrecord	addressbook	nl	Aanvangsrecord
+state	common	nl	Provincie
+street	common	nl	Straatnaam
+suffix	addressbook	nl	Achtervoegsel
+test import (show importable records &lt;u&gt;only&lt;/u&gt; in browser)	addressbook	nl	Test Import (toon te importeren records &lt;u&gt;alleen&lt;/u&gt; in browser)
+that field name has been used already !	addressbook	nl	Die veldnaam is al in gebruik!
+this person's first name was not in the address book.	addressbook	nl	De voornaam van deze persoon staat niet in het adresboek.
+this person's last name was not in the address book.	addressbook	nl	De achternaam van deze persoon staat niet in het adresboek.
+title	addressbook	nl	Titel
+today is %1's birthday!	common	nl	Vandaag is %1's verjaardag!
+tomorrow is %1's birthday.	common	nl	Morgen is %1's verjaardag.
+type	addressbook	nl	Type
+update a single entry by passing the fields.	addressbook	nl	Aanpassen enkele entry door de velden door te geven.
+use country list	addressbook	nl	Gebruik Landenlijst
+value	addressbook	nl	Waarde
+vcard	common	nl	VCard
+vcards require a first name entry.	addressbook	nl	VCards vereisen een voornaam
+vcards require a last name entry.	addressbook	nl	VCard benodigd invoer achternaam
+video phone	addressbook	nl	Video Telefoon
+voice phone	addressbook	nl	Stem Telefoon
+warning!! ldap is valid only if you are not using contacts for accounts storage!	admin	nl	Waarschuwing!! LDAP is alleen geldig als u Contacten NIET gebruikt om accountgegevens op te slaan!
+work phone	addressbook	nl	Telefoon werk
+you must select a vcard. (*.vcf)	addressbook	nl	U moet een (*.vcf) vcard selecteren.
+you must select at least 1 column to display	addressbook	nl	U moet minstens 1 kolom selecteren om iets te tonen
+zip code	common	nl	Postcode

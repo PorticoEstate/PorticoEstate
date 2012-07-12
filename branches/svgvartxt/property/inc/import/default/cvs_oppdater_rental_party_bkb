@@ -1,0 +1,117 @@
+<?php
+	class import_conversion
+	{
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		public $debug = true;
+		public $fields = array();
+		public $table;
+		public $metadata = array();
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+		}
+
+		public function add($data)
+		{
+			$error = false;
+			$table = $this->table;
+			$fields =  $this->fields;
+
+			if(!$table)
+			{
+				throw new Exception("Tabell er ikke angitt");
+			}
+
+			if(!$fields)
+			{
+				throw new Exception("Felter er ikke definert");
+			}
+
+			$id = (int)$data[array_search('id', $fields)];
+			
+			if(!$id)
+			{
+				throw new Exception("Fant ikke verdi for feltet 'id'");
+			}
+
+			$value_set = array();
+			foreach ($fields as $key => $field)
+			{
+				$value_set[$field] 	= $this->validate_value($data[$key], $field);
+			}
+			unset($value_set['id']);
+		
+			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
+				$value_set	= $this->db->validate_update($value_set);
+				$sql = "UPDATE {$table} SET {$value_set} WHERE id = {$id}";
+			}
+			else
+			{
+				$this->warnings[] = "ID fantes ikke fra før: {$id}";
+			}
+
+			if($this->debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			if(!$error)
+			{
+				$this->messages[] = "Successfully updated party: Title ({$data[7]})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error updating location: Title ({$data[7]})";
+				$ok = false;
+			}
+			return $ok;
+		}
+
+		
+		/**
+		 * Test a value for null according to several formats that can exist in the export.
+		 * Returns true if the value is null according to these rules, false otherwise.
+		 * 
+		 * @param string $value The value to test
+		 * @return bool
+		 */
+		protected function is_null($value)
+		{
+			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
+		}
+
+		protected function validate_value($value,$field)
+		{
+			$datatype = $this->metadata[$field]->type;
+			switch ($datatype)
+			{
+				case 'char':
+				case 'varchar':
+				case 'text':
+					$ret = $this->db->db_addslashes($value);
+					break;
+				case 'bool':
+					$ret = $value ? 'True' : 'False';
+					break;
+				default:
+					$ret = $value;
+			}
+
+			return $ret;
+		}
+
+	}

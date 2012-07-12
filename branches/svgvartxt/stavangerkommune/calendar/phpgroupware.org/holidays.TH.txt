@@ -1,0 +1,17 @@
+TH	New Year\'s Day	1	1	0	0	1
+TH	Chinese New Year (Substitution Day)	3	2	2003	0	0
+TH	Makha Bucha Day (Substitution Day)	17	2	2003	0	0
+TH	Chakri Day (Substitution Day)	7	4	0	0	1
+TH	Songkran Festival	13	4	0	0	1
+TH	Songkran Festival	14	4	0	0	1
+TH	Songkran Festival	15	4	0	0	1
+TH	National Labour Day	1	5	0	0	1
+TH	Coronation Day	5	5	0	0	1
+TH	Wisakha Bucha Day	15	5	2003	0	0
+TH	Buddhist Lent Day	14	7	2003	0	0
+TH	H.M. the Queen\'s Birthday	12	8	0	0	1
+TH	Chulalongkorn Day	23	10	0	0	1
+TH	H.M. the King\'s Birthday	5	12	0	0	1
+TH	Constitution Day	10	12	0	0	1
+TH	Christmas Day	25	12	0	0	1
+TH	New Year\'s Eve	31	12	0	0	1

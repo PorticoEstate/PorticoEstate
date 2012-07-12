@@ -1,0 +1,113 @@
+******************************
+*    getFolderContent
+******************************
+
+The folder application uses the hook technique. The application
+can display any kind of information/data in form of a tree. To
+retrieve those information a hook 'getFolderContent' is proceed.
+
+The folder application itselfs provide a hook to deliver all available
+categories for the actual user (use user who actually is logged to
+the phpgroupware).
+
+A hook of the 'email' module provides all IMAP-Accounts with
+its mailfolders.
+
+Additional hooks in other applications are thinkable: As an example the
+'calendar' module could provide all actual appointment for a user of the
+actual week.
+
+All these data/information are collected by the folders module and are
+parsed to a tree view.
+
+In the phpGroupware two hook mechanisms are possible:
+
+1. An old hook style just includes some php-code. This method is not
+supported by the folders module.
+
+2. A new hook style allows to call a certain function and allows to get
+a return value of this function. This hook style is used by the folders
+application. The method is called 'getFolderContent'.
+
+
+The folders module expect an array in a certain form as return value.
+See the next example for more details:
+
+Array
+        (
+            [content] => Array
+                (
+                    [email_0] => Array
+                        (
+                            [text] => Postfach 'standard'
+                            [parent_id] => 0
+                            [icon] => 
+                        )
+
+                    [email_0_INBOX] => Array
+                        (
+                            [text] => INBOX
+                            [title] => INBOX
+                            [icon] => email/templates/probusiness/images/folders.png
+                            [parent_id] => email_0
+                            [href] => /phpgw-pb-tpl/index.php?menuaction=email.uiindex.index&fldball[folder]=INBOX&fldball[acctnum]=0&sessionid=7d420f1dbc4f78626b5d9f2650a3861b&kp3=9fbf49ec310b7cfd0223d366a0ed60bb&domain=default&PHPSESSID=483ae728eeae96fc158461eca05f67a9&click_history=3176a0e60e8776d7f2e1acda1e121e3f
+                            [target] => _parent
+                        )
+
+                    [email_0_Sent] => Array
+                        (
+                            [text] => Sent
+                            [title] => INBOX.Sent
+                            [icon] => email/templates/probusiness/images/folders.png
+                            [parent_id] => email_0
+                            [href] => /phpgw-pb-tpl/index.php?menuaction=email.uiindex.index&fldball[folder]=INBOX.Sent&fldball[acctnum]=0&sessionid=7d420f1dbc4f78626b5d9f2650a3861b&kp3=9fbf49ec310b7cfd0223d366a0ed60bb&domain=default&PHPSESSID=483ae728eeae96fc158461eca05f67a9&click_history=3176a0e60e8776d7f2e1acda1e121e3f
+                            [target] => _parent
+                        )
+
+                    [email_0_Trash] => Array
+                        (
+                            [text] => Trash
+                            [title] => INBOX.Trash
+                            [icon] => email/templates/probusiness/images/folders.png
+                            [parent_id] => email_0
+                            [href] => /phpgw-pb-tpl/index.php?menuaction=email.uiindex.index&fldball[folder]=INBOX.Trash&fldball[acctnum]=0&sessionid=7d420f1dbc4f78626b5d9f2650a3861b&kp3=9fbf49ec310b7cfd0223d366a0ed60bb&domain=default&PHPSESSID=483ae728eeae96fc158461eca05f67a9&click_history=3176a0e60e8776d7f2e1acda1e121e3f
+                            [target] => _parent
+                        )
+
+                    [email_0_helpdesk] => Array
+                        (
+                            [text] => helpdesk
+                            [title] => INBOX.helpdesk
+                            [icon] => email/templates/probusiness/images/folders.png
+                            [parent_id] => email_0
+                            [href] => /phpgw-pb-tpl/index.php?menuaction=email.uiindex.index&fldball[folder]=INBOX.helpdesk&fldball[acctnum]=0&sessionid=7d420f1dbc4f78626b5d9f2650a3861b&kp3=9fbf49ec310b7cfd0223d366a0ed60bb&domain=default&PHPSESSID=483ae728eeae96fc158461eca05f67a9&click_history=3176a0e60e8776d7f2e1acda1e121e3f
+                            [target] => _parent
+                        )
+
+                )
+
+        )
+        
+ The folders module will parse this array as following illustration shows:
+ 
+ Postfach 'standard'
+        INBOX
+        Sent
+        Trash
+        helpdesk
+        
+The most important elements of this array are:
+- array key which is the ID of each tree element
+- the parent_id key which contains the reference to a parent element (the ID)
+
+The value '0' (0 as a string) as a parent key determines that the element
+is going to be a first node under the root element.
+
+The array key (id of each tree element) has to be non-ambiguous. Therefore each
+application which provides data or information to the folders module have to name
+this key with a starting <applicationname_>. In this example the email module
+names all keys with a strarting 'email_' in the id names.
+
+For all tree entries you are able to specifie a custom href with its target and a custom
+image. If the image doesn't exists a standard image is going to be used.
+

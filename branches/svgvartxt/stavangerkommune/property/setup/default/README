@@ -1,0 +1,2 @@
+This catalag represent localised tranlsation for each 'phpgw_domain'.
+If one wants differents translation to the same item - create a catalog for the domain in question and create a lang file with your translations

@@ -1,0 +1,95 @@
+%1 already exists as a file	filemanager	sv	%1 existerar redan som fil
+application	filemanager	sv	Program
+back to file manager	filemanager	sv	Tillbaka till filhanteraren
+cannot create directory because it begins or ends in a space	filemanager	sv	Kan inte skapa mapp eftersom den börjar eller slutar med ett mellanslag
+cannot replace %1 because it is a directory	filemanager	sv	Kan inte byta ut %1 för det är en mapp
+command sucessfully run	filemanager	sv	Kommandot kördes utan fel
+comment	filemanager	sv	Kommentar
+comments cannot contain "%1"	filemanager	sv	Kommentarer kan inte innehålla "%1"
+copied %1 to %2	filemanager	sv	Kopierade %1 till %2
+copy to	filemanager	sv	Kopiera till
+copy to:	filemanager	sv	Kopiera till:
+could not copy %1 to %2	filemanager	sv	Kunde inte kopiera %1 till %2
+could not create %1	filemanager	sv	Kunde inte skapa %1
+could not create directory %1	filemanager	sv	Kunde inte skapa mappen %1
+could not delete %1	filemanager	sv	Kunde inte radera %1
+could not move %1 to %2	filemanager	sv	Kunde inte flytta %1 till %2
+could not rename %1 to %2	filemanager	sv	Kunde inte byta namn på %1 till %2
+could not save %1	filemanager	sv	Kunde inte spara %1
+create file	filemanager	sv	Skapa fil
+create folder	filemanager	sv	Skapa mapp
+created	filemanager	sv	Skapad
+created %1	filemanager	sv	Skapad %1
+created by	filemanager	sv	Skapad av
+created directory %1	filemanager	sv	Skapade mapp %1
+date	filemanager	sv	Datum
+default number of upload fields to show	filemanager	sv	Standard antal uppladdningsfält som ska visas
+delete	filemanager	sv	Radera
+deleted %1	filemanager	sv	Raderad %1
+directory	filemanager	sv	Mapp
+directory %1 already exists	filemanager	sv	Mappen %1 finns redan
+directory %1 does not exist	filemanager	sv	Mappen %1 finns inte
+directory names cannot contain "%1"	filemanager	sv	Mappnamn kan inte innehålla "%1"
+display attributes	filemanager	sv	Visa attribut
+download	filemanager	sv	Ladda ner
+edit	filemanager	sv	Ändra
+edit comments	filemanager	sv	Ändra kommentarer
+error running command	filemanager	sv	Fel vid kommandokörning
+execute	filemanager	sv	Utför
+failed to create directory	filemanager	sv	kunde inte skapa mapp
+file	filemanager	sv	Fil
+file %1 already exists. please edit it or delete it first.	filemanager	sv	Fil %1 finns redan. Ändra namn eller radera den först.
+file %1 could not be created.	filemanager	sv	Fil %1 kunde inte skapas.
+file name	filemanager	sv	Filnamn
+file names cannot contain "%1"	filemanager	sv	Filnamn kan inte innehålla "%1"
+file names cannot contain \ or /	filemanager	sv	Filnamn kan inte innehålla \ eller /
+filemanager	common	sv	Filhanterare
+filemanager preferences	filemanager	sv	Filhanterare förinställningar
+files	filemanager	sv	Filer
+folder	filemanager	sv	Mapp
+go to	filemanager	sv	Gå till
+go to %1	filemanager	sv	Gå till %1
+go to your home directory	filemanager	sv	Gå till din hemmapp
+go to:	filemanager	sv	Gå till:
+home	filemanager	sv	Hem
+locked	filemanager	sv	Låst
+mime type	filemanager	sv	MIME typ
+modified	filemanager	sv	Ändrad
+modified by	filemanager	sv	Ändrad av
+move to	filemanager	sv	Flytta till
+move to:	filemanager	sv	Flytta till:
+moved %1 to %2	filemanager	sv	Flyttade %1 till %2
+no version history for this file/directory	filemanager	sv	Ingen versionshistorik för denna fil/mapp
+operation	filemanager	sv	Operation
+owner	filemanager	sv	Ägare
+preview %1	filemanager	sv	Förhandsgranska %1
+preview of %1	filemanager	sv	Förhandsgranskning av %1
+rename	filemanager	sv	Byt namn
+renamed %1 to %2	filemanager	sv	Bytt namn %1 till %2
+replaced %1	filemanager	sv	Bytte ut %1
+save %1	filemanager	sv	Spara %1
+save all	filemanager	sv	Spara alla
+saved %1	filemanager	sv	Sparade %1
+show	filemanager	sv	Visa
+show ..	filemanager	sv	Visa ..
+show .files	filemanager	sv	Visa .filer
+show command line (experimental. dangerous.)	filemanager	sv	Visa kommandorad (EXPERIMENTELLT. FARLIGT.)
+show help	filemanager	sv	Visa hjälp
+size	filemanager	sv	Storlek
+sort by:	filemanager	sv	Sortera efter:
+total files	filemanager	sv	Totalt filer
+unknown mime-type defaults to text/plain when viewing	filemanager	sv	Okänd MIME-typ, ändras till text/plain vid visning
+unused space	filemanager	sv	Oanvänt utrymme
+up	filemanager	sv	Upp
+update	filemanager	sv	Uppdatera
+updated comment for %1	filemanager	sv	Uppdatera kommentar för %1
+upload fields	filemanager	sv	ladda upp fält
+upload files	filemanager	sv	Ladda upp filer
+used space	filemanager	sv	Använt utrymme
+users	filemanager	sv	Användare
+version	filemanager	sv	Version
+view documents in new window	filemanager	sv	Visa dokument i nytt fönster
+view documents on server (if available)	filemanager	sv	Visa dokument på servern (om de finns)
+who	filemanager	sv	Vem
+you do not have access to %1	filemanager	sv	Du har inte behörighet till %1
+

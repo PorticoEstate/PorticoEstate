@@ -1,0 +1,304 @@
+<?php
+	class import_conversion
+	{
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		public $debug = true;
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->custom 		= createObject('property.custom_fields');
+			$this->attrib_data	= $this->custom->find('property', '.project.request', 0, '', 'ASC', 'attrib_sort', true, true);
+		}
+
+		public function add($data)
+		{
+
+			$debug = $this->debug;
+			$error = false;
+			$type = $data[0];
+			$location_arr = explode('-',$data[1]);
+			
+			if(strpos($location_arr[0], 'A') !== false )
+			{
+				$location_code = $location_arr[0] . '-' . sprintf("%04d",$data[2]);
+			}
+			else
+			{
+				$location_code = $location_arr[0] . '-' . sprintf("%02d",$data[2]);			
+			}
+
+			$location_data = execMethod('property.solocation.read_single', $location_code );
+
+			if($debug)
+			{
+				_debug_array($data);
+			}
+
+
+//_debug_array($location_data);die();
+			if(!$location_data)
+			{
+				$this->errors[] = "Error importing location: {$location_code}";
+				$error = true;
+				return false;
+			}
+
+			$value_set = array();
+
+    		$value_set['loc1'] = $location_data['loc1'];
+    		$value_set['loc2'] = $location_data['loc2'];
+
+
+			if($location_data['street_name'])
+			{
+				$address[]= $location_data['street_name'];
+				$address[]= $location_data['street_number'];
+				$address	= $this->db->db_addslashes(implode(" ", $address));
+			}
+
+			if(!$address)
+			{
+				$address = $this->db->db_addslashes($location_data['loc1_name']);
+			}
+
+
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'request'");
+			$this->db->next_record();
+			$id = $this->db->f('value')+1;
+
+			if($data[7])
+			{
+				$entry_date_info = explode('/',$data[7]);
+			}
+			else if($data[8])
+			{
+				$entry_date_info = explode('/',$data[8]);
+			}
+			//YYYY/MM/DD
+			
+			if(isset($entry_date_info[0]) && ctype_digit($entry_date_info[0]))
+			{
+				$entry_date = strtotime("{$entry_date_info[0]}/06/24");
+			}
+			else
+			{
+				$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
+				$entry_date = time();
+			}
+
+
+//_debug_array($entry_date_info);
+//_debug_array($entry_date);
+
+			$status = 'registrert';
+			
+			if($data[3])//historikk
+			{
+				$status = 'avsluttet';
+			}
+
+			if($data[9])//Status - Utført
+			{
+				if($data[9] == 'Delvis')
+				{
+					$status = 'delvis';				
+				}
+				else if($data[9] == 'Utgått')
+				{
+					$status = 'kansellert';				
+				}
+				else
+				{
+					$status = 'avsluttet';				
+					$value_set['closed_date']		= strtotime("{$data[9]}/06/24");
+				}
+			}
+
+/*
+			$value_set['in_progress_date']	= time();
+			$value_set['delivered_date']	= time();
+*/
+
+			
+			switch ($data[4])
+			{
+				case 'D':
+					$category = 13;
+					break;
+				case 'V':
+					$category = 12;
+					break;
+				case 'U':
+					$category = 14;
+					break;
+				case 'Kombinasjon':
+					$category = 202;
+					break;
+				default:
+					$category = 202;
+					break;
+
+			}
+			
+			$value_set['id'] 					= $id;
+			$value_set['title']					= substr($this->db->db_addslashes("{$data[0]}::{$data[6]}::{$data[20]}"), 0 , 100);
+			$value_set['owner']					= $this->account;
+			$value_set['category']				= $category;
+			$value_set['descr']					= $this->db->db_addslashes("{$data[6]}\n{$data[20]}");
+			$value_set['location_code']			= $location_code;
+			$value_set['address']				= $address;
+			$value_set['entry_date']			= $entry_date;
+			$value_set['budget']				= (int)str_replace(',', '', $data[21]);
+			$value_set['status']				= $status;
+	//		$value_set['coordinator']			= $coordinator;
+			$value_set['authorities_demands']	= $authorities_demands;
+			$value_set['building_part']			= $data[5];
+			$value_set['vurderingskriterie']	= (int)$data[10];
+
+			reset($this->attrib_data);
+			foreach ( $this->attrib_data as $attrib )
+			{
+				if($attrib['datatype'] == 'LB' && $attrib['column_name'] == 'hjemmel')
+				{
+					foreach($attrib['choice'] as $choice)
+					{
+						if(strpos($choice['value'], $data[11]) !== false)
+						{
+							$value_set['hjemmel']	= $choice['id'];
+							break 2;
+						}
+					}
+				}
+			}
+
+/*
+			reset($this->attrib_data);
+			foreach ( $this->attrib_data as $attrib )
+			{
+				if($attrib['datatype'] == 'LB' && $attrib['column_name'] == 'forskriftshjemmel')
+				{
+					foreach($attrib['choice'] as $choice)
+					{
+						if(strpos($choice['value'], $data[12]) !== false)
+						{
+							$value_set['forskriftshjemmel']	= $choice['id'];
+							break 2;
+						}
+					}
+				}
+			}
+*/
+
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+
+			$sql = "INSERT INTO fm_request ({$cols}) VALUES ({$values})";
+
+			if($debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+				if($request_ok)
+				{
+					$this->db->query("UPDATE fm_idgenerator set value = value + 1 where name = 'request'");
+				}
+			}
+
+			$condition = array();
+			$condition_type = (int) substr($data[14], 0, 1);
+//_debug_array($data);			
+			if($condition_type)
+			{
+				$condition[$condition_type] = array
+				(
+					'degree'		=> $data[13] ? (int)$data[13] : 0,
+					'probability'	=>	$data[16] ? (int)$data[16] : 0,
+					'consequence'	=>	$data[15] ? (int)$data[15] : 0,
+				);
+			}
+			
+//_debug_array($condition);			
+			foreach ($condition as $condition_type => $value_type)
+			{
+				$sql = "INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+					. "VALUES ("
+					. $id. ","
+					. $condition_type . ","
+					. $value_type['degree']. ","
+					. $value_type['probability']. ","
+					. $value_type['consequence']. ","
+					. $this->account . ","
+					. time() . ")";
+
+				if($debug)
+				{
+					_debug_array($sql);
+				}
+				else
+				{
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+			$consume_data = array();
+
+			$j = 0;
+			for ($i=22; $i<36; $i++)
+			{
+				$data[$i] = str_replace(',', '', $data[$i]);
+
+				$year = 2012 - $j;
+				$j++;
+				if($data[$i] && ctype_digit($data[$i]))
+				{
+					$consume_data[] = array
+					(
+						 'value' => (int)$data[$i],
+						 'date' => strtotime("{$year}/06/24")
+					);
+				}
+			}
+
+			foreach ($consume_data as $consume)
+			{
+				$sql = "INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ("
+					. $id . ","
+					. (int)$consume['value'] . ","
+					. (int)$consume['date'] . ","
+					. $this->account . ","
+					. time() . ")";
+
+				if($debug)
+				{
+					_debug_array($sql);
+				}
+				else
+				{
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+
+			if(!$error)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$data[20]})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$data[20]})";
+				$ok = false;
+			}
+			return $ok;
+		}
+	}

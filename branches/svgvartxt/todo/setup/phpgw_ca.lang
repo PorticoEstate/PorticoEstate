@@ -1,0 +1,42 @@
+access changed	todo	ca	Accés canviat
+add main project	todo	ca	Afegir projecte principal
+add sub project	todo	ca	Afegir sub-projecte
+adds or edits a todo item	todo	ca	Afegir o editar un element
+are you sure you want to delete this entry	todo	ca	Segur que vol eliminar aquesta entrada ?
+assigned to	todo	ca	Assignat a
+category changed	todo	ca	Categoria canviada
+completed	todo	ca	completat
+deletes a todo item	todo	ca	Elimina un element
+description can not exceed 8000 characters in length	todo	ca	La descripció no pot excedir els 8000 caràcters !
+description changed	todo	ca	Descripció canviada
+do you also want to delete all sub projects ?	todo	ca	Vol eliminar també tots els sub-projectes ?
+edit main project	todo	ca	Editar projecte principal
+edit sub project	todo	ca	Editar sub-projecte
+end date changed	todo	ca	Data d'acabament canviada
+ending date can not be before start date	todo	ca	La data d'acabament no pot ser anterior a la data de començament !
+entry added	todo	ca	Entrada afegida
+high	todo	ca	Alt
+low	todo	ca	Baix
+nobody	todo	ca	Ningú
+normal	todo	ca	Normal
+or: days from startdate:	todo	ca	o: dies des de la data d'inici:
+or: select for today:	todo	ca	o: seleccioni per avui:
+parent changed	todo	ca	Precedent canviat
+parent project	todo	ca	Projecte Precedent
+please enter a title	todo	ca	Si us plau, introdueixi un títol !
+returns a the total number of records in the database, must call list_todos first	todo	ca	Retorna el número total de registres a la base dadades, must call list_todos first
+show todo items on main screen	todo	ca	Mostrar elements recordatori (ToDo) a la pantalla principal
+start date changed	todo	ca	Data d'inici canviada
+status changed	todo	ca	Estat canviat
+title changed	todo	ca	Títol canviat
+to do list	common	ca	Llista de recordatoris
+todo	common	ca	recordatori
+todo list	common	ca	Llista de recordatoris
+todo preferences	todo	ca	Preferències dels recodatoris (ToDo)
+urgency	todo	ca	Urgència
+urgency changed	todo	ca	Urgència canviada
+view matrix of actual month	todo	ca	Vista matricial del mes actual
+view todo item	todo	ca	Veure recordatori
+you can only enter numbers for days from now	todo	ca	Per ara només por introduir números per als dies !
+you have entered an ending invalid date	todo	ca	Ha introduit una data d'acabament invàlida !
+you have entered an starting invalid date	todo	ca	Ha introduit una data de començament invàlida !

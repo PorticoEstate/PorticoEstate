@@ -1,0 +1,137 @@
+/*
+ * Conflicts with portico
+body, div, input, p, select, textarea
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+*/
+a
+{
+	text-decoration: none;
+}
+
+a:hover, a:active
+{
+	text-decoration: underline;
+}
+
+img
+{
+	border: 0px;
+}
+
+label, input[type=text], input[type=password], input[type=checkbox], input[type=radio], select, textarea
+{
+	margin-bottom: 8px;
+}
+
+label, input[type=text], input[type=password], select, textarea
+{
+	display: block;
+	float: left;
+	margin-bottom: 8px;
+}
+
+label
+{
+	text-align: right;
+	width: 150px;
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+textarea
+{
+/*	white-space: normal;*/
+}
+
+br
+{
+	clear: left;
+}
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: center;
+}
+
+.link_group
+{
+	text-align: center;
+}
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+.yui-dt .yui-dt-hidden
+{
+	border-right:0px solid #ff0 !important;
+}
+.yui-tt .bd
+{
+	background-color:#fffbeb !important;
+	border-color:#D4C237 #A6982B #A6982B;
+	border-width:0px !important;
+	color:#000000 !important;
+	left:0 !important;
+	padding:0 !important;
+	font-family: tahoma !important;
+	font-size: 11px !important;
+}
+.tooltip-table
+{
+	width:200px !important;
+}
+.tooltip
+{
+	background-color:#0066cc !important;
+	color:#FFFFFF !important;
+	font-weight: bold !important;
+	font-family: tahoma !important;
+	font-size: 11px !important;
+}
+.nolink a
+{
+	color:#FFFFFF !important;
+	text-decoration: none !important;
+}
+.nolink a visited
+{
+	color:#FFFFFF !important;
+	text-decoration: none !important;
+}
+
+#curtain {
+    background: none repeat scroll 0 0 #000000;
+    display: none;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+#popupBox {
+    background: none repeat scroll 0 0 #fff;
+    display: none;
+    height: 50%;
+    left: 80px;
+    position: absolute;
+    top: 80px;
+    width: 800px;
+    z-index: 2;
+}
+
+

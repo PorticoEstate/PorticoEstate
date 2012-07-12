@@ -1,0 +1,405 @@
+<?php
+	/**
+	* phpGroupWare - property: a Facilities Management System.
+	*
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	* @package property
+	* @subpackage import
+ 	* @version $Id: Import_fra_Kemner,v 1.9 2007/01/26 14:58:56 sigurdne Exp $
+	*/
+
+	/**
+	 * Description
+	 * @package property
+	 */
+	class import_conv
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id = -1;
+		var $spbudact_code='11954111';
+		var $dimb=40;
+		var $mvakode=0;
+		var $kildeid=1;
+		var $splitt=0;
+		var $type = 'fixed';
+		var $header_count = 0;
+		var $soXport;
+		var $invoice;
+
+		var $import = array(
+			'Bilagsnr' => 'bilagsnr', 
+			'Ref.' => 'fakturanr', 
+			'Gnr/Bnr-seksjon' => 'gid',
+			'Konto' => 'spbudact_code',
+			'Objekt' => 'dima', //objectclass: organizationalPerson
+			'DimB' => 'dimb',
+			'KID' => 'kidnr',
+			'MVA' => 'mvakode',
+			'Tjeneste'=> 'kostra_id',
+			'Beløp [kr]' => 'belop',
+			'Referanse' => 'referanse',
+			'BOEI Gateadresse' => 'boei_gateadresse',
+			);
+
+	//	var $header = array('Bilagsnr','Ref.','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Beløp [kr]','Referanse','BOEI Gateadresse');
+		var $header = array('Bilagsnr','Ref.','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Beløp [kr]','Referanse');
+
+		function import_conv()
+		{
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->soXport 		= CreateObject($this->currentapp.'.soXport');	
+			$this->invoice 		= CreateObject($this->currentapp.'.boinvoice');
+			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
+			$this->dateformat	= $this->bocommon->dateformat;
+			$this->datetimeformat	= $this->bocommon->datetimeformat;
+			
+		}
+
+		function import($invoice_common,$download)
+		{
+		
+			$tsvfile	= $invoice_common['tsvfile'];
+			$conv_type	= $invoice_common['conv_type'];
+
+			$Ingen = 0;
+			$FilGodkjent = 1;
+			$Betalingskrav = 2;
+			$Beløpspost1 = 3;
+			$Beløpspost2 = 4;
+			$Spesifikasjon = 5;
+			$LinjeNr = 0;
+			$ePostNivå = $Ingen;
+			$errorcount = 0;
+			$last_case_merknad='';
+			$bilagsnr = $this->invoice->next_bilagsnr();
+			$buffer = array();
+			$buffer = $this->import_start_file($buffer);
+			$fp = fopen($tsvfile,'r');
+
+			while ($data = fgets($fp,8000))
+			{
+//-----------------------------
+//print_r($buffer);
+				
+			        $LinjeNr = $LinjeNr + 1;
+			        if (strlen($data) >= 80)
+			        {
+					if ($last_case_merknad && substr($data,0,8)!=$last_case_merknad)
+					{
+						if ($Merknad)
+						{
+							$buffer = $this->import_new_attrib($buffer,merknad,$Merknad,$invoice_common);
+						}
+						$Merknad='';
+						$buffer = $this->import_end_record($buffer,$invoice_common);
+						$last_case_merknad='';
+					}
+			            switch(substr($data,0,8))
+			            {
+			                Case 'NY000010':
+			                    //Start forsendelse
+			                    if (($LinjeNr == 1) && ($ePostNivå == $Ingen))
+			                    {
+			                        $ePostNivå = $FilGodkjent;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') . lang('Filen inneholder flere start poster på linje nr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                break;
+			                
+			                Case 'NY210020':
+			                    //Start betalingskrav
+			                    if ($ePostNivå == $FilGodkjent)
+			                    {
+			                        $ePostNivå = $Betalingskrav;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                    $OppdragsNr = substr($data,17,7);
+			                    $OppdragsKonto = substr($data, 24, 11);
+			                break;
+			                
+			                Case 'NY210230':
+			                break;
+			                
+			                Case 'NY212130':
+					$buffer = $this->import_start_record($buffer);
+
+             
+			                    //Beløpspost 1
+			                    if ($ePostNivå == $Betalingskrav Or $ePostNivå >= $Beløpspost2)
+			                    {
+			                        $ePostNivå = $Beløpspost1;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                    //Lagre eksisterende post
+			                    if (!oRsTmp.EOF && !oRsTmp.BOF)
+			                    {
+			                        if (oRsTmp.EditMode == adEditAdd)
+			                        {
+			                            oRsTmp.Update;
+			                        }
+			                    }
+			
+			                    //Opprett post
+			                        $TransaksjonsNr = substr($data, 8, 7);
+			                        $Gnr = substr($data, 56, 5);
+			                        $Bnr = substr($data, 61, 4);
+			                        $sekjonnr = substr($data, 69, 3);
+			
+						$forfall_day = substr($data, 15, 2);
+						$forfall_month = substr($data, 17, 2);
+						$forfall_year = substr($data, 19, 2);
+		//				$periode = $forfall_month - 1;
+						$periode = $forfall_year . sprintf("%02d",($forfall_month - 1));
+
+						$forfallsdato = date($this->dateformat,mktime(2,0,0,$forfall_month,$forfall_day,$forfall_year));
+						$fakturadato= date($this->dateformat,mktime(2,0,0,$forfall_month,$forfall_day,$forfall_year)-(86400*30));
+
+						$belop = intval(substr($data,32,17))/100;
+
+						if( $invoice_common['art'] == 2 ) // kreditnota
+						{
+							$belop = -1 * abs($belop);
+						}
+
+						$kidnr = substr($data, 54, 20);
+						$gid = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
+			
+						$buffer = $this->import_new_attrib($buffer,periode,$periode,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,forfallsdato,$forfallsdato,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,fakturadato,$fakturadato,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,belop,$belop,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,kidnr,$kidnr,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,gid,$gid,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,bilagsnr,$bilagsnr,$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,dimb,$this->dimb,$invoice_common);
+						$bilagsnr++;
+
+			            //Finn dima fra Boei
+			            $gabinfo = $this->soXport->gabnr_to_objekt($Gnr,$Bnr,$sekjonnr);
+						$buffer = $this->import_new_attrib($buffer,'dima',$gabinfo['dima'],$invoice_common);
+						$buffer = $this->import_new_attrib($buffer,'loc1',$gabinfo['loc1'],$invoice_common);
+						//finn boei gateadresse for kongroll
+						$boei_gateadresse=$this->soXport->dima_to_address($dima);
+						$buffer = $this->import_new_attrib($buffer,boei_gateadresse,$boei_gateadresse,$invoice_common);
+						
+			                break;
+			                
+			                Case 'NY210231':
+			                break;
+			                
+			                Case 'NY212131':
+			                    //Beløpspost 2
+			                    if ($ePostNivå == $Beløpspost1)
+			                    {
+			                        $ePostNivå = $Beløpspost2;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                    //Sjekk transaksjonsnr
+			                    if ((intval(substr($data, 8, 7))) <> $TransaksjonsNr)
+			                    {
+						echo lang('Importer_BBS') .lang('Transaksjonsnr på beløpspost 2 stemmer ikke med nr på beløpspost 1. Linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                    $Navn = substr($data, 15, 10);
+			                    $referanse = substr($data, 50, 25);
+			                    $buffer = $this->import_new_attrib($buffer,referanse,$referanse,$invoice_common);                
+					$Merknad = 'Kemner adr: '.$referanse."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n";
+			                break;
+			                
+			                Case 'NY212149':
+			                    //Spesifikasjonsrecord
+			                    if ($ePostNivå >= $Beløpspost2)
+			                    {
+			                        $ePostNivå = $Spesifikasjon;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                    //Hent merknad
+					$Merknad.=strval(substr($data, 20, 40))."\r\n";
+					$last_case_merknad=substr($data,0,8);
+			
+			                break;
+			                
+			                Case 'NY210088':
+			                    //Slutt betalingskrav
+			                    if ($ePostNivå >= $Betalingskrav && $ePostNivå <> $Beløpspost1)
+			                    {
+			                        $ePostNivå = $FilGodkjent;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			
+			                break;
+			                
+			                Case 'NY000089':
+			                    //Slutt forsendelse
+			                    if ($ePostNivå == $FilGodkjent)
+			                    {
+			                        $ePostNivå = $Ingen;
+			                    }
+			                    else
+			                    {
+						echo lang('Importer_BBS') .lang('Formatfeil på fil på linjenr:') . $LinjeNr . lang('Importen kan ikke fortsette');
+				                break 2;
+			                    }
+			                
+			                break;
+			            }
+			
+			            //Filen må altid begynne med en gyldig start record
+			            if ($LinjeNr == 1 && $ePostNivå == $Ingen)
+			            {
+					echo lang('Importer_BBS') . lang('Filen starter ikke med riktig recordtype. Importen kan ikke fortsette');
+			                break;
+			            }
+			        }
+//-----------------------------
+			}
+			fclose($fp);
+
+			if(!$download)
+			{
+				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
+			}
+//print_r($buffer);
+			$this->header = array('Bilagsnr','Ref.','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Tjeneste','Beløp [kr]','Referanse');
+			return $buffer;
+
+		}
+		
+
+		function import_start_file($buffer)
+		{
+			return $buffer;
+		}
+
+		function import_start_record($buffer)
+		{
+			$top=array();
+			++$this->id;
+			$this->currentrecord = $top;
+			return $buffer;
+		}
+
+		function import_new_attrib($buffer,$name,$value,$invoice_common)
+		{
+//			$value = trim($value);
+//			$value = str_replace('\n','<BR>',$value);
+//			$value = str_replace('\r','',$value);
+//echo '<br> '.$name.': => '.$value;
+
+			$this->currentrecord += array($name => $value);
+			return $buffer;
+		}
+
+		function import_end_record($buffer,$invoice_common)
+		{
+			$buffer[$this->id]='';
+
+			while ( list($name, $value) = each($this->currentrecord))
+			{
+				if($name=='belop')
+				{
+					$godkjentbelop=$value;
+				}
+
+
+				if($name=='loc1' && $invoice_common['auto_tax']):
+				{
+					$mvakode=$this->soXport->auto_tax($value);
+					
+					if($mvakode)
+					{
+						$buffer[$this->id]['mvakode'] = $mvakode;
+					}
+					else
+					{
+						$buffer[$this->id]['mvakode'] = $this->mvakode;
+					}
+				}
+				elseif($name=='loc1' && !$invoice_common['auto_tax']):
+				{
+					$buffer[$this->id]['mvakode'] = $this->mvakode;
+				}
+				endif;
+
+				$buffer[$this->id][$name] = $value;
+				$buffer[$this->id]['fakturanr'] = $invoice_common['invoice_num'];
+				$buffer[$this->id]['splitt'] = $this->splitt;
+				$buffer[$this->id]['kildeid'] = $this->kildeid;
+
+				$buffer[$this->id]['spbudact_code'] = $this->spbudact_code;
+				$buffer[$this->id]['typeid'] = $invoice_common['type'];
+				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
+				$buffer[$this->id]['artid'] = $invoice_common['art'];
+				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;
+				$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
+//				$buffer[$this->id]['dimb'] = $invoice_common['dim_b'];
+				$buffer[$this->id]['oppsynsmannid'] = $invoice_common['janitor'];
+				$buffer[$this->id]['saksbehandlerid'] = $invoice_common['supervisor'];
+				$buffer[$this->id]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
+
+				if($invoice_common['auto_tax'])
+				{
+					$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spbudact_code']);
+					$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'] ,$buffer[$this->id]['spvend_code']);
+					$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
+				}
+			}
+			return $buffer;
+		}
+
+		function import_end_file($buffer,$bilagsnr)
+		{
+			$num	= $this->soXport->add($buffer);
+			$receipt['message'][]= array('msg' => lang('Successfully imported %1 records into your invoice register.',$num).' '.lang('ID').': '. $bilagsnr);
+			return $receipt;
+		}
+	}
+?>

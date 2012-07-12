@@ -1,0 +1,38 @@
+are you sure you want to delete %1 ?	ftp	ja	%1 を削除してもよろしいですか
+attempt to create a directory with empty name	ftp	ja	ディレクトリ名が入力されていません
+cancel	ftp	ja	取消
+cd	ftp	ja	cd
+connect	ftp	ja	接続
+create new dir	ftp	ja	新規ディレクトリ作成
+create new directory	ftp	ja	新規ディレクトリ作成
+delete	ftp	ja	削除
+dir	ftp	ja	DIR
+failed to connect to %1 with user %2 and password %3	ftp	ja	ユーザー（%1）での接続に失敗しました
+failed to create directory %1	ftp	ja	ディレクトリ（%1）の作成に失敗しました
+failed to delete %1	ftp	ja	%1 の削除ができませんでした
+failed to rename %1 to %2	ftp	ja	%1 を %2 に名称変更できませんでした
+failed to upload %1	ftp	ja	%1 のアップロードに失敗しました
+ftp client	ftp	ja	FTPクライアント
+ftp client.	about	ja	FTPクライアント
+ftp hostname	ftp	ja	FTPホスト名
+ftp server	ftp	ja	FTPサーバー
+home	ftp	ja	ホーム
+log into ftp server	ftp	ja	FTPログイン画面
+logout/relogin	ftp	ja	ログアウト/再ログイン
+password	ftp	ja	パスワード
+permissions	ftp	ja	パーミッション
+rename	ftp	ja	名称変更
+rename file	ftp	ja	名称変更
+rename from	ftp	ja	変更前の名称
+rename to	ftp	ja	変更後の名称
+renamed %1 to %2	ftp	ja	%1 から %2 に名称変更しました
+save	ftp	ja	保存
+save to filemanager	ftp	ja	ファイルマネージャーに保存
+size	ftp	ja	サイズ
+successfully created directory %1	ftp	ja	ディレクトリ（%1）を作成しました
+successfully deleted %1	ftp	ja	%1 を削除しました
+successfully uploaded %1	ftp	ja	%1 をアップロードしました
+upload	ftp	ja	アップロード
+username	ftp	ja	ユーザー名
+view	ftp	ja	表示
+ｃreate new dir	ftp	ja	新規ディレクトリ作成

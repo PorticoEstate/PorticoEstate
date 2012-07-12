@@ -1,0 +1,352 @@
+add_check_list_to_location	controller	no	Registrer kontroll for bygg
+location_connections	controller	no	Byggknytning
+control	controller	no	Kontroll
+controller	common	no	Kontroll
+Register control item	controller	no	Legg til nytt kontrollpunkt
+Edit control item	controller	no	Endre kontrollpunkt
+View control item	controller	no	Vis kontrollpunkt
+control_item_type_1	controller	no	Ved innskriving av kommentar i et kommentarfelt
+control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
+control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
+control_item_type_4	controller	no	Ved valg av verdi fra Radioknapper
+control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
+Check_list	controller	no	Sjekkliste
+Calendar_overview	controller	no	Kontrollplan
+Check_lists	controller	no	Sjekklister
+Choose_control_groups	controller	no	Velg kontrollgrupper
+Choose_control_items	controller	no	Velg kontrollpunkt
+Choose_building_type	controller	no	Velg byggtype
+Choose_building_category	controller	no	Velg byggkategori
+Choose_district	controller	no	Velg distrikt
+Choose_part_of_town	controller	no	Velg bydel
+DATATABLE_MSG_EMPTY	controller	no	Ingen data
+DATATABLE_MSG_ERROR	controller	no	Datafeil
+DATATABLE_MSG_LOADING	controller	no	Laster data
+Sort_check_list	controller	no	Sorter sjekkliste
+Show_check_lists	controller	no	Vis sjekklister
+save_check_list	controller	no	Lagre sjekkliste
+title	controller	no	kontroll
+close	controller	no	Lukk
+clear	controller	no	Nullstill
+month 1	controller	no	januar
+month 2	controller	no	februar
+month 3	controller	no	mars
+month 4	controller	no	april
+month 5	controller	no	mai
+month 6	controller	no	juni
+month 7	controller	no	juli
+month 8	controller	no	august
+month 9	controller	no	september
+month 10	controller	no	oktober
+month 11	controller	no	november
+month 12	controller	no	desember
+month 0 capitalized	controller	no	Ikke tilgjengelig
+month 1 capitalized	controller	no	Januar
+month 2 capitalized	controller	no	Februar
+month 3 capitalized	controller	no	Mars
+month 4 capitalized	controller	no	April
+month 5 capitalized	controller	no	Mai
+month 6 capitalized	controller	no	Juni
+month 7 capitalized	controller	no	Juli
+month 8 capitalized	controller	no	August
+month 9 capitalized	controller	no	September
+month 10 capitalized	controller	no	Oktober
+month 11 capitalized	controller	no	November
+month 12 capitalized	controller	no	Desember
+short_month 1 capitalized	controller	no	Jan
+short_month 2 capitalized	controller	no	Feb
+short_month 3 capitalized	controller	no	Mar
+short_month 4 capitalized	controller	no	Apr
+short_month 5 capitalized	controller	no	Mai
+short_month 6 capitalized	controller	no	Jun
+short_month 7 capitalized	controller	no	Jul
+short_month 8 capitalized	controller	no	Aug
+short_month 9 capitalized	controller	no	Sep
+short_month 10 capitalized	controller	no	Okt
+short_month 11 capitalized	controller	no	Nov
+short_month 12 capitalized	controller	no	Des
+monthly	controller	no	Månedlig
+month	controller	no	Måned
+no part of town	controller	no	Bydel ikke valgt
+no district	controller	no	Distrikt ikke valgt
+calendar_months	controller	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
+calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
+select_date	controller	no	Velg dato
+year controller	no	År
+location_code	controller	no	Enhetsnummer
+included_units	controller	no	Kontrollens enheter
+floor	controller	no	Etasje
+section	controller	no	Seksjon
+room	controller	no	Rom
+save	controller	no	Lagre
+save_order	controller	no	Lagre rekkefølge
+1-6 characters	controller	no	1-6 tegn
+6 characters	controller	no	6 tegn
+active	controller	no	Aktiv
+add	controller	no	Legg til
+add_location	controller	no	Registrer kontroll til bygg
+all	controller	no	Alle
+all_locations	controller	no	Enheter fra eiendomsregisteret
+annually	controller	no	Årlig
+back	controller	no	Tilbake
+building	controller	no	Bygg
+calendar_months	controller	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
+calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
+cancel	controller	no	Avbryt
+close	controller	no	Lukk
+clear	controller	no	Nullstill
+comment	controller	no	Kommentar
+comments	controller	no	Kommentarer
+count	controller	no	Antall
+count_suffix	controller	no	stk
+create_shortcut	controller	no	Ny snarvei
+DATATABLE_MSG_EMPTY	controller	no	Ingen data
+DATATABLE_MSG_ERROR	controller	no	Datafeil
+DATATABLE_MSG_LOADING	controller	no	Laster data
+date_end	controller	no	Gjelder til
+date	controller	no	Dato
+date_start	controller	no	Gjelder fra
+delete	controller	no	Slett
+description	controller	no	Beskrivelse
+details	controller	no	Detaljer
+do_not_exist	controller	no	Eksisterer ikke
+edit	controller	no	Redigér
+elements_pr_page	controller	no	elementer per side
+elements	controller	no	Elementer
+every_second_week	controller	no	Hver 14. dag
+export	controller	no	Eksport
+export_to	controller	no	Eksporter
+filters 	controller	no	Filtre
+Finish	controller	no	Avslutt
+fire_drawings	controller	no	Branntegninger
+first	controller	no	Første
+first_half	controller	no	1. halvår
+first_quarter	controller	no	1. kvartal
+fixed	controller	no	Tidsbestemt
+floor	controller	no	Etasje
+fourth_quarter	controller	no	4. kvartal
+from	controller	no	Fra
+f_select_columns	controller	no	Velg kolonner
+gab	controller	no	GAB
+gab_id	controller	no	GAB
+half-year	controller	no	Halvårig
+hidden	controller	no	Skjult
+hidden_for_pick	controller	no	skjult
+house_number	controller	no	Husnummer
+id	controller	no	ID
+Identifier	controller	no	Identifikator
+inactive	controller	no	Inaktiv
+interval	controller	no	Intervall
+is_active	controller	no	Aktiv
+is_inactive	controller	no	Inaktiv
+is_executed	controller	no	Utført
+land_title	controller	no	Gnr/Bnr
+lastname	controller	no	Etternavn
+last	controller	no	Siste
+last_updated	controller	no	Sist oppdatert
+level	controller	no	Nivå
+link	controller	no	Lenke
+Locations_for_control	controller	no	Bygg tilknyttet kontroll
+make_pdf	controller	no	Lag PDF for utskrift
+message	controller	no	Melding
+messages_form_error	controller	no	Skjemaet inneholder en feil.
+messages_general	controller	no	Feil i feltet
+messages_isint	controller	no	Feltet må inneholde et heltall
+messages_isnumeric	controller	no	Feltet må inneholde et tall
+messages_not_valid_date	controller	no	Må være en gyldig dato
+messages_number_out_of_range	controller	no	Tallet er over eller under tillatte verdier
+messages_required_field	controller	no	Dette feltet er påkrevd
+messages_right_click_to_add	controller	no	Høyreklikk for å legge til
+messages_saved_form	controller	no	Informasjonen ble lagret.
+messages_string_too_long	controller	no	Teksten er for lang
+Missing responsibility id.	controller	no	Ansvar mangler.
+mobile_phone	controller	no	Mobiltelefon
+month	controller	no	Måned
+name	controller	no	Navn
+never	controller	no	Aldri
+new_notification	controller	no	Nytt varsel
+next	controller	no	Neste
+no	controller	no	Nei
+none	controller	no	Ingen
+nobody	controller	no	Ingen
+no_hits	controller	no	Ingen treff
+no_value	controller	no	Ingen
+not_available	controller	no	Ikke tilgjengelig
+notification_status	controller	no	Varsel
+notifications	controller	no	Varsler
+notification_optgroup_groups	controller	no	Grupper
+notification_optgroup_users	controller	no	Brukere
+not_started	controller	no	Ikke startet
+not_available_nor_hidden	controller	no	tilgjengelig eller skjult
+object_number	controller	no	Objektnummer
+objno_name_address	controller	no	Objektnummer/navn/adresse
+occupied	controller	no	Opptatt
+of_total	controller	no	av totalt
+ok	controller	no	Ok
+ODS	controller	no	ODS
+only_one_time	controller	no	Status
+or	controller	no	eller
+others	controller	no	Annet
+out_of_operation	controller	no	Ikke i drift
+panels	controller	no	Vinduer
+phone	controller	no	Telefon
+postal_code_place	controller	no	Postnummer/-sted
+previous	controller	no	Forrige
+propertyident	controller	no	G.nr. / B.nr. / F.nr. / S.nr.
+property_id	controller	no	BKB Identifikator
+property	controller	no	Eiendom
+quarterly	controller	no	Kvartalvis
+recurrence	controller	no	Gjentakelse
+registered	controller	no	Registrert
+remove	controller	no	Fjern
+controller	controller	no	Kontroll
+reports	controller	no	Rapporter
+Receipt	controller	no	Kvittering
+reset	controller	no	Nullstill
+responsibility	controller	no	Ansvar
+responsibility_id	controller	no	Ansvar
+Responsibility id must be 6 characters.	controller	no	Ansvar må være seks tegn.
+responsibility_id_not_numeric	controller	no	Ansvar må være et tall
+room	controller	no	Rom
+running	controller	no	Løpende
+save	controller	no	Lagre
+save_control_item	controller	no	Lagre kontrollpunkt
+save_check_item	controller	no	Lagre sjekkpunkt
+search_for	controller	no	Søk etter
+search_options	controller	no	Søkevalg
+search	controller	no	Søk
+search_where	controller	no	i
+second_half	controller	no	2. halvår
+second_quarter	controller	no	2. kvartal
+section	controller	no	Seksjon
+security	controller	no	Sikkerhet
+select_all_options	controller	no	&lt;Alle$gt;
+select_date	controller	no	Velg dato
+select_date_valid_year	controller	no	Vennligst velg et gyldig år
+service	controller	no	Tjeneste
+service_id	controller	no	Tjeneste
+Service id must be 5 characters.	controller	no	Tjeneste må være fem tegn.
+service_id_not_numeric	controller	no	Tjeneste må være et tall
+service_exist	controller	no	Eksisterer
+shortcuts	controller	no	Snarveier
+show	controller	no	Vis
+shows_from	controller	no	Viser fra
+started	controller	no	Startet
+status_before	controller	no	før
+status_date	controller	no	den
+status_unknown	controller	no	Ukjent status
+status	controller	no	Status
+Success	controller	no	Suksess
+sum	controller	no	Sum
+System setting for responsibility id for the current user must be 6 characters.	controller	no	Systeminnstilling for ansvar må være seks tegn.
+target_me	controller	no	Meg selv
+target_none	controller	no	Ingen
+third_quarter	controller	no	3. kvartal
+t_functions	controller	no	Funksjoner
+title	controller	no	Tittel
+to	controller	no	til
+to_the_top	controller	no	Til toppen
+type	controller	no	Type
+units	controller	no	Enheter
+unit_id	controller	no	Enhetsid
+unit_name	controller	no	Enhetsnavn
+update	controller	no	Oppdatér
+upload	controller	no	Last opp
+url	controller	no	Nettsted
+username	controller	no	Brukernavn
+user_or_group	controller	no	Bruker/Gruppe
+unable_to_connect_to_database	controller	no	Problemer med å koble til databasen.
+unknown_user	controller	no	Personen finnes ikke.
+weekly	controller	no	Ukentlig
+working_on	controller	no	Kontrakter under arbeid
+year	controller	no	År
+yes	controller	no	Ja
+control_items	controller	no	Kontrollpunkt
+Control_item	controller	no	Kontrollpunkt
+Procedure	controller	no	Prosedyre
+Procedures	controller	no	Prosedyrer
+Procedure title	controller	no	Navn
+t_new_procedure	controller	no	Ny prosedyre
+f_new_procedure	controller	no	Legg til
+Procedure purpose	controller	no	Formål
+Procedure responsibility	controller	no	Ansvar og myndighet
+Procedure description	controller	no	Beskrivelse
+Procedure reference	controller	no	Referanse
+Procedure attachment	controller	no	Vedlegg
+Procedure start date	controller	no	Startdato
+Procedure end date	controller	no	Sluttdato
+Procedure valid from date	controller	no	Gyldig fra
+New control item	controller	no	Nytt kontrollpunkt
+Control item title	controller	no	Tittel
+Control_group	controller	no	Kontrollgruppe
+Control group	controller	no	Kontrollgruppe
+Control_groups	controller	no	Kontrollgrupper
+Control_area	controller	no	Kontrollområde
+Control area	controller	no	Kontrollområde
+Control_areas	controller	no	Kontrollområder
+Use ACL for control areas	common	no	Bruk rettighetsstyring på kontrollområder
+Control item what to do	controller	no	Hva skal gjøres
+Not selected	controller	no	Ingen valgt
+searchfield	controller	no	Søkefelt
+NEW	controller	no	Ny
+PENDING	controller	no	Venter
+ACCEPTED	controller	no	Akseptert
+REJECTED	controller	no	Avvist
+New control group	controller	no	Ny kontrollgruppe
+Control group title	controller	no	Tittel
+Building part	controller	no	Bygningsdel
+remove	controller	no	Fjern valgte elementer
+Locations	controller	no	Lokasjoner
+component	controller	no	Utstyr
+Control_locations	controller	no	Lokasjoner
+Control_component	controller	no	Utstyr
+New control	controller	no	Ny kontroll
+revisit	controller	no	Revidér
+Procedure revision	controller	no	Versjon
+Procedure revision date	controller	no	Revisjonsdato
+Font Style	controller	no	Font stil
+Lists	controller	no	Lister
+Insert Item	controller	no	Sett inn
+Control title	controller	no	Tittel
+start_date	controller	no	Startdato
+planned_date	controller	no	Planlagtdato
+end_date	controller	no	Sluttdato
+View_locations_for_control	controller	no	Vis kontroller for lokasjon
+Add_locations_for_control	controller	no	Legg til knytning mot lokasjon
+View_component_for_control	controller	no	Vis knytning mot utstyr
+Add_component_for_control	controller	no	Legg til knytning mot utstyr
+component_for_control	controller	no	Utstyr tilknyttet kontroll
+Choose_component_type	controller	no	Velg utstyrstype
+Choose_component_category	controller	no	Velg utstyrskategori
+component_category_internal	controller	no	Internt utstyrsregister
+component_category_ifc	controller	no	IFC
+invert_checkboxes	controller	no	Inverter merking
+ControlId	controller	no	Kontroll ID
+Bim_id	controller	no	Utstyr ID
+Bim_name	controller	no	Utstyrsnavn
+Bim_type	controller	no	Utstyrstype
+GUID	controller	no	GUID
+View_procedure	controller	Prosedyre
+View_documents_for_procedure	controller	no	Tilknyttede dokumenter
+Document title	controller	no	Dokumentets tittel
+Document name	controller	no	Filnavn
+Document description	controller	no	Beskrivelse
+select value	controller	no	Velg
+component_for_control_group	controller	no	Utstyr tilknyttet kontrollgrupper
+View_component_for_control_group	controller	no	Vis knytning mot utstyr
+Add_component_for_control_group	controller	no	Legg til knytning mot utstyr
+show_controls_for_location	controller	no	Vis lokasjoner/ komponenter
+Property name	controller	no	Lokasjonsnavn
+Address	controller	no	Adresse
+Zip code	controller	no	Postnummer
+no category selected	controller	no	Kategori ikke valgt
+repeat_type_none	controller	no	Ingen
+repeat_type_day	controller	no	Dag
+repeat_type_week	controller	no	Uke
+repeat_type_month	controller	no	Måned
+repeat_type_year	controller	no	År
+components for control	controller	no	Komponenter tilknyttet kontroll
+add components for control	controller	no	Legg til knytning mellom kontroll og komponent(er)
+location category	controller	no	Lokaliseringskategori
+select add	controller	no	Velg for å legge til
+select delete	controller	no	Velg for sletting

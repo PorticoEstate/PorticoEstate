@@ -1,0 +1,139 @@
+access	common	no	Access
+access type	common	no	Access type
+account has been created	common	no	Account har blitt opprettet
+account has been deleted	common	no	Account har blitt slettet
+account has been updated	common	no	Account har blitt oppdatert
+add	common	no	Legg til
+admin	common	no	Admin
+administration	common	no	Administrasjon
+april	common	no	April
+are you sure you want to delete this entry ?	common	no	Er du sikker du vil slette denne entry ?
+august	common	no	August
+cancel	common	no	Avslutt
+change	common	no	Endre
+charset	common	no	utf-8
+clear	common	no	Clear
+clear form	common	no	Tøm skjema
+configure access permissions	common	no	Tilgangskontroll
+configuration	common	no	Konfigurasjon
+copy	common	no	Kopier
+create	common	no	Lag
+created by	common	no	Laget av
+current users	common	no	Current brukere
+date	common	no	Dato
+december	common	no	Desember
+delete	common	no	Slett
+domain	common	no	Database
+domain name for mail-address, eg. %1	common	no	Domene-navnet for E-Postadressen, %1
+done	common	no	Avslutt
+e-mail	common	no	E-Post
+email-address of the user, eg. %1	common	no	E-Postadressen til brukeren, %1
+edit	common	no	Editer
+email	common	no	E-Post
+entry has been deleted sucessfully	common	no	Entry har blitt slettet
+entry updated sucessfully	common	no	Entry er oppdatert
+error	common	no	Feil
+exit	common	no	Avslutt
+february	common	no	Februar
+files	common	no	Filer
+filter	common	no	Filter
+first name	common	no	Fornavn
+first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
+friday	common	no	Fredag
+frontend	common	no	Frontend
+ftp	common	no	FTP
+global public	common	no	Global Public
+group access	common	no	Gruppe Access
+group has been added	common	no	Gruppe har blitt lagt til
+group has been deleted	common	no	Gruppe har blitt slettet
+group has been updated	common	no	Gruppe har blitt oppdatert
+group public	common	no	Gruppe Public
+groups	common	no	Grupper
+help	common	no	Hjelp
+high	common	no	Høy
+home	common	no	Hjemme
+it has been more then %1 days since you changed your password	common	no	Det er mer enn %1 dager siden du har endet ditt passord
+january	common	no	Januar
+july	common	no	Juli
+june	common	no	Juni
+last name	common	no	Etternavn
+last name of the user, eg. %1	common	no	Etternavn til bruker, %1
+last page	common	no	siste side
+login	common	no	Login
+logout	common	no	Logg ut
+low	common	no	Lav
+march	common	no	Mars
+may	common	no	Mai
+medium	common	no	Medium
+monday	common	no	Mandag
+name	common	no	Navn
+name of the user, eg. %1	common	no	Fullt navn på bruker, %1
+new entry added sucessfully	common	no	Ny entry er lagt til
+next page	common	no	neste side
+no	common	no	Nei
+none	common	no	Ikke angitt
+normal	common	no	Normal
+november	common	no	November
+october	common	no	Oktober
+ok	common	no	OK
+only yours	common	no	kun dine
+page prepared in %1 seconds.	common	no	Side produsert på %1 sekunder
+password	common	no	Passord
+password has been updated	common	no	Passord har blitt oppdatert
+powered by phpgroupware version %1	common	no	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
+preferences	common	no	Innstillinger
+previous page	common	no	Forrige side
+priority	common	no	Prioritet
+private	common	no	Privat
+rename	common	no	Endre navn
+rental	common	no	Leie
+saturday	common	no	Lørdag
+save	common	no	Lagre
+search	common	no	Søk
+september	common	no	September
+session has been killed	common	no	Session har blitt avsluttet
+show all	common	no	vis alle
+showing %1	common	no	showing %1
+showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
+site configuration	common	no	Konfigurasjon av moduler
+sorry, there was a problem processing your request.	common	no	Beklager, der var problemer ved din forespørsel.
+submit	common	no	Submit
+sunday	common	no	Søndag
+thursday	common	no	Torsdag
+the api is current	common	no	API er oppdatert
+the api requires an upgrade	common	no	API må oppdateres
+this application is current	common	no	Denne modulen er oppdatert
+this application requires an upgrade	common	no	Denne modulen må oppdateres
+time	common	no	Tid
+total	common	no	Total
+tuesday	common	no	Tirsdag
+updated	common	no	Oppdatert
+view	common	no	Vis
+wednesday	common	no	Onsdag
+which groups	common	no	hvilke grupper
+yes	common	no	Ja
+you have 1 new message!	common	no	Du har 1 ny melding!
+you have %1 new messages!	common	no	Du har %1 nye meldinger!
+your message has been sent	common	no	Din melding har blitt sent
+your search returned 1 match	common	no	ditt søk gav 1 treff
+your search returned %1 matchs	common	no	ditt søk gav %1 treff
+your settings have been updated	common	no	Dine innstillinger har blitt oppdatert
+bad login or password	common	no	Ugyldig login eller passord
+login	login	no	Login
+password	login	no	Passord
+sorry, your login has expired	login	no	Beklager, din login er utgått
+todays date, eg. %1	common	no	Dagens dato, %1
+use cookies	login	no	use cookies
+username	login	no	Brukernavn
+new user	login	no	Ny bruker
+forgotten password	login	no	Glemt passord eller Brukernavn
+use a valid username and password to gain access to %1	login	no	Angi et gyldig brukernavn og passord for få tilgang til %1
+version	common	no	versjon
+you have been successfully logged out	login	no	Du har nå logget ut
+Info: you have changed domain from "%1" to "%2"	login	no	Informasjon: Du har endret domene fra "%1" til "%2"
+Password must be at least 8 characters long, not %1	common	no	Passord må være minst på 8 tegn, du forsøker med %1
+Password must contain at least 2 upper case characters	common	no	Passord må inneholde minst 2 store bosktaver
+Password must contain at least 2 lower case characters	common	no	Passord må inneholde minst 2 små bosktaver
+Password must contain at least 1 number	common	no	Passord må inneholde minst 1 tall
+Password must contain at least 1 non alphanumeric character	common	no	Passord må inneholde minst 1 spesialtegn
+The passwords don't match	common	no	Passordene er ikke like

@@ -1,0 +1,29 @@
+are you sure you want to delete %1 ?	ftp	kr	%1를 정말 삭제하시겠습니까 ?
+attempt to create a directory with empty name	ftp	kr	이름 없는 디렉토리를 만듭니다.
+cancel	ftp	kr	취소
+cd	ftp	kr	cd
+connect	ftp	kr	접속
+create new directory	ftp	kr	새 디렉토리 생성
+delete	ftp	kr	삭제 %1
+failed to connect to %1 with user %2 and password %3	ftp	kr	%1로 사용자 ID %2 와 비밀번호 %3로 접속하는 실패했습니다.
+failed to create directory %1	ftp	kr	디렉토리 %1 생성필패
+failed to delete %1	ftp	kr	%1를 삭제하는데 에러가 발생하였습니다.
+failed to rename %1 to %2	ftp	kr	%1 을  %2으로 바꾸는데 실패했습니다.
+failed to upload %1	ftp	kr	%1를 업로드 실패
+ftp client	ftp	kr	FTP 클라이언트
+ftp server	ftp	kr	FTP 서버
+home	ftp	kr	접속지
+logout/relogin	ftp	kr	로그아웃/재로그인
+password	ftp	kr	패스워드
+rename	ftp	kr	이름바꾸기 %1
+rename from	ftp	kr	이름 바꿈
+rename to	ftp	kr	으로
+renamed %1 to %2	ftp	kr	%1 을  %2로 이름을 바꿨습니다.
+save	ftp	kr	저장
+save to filemanager	ftp	kr	파일메니저로 저장
+successfully created directory %1	ftp	kr	%1가 성공적으로 생성되었습니다.
+successfully deleted %1	ftp	kr	%1가 삭제되었습니다.
+successfully uploaded %1	ftp	kr	%1를 업로드 했습니다.
+upload	ftp	kr	업로드
+username	ftp	kr	사용자이름
+view	ftp	kr	보기
