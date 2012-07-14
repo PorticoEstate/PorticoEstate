@@ -52,9 +52,8 @@
 		}
 
 		/**
-		 * Function for adding a new control to the database. Updates the control object.
-		 *
-		 * @param activitycalendar_activity $activity the party to be added
+		 * Add a new control to database.
+		 * @param $control control object
 		 * @return bool true if successful, false otherwise
 		 */
 		function add(&$control)
@@ -79,9 +78,9 @@
 		}
 
 		/**
-		 * Update the database values for an existing activity object.
+		 * Update the database values for an existing control object.
 		 *
-		 * @param $activity the activity to be updated
+		 * @param $control the control to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
 		function update($control)
@@ -110,6 +109,17 @@
 			}
 		}
 		
+		/**
+		 * Get controls that should be carried out on a location within period
+		 *
+		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $from_date start date for period
+		 * @param $to_date end date for period
+		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $return_type return data as objects or as arrays
+		 * @param $role_id responsible role for carrying out the control  
+		 * @return array with controls as objects or arrays
+		 */
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
@@ -160,6 +170,17 @@
 			}
 		}
 		
+		/**
+		 * Get controls that should be carried out on components on a location within period
+		 *
+		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $from_date start date for period
+		 * @param $to_date end date for period
+		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $return_type return data as objects or as arrays
+		 * @param $role_id responsible role for carrying out the control  
+		 * @return array with controls as objects or arrays
+		 */
 	  public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
@@ -210,6 +231,17 @@
 			}
 		}
 		
+		/**
+		 * Get components and populates array of controls that should be carried out on the components on a location within period
+		 *
+		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $from_date start date for period
+		 * @param $to_date end date for period
+		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $return_type return data as objects or as arrays
+		 * @param $role_id responsible role for carrying out the control  
+		 * @return array of components as objects or arrays
+		 */
 		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '')
 		{
 			$controls_array = array();
@@ -323,6 +355,12 @@
 			}
 		}
 
+		/**
+		 * Get controls with a control area
+		 *
+		 * @param $control_area_id  
+		 * @return array with controls as objects or arrays
+		 */
 		function get_controls_by_control_area($control_area_id)
 		{
 			$control_area_id = (int) $control_area_id;
@@ -361,6 +399,12 @@
 			}
 		}
 
+		/**
+		 * Get locations that a control should be carried out for
+		 *
+		 * @param $control_id control id
+		 * @return array with arrays of location info  
+		 */
 		function get_locations_for_control($control_id)
 		{
 			$controls_array = array();
@@ -394,38 +438,42 @@
 			}
 		}
 		
+		/**
+		 * Get arrays with component info that a control should be carried out on
+		 *
+		 * @param $control_id control id
+		 * @return array with arrays of component info  
+		 */
 	  function get_components_for_control($control_id)
 		{
 			$controls_array = array();
 
-			$sql =  "SELECT c.id, c.title, ccl.component_id, ccl.location_id, bim_type.description, bim.location_code ";
-      $sql .= "FROM controller_control c, controller_control_component_list ccl, fm_bim_item bim, fm_bim_type bim_type "; 
+			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id, ccl.location_id as location_id, bim_type.description, bim_item.location_code ";
+      $sql .= "FROM controller_control_component_list ccl, fm_bim_item bim_item, fm_bim_type bim_type "; 
 			$sql .= "WHERE ccl.control_id = $control_id ";
-      $sql .= "AND ccl.control_id = c.id ";
-			$sql .= "AND bim.id = ccl.component_id ";
-			$sql .= "AND bim_type.id = bim.type";
+			$sql .= "AND ccl.component_id = bim_item.id ";
+			$sql .= "AND ccl.location_id = bim_type.location_id ";
+			$sql .= "AND bim_type.id = bim_item.type";
 
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
-				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
-				$title = $this->unmarshal($this->db->f('title', true), 'string');
-				$component_id = $this->unmarshal($this->db->f('component_id', true), 'int');
-				$location_id = $this->unmarshal($this->db->f('location_id', true), 'int');
-				$component_type = $this->unmarshal($this->db->f('description', true), 'string');
-				$component_location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
-				//$component_guid = $this->unmarshal($this->db->f('guid', true), 'string');
-				//$component_description = $this->getBimItemAttributeValue($component_guid, "beskrivelse");
-				//$component_name = $this->getBimItemAttributeValue($component_guid, "betegnelse");
-				//$component_author = $this->getBimItemAttributeValue($component_guid, "juridisk_person");
+				$component = new controller_component();
+				$component->set_type($this->unmarshal($this->db->f('type', true), 'int'));
+				$component->set_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+				$component->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+				$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
+				$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
+				$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$component->set_loc_1($this->unmarshal($this->db->f('loc_1', true), 'string'));
+				$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
+				$component->set_type_str($this->unmarshal($this->db->f('description', true), 'string'));
 				
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $component_location_code));
-				
-				$controls_array[] = array("id" => $control_id, "title" => $title, "component_id" => $component_id, "location_id" => $location_id, "component_description" => $component_type, "component_location" => $location_array["loc1_name"]);
+				$components_array[] = $component;
 			}
 
-			if( count( $controls_array ) > 0 ){
-				return $controls_array; 
+			if( count( $components_array ) > 0 ){
+				return $components_array; 
 			}
 			else
 			{
@@ -433,6 +481,13 @@
 			}
 		}
 
+		/**
+		 * Get arrays of control_location_list objects
+		 *
+		 * @param $control_id control id
+		 * @param $location_code location code
+		 * @return array with control_location_list objects  
+		 */
 		function get_control_location($control_id, $location_code)
 		{
 			$control_id = (int)$control_id;
@@ -525,6 +580,14 @@
 			return $this->db->next_record();
 		}
 
+		/**
+		 * Register that a control should be carried out on a component
+		 *
+		 * @param $data['control_id'] control id
+		 * @param $data['component_id'] component id
+		 * @param $data['location_id'] component id
+		 * @return true or false if the execution was successful  
+		*/
 		function register_control_to_component($data)
 		{
 
@@ -591,7 +654,13 @@
 			return $this->db->transaction_commit();
 		}
 
-
+		/**
+		 * Register that a control should be carried out on a component
+		 *
+		 * @param $control_id control id
+		 * @param $component_id component id
+		 * @return void  
+		 */
 		function add_component_to_control($control_id, $component_id)
 		{
 			$sql =  "INSERT INTO controller_control_component_list (control_id, component_id) values($control_id, $component_id)";
@@ -707,10 +776,8 @@
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				//$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control->set_control_area_name($category[0]['name']);
-	//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
@@ -722,22 +789,23 @@
 		 * Get single control
 		 * 
 		 * @param	$id	id of the control to return
-		 * @return a controller_control
+		 * @return a controller_control object
 		 */
 		function get_single($id)
 		{
 			$id = (int)$id;
 
-			//$joins = " {$this->left_join} controller_control_area ON (c.control_area_id = controller_control_area.id)";
 			$joins .= " {$this->left_join} controller_procedure ON (c.procedure_id = controller_procedure.id)";
 			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 
-			$sql = "SELECT c.*, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name FROM controller_control c {$joins} WHERE c.id = " . $id;
+			$sql  = "SELECT c.*, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name "; 
+			$sql .= "FROM controller_control c {$joins} "; 
+			$sql .= "WHERE c.id = " . $id;
+			
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
-
+			
 			$control = new controller_control((int) $id);
-
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
 			$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
@@ -749,7 +817,6 @@
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			//$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control->set_control_area_name($category[0]['name']);
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
@@ -796,7 +863,8 @@
 			}
 			return $ret_array;
 		}
-
+		
+/*
 		public function getAllBimItems($noOfObjects = null, $bim_type = null) {
 			$filters = array();
 			if($noOfObjects != null && is_numeric($noOfObjects))
@@ -827,7 +895,7 @@
 
 			return $bimItemArray;
 		}
-
+*/
 		public function get_control_component($noOfObjects = null, $bim_type = null)
 		{
 			$filters = array();
@@ -866,7 +934,7 @@
 		{
 			$columnAlias = "attribute_values";
 			$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
-			//var_dump($sql);
+			
 			$this->db->query($sql,__LINE__,__FILE__);
 			if($this->db->num_rows() > 0)
 			{
@@ -875,8 +943,6 @@
 				return preg_split('/,/', $result);
 			}
 		}
-		
-		
 		
 		public function getLocationCodeFromControl($control_id)
 		{

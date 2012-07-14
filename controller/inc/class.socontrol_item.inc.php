@@ -39,7 +39,7 @@
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 *
-		 * @return controller_soparty the storage object
+		 * @return controller_socontrol_item the storage object
 		 */
 		public static function get_instance()
 		{
@@ -50,9 +50,9 @@
 		}
 
 		/**
-		 * Function for adding a new activity to the database. Updates the activity object.
+		 * Add a new control item to database.
 		 *
-		 * @param activitycalendar_activity $activity the party to be added
+		 * @param control_item object to be added
 		 * @return bool true if successful, false otherwise
 		 */
 		function add(&$control_item)
@@ -78,7 +78,6 @@
 			);
 
 			$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
-			//$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if(isset($result)) {
 				// return the new control item ID
@@ -91,9 +90,9 @@
 		}
 
 		/**
-		 * Update the database values for an existing activity object.
+		 * Update the database values for an existing control item object.
 		 *
-		 * @param $activity the activity to be updated
+		 * @param $control item object to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
 
@@ -128,7 +127,7 @@
 		 * Get single control item
 		 * 
 		 * @param	$id	id of the control_item to return
-		 * @return a controller_control_item
+		 * @return control item object
 		 */
 		function get_single($id)
 		{
@@ -153,6 +152,13 @@
 			return $control_item;
 		}
 		
+		/**
+		 * Get single control item with options  
+		 * 
+		 * @param	$id	id of the control_item to return
+		 * @param $return_type return data as objects or as arrays
+		 * @return control item object
+		*/
 		public function get_single_with_options($id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
 			$sql .= "FROM controller_control_item ci "; 
@@ -213,6 +219,12 @@
 			}
 		}
 		
+		/**
+		 * Delete control item from database  
+		 * 
+		 * @param	$control_item_id id of control_item to be deleted
+		 * @return void
+		*/
 		function delete_option_values($control_item_id)
 		{
 			$sql  = "delete from controller_control_item_option where control_item_id=$control_item_id";
@@ -386,6 +398,13 @@
 			return true;
 		}
 		
+		/**
+		 * Get control items for a control within control group  
+		 * 
+		 * @param	$control_id control id
+		 * @param	$control_group_id control group id
+		 * @return void
+		*/
 		function get_items_for_control_group($control_id, $control_group_id)
 		{
 			$results = array();

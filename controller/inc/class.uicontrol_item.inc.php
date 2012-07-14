@@ -195,20 +195,27 @@
 			return status;
 		}
 
-		public function edit()
+		public function edit( $control_item = null )
 		{
-			$control_item_id = phpgw::get_var('id');
+			// NOT REDIRECT
+			if($control_item == null)
+			{
+				$control_item_id = phpgw::get_var('id');
+			
+				// Edit control item
+				if($control_item_id > 0)
+				{
+					$control_item = $this->so->get_single_with_options($control_item_id , "return_object"); 
+				}
+				// New control item
+				else
+				{
+					$control_item = new controller_control_item();
+				}	
+			}
 			
 			$control_item_array = array();
-			if($control_item_id > 0)
-			{
-				$control_item_array = $this->so->get_single_with_options( $control_item_id , "return_array"); 
-			}
-			else
-			{
-				$control_item = new controller_control_item();
-			  $control_item_array = $control_item->toArray();
-			}
+			$control_item_array = $control_item->toArray();
 			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -290,45 +297,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $saved_control_item_id));
 			}else
 			{
-				$this->redirect($control_item);
+				$this->edit($control_item);
 			}
 		}
 
-		public function redirect($control_item)
-		{		
-			// Sigurd: START as categories
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-			
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-			$control_areas_array = $control_areas['cat_list'];
-
-			$control_groups_array = $this->so_control_group->get_control_group_array();
-
-			$control_item_array = $control_item->toArray();
-			
-			// Hack to fix display of &nbsp; char
-			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
-			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
-
-			print_r( $control_item_array );
-			$data = array
-			(
-				'editable' 				=> true,
-				'control_item'		=> $control_item_array,
-				'control_areas'		=> $control_areas_array,
-				'control_groups'	=> $control_groups_array,
-			);
-		
-			$this->use_yui_editor(array('what_to_do','how_to_do'));
-			
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-
-			self::render_template_xsl('control_item/control_item', $data);
-		}
-		
 		/**
 		 * Public method. Called when a user wants to view information about a control item.
 		 * @param HTTP::id	the control_item ID
