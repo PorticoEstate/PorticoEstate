@@ -247,13 +247,16 @@
 		 * @param HTTP:: control id
 		 * @return data array 
 		 */
-		public function view_control_details()
+		public function view_control_details($control = null)
 		{
-			$control_id = phpgw::get_var('id');
-		
-			if(isset($control_id) && $control_id > 0)
+			if($control == null)
 			{
-				$control = $this->so->get_single($control_id);	
+				$control_id = phpgw::get_var('id');
+		
+				if(isset($control_id) && $control_id > 0)
+				{
+					$control = $this->so->get_single($control_id);
+				}
 			}
 			
 			// Sigurd: START as categories
@@ -313,37 +316,49 @@
 		public function save_control_details(){
 			$control_id = phpgw::get_var('control_id');
 			
-			// Update control details
+			// Update existing control details
+			$delete_control_groups = false;
 			if(isset($control_id) && $control_id > 0 )
 			{
 				$control = $this->so->get_single($control_id);
-			}
-			// Add control details
-			else {
-				$control = new controller_control();
-			}
+				$control_area_id_in_db = $control->get_control_area_id();
+				$control->populate();
+				$control_area_id_from_req = $control->get_control_area_id();
 			
-			$control_area_id_in_db = $control->get_control_area_id();
-			
-			$control->populate();
-
-			$control_area_id_from_req = $control->get_control_area_id();
-			
-			if( $control_area_id_in_db > 0 & $control_area_id_in_db != $control_area_id_from_req ){
-								
-				// Deleting earlier saved control groups
-				$this->so_control_group_list->delete_control_groups($control_id);
-				
-				$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id);
-				
-				foreach($saved_control_items as $control_item){
-					$this->so_control_item_list->delete($control->get_id(), $control_item->get_id());
+				// DELETE EARLIER SAVED CONTROL GROUPS
+				// If control are is different from a previous registration - delete related groups 			
+				if( ($control_area_id_in_db > 0) & ($control_area_id_in_db != $control_area_id_from_req) )
+				{								
+					$delete_control_groups = true;
 				}
 			}
-			else
+			// Add control details
+			else 
 			{
+				$control = new controller_control();
+				$control->populate();
+			}
+		
+			// SAVE CONTROL DETAILS
+			if( $control->validate() )
+			{
+				if($delete_control_groups)
+				{
+					// Deleting earlier saved control groups
+					$this->so_control_group_list->delete_control_groups($control_id);
+					$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id);
+				
+					foreach($saved_control_items as $control_item)
+					{
+						$this->so_control_item_list->delete($control->get_id(), $control_item->get_id());
+					}
+				}
+				
 				$control_id = $this->so->store($control);
-				$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id' => $control_id));
+				$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id' => $control_id));	
+			}else
+			{
+					$this->view_control_details($control);
 			}
 		}
 						
@@ -367,7 +382,7 @@
 			}
 			
 			// Fetches control groups based on selected control area						
-			$control_area = $this->so_control_area->get_single( $control->get_control_area_id );		
+			$contro_area = execMethod('phpgwapi.categories.return_single', $control->get_control_area_id());			
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
 			$control_groups = array();
@@ -387,12 +402,12 @@
 			
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'							=> "control_groups",
-				'editable' 						=> true,
-				'control'						=> $control->toArray(),
-				'control_area'					=> $control_area->toArray(),
-				'control_groups'				=> $control_groups,
+				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'						=> "control_groups",
+				'editable' 				=> true,
+				'control'					=> $control->toArray(),
+				'control_area'		=> $control_area,
+				'control_groups'	=> $control_groups,
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
