@@ -142,7 +142,7 @@
 		{
 			return array_values( $this->type_array );
 		}
-		
+			
 		public function get_error_msg_array() { return $this->error_msg_array; }
 		
 		public function set_error_msg_array( $error_msg_array )
