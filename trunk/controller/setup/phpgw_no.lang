@@ -352,3 +352,4 @@ select add	controller	no	Velg for å legge til
 select delete	controller	no	Velg for sletting
 error_msg_1	controller	no	Vennligst fyll inn dette feltet
 error_msg_2	controller	no	Vennligst velg en verdi i listen
+error_msg_3	controller	no	Vennligst angi sluttdato etter startdato
