@@ -1,8 +1,8 @@
 <?php
 phpgw::import_class('controller.socheck_list');
 include_class('controller', 'date_generator', 'inc/component/');
-include_class('controller', 'check_list_status_info', 'inc/helper/');
-include_class('controller', 'check_list_status_manager', 'inc/helper/');
+include_class('controller', 'check_list_status_info', 'inc/component/');
+include_class('controller', 'check_list_status_manager', 'inc/component/');
 		
 /* This class transforms controls with checklists or controls with aggregated number of open cases, 
 *  and puts these values in a calendar array for each control
@@ -18,16 +18,19 @@ class month_calendar {
 	private $calendar_array = array();
 	
 	public function __construct($control, $year, $month, $component, $location_code, $type){
-    $this->year = $year;
-    $this->month = $month;
     $this->control = $control;
+		$this->year = $year;
+    $this->month = $month;
     $this->component = $component;
     $this->location_code = $location_code;
     $this->type = $type;
-		
+		    
     $this->init_calendar();
   }
 	
+  /* Initializes calendar by setting status for each month in calendar array. 
+  * 	- CONTROL_NOT_DONE if month date is in the past 
+  * 	- CONTROL_REGISTERED if month date is in the future */ 
 	function init_calendar(){
 		$ctr_start_date_ts = $this->control->get_start_date();
     $ctr_end_date_ts = $this->control->get_end_date();
@@ -42,11 +45,11 @@ class month_calendar {
 		{
 			$this->calendar_array[$i] = null;
 		}
-		
+	
 		$date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
 		$dates_array = $date_generator->get_dates();
-		
-		// Inserts dates 
+					
+	  // Set status for control on each date to NOT DONE or REGISTERED   
 		foreach($dates_array as $date_ts)
 		{
 			$check_list = new controller_check_list();
@@ -69,22 +72,6 @@ class month_calendar {
     	
       $this->calendar_array[ date("j", $date_ts) ]["status"] = $check_list_status_info->get_status();
       $this->calendar_array[ date("j", $date_ts) ]["info"]   = $check_list_status_info->serialize();
-      
-			/*
-			$todays_date = mktime(0,0,0,date("m"), date("d"), date("Y"));
-			
-			if($date < $todays_date)
-			{
-				$status = "CONTROL_NOT_DONE";
-			}
-			else
-			{
-				$status = "CONTROL_REGISTERED";
-			}
-			
-			$this->calendar_array[ date("j", $date) ]["status"]  = $status;
-			$this->calendar_array[ date("j", $date) ]["info"]  = array("date" => $date, "control_id" => $this->control->get_id());
-			*/
 		}
 	}
    	

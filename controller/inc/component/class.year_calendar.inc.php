@@ -2,8 +2,8 @@
 phpgw::import_class('controller.socheck_list');
 include_class('controller', 'date_generator', 'inc/component/');
 include_class('controller', 'date_generator', 'inc/component/');
-include_class('controller', 'check_list_status_info', 'inc/helper/');
-include_class('controller', 'check_list_status_manager', 'inc/helper/');
+include_class('controller', 'check_list_status_info', 'inc/component/');
+include_class('controller', 'check_list_status_manager', 'inc/component/');
 include_class('controller', 'check_list', 'inc/model/');
 	
 
@@ -31,6 +31,7 @@ class year_calendar {
    * 	- CONTROL_REGISTERED if month date is in the future */ 
 	function init_calendar()
 	{
+		// Sets null values for twelve months in calendar array 
     for($i = 1;$i <= 12;$i++)
     {
 		  $this->calendar_array[$i] = null;
@@ -43,10 +44,11 @@ class year_calendar {
     $repeat_type = $this->control->get_repeat_type();
     $repeat_interval = $this->control->get_repeat_interval();
     
+    // Generates dates for time period with specified interval 
     $date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
     $dates_array = $date_generator->get_dates();
 		
-    // Inserts dates 
+    // Set status for control on each date to NOT DONE or REGISTERED   
     foreach($dates_array as $date_ts)
     {
     	$check_list = new controller_check_list();

@@ -68,9 +68,11 @@
 						</td>
 							
 						<xsl:for-each select="calendar_array">
-							<xsl:call-template name="check_list_status_checker" >
-								<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
-							</xsl:call-template>
+							<td>
+								<xsl:call-template name="check_list_status_manager" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+								</xsl:call-template>
+							</td>
 						</xsl:for-each>
 					</tr>	
 				</xsl:for-each>	
@@ -133,9 +135,11 @@
 						</td>
 							
 						<xsl:for-each select="calendar_array">
-							<xsl:call-template name="check_list_status_checker" >
-								<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
-							</xsl:call-template>
+							<td>
+								<xsl:call-template name="check_list_status_manager" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+								</xsl:call-template>
+							</td>
 						</xsl:for-each>
 					</tr>	
 				</xsl:for-each>	
