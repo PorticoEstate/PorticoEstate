@@ -341,7 +341,7 @@
 		  }
 
 		  // Validate REPEAT INTERVAL
-		  if( $this->repeat_interval == "" )
+		  if( ($this->repeat_interval == "") || (intval($this->repeat_interval) < 1) )
 		  {
 		  	$status = false;
 		  	$this->error_msg_array['repeat_interval'] = "error_msg_1";
