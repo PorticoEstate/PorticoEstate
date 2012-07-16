@@ -37,7 +37,6 @@
 	phpgw::import_class('phpgwapi.jquery');
 
 	phpgw::import_class('phpgwapi.uicommon');
-	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
@@ -56,7 +55,6 @@
 		var $type_id;
 		var $location_code;
 		
-		private $so_control_area;
 		private $so_control;
 		private $so_check_list;
 		private $so_control_item;
@@ -87,7 +85,6 @@
 			
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control 			= CreateObject('controller.socontrol');
 			$this->so_check_list		= CreateObject('controller.socheck_list');
 			$this->so_control_item		= CreateObject('controller.socontrol_item');
