@@ -38,7 +38,6 @@
 	class controller_uiprocedure extends phpgwapi_uicommon
 	{
 		private $so;
-		private $so_control_area;
 		private $_category_acl;
 		private $so_control;
 		private $so_control_group_list;
@@ -61,7 +60,6 @@
 			parent::__construct();
 
 			$this->so = CreateObject('controller.soprocedure');			
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
