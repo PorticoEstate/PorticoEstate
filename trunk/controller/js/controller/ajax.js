@@ -86,6 +86,7 @@ $(document).ready(function(){
 			
     });
 	
+	//HENTER KONTROLER NÅR EN VELGER ET KONTROLLOMRÅDE
 	$("#control_area_list").change(function () {
 		var control_area_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
@@ -227,6 +228,8 @@ $(document).ready(function(){
 	
 	/* ================================  PROCEDURE ================================== */
 	
+	
+	// FETCHES PROCEDURES WHEN A CONTROLAREA IS CHOSEN FORM SELECT LIST
 	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
 		 
