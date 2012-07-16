@@ -216,7 +216,6 @@
 					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
 					$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 					$procedure->set_control_area_name($category[0]['name']);
-					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 				}
 				
 				if($this->db->f('document_id', true) != ''){
@@ -354,9 +353,7 @@
 		{
 			$results = array();
 
-			$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
-
-			$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE procedure_id = {$id} ORDER BY end_date DESC";
+			$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 			while ($this->db->next_record()) {
@@ -375,7 +372,6 @@
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category    = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$procedure->set_control_area_name($category_name = $category[0]['name']);
-				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 
 				$results[] = $procedure->toArray();;
 			}
