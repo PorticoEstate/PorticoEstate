@@ -445,12 +445,11 @@ $(document).ready(function(){
 	/* =========================  CONTROL  ===================== */
 	
 	// SAVE CONTROL DETAILS
-	$("#frm_save_control_details**").submit(function(e){
-		
+	$("#frm_save_control_details").submit(function(e){
 		var thisForm = $(this);
 		var $required_input_fields = $(this).find(".required");
 		var status = true;
-	
+		
 		// Checking that required fields (fields with class required) is not null
 	    $required_input_fields.each(function() {
 	    	
@@ -482,7 +481,6 @@ $(document).ready(function(){
 	    }else{
 	    	e.preventDefault();
 	    }
-	    	
 	});
 	
 	// HELP TEXT ON SAVING CONTROL DETAILS 
