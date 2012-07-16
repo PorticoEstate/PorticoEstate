@@ -30,7 +30,6 @@
 	
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
-	phpgw::import_class('controller.socontrol_area');
 	phpgw::import_class('controller.socheck_list');
 	
 	include_class('controller', 'check_list', 'inc/model/');
@@ -42,7 +41,6 @@
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
 		private $so;
-		private $so_control_area;
 		private $so_control;
 		private $so_control_item;
 		private $so_check_item;
@@ -72,7 +70,6 @@
 		{
 			parent::__construct();
 
-			$this->so_control_area 				= CreateObject('controller.socontrol_area');
 			$this->so_control 						= CreateObject('controller.socontrol');
 			$this->so											= CreateObject('controller.socheck_list');
 			$this->so_control_item				= CreateObject('controller.socontrol_item');
