@@ -30,7 +30,6 @@
 
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.soprocedure');
-	phpgw::import_class('controller.socontrol_area');
 	phpgw::import_class('controller.socontrol');
 
 	include_class('controller', 'procedure', 'inc/model/');
