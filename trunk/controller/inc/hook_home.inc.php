@@ -30,7 +30,7 @@
 
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
-	include_class('controller', 'check_list_status_info', 'inc/helper/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 		
