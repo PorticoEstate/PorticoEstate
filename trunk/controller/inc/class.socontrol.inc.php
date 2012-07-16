@@ -382,7 +382,6 @@
 				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 				
