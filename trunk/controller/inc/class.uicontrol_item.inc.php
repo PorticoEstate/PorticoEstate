@@ -34,7 +34,6 @@
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.socontrol_group');
-	phpgw::import_class('controller.socontrol_area');
 
 	include_class('controller', 'control_item', 'inc/model/');
 
@@ -43,7 +42,6 @@
 		private $so;
 		private $so_control_item;
 		private $so_control_group;
-		private $so_control_area;
 		private $so_control_item_option;
 		
 
@@ -65,7 +63,6 @@
 			$this->so = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item_option = CreateObject('controller.socontrol_item_option');
 			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
