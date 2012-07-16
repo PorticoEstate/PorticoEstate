@@ -1306,7 +1306,12 @@ ul#icon_color_map span{
 
 .cal_info_msg {
 	font-size: 16px;
-    padding: 40px 20px;	
+  padding: 40px 20px;	
+}
+
+#calendar .cal_info_msg td{
+	text-align: left;
+	
 }
 
 #showYear{
