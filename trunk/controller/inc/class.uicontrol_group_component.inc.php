@@ -31,7 +31,6 @@
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
-	phpgw::import_class('controller.socontrol_area');
 	//phpgw::import_class('bim.sobimitem');
 
 	class controller_uicontrol_group_component extends phpgwapi_uicommon
@@ -46,7 +45,6 @@
 		var $type_id;
 		var $location_code;
 
-		private $so_control_area;
 		private $so_control_group;
 		private $so_control;  
 		private $so_bim;
@@ -62,7 +60,6 @@
 
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control_group		= CreateObject('controller.socontrol_group');
 			$this->so_control			= CreateObject('controller.socontrol');
 
