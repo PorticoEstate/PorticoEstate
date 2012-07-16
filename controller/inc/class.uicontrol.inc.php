@@ -32,7 +32,6 @@
   phpgw::import_class('property.boevent');
   phpgw::import_class('controller.socontrol');
   phpgw::import_class('controller.socontrol_group');
-  phpgw::import_class('controller.socontrol_area');
   phpgw::import_class('controller.socontrol_item');
   phpgw::import_class('controller.socontrol_item_list');
   phpgw::import_class('controller.soprocedure');
@@ -40,7 +39,6 @@
   phpgw::import_class('phpgwapi.yui');
 	
   include_class('controller', 'control', 'inc/model/');
-  include_class('controller', 'control_area', 'inc/model/');
   include_class('controller', 'control_item_list', 'inc/model/');
   include_class('controller', 'control_group_list', 'inc/model/');
   include_class('controller', 'check_item', 'inc/model/');
@@ -51,7 +49,6 @@
     private $so;
     private $so_procedure;
     private $so_control_group; 
-    private $so_control_area; 
     private $so_control_item;
     private $so_control_item_list;
     private $so_control_group_list;
@@ -90,7 +87,6 @@
 			$this->bo = CreateObject('property.boevent',true);
 			$this->so_procedure = CreateObject('controller.soprocedure');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
