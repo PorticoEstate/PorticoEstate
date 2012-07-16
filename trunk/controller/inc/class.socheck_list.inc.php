@@ -741,8 +741,6 @@ class controller_socheck_list extends controller_socommon
 
 	function populate(int $control_id, &$control)
 	{
-		
-			
 		if($control == null) {
 			$start_date = date("d.m.Y",  $this->db->f('start_date'));
 			$end_date = date("d.m.Y",  $this->db->f('end_date'));
