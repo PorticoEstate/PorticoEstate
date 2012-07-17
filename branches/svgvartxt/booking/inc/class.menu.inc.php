@@ -278,6 +278,11 @@
 									)
 								)
 							),
+							'strings'	=> array
+							(
+								'text'	=> lang('Strings'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.strings.index', 'appname' => 'booking') )
+							),
 						)
 					);
 					if ($manual !== null)

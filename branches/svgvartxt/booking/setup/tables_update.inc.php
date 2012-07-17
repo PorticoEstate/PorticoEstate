@@ -2635,3 +2635,35 @@
 	}
 
 
+	$test[] = '0.2.09';
+	/**
+	* Update booking version from 0.2.09 to 0.2.10
+	* Add table for replacable booking strings
+	* 
+	*/
+	function booking_upgrade0_2_09()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_string', array(
+				'fd' => array(
+					'id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'contents' => array('type' => 'text', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.10';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

@@ -26,6 +26,7 @@
 			);
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			
+			error_log( var_export( $GLOBALS['phpgw_info']['server']['files_dir'], true ) );
 			$server_files_dir = $this->_chomp_dir_sep($GLOBALS['phpgw_info']['server']['files_dir']);
 			
 			if (!file_exists($server_files_dir) || !is_dir($server_files_dir)) {
