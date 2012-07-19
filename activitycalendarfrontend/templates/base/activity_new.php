@@ -225,16 +225,16 @@ function allOK()
 <div class="yui-content">
 	<div id="details">
 	
-	<?php if($message){?>
-	<div class="success">
-		<?php echo $message;?>
-	</div>
-	<?php }else if($error){?>
-	<div class="error">
-		<?php echo $error;?>
-	</div>
-	<?php }?>
-	</div>
+    	<?php if($message){?>
+    	<div class="success">
+    		<?php echo $message;?>
+    	</div>
+    	<?php }else if($error){?>
+    	<div class="error">
+    		<?php echo $error;?>
+    	</div>
+    	<?php }?>
+    	</div>
 		<div class="pageTop">
 			<h1><?php echo lang('new_activity') ?></h1>
 			<div>
