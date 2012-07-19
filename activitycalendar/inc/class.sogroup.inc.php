@@ -178,7 +178,76 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	{
 		return false;
 	}
-
+	
+	function update_group_description($group_id, $desc)
+	{
+		$sql = "UPDATE bb_group SET description={$desc} WHERE ID={$group_id}";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	function update_group_contact($contact)
+	{
+	    $id=intval($contact['id']);
+	    $name=$contact['name'];
+	    $phone=$contact['phone'];
+	    $mail=$contact['mail'];
+	    
+	    $sql = "UPDATE bb_group_contact SET NAME='{$name}, PHONE='{$phone}', EMAIL='{$mail}' WHERE id={$id}";
+	    $result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+    function add_group_contact_local($contact)
+	{
+		$name = $contact['name'];
+		$phone = $contact['phone'];
+		$mail = $contact['mail'];
+		$original_id = $contact['original_id'];
+		$group_id = $contact['group_id'];
+		
+		$columns[] = 'name';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'organization_id';
+		$columns[] = 'group_id';
+		$columns[] = 'address';
+		$columns[] = 'zipcode'; 
+		$columns[] = 'city';
+		$columns[] = 'original_id';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$mail}'";
+		$values[] = "''";
+		$values[] = $group_id;
+		$values[] = "''";
+		$values[] = "''";
+		$values[] = "''";
+		$values[] = $original_id;
+		$vals = implode(',',$values);
+		
+		//var_dump("INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})");
+		$sql = "INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		return isset($result);
+	}
+	
 	public function get_id_field_name($extended_info = false)
 	{
 		if(!$extended_info)
@@ -388,7 +457,6 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		$vals = implode(',',$values);
 		
 		$sql = "UPDATE activity_group SET {$vals} WHERE ID={$group->get_id()}";
-		var_dump($sql);
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
 		{
