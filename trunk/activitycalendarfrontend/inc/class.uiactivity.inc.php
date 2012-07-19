@@ -457,6 +457,7 @@
 				$secret_param = phpgw::get_var('secret', 'GET');
 				if(!isset($id) || $id == '')
 				{
+				    var_dump(3);
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array('edit_from_frontend' => 'yes'));
@@ -539,25 +540,35 @@
 					{
 						if(isset($activity)) // If an activity object is created
 						{
+						    $act_description = phpgw::get_var('description');
 							$old_state = $activity->get_state();
 							$new_state = phpgw::get_var('state');
 							// ... set all parameters
 							$activity->set_title(phpgw::get_var('title'));
 							$activity->set_arena(phpgw::get_var('arena_id'));
 							$activity->set_internal_arena(phpgw::get_var('internal_arena_id'));
-							$district_array = phpgw::get_var('district');
-							$activity->set_district(implode(",", $district_array));
+							//$district_array = phpgw::get_var('district');
+							$activity->set_district(phpgw::get_var('district'));
 							$activity->set_office(phpgw::get_var('office'));
 							$activity->set_state(2);
 							$activity->set_category(phpgw::get_var('category'));
 							$target_array = phpgw::get_var('target');
 							$activity->set_target(implode(",", $target_array));
-							$activity->set_description($desc);
+							$activity->set_description($act_description);
 							$activity->set_time(phpgw::get_var('time'));
 							$activity->set_contact_persons($persons);
 							$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 							$activity->set_frontend(true);
-		
+							
+							$contact_person = array();
+							$cp_tmp = $persons_array[0];
+							$contact_person['original_id'] = $cp_tmp->get_id();
+							$contact_person['name'] = phpgw::get_var('contact_name');
+							$contact_person['phone'] = phpgw::get_var('contact_phone');
+							$contact_person['mail'] = phpgw::get_var('contact_mail');
+							$contact_person['group_id'] = $activity->get_group_id();
+							
+							
 							$target_ok = false;
 							$district_ok = false;
 							if($activity->get_target() && $activity->get_target() != '')
@@ -575,6 +586,12 @@
 								if($this->so_activity->store($activity)) // ... and then try to store the object
 								{
 									$message = lang('messages_saved_form');	
+									//update group description
+									if($activity->get_group_id())
+									{
+									    $this->so_group->update_group_description($activity->get_group_id(), $act_description);
+									    $this->so_group->update_group_contact($contact_person);
+									}
 								}
 								else
 								{
@@ -589,7 +606,6 @@
 												'organization' => $organization,
 												'group' => $group,
     											'contact1' => $persons_array[0],
-    											'contact2' => $persons_array[1],
 												'arenas' => $arenas,
 												'buildings' => $buildings,
 												'categories' => $categories,
@@ -617,7 +633,6 @@
 										'activity' 	=> $activity,
 										'organization' => $organization,
 									    'contact1' => $persons_array[0],
-										'contact2' => $persons_array[1],
 										'org_name' => $org_name,
 										'group' => $group,
 										'arenas' => $arenas,
@@ -646,7 +661,6 @@
 										'organization' => $organization,
 										'group' => $group,
 										'contact1' => $persons_array[0],
-										'contact2' => $persons_array[1],
 										'arenas' => $arenas,
 										'buildings' => $buildings,
 										'categories' => $categories,
