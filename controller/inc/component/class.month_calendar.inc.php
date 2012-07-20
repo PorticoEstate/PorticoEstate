@@ -75,8 +75,8 @@ class month_calendar {
 		}
 	}
    	
-	public function build_calendar( $check_lists_array ){
-		
+	public function build_calendar( $check_lists_array )
+	{
 		foreach($check_lists_array as $check_list){
 			$check_list_status_manager = new check_list_status_manager( $check_list );
 			$check_list_status_info = $check_list_status_manager->get_status_for_check_list(); 

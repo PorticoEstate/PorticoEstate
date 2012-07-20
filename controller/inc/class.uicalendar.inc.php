@@ -422,7 +422,7 @@
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
-			
+			 
 			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
@@ -431,7 +431,7 @@
 			
 			$locations_with_calendar_array = array();
 			
-			// Process aggregated values for controls with repeat type day or week 
+			// LOCATIONS: Process aggregated values for controls with repeat type day or week 
 			if( $control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK  )
 			{
 				foreach($locations_for_control_array as $location)
@@ -452,7 +452,8 @@
 					$calendar_array = $year_calendar->build_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array( "location" => $location, "calendar_array" => $calendar_array );
 				}
-				
+
+				// COMPONENTS: Process aggregated values for controls with repeat type day or week
 			  foreach( $components_for_control_array as $component )
 			  {
 			  	$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
@@ -529,7 +530,7 @@
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager', 
-											 								 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -588,7 +589,7 @@
 				$check_lists_array = $component_with_check_lists["check_lists_array"];
 					
 				$month_calendar = new month_calendar( $control, $year, $month, $component, null, "component" );
-				$calendar_array = $month_calendar->build_calendar( $control->get_check_lists_array() );
+				$calendar_array = $month_calendar->build_calendar( $check_lists_array );
 				
 				$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 			}
@@ -613,7 +614,7 @@
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_manager', 
-											 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_month'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -797,9 +798,7 @@
 		
 		function get_start_date_year_ts($year)
 		{
-			$start_date_year_ts = strtotime("01/01/$year");
-			
-			return $start_date_year_ts;
+			return strtotime("01/01/$year");
 		}
 		
 		function get_end_date_year_ts($year)
