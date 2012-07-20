@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-
+<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 <script>
 <xsl:text>
 
@@ -71,8 +71,6 @@ function chooseLocation( label, value ){
 						<h1>Kontrollplan for bygg: <xsl:value-of select="current_location/loc2_name"/></h1>
 				</xsl:otherwise>
 			</xsl:choose>
-						
-			<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 			<h3>Kalenderoversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->

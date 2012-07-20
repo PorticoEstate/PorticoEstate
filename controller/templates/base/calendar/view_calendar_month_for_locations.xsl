@@ -1,12 +1,13 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 
 <div id="main_content">
 	<div id="control_plan">
 		<div class="top">
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
-			<h3>Periode: <xsl:value-of select="current_year"/></h3>
+			<h3>Oversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		</div>
 		<div class="middle">
 			<!-- =====================  ICON COLOR MAP  ================= -->

@@ -608,8 +608,8 @@
 				'locations_with_calendar_array' 	=> $locations_with_calendar_array,
 				'components_with_calendar_array'	=> $components_with_calendar_array,
 				'date_format' 			  						=> $date_format,
-				'current_month_nr' 			  				=> $month,
-				'current_year' 			  	  				=> $year,
+				'current_year' 			  						=> $year,
+				'current_month_nr' 		  					=> $month,
 			);
 			
 			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_manager', 
