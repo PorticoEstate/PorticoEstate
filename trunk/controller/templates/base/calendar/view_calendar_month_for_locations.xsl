@@ -13,22 +13,24 @@
 			<!-- =====================  ICON COLOR MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 					
-					
-			<!-- =====================  CALENDAR NAVIGATION  ================= -->
+			<!-- =====================  VIEW OVERVIEW FOR YEAR  ================= -->
 			<div id="calNav">
 				<a class="showPrev month">
 					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
+						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
 						<xsl:text>&amp;year=</xsl:text>
 						<xsl:value-of select="current_year"/>
-						<xsl:text>&amp;month=</xsl:text>
-						<xsl:value-of select="current_month"/>
 						<xsl:text>&amp;control_id=</xsl:text>
 						<xsl:value-of select="control/id"/>
 					</xsl:attribute>
 					Årsoversikt
 				</a>
 			</div>
+			
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->
+			<xsl:call-template name="nav_calendar_month">
+    		<xsl:with-param name="view">LOCATIONS_FOR_CONTROL</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 		
 		<!-- =====================  CALENDAR ================= -->

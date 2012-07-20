@@ -177,11 +177,12 @@ function chooseLocation( label, value ){
 			</xsl:call-template>
 				
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<xsl:call-template name="nav_calendar_month" />
+			<xsl:call-template name="nav_calendar_month">
+    		<xsl:with-param name="view">CONTROLS_FOR_LOCATION</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 			
 		<div id="cal_wrp">
-		
 			<!-- ================================  BUILDINGS TABLE  ====================================  -->
 			<h2>Bygg/eiendom</h2>
 			<table id="calendar" class="month">

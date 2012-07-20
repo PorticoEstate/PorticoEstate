@@ -32,7 +32,7 @@ class year_calendar_agg {
     	{
     		$this->calendar_array[ $month_nr ] = null;
     	}
-     	else if( $month_nr < date("m") )
+     	else if( ($month_nr < date("m"))  && (date("Y", $this->control->get_start_date()) == $this->year) )
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_NOT_DONE";
     		$this->calendar_array[ $month_nr ]["info"] = array("view" => "LOCATIONS_FOR_CONTROL", "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
