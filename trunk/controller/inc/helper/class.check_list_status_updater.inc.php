@@ -23,7 +23,6 @@
 			$num_pending_cases = 0;
 					
 			foreach($check_items as $check_item){
-				
 				foreach($check_item->get_cases_array() as $case){
 					
 					if($case->get_status() == controller_check_item_case::STATUS_OPEN){

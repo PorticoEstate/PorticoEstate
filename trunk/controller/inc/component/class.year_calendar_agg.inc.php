@@ -28,26 +28,25 @@ class year_calendar_agg {
 		
     for($month_nr = 1;$month_nr <= 12;$month_nr++)
     {
-    	if( ($month_nr < $start_month_nr) || ($month_nr > $end_month_nr))
+    	if( ($month_nr < $start_month_nr) || ($month_nr > $end_month_nr) )
     	{
     		$this->calendar_array[ $month_nr ] = null;
     	}
      	else if( $month_nr < date("m") )
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_NOT_DONE";
-    		$this->calendar_array[ $month_nr ]["info"] = array("location_code" => $this->location_code, "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => "LOCATIONS_FOR_CONTROL", "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
     	}
     	else
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_REGISTERED";
-    		$this->calendar_array[ $month_nr ]["info"] = array("location_code" => $this->location_code, "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => "LOCATIONS_FOR_CONTROL", "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
     	}
     }
 	}
 	
 	public function build_calendar( $agg_open_cases_pr_month_array )
 	{
-		
 		foreach($agg_open_cases_pr_month_array as $status_agg_month_info)
 		{
 			$status = "CONTROLS_DONE_WITH_ERRORS";
