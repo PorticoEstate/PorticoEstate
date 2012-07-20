@@ -48,7 +48,7 @@
 		private $so_check_item;
 		
 		var $public_functions = array(
-									'register_case' 				=> true,
+									'add_case' 							=> true,
 									'save_case' 						=> true,
 									'create_case_message' 	=> true,
 									'view_case_message' 		=> true,
@@ -70,7 +70,7 @@
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 		}	
 		
-		function register_case(){
+		function add_case(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');

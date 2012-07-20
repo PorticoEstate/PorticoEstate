@@ -242,7 +242,7 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '')
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '', $filter = null)
 		{
 			$controls_array = array();
 			
@@ -255,7 +255,7 @@
 			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
 			$sql  .= "JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql  .= "AND bim_item.type = bim_type.id ";
-			$sql  .= "AND bim_item.location_code LIKE '$location_code%' ";
+			$sql  .= "AND bim_item.type = bim_type.id ";
 			
 			if( is_numeric($repeat_type))
 			{
@@ -268,6 +268,11 @@
 			    
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date) ";
+			
+			if($filter != null)
+			{
+				$sql  .= "AND " . $filter;	
+			}
 			
 			$sql  .= "ORDER BY bim_item.id ";
 			 

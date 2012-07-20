@@ -57,7 +57,7 @@
 										'view_control_info' 				=> true,
 										'view_cases_for_check_list'	=> true,
 										'print_check_list'					=> true,
-										'register_case'							=> true,
+										'add_case'							=> true,
 										'view_open_cases'						=> true,
 										'view_closed_cases'					=> true,
 										'view_control_details'			=> true,
@@ -277,6 +277,7 @@
 			
 			if($completed_date != ''){
 				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+				$status = controller_check_list::STATUS_DONE;
 			}else{
 				$completed_date_ts = 0;
 			}		
@@ -552,7 +553,7 @@
 		}
 						
 		// Displays control groups and control items for a check list
-		function register_case()
+		function add_case()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			
@@ -563,7 +564,7 @@
 		
 			$control_groups_with_items_array = array();
 			
-		$component_id = $check_list->get_component_id();
+			$component_id = $check_list->get_component_id();
 
 			if($component_id > 0)
 			{
@@ -663,7 +664,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/register_case'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/add_case'), $data);
 		}
 		
 		function view_open_cases()

@@ -183,8 +183,45 @@
 			);
 		}
 		
-		public function validate(){
-			
-		
+		public function validate()
+		{
+			$status = true;
+	
+			// Validate CONTROL ID
+			if( empty( $this->control_id ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['control_id'] = "error_msg_2";
+		  }
+		  
+		  // Validate STATUS		  		  
+			if( empty( $this->status ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['status'] = "error_msg_2";
+		  }
+		  		  
+		  // Validate STATUS		  		  
+			if( ($this->status == Check_list::STATUS_DONE) && empty($this->completed_date) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['completed_date'] = "error_msg_2";
+		  }
+		  
+		  // Validate DEADLINE	  		  
+			if( empty( $this->deadline ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['deadline'] = "error_msg_2";
+		  }
+		  
+			// Validate DEADLINE	  		  
+			if( empty( $this->location_code ) && empty( $this->component_id ))
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['deadline'] = "error_msg_2";
+		  }
+		  
+		  return $status;
 		}
 	}
