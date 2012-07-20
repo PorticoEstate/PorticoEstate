@@ -120,8 +120,16 @@
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role );
 
-			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
+			if($level == 1){
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code = '$location_code' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}else
+			{
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code LIKE '$location_code%' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}
 			
 			// Fetches all control ids with check lists for specified time period
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location($location_code, $from_date_ts, $to_date_ts);
@@ -253,8 +261,17 @@
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 			
-			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
+			if($level == 1){
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code = '$location_code' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}else
+			{
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code LIKE '$location_code%' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}
+			
 		  
 			// Loops through controls with repeat type day or week
 			// and populates array that contains aggregated open cases pr month.
@@ -431,8 +448,8 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar($control, $year, null, $curr_location_code, "location");
-					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
+					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code);
+					$calendar_array = $year_calendar->build_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array( "location" => $location, "calendar_array" => $calendar_array );
 				}
 				
@@ -455,8 +472,8 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar( $control, $year, $component, null, "component" );
-					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
+					$year_calendar_agg = new year_calendar_agg( $control, $year, $location_code );
+					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 					$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 				}
 			}
