@@ -7,24 +7,6 @@
 		<div class="top">
 			<h1>Kontrollplan for <xsl:value-of select="control/title"/></h1>
 			<h3>Periode: <xsl:value-of select="current_year"/></h3>
-			
-			<form action="#">
-				<input type="hidden" name="period_type" value="view_year" />
-				<input type="hidden" name="year">
-			      <xsl:attribute name="value">
-			      	<xsl:value-of select="year"/>
-			      </xsl:attribute>
-				</input>
-
-				<select id="choose_my_location">
-					<xsl:for-each select="my_locations">
-						<xsl:variable name="loc_code"><xsl:value-of select="location_code"/></xsl:variable>
-						<option value="{$loc_code}">
-							<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-						</option>
-					</xsl:for-each>
-				</select>					
-			</form>
 		</div>
 		<div class="middle">
 			<!-- =====================  ICON COLOR MAP  ================= -->
