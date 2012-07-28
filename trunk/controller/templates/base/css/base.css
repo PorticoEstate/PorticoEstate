@@ -966,6 +966,10 @@ input.date {
     margin:0;
 }
 
+#check_list_details fieldset{
+    width: 65%;
+}
+
 #check_list_details form .row {
     padding: 0.1em 0;
 }
@@ -2152,6 +2156,8 @@ p.no_items_msg {
   margin-bottom: 5px;
   margin-top: 5px;
   padding: 5px;
+  width: 100%;
+  text-align: center;
 }
 
 .error_msg {

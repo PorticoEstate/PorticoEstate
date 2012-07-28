@@ -214,8 +214,8 @@
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_manager', 
 																			'calendar/icon_color_map', 'calendar/select_my_locations', 
@@ -272,7 +272,6 @@
 				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
 			}
 			
-		  
 			// Loops through controls with repeat type day or week
 			// and populates array that contains aggregated open cases pr month.
 			foreach($controls_for_location_array as $control)
@@ -289,7 +288,7 @@
 					// Loops through controls and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar_agg = new year_calendar_agg($control, $year, $location_code);
+					$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
 					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 						
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
@@ -341,7 +340,7 @@
 									  	
 					  $agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					  $year_calendar_agg = new year_calendar_agg( $control, $year, $location_code);
+					  $year_calendar_agg = new year_calendar_agg( $control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
 					  $calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 
 					  $controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
@@ -404,8 +403,8 @@
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 		}
 
 		public function view_calendar_year_for_locations()
@@ -448,7 +447,7 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code);
+					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 					$calendar_array = $year_calendar->build_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array( "location" => $location, "calendar_array" => $calendar_array );
 				}
@@ -473,7 +472,7 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar_agg = new year_calendar_agg( $control, $year, $location_code );
+					$year_calendar_agg = new year_calendar_agg( $control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL" );
 					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 					$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 				}

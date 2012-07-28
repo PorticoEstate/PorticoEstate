@@ -29,7 +29,7 @@
 			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
 			<xsl:call-template name="nav_calendar_month">
-    		<xsl:with-param name="view">LOCATIONS_FOR_CONTROL</xsl:with-param>
+    		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
   		</xsl:call-template>
 		</div>
 		

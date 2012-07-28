@@ -124,8 +124,8 @@
 				</dt>
 				<dd>
 					<xsl:if test="control/error_msg_array/start_date != ''">
-								<xsl:variable name="error_msg"><xsl:value-of select="control/error_msg_array/start_date" /></xsl:variable>
-								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+						<xsl:variable name="error_msg"><xsl:value-of select="control/error_msg_array/start_date" /></xsl:variable>
+						<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 					</xsl:if>
 					<input class="required date" id="start_date" name="start_date" type="text">
 			    <xsl:if test="control/start_date != 0">

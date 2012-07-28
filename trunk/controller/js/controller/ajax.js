@@ -86,7 +86,7 @@ $(document).ready(function(){
 			
     });
 	
-	//HENTER KONTROLER NÅR EN VELGER ET KONTROLLOMRÅDE
+	// FETCHES RELATED CONTROLS WHEN CONTROL AREA IS CHOSEN
 	$("#control_area_list").change(function () {
 		var control_area_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol.get_controls_by_control_area'};
@@ -228,7 +228,6 @@ $(document).ready(function(){
 	
 	/* ================================  PROCEDURE ================================== */
 	
-	
 	// FETCHES PROCEDURES WHEN A CONTROLAREA IS CHOSEN FORM SELECT LIST
 	$("#control_area_id").change(function () {
 		 var control_area_id = $(this).val();
@@ -295,8 +294,7 @@ $(document).ready(function(){
          		  		$("#control_group").html( htmlString );
          		  	}
 			  }  
-			});
-			
+		});
     });
 	
 	/* ================================  CONTROL GROUP ================================== */
@@ -329,7 +327,6 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
 	
 	$("#frm_control_items input[type='checkbox']").click(function(){
 		var thisCbox = $(this);
@@ -525,26 +522,38 @@ $(document).ready(function(){
   		$("#hidden_control_id").val( control_id );
     });
 	
-	//=====================================  CHECKLIST  ================================
+	//=====================================  CHECK LIST  ================================
 	
 	// ADD CHECKLIST
-	$("#frm_add_check_list").live("submit", function(e){
+	$("#frm_add_check_list_").live("submit", function(e){
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
+		var statusRow = $("#status").closest(".row");
 		var plannedDateVal = $("#planned_date").val();
 		var plannedDateRow = $("#planned_date").closest(".row");
 		var completedDateVal = $("#completed_date").val();
 		var completedDateRow = $("#completed_date").closest(".row");
 		
+		$(thisForm).find(".input_error_msg").remove();
+		
 		// Checks that COMPLETE DATE is set if status is set to DONE 
-		if(statusFieldVal == 1 & completedDateVal == ''){
+		if(statusFieldVal == 1 && completedDateVal == ''){
 			e.preventDefault();
 			// Displays error message above completed date
 			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-		}else if(statusFieldVal == 0 & plannedDateVal == ''){
+		}
+		else if(statusFieldVal == 0 && completedDateVal != ''){
 			e.preventDefault();
 			// Displays error message above completed date
-			$(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");
+			$(statusRow).before("<div class='input_error_msg'>Du har angitt utførtdato, men status er Ikke utført. Vennligst endre status til utført</div>");
+		}
+		else if(statusFieldVal == 0 & plannedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above planned date
+			if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
+			{
+			  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
+			}
 		}		
 	});	
 	

@@ -137,7 +137,7 @@
    					<a class="view_info_box">
 					 	<xsl:attribute name="href">
 								<xsl:choose>
-					 		<xsl:when test="info/view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="info/view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="info/control_id"/>
@@ -165,16 +165,16 @@
 				<a>
 					<xsl:attribute name="href">
 						<xsl:choose>
-					 		<xsl:when test="info/view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="info/view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="info/control_id"/>
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="info/view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 							  <xsl:value-of select="info/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 						<xsl:text>&amp;year=</xsl:text>
 						<xsl:value-of select="//current_year"/>
@@ -188,16 +188,16 @@
 			<a>
 				<xsl:attribute name="href">
 						<xsl:choose>
-					 		<xsl:when test="info/view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="info/view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="info/control_id"/>
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="info/view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 							  <xsl:value-of select="info/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when> 
 					  </xsl:choose>
 					<xsl:text>&amp;month=</xsl:text>
 					<xsl:value-of select="info/month"/>

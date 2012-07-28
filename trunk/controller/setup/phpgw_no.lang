@@ -353,5 +353,8 @@ select delete	controller	no	Velg for sletting
 error_msg_1	controller	no	Vennligst fyll inn dette feltet
 error_msg_2	controller	no	Vennligst velg en verdi i listen
 error_msg_3	controller	no	Vennligst angi sluttdato etter startdato
+error_msg_4	controller	no	Sjekklisten må være knyttet mot en kontroll
+error_msg_5	controller	no	Vennligst angi når kontrollen ble utført
+error_msg_6	controller	no	Kontrollen må være knyttet mot en komponent/lokasjon
 error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
 error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden
