@@ -10,13 +10,16 @@ class year_calendar_agg {
 	private $year;
 	private $control;
 	private $location_code;
+	private $view;
+	
 	private $calendar_array = array();
 	
-  public function __construct($control, $year, $location_code)
+  public function __construct($control, $year, $location_code, $view)
   {
     $this->year = $year;
     $this->control = $control;
     $this->location_code = $location_code;
+    $this->view = $view;
          
     $this->init_calendar();
   }
@@ -35,12 +38,12 @@ class year_calendar_agg {
      	else if( ($month_nr < date("m"))  && (date("Y", $this->control->get_start_date()) == $this->year) )
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_NOT_DONE";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => "LOCATIONS_FOR_CONTROL", "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
     	}
     	else
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_REGISTERED";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => "LOCATIONS_FOR_CONTROL", "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
     	}
     }
 	}

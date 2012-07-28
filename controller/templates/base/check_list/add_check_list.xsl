@@ -60,7 +60,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
+				Kontrollplan for bygg/eiendom (år)
 			</a>
 			<a class="last">
 				<xsl:attribute name="href">
@@ -119,35 +119,66 @@
 			</xsl:choose>
 			
 			<fieldset>
+				<!-- STATUS -->
 				<div class="row">
+				<xsl:if test="check_list/error_msg_array/status != ''">
+					  <xsl:variable name="error_msg"><xsl:value-of select="check_list/error_msg_array/status" /></xsl:variable>
+						<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+					</xsl:if>
 					<label>Status</label>
+					<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
 					<select id="status" name="status">
-						<option value="0" SELECTED="SELECTED">Ikke utført</option>
-						<option value="1" >Utført</option>
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+								<option value="1">Utført</option>
+								<option value="0" SELECTED="SELECTED" >Ikke utført</option>
+							</xsl:when>
+							<xsl:when test="check_list/status = 1">
+								<option value="1" SELECTED="SELECTED">Utført</option>
+								<option value="0">Ikke utført</option>
+							</xsl:when>
+						</xsl:choose>
 					</select>
 				</div>
+				<!-- DEADLINE -->
 				<div class="row">
+					<xsl:if test="check_list/error_msg_array/deadline != ''">
+						<xsl:variable name="error_msg"><xsl:value-of select="check_list/error_msg_array/deadline" /></xsl:variable>
+						<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+					</xsl:if>
 					<label>Fristdato</label>
 					<input type="text" id="deadline_date" name="deadline_date" class="date">
 				      <xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
-				    </input>
-			    </div>
+				  </input>
+				</div>
+				<!-- PLANNED DATE -->
 				<div class="row">
 					<label>Planlagt dato</label>
-					<input type="text" id="planned_date" name="planned_date" class="date" value="" />
-			    </div>
-			    <div class="row">
-					<label>Utført dato</label>
-					<input type="text" id="completed_date" name="completed_date" class="date">
-					  <xsl:if test="check_list/completed_date != ''">
-				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></xsl:attribute>
-				      </xsl:if>
-				    </input>
-			    </div>
-				<!-- 
-					div><label>Utstyr</label><input name="equipment_id" /></div>
-				 -->
+					<input type="text" id="planned_date" name="planned_date" class="date">
+				  	<xsl:if test="check_list/planned_date != 0">
+			   	  	<xsl:attribute name="value">
+			   	  		<xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/>
+			   	  	</xsl:attribute>
+			    	</xsl:if>
+			    </input>
+			  </div>
+			  <!-- COMPLETED DATE -->
+		    <div class="row">
+				  <xsl:if test="check_list/error_msg_array/completed_date != ''">
+					  <xsl:variable name="error_msg"><xsl:value-of select="check_list/error_msg_array/completed_date" /></xsl:variable>
+						<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+				  </xsl:if>
+				  <label>Utført dato</label>
+				  <input type="text" id="completed_date" name="completed_date" class="date">
+				  	<xsl:if test="check_list/completed_date != 0">
+			   	  	<xsl:attribute name="value">
+			   	  		<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
+			   	  	</xsl:attribute>
+			    	</xsl:if>
+			    </input>
+		    </div>
 			</fieldset>
+			 <!-- COMMENT -->
 			<div class="comment">
 				<label>Kommentar</label>
 				<textarea>

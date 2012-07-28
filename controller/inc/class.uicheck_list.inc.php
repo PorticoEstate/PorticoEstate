@@ -57,7 +57,7 @@
 										'view_control_info' 				=> true,
 										'view_cases_for_check_list'	=> true,
 										'print_check_list'					=> true,
-										'add_case'							=> true,
+										'add_case'									=> true,
 										'view_open_cases'						=> true,
 										'view_closed_cases'					=> true,
 										'view_control_details'			=> true,
@@ -184,23 +184,29 @@
 		 * 
 		 * @param HTTP:: location code, control id, date
 		 * @return data array
-		*/
-		function add_check_list(){
-			$type = phpgw::get_var('type');
-			$control_id = phpgw::get_var('control_id');
-			$deadline_ts = phpgw::get_var('deadline_ts');
-			
-			$check_list = new controller_check_list();
-			$check_list->set_control_id($control_id);
-			$check_list->set_deadline($deadline_ts);
+		*/			
+		function add_check_list($check_list = null){
+			if($check_list == null)
+			{
+				$type = phpgw::get_var('type');
+				$control_id = phpgw::get_var('control_id');
+				$deadline_ts = phpgw::get_var('deadline_ts');
+				
+				$check_list = new controller_check_list();
+				$check_list->set_control_id($control_id);
+				$check_list->set_deadline($deadline_ts);
+			}
 			
 			if($type == "component")
 			{
-				$location_id = phpgw::get_var('location_id');
-				$check_list->set_location_id($location_id);
-				$component_id = phpgw::get_var('component_id');
-				$check_list->set_component_id($component_id);
-						
+				if($check_list != null)
+				{
+					$location_id = phpgw::get_var('location_id');
+					$check_list->set_location_id($location_id);
+					$component_id = phpgw::get_var('component_id');
+					$check_list->set_component_id($component_id);	
+				}
+				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
 				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
@@ -214,17 +220,21 @@
 			}
 			else
 			{
-				$location_code = phpgw::get_var('location_code');	
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				if($check_list != null)
+				{
+					$location_code = phpgw::get_var('location_code');
+					$check_list->set_location_code($location_code);	
+				}
+					
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
 				$level = $this->get_location_level($location_code);
 				$type = "location";
 			}
 			
-			$control = $this->so_control->get_single($control_id);
+			$control = $this->so_control->get_single( $check_list->get_control_id() );
 			
 			$year = date("Y", $deadline_ts);
-			$month = date("n", $deadline_ts);
-		
+			$month_nr = date("n", $deadline_ts);
 			
 			$data = array
 			(
@@ -235,7 +245,7 @@
 				'check_list' 							=> $check_list->toArray(),
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month,
+				'current_month_nr' 				=> $month_nr,
 				'building_location_code' 	=> $building_location_code,
 				'location_level' 					=> $level
 			);
@@ -244,78 +254,10 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
-			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/add_check_list'), $data);
-		}
-		
-		/**
-		 * Public function for saving a check list
-		 * 
-		 * @param HTTP:: location code, control id, status etc.. (check list details) 
-		 * @return data array
-		*/
-		function save_check_list()
-		{
-			$control_id = phpgw::get_var('control_id');
-			$status = (int)phpgw::get_var('status');
-			$type = phpgw::get_var('type');
-			$deadline_date = phpgw::get_var('deadline_date', 'string');
-			$planned_date = phpgw::get_var('planned_date', 'string');
-			$completed_date = phpgw::get_var('completed_date', 'string');
-			$comment = phpgw::get_var('comment', 'string');
-			$return_format = phpgw::get_var('phpgw_return_as');
-						
-			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
-			
-			if($planned_date != ''){
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-			}else{
-				$planned_date_ts = 0;
-			} 
-			
-			if($completed_date != ''){
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
-				$status = controller_check_list::STATUS_DONE;
-			}else{
-				$completed_date_ts = 0;
-			}		
-
-			$check_list = new controller_check_list();
-			$check_list->set_location_code($location_code);
-			$check_list->set_control_id($control_id);
-			$check_list->set_status($status);
-			$check_list->set_comment($comment);
-			$check_list->set_deadline( $deadline_date_ts );
-			$check_list->set_planned_date($planned_date_ts);
-			$check_list->set_completed_date($completed_date_ts);
-			
-			if($type == "component"){
-				$location_id = phpgw::get_var('location_id');
-				$component_id = phpgw::get_var('component_id');
-				$check_list->set_location_id( $location_id );
-				$check_list->set_component_id( $component_id );
-			}else {
-				$location_code = phpgw::get_var('location_code');
-				$check_list->set_location_code( $location_code );
-			}
-			
-			$check_list_id = $this->so->store($check_list);
-			
-			
-			if( ($check_list_id > 0) & ($return_format != 'json') )
-			{
-				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));	
-			}
-			else if( ($check_list_id > 0) & ($return_format == 'json') )
-			{
-				return json_encode( array( "status" => "updated" ) );
-			}
-			else
-			{
-				return json_encode( array( "status" => "not_updated" ) );
-			} 
+			//self::render_template_xsl('check_list/edit_check_list', $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
 		
 		/**
@@ -324,13 +266,16 @@
 		 * @param HTTP:: check list id
 		 * @return data array
 		*/
-		function edit_check_list(){
-			$check_list_id = phpgw::get_var('check_list_id');
-
+		function edit_check_list( $check_list = null){
+			if($check_list == null)
+			{
+				$check_list_id = phpgw::get_var('check_list_id');
+				$check_list = $this->so->get_single($check_list_id);
+			}
+			
 			$cl_status_updater = new check_list_status_updater();
 			$cl_status_updater->update_check_list_status( $check_list_id );
 		
-			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -386,6 +331,96 @@
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
+		}
+		
+		/**
+		 * Public function for saving a check list
+		 * 
+		 * @param HTTP:: location code, control id, status etc.. (check list details) 
+		 * @return data array
+		*/
+		function save_check_list()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$control_id = phpgw::get_var('control_id');
+			$status = (int)phpgw::get_var('status');
+			$type = phpgw::get_var('type');
+			$deadline_date = phpgw::get_var('deadline_date', 'string');
+			$planned_date = phpgw::get_var('planned_date', 'string');
+			$completed_date = phpgw::get_var('completed_date', 'string');
+			$comment = phpgw::get_var('comment', 'string');
+			$return_format = phpgw::get_var('phpgw_return_as');
+						
+			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			
+			if($planned_date != ''){
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
+			}else{
+				$planned_date_ts = 0;
+			} 
+			
+			if($completed_date != ''){
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+				$status = controller_check_list::STATUS_DONE;
+			}else{
+				$completed_date_ts = 0;
+			}		
+
+			if(check_list_id > 0)
+			{
+				$check_list = $this->so->get_single($check_list_id);
+			}
+			else
+			{
+				$check_list = new controller_check_list();	
+			}
+						
+			$check_list->set_location_code($location_code);
+			$check_list->set_control_id($control_id);
+			$check_list->set_status($status);
+			$check_list->set_comment($comment);
+			$check_list->set_deadline( $deadline_date_ts );
+			$check_list->set_planned_date($planned_date_ts);
+			$check_list->set_completed_date($completed_date_ts);
+			
+			if($type == "component"){
+				$location_id = phpgw::get_var('location_id');
+				$component_id = phpgw::get_var('component_id');
+				$check_list->set_location_id( $location_id );
+				$check_list->set_component_id( $component_id );
+			}else {
+				$location_code = phpgw::get_var('location_code');
+				$check_list->set_location_code( $location_code );
+			}
+			
+			if( $check_list->validate() )
+			{
+				$check_list_id = $this->so->store($check_list);
+				
+				if( ($check_list_id > 0) & ($return_format != 'json') )
+				{
+					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));	
+				}
+				else if( ($check_list_id > 0) & ($return_format == 'json') )
+				{
+					return json_encode( array( "status" => "updated" ) );
+				}
+				else
+				{
+					return json_encode( array( "status" => "not_updated" ) );
+				}
+			}
+			else
+			{
+				if($check_list->get_id() > 0)
+				{
+					$this->edit_check_list($check_list);	
+				}
+				else
+				{
+					$this->add_check_list($check_list);
+				}
+			}
 		}
 		
 		function view_cases_for_check_list()

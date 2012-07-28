@@ -55,6 +55,9 @@
 		
 		// Objects
 		protected $check_item_array = array();
+		// Array that contains error messages. Is populted in function validate
+		protected $error_msg_array = array();
+		
 		protected $control;
 		
 		/**
@@ -166,6 +169,13 @@
 		
 		public function get_control() { return $this->control; }
 		
+		public function get_error_msg_array() { return $this->error_msg_array; }
+		
+		public function set_error_msg_array( $error_msg_array )
+		{
+			$this->error_msg_array = $error_msg_array;
+		}
+		
 		public function serialize()
 		{
 			return array(
@@ -191,7 +201,7 @@
 			if( empty( $this->control_id ) )
 		  {
 		  	$status = false;
-		  	$this->error_msg_array['control_id'] = "error_msg_2";
+		  	$this->error_msg_array['control_id'] = "error_msg_4";
 		  }
 		  
 		  // Validate STATUS		  		  
@@ -200,28 +210,28 @@
 		  	$status = false;
 		  	$this->error_msg_array['status'] = "error_msg_2";
 		  }
-		  		  
-		  // Validate STATUS		  		  
-			if( ($this->status == Check_list::STATUS_DONE) && empty($this->completed_date) )
+
+		  // Validate COMPLETED DATE when STATUS:DONE		  		  
+			if( ($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date) )
 		  {
 		  	$status = false;
-		  	$this->error_msg_array['completed_date'] = "error_msg_2";
+		  	$this->error_msg_array['completed_date'] = "error_msg_5";
 		  }
-		  
+	
 		  // Validate DEADLINE	  		  
 			if( empty( $this->deadline ) )
 		  {
 		  	$status = false;
-		  	$this->error_msg_array['deadline'] = "error_msg_2";
+		  	$this->error_msg_array['deadline'] = "error_msg_1";
 		  }
-		  
-			// Validate DEADLINE	  		  
+	
+			// Validate connection to COMPONENT/LOCATION
 			if( empty( $this->location_code ) && empty( $this->component_id ))
 		  {
 		  	$status = false;
-		  	$this->error_msg_array['deadline'] = "error_msg_2";
+		  	$this->error_msg_array['deadline'] = "error_msg_6";
 		  }
-		  
+	
 		  return $status;
 		}
 	}

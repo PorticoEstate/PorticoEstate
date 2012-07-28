@@ -130,8 +130,8 @@ function chooseLocation( label, value ){
 			</xsl:call-template>
 			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<xsl:call-template name="nav_calendar_year" />
-    		<xsl:with-param name="view">CONTROLS_FOR_LOCATION</xsl:with-param>
+			<xsl:call-template name="nav_calendar_year">
+    		<xsl:with-param name="view">VIEW_CONTROLS_FOR_LOCATION</xsl:with-param>
   		</xsl:call-template>
 		</div>
 		 

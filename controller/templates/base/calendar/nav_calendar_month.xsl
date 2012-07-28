@@ -9,16 +9,16 @@
 			<a class="showPrev month">
 				<xsl:attribute name="href">
 					<xsl:choose>
-					 		<xsl:when test="$view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="$view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
@@ -35,16 +35,16 @@
 			<a class="showPrev month">
 				<xsl:attribute name="href">
 					<xsl:choose>
-					 		<xsl:when test="$view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="$view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year - 1"/>
@@ -66,16 +66,16 @@
 			<a class="showNext">
 				<xsl:attribute name="href">
 					<xsl:choose>
-					 		<xsl:when test="$view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="$view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$view = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
@@ -91,16 +91,16 @@
 			<a class="showNext">
 				<xsl:attribute name="href">
 					<xsl:choose>
-					 		<xsl:when test="$view = 'LOCATIONS_FOR_CONTROL'">
+					 		<xsl:when test="$view = 'VIEW_LOCATIONS_FOR_CONTROL'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="control/id" />
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$ = 'VIEW_CONTROLS_FOR_LOCATION'">
 								<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 								<xsl:text>&amp;location_code=</xsl:text>
 								<xsl:value-of select="//current_location/location_code"/>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year + 1"/>
