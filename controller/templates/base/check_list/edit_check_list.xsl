@@ -104,7 +104,6 @@
 			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.save_check_list" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
-			<input type="hidden" name="phpgw_return_as" value="json" />
 			
 			<fieldset class="col_1">
 			<div class="row">

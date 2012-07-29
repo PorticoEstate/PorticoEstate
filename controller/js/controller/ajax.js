@@ -573,20 +573,35 @@ $(document).ready(function(){
 		var requestUrl = $(thisForm).attr("action");
 		
 		var check_list_id = $("#check_list_id").val();
-		
-		if(check_list_id > 0){
-			e.preventDefault();
 			
 			var statusFieldVal = $("#status").val();
+			var statusRow = $("#status").closest(".row");
+			var plannedDateVal = $("#planned_date").val();
+			var plannedDateRow = $("#planned_date").closest(".row");
 			var completedDateVal = $("#completed_date").val();
 			var completedDateRow = $("#completed_date").closest(".row");
 			
 			// Checks that COMPLETE DATE is set if status is set to DONE 
 			if(statusFieldVal == 1 & completedDateVal == ''){
+				e.preventDefault();
 				// Displays error message above completed date
 				$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-	    	}else{
-	    		
+	    	}
+			else if(statusFieldVal == 0 && completedDateVal != ''){
+				e.preventDefault();
+				// Displays error message above completed date
+				$(statusRow).before("<div class='input_error_msg'>Vennligst endre status til utført</div>");
+			}
+			else if(statusFieldVal == 0 & plannedDateVal == ''){
+				e.preventDefault();
+				// Displays error message above planned date
+				if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
+				{
+				  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
+				}
+			}	
+			/*
+			else{
 	    		$(".input_error_msg").hide();
 	    		
 				$.ajax({
@@ -610,7 +625,7 @@ $(document).ready(function(){
 						}
 				});
 	    	}
-		}
+	    	*/
 	});
 	
 	// Display submit button on click
