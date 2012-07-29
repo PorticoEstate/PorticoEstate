@@ -137,6 +137,10 @@
 								<option value="1" SELECTED="SELECTED">Utført</option>
 								<option value="0">Ikke utført</option>
 							</xsl:when>
+							<xsl:otherwise>
+								<option value="0">Ikke utført</option>
+								<option value="1">Utført</option>
+							</xsl:otherwise>
 						</xsl:choose>
 					</select>
 				</div>
@@ -155,7 +159,7 @@
 				<div class="row">
 					<label>Planlagt dato</label>
 					<input type="text" id="planned_date" name="planned_date" class="date">
-				  	<xsl:if test="check_list/planned_date != 0">
+				  	<xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">
 			   	  	<xsl:attribute name="value">
 			   	  		<xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/>
 			   	  	</xsl:attribute>
@@ -170,7 +174,7 @@
 				  </xsl:if>
 				  <label>Utført dato</label>
 				  <input type="text" id="completed_date" name="completed_date" class="date">
-				  	<xsl:if test="check_list/completed_date != 0">
+				  	<xsl:if test="check_list/completed_date != 0 and check_list/completed_date != ''">
 			   	  	<xsl:attribute name="value">
 			   	  		<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
 			   	  	</xsl:attribute>

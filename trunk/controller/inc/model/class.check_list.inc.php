@@ -203,12 +203,19 @@
 		  	$status = false;
 		  	$this->error_msg_array['control_id'] = "error_msg_4";
 		  }
-		  
+		 
 		  // Validate STATUS		  		  
-			if( empty( $this->status ) )
-		  {
+			if( $this->status != 0 and $this->status != 1 )
+		  { 
 		  	$status = false;
 		  	$this->error_msg_array['status'] = "error_msg_2";
+		  }
+		  
+			// Validate STATUS ON PLANNED DATE		  		  
+			if( $this->status == 0 and ( $this->planned_date == '' or $this->planned_date == 0) )
+		  { 
+		  	$status = false;
+		  	$this->error_msg_array['status'] = "error_msg_7";
 		  }
 
 		  // Validate COMPLETED DATE when STATUS:DONE		  		  

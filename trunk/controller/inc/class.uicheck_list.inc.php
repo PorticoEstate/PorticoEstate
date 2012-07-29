@@ -196,6 +196,17 @@
 				$check_list->set_control_id($control_id);
 				$check_list->set_deadline($deadline_ts);
 			}
+			else
+			{
+				if( $check_list->get_component_id() > 0)
+				{
+					$type = "component";
+				}
+				else
+				{
+					$type = "location";
+				}
+			}
 			
 			if($type == "component")
 			{
@@ -220,12 +231,11 @@
 			}
 			else
 			{
-				if($check_list != null)
+				if($check_list->get_location_code() == '')
 				{
 					$location_code = phpgw::get_var('location_code');
 					$check_list->set_location_code($location_code);	
 				}
-					
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
 				$level = $this->get_location_level($location_code);
 				$type = "location";
@@ -256,8 +266,7 @@
 			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 			
-			//self::render_template_xsl('check_list/edit_check_list', $data);
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
+			self::render_template_xsl('check_list/add_check_list', $data);
 		}
 		
 		/**
@@ -392,7 +401,8 @@
 				$location_code = phpgw::get_var('location_code');
 				$check_list->set_location_code( $location_code );
 			}
-			
+			echo " SAVE ";
+			print_r($check_list);
 			if( $check_list->validate() )
 			{
 				$check_list_id = $this->so->store($check_list);
@@ -412,6 +422,8 @@
 			}
 			else
 			{
+				echo "i validate failed";
+				
 				if($check_list->get_id() > 0)
 				{
 					$this->edit_check_list($check_list);	
