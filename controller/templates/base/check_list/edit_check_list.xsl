@@ -120,6 +120,10 @@
 							<option value="1" SELECTED="SELECTED">Utført</option>
 							<option value="0">Ikke utført</option>
 						</xsl:when>
+						<xsl:otherwise>
+							<option value="1">Utført</option>
+							<option value="0">Ikke utført</option>
+						</xsl:otherwise>
 					</xsl:choose>
 				</select>
 			</div>
@@ -129,7 +133,7 @@
 			      <xsl:attribute name="id">deadline_date</xsl:attribute>
 			      <xsl:attribute name="name">deadline_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
-			      <xsl:if test="check_list/deadline != 0">
+			      <xsl:if test="check_list/deadline != 0 or check_list/deadline != ''">
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
 				  </xsl:if>
 			    </input>
@@ -140,7 +144,7 @@
 			      <xsl:attribute name="id">planned_date</xsl:attribute>
 			      <xsl:attribute name="name">planned_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
-			      <xsl:if test="check_list/planned_date != 0">
+			      <xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/></xsl:attribute>
 			      </xsl:if>
 			    </input>
@@ -151,7 +155,7 @@
 			      <xsl:attribute name="id">completed_date</xsl:attribute>
 			      <xsl:attribute name="name">completed_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
-				  <xsl:if test="check_list/completed_date != 0">
+				  <xsl:if test="check_list/completed_date != 0 and check_list/completed_date != ''">
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></xsl:attribute>
 			      </xsl:if>
 			    </input>
