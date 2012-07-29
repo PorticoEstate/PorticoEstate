@@ -59,44 +59,28 @@ class controller_socheck_list extends controller_socommon
 	 */
 	public function get_single($check_list_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
-		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id, "; 
-		$sql .= "check_list_id "; 
+		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "WHERE cl.id = $check_list_id";
-				
+		
 		$this->db->query($sql);
-		
-		$counter = 0;
-		$check_list = null;
-		while ($this->db->next_record()) {
+		$this->db->next_record();
 			
-			if($counter == 0){
-				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
-				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
-				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
-				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
-				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
-				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-				$check_list->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$check_list->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));	
-				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));	
-			}
+		$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+		$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+		$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
+		$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+		$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
+		$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+		$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
+		$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+		$check_list->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+		$check_list->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+		$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));	
+		$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));	
 			
-			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
-			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-			
-			$check_items_array[] = $check_item;
-			
-			$counter++;
-		}
-		
 		if($check_list != null){
-			$check_list->set_check_item_array($check_items_array);
 			return $check_list;
 		}else {
 			return null;
@@ -823,7 +807,14 @@ class controller_socheck_list extends controller_socommon
 
 		$result = $this->db->query('UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-		return isset($result);
+		if(isset($result))
+		{
+			return $id;			
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	function get_id_field_name($extended_info = false)

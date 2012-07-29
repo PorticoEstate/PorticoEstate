@@ -282,6 +282,7 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			
+			
 			$cl_status_updater = new check_list_status_updater();
 			$cl_status_updater->update_check_list_status( $check_list_id );
 		
@@ -358,8 +359,7 @@
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
-			$return_format = phpgw::get_var('phpgw_return_as');
-						
+					
 			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
 			
 			if($planned_date != ''){
@@ -375,55 +375,46 @@
 				$completed_date_ts = 0;
 			}		
 
-			if(check_list_id > 0)
+			if($check_list_id > 0)
 			{
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			else
 			{
 				$check_list = new controller_check_list();	
+				$check_list->set_control_id($control_id);
+				
+				if($type == "component"){
+					$location_id = phpgw::get_var('location_id');
+					$component_id = phpgw::get_var('component_id');
+					$check_list->set_location_id( $location_id );
+					$check_list->set_component_id( $component_id );
+				}else {
+					$location_code = phpgw::get_var('location_code');
+					$check_list->set_location_code( $location_code );
+				}
 			}
 						
-			$check_list->set_location_code($location_code);
-			$check_list->set_control_id($control_id);
 			$check_list->set_status($status);
 			$check_list->set_comment($comment);
 			$check_list->set_deadline( $deadline_date_ts );
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
-			
-			if($type == "component"){
-				$location_id = phpgw::get_var('location_id');
-				$component_id = phpgw::get_var('component_id');
-				$check_list->set_location_id( $location_id );
-				$check_list->set_component_id( $component_id );
-			}else {
-				$location_code = phpgw::get_var('location_code');
-				$check_list->set_location_code( $location_code );
-			}
-			echo " SAVE ";
-			print_r($check_list);
+
 			if( $check_list->validate() )
 			{
-				$check_list_id = $this->so->store($check_list);
+					$check_list_id  = $this->so->store($check_list);
 				
-				if( ($check_list_id > 0) & ($return_format != 'json') )
+				if( $check_list_id > 0 )
 				{
-					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id'=>$check_list_id));	
+					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));	
 				}
-				else if( ($check_list_id > 0) & ($return_format == 'json') )
-				{
-					return json_encode( array( "status" => "updated" ) );
-				}
-				else
-				{
-					return json_encode( array( "status" => "not_updated" ) );
+				else{
+					$this->edit_check_list($check_list);	
 				}
 			}
 			else
 			{
-				echo "i validate failed";
-				
 				if($check_list->get_id() > 0)
 				{
 					$this->edit_check_list($check_list);	

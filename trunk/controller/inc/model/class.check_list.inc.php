@@ -233,10 +233,11 @@
 		  }
 	
 			// Validate connection to COMPONENT/LOCATION
-			if( empty( $this->location_code ) && empty( $this->component_id ))
+			if( empty( $this->location_code ) && empty( $this->component_id ) )
 		  {
+		  	echo "FAILED: " . $this->location_code; 
 		  	$status = false;
-		  	$this->error_msg_array['deadline'] = "error_msg_6";
+		  	$this->error_msg_array['location_code'] = "error_msg_6";
 		  }
 	
 		  return $status;
