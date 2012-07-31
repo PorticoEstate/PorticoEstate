@@ -2357,7 +2357,7 @@
 							(
 								'name'		=> 'value',
 								'descr'		=> lang('value'),
-								'type'		=> 'int',
+								'type'		=> 'numeric',
 								'nullable'	=> false,
 								'size'		=> 4,
 								'sortable'	=> true
