@@ -360,6 +360,7 @@ consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
 periodization	property	no	Periodisering
 periodization start	property	no	Startperiode
+periodization outline	property	no	Periodiseringsfordeling
 planning	property	no	Planlagt
 planning date	property	no	Dato planlagt disponering
 planning value	property	no	Beløp planlagt disponering
