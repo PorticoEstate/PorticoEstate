@@ -853,4 +853,9 @@
 		{
 			return $this->so->get_budget($project_id);
 		}
+
+		public function get_periodizations_with_outline()
+		{
+			return $this->so->get_periodizations_with_outline();
+		}
 	}
