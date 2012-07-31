@@ -6551,7 +6551,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_eco_periodization SET active = 1",__LINE__,__FILE__);
 
-		$sql = 'SELECT * FROM fm_project_budget JOIN fm_project ON fm_project_budget.project_id = fm_project.id';
+		$sql = 'SELECT fm_project_budget.* FROM fm_project_budget JOIN fm_project ON fm_project_budget.project_id = fm_project.id';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
 		$budgets = array();
