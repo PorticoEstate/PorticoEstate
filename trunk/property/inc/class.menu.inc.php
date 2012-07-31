@@ -246,6 +246,11 @@
 							'text'	=> lang('periodization'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization') )
 						),
+						'periodization_outline'	=> array
+						(
+							'text'	=> lang('periodization outline'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization_outline') )
+						),
 						'accounting_config'	=> array
 						(
 							'text'	=> lang('Configuration'),
