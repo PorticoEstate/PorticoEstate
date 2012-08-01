@@ -299,13 +299,37 @@
 			
 			$botts = CreateObject('property.botts',true);
 			$message_ticket_id = $botts->add_ticket($ticket);
+			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
-			$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 
-			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+//---Sigurd: start register component to ticket
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$component_location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+
+				$interlink_data = array
+				(
+					'location1_id'		=> $component_location_id,
+					'location1_item_id' => $component_id,
+					'location2_id'		=> $location_id_ticket,
+					'location2_item_id' => $message_ticket_id,
+					'account_id'		=> $user_id
+				);
+
+				execMethod('property.interlink.add', $interlink_data);
+			}
+
+//---End register component to ticket
+
+			//Not used
+			//$todays_date_ts = mktime(0,0,0,date("m"), date("d"), date("Y"));
 						
 			// Registers message and updates check items with message ticket id
-			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
 			foreach($case_ids as $case_id){
 				$case = $this->so->get_single($case_id);
 				$case->set_location_id($location_id_ticket);
