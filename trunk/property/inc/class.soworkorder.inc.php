@@ -1536,5 +1536,41 @@
 			}
 
 			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+			$tax = 1+(($config->config_data['fm_tax'])/100);
+			
+			foreach ($orders as $id => $dummy)
+			{
+				$this->db->query("SELECT combined_cost, budget,calculation,contract_sum,addition FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+
+				$old_combined_cost	= $this->db->f('combined_cost');
+				$budget				= $this->db->f('budget');
+				$calculation		= $this->db->f('calculation');
+				$contract_sum		= $this->db->f('contract_sum');
+				$addition			= $this->db->f('addition');
+
+				if ( abs((int)$contract_sum) > 0)
+				{
+					$addition = 1 + ((int)$addition/100);
+					$combined_cost = (int)$contract_sum * $addition;
+				}
+				else if (abs($calculation) > 0)
+				{
+					$combined_cost = $calculation * $tax;
+				}
+				else
+				{
+					$combined_cost = (int)$budget;
+				}
+				
+				if($old_combined_cost != $combined_cost)
+				{
+					//_debug_array(array($old_combined_cost,$combined_cost));
+					$this->db->query("UPDATE fm_workorder SET combined_cost = '{$combined_cost}' WHERE id = {$id}",__LINE__,__FILE__);
+				}
+			}
 		}
 	}
