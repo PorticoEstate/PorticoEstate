@@ -6514,9 +6514,10 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
 	/**
 	* Update property version from 0.9.17.648 to 0.9.17.649
-	* Update values
+	* Enable periodization of budget at project
 	*/
 	$test[] = '0.9.17.648';
 	function property_upgrade0_9_17_648()
@@ -6601,6 +6602,57 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.649';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.649 to 0.9.17.650
+	* Enable join to locations on loc1
+	*/
+	$test[] = '0.9.17.649';
+	function property_upgrade0_9_17_649()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_locations','loc1',array(
+			'type'		=> 'varchar',
+			'precision'	=> 6,
+			'nullable'	=> true
+			)
+		);
+
+
+		$sql = 'SELECT id, location_code FROM fm_locations';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$locations = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$location_arr	= explode('-', $GLOBALS['phpgw_setup']->oProc->f('location_code'));
+			$locations[] = array
+			(
+				'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'loc1'		=> $location_arr[0]
+			);
+		}
+
+		foreach ($locations as $location)
+		{
+			$sql = "UPDATE fm_locations SET loc1 = '{$location['loc1']}' WHERE id = {$location['id']}";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_locations','loc1',array(
+			'type'		=> 'varchar',
+			'precision'	=> 6,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.650';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}	

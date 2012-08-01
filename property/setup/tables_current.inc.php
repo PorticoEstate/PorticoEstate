@@ -160,7 +160,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'level' => array('type' => 'int','precision' => '4','nullable' => False),
-				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False)
+				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

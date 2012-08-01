@@ -1279,7 +1279,7 @@
 			//echo $sql;
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$sql	= "INSERT INTO fm_locations (level, location_code) VALUES ({$type_id}, '{$location['location_code']}')";
+			$sql	= "INSERT INTO fm_locations (level, location_code, loc1) VALUES ({$type_id}, '{$location['location_code']}', '{$location['loc1']}')";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
@@ -1520,13 +1520,14 @@
 			$locations = array();
 			for ($i=1;$i<($levels+1);$i++)
 			{
-				$this->db->query("SELECT fm_location{$i}.location_code from fm_location{$i} $this->left_join fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
+				$this->db->query("SELECT fm_location{$i}.location_code, loc1 FROM fm_location{$i} {$this->left_join} fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
 				while($this->db->next_record())
 				{
 					$locations[] = array
 						(
 							'level' 		=> $i,
-							'location_code' => $this->db->f('location_code')
+							'location_code' => $this->db->f('location_code'),
+							'loc1' 			=> $this->db->f('loc1')
 						);
 				}
 			}
@@ -1534,7 +1535,7 @@
 			$receipt = array();
 			foreach ($locations as $location)
 			{
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES ({$location['level']}, '{$location['location_code']}')");
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES ({$location['level']}, '{$location['location_code']}', '{$location['loc1']}')");
 
 				$receipt['message'][]=array('msg'=>lang('location %1 added at level %2', $location['location_code'], $location['level']));
 			}

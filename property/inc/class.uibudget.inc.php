@@ -993,6 +993,7 @@
 
 			$datatable = array();
 			$values_combo_box = array();
+			$dry_run = false;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -1032,16 +1033,19 @@
 				array_unshift ($values_combo_box[1],$default_value);
 
 				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
-				$values_combo_box[2] =  $cat_filter['cat_list'];
-				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
-				array_unshift ($values_combo_box[2],$default_value);
-				
-				foreach($values_combo_box[2] as &$entry)
+				foreach($cat_filter['cat_list'] as $_cat)
 				{
-					$entry['id'] = $entry['cat_id'];
+					$values_combo_box[2][] = array
+					(
+						'id' => $_cat['cat_id'],
+						'name' => $_cat['name'],
+						'selected' => $_cat['selected'] ? 1 : 0
+					);
 				}
+				
+				array_unshift ($values_combo_box[2],array ('id'=>'', 'name'=>lang('no category')));
 
-//_debug_array($values_combo_box[2]);die();
+//_debug_array($values_combo_box[2]);
 
 				$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping);
 				$default_value = array ('id'=>'','name'=>lang('no grouping'));
@@ -1224,6 +1228,7 @@
 						)
 					)
 				);
+				$dry_run = true;
 			}
 
 			$uicols = array (
@@ -1262,17 +1267,28 @@
 					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);	
 
-			$location_list = array();
 
-			$location_list = $this->bo->read_obligations(); 
+			//FIXME
+			if($dry_run)
+			{
+				$location_list = array();
+
+			}
+			else
+			{
+			$location_list = $this->bo->read_obligations();
+			}
+
+
 			//_debug_array($location_list);
+	
 			$entry = $content = array();
 			$j = 0;
 			//cramirez: add this code because  "mktime" functions fire an error
 			if($this->year == "")
 			{
 				$today = getdate();
-				$this->year = $today[year];
+				$this->year = $today['year'];
 			}
 
 			if (isset($location_list) && is_array($location_list))
