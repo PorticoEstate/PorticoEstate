@@ -1520,7 +1520,7 @@
 			$locations = array();
 			for ($i=1;$i<($levels+1);$i++)
 			{
-				$this->db->query("SELECT fm_location{$i}.location_code, loc1 FROM fm_location{$i} {$this->left_join} fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
+				$this->db->query("SELECT fm_location{$i}.location_code, fm_location{$i}.loc1 FROM fm_location{$i} {$this->left_join} fm_locations ON fm_location{$i}.location_code = fm_locations.location_code WHERE fm_locations.location_code IS NULL");
 				while($this->db->next_record())
 				{
 					$locations[] = array
