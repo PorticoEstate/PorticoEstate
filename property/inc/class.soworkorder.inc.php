@@ -140,6 +140,7 @@
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 			$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
+			$ecodimb		= isset($data['ecodimb']) ? $data['ecodimb'] : '';
 			$paid			= isset($data['paid']) ? $data['paid'] : '';
 			$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
@@ -151,9 +152,7 @@
 			//echo $sql;
 			if(!$sql)
 			{
-				$entity_table = 'fm_project';
-
-				$cols = "$entity_table.id as project_id";
+				$cols = "fm_project.id as project_id";
 				$cols_return[] 				= 'project_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'project_id';
@@ -271,7 +270,7 @@
 */
 				$cols .= ",fm_project.user_id as project_owner";
 
-				$joinmethod .= "{$this->join} fm_workorder ON ({$entity_table}.id = fm_workorder.project_id) {$this->join} phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
+				$joinmethod .= "{$this->join} fm_workorder ON (fm_project.id = fm_workorder.project_id) {$this->join} phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
 				$paranthesis .='(';
 
 				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
@@ -388,13 +387,21 @@
 					$uicols['formatter'][]		= '';
 					$uicols['classname'][]		= '';
 					$uicols['sortable'][]		= true;
+
+					$joinmethod		.=	"{$this->join} fm_locations ON (fm_workorder.location_code = fm_locations.location_code))";
+					$paranthesis	.='(';
+
+					$location_table = 'fm_locations';
 				}
 				else
 				{
-					$cols .= ",{$entity_table}.location_code";
+					$cols .= ",fm_project.location_code";
+					$location_table = 'fm_project';
 				}
 
-				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
+				$entity_table = 'fm_project';
+
+				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'location_table'=>$location_table,'cols'=>$cols,'cols_return'=>$cols_return,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,
 					'force_location'=>true, 'no_address' => $no_address));
 
@@ -549,6 +556,12 @@
 				$where= 'AND';
 			}
 
+			if ($ecodimb)
+			{
+				$filtermethod .= " $where fm_workorder.ecodimb =" . (int) $ecodimb;
+				$where= 'AND';
+			}
+
 			if ($b_account)
 			{
 				$filtermethod .= " {$where} fm_workorder.account_id = '{$b_account}'";
@@ -681,7 +694,7 @@
 			}
 
 			$sql_end =   str_replace('SELECT DISTINCT fm_workorder.id',"SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
-//	_debug_array($sql_end);die();
+	_debug_array($sql_end);
 
 			if(!$allrows)
 			{

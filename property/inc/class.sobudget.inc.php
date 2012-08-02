@@ -1183,7 +1183,7 @@
 							{
 								$result[] = array(
 									'grouping'		=> $details ? '' : $b_account, 
-									'b_account'		=> $b_account,
+									'b_account'		=> $details ? $b_account : '',
 									'district_id'	=> $district_id,
 									'ecodimb'		=> $dimb,
 									'actual_cost'	=> isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb] ? round($actual_cost[$b_account][$district_id][$dimb]) : 0,
