@@ -129,7 +129,7 @@
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 		}
 
-		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='', $invoice_id = '')
+		function read_invoice($paid='',$start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$voucher_id='', $invoice_id = '',$ecodimb = '')
 		{
 			if(!phpgw::get_var('paid', 'bool'))
 			{
@@ -144,7 +144,7 @@
 				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
 				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
 				'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
-				'district_id' => $this->district_id, 'invoice_id' => $invoice_id));
+				'district_id' => $this->district_id, 'invoice_id' => $invoice_id, 'ecodimb' => $ecodimb));
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
@@ -207,7 +207,7 @@
 			return $this->so->read_single_voucher(0, $line_id);
 		}
 
-		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='')
+		function read_consume($start_date='',$end_date='',$vendor_id='',$loc1='',$workorder_id='',$b_account_class='',$district_id='',$ecodimb = '')
 		{
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
@@ -216,7 +216,7 @@
 				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
 				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'b_account_class' =>$b_account_class,
-				'district_id' => $district_id, 'b_account' => $this->b_account ));
+				'district_id' => $district_id, 'b_account' => $this->b_account,'ecodimb' => $ecodimb ));
 
 			$this->total_records = $this->so->total_records;
 

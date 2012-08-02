@@ -1154,6 +1154,7 @@
 
 			$cols 				= isset($data['cols'])?$data['cols']:'';
 			$entity_table 		= isset($data['entity_table'])?$data['entity_table']:'';
+			$location_table 	= isset($data['location_table'])?$data['location_table']:'';
 			$cols_return 		= isset($data['cols_return']) && $data['cols_return'] ? $data['cols_return']:array();
 			$uicols 			= isset($data['uicols']) && $data['uicols'] ? $data['uicols']: array();
 			$joinmethod 		= isset($data['joinmethod'])?$data['joinmethod']:'';
@@ -1172,7 +1173,7 @@
 
 			if($location_level || $force_location)
 			{
-
+				$_location_table = $location_table ? $location_table : $entity_table;
 				if($location_level)
 				{
 					$type_id = $location_level;
@@ -1182,7 +1183,7 @@
 					$type_id	= count($location_types);
 				}
 				$cols.= ",fm_location1.loc1_name";
-				$joinmethod .= " {$this->join}  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
+				$joinmethod .= " {$this->join}  fm_location1 ON ({$_location_table}.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
 				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
 				$paranthesis .='(';
