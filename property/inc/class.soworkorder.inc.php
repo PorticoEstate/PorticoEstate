@@ -440,7 +440,7 @@
 				switch($order)
 				{
 					case 'workorder_id':
-	//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
+	//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";
 						$ordermethod = " ORDER BY fm_workorder.id {$sort}";
 						break;
 					case 'actual_cost':
@@ -671,7 +671,7 @@
 			$sql_base = substr($sql_full,strripos($sql_full,'FROM'));
 
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
-			{				
+			{
 				$sql_minimized = "SELECT DISTINCT fm_workorder.id {$sql_base}";
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
 
@@ -1302,7 +1302,7 @@
 				}
 				else//revoked
 				{
-					$historylog->add('OB',$workorder['id'],$workorder['approved'], $old_approved);				
+					$historylog->add('OB',$workorder['id'],$workorder['approved'], $old_approved);
 				}
 				$check_pending_action = true;
 			}
@@ -1475,7 +1475,7 @@
 						case 'workorder':
 							$historylog_workorder->add($entry,$id,$closed);
 							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET status='{$closed}' WHERE id = '{$id}'");
-							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");				
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");
 							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $closed));
 							$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$id}'",__LINE__,__FILE__);
 							$this->db->next_record();
@@ -1553,7 +1553,7 @@
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
 			$tax = 1+(($config->config_data['fm_tax'])/100);
-			
+
 			foreach ($orders as $id => $dummy)
 			{
 				$this->db->query("SELECT combined_cost, budget,calculation,contract_sum,addition FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
@@ -1578,11 +1578,36 @@
 				{
 					$combined_cost = (int)$budget;
 				}
-				
+
 				if($old_combined_cost != $combined_cost)
 				{
 					//_debug_array(array($old_combined_cost,$combined_cost));
 					$this->db->query("UPDATE fm_workorder SET combined_cost = '{$combined_cost}' WHERE id = {$id}",__LINE__,__FILE__);
+				}
+			}
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+
+			if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+			{
+				$this->db->query("SELECT id, project_id FROM fm_workorder WHERE location_code IS NULL",__LINE__,__FILE__);
+				$orders = array();
+				while ($this->db->next_record())
+				{
+					$orders[] = array
+					(
+						'id'			=> $this->db->f('id'),
+						'project_id'	=> $this->db->f('project_id')
+					);
+				}
+
+				foreach ($orders as $order)
+				{
+					$this->db->query("SELECT location_code FROM fm_project WHERE id = {$order['project_id']}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$location_code = $this->db->f('location_code');
+					$this->db->query("UPDATE fm_workorder SET location_code = '{$location_code}' WHERE id = {$order['id']}",__LINE__,__FILE__);
 				}
 			}
 		}
