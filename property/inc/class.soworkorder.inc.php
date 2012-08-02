@@ -694,7 +694,7 @@
 			}
 
 			$sql_end =   str_replace('SELECT DISTINCT fm_workorder.id',"SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
-	_debug_array($sql_end);
+//	_debug_array($sql_end);
 
 			if(!$allrows)
 			{
