@@ -42,6 +42,7 @@
 	$limit_no_of_planned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'] : (isset($config->config_data['no_of_planned_controls']) && $config->config_data['no_of_planned_controls'] > 0 ? $config->config_data['no_of_planned_controls']:5);
 	$limit_no_of_assigned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'] : (isset($config->config_data['no_of_assigned_controls']) && $config->config_data['no_of_assigned_controls'] > 0 ? $config->config_data['no_of_assigned_controls']:10);
 
+	$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	$year = phpgw::get_var('year');
 	
 	if(empty($year)){
@@ -154,7 +155,7 @@
 		}
 		foreach($check_lists as $check_list)
 		{
-			$next_date = "Frist: " . date('d/m/Y', $check_list->get_deadline());
+			$next_date = "Frist: " . date($dateformat, $check_list->get_deadline());
 			$portalbox0_data[] = array
 			($check_list->get_deadline(), array
 			(
@@ -246,7 +247,7 @@
 		}
 		foreach($check_lists as $check_list)
 		{
-			$next_date = "Planlagt: " . date('d/m/Y', $check_list->get_planned_date());
+			$next_date = "Planlagt: " . date($dateformat, $check_list->get_planned_date());
 			$portalbox1_data[] = array
 			($check_list->get_planned_date(), array
 			(
@@ -338,7 +339,7 @@
 				{
 					if($current_date > $check_list->get_deadline() && $current_date != $check_list->get_deadline())
 					{
-						$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+						$next_date = "Fristdato: " . date($dateformat, $current_date);
 						$portalbox2_data[] = array
 						($current_date, array
 						(
@@ -359,7 +360,7 @@
 					{
 					    if(!$check_list->get_planned_date())
 					    {
-    						$next_date = "Fristdato: " . date('d/m/Y', $check_list->get_deadline());
+    						$next_date = "Fristdato: " . date($dateformat, $check_list->get_deadline());
     						$portalbox2_data[] = array
     						($check_list->get_deadline(), array
     						(
@@ -372,7 +373,7 @@
 			}
 			else
 			{
-				$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+				$next_date = "Fristdato: " . date($dateformat, $current_date);
 			
 				$portalbox2_data[] = array
 				($current_date, array
