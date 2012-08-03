@@ -208,6 +208,14 @@
 				}
 			}
 			
+			if(!$location_code = $check_list->get_location_code())
+			{
+				$location_code = phpgw::get_var('location_code');
+				$check_list->set_location_code($location_code);	
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
+				$level = $this->get_location_level($location_code);
+			}
+
 			if($type == "component")
 			{
 				if($check_list != null)
@@ -223,7 +231,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    		$component->set_xml_short_desc( $short_desc );
+    			$component->set_xml_short_desc( $short_desc );
 				
 				$component_array = $component->toArray();
 				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
@@ -231,13 +239,6 @@
 			}
 			else
 			{
-				if($check_list->get_location_code() == '')
-				{
-					$location_code = phpgw::get_var('location_code');
-					$check_list->set_location_code($location_code);	
-				}
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
-				$level = $this->get_location_level($location_code);
 				$type = "location";
 			}
 			
@@ -248,16 +249,16 @@
 			
 			$data = array
 			(
-				'location_array'					=> $location_array,
-				'component_array'					=> $component_array,
-				'control'									=> $control->toArray(),
-				'date_format' 						=> $date_format,
-				'check_list' 							=> $check_list->toArray(),
-				'type'			 							=> $type,
-				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month_nr,
+				'location_array'			=> $location_array,
+				'component_array'			=> $component_array,
+				'control'					=> $control->toArray(),
+				'date_format' 				=> $date_format,
+				'check_list' 				=> $check_list->toArray(),
+				'type'			 			=> $type,
+				'current_year' 				=> $year,
+				'current_month_nr' 			=> $month_nr,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 					=> $level
+				'location_level' 			=> $level
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
@@ -383,15 +384,15 @@
 			{
 				$check_list = new controller_check_list();	
 				$check_list->set_control_id($control_id);
+				$location_code = phpgw::get_var('location_code');
+				$check_list->set_location_code( $location_code );
 				
-				if($type == "component"){
+				if($type == "component")
+				{
 					$location_id = phpgw::get_var('location_id');
 					$component_id = phpgw::get_var('component_id');
 					$check_list->set_location_id( $location_id );
 					$check_list->set_component_id( $component_id );
-				}else {
-					$location_code = phpgw::get_var('location_code');
-					$check_list->set_location_code( $location_code );
 				}
 			}
 						

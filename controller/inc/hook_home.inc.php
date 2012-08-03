@@ -227,7 +227,7 @@
 	{
 		$curr_location = $control_instance[0];
 		$current_control = $control_instance[1];
-		$check_lists = $so->get_planned_check_lists_for_control($current_control["id"], $curr_location);
+		$check_lists = $so->get_planned_check_lists_for_control($current_control["id"], $curr_location, $current_control['location_id'], $current_control['component_id']);
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
 		if(isset($current_control['component_id']) && $current_control['component_id'])

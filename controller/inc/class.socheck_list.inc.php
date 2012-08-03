@@ -221,10 +221,21 @@ class controller_socheck_list extends controller_socommon
 	 * Get check list objects for a control on a location with set planned date
 	 *
 	 * @param $control_id control id
-	 * @param $location_code location code
+	 * @param $location_code location code representing physical locations
+	 * @param $location_id location id representing logical system locations
+	 * @param $component_id component id: entity within logical location
 	 * @return array with check list objects
 	 */
-	function get_planned_check_lists_for_control($control_id, $location_code){
+	function get_planned_check_lists_for_control($control_id, $location_code,$location_id, $component_id)
+	{
+		$component_filter = ' AND component_id IS NULL ';
+		if($component_id)
+		{
+			$location_id = (int)$location_id;
+			$component_id = (int)$component_id;
+			$component_filter = " AND component_id = {$component_id} AND location_id = {$location_id} ";
+		}
+
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
@@ -232,6 +243,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "AND NOT cl.planned_date IS NULL ";
 		$sql .= "AND cl.completed_date IS NULL ";
+		$sql .= $component_filter;
 		$sql .= "ORDER BY cl.id;";
 
 		$this->db->query($sql);
