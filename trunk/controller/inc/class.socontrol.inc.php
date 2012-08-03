@@ -185,7 +185,7 @@
 		{
 			$controls_array = array();
 			
-			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name ";
+			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name, ccl.location_id, ccl.component_id ";
 			$sql .= "FROM controller_control_component_list ccl "; 
 			$sql .= "LEFT JOIN controller_control c on ccl.control_id=c.id ";
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
@@ -199,7 +199,7 @@
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
-			
+
 			$this->db->query($sql);
 			
 			while($this->db->next_record()) {
@@ -217,7 +217,10 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
-				
+//Sigurd 3.august 2010:
+				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+//
 				if($return_type == "return_object")
 					$controls_array[] = $control;
 				else
