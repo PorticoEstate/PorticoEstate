@@ -104,16 +104,18 @@
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<xsl:variable name="type"><xsl:value-of select="type"/></xsl:variable>
 			<input type="hidden" name="type" value="{$type}" />
-			
+
+			<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>		
+
 			<xsl:choose>
 				<xsl:when test="type = 'component'">
 					<xsl:variable name="location_id"><xsl:value-of select="check_list/location_id"/></xsl:variable>
 					<input type="hidden" name="location_id" value="{$location_id}" />
 					<xsl:variable name="component_id"><xsl:value-of select="check_list/component_id"/></xsl:variable>
 					<input type="hidden" name="component_id" value="{$component_id}" />
+					<input type="hidden" name="location_code" value="{$location_code}" />
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:variable name="location_code"><xsl:value-of select="location_array/location_code"/></xsl:variable>
 					<input type="hidden" name="location_code" value="{$location_code}" />
 				</xsl:otherwise>
 			</xsl:choose>
