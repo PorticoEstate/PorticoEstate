@@ -6618,7 +6618,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_locations','loc1',array(
 			'type'		=> 'varchar',
-			'precision'	=> 6,
+			'precision'	=> 10,
 			'nullable'	=> true
 			)
 		);
@@ -6646,7 +6646,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_locations','loc1',array(
 			'type'		=> 'varchar',
-			'precision'	=> 6,
+			'precision'	=> 10,
 			'nullable'	=> false
 			)
 		);
