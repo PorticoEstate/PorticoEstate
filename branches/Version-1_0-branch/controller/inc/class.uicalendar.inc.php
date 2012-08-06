@@ -33,10 +33,12 @@
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
-	include_class('controller', 'check_list_status_info', 'inc/helper/');
-	include_class('controller', 'status_agg_month_info', 'inc/helper/');
+	include_class('controller', 'component', 'inc/model/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
+	include_class('controller', 'status_agg_month_info', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 	include_class('controller', 'year_calendar', 'inc/component/');
+	include_class('controller', 'year_calendar_agg', 'inc/component/');
 	include_class('controller', 'month_calendar', 'inc/component/');
 		
 	class controller_uicalendar extends phpgwapi_uicommon
@@ -118,8 +120,16 @@
 			// Fetches controls for location within specified time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role );
 
-			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
+			if($level == 1){
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code = '$location_code' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}else
+			{
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code LIKE '$location_code%' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}
 			
 			// Fetches all control ids with check lists for specified time period
 			$control_id_with_check_list_array = $this->so->get_check_lists_for_location($location_code, $from_date_ts, $to_date_ts);
@@ -155,7 +165,7 @@
 
 					// Loops through all controls for location and populates controls with check lists
 					$controls_for_component_array = $this->populate_controls_with_check_lists($controls_for_component_array, $control_id_with_check_list_array);
-
+									 
 					$month_calendar = new month_calendar( $control, $year, $month, $component, null, "component" );
 					$calendar_array = $month_calendar->build_calendar( $control->get_check_lists_array() );
 														
@@ -164,8 +174,6 @@
 			  
 			  $components_calendar_array[] = array("component" => $component->toArray(), "controls_calendar" => $controls_components_calendar_array);
 			}
-			
-			print_r( $components_calendar_array );
 			
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 		
@@ -206,10 +214,10 @@
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 			
-			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_checker', 
+			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_manager', 
 																			'calendar/icon_color_map', 'calendar/select_my_locations', 
 																			'calendar/select_buildings_on_property', 'calendar/nav_calendar_month',
 																			'calendar/calendar_filters'), $data);
@@ -221,7 +229,7 @@
 			$year = phpgw::get_var('year');
 			$role = phpgw::get_var('role');
 			$repeat_type = phpgw::get_var('repeat_type');
-			
+		
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 
@@ -253,9 +261,17 @@
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
 			
-			// Fetches all controls for the components for a location within time period
-			$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
-		  
+			if($level == 1){
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code = '$location_code' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}else
+			{
+				// Fetches all controls for the components for a location within time period
+				$filter = "bim_item.location_code LIKE '$location_code%' ";
+				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+			}
+			
 			// Loops through controls with repeat type day or week
 			// and populates array that contains aggregated open cases pr month.
 			foreach($controls_for_location_array as $control)
@@ -272,8 +288,8 @@
 					// Loops through controls and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar($control, $year, null, $location_code, "location");
-					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
+					$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
+					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 						
 					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				}
@@ -308,7 +324,8 @@
 				
 				$controls_for_component_array = $component->get_controls_array();
 				$controls_components_calendar_array = array();
-				
+
+				// AGGREGATED VALUES PR MONTH: Puts aggregated number of open cases for days and weeks in calendar array
 			  foreach($controls_for_component_array as $control)
 			  {
 				  if($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
@@ -323,8 +340,8 @@
 									  	
 					  $agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					  $year_calendar = new year_calendar($control, $year);
-					  $calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
+					  $year_calendar_agg = new year_calendar_agg( $control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
+					  $calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 
 					  $controls_components_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 				  }
@@ -379,15 +396,15 @@
 				'current_repeat_type' 			=> $repeat_type
 			);
 			
-			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_checker', 
+			self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_manager', 
 																			'calendar/icon_color_map', 'calendar/select_my_locations', 
 																			'calendar/select_buildings_on_property', 'calendar/nav_calendar_year',
 																			'calendar/calendar_filters'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui-1.8.20.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui-1.8.20.custom.css');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 		}
 
 		public function view_calendar_year_for_locations()
@@ -404,7 +421,7 @@
 			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
-			
+			 
 			// Gets timestamp of first day in year
 			$from_date_ts = $this->get_start_date_year_ts($year);
 
@@ -413,8 +430,8 @@
 			
 			$locations_with_calendar_array = array();
 			
-			// Process aggregated values for controls with repeat type day or week 
-			if($control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK )
+			// LOCATIONS: Process aggregated values for controls with repeat type day or week 
+			if( $control->get_repeat_type() <= controller_control::REPEAT_TYPE_WEEK  )
 			{
 				foreach($locations_for_control_array as $location)
 				{
@@ -430,20 +447,24 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar($control, $year);
-					$calendar_array = $year_calendar->build_agg_month_calendar($agg_open_cases_pr_month_array);
+					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
+					$calendar_array = $year_calendar->build_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array( "location" => $location, "calendar_array" => $calendar_array );
 				}
-				
-			  foreach($components_for_control_array as $component)
+
+				// COMPONENTS: Process aggregated values for controls with repeat type day or week
+			  foreach( $components_for_control_array as $component )
 			  {
-					$component_id = $component['component_id'];
-					$location_id = $component['location_id'];
+			  	$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+    			$component->set_xml_short_desc( $short_desc_arr );
 					
+					$repeat_type = $control->get_repeat_type();
+					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+								
 					$cl_criteria = new controller_check_list();
 					$cl_criteria->set_control_id( $control->get_id() );
-					$cl_criteria->set_component_id( $component_id);
-				  $cl_criteria->set_location_id( $location_id );
+					$cl_criteria->set_component_id( $component->get_id());
+				  $cl_criteria->set_location_id( $component->get_location_id() );
 				  	
 				  $from_month = $this->get_start_month_for_control($control);
 					$to_month = $this->get_end_month_for_control($control);
@@ -451,15 +472,15 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
-					$year_calendar = new year_calendar($control, $year);
-					$calendar_array = $year_calendar->build_agg_calendar($agg_open_cases_pr_month_array);
-					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
+					$year_calendar_agg = new year_calendar_agg( $control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL" );
+					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
+					$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 				}
 			}
 			// Process values for controls with repeat type month or year
-			else if($control->get_repeat_type() > controller_control::REPEAT_TYPE_WEEK)
+			else if( $control->get_repeat_type() > controller_control::REPEAT_TYPE_WEEK )
 			{
-				foreach($locations_for_control_array as $location)
+				foreach( $locations_for_control_array as $location )
 				{
 					$curr_location_code = $location['location_code'];
 					
@@ -468,26 +489,26 @@
 					
 					$check_lists_array = $location_with_check_lists["check_lists_array"];
 					
-					$year_calendar = new year_calendar($control, $year);
+					$year_calendar = new year_calendar($control, $year, null, $curr_location_code, "location");
 					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
 
 					$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 				}
 				
-			  foreach($components_for_control_array as $component)
+			  foreach( $components_for_control_array as $component )
 			  {
-					$curr_component_id = $component['component_id'];
-					$curr_location_id = $component['location_id'];
+					$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+    			$component->set_xml_short_desc( $short_desc_arr );
 					
 					$repeat_type = $control->get_repeat_type();
-					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $curr_location_id, $curr_component_id, $from_date_ts, $to_date_ts, $repeat_type);	
+					$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);	
 					
 					$check_lists_array = $component_with_check_lists["check_lists_array"];
 					
-					$year_calendar = new year_calendar($control, $year);
+					$year_calendar = new year_calendar( $control, $year, $component, null, "component" );
 					$calendar_array = $year_calendar->build_calendar( $check_lists_array );
 
-					$components_with_calendar_array[] = array("component" => $component, "calendar_array" => $calendar_array);
+					$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 				}
 			}
 			
@@ -507,8 +528,8 @@
 				'current_year'	  	  	  				=> $year,
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_checker', 
-											 								 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager', 
+											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -546,14 +567,30 @@
 				$curr_location_code = $location['location_code'];
 					
 				$repeat_type = $control->get_repeat_type();
-				$location_with_check_lists = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $repeat_type);	
+				$location_with_check_lists = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $control->get_repeat_type());	
 					
 				$check_lists_array = $location_with_check_lists["check_lists_array"];
 					
-				$month_calendar = new month_calendar($control, $year, $month);
+				$month_calendar = new month_calendar($control, $year, $month, null, $location_code, "location");
 				$calendar_array = $month_calendar->build_calendar( $check_lists_array );
 
 				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
+			}
+			
+			foreach( $components_for_control_array as $component )
+			{
+				$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+    		$component->set_xml_short_desc( $short_desc_arr );
+					
+				$repeat_type = $control->get_repeat_type();
+				$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $control->get_repeat_type());	
+					
+				$check_lists_array = $component_with_check_lists["check_lists_array"];
+					
+				$month_calendar = new month_calendar( $control, $year, $month, $component, null, "component" );
+				$calendar_array = $month_calendar->build_calendar( $check_lists_array );
+				
+				$components_with_calendar_array[] = array("component" => $component->toArray(), "calendar_array" => $calendar_array);
 			}
 			
 			// Gets array of locations assigned to current user
@@ -563,19 +600,20 @@
 			
 			$data = array
 			(		
-				'control'	  		  							=> $control->toArray(),
-				'my_locations'	  		  				=> $my_locations,
-				'property_array'	  	  				=> $property_array,
-				'location_array'		  					=> $location_array,
-				'heading_array'		  	  				=> $heading_array,
-				'locations_with_calendar_array' => $locations_with_calendar_array,
-				'date_format' 			  					=> $date_format,
-				'current_month_nr' 			  			=> $month,
-				'current_year' 			  	  			=> $year,
+				'control'	  		  								=> $control->toArray(),
+				'my_locations'	  		  					=> $my_locations,
+				'property_array'	  	  					=> $property_array,
+				'location_array'		  						=> $location_array,
+				'heading_array'		  	  					=> $heading_array,
+				'locations_with_calendar_array' 	=> $locations_with_calendar_array,
+				'components_with_calendar_array'	=> $components_with_calendar_array,
+				'date_format' 			  						=> $date_format,
+				'current_year' 			  						=> $year,
+				'current_month_nr' 		  					=> $month,
 			);
 			
-			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_checker', 
-											 'calendar/icon_color_map', 'calendar/select_my_locations'), $data);
+			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_manager', 
+											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_month'), $data);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -759,9 +797,7 @@
 		
 		function get_start_date_year_ts($year)
 		{
-			$start_date_year_ts = strtotime("01/01/$year");
-			
-			return $start_date_year_ts;
+			return strtotime("01/01/$year");
 		}
 		
 		function get_end_date_year_ts($year)

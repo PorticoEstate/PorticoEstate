@@ -171,4 +171,72 @@
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
 	
+	$test[] = '0.1.8';
+	function activitycalendar_upgrade0_1_8()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_organization','addressnumber',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_organization','zip_code',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_organization','city',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_arena','addressnumber',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_arena','zip_code',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_arena','city',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.9';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
+	
+	$test[] = '0.1.9';
+	function activitycalendar_upgrade0_1_9()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','new_group',array(
+			'type' => 'bool',
+			'default' => 'false',
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.10';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
+	
+	$test[] = '0.1.10';
+	function activitycalendar_upgrade0_1_10()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_group','original_group_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.11';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
 ?>

@@ -30,7 +30,7 @@
 
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
-	include_class('controller', 'check_list_status_info', 'inc/helper/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 		
@@ -42,6 +42,7 @@
 	$limit_no_of_planned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'] : (isset($config->config_data['no_of_planned_controls']) && $config->config_data['no_of_planned_controls'] > 0 ? $config->config_data['no_of_planned_controls']:5);
 	$limit_no_of_assigned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'])? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'] : (isset($config->config_data['no_of_assigned_controls']) && $config->config_data['no_of_assigned_controls'] > 0 ? $config->config_data['no_of_assigned_controls']:10);
 
+	$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	$year = phpgw::get_var('year');
 	
 	if(empty($year)){
@@ -72,7 +73,6 @@
 	    $controls = array();
 	    $controls_loc = $so_control->get_controls_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, '', $location["role_id"] );
 	    $controls_comp = $so_control->get_controls_for_components_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, '', $location["role_id"] );
-	    
 	    foreach($controls_loc as $cl)
 	    {
 	        $controls[] = $cl;
@@ -138,6 +138,14 @@
 		$check_lists = $so->get_open_check_lists_for_control($current_control["id"], $curr_location, $from_date_ts);
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
+		if(isset($current_control['component_id']) && $current_control['component_id'])
+		{
+			if($short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $current_control['location_id'], 'id' => $current_control['component_id'])))
+			{
+				$location_name .= "::{$short_desc}";
+			}
+		}
+
 		foreach($control_areas['cat_list'] as $area)
 		{
 			if($area['cat_id'] == $current_control["control_area_id"])
@@ -147,7 +155,7 @@
 		}
 		foreach($check_lists as $check_list)
 		{
-			$next_date = "Frist: " . date('d/m/Y', $check_list->get_deadline());
+			$next_date = "Frist: " . date($dateformat, $check_list->get_deadline());
 			$portalbox0_data[] = array
 			($check_list->get_deadline(), array
 			(
@@ -219,9 +227,17 @@
 	{
 		$curr_location = $control_instance[0];
 		$current_control = $control_instance[1];
-		$check_lists = $so->get_planned_check_lists_for_control($current_control["id"], $curr_location);
+		$check_lists = $so->get_planned_check_lists_for_control($current_control["id"], $curr_location, $current_control['location_id'], $current_control['component_id']);
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
+		if(isset($current_control['component_id']) && $current_control['component_id'])
+		{
+			if($short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $current_control['location_id'], 'id' => $current_control['component_id'])))
+			{
+				$location_name .= "::{$short_desc}";
+			}
+		}
+
 		foreach($control_areas['cat_list'] as $area)
 		{
 			if($area['cat_id'] == $current_control["control_area_id"])
@@ -231,7 +247,7 @@
 		}
 		foreach($check_lists as $check_list)
 		{
-			$next_date = "Planlagt: " . date('d/m/Y', $check_list->get_planned_date());
+			$next_date = "Planlagt: " . date($dateformat, $check_list->get_planned_date());
 			$portalbox1_data[] = array
 			($check_list->get_planned_date(), array
 			(
@@ -297,6 +313,14 @@
 		//$control_location = $so_control->getLocationCodeFromControl($current_control->get_id());
 		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
 		$location_name = $location_array["loc1_name"];
+		if(isset($current_control['component_id']) && $current_control['component_id'])
+		{
+			if($short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $current_control['location_id'], 'id' => $current_control['component_id'])))
+			{
+				$location_name .= "::{$short_desc}";
+			}
+		}
+
 		foreach($control_areas['cat_list'] as $area)
 		{
 			if($area['cat_id'] == $current_control["control_area_id"])
@@ -315,19 +339,28 @@
 				{
 					if($current_date > $check_list->get_deadline() && $current_date != $check_list->get_deadline())
 					{
-						$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+						$next_date = "Fristdato: " . date($dateformat, $current_date);
 						$portalbox2_data[] = array
 						($current_date, array
 						(
 							'text' => "<span class='title'>{$location_name}</span><span class='control-area'>{$control_area_name}</span> <span class='control'>{$current_control["title"]}</span> <span class='date'>{$next_date}</span>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'deadline_ts' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
+							'link' => $GLOBALS['phpgw']->link('/index.php', array
+							(
+								'menuaction'	=> 'controller.uicheck_list.add_check_list',
+								'deadline_ts'	=> $current_date,
+								'control_id'	=> $current_control["id"],
+								'location_code' => $curr_location,
+								'type'			=> $current_control['component_id'] ? 'component' : '',
+								'location_id'	=> $current_control['location_id'],
+								'component_id'	=> $current_control['component_id']
+							))
 						));
 					}
 					else
 					{
 					    if(!$check_list->get_planned_date())
 					    {
-    						$next_date = "Fristdato: " . date('d/m/Y', $check_list->get_deadline());
+    						$next_date = "Fristdato: " . date($dateformat, $check_list->get_deadline());
     						$portalbox2_data[] = array
     						($check_list->get_deadline(), array
     						(
@@ -340,12 +373,22 @@
 			}
 			else
 			{
-				$next_date = "Fristdato: " . date('d/m/Y', $current_date);
+				$next_date = "Fristdato: " . date($dateformat, $current_date);
+			
 				$portalbox2_data[] = array
 				($current_date, array
 				(
 					'text' => "<span class='title'>{$location_name}</span><span class='control-area'>{$control_area_name}</span> <span class='control'>{$current_control["title"]}</span> <span class='date'>{$next_date}</span>",
-					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'deadline_ts' => $current_date, 'control_id' => $current_control["id"], 'location_code' => $curr_location))
+					'link' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'	=> 'controller.uicheck_list.add_check_list', 
+						'deadline_ts'	=> $current_date, 
+						'control_id'	=> $current_control["id"], 
+						'location_code' => $curr_location,
+						'type'			=> $current_control['component_id'] ? 'component' : '',
+						'location_id'	=> $current_control['location_id'],
+						'component_id'	=> $current_control['component_id']
+					))
 				));					
 			}
 		}

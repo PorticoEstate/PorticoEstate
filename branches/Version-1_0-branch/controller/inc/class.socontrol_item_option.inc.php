@@ -44,6 +44,12 @@
 			return self::$so;
 		}
 
+		/**
+		 * Inserts a new control item option in database  
+		 * 
+		 * @param	$control_item_option object to be inserted
+		 * @return true if task was successful, false otherwise  
+		*/
 		function add(&$control_item_option)
 		{
 			$cols = array(
@@ -67,7 +73,13 @@
 				return 0;
 			}
 		}
-
+		
+		/**
+		 * Updates an existing control item option in database  
+		 * 
+		 * @param	$control_item_option object to be updated
+		 * @return true if task was successful, false otherwise  
+		*/
 		function update($control_item_option)
 		{
 			$id = intval($control_item_option->get_id());
@@ -82,6 +94,12 @@
 			return isset($result);
 		}
 		
+		/**
+		 * Get a single control item option from database  
+		 * 
+		 * @param	$id id of control item option to be fetched
+		 * @return control item option object  
+		*/
 		function get_single($id)
 		{
 			$id = (int)$id;

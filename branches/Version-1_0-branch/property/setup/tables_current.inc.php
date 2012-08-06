@@ -160,7 +160,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'level' => array('type' => 'int','precision' => '4','nullable' => False),
-				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False)
+				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1230,12 +1231,26 @@
 		'fm_eco_periodization' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '64','nullable' => False)
+				'descr' => array('type' => 'varchar','precision' => '64','nullable' => False),
+				'active' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
 			'fk' => array(),
 			'uc' => array()
+		),
+		'fm_eco_periodization_outline' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'periodization_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'month' => array('type' => 'int','precision' => '4','nullable' => true),
+				'value' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => false,'default' => '0.00'),
+				'remark' => array('type' => 'varchar','precision' => '60','nullable' => False),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array('fm_eco_periodization' => array('periodization_id' => 'id') ),
+			'uc' => array('periodization_id', 'month')
 		),
 		'fm_order_dim1' => array(
 			'fd' => array(
@@ -1446,13 +1461,14 @@
 			'fd' => array(
 				'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
 				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
-			'pk' => array('project_id','year'),
-			'fk' => array(),
+			'pk' => array('project_id','year','month'),
+			'fk' => array('fm_project' => array('project_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),

@@ -162,7 +162,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		if(isset($filters['new_activities']))
 		{
 			if(!isset($filters['activity_state']) || (isset($filters['activity_state']) && $filters['activity_state'] == 'all')){
-				$filter_clauses[] = "activity.state=1 OR activity.state=2";
+				$filter_clauses[] = "(activity.state=1 OR activity.state=2)";
 			}
 			if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
 				$activity_state = $this->marshal($filters['activity_state'],'int');
@@ -268,7 +268,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.special_adaptation';
 			$columns[] = 'activity.secret';
 			$columns[] = 'activity.frontend';
-			$columns[] = 'activity.new_org';			
+			$columns[] = 'activity.new_org';
+			$columns[] = 'activity.new_group';			
 			
 			$cols = implode(',',$columns);
 		}
@@ -341,7 +342,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'contact_person_2_zip = '          . $this->marshal($activity->get_contact_person_2_zip(), 'string'),
 			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false"),
 			'frontend = '			.($activity->get_frontend() ? "true" : "false"),
-			'new_org = '			.($activity->get_new_org() ? "true" : "false")
+			'new_org = '			.($activity->get_new_org() ? "true" : "false"),
+			'new_group = '			.($activity->get_new_group() ? "true" : "false")
 		);
 		
 		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
@@ -449,10 +451,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
 			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
 			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
+			$activity->set_new_group($this->unmarshal($this->db->f('new_group', 'bool')));
 			
 			if($activity->get_group_id() && $activity->get_group_id() > 0)
 			{
-				if($activity->get_new_org())
+				if($activity->get_new_group())
 				{
 					$contacts = activitycalendar_sogroup::get_instance()->get_contacts_local($activity->get_group_id());
 					$activity->set_contact_persons($contacts);
@@ -482,6 +485,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			}
 			
 		}
+
 		return $activity;
 	}
 	
@@ -1104,17 +1108,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$email = $org_info['email'];
 		$description = $org_info['description'];
 		$street = $org_info['street'];
-		$zip = $org_info['zip'];
-		if($zip && strlen($zip) > 5)
-		{
-			$zip_code = substr($zip,0,4);
-			$city = substr($zip, 5);
-		}
-		else
-		{
-			$zip_code = '';
-			$city = '';
-		}
+		$streetnumber = $org_info['streetnumber'];
+		$zip_code = $org_info['zip'];
+		$city = $org_info['postaddress'];
 		$district = $org_info['district'];
 		$status = $org_info['status'];
 		$original_org_id = $org_info['original_org_id'];
@@ -1129,8 +1125,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'email';
 		$columns[] = 'description';
 		$columns[] = 'address';
-		//$columns[] = 'zip_code';
-		//$columns[] = 'city';
+		$columns[] = 'addressnumber';
+		$columns[] = 'zip_code';
+		$columns[] = 'city';
 		$columns[] = 'orgno';
 		$columns[] = 'district';
 		$columns[] = 'change_type';
@@ -1143,8 +1140,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "'{$email}'";
 		$values[] = "'{$description}'";
 		$values[] = "'{$street}'";
-		//$values[] = "'{$zip_code}'";
-		//$values[] = "'{$city}'";
+		$values[] = "'{$streetnumber}'";
+		$values[] = "'{$zip_code}'";
+		$values[] = "'{$city}'";
 		$values[] = "'{$orgnr}'";
 		$values[] = "'{$district}'";
 		$values[] = "'{$status}'";
@@ -1344,58 +1342,23 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_activities_for_update($org_id, $group = false)
 	{
-		$activities = array();
+		$activity_ids = array();
 		if($group)
 		{
-			$sql = "SELECT * FROM activity_activity WHERE new_org AND group_id={$org_id}";
+			$sql = "SELECT id FROM activity_activity WHERE new_group AND group_id={$org_id}";
 		}
 		else
 		{
-			$sql = "SELECT * FROM activity_activity WHERE new_org AND organization_id={$org_id}";
+			$sql = "SELECT id FROM activity_activity WHERE new_org AND organization_id={$org_id}";
 		}
-		//var_dump($sql);
+
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
-		{			
-			$activity = new activitycalendar_activity((int) $this->db->f('id'));
-
-			$activity->set_title($this->unmarshal($this->db->f('title'), 'string'));
-			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
-			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
-			$activity->set_district($this->unmarshal($this->db->f('district'), 'string'));
-			$activity->set_office($this->unmarshal($this->db->f('office'), 'int'));
-			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
-			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
-			$activity->set_target($this->unmarshal($this->db->f('target'), 'string'));
-			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
-			$activity->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
-			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
-			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
-			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
-			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
-			$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
-			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
-			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
-			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
-			
-			if($activity->get_group_id() && $activity->get_group_id() > 0)
-			{
-				$contacts = activitycalendar_sogroup::get_instance()->get_contacts($activity->get_group_id());
-				$activity->set_contact_persons($contacts);
-				$org_tmp = activitycalendar_sogroup::get_instance()->get_orgid_from_group($activity->get_group_id());
-				$activity->set_organization_id($org_tmp);
-			}
-			else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
-			{
-				$contacts = activitycalendar_soorganization::get_instance()->get_contacts($activity->get_organization_id());
-				$activity->set_contact_persons($contacts);
-			}
-			
-			$activities[] = $activity;
+		{
+		    $activity_ids[] = $this->db->f('id');
 		}
 		
-		return $activities;
+		return $activity_ids;
 	}
 	
 	function get_connected_activities($org_id)

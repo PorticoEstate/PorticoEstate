@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
-
+<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 <script>
 <xsl:text>
 
@@ -71,8 +71,6 @@ function chooseLocation( label, value ){
 						<h1>Kontrollplan for bygg: <xsl:value-of select="current_location/loc2_name"/></h1>
 				</xsl:otherwise>
 			</xsl:choose>
-						
-			<xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
 			<h3>Kalenderoversikt for <span class="month"><xsl:value-of select="php:function('lang', $month_str)" /></span><span class="year"><xsl:value-of select="current_year"/></span></h3>
 		
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
@@ -179,11 +177,12 @@ function chooseLocation( label, value ){
 			</xsl:call-template>
 				
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<xsl:call-template name="nav_calendar_month" />
+			<xsl:call-template name="nav_calendar_month">
+    		<xsl:with-param name="view">VIEW_CONTROLS_FOR_LOCATION</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 			
 		<div id="cal_wrp">
-		
 			<!-- ================================  BUILDINGS TABLE  ====================================  -->
 			<h2>Bygg/eiendom</h2>
 			<table id="calendar" class="month">
@@ -233,15 +232,17 @@ function chooseLocation( label, value ){
 								</td>
 						
 							<xsl:for-each select="calendar_array">
-								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-								</xsl:call-template>
+								<td>
+									<xsl:call-template name="check_list_status_manager" >
+										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+									</xsl:call-template>
+								</td>
 							</xsl:for-each>
 						</tr>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
+					<tr class="cal_info_msg"><td colspan="3"><xsl:value-of select="php:function('lang', 'error_msg_no_controls_in_period')" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			</table>
@@ -302,9 +303,11 @@ function chooseLocation( label, value ){
 					      			</span>
 								</td>
 								<xsl:for-each select="calendar_array">
-									<xsl:call-template name="check_list_status_checker" >
-										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-									</xsl:call-template>
+									<td>
+										<xsl:call-template name="check_list_status_manager" >
+											<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+										</xsl:call-template>
+									</td>
 								</xsl:for-each>
 						</tr>	
 					</xsl:for-each>

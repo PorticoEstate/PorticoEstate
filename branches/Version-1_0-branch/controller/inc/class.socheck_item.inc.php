@@ -50,10 +50,12 @@
 			return self::$so;
 		}
 
-		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
-
-		function populate(int $object_id, &$object){}
-
+		/**
+		 * Add a new check item object to database
+		 * 
+		 * @param	$check_item check item oject to be added
+		 * @return id of the inserted check item, 0 otherwise 
+		*/
 		function add(&$check_item)
 		{
 			$cols = array(
@@ -71,6 +73,12 @@
 			return isset($result) ? $this->db->get_last_insert_id('controller_check_item', 'id') : 0;
 		}
 
+		/**
+		 * Update existing check item object in database  
+		 * 
+		 * @param	$check_item check item oject to be updated
+		 * @return  id of the inserted check item, 0 otherwise 
+		*/
 		function update($check_item)
 		{
 			$id = $check_item->get_id();
@@ -92,6 +100,12 @@
 			}
 		}
 
+		/**
+		 * Get single check item object from database including related control item  
+		 * 
+		 * @param	$check_item_id id to check item to be fetched from database
+		 * @return  check item object 
+		*/
 		public function get_single($check_item_id)
 		{
 			$sql = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
@@ -123,6 +137,12 @@
 			}
 		}
 		
+		/**
+		 * Get single check item object from database including related cases and control item 
+		 * 
+		 * @param	$check_item_id id to check item to be fetched from database
+		 * @return  check item object 
+		*/
 		public function get_single_with_cases($check_item_id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, ";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
@@ -195,9 +215,16 @@
 			}
 		}
 		
+		/**
+		 * Get single check item object from database including related control item
+		 * 
+		 * @param	$check_list_id check list id
+		 * @param	$check_item_id control item id
+		 * @return check item object 
+		*/
 		public function get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id)
 		{
-			$sql = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
+			$sql  = "SELECT ci.*, ci.id as c_id, coi.id as coi_id, coi.* ";
 			$sql .= "FROM controller_check_item ci, controller_control_item coi "; 
 			$sql .= "WHERE ci.check_list_id = $check_list_id ";
 			$sql .= "AND ci.control_item_id = coi.id ";
@@ -227,6 +254,7 @@
 			}
 		}
 		
+	/* Later ikke til at denne er i bruk: Torstein 10.07.12
 		public function get_check_items($check_list_id, $status, $type, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, "; 
 			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
@@ -269,7 +297,18 @@
 			
 			return $check_items_array;
 		}
+		*/
 		
+		/**
+		 * Get check item objects from database including control item and related cases 
+		 * 
+		 * @param	$check_list_id check list id
+		 * @param	$type control item registration type COMMENT/TEXTFIELD/CHECKLIST/RADIOBUTTONS 
+		 * @param	$status status for cases OPEN/CLOSED/PENDING
+		 * @param	$messageStatus is there a message registered for the case
+		 * @param	$returnType data returned as objects or arrays
+		 * @return check item objects
+		*/
 		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, ";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
@@ -372,6 +411,13 @@
 			}
 		}
 		
+		/**
+		 * Get check item objects from database including related control item and cases
+		 * 
+		 * @param	$message_ticket_id get check items and cases for this message
+		 * @param	$returnType data returned as objects or arrays
+		 * @return check item objects 
+		*/
 		public function get_check_items_with_cases_by_message($message_ticket_id, $return_type = "return_object"){
 			$sql  = "SELECT ci.id as ci_id, control_item_id, "; 
 			$sql .= "check_list_id, cic.id as cic_id, cic.status as cic_status, cic.*, ";
@@ -453,7 +499,7 @@
 				return null;
 			}
 		}
-		
+		 /* Later ikke til at vi bruker denne: Torstein 10.07.12
 		public function get_check_items_by_message($location_id, $location_item_id, $return_type = "return_array" )
 		{
 			$location_id		= (int)$location_id;
@@ -478,6 +524,11 @@
 			
 			return $check_items_array;
 		}
+		*/
+		
+		function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
+
+		function populate(int $object_id, &$object){}
 
 		function get_id_field_name(){}
 	}

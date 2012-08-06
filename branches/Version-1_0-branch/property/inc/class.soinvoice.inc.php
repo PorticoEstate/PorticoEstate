@@ -82,6 +82,7 @@
 			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
 			$district_id 	= isset($data['district_id'])?$data['district_id']:'';
 			$invoice_id		= $data['invoice_id'] ? $data['invoice_id'] :'';
+			$ecodimb 		= isset($data['ecodimb'])?$data['ecodimb']:'';
 
 			$join_tables	= '';
 			$filtermethod	= '';
@@ -118,6 +119,12 @@
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where typeid='$cat_id' ";
+				$where= 'AND';
+			}
+
+			if($ecodimb)
+			{
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where= 'AND';
 			}
 
@@ -618,6 +625,7 @@
 				$workorder_id 	= isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id']:0;
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
+				$ecodimb 		= isset($data['ecodimb'])?$data['ecodimb']:'';
 			}
 
 			$where = 'AND';
@@ -672,6 +680,12 @@
 			if ($cat_id>0)
 			{
 				$filtermethod .= " $where typeid = $cat_id";
+				$where= 'AND';
+			}
+
+			if($ecodimb)
+			{
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where= 'AND';
 			}
 

@@ -34,7 +34,6 @@
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.socontrol_group');
-	phpgw::import_class('controller.socontrol_area');
 
 	include_class('controller', 'control_item', 'inc/model/');
 
@@ -43,7 +42,6 @@
 		private $so;
 		private $so_control_item;
 		private $so_control_group;
-		private $so_control_area;
 		private $so_control_item_option;
 		
 
@@ -65,7 +63,6 @@
 			$this->so = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item_option = CreateObject('controller.socontrol_item_option');
 			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
@@ -195,20 +192,27 @@
 			return status;
 		}
 
-		public function edit()
+		public function edit( $control_item = null )
 		{
-			$control_item_id = phpgw::get_var('id');
+			// NOT REDIRECT
+			if($control_item == null)
+			{
+				$control_item_id = phpgw::get_var('id');
+			
+				// Edit control item
+				if($control_item_id > 0)
+				{
+					$control_item = $this->so->get_single_with_options($control_item_id , "return_object"); 
+				}
+				// New control item
+				else
+				{
+					$control_item = new controller_control_item();
+				}	
+			}
 			
 			$control_item_array = array();
-			if($control_item_id > 0)
-			{
-				$control_item_array = $this->so->get_single_with_options( $control_item_id , "return_array"); 
-			}
-			else
-			{
-				$control_item = new controller_control_item();
-			  $control_item_array = $control_item->toArray();
-			}
+			$control_item_array = $control_item->toArray();
 			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -270,22 +274,28 @@
 			$control_item->set_type($type);
 			$control_item->set_what_to_do($what_to_do_txt);
 			$control_item->set_how_to_do($how_to_do_txt);
-
-			$saved_control_item_id = $this->so->store($control_item);
-
-			$this->so->delete_option_values( $saved_control_item_id );
 			
-			if(($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+			if( $control_item->validate() )
 			{
-				$option_values = phpgw::get_var('option_values');
+				$saved_control_item_id = $this->so->store($control_item);
+	
+				$this->so->delete_option_values( $saved_control_item_id );
 				
-				foreach($option_values as $option_value){
-					$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
-					$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
+				if(($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+				{
+					$option_values = phpgw::get_var('option_values');
+					
+					foreach($option_values as $option_value){
+						$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
+						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
+					}
 				}
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $saved_control_item_id));
+			}else
+			{
+				$this->edit($control_item);
 			}
-			
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.view', 'id' => $saved_control_item_id));
 		}
 
 		/**

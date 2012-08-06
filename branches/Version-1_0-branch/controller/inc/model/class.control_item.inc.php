@@ -48,6 +48,7 @@
 		protected $type;
 		
 		protected $options_array;
+		protected $error_msg_array;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -142,6 +143,13 @@
 			return array_values( $this->type_array );
 		}
 			
+		public function get_error_msg_array() { return $this->error_msg_array; }
+		
+		public function set_error_msg_array( $error_msg_array )
+		{
+			$this->error_msg_array = $error_msg_array;
+		}
+			
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -157,7 +165,7 @@
 			return self::$so;
 		}
 		
-		 public function serialize()
+		public function serialize()
 		 {
 			$result = array();
 			$result['id'] = $this->get_id();
@@ -170,5 +178,35 @@
 			$result['control_area'] = $this->get_control_area_name();
 						
 			return $result;
+		}
+		
+		public function validate()
+		{
+			$status = true;
+	
+		  if( $this->title == '')
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['title'] = "error_msg_1";
+		  }
+
+		  if( $this->what_to_do == '' | strlen( $this->what_to_do ) == 0 )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['what_to_do'] = "error_msg_1";
+		  }
+		  
+			if( $this->how_to_do == '')
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['how_to_do'] = "error_msg_1";
+		  }
+		  
+			if( $this->control_area_id == '' && intval($this->control_area_id) > 0)
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['control_area_id'] = "error_msg_2";
+		  }
+		  return $status;
 		}
 	}

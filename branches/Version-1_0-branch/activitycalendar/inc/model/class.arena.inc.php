@@ -10,6 +10,9 @@
 		protected $arena_name;
 		protected $internal_arena_id;
 		protected $address;
+		protected $addressnumber;
+		protected $zip_code;
+		protected $city;
 		protected $reference;
 		protected $active;
 		
@@ -68,6 +71,36 @@
 		{
 			return $this->address;
 		}
+		
+	    public function set_addressnumber($addressnumber)
+		{
+			$this->addressnumber = $addressnumber;
+		}
+	
+		public function get_addressnumber()
+		{
+			return $this->addressnumber;
+		}
+		
+	    public function set_zip_code($zip_code)
+		{
+			$this->zip_code = $zip_code;
+		}
+	
+		public function get_zip_code()
+		{
+			return $this->zip_code;
+		}
+		
+	    public function set_city($city)
+		{
+			$this->city = $city;
+		}
+	
+		public function get_city()
+		{
+			return $this->city;
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -89,6 +122,9 @@
 				'id' => $this->get_id(),
 				'arena_name' => $this->get_arena_name(),
 				'address' => $this->get_address(),
+			    'addressnumber' => $this->get_addressnumber(),
+			    'zip_code' => $this->get_zip_code(),
+			    'city' => $this->get_city(),
 				'active' => ($this->is_active())?'Aktiv':'Inaktiv'
 			);
 		}

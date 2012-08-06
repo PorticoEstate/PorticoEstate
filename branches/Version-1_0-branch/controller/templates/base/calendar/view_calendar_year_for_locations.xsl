@@ -15,16 +15,20 @@
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
 			
+			<!-- =====================  CALENDAR NAVIGATION  ================= -->			
+			<xsl:call-template name="nav_calendar_year">
+    		<xsl:with-param name="view">VIEW_LOCATIONS_FOR_CONTROL</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 		<div id="cal_wrp">
 		<h2>Bygg/Eiendom</h2>
 			<table id="calendar" class="year">
 				<tr>
 					<th class="title">
-						<span class="location_code">Lokasjonskode</span>
+						<span class="location-code">Lokasjonskode</span>
 					</th>
 					<th class="title">
-						<span class="location_name">Lokasjonsnavn</span>
+						<span class="location-name">Lokasjonsnavn</span>
 					</th>
 					<xsl:for-each select="heading_array">
 						<th>
@@ -32,7 +36,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="current_year"/>
+									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
@@ -63,31 +67,32 @@
 						<td class="title">
 							<xsl:value-of select="location/location_code"/>
 						</td>
-						<td class="location_name">
+						<td class="location-name">
 							<xsl:value-of select="location/loc1_name"/>
 						</td>
 							
 						<xsl:for-each select="calendar_array">
-							<xsl:call-template name="check_list_status_checker" >
-								<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
-							</xsl:call-template>
+							<td>
+								<xsl:call-template name="check_list_status_manager" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+								</xsl:call-template>
+							</td>
 						</xsl:for-each>
 					</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
+				<tr class="cal_info_msg"><td colspan="3"><xsl:value-of select="php:function('lang', 'error_msg_no_controls_in_period')" /></td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
 	</table>
-	</div>
-		<div id="cal_wrp">
+
 			<table id="calendar" class="year">
 				<tr>
-					<th class="location_name">
+					<th class="location-name">
 						<span>Lokasjon</span>
 					</th>
-					<th class="component_type">
+					<th class="component-type">
 						<span>Komponenttype</span>
 					</th>
 					<xsl:for-each select="heading_array">
@@ -96,7 +101,7 @@
 								<xsl:attribute name="href">
 									<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_month_for_locations</xsl:text>
 									<xsl:text>&amp;year=</xsl:text>
-									<xsl:value-of select="current_year"/>
+									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
@@ -126,23 +131,25 @@
 					        </xsl:otherwise>
 					    </xsl:choose>
 				    
-						<td class="title">
-							<xsl:value-of select="component/component_location"/>
+						<td class="location-name">
+							<xsl:value-of select="component/xml_short_desc"/>
 						</td>
-						<td class="location_name">
-							<xsl:value-of select="component/component_description"/>
+						<td class="component-type">
+							<xsl:value-of select="component/type_str"/>
 						</td>
 							
 						<xsl:for-each select="calendar_array">
-							<xsl:call-template name="check_list_status_checker" >
-								<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
-							</xsl:call-template>
+							<td>
+								<xsl:call-template name="check_list_status_manager" >
+									<xsl:with-param name="location_code"><xsl:value-of select="//location"/></xsl:with-param>
+								</xsl:call-template>
+							</td>
 						</xsl:for-each>
 					</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for komponent i angitt periode</td></tr>
+				<tr class="cal_info_msg"><td colspan="3"><xsl:value-of select="php:function('lang', 'error_msg_no_controls_in_period')" /></td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
 	</table>

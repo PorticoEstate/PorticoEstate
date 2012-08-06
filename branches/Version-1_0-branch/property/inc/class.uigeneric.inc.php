@@ -654,6 +654,14 @@
 								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter an integer !'));
 							}
 						}
+						else if ($field_info['type'] == 'numeric')
+						{
+							$values[$field_info['name']] = str_replace(',', '.', $values[$field_info['name']]);
+							if( $values[$field_info['name']] && ! is_numeric($values[$field_info['name']]) )
+							{
+								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter a numeric value !'));
+							}
+						}
 					}
 
 					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))

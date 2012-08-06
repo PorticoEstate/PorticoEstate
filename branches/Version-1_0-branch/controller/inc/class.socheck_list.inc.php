@@ -41,7 +41,7 @@ class controller_socheck_list extends controller_socommon
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
-	 * @return controller_socontrol_group the storage object
+	 * @return controller_socheck_list the storage object
 	 */
 	public static function get_instance()
 	{
@@ -51,52 +51,50 @@ class controller_socheck_list extends controller_socommon
 		return self::$so;
 	}
 	
+	/**
+	 * Get a check list and related check_items and returns it as an object
+	 *
+	 * @param $check_list_id
+	 * @return check list object
+	 */
 	public function get_single($check_list_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
-		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id, "; 
-		$sql .= "check_list_id "; 
+		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "WHERE cl.id = $check_list_id";
-				
+		
 		$this->db->query($sql);
-		
-		$counter = 0;
-		$check_list = null;
-		while ($this->db->next_record()) {
+		$this->db->next_record();
 			
-			if($counter == 0){
-				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
-				$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
-				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
-				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
-				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
-				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-				$check_list->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$check_list->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));	
-				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));	
-			}
+		$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+		$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+		$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
+		$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+		$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
+		$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+		$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
+		$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+		$check_list->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
+		$check_list->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+		$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));	
+		$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));	
 			
-			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
-			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-			
-			$check_items_array[] = $check_item;
-			
-			$counter++;
-		}
-		
 		if($check_list != null){
-			$check_list->set_check_item_array($check_items_array);
 			return $check_list;
 		}else {
 			return null;
 		}
 	}
-		
+	
+	/**
+	 * Get check lists from database with related check items and control items
+	 *
+	 * @param $check_list_id check list id
+	 * @param $status status OPEN/CLOSED
+	 * @param $type control items registration type (Radiobuttons, Checklist, textfield, just commentfield)
+	 * @return returns a check list object
+	 */
 	public function get_single_with_check_items($check_list_id, $status, $type){
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, num_open_cases, location_code, num_pending_cases, ";
 		$sql .= "ci.id as ci_id, control_item_id, check_list_id, "; 
@@ -161,6 +159,12 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
+	/**
+	 * Get check list objects for a control
+	 *
+	 * @param $control_id
+	 * @return array with check list objects
+	 */
 	function get_check_lists_for_control($control_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
@@ -213,7 +217,25 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
-	function get_planned_check_lists_for_control($control_id, $location_code){
+	/**
+	 * Get check list objects for a control on a location with set planned date
+	 *
+	 * @param $control_id control id
+	 * @param $location_code location code representing physical locations
+	 * @param $location_id location id representing logical system locations
+	 * @param $component_id component id: entity within logical location
+	 * @return array with check list objects
+	 */
+	function get_planned_check_lists_for_control($control_id, $location_code,$location_id, $component_id)
+	{
+		$component_filter = ' AND component_id IS NULL ';
+		if($component_id)
+		{
+			$location_id = (int)$location_id;
+			$component_id = (int)$component_id;
+			$component_filter = " AND component_id = {$component_id} AND location_id = {$location_id} ";
+		}
+
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
@@ -221,6 +243,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "AND NOT cl.planned_date IS NULL ";
 		$sql .= "AND cl.completed_date IS NULL ";
+		$sql .= $component_filter;
 		$sql .= "ORDER BY cl.id;";
 
 		$this->db->query($sql);
@@ -257,6 +280,14 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
+	
+	/**
+	 * Get check list objects for a control on a location with no set planned date
+	 *
+	 * @param $control_id
+	 * @param $location_code
+	 * @return array with check list objects
+	 */
 	function get_unplanned_check_lists_for_control($control_id, $location_code){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
@@ -298,7 +329,14 @@ class controller_socheck_list extends controller_socommon
 			return null;
 		}
 	}
-	
+	 
+	/**
+	 * Get check list objects for a control on a location after specitied date
+	 *
+	 * @param $control_id control id
+	 * @param $location_code location code
+	 * @return array with check list objects
+	 */
 	function get_open_check_lists_for_control($control_id, $location_code, $from_date){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
@@ -343,6 +381,14 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
+	/**
+	 * Get array with control id and number of open cases within time period
+	 *
+	 * @param $cl_criteria check list criteria object
+	 * @param $from_date start time period
+	 * @param $to_date end time period
+	 * @return array with check list objects
+	 */
 	function get_num_open_cases_for_control( $cl_criteria, $from_date_ts, $to_date_ts ){
 		
 		$sql = 	"SELECT c.id as c_id, sum(cl.num_open_cases) as count ";
@@ -372,7 +418,15 @@ class controller_socheck_list extends controller_socommon
 		return $control_array;
 	}
 	
-	// Fetches control id and check lists for period and location
+	/**
+	 * Get array with check lists for a location within time period and for a specified repeat type
+	 *
+	 * @param $location_code location code
+	 * @param $from_date_ts start time period
+	 * @param $to_date_ts end time period
+	 * @param $repeat_type_expr repeat type expression
+	 * @return array with check list objects
+	 */
 	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type_expr = null ){
 		$sql = 	"SELECT c.id as c_id, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
@@ -430,6 +484,15 @@ class controller_socheck_list extends controller_socommon
 		return $controls_array;
 	}
 	
+	/**
+	 * Get array with check lists for a component within time period and for a specified repeat type
+	 *
+	 * @param $location_code location code
+	 * @param $from_date_ts start time period
+	 * @param $to_date_ts end time period
+	 * @param $repeat_type_expr repeat type expression
+	 * @return array with check list objects
+	 */
 	function get_check_lists_for_component( $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type_expr = null ){
 		$sql = 	"SELECT c.id as c_id, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
@@ -489,7 +552,16 @@ class controller_socheck_list extends controller_socommon
 		return $controls_array;
 	}
 	
-	// Fetches check lists for location and control id
+	/**
+	 * Get array with check lists for a control on a location within time period and for a specified repeat type
+	 *
+	 * @param $control_id control id
+	 * @param $location_code location code
+	 * @param $from_date_ts start time period
+	 * @param $to_date_ts end time period
+	 * @param $repeat_type_expr repeat type expression
+	 * @return array with check list objects
+	*/
 	function get_check_lists_for_control_and_location( $control_id, $location_code, $from_date_ts, $to_date_ts, $repeat_type = null ){
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
@@ -523,7 +595,16 @@ class controller_socheck_list extends controller_socommon
 		return array( "location_code" => $location_code, "check_lists_array" => $check_lists_array);
 	}
 	
-	// Fetches check lists for component and control id
+	/**
+	 * Get array with check lists for a control on a component within time period and for a specified repeat type
+	 *
+	 * @param $control_id control id
+	 * @param $location_code location code
+	 * @param $from_date_ts start time period
+	 * @param $to_date_ts end time period
+	 * @param $repeat_type_expr repeat type expression
+	 * @return array with check list objects
+	*/
 	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null ){
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
@@ -559,6 +640,7 @@ class controller_socheck_list extends controller_socommon
 		return array( "location_code" => $location_code, "check_lists_array" => $check_lists_array);
 	}
 	
+/* Denne ser det ikke ut til at vi bruker: Torstein 9/7-12 
 	function get_check_list_for_date($control_id, $current_date){
 		$sql = 	"SELECT c.id as c_id, title, description, start_date, end_date, control_area_id, c.location_code as c_location_code, repeat_type, repeat_interval, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
@@ -589,6 +671,7 @@ class controller_socheck_list extends controller_socommon
 
 		return $check_lists_array;
 	}
+	*/
 	
 	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
@@ -618,7 +701,7 @@ class controller_socheck_list extends controller_socommon
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
 		}
-		//var_dump($filters);
+		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "p.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
@@ -632,9 +715,6 @@ class controller_socheck_list extends controller_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "controller_control p";
-		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
-		//$joins = " {$this->left_join} controller_control_area ON (controller_control.control_area_id = controller_control_area.id)";
-		//$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
 		
 		if($return_count)
 		{
@@ -657,8 +737,6 @@ class controller_socheck_list extends controller_socommon
 
 	function populate(int $control_id, &$control)
 	{
-		
-			
 		if($control == null) {
 			$start_date = date("d.m.Y",  $this->db->f('start_date'));
 			$end_date = date("d.m.Y",  $this->db->f('end_date'));
@@ -741,7 +819,14 @@ class controller_socheck_list extends controller_socommon
 
 		$result = $this->db->query('UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-		return isset($result);
+		if(isset($result))
+		{
+			return $id;			
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	function get_id_field_name($extended_info = false)

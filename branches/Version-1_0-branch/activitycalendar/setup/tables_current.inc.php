@@ -24,7 +24,8 @@
 				'contact_person_2_address' => array('type' => 'varchar','precision' => '255'),
 				'contact_person_2_zip' => array('type' => 'varchar','precision' => '255'),
 				'frontend' => array('type' => 'bool','nullable' => true,'default' => 'false'),
-				'new_org' => array('type' => 'bool','nullable' => true,'default' => 'false')
+				'new_org' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'new_group' => array('type' => 'bool','nullable' => true,'default' => 'false')
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -37,6 +38,9 @@
 				'internal_arena_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'arena_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'address' => array('type' => 'varchar','precision' => '255','nullable' => True),
+        		'addressnumber' => array('type' => 'varchar','precision' => '255','nullable' => True),
+        		'zip_code' => array('type' => 'varchar','precision' => '255','nullable' => True),
+        		'city' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'active' => array('type' => 'bool','nullable' => true,'default' => 'true')
 			),
 			'pk' => array('id'),
@@ -54,6 +58,9 @@
 				'email' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'phone' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'address' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'addressnumber' => array('type' => 'varchar','precision' => '255','nullable' => True),
+        		'zip_code' => array('type' => 'varchar','precision' => '255','nullable' => True),
+        		'city' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'orgno' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'change_type' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false'),
@@ -71,7 +78,8 @@
 				'name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'description' => array('type' => 'text','nullable' => false),
 				'change_type' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false')
+				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'original_group_id' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

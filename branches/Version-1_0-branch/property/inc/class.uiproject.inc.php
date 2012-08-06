@@ -1683,7 +1683,7 @@
 				$lang_delete = lang('Check to delete year');
 				foreach($content_budget as & $b_entry)
 				{
-					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}' title='{$lang_delete}'>";
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
 					$value_remainder -= $b_entry['sum_orders'];
 					$value_remainder -= $b_entry['actual_cost'];
 				}
@@ -1710,6 +1710,7 @@
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
@@ -1874,6 +1875,7 @@
 				$year++;
 			}
 
+			$periodization_list = $this->bo->get_periodizations_with_outline();
 
 			$data = array
 				(
@@ -1896,6 +1898,7 @@
 					'value_origin_type'					=> isset($origin)?$origin:'',
 					'value_origin_id'					=> isset($origin_id)?$origin_id:'',
 					'year_list'							=> array('options' => $year_list),
+					'periodization_list'				=> array('options' => $periodization_list),
 					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
 					'lang_request_statustext'			=> lang('Link to the request for this project'),
