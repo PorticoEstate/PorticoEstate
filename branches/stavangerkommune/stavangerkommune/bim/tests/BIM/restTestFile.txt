@@ -1,2 +1,0 @@
-This is a test file for the rest service
- Please delete this file if you come across it!
