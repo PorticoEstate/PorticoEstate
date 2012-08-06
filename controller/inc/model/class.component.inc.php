@@ -40,6 +40,7 @@
 		protected $xml;
 		// Not a table column
 		protected $xml_short_desc;
+		protected $type_str;
 		protected $location_code;
 		protected $p_location_code;
 		protected $loc_1;
@@ -117,6 +118,13 @@
 		}
 		
 		public function get_address() { return $this->address; }
+		
+		public function set_type_str($type_str)
+		{
+			$this->type_str = $type_str;
+		}
+		
+		public function get_type_str() { return $this->type_str; }
 		
 		public function set_controls_array($controls_array)
 		{

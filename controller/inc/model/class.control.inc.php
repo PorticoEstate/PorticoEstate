@@ -57,11 +57,15 @@
 		protected $responsibility_name;
 		protected $control_area_id;
 		protected $control_area_name;
+		protected $location_id;
+		protected $component_id;
 
 		// Objects
 		protected $check_lists_array = array();
 		// Array that contains open cases for a month   
 		protected $agg_open_cases_pr_month_array = array();
+		// Array that contains error messages. Is populted in function validate
+		protected $error_msg_array;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -224,6 +228,39 @@
 		
 		public function get_agg_open_cases_pr_month_array() { return $this->agg_open_cases_pr_month_array; }
 		
+		public function get_error_msg_array() { return $this->error_msg_array; }
+		
+		public function set_error_msg_array( $error_msg_array )
+		{
+			$this->error_msg_array = $error_msg_array;
+		}
+		
+
+
+//Sigurd 3.august 2010: needed for socontrol::get_controls_for_components_by_location() 
+
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+
+		public function get_location_id()
+		{
+			return $this->location_id;
+		}
+
+		public function set_component_id($component_id)
+		{
+			$this->component_id = $component_id;
+		}
+
+		public function get_component_id()
+		{
+			return $this->component_id;
+		}
+
+//
+
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -260,8 +297,8 @@
 					$this->set_end_date( 0 );
 				}
 				
-				$this->set_repeat_type(phpgw::get_var('repeat_type','int'));
-				$this->set_repeat_interval(phpgw::get_var('repeat_interval','int'));
+				$this->set_repeat_type(phpgw::get_var('repeat_type','string'));
+				$this->set_repeat_interval(phpgw::get_var('repeat_interval','string'));
 				$this->set_procedure_id(phpgw::get_var('procedure_id','int'));
 				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
 				$this->set_responsibility_id(phpgw::get_var('responsibility_id','int'));
@@ -279,9 +316,73 @@
 				'procedure_name' => $this->get_procedure_name(),
 				'control_area_id' => $this->get_control_area_id(),
 				'control_area_name' => $this->get_control_area_name(),
-			   	'repeat_type' => $this->get_repeat_type(),
+			  'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
 				'responsibility_name' => $this->get_responsibility_name()
 			);
+		}
+				
+		public function validate()
+		{
+			$status = true;
+	
+			// Validate CONTROL AREA
+			if( empty( $this->control_area_id ) && (intval($this->control_area_id) == 0) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['control_area_id'] = "error_msg_2";
+		  }
+		  
+		  // Validate PROCEDURE		  		  
+			if( empty( $this->procedure_id ) && (intval($this->procedure_id) == 0) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['procedure_id'] = "error_msg_2";
+		  }
+			
+		  // Validate TITLE
+		  if( empty($this->title) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['title'] = "error_msg_1";
+		  }
+		 		  
+		  // Validate START DATE
+			if( empty($this->start_date) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['start_date'] = "error_msg_1";
+		  }
+
+		  // Validate END DATE
+			if( !empty($this->end_date) && ($this->end_date < $this->start_date) )
+		  {
+		   	$status = false;
+		  	$this->error_msg_array['end_date'] = "error_msg_3";
+		  }  
+		  
+		  // Validate REPEAT TYPE
+		  if( $this->repeat_type == "" )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['repeat_type'] = "error_msg_2";
+		  }
+
+		  // Validate REPEAT INTERVAL
+		  if( ($this->repeat_interval == "") || (intval($this->repeat_interval) < 1) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['repeat_interval'] = "error_msg_1";
+		  }
+		  
+			// Validate RESPONSIBILITY
+		  if( $this->responsibility_id == "" || (!is_numeric($this->responsibility_id)) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['responsibility_id'] = "error_msg_2";
+		  }
+		  
+		  
+		  return $status;
 		}
 	}

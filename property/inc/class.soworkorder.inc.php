@@ -140,6 +140,7 @@
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 			$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
+			$ecodimb		= isset($data['ecodimb']) ? $data['ecodimb'] : '';
 			$paid			= isset($data['paid']) ? $data['paid'] : '';
 			$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
@@ -151,9 +152,7 @@
 			//echo $sql;
 			if(!$sql)
 			{
-				$entity_table = 'fm_project';
-
-				$cols = "$entity_table.id as project_id";
+				$cols = "fm_project.id as project_id";
 				$cols_return[] 				= 'project_id';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'project_id';
@@ -271,7 +270,7 @@
 */
 				$cols .= ",fm_project.user_id as project_owner";
 
-				$joinmethod .= "{$this->join} fm_workorder ON ({$entity_table}.id = fm_workorder.project_id) {$this->join} phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
+				$joinmethod .= "{$this->join} fm_workorder ON (fm_project.id = fm_workorder.project_id) {$this->join} phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
 				$paranthesis .='(';
 
 				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
@@ -388,13 +387,21 @@
 					$uicols['formatter'][]		= '';
 					$uicols['classname'][]		= '';
 					$uicols['sortable'][]		= true;
+
+					$joinmethod		.=	"{$this->join} fm_locations ON (fm_workorder.location_code = fm_locations.location_code))";
+					$paranthesis	.='(';
+
+					$location_table = 'fm_locations';
 				}
 				else
 				{
-					$cols .= ",{$entity_table}.location_code";
+					$cols .= ",fm_project.location_code";
+					$location_table = 'fm_project';
 				}
 
-				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
+				$entity_table = 'fm_project';
+
+				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'location_table'=>$location_table,'cols'=>$cols,'cols_return'=>$cols_return,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,
 					'force_location'=>true, 'no_address' => $no_address));
 
@@ -433,7 +440,7 @@
 				switch($order)
 				{
 					case 'workorder_id':
-	//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
+	//					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";
 						$ordermethod = " ORDER BY fm_workorder.id {$sort}";
 						break;
 					case 'actual_cost':
@@ -549,6 +556,12 @@
 				$where= 'AND';
 			}
 
+			if ($ecodimb)
+			{
+				$filtermethod .= " $where fm_workorder.ecodimb =" . (int) $ecodimb;
+				$where= 'AND';
+			}
+
 			if ($b_account)
 			{
 				$filtermethod .= " {$where} fm_workorder.account_id = '{$b_account}'";
@@ -658,7 +671,7 @@
 			$sql_base = substr($sql_full,strripos($sql_full,'FROM'));
 
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
-			{				
+			{
 				$sql_minimized = "SELECT DISTINCT fm_workorder.id {$sql_base}";
 				$sql_count = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
 
@@ -681,7 +694,7 @@
 			}
 
 			$sql_end =   str_replace('SELECT DISTINCT fm_workorder.id',"SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
-//	_debug_array($sql_end);die();
+//	_debug_array($sql_end);
 
 			if(!$allrows)
 			{
@@ -1289,7 +1302,7 @@
 				}
 				else//revoked
 				{
-					$historylog->add('OB',$workorder['id'],$workorder['approved'], $old_approved);				
+					$historylog->add('OB',$workorder['id'],$workorder['approved'], $old_approved);
 				}
 				$check_pending_action = true;
 			}
@@ -1462,7 +1475,7 @@
 						case 'workorder':
 							$historylog_workorder->add($entry,$id,$closed);
 							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET status='{$closed}' WHERE id = '{$id}'");
-							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");				
+							$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET paid_percent=100 WHERE id= '{$id}'");
 							$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $closed));
 							$this->db->query("SELECT project_id FROM fm_workorder WHERE id='{$id}'",__LINE__,__FILE__);
 							$this->db->next_record();
@@ -1536,5 +1549,66 @@
 			}
 
 			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+			$tax = 1+(($config->config_data['fm_tax'])/100);
+
+			foreach ($orders as $id => $dummy)
+			{
+				$this->db->query("SELECT combined_cost, budget,calculation,contract_sum,addition FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+
+				$old_combined_cost	= $this->db->f('combined_cost');
+				$budget				= $this->db->f('budget');
+				$calculation		= $this->db->f('calculation');
+				$contract_sum		= $this->db->f('contract_sum');
+				$addition			= $this->db->f('addition');
+
+				if ( abs((int)$contract_sum) > 0)
+				{
+					$addition = 1 + ((int)$addition/100);
+					$combined_cost = (int)$contract_sum * $addition;
+				}
+				else if (abs($calculation) > 0)
+				{
+					$combined_cost = $calculation * $tax;
+				}
+				else
+				{
+					$combined_cost = (int)$budget;
+				}
+
+				if($old_combined_cost != $combined_cost)
+				{
+					//_debug_array(array($old_combined_cost,$combined_cost));
+					$this->db->query("UPDATE fm_workorder SET combined_cost = '{$combined_cost}' WHERE id = {$id}",__LINE__,__FILE__);
+				}
+			}
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
+
+			if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+			{
+				$this->db->query("SELECT id, project_id FROM fm_workorder WHERE location_code IS NULL",__LINE__,__FILE__);
+				$orders = array();
+				while ($this->db->next_record())
+				{
+					$orders[] = array
+					(
+						'id'			=> $this->db->f('id'),
+						'project_id'	=> $this->db->f('project_id')
+					);
+				}
+
+				foreach ($orders as $order)
+				{
+					$this->db->query("SELECT location_code FROM fm_project WHERE id = {$order['project_id']}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$location_code = $this->db->f('location_code');
+					$this->db->query("UPDATE fm_workorder SET location_code = '{$location_code}' WHERE id = {$order['id']}",__LINE__,__FILE__);
+				}
+			}
 		}
 	}

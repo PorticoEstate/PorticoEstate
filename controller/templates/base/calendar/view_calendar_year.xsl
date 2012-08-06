@@ -130,7 +130,9 @@ function chooseLocation( label, value ){
 			</xsl:call-template>
 			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<xsl:call-template name="nav_calendar_year" />
+			<xsl:call-template name="nav_calendar_year">
+    		<xsl:with-param name="view">VIEW_CONTROLS_FOR_LOCATION</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 		 
 		<div id="cal_wrp">
@@ -200,15 +202,17 @@ function chooseLocation( label, value ){
 		      			</span>
 							</td>
 							<xsl:for-each select="calendar_array">
-								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-								</xsl:call-template>
+								<td>
+									<xsl:call-template name="check_list_status_manager" >
+										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+									</xsl:call-template>
+								</td>
 							</xsl:for-each>
 						</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
+				<tr class="cal_info_msg"><td colspan="3"><xsl:value-of select="php:function('lang', 'error_msg_no_controls_in_period')" /></td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
 		</table>
@@ -283,9 +287,11 @@ function chooseLocation( label, value ){
 					      			</span>
 								</td>
 								<xsl:for-each select="calendar_array">
-									<xsl:call-template name="check_list_status_checker" >
-										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-									</xsl:call-template>
+									<td>
+										<xsl:call-template name="check_list_status_manager" >
+											<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+										</xsl:call-template>
+									</td>
 								</xsl:for-each>
 						</tr>	
 					</xsl:for-each>

@@ -398,7 +398,7 @@ active_arena	activitycalendar	no	Aktiv
 inactive_arena	activitycalendar	no	Inaktiv
 change_type	activitycalendar	no	Endringstype
 added	activitycalendar	no	Lagt til i organisasjonsregisteret
-store	activitycalendar	no	Overfør til organisasjonsregister
+store	activitycalendar	no	Lagre til organisasjonsregisteret
 back	activitycalendar	no	Tilbake
 arena_saved_form	activitycalendar	no	Arena ble lagret
 activity_saved_form	activitycalendar	no	Aktiviteten ble lagret
@@ -434,4 +434,4 @@ edit_contact_info	activitycalendar	no	For å redigere kontaktopplysninger:
 edit_contact_info_org	activitycalendar	no	Gå til organisasjonsopplysninger
 edit_contact_info_group	activitycalendar	no	Gå til gruppeopplysninger
 arena_helptext	activitycalendar	no	I feltet Navn skal det stå navn på arena, som det heter på folkemunne.<br/>Når du redigerer feltet besøksadresse, gjøres det automatisk oppslag i gatetabellen, dette for å sikre at adresser skrives riktig, og kan kobles mot kart.<br/>Når du har funnet rett gateadresse , gå til feltet Husnummer og legg inn husnummer.<br/>Trykk lagre.
-org_not_transferred	activitycalendar	no	Organisasjonen/gruppen som aktiviteten er tilknyttet er ikke overført til organisasjonsregisteret.<br/>Før aktiviteten kan redigeres, må denne overføres.
+org_not_transferred	activitycalendar	no	Organisasjonen som aktiviteten er tilknyttet er ikke overført til organisasjonsregisteret.<br/>Før aktiviteten kan redigeres, må denne overføres.

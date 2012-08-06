@@ -118,7 +118,10 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 				// ... set all parameters
 				$arena->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
 				$arena->set_arena_name(phpgw::get_var('arena_name'));
-				$arena->set_address(phpgw::get_var('address') . ' ' . phpgw::get_var('address_no'));
+				$arena->set_address(phpgw::get_var('address'));
+				$arena->set_addressnumber(phpgw::get_var('address_no'));
+				$arena->set_zip_code(phpgw::get_var('zip_code'));
+				$arena->set_city(phpgw::get_var('city'));
 				$arena->set_active(phpgw::get_var('arena_active') == 'yes' ? true : false);
 				
 				if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object

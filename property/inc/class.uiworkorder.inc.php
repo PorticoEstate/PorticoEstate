@@ -99,6 +99,7 @@
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->b_group				= $this->bo->b_group;
+			$this->ecodimb 				= $this->bo->ecodimb;
 			$this->paid					= $this->bo->paid;
 			$this->b_account			= $this->bo->b_account;
 			$this->district_id			= $this->bo->district_id;
@@ -257,6 +258,9 @@
 					."start_date:'{$start_date}',"
 					."end_date:'{$end_date}',"
 					."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
+					."b_group:'{$this->b_group}',"
+					."b_account:'{$this->b_account}',"
+					."ecodimb:'{$this->ecodimb}',"
 					."filter:'{$this->filter}',"
 					."status_id:'{$this->status_id}',"
 					."second_display:1,"

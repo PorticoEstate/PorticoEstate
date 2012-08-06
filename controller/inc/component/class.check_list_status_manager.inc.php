@@ -28,7 +28,7 @@
  	* @version $Id: class.check_list_status_info.inc.php 8885 2012-02-16 07:41:15Z vator $
 	*/
 
-	include_class('controller', 'check_list_status_info', 'inc/helper/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
 
 	class check_list_status_manager
 	{		

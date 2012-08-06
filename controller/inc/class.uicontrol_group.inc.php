@@ -34,7 +34,6 @@
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.socontrol_group_list');
-	phpgw::import_class('controller.socontrol_area');
 
 	include_class('controller', 'control_group', 'inc/model/');
 
@@ -63,7 +62,6 @@
 			parent::__construct();
 			$this->so = CreateObject('controller.socontrol_group');
 			$this->so_procedure = CreateObject('controller.soprocedure');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');

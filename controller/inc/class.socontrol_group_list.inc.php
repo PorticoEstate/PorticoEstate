@@ -51,10 +51,10 @@
 		}
 
 		/**
-		 * Function for adding a new control group to the database.
+		 * Function for adding a new control_group_list to the database.
 		 *
-		 * @param controller_control_group $control_group the control group to be added
-		 * @return int id of the new control group object
+		 * @param $control_group_list the control_group_list group to be added
+		 * @return int id of the new control_group_list object
 		 */
 		function add(&$control_group_list)
 		{
@@ -84,9 +84,9 @@
 		}
 
 		/**
-		 * Update the database values for an existing activity object.
+		 * Update the database values for an existing control_group_list object.
 		 *
-		 * @param $activity the activity to be updated
+		 * @param $control_group_list the control_group_list to be updated
 		 * @return boolean true if successful, false otherwise
 		 */
 
@@ -107,10 +107,10 @@
 		}
 
 		/**
-		 * Get single procedure
+		 * Get single control_group_list object
 		 * 
-		 * @param	$id	id of the procedure to return
-		 * @return a controller_procedure
+		 * @param	$id	id of the control_group_list to return
+		 * @return a control_group_list
 		 */
 		function get_single($id)
 		{
@@ -133,6 +133,13 @@
 			}
 		}
 
+		/**
+		 * Get single control_group_list object by specifying parameters control id and control group id 
+		 * 
+		 * @param	$control_id control id
+		 * @param	$control group id control group id
+		 * @return a control_group_list
+		 */
 		function get_group_list_by_control_and_group($control_id, $control_group_id)
 		{
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id=" . $control_id . " AND p.control_group_id=" . $control_group_id;
@@ -152,6 +159,13 @@
 			}
 		}
 
+		/**
+		 * Delete a row in control_group_list table 
+		 * 
+		 * @param	$control_id control id
+		 * @param	$control group id control group id
+		 * @return a control_group_list
+		 */
 		function delete($control_id, $control_group_id)
 		{
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id AND control_group_id = $control_group_id");
@@ -159,6 +173,12 @@
 			return isset($result);
 		}
 
+		/**
+		 * Delete several rows in control_group_list table 
+		 * 
+		 * @param	$control_id control id
+		 * @return a control_group_list
+		 */
 		function delete_control_groups($control_id)
 		{
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id");
@@ -166,6 +186,13 @@
 			return isset($result);
 		}
 
+		/**
+		 * Get array with control group objects represented as objects or arrays   
+		 * 
+		 * @param	$control_id control id
+		 * @param	$returnType representation of returned control grups, as objects or as arrays  
+		 * @return a control_group_list
+		 */
 		function get_control_groups_by_control($control_id, $returnType = "object")
 		{
 			$sql =  "SELECT cg.*, cgl.order_nr "; 

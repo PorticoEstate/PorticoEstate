@@ -39,7 +39,7 @@
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 *
-		 * @return controller_socontrol_group the storage object
+		 * @return controller_socase the storage object
 		 */
 		public static function get_instance()
 		{
@@ -53,6 +53,12 @@
 
 		function populate(int $object_id, &$object){}
 
+		/**
+		 * Get single case object from database  
+		 * 
+		 * @param	$case id id of case to be returned
+		 * @return case object
+		*/
 		public function get_single($case_id)
 		{
 			$sql = "SELECT * FROM controller_check_item_case "; 
@@ -82,6 +88,14 @@
 			}
 		}
 		
+		/**
+		 * Get cases for message  
+		 * 
+		 * @param	$location_id location id
+		 * @param	$location_item_id location item id
+		 * @param $return_type return data as objects or as arrays
+		 * @return array of case object represented as objects or arrays
+		*/
 		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
 		{
 			$sql = "SELECT * FROM controller_check_item_case "; 
@@ -111,7 +125,12 @@
 			return $cases_array;
 		}
 		
-		
+		/**
+		 * Inserts a new case in database  
+		 * 
+		 * @param	$case to inserted
+		 * @return true or false
+		*/
 		function add(&$case)
 		{
 			$cols = array(
@@ -145,6 +164,12 @@
 			return isset($result) ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
 		}
 
+		/**
+		 * Updates an existing case object in database  
+		 * 
+		 * @param	$case to updated
+		 * @return true or false
+		*/
 		function update($case)
 		{
 			$id = $case->get_id();
@@ -174,6 +199,12 @@
 			}
 		}
 		
+		/**
+		 * Delete case in database  
+		 * 
+		 * @param	$case_id case to be deleted
+		 * @return true or false
+		*/
 		function delete($case_id)
 		{
 			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
