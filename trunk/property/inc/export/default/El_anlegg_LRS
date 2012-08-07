@@ -42,42 +42,37 @@
 		var $debug;
 		var $client_code = 14;
 		protected $connection = false;
-		protected $global_lock = false;
-		protected $orders_affected = array();
+		protected $receipt = array();
 
 		function  __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-			$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->db 					= & $GLOBALS['phpgw']->db;
 			$this->join					= & $this->db->join;
 
-			$this->soXport 				= CreateObject('property.soXport');
 			$this->config				= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.project');
-			$this->cats->supress_info	= true;
-
 		}
-
 
 		protected function get_anlegg()
 		{
 			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1";
 
-			$this->db->limit_query($sql,__LINE__,__FILE__);
+			$this->db->query($sql,__LINE__,__FILE__);
 			$anlegg = array();
 
 			$PeriodFrom = date('Ym');
-			$PeriodTo = 202012;
+			$PeriodTo = 209912;
+
+			$doc = new DOMDocument('1.0', 'utf-8');
+			$domElement = $doc->createElement('AttributeList');
+
 			while ($this->db->next_record())
 			{
-				$anlegg[]	= array
-				(
-					'Attribute' => array
+					$Attribute = array
 					(
 						'ID'			=> 'TJ',
 						'Name'			=> 'MALEPID',
-						'Value'			=> $this->db->f('ext_system_id2'),
+						'Value'			=> substr($this->db->f('ext_system_id2'),-8),
 					//	'id' 			=> $this->db->f('id'),
 						'Description'	=> $this->db->f('address'),
 						'PeriodFrom'	=> $PeriodFrom,
@@ -91,7 +86,7 @@
 								(
 									'ID'	=> '',
 									'Name'	=> 'FIRMA',
-									'Value'	=> 'BBB',
+									'Value'	=> 'BB',
 									'Description'	=> '',
 									'PeriodFrom'	=> '',
 									'PeriodTo'	=> '',
@@ -113,7 +108,7 @@
 								(
 									'ID'	=> '',
 									'Name'	=> 'Ansvar',
-									'Value'	=> '', // fylles ut
+									'Value'	=> '45',
 									'Description'	=> '',
 									'PeriodFrom'	=> '',
 									'PeriodTo'	=> '',
@@ -166,133 +161,61 @@
 								),
 							)
 						)
-					)
-				);
+					);
+
+				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'Attribute');
+
+				$reader = new XMLReader();
+				$reader->XML($xmldata,'utf-8');
+
+				while ($reader->read())
+				{
+					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'Attribute')
+					{
+						$domnode = $reader->expand();
+						$domElement->appendChild($domnode);
+						break;
+					}
+				}
+				$reader->close();
 			}
-			$AttributeList = array('AttributeList' => $anlegg);
-//_debug_array($AttributeList);die();
-			
-			$xmldata = phpgwapi_xmlhelper::toXML($AttributeList, 'AttributeList');
-			$doc = new DOMDocument('1.0', 'utf-8');
-			$doc->preserveWhiteSpace = true;
-			$doc->loadXML( $xmldata );
+			$doc->appendChild($domElement);
 
 			$doc->formatOutput = true;
+			$doc->preserveWhiteSpace = true;
+			$xml = $doc->saveXML();
 
-			$xml = trim($doc->saveXML());
+			header('Content-type: text/xml');
 			echo $xml; die();
 
-/*
-MålepunktID	=	Nøkkel
-Firma		=	BB
-Art		=	Skal fylles ut
-Ansvar		=	Skal fylles ut
-Objekt		=	Skal fylles ut
-Prosjekt	=	kan leveres blank, valgfri i konteringsregel
-Fagkode	=	kan leveres blank, forslag 999 i konteringsregel
-Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
-
-*/
-
-//_debug_array($anlegg);die();
 			return $xml;
 		}
 
-		protected function log_end($batchid)
+		protected function log_end()
 		{
-			$tid=date($this->soXport->datetimeformat);
-			$sql= "insert into fm_ecologg (batchid,melding,tid) values ('$batchid','End transfer','$tid')";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-		protected function log_error($batchid,$error_desr)
-		{
-			$tid = date($this->soXport->datetimeformat);
-			$sql = "INSERT INTO fm_ecologg (batchid,ecobilagid,status,melding,tid) VALUES ('$batchid',NULL,0,'$error_desr','$tid')";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-		protected function increment_batchid()
-		{
-			$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'Ecobatchid'",__LINE__,__FILE__);
-			$this->db->query("SELECT value from fm_idgenerator WHERE name = 'Ecobatchid'",__LINE__,__FILE__);
-			$this->db->next_record();
-			$batchid = $this->db->f('value');
-			return $batchid;
-		}
-
-		protected function next_batchid()
-		{
-			$this->db->query("SELECT value from fm_idgenerator WHERE name = 'Ecobatchid'",__LINE__,__FILE__);
-			$this->db->next_record();
-			$batchid = $this->db->f('value')+1;
-			return $batchid;
-		}
-
-		//Lagre start melding
-		protected function log_start($batchid)
-		{
-			$tid = date($this->db->datetime_format());
-			$sql= "INSERT INTO fm_ecologg (batchid,melding,tid) VALUES ('$batchid','Start transfer','$tid')";
-			$this->db->query($sql,__LINE__,__FILE__);
-		}
-
-		protected function get_vendor_info($vendor_id='')
-		{
-			$sql = "SELECT org_nr, konto_nr FROM fm_vendor WHERE id='$vendor_id'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-
-			$vendor_info= array
+			$msgbox_data =  $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
+	
+			$insert_values= array
 			(
-				'org_nr' => $this->db->f('org_nr'),
-				'konto_nr' => $this->db->f('konto_nr')
+				0,
+				date($this->db->datetime_format()),
+				'El_anlegg_LRS',
+				implode(',',(array_keys($msgbox_data)))
 			);
 
-			return $vendor_info;
-		}
+			$insert_values	= $this->db->validate_insert($insert_values);
 
-		protected function get_order_info($order_id='')
-		{
-			$order_info = array();
-			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
+			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+					. "VALUES ($insert_values)";
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-
-			switch($this->db->f('type'))
-			{
-				case 'workorder':
-					$sql2 = "SELECT title, category FROM fm_workorder WHERE id='$order_id'";
-					$this->db->query($sql2,__LINE__,__FILE__);
-					$this->db->next_record();
-					$order_info['title'] = $this->db->f('title');
-					$cat_id = (int)$this->db->f('category');
-					$category = $this->cats->return_single($cat_id);
-					$category_arr = explode('-',$category[0]['name']);
-					$order_info['category'] = (int)trim($category_arr[0]);
-					break;
-				case 's_agreement':
-					$sql2 = "SELECT descr as title FROM fm_s_agreement WHERE id='$order_id'";
-					$this->db->query($sql2,__LINE__,__FILE__);
-					$this->db->next_record();
-					$order_info['title'] = $this->db->f('title');
-					break;
-			}
-
-			return $order_info;
 		}
-
-
 
 		public function overfor($download)
 		{
+
 //			$download = 'on';
 //			$download = False;
 //			$this->debug=True;
-
-			//Velg ut alle anlegg som skal overføres
-			$anlegg = $this->get_anlegg();
-
 
 			//Bestem filnavn
 			$external_ref = '';
@@ -301,8 +224,10 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 			if (!$Filnavn)
 			{
 				$message='LagFilnavn: Filnavn er i bruk';
-				$this->errorhandler($batchid,$message);
-				return $message;
+				$receipt['error'][]= array('msg' => $message);
+				$this->log_end();
+				echo $message;
+				return;
 			}
 
 			//Test om filen kan opprettes og skrives til
@@ -319,16 +244,18 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 				}
 				else
 				{
-					return $message;
+					$receipt['error'][]= array('msg' => $message);
+					$this->log_end();
 				}
 			}
 
+			//Velg ut alle anlegg som skal overføres
+			$anlegg = $this->get_anlegg();
 
 			if ($anlegg)
 			{
-				$receipt['message'][]= array('msg' => $this->transfer_anlegg($anlegg, $Filnavn, $download));
+				$this->receipt['message'][]= array('msg' => $this->transfer_anlegg($anlegg, $Filnavn, $download));
 			}
-
 
 			if($this->connection)
 			{
@@ -345,26 +272,10 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 			//Lagre melding
 			if ($download=='on')
 			{
-				$this->log_end($batchid); //Lagre melding
+				$this->log_end();
 			}
 
 			return $receipt;
-		}
-
-		protected function errorhandler($batchid,$error_desr)
-		{
-			if($this->db->get_transaction())
-			{
-				$this->db->transaction_abort();
-			}
-
-			$meld = $error_desr;
-
-			//Vis feilmelding
-			echo $meld;
-
-			//Lagre feilmelding
-			$this->log_error($batchid,$error_desr);
 		}
 
 
@@ -375,7 +286,7 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 				$external_ref = mt_rand();
 			}
 			$fil_katalog = $this->config->config_data['export']['path'];
-			$continue = True;
+
 			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
 
 			//Sjekk om filen eksisterer
@@ -387,82 +298,47 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 			return $Filnavn;
 		}
 
-		protected function transfer_anlegg($anlegg, $Filnavn, $download)
+		protected function transfer_anlegg($xmldata, $Filnavn, $download)
 		{
-
-			$antall = count($anlegg);
-
-			if ( $this->db->get_transaction() )
-			{
-				$this->global_lock = true;
-			}
-			else
-			{
-				$this->db->transaction_begin();
-			}
-
-			$tranfser_bilag = $bilagsnr_ut ? array($bilagsnr_ut) : array($voucher_id);
-
-			$localtime = phpgwapi_datetime::user_localtime();
-
-			$buffer = $xmldata;
-
-
-
-			//Fullfør transaksjon
 			if ($download=='on' && !$this->debug)
 			{
-			//	$file_written = true;
-
-			// -- Start
-			 
 				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
-				fwrite($fp,$buffer);
+				fwrite($fp,$xmldata);
 
 				if(fclose($fp))
 				{
 					$file_written=true;
 				}
 
-			// -- END
 				if( $file_written && ($this->config->config_data['common']['method'] != 'ftp' && $this->config->config_data['common']['method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
 				else if($file_written)
 				{
-					$transfer_ok = $this->transfer($buffer,$Filnavn,$batchid,$tranfser_bilag);
+					$transfer_ok = $this->transfer($xmldata,$Filnavn);
 				}
 
 				if($transfer_ok)
 				{
-					if ( !$this->global_lock )
-					{
-						$this->db->transaction_commit();
-					}
-
-					$message = "Antall bilag/underbilag overfort: {$antall}, fil: {$Filnavn}";
+					$message = "El Anlegg er overført, fil: {$Filnavn}";
 				}
 				else
 				{
-					$this->db->transaction_abort();
-					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';
+					$message = 'Noe gikk galt med overføring av El Anlegg';
 				}
 			}
 			else
 			{
-				$message = $buffer;
-				$this->db->transaction_abort();
-
+				$message = $xmldata;
 			}
 
 			return $message;
 		}
 
 
-
-		protected function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
+		protected function transfer($xmldata,$Filnavn)
 		{
 			$transfer_ok = false;
 			if($this->config->config_data['common']['method']=='ftp' || $this->config->config_data['common']['method']=='ssh')
@@ -497,21 +373,8 @@ Prosent		=	100% hvis hele beløpet skal fordeles på samme kontering.
 					default:
 						$transfer_ok = false;
 				}
-				if ($transfer_ok)
-				{
-				 	for ($i=0;$i<count($tranfser_bilag);$i++)
-					{
-		//				$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice transferred %1 to Basware',basename($Filnavn)));
-					}
-				}
-				else
-				{
-				 	for ($i=0;$i<count($tranfser_bilag);$i++)
-					{
-		//				$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to transfere %1 to Basware',basename($Filnavn)));
-					}
-				}
-				if(!$transfer_ok)
+
+				if (!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
