@@ -64,8 +64,9 @@
 			$PeriodTo = 209912;
 
 			$doc = new DOMDocument('1.0', 'utf-8');
-			$domElement = $doc->createElement('AttributeList');
-
+			$domElement = $doc->createElement('AttributeValueList');
+			$domElement->setAttribute('xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
+			$domElement->setAttribute('xsi:noNamespaceSchemaLocation','..\XmlSchema\AttributeValueList.xsd');
 
 			while ($this->db->next_record())
 			{
@@ -80,99 +81,64 @@
 						'PeriodTo'		=> $PeriodTo,
 						'Status'		=> 'N',
 						'Percentage'	=> '100',
-						'RelationList'	=> array
+						'RelationValueList'	=> array
 						(
 							'RelationValue'	=> array
 							(
 								array
 								(
-									'ID'	=> 'A3',
-									'Name'	=> 'FIRMA',
-									'Value'	=> 'BB',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'A3',
+									'Name'			=> 'FIRMA',
+									'Value'			=> 'BB',
 									'Percentage'	=> '100'
 								),
 								array
 								(
-									'ID'	=> 'A0',
-									'Name'	=> 'Art',
-									'Value'	=> '12304121',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'A0',
+									'Name'			=> 'Art',
+									'Value'			=> '12304121',
 									'Percentage'	=> '100'
 								),
 								array
 								(
-									'ID'	=> 'C1',
-									'Name'	=> 'Ansvar',
-									'Value'	=> '45',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'C1',
+									'Name'			=> 'Ansvar',
+									'Value'			=> '45',
 									'Percentage'	=> '100'
 								),
 								array
 								(
-									'ID'	=> 'F0',
-									'Name'	=> 'Objekt',
-									'Value'	=> $this->db->f('loc1'),
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'F0',
+									'Name'			=> 'Objekt',
+									'Value'			=> $this->db->f('loc1'),
 									'Percentage'	=> '100'
 								),
 								array
 								(
-									'ID'	=> 'B0',
-									'Name'	=> 'Prosjekt',
-									'Value'	=> '',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'B0',
+									'Name'			=> 'Prosjekt',
+									'Value'			=> '',
 									'Percentage'	=> '100'
 								),
 								array
 								(
-									'ID'	=> 'B1',
-									'Name'	=> 'Fagkode',
-									'Value'	=> '999',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
-									'Percentage'	=> '100'
-								),
-								array
-								(
-									'ID'	=> '',
-									'Name'	=> 'Prosent',
-									'Value'	=> '100',
-									'Description'	=> '',
-									'PeriodFrom'	=> '',
-									'PeriodTo'	=> '',
-									'Status'	=> '',
+									'ID'			=> 'B1',
+									'Name'			=> 'Fagkode',
+									'Value'			=> '999',
 									'Percentage'	=> '100'
 								),
 							)
 						)
 					);
 
-				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'Attribute');
+				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'AttributeValue');
 
 				$reader = new XMLReader();
 				$reader->XML($xmldata,'utf-8');
 
 				while ($reader->read())
 				{
-					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'Attribute')
+					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'AttributeValue')
 					{
 						$domnode = $reader->expand();
 						$domElement->appendChild($domnode);
