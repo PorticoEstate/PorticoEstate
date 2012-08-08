@@ -1781,7 +1781,7 @@
 				'status' => array('type' => 'int','precision' => '4','nullable' => True),
 				'category' => array('type' => 'int','precision' => '4','nullable' => False),
 				'ext_system_id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'ext_meter_id' => array('type' => 'varchar','precision' => '20','nullable' => False),
+				'maaler_nr' => array('type' => 'varchar','precision' => '20','nullable' => False),
 				'remark' => array('type' => 'varchar','precision' => '255','nullable' => True)
 			),
 			'pk' => array('id'),

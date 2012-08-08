@@ -66,25 +66,27 @@
 			$doc = new DOMDocument('1.0', 'utf-8');
 			$domElement = $doc->createElement('AttributeList');
 
+
 			while ($this->db->next_record())
 			{
 					$Attribute = array
 					(
 						'ID'			=> 'TJ',
 						'Name'			=> 'MALEPID',
-						'Value'			=> substr($this->db->f('ext_system_id2'),-8),
+						'Value'			=> substr($this->db->f('maalepunkt_id'),-8),
 					//	'id' 			=> $this->db->f('id'),
 						'Description'	=> $this->db->f('address'),
 						'PeriodFrom'	=> $PeriodFrom,
 						'PeriodTo'		=> $PeriodTo,
 						'Status'		=> 'N',
+						'Percentage'	=> '100',
 						'RelationList'	=> array
 						(
 							'RelationValue'	=> array
 							(
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'A3',
 									'Name'	=> 'FIRMA',
 									'Value'	=> 'BB',
 									'Description'	=> '',
@@ -95,7 +97,7 @@
 								),
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'A0',
 									'Name'	=> 'Art',
 									'Value'	=> '12304121',
 									'Description'	=> '',
@@ -106,7 +108,7 @@
 								),
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'C1',
 									'Name'	=> 'Ansvar',
 									'Value'	=> '45',
 									'Description'	=> '',
@@ -117,7 +119,7 @@
 								),
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'F0',
 									'Name'	=> 'Objekt',
 									'Value'	=> $this->db->f('loc1'),
 									'Description'	=> '',
@@ -128,7 +130,7 @@
 								),
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'B0',
 									'Name'	=> 'Prosjekt',
 									'Value'	=> '',
 									'Description'	=> '',
@@ -139,7 +141,7 @@
 								),
 								array
 								(
-									'ID'	=> '',
+									'ID'	=> 'B1',
 									'Name'	=> 'Fagkode',
 									'Value'	=> '999',
 									'Description'	=> '',
