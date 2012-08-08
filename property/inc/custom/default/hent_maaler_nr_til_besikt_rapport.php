@@ -11,7 +11,7 @@
 
 		//'property'	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-		$sql = "SELECT ext_meter_id as maaler_nr FROM fm_entity_1_11 WHERE location_code='" . $values['location_code'] . "'";
+		$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='" . $values['location_code'] . "'";
 		$this->db->query($sql,__LINE__,__FILE__);
 		$this->db->next_record();
 		$maaler_nr = $this->db->f('maaler_nr');
@@ -66,7 +66,7 @@
 						{
 							$new_value = $entry['value'];
 
-							$this->db->query("SELECT maaler_stand, id FROM fm_entity_1_11 WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);
+							$this->db->query("SELECT maaler_stand, id FROM fm_entity_1_11 WHERE maaler_nr = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);
 							$this->db->next_record();
 							$old_value = $this->db->f('maaler_stand');
 							$id = $this->db->f('id');
@@ -77,7 +77,7 @@
 								{
 									$historylog	= CreateObject('property.historylog','entity_1_11');
 									$historylog->add('SO',$id,$new_value,false, $attrib_id,$besiktet_dato);
-									$this->db->query("UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE ext_meter_id = '{$maaler_nr}' AND location_code ='{$values['location_code']}'",__LINE__,__FILE__);
+									$this->db->query("UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'",__LINE__,__FILE__);
 								}
 							}
 						}
