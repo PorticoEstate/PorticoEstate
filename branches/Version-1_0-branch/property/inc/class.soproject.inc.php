@@ -856,7 +856,7 @@
 				return false;
 			}
 
-			$this->db->query("SELECT ext_meter_id as power_meter FROM $meter_table where location_code='$location_code' and category='1'",__LINE__,__FILE__);
+			$this->db->query("SELECT maaler_nr as power_meter FROM $meter_table where location_code='$location_code' and category='1'",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
@@ -1121,14 +1121,14 @@
 
 			if ( $this->db->f('cnt'))
 			{
-				$this->db->query("update $meter_table set ext_meter_id='$power_meter',address='$address' where location_code='$location_code' and category='1'",__LINE__,__FILE__);
+				$this->db->query("update $meter_table set maaler_nr='$power_meter',address='$address' where location_code='$location_code' and category='1'",__LINE__,__FILE__);
 			}
 			else
 			{
 				$id = $this->bocommon->next_id($meter_table);
 
 				$meter_id	= $this->generate_meter_id($meter_table);
-				$this->db->query("insert into $meter_table (id,num,ext_meter_id,category,location_code,entry_date,user_id,address $cols) "
+				$this->db->query("insert into $meter_table (id,num,maaler_nr,category,location_code,entry_date,user_id,address $cols) "
 					. "VALUES ('"
 					. $id. "','"
 					. $meter_id. "','"
