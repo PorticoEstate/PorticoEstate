@@ -133,7 +133,11 @@
 
                         if ($export_type == 'external') {
 							$export_result['total_items'] = $export_result['export']['header_count'];	
-							$export_log = $export_result['export']['data_log'];	
+						    if (!is_null($export_result['export']['data_log'])) {
+								$export_log .= $export_result['export']['data_log'];	
+							} else {
+								$export_log .= "";
+							}
                         }
 						
 						$export_configurations[$export_type][$export['id']] = $conf;
@@ -142,6 +146,10 @@
 					}
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
+
+				$log = "Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp\n";
+				$log .= $export_log;
+				$export_log = $log;			
 				
 				if ($do_generate_files === false) {
 					return false;
@@ -164,7 +172,7 @@
 			
 					$this->file_storage->attach($export_file)->persist();
                                             
-                    if ($export_type == 'external') {
+                    if ($export_type == 'external'){
     					$entity_export_file['log_filename'] = 'log_'.$export_type.'_'.$entity_export_file['id'].'.csv';
     					$log_export_file = new booking_storage_object($entity_export_file['log_filename']);
     					$log_export_files[] = $log_export_file;
