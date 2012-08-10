@@ -722,7 +722,7 @@
 						$project['actual_cost']		+= $_actual_cost;
 					}
 
-					if($project['budget'] > 0)
+					if($project['budget'] >= 0)
 					{
 						if($project['combined_cost'] < 0)
 						{

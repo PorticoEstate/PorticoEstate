@@ -1540,7 +1540,9 @@
 
 		function recalculate()
 		{
-			$this->db->query("SELECT id FROM fm_workorder",__LINE__,__FILE__);
+			set_time_limit (0);
+
+			$this->db->query("SELECT id FROM fm_workorder ORDER BY id ASC",__LINE__,__FILE__);
 
 			$orders = array();
 			while ($this->db->next_record())
