@@ -601,9 +601,8 @@
 			//$orders = array();
 			$export_info = array();
 			$output = array();
-			$log = array();
 
-			$log[] = 'Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp';
+			$log = array();
 
 			/* NOTE: The specification states that values of type date
 			 * should be left padded with spaces. The example file,

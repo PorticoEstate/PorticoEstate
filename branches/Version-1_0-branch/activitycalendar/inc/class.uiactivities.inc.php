@@ -537,17 +537,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	    	if($activity->get_group_id() && $activity->get_group_id() > 0)
 	    	{
 	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
-	    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+	    		else*/ 
+	    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
 	    	}
 	    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 	    	{
 	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
-	    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+	    		else*/ 
+	    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
 	    	}
 	    }
@@ -592,18 +594,20 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
     		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
     			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
-    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+    		else */
+    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
     			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
     	}
     	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
     		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 				activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
-    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+    		else */
+    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
     	}
     	

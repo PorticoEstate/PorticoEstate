@@ -390,6 +390,40 @@
 		}
 
 
+		public function add_role($data)
+		{
+			$receipt = array();
+
+			$values_insert['name']					=$this->db->db_addslashes($data['name']);
+			$values_insert['remark']				= $this->db->db_addslashes($data['remark']);
+			$values_insert['responsibility_id']		= $data['responsibility_id'];
+			$values_insert['location_level']		= implode(',', $data['location_level']);
+			$values_insert['modified_date']			= time();
+			$values_insert['entry_date']			= time();
+			$values_insert['user_id']				= $this->account;
+			//FIXME
+			$values_insert['appname']				= 'property';
+			$values_insert['id'] = $this->db->next_id('fm_responsibility_role');
+
+ 			$this->db->transaction_begin();
+
+			$this->db->query("INSERT INTO fm_responsibility_role (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+			 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+
+
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('Responsibility role has been changed'));
+				$receipt['id']= $values_insert['id'];//$this->db->get_last_insert_id('fm_responsibility_role', 'id');
+			}
+			else
+			{
+				$receipt['message'][]=array('msg'=>lang('Nothing changed'));
+			}
+
+			return $receipt;
+		}
+
 
 		public function edit_role($data)
 		{
