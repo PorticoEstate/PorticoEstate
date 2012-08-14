@@ -61,8 +61,10 @@
 		*/
 		public function get_single($case_id)
 		{
+			$case_id = (int) $case_id;
+			
 			$sql = "SELECT * FROM controller_check_item_case "; 
-			$sql .= "WHERE id = $case_id";
+			$sql .= "WHERE id = {$case_id}";
 			
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
@@ -98,6 +100,9 @@
 		*/
 		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
 		{
+			$location_id		= (int) $location_id;
+			$location_item_id	= (int) $location_item_id;
+
 			$sql = "SELECT * FROM controller_check_item_case "; 
 			$sql .= "WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
 
@@ -207,6 +212,7 @@
 		*/
 		function delete($case_id)
 		{
+			$case_id = (int) $case_id;
 			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 					
 			if( isset($status) )

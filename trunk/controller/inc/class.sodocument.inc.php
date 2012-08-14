@@ -153,6 +153,8 @@ class controller_sodocument extends controller_socommon
 
 	function populate(int $document_id, &$document)
 	{
+		$document_id = (int) $document_id;
+
 		if($document == null)
 		{
 			$document = new controller_document($document_id);

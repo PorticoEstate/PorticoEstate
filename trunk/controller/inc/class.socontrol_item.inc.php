@@ -159,7 +159,9 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return control item object
 		*/
-		public function get_single_with_options($id, $return_type = "return_object"){
+		public function get_single_with_options($id, $return_type = "return_object")
+		{
+			$id = (int)$id;
 			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
 			$sql .= "FROM controller_control_item ci "; 
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
@@ -227,7 +229,8 @@
 		*/
 		function delete_option_values($control_item_id)
 		{
-			$sql  = "delete from controller_control_item_option where control_item_id=$control_item_id";
+			$control_item_id = (int)$control_item_id;
+			$sql  = "delete from controller_control_item_option where control_item_id={$control_item_id}";
 			$this->db->query($sql);
 		}
 
@@ -408,6 +411,9 @@
 		*/
 		function get_items_for_control_group($control_id, $control_group_id)
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 			
 			$sql = "select ci.* from controller_control_item ci, controller_control_item_list cil where ci.control_group_id = {$control_group_id} and cil.control_id = {$control_id} and ci.id = cil.control_item_id";

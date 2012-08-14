@@ -212,6 +212,7 @@
 		 */
 		function get_control_groups_as_array($control_area_id)
 		{
+			$control_area_id = (int) $control_area_id;
 			$results = array();
 
 			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
@@ -331,6 +332,7 @@
 		 */
 		function get_control_groups_by_control_area($control_area_id)
 		{
+			$control_area_id = (int) $control_area_id;
 			$controls_array = array();
 
 			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
@@ -368,7 +370,8 @@
 		*/
 		function get_control_areas_by_control_group($control_group_id)
 		{
-			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id=$control_group_id";
+			$control_group_id = (int) $control_group_id;
+			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id={$control_group_id}";
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
@@ -458,6 +461,7 @@
 		*/
 		function get_components_for_control_group($control_group_id)
 		{
+			$control_group_id = (int) $control_group_id;
 			$results = array();
 			
 			$sql = "select * from controller_control_group_component_list where control_group_id={$control_group_id}";

@@ -252,6 +252,7 @@
 
 		function get_procedures_by_control_area($control_area_id)
 		{
+			$control_area_id = (int) $control_area_id;
 			$results = array();
 
 			$sql = "SELECT * FROM controller_procedure WHERE control_area_id={$control_area_id} AND end_date IS NULL ORDER BY title ASC";
@@ -351,6 +352,7 @@
 
 		function get_old_revisions($id)
 		{
+			$id = (int) $id;
 			$results = array();
 
 			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";

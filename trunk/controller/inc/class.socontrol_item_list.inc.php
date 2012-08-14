@@ -132,6 +132,9 @@
 		 */
 		function get_single_2($control_id, $control_item_id)
 		{
+			$control_id = (int) $control_id;
+			$control_item_id = (int) $control_item_id;
+
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
@@ -153,6 +156,8 @@
 		*/
 		function get_control_items($control_group_id, $return_type = "return_object")
 		{
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  = "SELECT * ";
@@ -187,6 +192,8 @@
 		*/
 		function get_control_items_by_control($control_id, $returnType = "return_object")
 		{
+			$control_id = (int) $control_id;
+
 			$results = array();
 
 			$sql  = "SELECT ci.* ";
@@ -224,6 +231,9 @@
 		*/
 		function get_control_items_by_control_and_group($control_id, $control_group_id, $returnType = "return_array")
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  =	"SELECT ci.* ";
@@ -264,6 +274,9 @@
 		*/
 		function get_control_items_and_options_by_control_and_group($control_id, $control_group_id, $return_type = "return_array")
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  =	"SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
@@ -338,6 +351,9 @@
 		*/
 		function delete($control_id, $control_item_id)
 		{
+			$control_id = (int) $control_id;
+			$control_item_id = (int) $control_item_id;
+
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
 
 			return isset($result);
@@ -351,6 +367,7 @@
 		*/
 		function delete_control_items($control_id)
 		{
+			$control_id = (int) $control_id;
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 
 			return isset($result);
@@ -365,6 +382,9 @@
 		*/
 		function delete_control_items_for_group_list($control_id, $control_group_id)
 		{
+ 			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
   			$sql  = "DELETE FROM controller_control_item_list "; 
   			$sql .= "USING controller_control_item ";
   			$sql .= "WHERE control_id = $control_id ";

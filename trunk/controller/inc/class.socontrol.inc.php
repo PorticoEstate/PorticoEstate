@@ -120,8 +120,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
+		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
+			$role_id = (int) $role_id;
+
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name "; 
@@ -181,8 +183,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-	  public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
+
+		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
+			$role_id = (int) $role_id;
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name, ccl.location_id, ccl.component_id ";
@@ -245,8 +249,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '', $filter = null)
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = 0, $filter = null)
 		{
+			$role_id = (int) $role_id;
+
 			$controls_array = array();
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
@@ -414,11 +420,13 @@
 		 */
 		function get_locations_for_control($control_id)
 		{
+			$control_id = (int) $control_id;
+
 			$controls_array = array();
 
 			$sql =  "SELECT c.id, c.title, cll.location_code "; 
 			$sql .= "FROM controller_control c, controller_control_location_list cll ";
-			$sql .= "WHERE cll.control_id = $control_id ";
+			$sql .= "WHERE cll.control_id = {$control_id} ";
 			$sql .= "AND cll.control_id = c.id";
 
 			$this->db->query($sql);
@@ -451,12 +459,14 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-	  function get_components_for_control($control_id)
+		function get_components_for_control($control_id)
 		{
+			$control_id = (int) $control_id;
+
 			$controls_array = array();
 
 			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id, ccl.location_id as location_id, bim_type.description, bim_item.location_code ";
-      $sql .= "FROM controller_control_component_list ccl, fm_bim_item bim_item, fm_bim_type bim_type "; 
+			$sql .= "FROM controller_control_component_list ccl, fm_bim_item bim_item, fm_bim_type bim_type "; 
 			$sql .= "WHERE ccl.control_id = $control_id ";
 			$sql .= "AND ccl.component_id = bim_item.id ";
 			$sql .= "AND ccl.location_id = bim_type.location_id ";

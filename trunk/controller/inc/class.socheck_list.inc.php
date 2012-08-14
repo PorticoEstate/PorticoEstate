@@ -57,12 +57,14 @@ class controller_socheck_list extends controller_socommon
 	 * @param $check_list_id
 	 * @return check list object
 	 */
-	public function get_single($check_list_id){
+	public function get_single($check_list_id)
+	{
+		$check_list_id = (int) $check_list_id;
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
-		$sql .= "WHERE cl.id = $check_list_id";
+		$sql .= "WHERE cl.id = {$check_list_id}";
 		
 		$this->db->query($sql);
 		$this->db->next_record();
@@ -95,7 +97,9 @@ class controller_socheck_list extends controller_socommon
 	 * @param $type control items registration type (Radiobuttons, Checklist, textfield, just commentfield)
 	 * @return returns a check list object
 	 */
-	public function get_single_with_check_items($check_list_id, $status, $type){
+	public function get_single_with_check_items($check_list_id, $status, $type)
+	{
+		$check_list_id = (int) $check_list_id;
 		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, num_open_cases, location_code, num_pending_cases, ";
 		$sql .= "ci.id as ci_id, control_item_id, check_list_id, "; 
 		$sql .= "coi.title as coi_title, coi.required as coi_required, ";
@@ -103,7 +107,7 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "FROM controller_check_list cl "; 
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
-		$sql .= "WHERE cl.id = $check_list_id ";
+		$sql .= "WHERE cl.id = {$check_list_id} ";
 		
 		if($status == 'open')
 			$sql .= "AND ci.status = 0 ";
@@ -165,12 +169,15 @@ class controller_socheck_list extends controller_socommon
 	 * @param $control_id
 	 * @return array with check list objects
 	 */
-	function get_check_lists_for_control($control_id){
+	function get_check_lists_for_control($control_id)
+	{
+		$control_id = (int) $control_id;
+
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "ci.id as ci_id, control_item_id, check_list_id ";
 		$sql .= "FROM controller_check_list cl, controller_check_item ci ";
-		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.id = ci.check_list_id "; 
 		$sql .= "ORDER BY cl.id;";
 
@@ -228,6 +235,8 @@ class controller_socheck_list extends controller_socommon
 	 */
 	function get_planned_check_lists_for_control($control_id, $location_code,$location_id, $component_id)
 	{
+		$control_id = (int) $control_id;
+		
 		$component_filter = ' AND component_id IS NULL ';
 		if($component_id)
 		{
@@ -239,7 +248,7 @@ class controller_socheck_list extends controller_socommon
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
-		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "AND NOT cl.planned_date IS NULL ";
 		$sql .= "AND cl.completed_date IS NULL ";
@@ -288,11 +297,14 @@ class controller_socheck_list extends controller_socommon
 	 * @param $location_code
 	 * @return array with check list objects
 	 */
-	function get_unplanned_check_lists_for_control($control_id, $location_code){
+	function get_unplanned_check_lists_for_control($control_id, $location_code)
+	{
+		$control_id = (int) $control_id;
+
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
-		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "AND cl.planned_date IS NULL ";
 		$sql .= "AND cl.completed_date IS NULL ";
@@ -337,11 +349,14 @@ class controller_socheck_list extends controller_socommon
 	 * @param $location_code location code
 	 * @return array with check list objects
 	 */
-	function get_open_check_lists_for_control($control_id, $location_code, $from_date){
+	function get_open_check_lists_for_control($control_id, $location_code, $from_date)
+	{
+		$control_id = (int) $control_id;
+
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
-		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "WHERE cl.control_id = {$control_id} ";
 		$sql .= "AND cl.location_code = '{$location_code}' "; 
 		$sql .= "AND (cl.planned_date IS NULL OR cl.planned_date < $from_date) ";
 		$sql .= "AND cl.deadline < $from_date ";
@@ -493,14 +508,18 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	 */
-	function get_check_lists_for_component( $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type_expr = null ){
+	function get_check_lists_for_component( $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type_expr = null )
+	{
+		$location_id = (int) $location_id;
+		$component_id = (int) $component_id;
+
 		$sql = 	"SELECT c.id as c_id, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id, cl.location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-		$sql .= "WHERE cl.location_id = $location_id ";
-		$sql .= "AND cl.component_id = $component_id ";
+		$sql .= "WHERE cl.location_id = {$location_id} ";
+		$sql .= "AND cl.component_id = {$component_id} ";
 		
 		if( $repeat_type != null )
 			$sql .= "AND c.repeat_type $repeat_type_expr ";
@@ -562,7 +581,10 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	*/
-	function get_check_lists_for_control_and_location( $control_id, $location_code, $from_date_ts, $to_date_ts, $repeat_type = null ){
+	function get_check_lists_for_control_and_location( $control_id, $location_code, $from_date_ts, $to_date_ts, $repeat_type = null )
+	{
+		$control_id = (int) $control_id;
+
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_check_list cl ";
@@ -605,7 +627,12 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	*/
-	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null ){
+	function get_check_lists_for_control_and_component( $control_id, $location_id, $component_id, $from_date_ts, $to_date_ts, $repeat_type = null )
+	{
+		$control_id = (int) $control_id;
+		$location_id = (int) $location_id;
+		$component_id = (int) $component_id;
+
 		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_check_list cl ";
