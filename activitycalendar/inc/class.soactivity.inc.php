@@ -723,22 +723,24 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$whereclause_date = "AND last_change_date > {$from_date}";
 		}
 		$activities = array();
-		$sql = "SELECT * FROM activity_activity where state in(3,5) {$whereclause_date}";
+		$sql = "SELECT * FROM activity_activity where state in (3,5) {$whereclause_date}";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
+		    $gr = $this->db->f('group_id');
 			$activities[]= array
 			(
 				'id'				=> (int) $this->db->f('id'),
 				'title'				=> $soap ? $this->db->f('title',true) : utf8_decode($this->db->f('title',true)),
-				'organization_id'	=> $this->db->f('organization_id',true),
+				'organization_id'	=> $this->db->f('organization_id'),
 				'group_id'			=> $this->db->f('group_id'),
-				'district'			=> $this->db->f('district',true),
+				'district'			=> $this->db->f('district'),
 				'category'			=> $this->db->f('category'),
-				'state'				=> $this->db->f('state',true),
+				'state'				=> $this->db->f('state'),
 				'target'			=> $this->db->f('target'),
 				'arena'				=> $this->db->f('arena'),
-				'time'				=> $soap ? $this->db->f('time') : utf8_decode($this->db->f('time')),
+			    'internal_arena'	=> $this->db->f('internal_arena'),
+				'time'				=> $soap ? $this->db->f('time',true) : utf8_decode($this->db->f('time',true)),
 				'contact_person_1'	=> $this->db->f('contact_person_1'),
 				'contact_person_2'	=> $this->db->f('contact_person_2'),
 				'special_adaptation'=> $this->db->f('special_adaptation'),
@@ -747,8 +749,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		foreach ($activities as &$activity)
 		{
-				if($activity['group_id'] && $activity['group_id'] =! '' && $activity['group_id'] != 0)
-				{
+				if($activity['group_id'] && !$activity['group_id'] == '' && !$activity['group_id'] == 0)
+				{   
 					$activity['group_info']			= $this->get_group_info($activity['group_id']);
 					$activity['organization_info']	= $this->get_org_info($activity['group_info']['organization_id']);
 				}
@@ -761,6 +763,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) : utf8_decode($this->get_category_name($activity['category']));
 				$activity['description']		= $this->get_activity_description($activity['organization_id'],$activity['group_id']);
 				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
+				$activity['internal_arena_info']= $this->get_internal_arena_info($activity['internal_arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
 //_debug_array($activities);
@@ -928,6 +931,23 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			(
 				'arena_name' => $this->soap ? $this->db->f('arena_name') : utf8_decode($this->db->f('arena_name')),
 				'address' => $this->soap ? $this->db->f('address') : utf8_decode($this->db->f('address'))
+			);
+		}
+		return $result;
+	}
+	
+	function get_internal_arena_info($arena_id)
+	{
+		$result = array();
+		if($arena_id)
+		{
+			$arena_id = (int)$arena_id;
+			$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$arena_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'arena_name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
+				'address' => $this->soap ? $this->db->f('street') : utf8_decode($this->db->f('street'))
 			);
 		}
 		return $result;
