@@ -125,18 +125,6 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$filter_clauses[] = "org.id IN (SELECT organization_id from activity_activity where state = 3 OR state = 4)";
 		}
 
-/*
-		// All parties with contracts of type X
-		if(isset($filters['party_type']))
-		{
-			$party_type = $this->marshal($filters['party_type'],'int');
-			if(isset($party_type) && $party_type > 0)
-			{
-				$filter_clauses[] = "contract.location_id = {$party_type}";
-			}
-		}
-*/		
-		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -159,6 +147,8 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.email';
 				$columns[] = 'org.description';
 				$columns[] = 'org.address';
+				$columns[] = 'org.zip_code';
+				$columns[] = 'org.city';
 				$columns[] = 'org.district';
 				$columns[] = 'org.change_type';
 				$columns[] = 'org.transferred';
@@ -204,9 +194,6 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	
 			$tables = "bb_organization org";			
 		}
-
-		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
-		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
 		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
@@ -595,14 +582,10 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$name = $organization->get_name();
 		$orgnr = $organization->get_organization_number();
 		$homepage = $organization->get_homepage();
-		$phone = $organization->get_phone();
-		$email = $organization->get_email();
-		$description = $organization->get_description();
 		$street = $organization->get_address();
 		$streetnumber = $organization->get_address_number();
 		$zip_code = $organization->get_zip_code();
 		$city = $organization->get_city();
-		$district = $organization->get_district();
 		if($organization->get_original_org_id() && $organization->get_original_org_id() != '')
 		{
 			$original_org_id = $organization->get_original_org_id(); 
@@ -615,15 +598,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		
 		$values[] = "NAME='{$name}'";
 		$values[] = "HOMEPAGE='{$homepage}'";
-		$values[] = "PHONE='{$phone}'";
-		$values[] = "EMAIL='{$email}'";
-		$values[] = "DESCRIPTION='{$description}'";
 		$values[] = "ADDRESS='{$street}'";
 		$values[] = "ADDRESSNUMBER='{$streetnumber}'";
 		$values[] = "ZIP_CODE='{$zip_code}'";
 		$values[] = "CITY='{$city}'";
 		$values[] = "ORGNO='{$orgnr}'";
-		$values[] = "DISTRICT='{$district}'";
 		$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
 		$vals = implode(',',$values);
 		
@@ -645,15 +624,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$name = $org_info['name'];
 		$orgnr = $org_info['orgnr'];
 		$homepage = $org_info['homepage'];
-		$phone = $org_info['phone'];
-		$email = $org_info['email'];
-		$description = $org_info['description'];
 		$street_1 = $org_info['street'];
 		$street_2 = $org_info['streetnumber'];
 		$street = $street_1 . ' ' . $street_2;
 		$zip_code = $org_info['zip'];
 		$city = $org_info['postaddress'];
-		$district = $org_info['district'];
 		$activity_id = 1;
 		$show_in_portal = 1; 
 		
@@ -673,13 +648,13 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		
 		$values[] = "'{$name}'";
 		$values[] = "'{$homepage}'";
-		$values[] = "'{$phone}'";
-		$values[] = "'{$email}'";
-		$values[] = "'{$description}'";
+		$values[] = "''";
+		$values[] = "''";
+		$values[] = "''";
 		$values[] = "'{$street}'";
 		$values[] = "'{$zip_code}'";
 		$values[] = "'{$city}'";
-		$values[] = "'{$district}'";
+		$values[] = "''";
 		$values[] = "'{$orgnr}'";
 		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
