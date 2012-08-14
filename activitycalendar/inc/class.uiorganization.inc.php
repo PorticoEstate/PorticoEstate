@@ -322,13 +322,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact1['org_id'] = $new_org_id;
 					$so_activity->add_contact_person_org($contact1);
 					
-					$contact2 = array();
-					$contact2['name'] = $contact2_name;
-					$contact2['phone'] = $contact2_phone;
-					$contact2['mail'] = $contact2_email;
-					$contact2['org_id'] = $new_org_id;
-					$so_activity->add_contact_person_org($contact2);
-					
 					$message = lang('messages_saved_form');	
 					
 					//get affected activities and update with new org id
