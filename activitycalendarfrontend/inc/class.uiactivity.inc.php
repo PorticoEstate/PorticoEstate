@@ -457,7 +457,6 @@
 				$secret_param = phpgw::get_var('secret', 'GET');
 				if(!isset($id) || $id == '')
 				{
-				    var_dump(3);
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array('edit_from_frontend' => 'yes'));
@@ -743,12 +742,9 @@
 					$org_info['name'] = phpgw::get_var('orgname');
 					$org_info['orgnr'] = phpgw::get_var('orgno');
 					$org_info['homepage'] = phpgw::get_var('homepage');
-					$org_info['phone'] = phpgw::get_var('phone');
-					$org_info['email'] = phpgw::get_var('email');
-					$org_info['description'] = phpgw::get_var('org_description');
 					$org_info['street'] = phpgw::get_var('address');
-					//$org_info['zip'] = phpgw::get_var('postaddress');
-					$org_info['district'] = $organization->get_district();
+					$org_info['zip'] = phpgw::get_var('postzip');
+					$org_info['postaddress'] = phpgw::get_var('postaddress');
 					$org_info['status'] = "change";
 					$org_info['original_org_id'] = $org_id;
 					$o_id = $this->so_activity->add_organization_local($org_info);
@@ -757,18 +753,10 @@
 					$contact1 = array();
 					$contact1['name'] = phpgw::get_var('org_contact1_name');
 					$contact1['phone'] = phpgw::get_var('org_contact1_phone');
-					$contact1['mail'] = phpgw::get_var('org_contact1_email');
+					$contact1['mail'] = phpgw::get_var('org_contact1_mail');
 					$contact1['org_id'] = $o_id;
 					$contact1['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact1);
-					
-					$contact2 = array();
-					$contact2['name'] = phpgw::get_var('org_contact2_name');
-					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
-					$contact2['mail'] = phpgw::get_var('org_contact2_email');
-					$contact2['org_id'] = $o_id;
-					$contact2['group_id'] = 0;
-					$this->so_activity->add_contact_person_local($contact2);
 					
 					$message = lang('change_request_ok', $org_info['name']);
 					
@@ -793,8 +781,6 @@
 						(
 							'organization' => $organization,
 							'contact1' => $persons[0],
-							'contact2' => $persons[1],
-							'districts' => $districts,
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error')

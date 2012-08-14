@@ -160,7 +160,6 @@ function setAddressValue(field)
 
 function allOK()
 {
-	alert(document.getElementById('district').value);
 	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
 	{
 		alert("Tittel må fylles ut!");
@@ -336,7 +335,7 @@ function allOK()
     						}
     						?>
     						</optgroup>
-    						<optgroup label="<?php echo lang('building') ?>">
+    						<optgroup label="<?php echo lang('external_arena') ?>">
     						<?php 
     						foreach($arenas as $arena)
 							{
