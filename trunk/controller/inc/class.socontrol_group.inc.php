@@ -124,15 +124,16 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
-			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-			$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
+			$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title', true), 'string'));
 			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
+			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
+
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 			$control_group->set_control_area_name($category[0]['name']);
-			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
-			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 
 			return $control_group;
 		}
@@ -158,7 +159,7 @@
 
 			while ($this->db->next_record())
 			{
-				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 
 				$results[] = $control_group->toArray();
@@ -190,14 +191,14 @@
 					$curr_id = $this->db->f('id', false);
 					if($selected_building_part_id && $selected_building_part_id > 0 && $selected_building_part_id == $curr_id)
 					{
-						$results[] = array('id' => $this->db->f('id', false),
-										   'name' => $this->db->f('name', false),
+						$results[] = array('id' => $this->db->f('id'),
+										   'name' => $this->db->f('name', true),
 										   'selected' => 'yes');
 					}
 					else
 					{
-						$results[] = array('id' => $this->db->f('id', false),
-										   'name' => $this->db->f('name', false));
+						$results[] = array('id' => $this->db->f('id'),
+										   'name' => $this->db->f('name', true));
 					}
 				}
 				return $results;
@@ -217,10 +218,10 @@
 			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
-				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
-				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
-				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
+				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 
 				$results[] = $control_group->toArray();
 			}
@@ -308,14 +309,15 @@
 			if($control_group == null) {
 				$control_group = new controller_control_group((int) $control_group_id);
 
-				$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
+				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
+				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title', true), 'string'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
+				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
+
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
-				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
-				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 			}
 
 			return $control_group;
@@ -337,14 +339,14 @@
 			while($this->db->next_record()) {
 				$control_group = new controller_control_group((int) $this->db->f('id'));
 
-				$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
+				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
+				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title', true), 'string'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				$control_group->set_control_area_name($category[0]['name']);
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
-				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
+				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
 
 				$control_groups_array[] = $control_group->toArray();
 			}
@@ -410,10 +412,10 @@
 			while($this->db->next_record())
 			{
 				$controlGroupArray[$i]['id'] = $this->db->f('control_group_id');
-				$controlGroupArray[$i]['title'] = $this->db->f('control_group_name');
+				$controlGroupArray[$i]['title'] = $this->db->f('control_group_name', true);
 				$controlGroupArray[$i]['bim_id'] = $this->db->f('bim_id');
 				$controlGroupArray[$i]['bim_item_guid'] = $this->db->f('bim_item_guid');
-				$controlGroupArray[$i]['bim_type'] = $this->db->f('type_name');
+				$controlGroupArray[$i]['bim_type'] = $this->db->f('type_name', true);
 				$i++;
 			}
 
@@ -475,8 +477,8 @@
 				$this->db->query("SELECT id, group_name FROM controller_control_group ORDER BY group_name ASC", __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$results[] = array('id' => $this->db->f('id', false),
-									   'group_name' => $this->db->f('group_name', false));
+					$results[] = array('id' => $this->db->f('id'),
+									   'group_name' => $this->db->f('group_name', true));
 				}
 				return $results;
 		}

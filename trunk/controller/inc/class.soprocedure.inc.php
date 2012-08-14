@@ -153,7 +153,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record()) {
 				if($counter == 0){
-					$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+					$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 					$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 					$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
@@ -173,8 +173,8 @@
 					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 				}
 				
-				if($this->db->f('document_id', true) != ''){
-					$document = new controller_document($this->unmarshal($this->db->f('document_id', true), 'int'));
+				if($this->db->f('document_id') != ''){
+					$document = new controller_document($this->unmarshal($this->db->f('document_id'), 'int'));
 					$document->set_procedure_id($procedure->get_id());
 					$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
 					$document->set_description($this->unmarshal($this->db->f('document_description', true), 'string'));
@@ -201,7 +201,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record()) {
 				if($counter == 0){
-					$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+					$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 					$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 					$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
@@ -218,8 +218,8 @@
 					$procedure->set_control_area_name($category[0]['name']);
 				}
 				
-				if($this->db->f('document_id', true) != ''){
-					$document = new controller_document($this->unmarshal($this->db->f('document_id', true), 'int'));
+				if($this->db->f('document_id') != ''){
+					$document = new controller_document($this->unmarshal($this->db->f('document_id'), 'int'));
 					$document->set_procedure_id($procedure->get_id());
 					$document->set_title($this->unmarshal($this->db->f('document_title', true), 'string'));
 					$document->set_description($this->unmarshal($this->db->f('document_description', true), 'string'));
@@ -258,7 +258,7 @@
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
-				$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 				$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
@@ -297,7 +297,7 @@
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 			while ($this->db->next_record()) {
-				$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 				$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
