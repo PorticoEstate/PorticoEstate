@@ -137,17 +137,17 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 			$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id')));
-			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			$control_item->set_control_area_name($category[0]['name']);
 			$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control_item->set_control_area_name($category[0]['name']);
 			
 			return $control_item;
 		}
@@ -174,25 +174,25 @@
 			{
 				if( $counter == 0 )
 				{
-					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 					$control_item->set_control_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 					$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id')));
-					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
-					$control_item->set_control_area_name($category[0]['name']);
 					$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
+					$control_item->set_control_area_name($category[0]['name']);
 				}
 				
-				if($this->db->f('cio_id', true) != '')
+				if($this->db->f('cio_id') != '')
 				{
 					$control_item_option = new controller_control_item_option();
-					$control_item_option->set_id($this->unmarshal($this->db->f('cio_id', true), 'int'));
+					$control_item_option->set_id($this->unmarshal($this->db->f('cio_id'), 'int'));
 					$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
-					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 
 					if($return_type == "return_object")
 					{
@@ -244,14 +244,14 @@
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 			while ($this->db->next_record()) {
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 
 				$results[] = $control_item;
 			}
@@ -367,12 +367,13 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control_item->set_control_area_name($category[0]['name']);
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
+
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control_item->set_control_area_name($category[0]['name']);
 			}
 
 			return $control_item;
@@ -416,14 +417,14 @@
 			while($this->db->next_record())
 			{
 				//create check_item and add to return array
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
+				$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 
 				$results[] = $control_item;
 			}

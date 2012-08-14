@@ -120,8 +120,8 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()){
-				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_group_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
@@ -146,8 +146,8 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()){
-				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_group_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
@@ -207,7 +207,7 @@
 
 			while($this->db->next_record())
 			{
-				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));

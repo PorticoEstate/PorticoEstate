@@ -160,7 +160,7 @@ class controller_sodocument extends controller_socommon
 			$document->set_description($this->unmarshal($this->db->f('description',true),'string'));
 			$document->set_name($this->unmarshal($this->db->f('name',true),'string'));
 			$document->set_type($this->unmarshal($this->db->f('type_title',true),'string'));
-			$document->set_procedure_id($this->unmarshal($this->db->f('procedure_id',true),'int'));
+			$document->set_procedure_id($this->unmarshal($this->db->f('procedure_id'),'int'));
 		}
 		return $document;
 	}
@@ -220,7 +220,7 @@ class controller_sodocument extends controller_socommon
 			$this->db->query($sql, __LINE__, __FILE__);
 			$results = array();
 			while($this->db->next_record()){
-				$location_id = $this->db->f('id', true);
+				$location_id = $this->db->f('id');
 				$results[$location_id] = $this->db->f('title', true);
 			}
 			$this->document_types = $results;
@@ -235,7 +235,7 @@ class controller_sodocument extends controller_socommon
 		$this->db->query($sql, __LINE__, __FILE__);
 		$results = array();
 		while($this->db->next_record()){
-			$result[] = $this->db->f('id', true);
+			$result[] = $this->db->f('id');
 			$result[] = $this->db->f('title', true);
 			$results[] = $result;
 		}
