@@ -330,7 +330,7 @@
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 			while ($this->db->next_record()) {
-				$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 				$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
@@ -353,11 +353,11 @@
 		{
 			$results = array();
 
-			$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
+			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
 			while ($this->db->next_record()) {
-				$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));
 				$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
 				$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
