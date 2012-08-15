@@ -87,6 +87,12 @@
 			{
 				$attributes['datatype_text']	= $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url']			= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
+
+				if(!$view_only && $attributes['history'])
+				{
+					$GLOBALS['phpgw']->jqcal->add_listener("values_attribute_{$i}_date");
+				}
+
 				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
 					if(!$view_only)
