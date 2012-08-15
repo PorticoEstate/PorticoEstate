@@ -93,17 +93,25 @@
 			{
 				return (boolean)$value;
 			}
-			elseif($value === null || $value == 'NULL')
+			else if($type == 'boolean')
+			{
+				return (boolean) $value;
+			}
+			else if($type == 'int')
+			{
+				return (int) $value;
+			}
+			else if($type == 'float')
+			{
+				return (float) $value;
+			}
+			else if($type == 'string')
+			{
+				return (string) $value;
+			}
+			else if($value === null || $value == 'NULL')
 			{
 				return null;
-			}
-			elseif($type == 'int')
-			{
-				return intval($value);
-			}
-			elseif($type == 'float')
-			{
-				return floatval($value);
 			}
 			return $value;
 		}
