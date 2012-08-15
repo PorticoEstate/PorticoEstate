@@ -107,9 +107,9 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
-			$control_item_option = new controller_control_item_option($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_item_option = new controller_control_item_option($this->unmarshal($this->db->f('id'), 'int'));
 			$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
-			$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+			$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 						
 			return $control_item_option;
 		}

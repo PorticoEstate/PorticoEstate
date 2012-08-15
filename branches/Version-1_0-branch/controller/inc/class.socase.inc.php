@@ -61,24 +61,26 @@
 		*/
 		public function get_single($case_id)
 		{
+			$case_id = (int) $case_id;
+			
 			$sql = "SELECT * FROM controller_check_item_case "; 
-			$sql .= "WHERE id = $case_id";
+			$sql .= "WHERE id = {$case_id}";
 			
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()) {
-				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
-				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
-				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
-				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
-				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
-				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
-				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
-				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
+				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 					
 				return $case;
 			}
@@ -98,23 +100,26 @@
 		*/
 		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
 		{
+			$location_id		= (int) $location_id;
+			$location_item_id	= (int) $location_item_id;
+
 			$sql = "SELECT * FROM controller_check_item_case "; 
 			$sql .= "WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
 
 			$this->db->query($sql);
 
 			while ($this->db->next_record()) {
-				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
-				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
-				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
-				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
-				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
-				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
-				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
-				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
+				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				
 				if($return_type == "return_object")
 					$cases_array[] = $case;
@@ -207,6 +212,7 @@
 		*/
 		function delete($case_id)
 		{
+			$case_id = (int) $case_id;
 			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 					
 			if( isset($status) )
