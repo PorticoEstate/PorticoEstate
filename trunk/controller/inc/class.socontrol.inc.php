@@ -145,7 +145,7 @@
 			while($this->db->next_record()) {
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -209,7 +209,7 @@
 			while($this->db->next_record()) {
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -321,7 +321,7 @@
 				
 				$control = new controller_control($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -387,7 +387,7 @@
 			{
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -783,7 +783,7 @@
 				$control = new controller_control((int) $control_id);
 
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -825,7 +825,7 @@
 			
 			$control = new controller_control((int) $id);
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 			$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
