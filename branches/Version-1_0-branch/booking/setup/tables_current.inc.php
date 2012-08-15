@@ -774,6 +774,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'description' => array('type' => 'text', 'nullable' => true),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),

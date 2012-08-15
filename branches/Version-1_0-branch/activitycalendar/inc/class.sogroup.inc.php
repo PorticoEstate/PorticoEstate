@@ -181,8 +181,8 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	
 	function update_group_description($group_id, $desc)
 	{
-		$sql = "UPDATE bb_group SET description={$desc} WHERE ID={$group_id}";
-    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		$sql = "UPDATE bb_group SET description='{$desc}' WHERE ID={$group_id}";
+                $result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
 		{
 			return true;
@@ -200,7 +200,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	    $phone=$contact['phone'];
 	    $mail=$contact['mail'];
 	    
-	    $sql = "UPDATE bb_group_contact SET NAME='{$name}, PHONE='{$phone}', EMAIL='{$mail}' WHERE id={$id}";
+	    $sql = "UPDATE bb_group_contact SET NAME='{$name}', PHONE='{$phone}', EMAIL='{$mail}' WHERE id={$id}";
 	    $result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
 		{
