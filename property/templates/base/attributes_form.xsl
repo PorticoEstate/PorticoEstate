@@ -556,7 +556,7 @@
 						</xsl:choose>
 						<xsl:choose>
 							<xsl:when test="history=1">
-								<input type="text" name="values_attribute[{counter}][date]" value="" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10">
+								<input type="text" id="values_attribute_{counter}_date" name="values_attribute[{counter}][date]" value="" size="12" maxlength="10">
 								</input>
 								<xsl:variable name="link_history">
 									<xsl:value-of select="link_history"/>
