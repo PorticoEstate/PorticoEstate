@@ -269,7 +269,7 @@
 				}
 				else
 				{
-				    $arena_arr = explode($arena_id,"_");
+				    $arena_arr = explode("_",$arena_id);
 				    if($arena_arr[0] == 'i')
 				    {
 				        $activity->set_internal_arena($arena_arr[1]);
@@ -545,7 +545,7 @@
 							// ... set all parameters
 							$activity->set_title(phpgw::get_var('title'));
 							$arena_id = phpgw::get_var('internal_arena_id');
-                                                        $arena_arr = explode($arena_id,"_");
+                                                        $arena_arr = explode("_",$arena_id);
                                                         if($arena_arr[0] == 'i')
                                                         {
                                                             $activity->set_internal_arena($arena_arr[1]);
