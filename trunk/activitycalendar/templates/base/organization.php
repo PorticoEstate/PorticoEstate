@@ -42,9 +42,12 @@
 						<?php }?>
 					</select>
 				<?php }else{
-						if($organization->get_change_type() == 'new'){?>
+						if($organization->get_change_type() == 'new'){
+                                                    if($organization->get_district()){?>
 							<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
-					<?php }else{
+					<?php       }
+                                        
+                                                }else{
 							if($organization->get_district() && is_numeric($organization->get_district())){?>
 								<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
 					<?php 	}else{?>
