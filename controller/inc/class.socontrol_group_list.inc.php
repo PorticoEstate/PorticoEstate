@@ -120,8 +120,8 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()){
-				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_group_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
@@ -142,12 +142,15 @@
 		 */
 		function get_group_list_by_control_and_group($control_id, $control_group_id)
 		{
-			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id=" . $control_id . " AND p.control_group_id=" . $control_group_id;
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
+			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id={$control_id} AND p.control_group_id={$control_group_id}";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
 			if($this->db->next_record()){
-				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id', true), 'int'));
-				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_group_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
@@ -168,6 +171,9 @@
 		 */
 		function delete($control_id, $control_group_id)
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id AND control_group_id = $control_group_id");
 
 			return isset($result);
@@ -181,6 +187,7 @@
 		 */
 		function delete_control_groups($control_id)
 		{
+			$control_id = (int) $control_id;
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id");
 
 			return isset($result);
@@ -195,9 +202,10 @@
 		 */
 		function get_control_groups_by_control($control_id, $returnType = "object")
 		{
+			$control_id = (int) $control_id;
 			$sql =  "SELECT cg.*, cgl.order_nr "; 
 			$sql .= "FROM controller_control_group_list cgl, controller_control_group cg "; 
-			$sql .= "WHERE cgl.control_id=$control_id ";
+			$sql .= "WHERE cgl.control_id={$control_id} ";
 			$sql .= "AND cgl.control_group_id=cg.id ";
 			$sql .= "ORDER BY cgl.order_nr";
 			
@@ -207,7 +215,7 @@
 
 			while($this->db->next_record())
 			{
-				$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));

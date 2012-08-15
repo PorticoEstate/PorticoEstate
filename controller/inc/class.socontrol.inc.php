@@ -120,8 +120,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
+		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
+			$role_id = (int) $role_id;
+
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name "; 
@@ -141,20 +143,20 @@
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
-				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				
 				if($return_type == "return_object")
 					$controls_array[] = $control;
@@ -181,8 +183,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-	  public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = '')
+
+		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
+			$role_id = (int) $role_id;
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name, ccl.location_id, ccl.component_id ";
@@ -203,20 +207,20 @@
 			$this->db->query($sql);
 			
 			while($this->db->next_record()) {
-				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 //Sigurd 3.august 2010:
 				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -245,8 +249,10 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = '', $filter = null)
+		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = 0, $filter = null)
 		{
+			$role_id = (int) $role_id;
+
 			$controls_array = array();
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
@@ -285,7 +291,7 @@
 			$component = null;
 			while($this->db->next_record()) 
 			{
-				if( $this->db->f('component_id', true) != $component_id )
+				if( $this->db->f('component_id') != $component_id )
 				{
 					if($component_id != 0)
 					{
@@ -303,9 +309,9 @@
 					}
 					
 					$component = new controller_component();
-					$component->set_type($this->unmarshal($this->db->f('component_type', true), 'int'));
-					$component->set_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-					$component->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+					$component->set_type($this->unmarshal($this->db->f('component_type'), 'int'));
+					$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
+					$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
 					$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
@@ -313,22 +319,22 @@
 					$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
 				}
 				
-				$control = new controller_control($this->unmarshal($this->db->f('control_id', true), 'int'));
+				$control = new controller_control($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				
 				if($return_type == "return_object")
 				{
@@ -379,19 +385,19 @@
 
 			while($this->db->next_record()) 
 			{
-				$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				
 				$controls_array[] = $control->toArray();
 			}
@@ -414,17 +420,19 @@
 		 */
 		function get_locations_for_control($control_id)
 		{
+			$control_id = (int) $control_id;
+
 			$controls_array = array();
 
 			$sql =  "SELECT c.id, c.title, cll.location_code "; 
 			$sql .= "FROM controller_control c, controller_control_location_list cll ";
-			$sql .= "WHERE cll.control_id = $control_id ";
+			$sql .= "WHERE cll.control_id = {$control_id} ";
 			$sql .= "AND cll.control_id = c.id";
 
 			$this->db->query($sql);
 
 			while($this->db->next_record()) {
-				$control_id = $this->unmarshal($this->db->f('id', true), 'int');
+				$control_id = $this->unmarshal($this->db->f('id'), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
 				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 
@@ -451,12 +459,14 @@
 		 * @param $control_id control id
 		 * @return array with arrays of component info  
 		 */
-	  function get_components_for_control($control_id)
+		function get_components_for_control($control_id)
 		{
+			$control_id = (int) $control_id;
+
 			$controls_array = array();
 
 			$sql =  "SELECT ccl.control_id, ccl.component_id as component_id, ccl.location_id as location_id, bim_type.description, bim_item.location_code ";
-      $sql .= "FROM controller_control_component_list ccl, fm_bim_item bim_item, fm_bim_type bim_type "; 
+			$sql .= "FROM controller_control_component_list ccl, fm_bim_item bim_item, fm_bim_type bim_type "; 
 			$sql .= "WHERE ccl.control_id = $control_id ";
 			$sql .= "AND ccl.component_id = bim_item.id ";
 			$sql .= "AND ccl.location_id = bim_type.location_id ";
@@ -466,9 +476,9 @@
 
 			while($this->db->next_record()) {
 				$component = new controller_component();
-				$component->set_type($this->unmarshal($this->db->f('type', true), 'int'));
-				$component->set_id($this->unmarshal($this->db->f('component_id', true), 'int'));
-				$component->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
+				$component->set_type($this->unmarshal($this->db->f('type'), 'int'));
+				$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
+				$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
 				$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 				$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
@@ -773,20 +783,21 @@
 				$control = new controller_control((int) $control_id);
 
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control->set_control_area_name($category[0]['name']);
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
 			}
 
 			return $control;
@@ -814,21 +825,22 @@
 			
 			$control = new controller_control((int) $id);
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
-			$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
-			$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
-			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+			$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+			$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
-			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
-			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
-			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 			$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
-			$control->set_control_area_name($category[0]['name']);
-			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 			$control->set_repeat_type_label($control->get_repeat_type());
-			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+
+			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control->set_control_area_name($category[0]['name']);
 
 			return $control;
 		}
@@ -865,7 +877,7 @@
 			while($this->db->next_record())
 			{
 				$ret_array[$i]['id'] = $this->db->f('id');
-				$ret_array[$i]['name'] = $this->db->f('name');
+				$ret_array[$i]['name'] = $this->db->f('name', true);
 				$i++;
 			}
 			return $ret_array;
@@ -929,8 +941,8 @@
 				$controlArray[$i]['id'] = $this->db->f('control_id');
 				$controlArray[$i]['title'] = $this->db->f('control_title');
 				$controlArray[$i]['bim_id'] = $this->db->f('bim_id');
-				$controlArray[$i]['bim_item_guid'] = $this->db->f('bim_item_guid');
-				$controlArray[$i]['bim_type'] = $this->db->f('type_name');
+				$controlArray[$i]['bim_item_guid'] = $this->db->f('bim_item_guid', true);
+				$controlArray[$i]['bim_type'] = $this->db->f('type_name', true);
 				$i++;
 			}
 
@@ -958,7 +970,7 @@
 			if($this->db->num_rows() > 0)
 			{
 				$this->db->next_record();
-				$result = $this->db->f(location_code);
+				$result = $this->db->f('location_code');
 				return $result;
 			}
 		}
