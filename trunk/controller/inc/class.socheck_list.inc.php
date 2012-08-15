@@ -69,7 +69,6 @@ class controller_socheck_list extends controller_socommon
 		$this->db->query($sql);
 		$this->db->next_record();
 			
-_debug_array($this->unmarshal($this->db->f('cl_status'), 'int'));
 		$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 		$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 		$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
