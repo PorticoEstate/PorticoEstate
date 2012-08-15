@@ -2395,6 +2395,12 @@
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'description',
+								'descr' => lang('description'),
+								'type' => 'text'
 							)
 						),
 						'edit_msg'			=> lang('edit'),

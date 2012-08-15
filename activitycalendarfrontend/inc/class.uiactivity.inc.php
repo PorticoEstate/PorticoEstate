@@ -269,7 +269,7 @@
 				}
 				else
 				{
-				    $arena_arr = explode($arena_id,"_");
+				    $arena_arr = explode("_",$arena_id);
 				    if($arena_arr[0] == 'i')
 				    {
 				        $activity->set_internal_arena($arena_arr[1]);
@@ -544,8 +544,16 @@
 							$new_state = phpgw::get_var('state');
 							// ... set all parameters
 							$activity->set_title(phpgw::get_var('title'));
-							$activity->set_arena(phpgw::get_var('arena_id'));
-							$activity->set_internal_arena(phpgw::get_var('internal_arena_id'));
+							$arena_id = phpgw::get_var('internal_arena_id');
+                                                        $arena_arr = explode("_",$arena_id);
+                                                        if($arena_arr[0] == 'i')
+                                                        {
+                                                            $activity->set_internal_arena($arena_arr[1]);
+                                                        }
+                                                        else
+                                                        {
+                                                            $activity->set_arena($arena_arr[1]);
+                                                        }
 							//$district_array = phpgw::get_var('district');
 							$activity->set_district(phpgw::get_var('district'));
 							$activity->set_office(phpgw::get_var('office'));

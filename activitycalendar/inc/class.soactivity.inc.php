@@ -1422,8 +1422,40 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$id = intval($activity_id);
 		$org_id = intval($organization_id);
 		
-		$result = $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__,__FILE__);
+                $result = $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__,__FILE__);
 
 		return isset($result);
 	}
+        
+        function get_activities_without_groups()
+        {
+            $activities = array();
+            $sql_activities = "select a.*, o.description as org_desc from activity_activity a, bb_organization o where (a.group_id is null or a.group_id = 0) and o.id = a.organization_id";
+            $this->db->query($sql_activities, __LINE__, __FILE__);
+            while($this->db->next_record())
+            {                
+                $activity_id = $this->db->f('id');
+                $activity_title = $this->db->f('title');
+                $activity_organization = $this->db->f('organization_id');
+                $description = $this->db->f('org_desc');
+                
+                $activities[] = array(
+                    'id'=>$activity_id,
+                    'title'=>$activity_title,
+                    'organization'=>$activity_organization,
+                    'description'=>$description
+                );
+            }
+            return $activities;
+        }
+        
+        /*
+         * Function to be run once.
+         * Generates new groups based on activity where group is not registered.
+         * Adds new group to booking
+         */
+        function generate_groups()
+        {
+            //TODO
+        }
 }

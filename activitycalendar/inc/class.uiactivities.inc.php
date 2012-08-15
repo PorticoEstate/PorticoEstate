@@ -25,7 +25,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		'edit'				=> true,
 		'download'			=> true,
 		'send_mail'			=> true,
-		'get_organization_groups'	=> true
+		'get_organization_groups'	=> true,
+                'create_groups'                 => true
 	);
 	
 	public function __construct()
@@ -307,12 +308,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						if(isset($g_id) && $g_id > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(),$subject,$body);
 						}
 						else if (isset($o_id) && $o_id > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(),$subject,$body);
 						}
 					}
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
@@ -742,5 +743,25 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		return $returnHTML;
 	}
+        
+        public function create_groups()
+        {
+            //var_dump('Vi skal lage grupper!');
+            $activities = $this->so_activity->get_activities_without_groups();
+            //_debug_array($activities);
+            
+            foreach ($activities as $a)
+            {
+                $group_info = array();
+                $group_info['name'] = $a['title'];
+                $group_info['organization_id'] =  $a['organization'];
+                $group_info['description'] = $a['description'];
+                
+                $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
+
+                _debug_array($group_info);
+                _debug_array($cp);
+            }
+        }
 }
 ?>

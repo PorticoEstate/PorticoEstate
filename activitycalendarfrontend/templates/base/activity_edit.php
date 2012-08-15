@@ -161,7 +161,7 @@ function allOK()
 		alert("Kategori må fylles ut!");
 		return false;
 	} 
-	if((document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0) && (document.getElementById('new_arena_hidden').value==null || document.getElementById('new_arena_hidden').value==''))
+	if((document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0))
 	{
 		alert("Lokale må fylles ut!");
 		return false;
@@ -326,7 +326,7 @@ function allOK()
         						}
         						?>
         						</optgroup>
-        						<optgroup label="<?php echo lang('building') ?>">
+        						<optgroup label="<?php echo lang('external_arena') ?>">
         						<?php 
         						foreach($arenas as $arena)
     							{
@@ -409,9 +409,9 @@ function allOK()
 				</FIELDSET>
 				<div class="form-buttons">
 				<?php
-					if ($editable) {
-						echo '<input type="submit" name="save_activity" value="' . lang('save') . '" onclick="return allOK();"/>';
-					}
+					if ($editable) {?>
+                                            <input type="submit" name="save_activity" value="<?php echo lang('save')?>" onclick="return allOK();"/>
+				<?php	}
 				?>
 				</div>
 			</dl>
