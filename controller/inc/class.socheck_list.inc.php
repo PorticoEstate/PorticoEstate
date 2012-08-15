@@ -69,6 +69,7 @@ class controller_socheck_list extends controller_socommon
 		$this->db->query($sql);
 		$this->db->next_record();
 			
+_debug_array($this->unmarshal($this->db->f('cl_status'), 'int'));
 		$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 		$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 		$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
@@ -770,7 +771,7 @@ class controller_socheck_list extends controller_socommon
 			$control = new controller_control((int) $control_id);
 
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 			$control->set_start_date($start_date);
 			$control->set_end_date($end_date);
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
