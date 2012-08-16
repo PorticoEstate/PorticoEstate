@@ -43,7 +43,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_group');
 			}
 			return self::$so;
@@ -73,7 +74,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result))
+			if($result)
 			{
 				// Get the new control group ID and return it
 				return $this->db->get_last_insert_id('controller_control_group', 'id');
@@ -104,7 +105,7 @@
 
 			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result ? $id : 0;
 		}
 
 		/**
@@ -218,7 +219,8 @@
 			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$control_group = new controller_control_group($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
@@ -257,7 +259,8 @@
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
-				switch($search_type){
+				switch($search_type)
+				{
 					default:
 						$like_clauses[] = "controller_control_group.group_name $this->like $like_pattern";
 						break;
@@ -338,7 +341,8 @@
 			$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$control_group = new controller_control_group((int) $this->db->f('id'));
 
 				$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
@@ -353,7 +357,8 @@
 				$control_groups_array[] = $control_group->toArray();
 			}
 
-			if( count( $control_groups_array ) > 0 ){
+			if( count( $control_groups_array ) > 0 )
+			{
 				return $control_groups_array; 
 			}
 			else
@@ -374,14 +379,16 @@
 			$sql = "SELECT control_area_id FROM controller_control_group WHERE control_group_id={$control_group_id}";
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$control_area = $this->unmarshal($this->db->f('control_area_id'), 'int');
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
 				
 				$control_area_array[] = array($control_area => $category[0]['name']);
 			}
 
-			if( count( $control_area_array ) > 0 ){
+			if( count( $control_area_array ) > 0 )
+			{
 				return $control_area_array; 
 			}
 			else

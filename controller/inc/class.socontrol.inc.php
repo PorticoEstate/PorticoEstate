@@ -36,7 +36,7 @@
 
   class controller_socontrol extends controller_socommon
   {
-    protected static $so;
+		protected static $so;
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -45,7 +45,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol');
 			}
 			return self::$so;
@@ -63,7 +64,8 @@
 			$sql = "INSERT INTO controller_control (title) VALUES ('$title')";
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 
 				// Set the new control ID
 				$control->set_id($this->db->get_last_insert_id('controller_control', 'id'));
@@ -85,7 +87,6 @@
 		 */
 		function update($control)
 		{
-
 			$id = intval($control->get_id());
 
 			$values = array(
@@ -102,9 +103,12 @@
 
 			$result = $this->db->query('UPDATE controller_control SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if( isset($result) ){
+			if( $result )
+			{
 				return $id;
-			}else{
+			}
+			else
+			{
 				return 0;
 			}
 		}
@@ -133,16 +137,22 @@
 			$sql .= "WHERE cll.location_code = '$location_code' ";
 			
 			if( is_numeric($repeat_type) )
+			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			}
+
 			if( is_numeric($role_id))
+			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
+			}
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
 
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
@@ -159,15 +169,21 @@
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				
 				if($return_type == "return_object")
+				{
 					$controls_array[] = $control;
+				}
 				else
+				{
 					$controls_array[] = $control->toArray();
+				}
 			}
 
-			if( count( $controls_array ) > 0 ){
+			if( count( $controls_array ) > 0 )
+			{
 				return $controls_array; 
 			}
-			else {
+			else
+			{
 				return null;
 			}
 		}
@@ -197,16 +213,21 @@
 			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
 			
 			if( is_numeric($repeat_type) )
+			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
+			}
 			if( is_numeric($role_id))
+			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
+			}
 			
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
 			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
 
 			$this->db->query($sql);
 			
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
@@ -226,14 +247,21 @@
 				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 //
 				if($return_type == "return_object")
+				{
 					$controls_array[] = $control;
+				}
 				else
+				{
 					$controls_array[] = $control->toArray();
+				}
 			}
 
-			if( count( $controls_array ) > 0 ){
+			if( count( $controls_array ) > 0 )
+			{
 				return $controls_array; 
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -431,24 +459,29 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$control_id = $this->unmarshal($this->db->f('id'), 'int');
 				$title = $this->unmarshal($this->db->f('title', true), 'string');
 				$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-				$controls_array[] = array(
-																		"id" => $control_id, 
-																		"title" => $title, 
-																		"location_code" => $location_code, 
-																		"loc1_name" => $location_array["loc1_name"]
-																	);
+				$controls_array[] = array
+				(
+					"id"			=> $control_id, 
+					"title"			=> $title, 
+					"location_code"	=> $location_code, 
+					"loc1_name"		=> $location_array["loc1_name"]
+				);
 			}
 
-			if( count( $controls_array ) > 0 ){
+			if( count( $controls_array ) > 0 )
+			{
 				return $controls_array; 
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -474,7 +507,8 @@
 
 			$this->db->query($sql);
 
-			while($this->db->next_record()) {
+			while($this->db->next_record())
+			{
 				$component = new controller_component();
 				$component->set_type($this->unmarshal($this->db->f('type'), 'int'));
 				$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -489,7 +523,8 @@
 				$components_array[] = $component;
 			}
 
-			if( count( $components_array ) > 0 ){
+			if( count( $components_array ) > 0 )
+			{
 				return $components_array; 
 			}
 			else
@@ -515,7 +550,8 @@
 			
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			
-			if($this->db->next_record()){
+			if($this->db->next_record())
+			{
 				$control_location = new controller_control_location($this->unmarshal($this->db->f('id'), 'int'));
 	
 				$control_location->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
@@ -715,7 +751,8 @@
 				$search_for = $this->marshal($search_for,'field');
 				$like_pattern = "'%".$search_for."%'";
 				$like_clauses = array();
-				switch($search_type){
+				switch($search_type)
+				{
 					default:
 						$like_clauses[] = "controller_control.title $this->like $like_pattern";
 						$like_clauses[] = "controller_control.description $this->like $like_pattern";
@@ -779,7 +816,8 @@
 
 		function populate(int $control_id, &$control)
 		{
-			if($control == null) {
+			if($control == null)
+			{
 				$control = new controller_control((int) $control_id);
 
 				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -867,9 +905,13 @@
 			if($ifc != null)
 			{
 				if($ifc == 1)
+				{
 					$where_clause = "WHERE is_ifc";
+				}
 				else
+				{
 					$where_clause = "WHERE NOT is_ifc";
+				}
 			}
 			$sql = "select * from fm_bim_type {$where_clause} ORDER BY name";
 			$this->db->query($sql, __LINE__, __FILE__);
