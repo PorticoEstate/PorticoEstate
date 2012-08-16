@@ -66,6 +66,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'get_activities'  		=> true,
 			'get_organizations'  	=> true,
 			'get_groups'  			=> true,
+                        'remove_old_activities'         => true,
 		);
 	
 	/**
@@ -1457,5 +1458,26 @@ class activitycalendar_soactivity extends activitycalendar_socommon
         function generate_groups()
         {
             //TODO
+        }
+        
+                
+        function remove_old_activities()
+        {
+            $sql = "delete from activity_activity where id in (1293,1294,1297,1299)"; //1293,1294,1297,1299
+            $result = $this->db->query($sql, __LINE__, __FILE__);
+            
+            return isset($result);
+        }
+        
+        function save_with_no_changes($activity)
+        {
+            $id = intval($activity->get_id());
+            $ts_now = strtotime('now');
+			
+            $values = "last_change_date = " . $this->marshal($ts_now, 'int');
+
+            $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
+
+            return isset($result);
         }
 }
