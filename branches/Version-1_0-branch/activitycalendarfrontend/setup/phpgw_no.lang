@@ -57,7 +57,7 @@ building	activitycalendarfrontend	no	Kommunale bygg
 title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
-messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
+messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret.<br/>Når aktiviteten er godkjent av kulturkontoret vil den vises i kommuneportalen.
 messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
 change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
@@ -94,7 +94,7 @@ activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker �
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
 address	activitycalendarfrontend	no	Adresse
-activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for organisasjonen.<br/>Du velger organisasjon og aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
+activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for aktiviteten.<br/>Du velger først organisasjon og deretter aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
 mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
 mail_subject_update	activitycalendarfrontend	no	Melding fra AktivBy - Aktivitetsoversikt
 save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå videre til Ny aktivitet
