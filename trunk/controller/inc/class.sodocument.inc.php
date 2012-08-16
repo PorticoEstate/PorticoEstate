@@ -45,7 +45,8 @@ class controller_sodocument extends controller_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+		if (self::$so == null)
+		{
 			self::$so = CreateObject('controller.sodocument');
 		}
 		return self::$so;
@@ -82,7 +83,8 @@ class controller_sodocument extends controller_socommon
 			$search_for = $this->marshal($search_for,'field');
 			$like_pattern = "'%".$search_for."%'";
 			$like_clauses = array();
-			switch($search_type){
+			switch($search_type)
+			{
 				case "title":
 					$like_clauses[] = "controller_document.title $this->like $like_pattern";
 					break;
@@ -221,7 +223,8 @@ class controller_sodocument extends controller_socommon
 			$sql = "SELECT id, title FROM controller_document_types";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$results = array();
-			while($this->db->next_record()){
+			while($this->db->next_record())
+			{
 				$location_id = $this->db->f('id');
 				$results[$location_id] = $this->db->f('title', true);
 			}
@@ -236,7 +239,8 @@ class controller_sodocument extends controller_socommon
 		$sql = "SELECT id, title FROM controller_document_types";
 		$this->db->query($sql, __LINE__, __FILE__);
 		$results = array();
-		while($this->db->next_record()){
+		while($this->db->next_record())
+		{
 			$result[] = $this->db->f('id');
 			$result[] = $this->db->f('title', true);
 			$results[] = $result;
