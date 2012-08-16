@@ -174,12 +174,42 @@ function allOK()
 	{
 		alert("Kategori må fylles ut!");
 		return false;
-	} 
+	}
+        var malgrupper = document.getElementsByName('target[]');
+        var malgruppe_ok = false;
+        for(i=0;i<malgrupper.length;i++)
+        {
+            if(!malgruppe_ok)
+                {
+                    if(malgrupper[i].checked)
+                        {malgruppe_ok = true;}
+                }
+        }
+        if(!malgruppe_ok)
+        {
+            alert("Målgruppe må fylles ut!");
+            return false;
+        }
 	if((document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0) && (document.getElementById('new_arena_hidden').value==null || document.getElementById('new_arena_hidden').value==''))
 	{
 		alert("Lokale må fylles ut!");
 		return false;
 	}
+        var distrikter = document.getElementsByName('district');
+        var distrikt_ok = false;
+        for(i=0;i<distrikter.length;i++)
+        {
+            if(!distrikt_ok)
+                {
+                    if(distrikter[i].checked)
+                        {distrikt_ok = true;}
+                }
+        }
+        if(!distrikt_ok)
+        {
+            alert("Bydel må fylles ut!");
+            return false;
+        }
 	if(document.getElementById('time').value == null || document.getElementById('time').value == '')
 	{
 		alert("Dag og tid må fylles ut!");
