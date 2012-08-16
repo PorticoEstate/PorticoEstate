@@ -111,3 +111,6 @@ choose_org	activitycalendarfrontend	no	Velg organisasjon
 activity_title	activitycalendarfrontend	no	Navn på aktiviteten
 location	activitycalendarfrontend	no	Lokale
 contact_person	activitycalendarfrontend	no	Kontaktperson for aktiviteten
+activity_ok_message	activitycalendarfrontend	no	Aktiviteten er lagret uten endringer
+activity_ok	activitycalendarfrontend	no	Opplysningene er korrekte
+change_activity	activitycalendarfrontend	no	Endre opplysningene

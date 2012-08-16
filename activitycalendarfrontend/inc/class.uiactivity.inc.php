@@ -438,9 +438,9 @@
 				
 				
 				//store update-request
-				$activity->set_state(2);
-				if($this->so_activity->store($activity))
-				{
+				//$activity->set_state(2);
+				//if($this->so_activity->store($activity))
+				//{
 					$this->send_email_to_selection(array($activity));
 					$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
 					return $this->render('activity_edit_step_1.php', array
@@ -450,7 +450,7 @@
 							'ajaxURL' => $ajaxUrl
 						)	
 					);
-				}
+				//}
 			}
 			else
 			{
@@ -535,152 +535,209 @@
 					}
 					$organization = $this->so_organization->get_single($activity->get_organization_id());
 					
-					if(isset($_POST['save_activity'])) // The user has pressed the save button
-					{
-						if(isset($activity)) // If an activity object is created
-						{
-						    $act_description = phpgw::get_var('description');
-							$old_state = $activity->get_state();
-							$new_state = phpgw::get_var('state');
-							// ... set all parameters
-							$activity->set_title(phpgw::get_var('title'));
-							$arena_id = phpgw::get_var('internal_arena_id');
-                                                        $arena_arr = explode("_",$arena_id);
-                                                        if($arena_arr[0] == 'i')
-                                                        {
-                                                            $activity->set_internal_arena($arena_arr[1]);
-                                                        }
-                                                        else
-                                                        {
-                                                            $activity->set_arena($arena_arr[1]);
-                                                        }
-							//$district_array = phpgw::get_var('district');
-							$activity->set_district(phpgw::get_var('district'));
-							$activity->set_office(phpgw::get_var('office'));
-							$activity->set_state(2);
-							$activity->set_category(phpgw::get_var('category'));
-							$target_array = phpgw::get_var('target');
-							$activity->set_target(implode(",", $target_array));
-							$activity->set_description($act_description);
-							$activity->set_time(phpgw::get_var('time'));
-							$activity->set_contact_persons($persons);
-							$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
-							$activity->set_frontend(true);
-							
-							$contact_person = array();
-							$cp_tmp = $persons_array[0];
-							$contact_person['original_id'] = $cp_tmp->get_id();
-							$contact_person['name'] = phpgw::get_var('contact_name');
-							$contact_person['phone'] = phpgw::get_var('contact_phone');
-							$contact_person['mail'] = phpgw::get_var('contact_mail');
-							$contact_person['group_id'] = $activity->get_group_id();
-							
-							
-							$target_ok = false;
-							$district_ok = false;
-							if($activity->get_target() && $activity->get_target() != '')
-							{
-								$target_ok = true;
-							}
-							if($activity->get_district() && $activity->get_district() != '')
-							{
-								$district_ok = true;
-							}
-							
-							if($target_ok && $district_ok)
-							{
-								
-								if($this->so_activity->store($activity)) // ... and then try to store the object
-								{
-									$message = lang('messages_saved_form');	
-									//update group description
-									if($activity->get_group_id())
-									{
-									    $this->so_group->update_group_description($activity->get_group_id(), $act_description);
-									    $this->so_group->update_group_contact($contact_person);
-									}
-								}
-								else
-								{
-									$error = lang('messages_form_error');
-								}
-				
-								$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+                                        $change_activity_request = FALSE;
+                                        if(isset($_POST['save_activity'])) // The user has pressed the save button
+                                        {
+                                            if(isset($activity)) // If an activity object is created
+                                            {
+                                                $act_description = phpgw::get_var('description');
+                                                    $old_state = $activity->get_state();
+                                                    $new_state = phpgw::get_var('state');
+                                                    // ... set all parameters
+                                                    $activity->set_state(2);
+                                                    $activity->set_title(phpgw::get_var('title'));
+                                                    $arena_id = phpgw::get_var('internal_arena_id');
+                                                    $arena_arr = explode("_",$arena_id);
+                                                    if($arena_arr[0] == 'i')
+                                                    {
+                                                        $activity->set_internal_arena($arena_arr[1]);
+                                                    }
+                                                    else
+                                                    {
+                                                        $activity->set_arena($arena_arr[1]);
+                                                    }
+                                                    //$district_array = phpgw::get_var('district');
+                                                    $activity->set_district(phpgw::get_var('district'));
+                                                    $activity->set_office(phpgw::get_var('office'));
+                                                    $activity->set_state(2);
+                                                    $activity->set_category(phpgw::get_var('category'));
+                                                    $target_array = phpgw::get_var('target');
+                                                    $activity->set_target(implode(",", $target_array));
+                                                    $activity->set_description($act_description);
+                                                    $activity->set_time(phpgw::get_var('time'));
+                                                    $activity->set_contact_persons($persons);
+                                                    $activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+                                                    $activity->set_frontend(true);
+
+                                                    $contact_person = array();
+                                                    $cp_tmp = $persons_array[0];
+                                                    $contact_person['original_id'] = $cp_tmp->get_id();
+                                                    $contact_person['name'] = phpgw::get_var('contact_name');
+                                                    $contact_person['phone'] = phpgw::get_var('contact_phone');
+                                                    $contact_person['mail'] = phpgw::get_var('contact_mail');
+                                                    $contact_person['group_id'] = $activity->get_group_id();
+
+
+                                                    $target_ok = false;
+                                                    $district_ok = false;
+                                                    if($activity->get_target() && $activity->get_target() != '')
+                                                    {
+                                                            $target_ok = true;
+                                                    }
+                                                    if($activity->get_district() && $activity->get_district() != '')
+                                                    {
+                                                            $district_ok = true;
+                                                    }
+
+                                                    if($target_ok && $district_ok)
+                                                    {
+
+                                                            if($this->so_activity->store($activity)) // ... and then try to store the object
+                                                            {
+                                                                    $message = lang('messages_saved_form');	
+                                                                    //update group description
+                                                                    if($activity->get_group_id())
+                                                                    {
+                                                                        $this->so_group->update_group_description($activity->get_group_id(), $act_description);
+                                                                        $this->so_group->update_group_contact($contact_person);
+                                                                    }
+                                                            }
+                                                            else
+                                                            {
+                                                                    $error = lang('messages_form_error');
+                                                            }
+
+                                                            $GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+                                                            $this->render('activity.php', array
+                                                                                    (
+                                                                                            'activity' 	=> $activity,
+                                                                                            'organization' => $organization,
+                                                                                            'group' => $group,
+                                                                                    'contact1' => $persons_array[0],
+                                                                                            'arenas' => $arenas,
+                                                                                            'buildings' => $buildings,
+                                                                                            'categories' => $categories,
+                                                                                            'targets' => $targets,
+                                                                                            'districts' => $districts,
+                                                                                            'offices' => $offices,
+                                                                                            'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                                                            'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                                                            'ajaxURL' => $ajaxUrl
+                                                                                    )
+                                                            );
+                                                    }
+                                                    else
+                                                    {
+                                                            if(!$target_ok)
+                                                            {
+                                                                    $error .= "<br/>" . lang('target_not_selected');
+                                                            }
+                                                            if(!$district_ok)
+                                                            {
+                                                                    $error .= "<br/>" . lang('district_not_selected');
+                                                            }
+                                                            return $this->render('activity_edit.php', array
+                                                                    (
+                                                                            'activity' 	=> $activity,
+                                                                            'organization' => $organization,
+                                                                        'contact1' => $persons_array[0],
+                                                                            'org_name' => $org_name,
+                                                                            'group' => $group,
+                                                                            'arenas' => $arenas,
+                                                                            'buildings' => $buildings,
+                                                                            'categories' => $categories,
+                                                                            'targets' => $targets,
+                                                                            'districts' => $districts,
+                                                                            'offices' => $offices,
+                                                                            'editable' => true,
+                                                                            'cancel_link' => $cancel_link,
+                                                                            'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                                            'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                                            'ajaxURL' => $ajaxUrl
+                                                                    )	
+                                                            );
+                                                    }
+                                            }
+                                    }
+                                    else if(isset($_POST['change_request']))
+                                    {
+                                        $GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+                                        $this->render('activity_edit.php', array
+                                                                (
+                                                                        'activity' 	=> $activity,
+                                                                        'organization' => $organization,
+                                                                        'group' => $group,
+                                                                        'contact1' => $persons_array[0],
+                                                                        'arenas' => $arenas,
+                                                                        'buildings' => $buildings,
+                                                                        'categories' => $categories,
+                                                                        'targets' => $targets,
+                                                                        'districts' => $districts,
+                                                                        'offices' => $offices,
+                                                                        'editable' => true,
+                                                                        'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                                        'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                                        'ajaxURL' => $ajaxUrl
+                                                                )
+                                        );
+                                    }
+                                    else if(isset($_POST['activity_ok'])) // The user has pressed the save button
+                                    {
+                                        if(isset($activity)) // If an activity object is created
+                                        {
+                                            $activity->set_frontend(true);
+
+                                            if($this->so_activity->save_with_no_changes($activity)) // ... and then try to store the object
+                                            {
+                                                $message = lang('activity_ok_message');
+                                            }
+                                            $GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			
-								$this->render('activity.php', array
-											(
-												'activity' 	=> $activity,
-												'organization' => $organization,
-												'group' => $group,
-    											'contact1' => $persons_array[0],
-												'arenas' => $arenas,
-												'buildings' => $buildings,
-												'categories' => $categories,
-												'targets' => $targets,
-												'districts' => $districts,
-												'offices' => $offices,
-												'message' => isset($message) ? $message : phpgw::get_var('message'),
-												'error' => isset($error) ? $error : phpgw::get_var('error'),
-												'ajaxURL' => $ajaxUrl
-											)
-								);
-							}
-							else
-							{
-								if(!$target_ok)
-								{
-									$error .= "<br/>" . lang('target_not_selected');
-								}
-								if(!$district_ok)
-								{
-									$error .= "<br/>" . lang('district_not_selected');
-								}
-								return $this->render('activity_edit.php', array
-									(
-										'activity' 	=> $activity,
-										'organization' => $organization,
-									    'contact1' => $persons_array[0],
-										'org_name' => $org_name,
-										'group' => $group,
-										'arenas' => $arenas,
-										'buildings' => $buildings,
-										'categories' => $categories,
-										'targets' => $targets,
-										'districts' => $districts,
-										'offices' => $offices,
-										'editable' => true,
-										'cancel_link' => $cancel_link,
-										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error'),
-										'ajaxURL' => $ajaxUrl
-									)	
-								);
-							}
-						}
-					}
-					else
-					{
-						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			
-						$this->render('activity_edit.php', array
-									(
-										'activity' 	=> $activity,
-										'organization' => $organization,
-										'group' => $group,
-										'contact1' => $persons_array[0],
-										'arenas' => $arenas,
-										'buildings' => $buildings,
-										'categories' => $categories,
-										'targets' => $targets,
-										'districts' => $districts,
-										'offices' => $offices,
-										'editable' => true,
-										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error'),
-										'ajaxURL' => $ajaxUrl
-									)
-						);
-					}
+                                            $this->render('activity.php', array
+                                                                        (
+                                                                            'activity' 	=> $activity,
+                                                                            'organization' => $organization,
+                                                                            'group' => $group,
+                                                                            'contact1' => $persons_array[0],
+                                                                            'arenas' => $arenas,
+                                                                            'buildings' => $buildings,
+                                                                            'categories' => $categories,
+                                                                            'targets' => $targets,
+                                                                            'districts' => $districts,
+                                                                            'offices' => $offices,
+                                                                            'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                                            'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                                            'ajaxURL' => $ajaxUrl
+                                                                        )
+                                            );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+                                        $this->render('activity.php', array
+                                                                (
+                                                                        'activity' 	=> $activity,
+                                                                        'organization' => $organization,
+                                                                        'group' => $group,
+                                                                        'contact1' => $persons_array[0],
+                                                                        'arenas' => $arenas,
+                                                                        'buildings' => $buildings,
+                                                                        'categories' => $categories,
+                                                                        'targets' => $targets,
+                                                                        'districts' => $districts,
+                                                                        'offices' => $offices,
+                                                                        'editable' => false,
+                                                                        'change_request' => true,
+                                                                        'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                                        'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                                        'ajaxURL' => $ajaxUrl
+                                                                )
+                                        );
+                                    }
 				}
 			}
 		}

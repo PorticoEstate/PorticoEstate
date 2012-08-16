@@ -22,6 +22,14 @@
 	<form action="#" method="post">
 		<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 		<dl class="proplist-col">
+                    <div class="form-buttons">
+                        <?php
+                            if ($change_request) {?>
+                                <input type="submit" name="activity_ok" value="<?php echo lang('activity_ok')?>" />
+                                <input type="submit" name="change_request" value="<?php echo lang('change_activity')?>" />
+                        <?php }
+                        ?>
+                    </div>
 			<FIELDSET title="Hva">
 				<LEGEND>Hva</LEGEND>
 				<dt>
@@ -112,9 +120,12 @@
 				<legend>Arrangør</legend>
 				<dd>
 					<?php echo $organization->get_name();?>
-					<?php if(!$activity->get_new_org()){?>
+                                    <?php if(!$change_request)
+                                    {
+                                        if(!$activity->get_new_org()){?>
 						<a href="index.php?menuaction=activitycalendarfrontend.uiactivity.edit_organization_values&amp;organization_id=<?php echo $organization->get_id();?>"><?php echo lang('edit_organization');?></a>
-					<?php }?>
+					<?php }
+                                    }?>
 				</dd>
 				<br/>
 				<LEGEND>Kontaktperson</LEGEND>
@@ -145,7 +156,15 @@
 					?>
 				</dd>
 		    </FIELDSET>
-		</dl>
-		<div class="form-buttons">&nbsp;</div>
+                    <br/><br/>
+                    <div class="form-buttons">
+                        <?php
+                            if ($change_request) {?>
+                                <input type="submit" name="activity_ok" value="<?php echo lang('activity_ok')?>" />
+                                <input type="submit" name="change_request" value="<?php echo lang('change_activity')?>" />
+                        <?php }
+                        ?>
+                    </div>
+                </dl>
 	</form>
 </div>
