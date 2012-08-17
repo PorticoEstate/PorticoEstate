@@ -44,7 +44,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_group_list');
 			}
 			return self::$so;
@@ -72,7 +73,8 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_group_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// Get the new control group ID and return it
 				return $this->db->get_last_insert_id('controller_control_group_list', 'id');
 			}
@@ -80,7 +82,6 @@
 			{
 				return 0;
 			}
-
 		}
 
 		/**
@@ -103,7 +104,7 @@
 			//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_group_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
@@ -119,7 +120,8 @@
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.id = " . $id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()){
+			if($this->db->next_record())
+			{
 				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -148,7 +150,8 @@
 			$sql = "SELECT p.* FROM controller_control_group_list p WHERE p.control_id={$control_id} AND p.control_group_id={$control_group_id}";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()){
+			if($this->db->next_record())
+			{
 				$control_group_list = new controller_control_group_list($this->unmarshal($this->db->f('id'), 'int'));
 				$control_group_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 				$control_group_list->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -176,7 +179,7 @@
 
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id AND control_group_id = $control_group_id");
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
@@ -190,7 +193,7 @@
 			$control_id = (int) $control_id;
 			$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id");
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
@@ -222,9 +225,13 @@
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
 
 				if($returnType == "array")
+				{
 					$control_group_list[] = $control_group->toArray();
-				else	
+				}
+				else
+				{
 					$control_group_list[] = $control_group;
+				}
 			}
 
 			return $control_group_list;

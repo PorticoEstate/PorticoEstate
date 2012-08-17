@@ -43,7 +43,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_item');
 			}
 			return self::$so;
@@ -79,7 +80,8 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item', 'id');
 			}
@@ -113,7 +115,8 @@
 			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// return the new control item ID
 				return $id;
 			}
@@ -174,7 +177,7 @@
 			$control_item = null;
 			while ($this->db->next_record()) 
 			{
-				if( $counter == 0 )
+				if( !$counter )
 				{
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -189,7 +192,7 @@
 					$control_item->set_control_area_name($category[0]['name']);
 				}
 				
-				if($this->db->f('cio_id') != '')
+				if($this->db->f('cio_id'))
 				{
 					$control_item_option = new controller_control_item_option();
 					$control_item_option->set_id($this->unmarshal($this->db->f('cio_id'), 'int'));
@@ -246,7 +249,8 @@
 			//var_dump($sql);
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
@@ -294,7 +298,8 @@
 				$search_for = $this->marshal($search_for,'field');
 				$like_pattern = "'%".$search_for."%'";
 				$like_clauses = array();
-				switch($search_type){
+				switch($search_type)
+				{
 					default:
 						$like_clauses[] = "controller_control_item.title $this->like $like_pattern";
 						$like_clauses[] = "controller_control_item.what_to_do $this->like $like_pattern";
@@ -363,7 +368,8 @@
 
 		function populate(int $control_item_id, &$control_item)
 		{
-			if($control_item == null) {
+			if($control_item == null)
+			{
 				$control_item = new controller_control_item((int) $control_item_id);
 
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -389,12 +395,12 @@
 			//var_dump($sql1);
 			$this->db->query($sql1, __LINE__, __FILE__);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$results[] = array('control_group' => $this->db->f('id'));
 			}
 
 			return $results;
-			
 		}
 		
 		function location_has_component($comp, $location_code)
@@ -436,5 +442,4 @@
 			}
 			return $results;
 		}
-
 	}
