@@ -43,7 +43,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socase');
 			}
 			return self::$so;
@@ -69,7 +70,8 @@
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()) {
+			if($this->db->next_record())
+			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
 				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
@@ -108,7 +110,8 @@
 
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
 				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
 				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
@@ -122,9 +125,13 @@
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				
 				if($return_type == "return_object")
+				{
 					$cases_array[] = $case;
+				}
 				else
+				{
 					$cases_array[] = $case->toArray();
+				}
 			}
 
 			return $cases_array;
@@ -166,7 +173,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			return isset($result) ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
+			return $result ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
 		}
 
 		/**
@@ -177,7 +184,7 @@
 		*/
 		function update($case)
 		{
-			$id = $case->get_id();
+			$id = (int) $case->get_id();
 			
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
@@ -194,7 +201,7 @@
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if( isset($result) )
+			if( $result )
 			{
 				return $id;
 			}
@@ -215,7 +222,7 @@
 			$case_id = (int) $case_id;
 			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 					
-			if( isset($status) )
+			if( $status )
 			{
 				return true;
 			}

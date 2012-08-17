@@ -44,7 +44,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socheck_item');
 			}
 			return self::$so;
@@ -70,7 +71,7 @@
 
 			$result = $this->db->query('INSERT INTO controller_check_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			return isset($result) ? $this->db->get_last_insert_id('controller_check_item', 'id') : 0;
+			return $result ? $this->db->get_last_insert_id('controller_check_item', 'id') : 0;
 		}
 
 		/**
@@ -90,7 +91,7 @@
 
 			$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if( isset($result) )
+			if( $result )
 			{
 				return $id;
 			}
@@ -117,7 +118,8 @@
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()) {
+			if($this->db->next_record())
+			{
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id'), 'int'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
@@ -161,10 +163,10 @@
 			
 			$counter = 0;
 			$check_item = null;
-			while ($this->db->next_record()) {
-				
-				if( $counter == 0 ){
-									
+			while ($this->db->next_record())
+			{
+				if( $counter == 0 )
+				{
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 					$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
@@ -178,14 +180,19 @@
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
 					if($return_type == "return_array")
+					{
 						$check_item->set_control_item($control_item->toArray());
+					}
 					else
+					{
 						$check_item->set_control_item($control_item);
+					}
 						
 					$cases_array = array();
 				}
 				
-				if($this->db->f('cic_id') != ''){
+				if($this->db->f('cic_id'))
+				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
 					$case->set_status($this->unmarshal($this->db->f('cic_status'), 'int'));
@@ -199,23 +206,34 @@
 				
 				
 					if($return_type == "return_array")
+					{
 						$cases_array[] = $case->toArray();
+					}
 					else
+					{
 						$cases_array[] = $case;
+					}
 				}
 				
 				$check_item_id =  $check_item->get_id();
 				$counter++;
 			}
 			
-			if($check_item != null){
+			if($check_item != null)
+			{
 				$check_item->set_cases_array($cases_array);
 				
 				if($return_type == "return_array")
+				{
 					return $check_item->toArray();
+				}
 				else
+				{
 					return $check_item;
-			}else{
+				}
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -240,7 +258,8 @@
 			
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()) {
+			if($this->db->next_record())
+			{
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('c_id'), 'int'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
@@ -329,22 +348,35 @@
 			$sql .= "WHERE ci.check_list_id = {$check_list_id} ";
 			
 			if($status == 'open')
+			{
 				$sql .= "AND cic.status = 0 ";
+			}
 			else if($status == 'closed')
+			{
 				$sql .= "AND cic.status = 1 ";
+			}
 			else if($status == 'waiting')
+			{
 				$sql .= "AND cic.status = 2 ";
+			}
 			else if($status == 'open_or_waiting')
+			{
 				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
+			}
 			
-			if($type != null){
+			if($type != null)
+			{
 				$sql .= "AND coi.type = '$type' ";
 			}
 										
 			if($messageStatus != null & $messageStatus == 'no_message_registered')
+			{
 				$sql .= "AND cic.location_item_id IS NULL ";
+			}
 			else if($messageStatus != null &  $messageStatus == 'message_registered')
+			{
 				$sql .= "AND cic.location_item_id > 0 ";
+			}
 			
 			$sql .= "ORDER BY ci.id";
 											
@@ -352,17 +384,22 @@
 			
 			$check_item_id = 0;
 			$check_item = null;
-			while ($this->db->next_record()) {
-				
-				if( $this->db->f('ci_id', true) != $check_item_id ){
-					
-					if($check_item_id != 0){
+			while ($this->db->next_record())
+			{
+				if( $this->db->f('ci_id') != $check_item_id )
+				{	
+					if($check_item_id)
+					{
 						$check_item->set_cases_array($cases_array);
 						
 						if($return_type == "return_array")
+						{
 							$check_items_array[] = $check_item->toArray();
+						}
 						else
+						{
 							$check_items_array[] = $check_item;
+						}
 					}
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id'), 'int'));
@@ -378,14 +415,19 @@
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
 					if($return_type == "return_array")
+					{
 						$check_item->set_control_item($control_item->toArray());
+					}
 					else
+					{
 						$check_item->set_control_item($control_item);
+					}
 							
 					$cases_array = array();
 				}
 				
-				if($this->db->f('cic_id', true) != ''){
+				if( $this->db->f('cic_id') )
+				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
 					$case->set_status($this->unmarshal($this->db->f('cic_status'), 'int'));
@@ -399,24 +441,34 @@
 					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
 								
 					if($return_type == "return_array")
+					{
 						$cases_array[] = $case->toArray();
+					}
 					else
+					{
 						$cases_array[] = $case;
+					}
 				}
 				
 				$check_item_id = $check_item->get_id();
 			}
 			
-			if($check_item != null){
+			if($check_item != null)
+			{
 				$check_item->set_cases_array($cases_array);
 				
 				if($return_type == "return_array")
+				{
 					$check_items_array[] = $check_item->toArray();
+				}
 				else
+				{
 					$check_items_array[] = $check_item;
-				
+				}
 				return $check_items_array;
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -444,17 +496,22 @@
 			
 			$check_item_id = 0;
 			$check_item = null;
-			while ($this->db->next_record()) {
-				
-				if( $this->db->f('ci_id', true) != $check_item_id ){
-					
-					if($check_item_id != 0){
+			while ($this->db->next_record())
+			{
+				if( $this->db->f('ci_id') != $check_item_id )
+				{
+					if($check_item_id)
+					{
 						$check_item->set_cases_array($cases_array);
 						
 						if($return_type == "return_array")
+						{
 							$check_items_array[] = $check_item->toArray();
+						}
 						else
+						{
 							$check_items_array[] = $check_item;
+						}
 					}
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id'), 'int'));
@@ -470,14 +527,19 @@
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
 					if($return_type == "return_array")
+					{
 						$check_item->set_control_item($control_item->toArray());
+					}
 					else
+					{
 						$check_item->set_control_item($control_item);
+					}
 									
 					$cases_array = array();
 				}
 				
-				if($this->db->f('cic_id') != ''){
+				if($this->db->f('cic_id'))
+				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_status($this->unmarshal($this->db->f('cic_status'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
@@ -491,24 +553,35 @@
 				
 				
 					if($return_type == "return_array")
+					{
 						$cases_array[] = $case->toArray();
+					}
 					else
+					{
 						$cases_array[] = $case;
+					}
 				}
 				
 				$check_item_id =  $check_item->get_id();
 			}
 			
-			if($check_item != null){
+			if($check_item != null)
+			{
 				$check_item->set_cases_array($cases_array);
 				
 				if($return_type == "return_array")
+				{
 					$check_items_array[] = $check_item->toArray();
+				}
 				else
+				{
 					$check_items_array[] = $check_item;
+				}
 				
 				return $check_items_array;
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}

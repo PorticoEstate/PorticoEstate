@@ -45,7 +45,8 @@ class controller_socheck_list extends controller_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+		if (self::$so == null)
+		{
 			self::$so = CreateObject('controller.socheck_list');
 		}
 		return self::$so;
@@ -82,9 +83,12 @@ class controller_socheck_list extends controller_socommon
 		$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
 		$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));	
 			
-		if($check_list != null){
+		if($check_list != null)
+		{
 			return $check_list;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -110,19 +114,27 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "WHERE cl.id = {$check_list_id} ";
 		
 		if($status == 'open')
+		{
 			$sql .= "AND ci.status = 0 ";
+		}
 		else if($status == 'handled')
+		{
 			$sql .= "AND ci.status = 1 ";
+		}
 			
 		if($type != null)
+		{
 			$sql .= "AND coi.type = '$type'";
-							
+		}					
+
 		$this->db->query($sql);
 		
 		$counter = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
-			if($counter == 0){
+		while ($this->db->next_record())
+		{
+			if($counter == 0)
+			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'bool'));
 				$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
@@ -135,7 +147,8 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
 			}
 						
-			if($this->db->f('ci_id') != ''){
+			if($this->db->f('ci_id'))
+			{
 				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id'), 'int'));
@@ -155,10 +168,13 @@ class controller_socheck_list extends controller_socommon
 			$counter++;
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list->set_check_item_array($check_items_array);
 			return $check_list->toArray();
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -185,9 +201,12 @@ class controller_socheck_list extends controller_socommon
 		
 		$check_list_id = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {		
-			if( $this->db->f('cl_id') != $check_list_id ){
-				if($check_list_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('cl_id') != $check_list_id )
+			{
+				if( $check_list_id )
+				{
 					$check_list->set_check_item_array($check_items_array);
 					$check_list_array[] = $check_list->toArray();
 				}
@@ -214,12 +233,15 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list->set_check_item_array($check_items_array);
 			$check_list_array[] = $check_list->toArray();
 		
 			return $check_list_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -259,11 +281,14 @@ class controller_socheck_list extends controller_socommon
 		
 		$check_list_id = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 		
-			if( $this->db->f('cl_id') != $check_list_id ){
+			if( $this->db->f('cl_id') != $check_list_id )
+			{
 				
-				if($check_list_id != 0){
+				if($check_list_id)
+				{
 					$check_list_array[] = $check_list;
 				}
 				
@@ -281,10 +306,13 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list_array[] = $check_list;
 			return $check_list_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -314,9 +342,12 @@ class controller_socheck_list extends controller_socommon
 		
 		$check_list_id = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
-			if( $this->db->f('cl_id') != $check_list_id ){
-				if($check_list_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('cl_id') != $check_list_id )
+			{
+				if($check_list_id)
+				{
 					$check_list_array[] = $check_list;
 				}
 				
@@ -334,10 +365,13 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list_array[] = $check_list;
 			return $check_list_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -367,10 +401,13 @@ class controller_socheck_list extends controller_socommon
 		
 		$check_list_id = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 		
-			if( $this->db->f('cl_id') != $check_list_id ){
-				if($check_list_id != 0){
+			if( $this->db->f('cl_id') != $check_list_id )
+			{
+				if($check_list_id)
+				{
 					$check_list_array[] = $check_list;
 				}
 				
@@ -388,10 +425,13 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list_array[] = $check_list;
 			return $check_list_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -404,15 +444,19 @@ class controller_socheck_list extends controller_socommon
 	 * @param $to_date end time period
 	 * @return array with check list objects
 	 */
-	function get_num_open_cases_for_control( $cl_criteria, $from_date_ts, $to_date_ts ){
+	function get_num_open_cases_for_control( $cl_criteria, $from_date_ts, $to_date_ts )
+	{
 		
 		$sql = 	"SELECT c.id as c_id, sum(cl.num_open_cases) as count ";
 		$sql .= "FROM controller_check_list cl, controller_control c ";
 		
-		if($cl_criteria->get_component_id() > 0 && $cl_criteria->get_location_id() > 0){
+		if($cl_criteria->get_component_id() > 0 && $cl_criteria->get_location_id() > 0)
+		{
 		    $sql .= "WHERE cl.component_id = {$cl_criteria->get_component_id()} ";
 		    $sql .= "AND cl.location_id = {$cl_criteria->get_location_id()} ";
-		}else{
+		}
+		else
+		{
 		    $sql .= "WHERE cl.location_code = '{$cl_criteria->get_location_code()}' ";
 		}
 		
@@ -423,11 +467,13 @@ class controller_socheck_list extends controller_socommon
 		
 		$this->db->query($sql);
 		
-		if ($this->db->next_record() & $this->db->f('count') > 0) {
-      $control_array = array(
-			                        "id" 	=> $this->unmarshal($this->db->f('c_id'), 'int'),
-									            "count" => $this->db->f('count')
-								             );
+		if ($this->db->next_record() & $this->db->f('count') > 0)
+		{
+			$control_array = array
+			(
+				"id" 	=> $this->unmarshal($this->db->f('c_id'), 'int'),
+				"count" => $this->db->f('count')
+			);
 		}
 		
 		return $control_array;
@@ -442,7 +488,8 @@ class controller_socheck_list extends controller_socommon
 	 * @param $repeat_type_expr repeat type expression
 	 * @return array with check list objects
 	 */
-	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type_expr = null ){
+	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type_expr = null )
+	{
 		$sql = 	"SELECT c.id as c_id, ";
 		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
@@ -451,7 +498,9 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "WHERE cl.location_code = '{$location_code}' ";
 		
 		if( $repeat_type != null )
+		{
 			$sql .= "AND c.repeat_type $repeat_type_expr ";
+		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
@@ -461,11 +510,12 @@ class controller_socheck_list extends controller_socommon
 		$control_id = 0;
 		$control = null;
 		$controls_array = array();
-		while ($this->db->next_record()) {
-			
-			if( $this->db->f('c_id') != $control_id ){
-				
-				if($control_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('c_id') != $control_id )
+			{	
+				if($control_id)
+				{
 					$control->set_check_lists_array($check_lists_array);
 					$controls_array[] = $control;
 				}
@@ -491,7 +541,8 @@ class controller_socheck_list extends controller_socommon
 			$control_id =  $control->get_id();
 		}
 		
-		if($control != null){
+		if($control != null)
+		{
 			$control->set_check_lists_array($check_lists_array);
 			$controls_array[] = $control;
 		}	
@@ -522,7 +573,9 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.component_id = {$component_id} ";
 		
 		if( $repeat_type != null )
+		{
 			$sql .= "AND c.repeat_type $repeat_type_expr ";
+		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		$sql .= "ORDER BY c.id;";
@@ -532,15 +585,16 @@ class controller_socheck_list extends controller_socommon
 		$control_id = 0;
 		$control = null;
 		$controls_array = array();
-		while ($this->db->next_record()) {
-			
-			if( $this->db->f('c_id') != $control_id ){
-				
-				if($control_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('c_id') != $control_id )
+			{
+				if($control_id != 0)
+				{
 					$control->set_check_lists_array($check_lists_array);
 					$controls_array[] = $control;
 				}
-			
+
 				$control = new controller_control($this->unmarshal($this->db->f('c_id'), 'int'));
 												
 				$check_lists_array = array();
@@ -563,7 +617,8 @@ class controller_socheck_list extends controller_socommon
 			$control_id =  $control->get_id();
 		}
 		
-		if($control != null){
+		if($control != null)
+		{
 			$control->set_check_lists_array($check_lists_array);
 			$controls_array[] = $control;
 		}	
@@ -593,13 +648,16 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.location_code = '{$location_code}' ";
 		
 		if( $repeat_type != null )
+		{
 			$sql .= "AND c.repeat_type = $repeat_type ";
+		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		
 		$this->db->query($sql);
 		
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 			$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
@@ -642,13 +700,16 @@ class controller_socheck_list extends controller_socommon
 		$sql .= "AND cl.location_id = {$location_id} ";
 		
 		if( $repeat_type != null )
+		{
 			$sql .= "AND c.repeat_type = $repeat_type ";
+		}
 		
 		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
 		
 		$this->db->query($sql);
 		
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 			$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
@@ -717,7 +778,8 @@ class controller_socheck_list extends controller_socommon
 			$search_for = $this->marshal($search_for,'field');
 			$like_pattern = "'%".$search_for."%'";
 			$like_clauses = array();
-			switch($search_type){
+			switch($search_type)
+			{
 				default:
 					$like_clauses[] = "p.title $this->like $like_pattern";
 					break;
@@ -764,7 +826,8 @@ class controller_socheck_list extends controller_socommon
 
 	function populate(int $control_id, &$control)
 	{
-		if($control == null) {
+		if($control == null)
+		{
 			$start_date = date("d.m.Y",  $this->db->f('start_date'));
 			$end_date = date("d.m.Y",  $this->db->f('end_date'));
 			$control = new controller_control((int) $control_id);
@@ -846,7 +909,7 @@ class controller_socheck_list extends controller_socommon
 
 		$result = $this->db->query('UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-		if(isset($result))
+		if($result)
 		{
 			return $id;			
 		}

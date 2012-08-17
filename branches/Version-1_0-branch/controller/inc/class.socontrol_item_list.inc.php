@@ -44,7 +44,8 @@
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_item_list');
 			}
 			return self::$so;
@@ -70,7 +71,8 @@
 
 			$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_list', 'id');
 			}
@@ -98,7 +100,7 @@
 
 			$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
@@ -166,7 +168,8 @@
 			
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
@@ -175,9 +178,13 @@
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 
 				if($return_type == "return_object")
+				{
 					$results[] = $control_item;
+				}
 				else
+				{
 					$results[] = $control_item->toArray();
+				}
 			}
 
 			return $results;
@@ -203,7 +210,8 @@
 									
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
@@ -213,9 +221,13 @@
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
 				if($returnType == "return_array")
+				{
 					$results[] = $control_item->toArray();
+				}
 				else
+				{
 					$results[] = $control_item;
+				}
 			}
 			
 			return $results;
@@ -246,7 +258,8 @@
 			
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
@@ -256,9 +269,13 @@
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
 				if($returnType == "return_array")
+				{
 					$results[] = $control_item->toArray();
+				}
 				else
+				{
 					$results[] = $control_item;
+				}
 			}
 
 			return $results;
@@ -293,15 +310,22 @@
 			$control_item_id = 0;
 			$control_item = null;
 			$control_item_array = array();
-			while ($this->db->next_record()) {
-				if( $this->db->f('ci_id') != $control_item_id ){
-					if($control_item_id != 0){
+			while ($this->db->next_record())
+			{
+				if( $this->db->f('ci_id') != $control_item_id )
+				{
+					if($control_item_id)
+					{
 						$control_item->set_options_array($options_array);
 						
 						if($return_type == "return_array")
+						{
 							$control_item_array[] = $control_item->toArray();
+						}
 						else
+						{
 							$control_item_array[] = $control_item;
+						}
 					}
 						
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
@@ -319,25 +343,34 @@
 				$control_item_option->set_id($this->db->f('cio_id'));
 				
 				if($return_type == "return_array")
+				{
 					$options_array[] = $control_item_option->toArray();
+				}
 				else
+				{
 					$options_array[] = $control_item_option;
-				 
-				
+				}
+
 				$control_item_id = $control_item->get_id();
 			}
 			
-			if($control_item != null){
+			if($control_item != null)
+			{
 				$control_item->set_options_array($options_array);
 
-				if($return_type == "return_array"){
+				if($return_type == "return_array")
+				{
 					$control_item_array[] = $control_item->toArray();
-				}else{
+				}
+				else
+				{
 					$control_item_array[] = $control_item;
 				}
 				
 				return $control_item_array;
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
@@ -356,7 +389,7 @@
 
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 		
 		/**
@@ -370,7 +403,7 @@
 			$control_id = (int) $control_id;
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
@@ -393,7 +426,7 @@
 			
 			$result = $this->db->query($sql);
 			
-			return isset($result);
+			return $result;
 		}
 
 		function get_id_field_name($extended_info = false){}

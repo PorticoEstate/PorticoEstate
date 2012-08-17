@@ -38,7 +38,8 @@
 
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_item_option');
 			}
 			return self::$so;
@@ -64,7 +65,8 @@
 
 			$result = $this->db->query('INSERT INTO controller_control_item_option (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_option', 'id');
 			}
@@ -91,7 +93,7 @@
 
 			$result = $this->db->query('UPDATE controller_control_item_option SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 		
 		/**

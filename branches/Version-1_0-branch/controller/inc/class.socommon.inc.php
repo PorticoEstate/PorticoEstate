@@ -160,7 +160,8 @@
 		/**
 		 * Method for retrieving the db-object (security "forgotten")
 		 */
-		public function get_db(){
+		public function get_db()
+		{
 			return $this->db;
 		}
 
@@ -347,8 +348,10 @@
 
 		public function store(&$object)
 		{
-			if ($object->validates()) {
-				if ($object->get_id() > 0) {
+			if ($object->validates())
+			{
+				if ($object->get_id() > 0)
+				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $this->update($object);
 				}
@@ -362,5 +365,4 @@
 			// The object did not validate
 			return false;
 		}
-
 	}
