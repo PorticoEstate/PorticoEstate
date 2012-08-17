@@ -521,14 +521,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		//$link_text = "<a href='{$mailBaseURL}?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
-    		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                $office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                //$office_footer = activitycalendar_soactivity::get_instance()->get_office_description($activity->get_office());
     		if($activity->get_state() == 2)
     		{
-    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name);// . '<br/><br/>'.$office_footer;
     		}
     		else
     		{
-    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);// . '<br/><br/>'.$office_footer;
     		}
 	    	
 	    	//var_dump($subject);

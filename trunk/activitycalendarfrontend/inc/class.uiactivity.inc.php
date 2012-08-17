@@ -600,6 +600,12 @@
                                                                     {
                                                                         $this->so_group->update_group_description($activity->get_group_id(), $act_description);
                                                                         $this->so_group->update_group_contact($contact_person);
+                                                                        
+                                                                        $person_arr_tmp = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
+                                                                        foreach($person_arr_tmp as $p_t)
+                                                                        {
+                                                                                $persons_array_tmp[] = $p_t;
+                                                                        }
                                                                     }
                                                             }
                                                             else
@@ -614,7 +620,7 @@
                                                                                             'activity' 	=> $activity,
                                                                                             'organization' => $organization,
                                                                                             'group' => $group,
-                                                                                    'contact1' => $persons_array[0],
+                                                                                    'contact1' => $persons_array_tmp[0],
                                                                                             'arenas' => $arenas,
                                                                                             'buildings' => $buildings,
                                                                                             'categories' => $categories,

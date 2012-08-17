@@ -147,6 +147,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.email';
 				$columns[] = 'org.description';
 				$columns[] = 'org.address';
+                                $columns[] = 'org.addressnumber';
 				$columns[] = 'org.zip_code';
 				$columns[] = 'org.city';
 				$columns[] = 'org.district';
@@ -499,7 +500,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$description = $organization->get_description();
 		$street = $organization->get_address();
 		$streetnumber = $organization->get_addressnumber();
-		$zip_code = $organization->set_zip_code();
+		$zip_code = $organization->get_zip_code();
 		$city = $organization->get_city();
 		$district = $organization->get_district();
 		$change_type = $organization->get_change_type();

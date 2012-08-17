@@ -83,9 +83,17 @@
 				<dt><label for="street">Adresse</label></dt>
 				<dd>
 				<?php if($editable){?>
-					<input type="text" name="address" value="<?php echo $organization->get_address();?>"/>
+					<input type="text" name="address" value="<?php echo $organization->get_address();?> <?php echo $organization->get_addressnumber();?>"/>
 				<?php }else{?>
-					<?php echo $organization->get_address();?>
+					<?php echo $organization->get_address() . ' ' . $organization->get_addressnumber();;?>
+				<?php }?>
+				</dd>
+                                <dt><label for="street">Postnummer/Sted</label></dt>
+				<dd>
+				<?php if($editable){?>
+                                    <input type="text" name="zip_code" value="<?php echo $organization->get_zip_code();?>" size="6"/>&nbsp;&nbsp;<input type="text" name="city" value="<?php echo $organization->get_city();?>"/>
+				<?php }else{?>
+					<?php echo $organization->get_zip_code() . ' ' . $organization->get_city();?>
 				<?php }?>
 				</dd>
 				<dt><label for="org_description">Beskrivelse</label></dt>
