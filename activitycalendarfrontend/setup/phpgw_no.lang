@@ -57,7 +57,7 @@ building	activitycalendarfrontend	no	Kommunale bygg
 title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
-messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret.<br/>Når aktiviteten er godkjent av kulturkontoret vil den vises i kommuneportalen.
+messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret.<br/>Når aktiviteten er godkjent av kulturkontoret vil den vises på kommunens nettsider.
 messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
 change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!

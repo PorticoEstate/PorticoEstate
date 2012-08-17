@@ -195,7 +195,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	
 	function update_group_contact($contact)
 	{
-	    $id=intval($contact['id']);
+	    $id=intval($contact['original_id']);
 	    $name=$contact['name'];
 	    $phone=$contact['phone'];
 	    $mail=$contact['mail'];

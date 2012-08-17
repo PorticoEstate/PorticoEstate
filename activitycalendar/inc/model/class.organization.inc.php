@@ -18,6 +18,9 @@
 		protected $change_type;
 		protected $transferred;
 		protected $original_org_id;
+                protected $addressnumber;
+                protected $zip_code;
+                protected $city;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
