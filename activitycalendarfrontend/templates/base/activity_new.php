@@ -162,7 +162,7 @@ function allOK()
 {
 	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
 	{
-		alert("Tittel må fylles ut!");
+		alert("Navn på aktivitet må fylles ut!");
 		return false;
 	}
 	if(document.getElementById('description').value == null || document.getElementById('description').value == '')

@@ -747,21 +747,32 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         
         public function create_groups()
         {
-            //var_dump('Vi skal lage grupper!');
             $activities = $this->so_activity->get_activities_without_groups();
-            //_debug_array($activities);
             
             foreach ($activities as $a)
             {
                 $group_info = array();
-                $group_info['name'] = $a['title'];
+                $title_new = $a['title'];
+                    if(strlen($title_new) > 50)
+		{
+			$title_new = substr($title_new,0,49);
+		}
+                $group_info['name'] = $title_new;
                 $group_info['organization_id'] =  $a['organization'];
                 $group_info['description'] = $a['description'];
                 
+                //add new group
+                $new_group_id = $this->so_group->add_new_group_from_activity($group_info);
+                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id);
+                $this->so_activity->update_activity_group($a['id'], $new_group_id);
                 $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
-
-                _debug_array($group_info);
-                _debug_array($cp);
+                foreach ($cp as $c)
+                {
+                    $c->set_group_id($new_group_id);
+                    $contact_id = $this->so_contact->add_new_group_contact($c);
+                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name']);
+                    //_debug_array($c);
+                }
             }
         }
 }
