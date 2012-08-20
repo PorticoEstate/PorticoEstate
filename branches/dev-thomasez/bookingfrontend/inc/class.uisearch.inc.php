@@ -106,16 +106,33 @@
 					'layout' => $layout,
 					'resource' => $resource,
 				);
-
-				// Get frontpage picture documents
-				$sodoc = CreateObject('booking.sodocument_resource');
-				$documents = $sodoc->read( array( "filters" => array( "category" => booking_sodocument::CATEGORY_FRONTPAGE_PICTURE ) ) );
-
-				// Insert into $params if there are pictures
-				if( $documents['total_records'] > 0 ) {
+				
+				// Get frontpage picture documents - Resources
+				$sodocres = CreateObject('booking.sodocument_resource');
+				$resource_documents = $sodocres->read( array( "filters" => array( "category" => booking_sodocument::CATEGORY_FRONTPAGE_PICTURE ) ) );
+				
+				// Insert into $params if there are pictures - Resources
+				if( $resource_documents['total_records'] > 0 ) {
 					// Convert nl2br on description
-					foreach( $documents['results'] as $key => $data ) { $documents['results'][$key]['description'] = nl2br( $documents['results'][$key]['description'] ); }
-					$params['frontimages'] = $documents['results'];
+					foreach( $resource_documents['results'] as $key => $data ) {
+						$resource_documents['results'][$key]['description'] = nl2br( $resource_documents['results'][$key]['description'] );
+						$resource_documents['results'][$key]['type'] = "resource";
+					}
+					$params['frontimages'] = $resource_documents['results'];
+				}
+			
+				// Get frontpage picture documents - Buildings
+				$sodocbuild = CreateObject('booking.sodocument_building');
+				$building_documents = $sodocbuild->read( array( "filters" => array( "category" => booking_sodocument::CATEGORY_FRONTPAGE_PICTURE ) ) );
+
+				// Insert into $params if there are pictures - Buildings
+				if( $building_documents['total_records'] > 0 ) {
+					// Convert nl2br on description
+					foreach( $building_documents['results'] as $key => $data ) {
+						$building_documents['results'][$key]['description'] = nl2br( $building_documents['results'][$key]['description'] );
+						$building_documents['results'][$key]['type'] = "building";
+					}
+					$params['frontimages'] = array_merge( $params['frontimages'], $building_documents['results'] );
 				}
 			}
 //			echo "<pre>";print_r($resource);exit;

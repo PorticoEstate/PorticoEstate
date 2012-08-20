@@ -104,17 +104,32 @@
 				<xsl:when test="frontimages">
 					<div id="frontimagesbox">
 						<xsl:for-each select="frontimages">
-							<a>
-								<xsl:attribute name="href">index.php?menuaction=bookingfrontend.uiresource.show&amp;id=<xsl:value-of select="owner_id"/></xsl:attribute>
-								<div class="frontimagebox">
-									<div class="frontimage">
-										<xsl:attribute name="style">
-											background-image: url( 'index.php?menuaction=bookingfrontend.uidocument_resource.download&amp;id=<xsl:value-of select="id"/>' );
-										</xsl:attribute>
+							<xsl:if test="type='resource'">
+								<a>
+									<xsl:attribute name="href">index.php?menuaction=bookingfrontend.uiresource.show&amp;id=<xsl:value-of select="owner_id"/></xsl:attribute>
+									<div class="frontimagebox">
+										<div class="frontimage">
+											<xsl:attribute name="style">
+												background-image: url( 'index.php?menuaction=bookingfrontend.uidocument_resource.download&amp;id=<xsl:value-of select="id"/>' );
+											</xsl:attribute>
+										</div>
+										<xsl:value-of disable-output-escaping="yes" select="description"/>
 									</div>
-									<xsl:value-of disable-output-escaping="yes" select="description"/>
-								</div>
-							</a>
+								</a>
+							</xsl:if>
+							<xsl:if test="type='building'">
+								<a>
+									<xsl:attribute name="href">index.php?menuaction=bookingfrontend.uibuilding.show&amp;id=<xsl:value-of select="owner_id"/></xsl:attribute>
+									<div class="frontimagebox">
+										<div class="frontimage">
+											<xsl:attribute name="style">
+												background-image: url( 'index.php?menuaction=bookingfrontend.uidocument_building.download&amp;id=<xsl:value-of select="id"/>' );
+											</xsl:attribute>
+										</div>
+										<xsl:value-of disable-output-escaping="yes" select="description"/>
+									</div>
+								</a>
+							</xsl:if>
 						</xsl:for-each>
 						<div class="clr"></div>
 					</div>
