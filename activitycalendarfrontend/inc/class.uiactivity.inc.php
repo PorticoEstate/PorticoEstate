@@ -551,9 +551,11 @@
                                                     if($arena_arr[0] == 'i')
                                                     {
                                                         $activity->set_internal_arena($arena_arr[1]);
+                                                        $activity->set_arena(0);
                                                     }
                                                     else
                                                     {
+                                                        $activity->set_internal_arena(0);
                                                         $activity->set_arena($arena_arr[1]);
                                                     }
                                                     //$district_array = phpgw::get_var('district');
