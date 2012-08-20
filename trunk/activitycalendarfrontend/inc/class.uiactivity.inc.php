@@ -814,6 +814,7 @@
 					$org_info['orgnr'] = phpgw::get_var('orgno');
 					$org_info['homepage'] = phpgw::get_var('homepage');
 					$org_info['street'] = phpgw::get_var('address');
+                                        $org_info['streetnumber'] = phpgw::get_var('number');
 					$org_info['zip'] = phpgw::get_var('postzip');
 					$org_info['postaddress'] = phpgw::get_var('postaddress');
 					$org_info['status'] = "change";

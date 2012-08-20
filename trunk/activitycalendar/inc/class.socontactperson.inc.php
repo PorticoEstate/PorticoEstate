@@ -406,4 +406,36 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		return isset($result);
 	}
+        
+        function add_new_group_contact($contact)
+	{
+            $name = $contact->get_name();
+            $phone = $contact->get_phone();
+            $mail = $contact->get_email();
+            $group_id = $contact->get_group_id();
+
+            $columns[] = 'name';
+            $columns[] = 'phone';
+            $columns[] = 'email';
+            $columns[] = 'group_id';
+            $cols = implode(',',$columns);
+
+            $values[] = "'{$name}'";
+            $values[] = "'{$phone}'";
+            $values[] = "'{$mail}'";
+            $values[] = $group_id;
+            $vals = implode(',',$values);
+
+            $sql = "INSERT INTO bb_group_contact ({$cols}) VALUES ({$vals})";
+            $result = $this->db->query($sql, __LINE__, __FILE__);
+            
+            if(isset($result))
+            {
+                return $this->db->get_last_insert_id('bb_group_contact', 'id');
+            }
+            else
+            {
+                return 0;
+            }
+	}
 }

@@ -1494,4 +1494,18 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
             return isset($result);
         }
+        
+        function update_activity_group($activity_id, $group_id)
+        {
+            $id = intval($activity_id);
+            $g_id = intval($group_id);
+			
+            $values = "group_id = " . $g_id;
+            var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
+            //die;
+
+            $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
+
+            return isset($result);
+        }
 }
