@@ -1,5 +1,30 @@
 <?php ?>
  <script type="text/javascript">
+     $(document).ready(function(){
+        var ele = document.getElementById("toggleText3");
+        var text = document.getElementById("displayText3");
+        ele.style.display = "none";
+        ele.style.visibility = "hidden";
+        text.innerHTML = "Ikke i listen? Registrer ny organisasjon";
+     });
+     
+     $(function(){
+         $("#displayText3").click(function(){
+            var ele = document.getElementById("toggleText3");
+            var org_id = document.getElementById("organization_id_hidden");
+            var text = document.getElementById("displayText3");
+            if(ele.style.display == "block") {
+                ele.style.display = "none";
+                text.innerHTML = "Registrer ny organisasjon";
+            }
+            else {
+                    ele.style.display = "block";
+                    ele.style.visibility = "visible";
+                    text.innerHTML = "";
+                    org_id.value = "new_org";
+            }
+         })
+     });
  function toggle() {
  	var ele = document.getElementById("toggleText");
  	var text = document.getElementById("displayText");
@@ -164,8 +189,8 @@ function isOK()
     				</select>
     				<br/>
     			</dd>
-    			<a id="displayText3" href="javascript:toggle3();">Ikke i listen? Registrer ny organisasjon</a><br/>
-				<DIV style="overflow: auto; display: none; visibility: hidden;" id="toggleText3">
+    			<a id="displayText3" href="#">Ikke i listen? Registrer ny organisasjon</a><br/>
+				<DIV style="overflow: auto;" id="toggleText3">
 					<DIV style="overflow: auto;">
   						<P>Registrer ny organisasjon <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
   							href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
