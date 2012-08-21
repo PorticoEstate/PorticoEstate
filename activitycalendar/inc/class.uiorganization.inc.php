@@ -96,6 +96,15 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
+                                if(isset($district) && is_numeric($district))
+                                {
+                                    //get district name before storing to booking
+                                    $district_name = $so_activity->get_district_from_id($district);
+                                }
+                                else
+                                {
+                                    $district_name = "";
+                                }
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
@@ -123,7 +132,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['zip'] = $zip;
                                 $org_info['postaddress'] = $city;
 				$org_info['activity_id'] = '';
-				$org_info['district'] = $district;
+				$org_info['district'] = $district_name;
 				
 				$contact1_id = phpgw::get_var('contact1_id');
 				$contact2_id = phpgw::get_var('contact2_id');
@@ -178,6 +187,15 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$original_org_id = phpgw::get_var('original_org_id');
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
+                                if(isset($district) && is_numeric($district))
+                                {
+                                    //get district name before storing to booking
+                                    $district_name = $so_activity->get_district_from_id($district);
+                                }
+                                else
+                                {
+                                    $district_name = "";
+                                }
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
@@ -203,7 +221,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['zip_code'] = $zip;
                                 $org_info['city'] = $city;
 				$org_info['activity_id'] = '';
-				$org_info['district'] = $district;
+				$org_info['district'] = $district_name;
                                 $org_info['orgid'] = $original_org_id;
 				
 				$contact1_id = phpgw::get_var('contact1_id');

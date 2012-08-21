@@ -629,6 +629,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$street_2 = $org_info['streetnumber'];
 		$street = $street_1 . ' ' . $street_2;
 		$zip_code = $org_info['zip'];
+                $district = $org_info['district'];
 		$city = $org_info['postaddress'];
 		$activity_id = 1;
 		$show_in_portal = 1; 
@@ -655,7 +656,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "'{$street}'";
 		$values[] = "'{$zip_code}'";
 		$values[] = "'{$city}'";
-		$values[] = "''";
+		$values[] = "'{$district}'";
 		$values[] = "'{$orgnr}'";
 		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
@@ -750,7 +751,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			'street = ' . $this->marshal($street, 'string'),
 			'zip_code = ' . $this->marshal($zip_code, 'string'),
 			'city = ' . $this->marshal($city, 'string'),
-			'district = ' . $this->marshal($district),
+			'district = ' . $this->marshal($district, 'string'),
 			'activity_id = ' . $this->marshal($activity_id, 'int'),
 			'show_in_portal = 1'
 		);
@@ -849,6 +850,20 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	function update($organization)
 	{
 		return false;
+	}
+        
+        function update_org_district_local($org_id, $district_id)
+	{
+            $sql = "UPDATE activity_organization SET district='{$district_id}' WHERE ID={$org_id}";
+            $result = $this->db->query($sql, __LINE__, __FILE__);
+            if(isset($result))
+            {
+            	return true;
+            }
+            else
+            {
+		return false;
+            }
 	}
 }
 ?>
