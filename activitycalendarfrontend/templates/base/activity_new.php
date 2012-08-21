@@ -6,6 +6,14 @@
 ?>
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+    var text = document.getElementById("displayText");
+    //ele.hide();
+    $("#toggleText").hide();
+    text.innerHTML = "Ikke i listen? Registrer ny organisasjon";
+ });
+ 
 function toggle() {
 	var ele = document.getElementById("toggleText");
 	var text = document.getElementById("displayText");
@@ -20,30 +28,7 @@ function toggle() {
 		arenahidden.value="new_arena";
 	}
 }
-function toggle2() {
-	var ele = document.getElementById("toggleText2");
-	var text = document.getElementById("displayText2");
-	if(ele.style.display == "block") {
-    		ele.style.display = "none";
-		text.innerHTML = "Legg til alternativ kontaktperson";
-  	}
-	else {
-		ele.style.display = "block";
-		text.innerHTML = "";
-	}
-}
-function toggle3() {
-	var ele = document.getElementById("toggleText3");
-	var text = document.getElementById("displayText3");
-	if(ele.style.display == "block") {
-    		ele.style.display = "none";
-		text.innerHTML = "Registrer ny organisasjon";
-  	}
-	else {
-		ele.style.display = "block";
-		text.innerHTML = "(X)";
-	}
-}
+
 function showhide(id)
 {
     if(id == "org")
@@ -377,7 +362,8 @@ function allOK()
     					<BR>
     					<A id="displayText" href="javascript:toggle();">Ikke i listen? Registrer nytt lokale</A>
     				</dd>
-                    <DIV style="overflow: auto; display: none;" id="toggleText">
+                    <DIV style="overflow: auto;" id="toggleText">
+                    	<dl>
                     	<DT>
                       		<label for="new_arena"><?php echo lang('register_new_arena') ?></label>
                       			<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
@@ -410,6 +396,7 @@ function allOK()
                       		<INPUT name="arena_postaddress" size="40" type="text">
                       	</DT>
                       	<BR>
+                      	</dl>
                   	</DIV>
     				<dt>
     					<br/>
@@ -451,19 +438,7 @@ function allOK()
                   <DT><LABEL for="contact_mail">E-post (*)</LABEL></DT>
                   <DD><INPUT name="contact_mail" id="contact_mail" size="50" type="text"></DD>
                   <DT><LABEL for="contact2_mail2">Gjenta e-post (*)</LABEL></DT>
-                  <DD><INPUT name="contact_mail2" id="contact_mail2" size="50" type="text"></DD><!-- <a id="displayText2" href="javascript:toggle2();">Legg til alternativ kontaktperson</a><br>
-				<div id="toggleText2" style="display: none">
-				
-				Alternativ kontaktperson <a href="hjelp.html" target="name"
-onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;"
-><img src="images/hjelp.gif" alt="Hjelp"></a><br>
-				<dt><label for="contact1_name">Navn (*)</label></dt>
-				<dd><input name="org_contact1_name" size="80" type="text"></dd>
-				<dt><label for="contact1_phone">Telefon (*)</label></dt>
-				<dd><input name="org_contact1_phone" type="text"></dd>
-				<dt><label for="contact1_mail">E-post (*)</label></dt>
-				<dd><input name="org_contact1_mail" type="text" size="50"></dd>
-				</div><br> -->
+                  <DD><INPUT name="contact_mail2" id="contact_mail2" size="50" type="text"></DD>
 				</FIELDSET>
     			<FIELDSET>
     				<BR>
