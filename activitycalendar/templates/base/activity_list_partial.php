@@ -185,6 +185,10 @@
 	{
 		$uid = $GLOBALS['phpgw_info']['user']['account_id'];
 		$user_office =  activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
+                if($user_office && $user_office == 1)
+                    $user_office = 2;
+                else if($user_office == 2)
+                    $user_office = 1;
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">

@@ -386,7 +386,7 @@ mail_body_state_5	activitycalendar	no	Ditt forslag til aktivitet er behandlet, m
 send_mail	activitycalendar	no	Send e-post
 marked_as	activitycalendar	no	Status
 address_number	activitycalendar	no	Husnummer
-changed_organizations_groups	activitycalendar	no	Endrede organisasjoner/grupper
+changed_organizations_groups	activitycalendar	no	Endrede organisasjoner
 changed_org_group	activitycalendar	no	Endringer
 building	activitycalendar	no	Kommunale bygg
 Download as excel	activitycalendar	no	Last ned i Excel-format
