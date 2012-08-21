@@ -63,10 +63,9 @@ YAHOO.util.Event.onDOMReady(function()
 					}
 					?>
 				</select>
-				<br/><br/>
 			</dd>
 			<dt>
-				<?php echo lang('activity_edit_helptext');?><br/><br/>
+				&nbsp;
 			</dt>
 			<dd>
 				<div id="activity_select">

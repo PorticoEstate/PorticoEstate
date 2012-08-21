@@ -305,12 +305,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						$subject = lang('mail_subject_update');
 						$body = lang('mail_body_state_' . $new_state, $kontor);
 						
-						if(isset($g_id) && $g_id > 0)
+						if($activity->get_group_id() && $activity->get_group_id() > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
 							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(),$subject,$body);
 						}
-						else if (isset($o_id) && $o_id > 0)
+						else if ($activity->get_organization_id() && $activity->get_organization_id() > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
 							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(),$subject,$body);
@@ -521,14 +521,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		//$link_text = "<a href='{$mailBaseURL}?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
-    		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                $office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                //$office_footer = activitycalendar_soactivity::get_instance()->get_office_description($activity->get_office());
     		if($activity->get_state() == 2)
     		{
-    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name);// . '<br/><br/>'.$office_footer;
     		}
     		else
     		{
-    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);// . '<br/><br/>'.$office_footer;
     		}
 	    	
 	    	//var_dump($subject);
@@ -746,22 +747,32 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         
         public function create_groups()
         {
-            //var_dump('Vi skal lage grupper!');
             $activities = $this->so_activity->get_activities_without_groups();
-            //_debug_array($activities);
             
             foreach ($activities as $a)
             {
                 $group_info = array();
-                $group_info['name'] = $a['title'];
+                $title_new = $a['title'];
+                    if(strlen($title_new) > 50)
+		{
+			$title_new = substr($title_new,0,49);
+		}
+                $group_info['name'] = $title_new;
                 $group_info['organization_id'] =  $a['organization'];
                 $group_info['description'] = $a['description'];
                 
+                //add new group
+                $new_group_id = $this->so_group->add_new_group_from_activity($group_info);
+                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id);
+                $this->so_activity->update_activity_group($a['id'], $new_group_id);
                 $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
-
-                _debug_array($group_info);
-                _debug_array($cp);
+                foreach ($cp as $c)
+                {
+                    $c->set_group_id($new_group_id);
+                    $contact_id = $this->so_contact->add_new_group_contact($c);
+                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name']);
+                    //_debug_array($c);
+                }
             }
         }
 }
-?>

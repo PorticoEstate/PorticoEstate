@@ -122,7 +122,6 @@
 				$ok = $this->so_control->register_control_to_location($control_id, $values);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index', 'control_id' => $control_id));
-
 			}
 			else
 			{
@@ -177,16 +176,22 @@
 						'name'	=> $cat_list['name'],
 					);		
 				}
-						
+				
+				$control = $this->so_control->get_single( $control_id ); 
+				$current_control_area_id = $control->get_control_area_id();
+				$controls_array = $this->so_control->get_controls_by_control_area( $current_control_area_id ); 		
+				
 				$data = array(
-					'view'								=> "register_control_to_location",
-					'control_id'					=> $control_id,
-					'control_areas_array'	=> $control_areas_array,
-					'filter_form' 				=> array(
-					'building_types' 			=> $building_types,
-					'category_types' 			=> $category_types,
-					'district_list' 			=> $district_list,
-					'part_of_town_list' 	=> $part_of_town_list
+					'view'										=> "register_control_to_location",
+					'control_areas_array'			=> $control_areas_array,
+				  'controls_array'			    => $controls_array,
+				  'current_control_id'			=> $control_id,
+					'current_control_area_id' => $current_control_area_id,
+					'filter_form' 						=> array(
+						'building_types' 					=> $building_types,
+						'category_types' 					=> $category_types,
+						'district_list' 					=> $district_list,
+						'part_of_town_list' 			=> $part_of_town_list
 					),
 					'datatable' => array(
 						'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control','control_id_init'	=> $control_id)),

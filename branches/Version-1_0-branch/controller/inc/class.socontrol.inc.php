@@ -127,6 +127,7 @@
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
 			$role_id = (int) $role_id;
+			$repeat_type = (int) $repeat_type;
 
 			$controls_array = array();
 			
@@ -136,12 +137,12 @@
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql .= "WHERE cll.location_code = '$location_code' ";
 			
-			if( is_numeric($repeat_type) )
+			if( $repeat_type )
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
 
-			if( is_numeric($role_id))
+			if( $role_id )
 			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}
@@ -203,6 +204,8 @@
 		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
 			$role_id = (int) $role_id;
+			$repeat_type = (int) $repeat_type;
+
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name, ccl.location_id, ccl.component_id ";
@@ -212,11 +215,11 @@
 			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
 			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
 			
-			if( is_numeric($repeat_type) )
+			if( $repeat_type )
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if( is_numeric($role_id))
+			if( $role_id)
 			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}
@@ -280,6 +283,7 @@
 		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = 0, $filter = null)
 		{
 			$role_id = (int) $role_id;
+			$repeat_type = (int) $repeat_type;
 
 			$controls_array = array();
 			
@@ -294,11 +298,11 @@
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			$sql  .= "AND bim_item.type = bim_type.id ";
 			
-			if( is_numeric($repeat_type))
+			if( $repeat_type)
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if( is_numeric($role_id))
+			if( $role_id)
 			{
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}

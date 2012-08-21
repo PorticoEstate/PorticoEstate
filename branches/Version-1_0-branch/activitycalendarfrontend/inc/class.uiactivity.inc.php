@@ -551,9 +551,11 @@
                                                     if($arena_arr[0] == 'i')
                                                     {
                                                         $activity->set_internal_arena($arena_arr[1]);
+                                                        $activity->set_arena(0);
                                                     }
                                                     else
                                                     {
+                                                        $activity->set_internal_arena(0);
                                                         $activity->set_arena($arena_arr[1]);
                                                     }
                                                     //$district_array = phpgw::get_var('district');
@@ -600,6 +602,12 @@
                                                                     {
                                                                         $this->so_group->update_group_description($activity->get_group_id(), $act_description);
                                                                         $this->so_group->update_group_contact($contact_person);
+                                                                        
+                                                                        $person_arr_tmp = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
+                                                                        foreach($person_arr_tmp as $p_t)
+                                                                        {
+                                                                                $persons_array_tmp[] = $p_t;
+                                                                        }
                                                                     }
                                                             }
                                                             else
@@ -614,7 +622,7 @@
                                                                                             'activity' 	=> $activity,
                                                                                             'organization' => $organization,
                                                                                             'group' => $group,
-                                                                                    'contact1' => $persons_array[0],
+                                                                                    'contact1' => $persons_array_tmp[0],
                                                                                             'arenas' => $arenas,
                                                                                             'buildings' => $buildings,
                                                                                             'categories' => $categories,
@@ -808,6 +816,7 @@
 					$org_info['orgnr'] = phpgw::get_var('orgno');
 					$org_info['homepage'] = phpgw::get_var('homepage');
 					$org_info['street'] = phpgw::get_var('address');
+                                        $org_info['streetnumber'] = phpgw::get_var('number');
 					$org_info['zip'] = phpgw::get_var('postzip');
 					$org_info['postaddress'] = phpgw::get_var('postaddress');
 					$org_info['status'] = "change";

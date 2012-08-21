@@ -195,7 +195,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	
 	function update_group_contact($contact)
 	{
-	    $id=intval($contact['id']);
+	    $id=intval($contact['original_id']);
 	    $name=$contact['name'];
 	    $phone=$contact['phone'];
 	    $mail=$contact['mail'];
@@ -536,6 +536,41 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			return $group;
 		}
 		
+	}
+        
+        function add_new_group_from_activity($group_info)
+	{
+            $name = $group_info['name'];
+            $orgid = $group_info['organization_id'];
+            $description = $group_info['description'];
+            $activity_id = 1;
+            $show_in_portal = 1; 
+
+            $columns[] = 'name';
+            $columns[] = 'description';
+            $columns[] = 'organization_id';
+            $columns[] = 'activity_id';
+            $columns[] = 'show_in_portal';
+            $cols = implode(',',$columns);
+
+            $values[] = $this->marshal($name, 'string');
+            $values[] = $this->marshal($description, 'string');
+            $values[] = "'{$orgid}'";
+            $values[] = $this->marshal($activity_id, 'int');
+            $values[] = $show_in_portal;
+            $vals = implode(',',$values);
+
+            $sql = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
+            $result = $this->db->query($sql, __LINE__, __FILE__);
+            
+            if(isset($result))
+            {
+                return $this->db->get_last_insert_id('bb_group', 'id');
+            }
+            else
+            {
+                return 0;
+            }
 	}
 }
 ?>

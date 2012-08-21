@@ -63,6 +63,7 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('rental/templates/base/css/base.css');
 			self::add_javascript('activitycalendar', 'activitycalendar', 'common.js');
+                        self::add_javascript('activitycalendar', 'activitycalendar', 'jquery.js');
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);

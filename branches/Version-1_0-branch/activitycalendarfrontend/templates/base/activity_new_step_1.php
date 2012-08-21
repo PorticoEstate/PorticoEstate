@@ -1,5 +1,23 @@
 <?php ?>
  <script type="text/javascript">
+     $(document).ready(function(){
+        var ele = document.getElementById("toggleText3");
+        var text = document.getElementById("displayText3");
+        //ele.hide();
+        $("#toggleText3").hide();
+        text.innerHTML = "Ikke i listen? Registrer ny organisasjon";
+     });
+     
+     $(function(){
+         $("#displayText3").click(function(){
+            var ele = document.getElementById("toggleText3");
+            var org_id = document.getElementById("organization_id_hidden");
+            var text = document.getElementById("displayText3");
+            $("#toggleText3").show();
+                    text.innerHTML = "";
+                    org_id.value = "new_org";
+         })
+     });
  function toggle() {
  	var ele = document.getElementById("toggleText");
  	var text = document.getElementById("displayText");
@@ -29,15 +47,32 @@
  	var org_id = document.getElementById("organization_id_hidden");
  	var text = document.getElementById("displayText3");
  	if(ele.style.display == "block") {
-     	ele.style.display = "none";
- 		text.innerHTML = "Registrer ny organisasjon";
+            ele.style.display = "none";
+            text.innerHTML = "Registrer ny organisasjon";
    	}
  	else {
  		ele.style.display = "block";
+                ele.style.visibility = "visible";
  		text.innerHTML = "";
  		org_id.value = "new_org";
  	}
  }
+
+ function toggle4() {
+	 	var ele = document.getElementById("toggleText3");
+	 	var org_id = document.getElementById("organization_id_hidden");
+	 	var text = document.getElementById("displayText3");
+	 	if(ele.style.display == "block") {
+	 		document.getElementById("toggleText3").style.display = "none";
+	            text.innerHTML = "Registrer ny organisasjon";
+	   	}
+	 	else {
+	 		document.getElementById("toggleText3").style.display = "block";
+	 		document.getElementById("toggleText3").style.visibility = "visible";
+	 		text.innerHTML = "";
+	 		org_id.value = "new_org";
+	 	}
+	 }
 function showhide(id)
 {
      if(id == "org")
@@ -141,8 +176,8 @@ function isOK()
     	<h1><?php echo lang('new_activity_helptext') ?></h1>
     	<form action="#" method="post">
     	<input type="hidden" name="organization_id_hidden" id="organization_id_hidden" value="" />
+    		<fieldset>
     		<dl class="proplist-col">
-    			<fieldset>
     				<legend><?php echo lang('responsible') ?></legend>
     			
     			<dt>
@@ -163,15 +198,17 @@ function isOK()
     				</select>
     				<br/>
     			</dd>
-    			<a id="displayText3" href="javascript:toggle3();">Ikke i listen? Registrer ny organisasjon</a><br/>
-				<DIV style="overflow: auto; display: none;" id="toggleText3">
-					<DIV style="overflow: auto;">
+    			
+    			<a id="displayText3" href="#">Ikke i listen? Registrer ny organisasjon</a><br/>
+    			<dt>
+				<DIV style="overflow: hidden" id="toggleText3">
+					<dl>
+					<DIV style="overflow: hidden;">
   						<P>Registrer ny organisasjon <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
   							href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
   							target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A>
   						</P> 
   						Felt merket med (*) er påkrevde felt <BR/><BR/>
-  						<P></P>
   						
   						<dt><label for="orgname">Organisasjonsnavn (*)</label>
       						<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
@@ -202,7 +239,7 @@ function isOK()
 						<IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A></LABEL>
 					</DT>
                 	<DD><INPUT name="homepage" value="http://" size="80" type="text"></DD><BR/><BR/>
-                	<DIV style="overflow: auto;">
+                	<DIV style="overflow: hidden;">
                 		Kontaktperson for organisasjonen <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" target="name">
                 		<IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A><BR/>
                         <DT><LABEL for="contact1_name">Navn (*)</LABEL></DT>
@@ -214,14 +251,15 @@ function isOK()
                         <DT><LABEL for="contact2_mail">Gjenta e-post (*)</LABEL></DT>
                         <DD><INPUT name="org_contact2_mail" id="org_contact2_mail" size="50" type="text"></DD>
 					</DIV>
+					</dl>
 				</DIV>
-				</fieldset>
+				</dt>
 				<br/><br/>
     			<div class="form-buttons">
     				<input type="submit" name="step_1" value="<?php echo lang('next') ?>" onclick="return isOK();"/>
     			</div>
     		</dl>
-    		
+    		</fieldset>
     	</form>
 	</div>
 </div>
