@@ -115,3 +115,20 @@ contact_person	activitycalendarfrontend	no	Kontaktperson for aktiviteten
 activity_ok_message	activitycalendarfrontend	no	Aktiviteten er lagret uten endringer
 activity_ok	activitycalendarfrontend	no	Opplysningene er korrekte
 change_activity	activitycalendarfrontend	no	Endre opplysningene
+help_choose_activity_org	activitycalendarfrontend	no	I aktivitetsoversikten må en aktivitet alltid tilhøre en organisasjon.\\n\\n Dersom en organisasjonen er oppført med andre aktiviteter fra før, skal du velge denne i stedet for å registrere ny. Du kan søke deg frem til din organisasjon ved å skrive i feltet.\\n\\nDersom organisasjon ikke er registrert tidligere velger du «Registrer ny organisasjon.\\n\\nDersom det ikke er et skarpt skille mellom organisasjon og aktivitet, skal du likevel velge organisasjon/registrere ny organisasjon. Det gjør ingen ting om enkelte opplysninger, som f.eks. kontaktinformasjon, skrives inn to ganger.
+help_organization_name	activitycalendarfrontend	no	Skriv inn organisasjonens navn her.
+help_new_activity_org	activitycalendarfrontend	no	I aktivitetsoversikten må en aktivitet alltid tilhøre en organisasjon. \\n\\nDersom det ikke er et skarpt skille mellom organisasjon og aktivitet, skal du likevel skrive inn navn i feltet for organisasjonsnavn. Det gjør ingen ting om navnet på organisasjonen er det samme som navnet på aktiviteten.
+help_streetaddress	activitycalendarfrontend	no	For å unngå feil innskriving av gateadresse, er feltet for «Gateadresse» koplet mot kommunens gateregister med oversikt over alle gatenavn i Bergen. Begynn å fylle ut feltet og velg rett gatenavn som løsningen foreslår.
+help_homepage	activitycalendarfrontend	no	Dersom organisasjonen/aktiviteten har egen internettside, så kan du skrive den inn her.
+help_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for organisasjonen.\\n\\nDersom organisasjon og aktivitet har samme kontaktperson, skal du likevel skrive inn kontaktopplysninger. Det gjør ingen ting om disse opplysningene senere også skrives inn på aktiviteten.\\n\\nI aktivitetsoversikten på kommunens internettsider, er det opplysningene skrevet inn på kontaktperson for aktiviteten som vil vises, ikke kontaktperson for organisasjonen.
+help_new_activity_title	activitycalendarfrontend	no	Skriv inn navnet på aktiviteten.
+help_new_activity_description	activitycalendarfrontend	no	Gi en KORT beskrivelse av hva aktiviteten går ut på. Skriv helst kun én setning, maksimalt to.
+help_new_activity_category	activitycalendarfrontend	no	Velg den kategorien som passer best for din aktivitet.
+help_new_activity_target	activitycalendarfrontend	no	Velg en eller flere målgrupper.
+help_new_activity_spec_adapt	activitycalendarfrontend	no	Hak av dersom aktiviteten passer for utviklingshemmede.
+help_new_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere. \\n\\nVelg eksisterende lokale eller registrer nytt, dersom det ikke finnes i listen.
+help_new_activity_district	activitycalendarfrontend	no	Velg bydelen hvor aktiviteten foregår.
+help_new_activity_time	activitycalendarfrontend	no	Skriv inn dag og klokkeslett når aktiviteten foregår, f.eks. slik «Mandag kl. 20 – 21» eller slik «Hver andre tirsdag kl. 19 – 21».
+help_new_activity_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for aktiviteten.
+help_new_activity_office	activitycalendarfrontend	no	Det kommunale kulturkontoret mottar registreringen. Velg kulturkontoret i den bydelen hvor aktiviteten foregår.
+help_edit_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere.

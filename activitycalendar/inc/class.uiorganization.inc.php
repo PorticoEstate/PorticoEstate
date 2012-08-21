@@ -176,7 +176,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			else if(isset($_POST['update_organization'])) // The user has pressed the store button
 			{
 				$original_org_id = phpgw::get_var('original_org_id');
-				$org_info['orgid'] = $original_org_id;
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
 				$homepage = phpgw::get_var('homepage');
@@ -185,8 +184,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$address = phpgw::get_var('address');
                                 $zip = phpgw::get_var('zip_code');
                                 $city = phpgw::get_var('city');
-				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-				//$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
 				
 				$org_info = array();
@@ -207,6 +204,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
                                 $org_info['city'] = $city;
 				$org_info['activity_id'] = '';
 				$org_info['district'] = $district;
+                                $org_info['orgid'] = $original_org_id;
 				
 				$contact1_id = phpgw::get_var('contact1_id');
 				$contact2_id = phpgw::get_var('contact2_id');
