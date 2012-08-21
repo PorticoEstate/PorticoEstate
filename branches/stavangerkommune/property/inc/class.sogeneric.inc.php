@@ -481,6 +481,21 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name'			=> 'department',
+								'descr'			=> lang('department'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'department',	'selected' => '##department##')
+								)
 							)
 						),
 						'custom_criteria' => array
@@ -533,6 +548,13 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
 							)
 						),
 						'edit_msg'	=> lang('edit'),
@@ -1495,6 +1517,57 @@
 					);
 				break;
 
+			case 'department':
+
+				$info = array
+					(
+						'table' 			=> 'fm_department',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 60,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'			=> 'parent_id',
+								'descr'			=> lang('parent'),
+								'type'			=> 'select',
+								'sortable'		=> true,
+								'nullable'		=> true,
+								'filter'		=> false,
+								'role'			=> 'parent',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'department', 'role' => 'parent', 'selected' => '##parent_id##')
+								)
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('department'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection' 	=> 'admin::property::accounting::department',
+						'default'			=> array
+							(
+								'created_by' 	=> array('add'		=> '$this->account'),
+								'created_on'	=> array('add'		=> 'time()'),
+								'modified_by' 	=> array('edit'	=> '$this->account'),
+								'modified_on'	=> array('edit'	=> 'time()'),
+							),
+						'check_grant'		=> false	
+					);
+				break;
+
 				//-------- ID type auto
 
 			case 'dimb_role_user':
@@ -2233,6 +2306,82 @@
 					);
 
 				break;
+
+			case 'periodization_outline':
+				$valueset_month = array();
+
+				for ($i=1;$i<13;$i++)
+				{
+					$valueset_month[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+
+				$info = array
+					(
+						'table' 			=> 'fm_eco_periodization_outline',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'periodization_id',
+								'descr'			=> lang('periodization'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'periodization',	'selected' => '##periodization_id##')
+								)
+							),
+							array
+							(
+								'name'			=> 'month',
+								'descr'			=> lang('month'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> $valueset_month,
+								)
+							),
+							array
+							(
+								'name'		=> 'value',
+								'descr'		=> lang('value'),
+								'type'		=> 'numeric',
+								'nullable'	=> false,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 60,
+								'sortable'	=> true
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('periodization'),
+						'acl_app' 			=> 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::periodization_outline'
+					);
+
+				break;
+
 // START BOOKING TABLES
 			case 'bb_office':
 				$info = array
@@ -2246,6 +2395,12 @@
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'description',
+								'descr' => lang('description'),
+								'type' => 'text'
 							)
 						),
 						'edit_msg'			=> lang('edit'),

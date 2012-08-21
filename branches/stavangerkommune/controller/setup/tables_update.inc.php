@@ -733,3 +733,91 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.38';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+
+	$test[] = '0.1.38';
+	function controller_upgrade0_1_38()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = 'SELECT id,status FROM controller_check_list';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$status_list = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$status_list[] = array
+			(
+				'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'status'	=> (int) $GLOBALS['phpgw_setup']->oProc->f('status'),
+			);
+		}
+
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_check_list', array(), 'status');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','status',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+
+		foreach ($status_list as $entry)
+		{
+			$sql = "UPDATE controller_check_list SET status = {$entry['status']} WHERE id = {$entry['id']} ";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+				
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_list','status',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => false
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_list','location_code',array(
+			'type' => 'varchar', 
+			'precision' => '30',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.39';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.39';
+	function controller_upgrade0_1_39()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control_group_component_list', array(), 'component_id');
+				
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group_component_list','location_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => false
+		));
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.40';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+	
+	$test[] = '0.1.40';
+	function controller_upgrade0_1_40()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+	$GLOBALS['phpgw_setup']->oProc->DropTable('controller_control_area');
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.41';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}

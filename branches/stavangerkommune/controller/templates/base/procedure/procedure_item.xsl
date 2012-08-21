@@ -3,7 +3,7 @@
 
 <xsl:template name="view_procedure" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
+<xsl:call-template name="yui_phpgw_i18n"/>
 <xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
 
 <div class="yui-content">

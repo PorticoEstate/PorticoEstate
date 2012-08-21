@@ -393,27 +393,38 @@ Returns mixed
 								</td>
 								<td>
 									<table>
-									<tr>
-									<td>
-									<input type="text" name="values[budget]" value="">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
-										</xsl:attribute>
-									</input>
-									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-									</td>
-									<td>
-									<select name="values[budget_year]">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'year')"/>
-										</xsl:attribute>
-										<option value="0">
-											<xsl:value-of select="php:function('lang', 'year')"/>
-										</option>
-										<xsl:apply-templates select="year_list/options"/>
-									</select>
-									</td>
-									</tr>
+										<tr>
+											<td>
+												<input type="text" name="values[budget]" value="">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+													</xsl:attribute>
+												</input>
+												<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+											</td>
+											<td>
+												<select name="values[budget_year]">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</xsl:attribute>
+													<option value="0">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</option>
+													<xsl:apply-templates select="year_list/options"/>
+												</select>
+											</td>
+											<td>
+												<select name="values[budget_periodization]">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'periodization')"/>
+													</xsl:attribute>
+													<option value="0">
+														<xsl:value-of select="php:function('lang', 'periodization')"/>
+													</option>
+													<xsl:apply-templates select="periodization_list/options"/>
+												</select>
+											</td>
+										</tr>
 									</table>
 								</td>
 							</tr>

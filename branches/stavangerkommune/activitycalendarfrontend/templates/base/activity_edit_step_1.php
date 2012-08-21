@@ -41,17 +41,19 @@ YAHOO.util.Event.onDOMReady(function()
 </script>
 
 <div class="yui-content" style="width: 100%;">
+    <div class="pageTop">
 	<h1><?php echo lang('edit_activity');?></h1>
 	<form action="#" method="post">
 		<dl class="proplist-col" style="width: 200%">
 			<dt>
+                            <?php if($message){?>
+                                <?php echo $message;?>
+                            <?php }else{?>
 				<?php echo lang('activity_edit_helptext_step1')?><br/><br/>
-				<?php echo lang('activity_org_helptext_step1')?><br/><br/>
+                            <?php }?>
 			</dt>
+                    <?php if(!$message){?>
 			<dd>
-			<?php if($message){?>
-			<?php echo $message;?>
-			<?php }else{?>
 				<select name="organization_id" id="organization_id" onchange="javascript: get_activities();">
 					<option value="">Ingen organisasjon valgt</option>
 					<?php
@@ -61,10 +63,9 @@ YAHOO.util.Event.onDOMReady(function()
 					}
 					?>
 				</select>
-				<br/><br/>
 			</dd>
 			<dt>
-				<?php echo lang('activity_edit_helptext');?><br/><br/>
+				&nbsp;
 			</dt>
 			<dd>
 				<div id="activity_select">
@@ -73,14 +74,13 @@ YAHOO.util.Event.onDOMReady(function()
 					</select>
 				</div>
 				<br/><br/>
-			<?php }?>
 			</dd>
-			<?php if(!$message){?>
 			<div class="form-buttons">
 				<input type="submit" name="step_1" value="<?php echo lang('send_change_request') ?>" onclick="return isOK();"/>
 			</div>
-			<?php }?>
+                    <?php }?>
 		</dl>
 		
 	</form>
+    </div>
 </div>

@@ -42,9 +42,12 @@
 						<?php }?>
 					</select>
 				<?php }else{
-						if($organization->get_change_type() == 'new'){?>
+						if($organization->get_change_type() == 'new'){
+                                                    if($organization->get_district()){?>
 							<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
-					<?php }else{
+					<?php       }
+                                        
+                                                }else{
 							if($organization->get_district() && is_numeric($organization->get_district())){?>
 								<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
 					<?php 	}else{?>
@@ -80,9 +83,17 @@
 				<dt><label for="street">Adresse</label></dt>
 				<dd>
 				<?php if($editable){?>
-					<input type="text" name="address" value="<?php echo $organization->get_address();?>"/>
+					<input type="text" name="address" value="<?php echo $organization->get_address();?> <?php echo $organization->get_addressnumber();?>"/>
 				<?php }else{?>
-					<?php echo $organization->get_address();?>
+					<?php echo $organization->get_address() . ' ' . $organization->get_addressnumber();;?>
+				<?php }?>
+				</dd>
+                                <dt><label for="street">Postnummer/Sted</label></dt>
+				<dd>
+				<?php if($editable){?>
+                                    <input type="text" name="zip_code" value="<?php echo $organization->get_zip_code();?>" size="6"/>&nbsp;&nbsp;<input type="text" name="city" value="<?php echo $organization->get_city();?>"/>
+				<?php }else{?>
+					<?php echo $organization->get_zip_code() . ' ' . $organization->get_city();?>
 				<?php }?>
 				</dd>
 				<dt><label for="org_description">Beskrivelse</label></dt>
@@ -153,7 +164,6 @@
 			<div class="form-buttons">
 				<?php
 					if ($editable) {
-						echo '<input type="submit" name="save_organization" value="' . lang('save') . '"/>';
 						if($organization->get_original_org_id() && $organization->get_original_org_id() > 0)
 						{
 							echo '<input type="submit" name="update_organization" value="' . lang('update_org') . '"/>';

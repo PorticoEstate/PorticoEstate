@@ -211,7 +211,7 @@
 			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
 			$invoice_id		= phpgw::get_var('invoice_id');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
-
+			$ecodimb 		= phpgw::get_var('ecodimb');
 			$this->save_sessiondata();
 
 			//-- ubica focus del menu derecho
@@ -282,6 +282,7 @@
 						'sub'				=> $this->sub,
 					//	'query'				=> $this->query,
 						'paid'				=> $paid,
+						'ecodimb'			=> $ecodimb,
 						'vendor_id'			=> $vendor_id,
 						'workorder_id'		=> $workorder_id,
 						'start_date'		=> $start_date,
@@ -299,6 +300,7 @@
 					."sub:'{$this->sub}',"
 					."query:'{$this->query}',"
 					."paid:'{$paid}',"
+					."ecodimb:'{$ecodimb}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
 					."voucher_id:'{$voucher_id}',"
@@ -776,6 +778,7 @@
 								'end_date'			=> $end_date,
 								'filter'			=> $this->filter,
 								'b_account_class'	=> $b_account_class,
+								'ecodimb'			=> $ecodimb,
 								'district_id'		=> $this->district_id
 							)
 						),
@@ -849,7 +852,7 @@ JS;
 
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
-			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id);
+			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id,$invoice_id,$ecodimb);
 
 
 			$uicols = array (
@@ -2482,6 +2485,7 @@ JS;
 			$loc1 			= phpgw::get_var('loc1');
 			$district_id 	= phpgw::get_var('district_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
+			$ecodimb 		= phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::consume';
@@ -2519,7 +2523,8 @@ JS;
 						'sub'			=> $this->sub,
 						'query'			=> $this->query,
 						'start'			=> $this->start,
-						'filter'		=> $this->filter
+						'filter'		=> $this->filter,
+						'ecodimb'		=> $ecodimb
 					));
 
 				$datatable['config']['allow_allrows'] = false;
@@ -2533,8 +2538,8 @@ JS;
 					."query:'{$this->query}',"
 					."start:'{$this->start}',"
 					."filter:'{$this->filter}',"
-					."b_account_class:'{$b_account_class}'"
-					;
+					."ecodimb:'{$ecodimb}',"
+					."b_account_class:'{$b_account_class}'";
 
 				$values_combo_box[0]  = $this->bo->select_category('',$this->cat_id);
 				$default_value = array ('id'=>'','name'=>lang('no category'));
@@ -2548,13 +2553,17 @@ JS;
 				$default_value = array ('id'=>'','name'=>lang('No account'));
 				array_unshift ($values_combo_box[2],$default_value);
 
+				$values_combo_box[3]  = $this->bocommon->select_category_list(array('type'=>'dimb', 'selected' => $ecodimb));
+				$default_value = array ('id'=>'','name'=>lang('no dimb'));
+				array_unshift ($values_combo_box[3],$default_value);
+
 				$field_invoice = array
 					(
 						array
 						( // imag calendar1
 							'type' 		=> 'img',
 							'id'     	=> 'start_date-trigger',
-							'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+						//	'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 							'alt'		=> lang('Select date'),
 							'tab_index' => 1,
 							'style' 	=> 'filter'
@@ -2574,7 +2583,7 @@ JS;
 						( // imag calendar2
 							'type' 		=> 'img',
 							'id'     	=> 'end_date-trigger',
-							'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+						//	'src'    	=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 							'alt'		=> lang('Select date'),
 							'tab_index' => 3,
 							'style' 	=> 'filter'
@@ -2705,7 +2714,18 @@ JS;
 							'type'		=> 'button',
 							'tab_index' => 14,
 							'style'		=> 'filter'
-						)
+						),
+						array
+						( 
+							'id' => 'sel_ecodimb',
+							'name' => 'ecodimb',
+							'value'	=> lang('dimb'),
+							'type' => 'select',
+							'style' => 'filter',
+							'values' => $values_combo_box[3],
+							'onchange'=> 'onChangeSelect("ecodimb");',
+							'tab_index' => 5
+						),
 					);
 
 				$datatable['actions']['form'] = array
@@ -2723,7 +2743,8 @@ JS;
 								'sub'				=> $this->sub,
 								'query'				=> $this->query,
 								'start'				=> $this->start,
-								'filter'			=> $this->filter
+								'filter'			=> $this->filter,
+								'ecodimb'			=> $ecodimb
 							)
 						),
 						'fields'	=> array
@@ -2802,7 +2823,7 @@ JS;
 
 			}
 
-			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id);
+			$content = $this->bo->read_consume($start_date,$end_date,$vendor_id,$loc1,$workorder_id,$b_account_class,$district_id,$ecodimb);
 
 			$sum = 0;
 			foreach ($content as & $entry)
@@ -2816,7 +2837,8 @@ JS;
 						'district_id'		=> $district_id,
 						'b_account_class'	=> $b_account_class,
 						'start_date'		=> $start_date,
-						'end_date'			=> $end_date
+						'end_date'			=> $end_date,
+						'ecodimb'			=> $ecodimb
 					)
 				);
 				$entry['consume'] 	= number_format($entry['consume'], 0, ',', ' ');

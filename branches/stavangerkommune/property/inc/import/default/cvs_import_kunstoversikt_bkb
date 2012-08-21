@@ -173,7 +173,7 @@
 			}
 			else
 			{
-				$ok = $this->_add_eav($id,$value_set);			
+				$ok = $this->_add_sql($id,$value_set);			
 			}
 			
 			return true;
@@ -306,7 +306,7 @@
 
 		}
 
-		private function _add_sql()
+		private function _add_sql($id,$value_set)
 		{
 			$request_ok = false;
 			$table = 'fm_entity_4_1';		

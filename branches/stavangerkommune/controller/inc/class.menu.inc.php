@@ -72,12 +72,6 @@
 											)
 										)
 					),
-/*					'location_for_check_list' => array
-					(
-						'text'	=> lang('location_connections'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.index') ),
-						'image'	=> array('property', 'location_1')
-					),*/
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),
@@ -89,25 +83,19 @@
 						'text'	=> lang('Control_group'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group.index') ),
 						'image'	=> array('property', 'location_1'),
-/*						'children' => array(
+						'children' => array(
 											'component_for_control_group' => array
 											(
 												'text'	=> lang('component'),
 												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group_component.index') ),
 												'image'	=> array('property', 'entity_1')
 											)
-										)*/
+										)
 					),
 					'procedure' => array
 					(
 						'text'	=> lang('Procedure'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
-						'image'	=> array('property', 'location_1'),
-					),
-					'check_list' => array
-					(
-						'text'	=> lang('Check_list'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 						'image'	=> array('property', 'location_1'),
 					),
 					'calendar_overview' => array
@@ -118,25 +106,7 @@
 					)
 				);
 			}
-			else
-			{
-				$menus['navigation'] =  array
-				(
-					'check_list' => array
-					(
-						'text'	=> lang('Check_list'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
-						'image'	=> array('property', 'location_1'),
-					),
-					'location_check_list' => array
-					(
-						'text'	=> lang('Check_list_location'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_check_lists_for_location') ),
-						'image'	=> array('property', 'location_1'),
-					),
-				);
-			}
-
+			
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{
@@ -194,14 +164,6 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'preferences.uiadmin_acl.aclprefs', 'acl_app'=> 'controller') )
 					)
 				);
-/*
-				$menus['toolbar'][] = array
-				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'	=> 'controller')),
-					'image'	=> array('hrm', 'preferences')
-				);
-*/
 			}
 
 			//Nothing...

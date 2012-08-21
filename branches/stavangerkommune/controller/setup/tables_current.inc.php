@@ -64,13 +64,13 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'status' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'status' => array('type' => 'int','precision' => '2','nullable' => false),
 				'comment' => array('type' => 'text', 'nullable' => True),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => false),
+				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
@@ -108,16 +108,6 @@
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'building_part_id' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'controller_control_area' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'title' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -163,7 +153,7 @@
 				'fd' => array(
 					'id' 								=> array('type' => 'auto', 'nullable' => false),
 					'control_group_id' 	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'component_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => false)
+					'location_id' 			=> array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
 			'pk' => array('id'),
 			'fk' => array(),

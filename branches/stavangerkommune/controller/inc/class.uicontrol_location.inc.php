@@ -4,6 +4,7 @@
 	*
 	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
@@ -35,15 +36,14 @@
 	*/
 	phpgw::import_class('phpgwapi.jquery');
 
-	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('controller.socontrol_area');
+	phpgw::import_class('phpgwapi.uicommon');
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
-	include_class('controller', 'status_checker', 'inc/helper/');
+	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 		
-	class controller_uicontrol_location extends controller_uicommon
+	class controller_uicontrol_location extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -55,7 +55,6 @@
 		var $type_id;
 		var $location_code;
 		
-		private $so_control_area;
 		private $so_control;
 		private $so_check_list;
 		private $so_control_item;
@@ -86,7 +85,6 @@
 			
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control 			= CreateObject('controller.socontrol');
 			$this->so_check_list		= CreateObject('controller.socheck_list');
 			$this->so_control_item		= CreateObject('controller.socontrol_item');
@@ -113,101 +111,6 @@
 	
 		function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->query();
-			}
-			
-			// Sigurd: START as categories
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-			
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-							
-			$control_areas_array = array();
-			foreach($control_areas['cat_list'] as $cat_list)
-			{
-				$control_areas_array[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-			// END as categories
-
-			$tabs = array
-			(
-				array
-				(
-					'label' => lang('View_locations_for_control')
-				),
-				 array
-				(
-					'label' => lang('Add_locations_for_control'),
-					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
-				),
-				array
-				(
-					'label' => lang('add components for control'),
-					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'))
-				)
-			);
-			
-			$data = array(
-				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'					=> "view_locations_for_control",
-				'control_areas_array'	=> $control_areas_array,
-				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_location.get_locations_for_control', 'control_id' => $control_id ,'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ControlId'),
-							'sortable'	=> true,
-						),
-						array(
-							'key'	=>	'title',
-							'label'	=>	lang('Control title'),
-							'sortable'	=>	false
-						),
-						array(
-							'key' => 'location_code',
-							'label' => lang('location_code'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'loc1_name',
-							'label' => lang('Property name'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'actions',
-							'hidden' => true
-						),
-						array(
-							'key' => 'labels',
-							'hidden' => true
-						),
-						array(
-							'key' => 'ajax',
-							'hidden' => true
-						),array(
-							'key' => 'parameters',
-							'hidden' => true
-						)						
-					)
-				)
-			);
-
-			phpgwapi_yui::load_widget('paginator');
-			
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');	
-
-			self::render_template_xsl(array('control_location/control_location_tabs', 'control_location/view_locations_for_control', 'common' ), $data);		
-		}
-		
-		function register_control_to_location()
-		{
 			$control_id = phpgw::get_var('control_id');
 			if(phpgw::get_var('save_location'))
 			{
@@ -218,17 +121,7 @@
 
 				$ok = $this->so_control->register_control_to_location($control_id, $values);
 
-/*				if($ok)
-				{
-					return json_encode( array( "status" => "saved" ) );
-				}
-				else
-				{
-					return json_encode( array( "status" => "not_saved" ) );
-				}
-*/
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location', 'control_id' => $control_id));
-
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.index', 'control_id' => $control_id));
 			}
 			else
 			{
@@ -283,41 +176,22 @@
 						'name'	=> $cat_list['name'],
 					);		
 				}
-
-/*
-				$control_info = execMethod('controller.socontrol.get_single', $control_id);
-				if($control_info)
-				{
-					$control_array = array
-					(
-						'id' => $control_id,
-						'title'	=> $control_info->get_title()
-					);
-				}
-*/
-				$tabs = array
-				( 
-					array
-					(
-						'label' => lang('View_locations_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
-					),
-					array
-					(
-						'label' => lang('Add_locations_for_control')
-					)
-				);
-						
+				
+				$control = $this->so_control->get_single( $control_id ); 
+				$current_control_area_id = $control->get_control_area_id();
+				$controls_array = $this->so_control->get_controls_by_control_area( $current_control_area_id ); 		
+				
 				$data = array(
-					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-					'view'						=> "register_control_to_location",
-					'control_id'				=> $control_id,
-					'control_areas_array'		=> $control_areas_array,
-					'filter_form' 				=> array(
-						'building_types' 			=> $building_types,
-						'category_types' 			=> $category_types,
-						'district_list' 			=> $district_list,
-						'part_of_town_list' 		=> $part_of_town_list
+					'view'										=> "register_control_to_location",
+					'control_areas_array'			=> $control_areas_array,
+				  'controls_array'			    => $controls_array,
+				  'current_control_id'			=> $control_id,
+					'current_control_area_id' => $current_control_area_id,
+					'filter_form' 						=> array(
+						'building_types' 					=> $building_types,
+						'category_types' 					=> $category_types,
+						'district_list' 					=> $district_list,
+						'part_of_town_list' 			=> $part_of_town_list
 					),
 					'datatable' => array(
 						'source' => self::link(array('menuaction' => 'controller.uicontrol_location.index', 'phpgw_return_as' => 'json', 'view_type' => 'register_control','control_id_init'	=> $control_id)),
@@ -388,8 +262,6 @@
 			}		
 		}
 		
-
-
 		// Returns locations for a control
 		public function get_locations_for_control()
 		{
@@ -496,12 +368,6 @@
 			$value['actions'] = array();
 			$value['labels'] = array();
 			$value['parameters'] = array();
-/*			
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uicontrol_location.register_control_to_location_2','location_code' => $value['location_code'], 'phpgw_return_as' => 'json')));
-			$value['labels'][] = lang('add_location');
-			$value['parameters'][] = "control_id";
-			*/
 		}
 		
 		/*
@@ -547,9 +413,6 @@
 
 			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
 
-/*			$default_value = array ('id'=>'','name'=>lang('select'));
-			array_unshift($category_list,$default_value);
-*/
 			return $category_list;
 		}
 
@@ -625,27 +488,10 @@
 
 			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
 
-			$tabs = array
-			( 
-/*				array
-				(
-					'label' => lang('View_locations_for_control'),
-					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.index'))
-				),
-				array
-				(
-					'label' => lang('Add_locations_for_control'),
-					'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_location'))
-				),*/
-				array
-				(
-					'label' => lang('add components for control')
-				)
-			);
+			
 					
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'td_count'						=> '""',
 		//		'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
@@ -673,14 +519,10 @@
 			$theme = 'ui-lightness';
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/development-bundle/themes/{$theme}/jquery.ui.autocomplete.css");
 
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-//			phpgwapi_yui::load_widget('autocomplete');
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -689,8 +531,7 @@
 	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
 			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('control_location/register_control_to_component'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
 	
 
@@ -743,7 +584,7 @@
 				'className' => ''
 			);
 
-			$count_fields = 16;//count($uicols['name']);
+			$count_fields = count($uicols['name']);
 
 			for ($i=0;$i<$count_fields;$i++)
 			{

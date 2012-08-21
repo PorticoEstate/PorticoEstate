@@ -30,11 +30,10 @@
 
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('controller.socontrol_area');
+	phpgw::import_class('phpgwapi.uicommon');
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicheck_list_for_component extends controller_uicommon
+	class controller_uicheck_list_for_component extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -62,7 +61,6 @@
 
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control 			= CreateObject('controller.socontrol');
 			//$this->so_bim				= CreateObject('bim.sobimitem_impl');
 			//$this->so_bim				= new sobimitem_impl();
@@ -262,7 +260,6 @@
 					)
 				)
 			);
-
 
 			phpgwapi_yui::load_widget('paginator');
 
@@ -473,7 +470,6 @@
 				else
 					$ifc = false;
 			}
-
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
 			if(count($bim_types)>0)

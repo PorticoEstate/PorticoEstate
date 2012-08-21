@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -652,6 +652,14 @@
 							if( $values[$field_info['name']] && !ctype_digit($values[$field_info['name']]) )
 							{
 								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter an integer !'));
+							}
+						}
+						else if ($field_info['type'] == 'numeric')
+						{
+							$values[$field_info['name']] = str_replace(',', '.', $values[$field_info['name']]);
+							if( $values[$field_info['name']] && ! is_numeric($values[$field_info['name']]) )
+							{
+								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter a numeric value !'));
 							}
 						}
 					}

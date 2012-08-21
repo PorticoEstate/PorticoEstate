@@ -77,21 +77,24 @@ function chooseLocation( label, value ){
 			<!-- =====================  SEARCH FOR LOCATION  ================= -->
 			<div id="search-location" class="select-box">
 				<div id="choose-loc">
-					<label>Søk etter andre <a href="loc_type_2" class="btn active">Bygg</a><a href="loc_type_1" class="btn">Eiendom</a>
-							<input id="loc_type" type="hidden" name="loc_type" value="2" />
-					</label>
+					<input id="loc_type" type="hidden" name="loc_type" value="2" />
+					<input type="hidden" id="currentYear">
+					  <xsl:attribute name="value">
+						  <xsl:value-of select="current_year"/>
+					  </xsl:attribute>
+				  </input>
+					<label>Søk etter</label>
+					<span>
+						<a href="loc_type_2" class="btn first active">Bygg</a>
+						<a href="loc_type_1" class="btn">Eiendom</a>
+					</span>
 				</div>
-				<input type="hidden" id="currentYear">
-					<xsl:attribute name="value">
-						<xsl:value-of select="current_year"/>
-					</xsl:attribute>
-				</input>
 				<input type="text" value="" id="search-location-name" />
 			</div>
 			
 			<!-- =====================  SELECT LIST FOR MY LOCATIONS  ================= -->
 			<div id="choose-my-location" class="select-box">
-				<label>Velg et annet bygg du har ansvar for</label>
+				<label>Velg et annet bygg/eiendom du har ansvar for</label>
 				<xsl:call-template name="select_my_locations" />
 			</div>
 		</div>
@@ -120,39 +123,20 @@ function chooseLocation( label, value ){
 			
 			<!-- =====================  COLOR ICON MAP  ================= -->
 			<xsl:call-template name="icon_color_map" />
+					
+			<!-- =====================  FILTERS  ================= -->
+			<xsl:call-template name="calendar_filters" >
+				<xsl:with-param name="view_period">year</xsl:with-param>
+			</xsl:call-template>
 			
 			<!-- =====================  CALENDAR NAVIGATION  ================= -->
-			<div id="calNav">
-				<a class="showPrev">
-					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="current_year - 1"/>
-						<xsl:text>&amp;location_code=</xsl:text>
-						<xsl:value-of select="current_location/location_code"/>
-					</xsl:attribute>
-					<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
-					<xsl:value-of select="current_year - 1"/>
-				</a>
-				<span class="current">
-						<xsl:value-of select="current_year"/>
-				</span>
-				<a class="showNext">
-						<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="current_year + 1"/>
-						<xsl:text>&amp;location_code=</xsl:text>
-						<xsl:value-of select="current_location/location_code"/>
-					</xsl:attribute>
-					<xsl:value-of select="current_year + 1"/>
-					<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />
-				</a>
-			</div>
-			
+			<xsl:call-template name="nav_calendar_year">
+    		<xsl:with-param name="view">VIEW_CONTROLS_FOR_LOCATION</xsl:with-param>
+  		</xsl:call-template>
 		</div>
 		 
 		<div id="cal_wrp">
+		<h2>Bygg/eiendom</h2>
 		<table id="calendar" class="year">
 				<tr class="heading">
 						<th class="title"><span>Tittel</span></th>
@@ -166,7 +150,7 @@ function chooseLocation( label, value ){
 									<xsl:text>&amp;year=</xsl:text>
 									<xsl:value-of select="//current_year"/>
 									<xsl:text>&amp;location_code=</xsl:text>
-									<xsl:value-of select="current_location/location_code"/>
+									<xsl:value-of select="//current_location/location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
 								</xsl:attribute>
@@ -180,18 +164,16 @@ function chooseLocation( label, value ){
 			
 			<xsl:choose>
 				<xsl:when test="controls_calendar_array/child::node()">
-				
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-			  	
 			  		<tr>				
-						<xsl:choose>
-					        <xsl:when test="(position() mod 2) != 1">
-					            <xsl:attribute name="class">odd</xsl:attribute>
-					        </xsl:when>
-					        <xsl:otherwise>
-					            <xsl:attribute name="class">even</xsl:attribute>
-					        </xsl:otherwise>
+							<xsl:choose>
+						    <xsl:when test="(position() mod 2) != 1">
+						     <xsl:attribute name="class">odd</xsl:attribute>
+						    </xsl:when>
+						    <xsl:otherwise>
+						    	<xsl:attribute name="class">even</xsl:attribute>
+						    </xsl:otherwise>
 					    </xsl:choose>
 							<td class="title">
 				      			<span><xsl:value-of select="control/title"/></span>
@@ -200,35 +182,128 @@ function chooseLocation( label, value ){
 				      			<span><xsl:value-of select="control/responsibility_name"/></span>
 							</td>
 							<td class="frequency">
-				      			<span>
-					      			<xsl:choose>
-					      				<xsl:when test="control/repeat_interval = 1">
-					      					<span class="pre">Hver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval = 2">
-					      					<span class="pre">Annenhver</span>
-					      				</xsl:when>
-					      				<xsl:when test="control/repeat_interval > 2">
-					      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
-					      				</xsl:when>
-					      			</xsl:choose>
-					      			
-					      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
-				      			</span>
+		      			<span>
+			      			<xsl:choose>
+			      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+			      					<span class="pre">Hver</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+			      					<span class="pre">Hvert</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval = 2">
+			      					<span class="pre">Annenhver</span>
+			      				</xsl:when>
+			      				<xsl:when test="control/repeat_interval > 2">
+			      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+			      				</xsl:when>
+			      			</xsl:choose>
+			      			
+			      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+		      			</span>
 							</td>
 							<xsl:for-each select="calendar_array">
-								<xsl:call-template name="check_list_status_checker" >
-									<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
-								</xsl:call-template>
+								<td>
+									<xsl:call-template name="check_list_status_manager" >
+										<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+									</xsl:call-template>
+								</td>
 							</xsl:for-each>
-					</tr>	
+						</tr>	
 				</xsl:for-each>	
 			</xsl:when>
 			<xsl:otherwise>
-				<tr class="cal_info_msg"><td colspan="3">Ingen sjekklister for bygg i angitt periode</td></tr>
+				<tr class="cal_info_msg"><td colspan="3"><xsl:value-of select="php:function('lang', 'error_msg_no_controls_in_period')" /></td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
-	</table>
+		</table>
+		
+		<h2 class="components">Komponenter</h2>
+		<xsl:choose>
+			<xsl:when test="components_calendar_array/child::node()">
+			<xsl:for-each select="components_calendar_array">
+		  <h3><xsl:value-of select="component/xml_short_desc"/></h3>
+		  
+			<table id="calendar" class="year">
+					<tr class="heading">
+							<th class="title"><span>Tittel</span></th>
+							<th class="assigned"><span>Tildelt</span></th>
+							<th class="frequency"><span>Frekvens</span></th>
+						<xsl:for-each select="//heading_array">
+							<th>
+								<a>
+									<xsl:attribute name="href">
+										<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+										<xsl:text>&amp;year=</xsl:text>
+										<xsl:value-of select="//current_year"/>
+										<xsl:text>&amp;location_code=</xsl:text>
+										<xsl:value-of select="//current_location/location_code"/>
+										<xsl:text>&amp;month=</xsl:text>
+										<xsl:number/>
+									</xsl:attribute>
+									
+									<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
+									<xsl:value-of select="php:function('lang', $month_str)" />
+								</a>				
+							</th>
+						</xsl:for-each>
+					</tr>
+			
+				<xsl:for-each select="controls_calendar">
+				  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+				  	
+				  		<tr>
+							<xsl:choose>
+						        <xsl:when test="(position() mod 2) != 1">
+						            <xsl:attribute name="class">odd</xsl:attribute>
+						        </xsl:when>
+						        <xsl:otherwise>
+						            <xsl:attribute name="class">even</xsl:attribute>
+						        </xsl:otherwise>
+						    </xsl:choose>
+								<td class="title">
+					      			<span><xsl:value-of select="control/title"/></span>
+								</td>
+								<td class="assigned">
+					      			<span><xsl:value-of select="control/responsibility_name"/></span>
+								</td>
+								<td class="frequency">
+					      			<span>
+						      			<xsl:choose>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type &lt; 3">
+						      					<span class="pre">Hver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 1 and control/repeat_type = 3">
+						      					<span class="pre">Hvert</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval = 2">
+						      					<span class="pre">Annenhver</span>
+						      				</xsl:when>
+						      				<xsl:when test="control/repeat_interval > 2">
+						      					<span class="pre">Hver</span><span><xsl:value-of select="control/repeat_interval"/>.</span>
+						      				</xsl:when>
+						      			</xsl:choose>
+						      			
+						      			<span class="val"><xsl:value-of select="control/repeat_type_label"/></span>
+					      			</span>
+								</td>
+								<xsl:for-each select="calendar_array">
+									<td>
+										<xsl:call-template name="check_list_status_manager" >
+											<xsl:with-param name="location_code"><xsl:value-of select="//current_location/location_code"/></xsl:with-param>
+										</xsl:call-template>
+									</td>
+								</xsl:for-each>
+						</tr>	
+					</xsl:for-each>
+				</table>	
+		</xsl:for-each>
+		</xsl:when>
+			<xsl:otherwise>
+				<div id="calendar">
+					<p class="no-comp-msg">Ingen komponenter tilknyttet kontroll</p>
+				</div>
+			</xsl:otherwise>
+			</xsl:choose>
 	</div>
 </div>
 </div>

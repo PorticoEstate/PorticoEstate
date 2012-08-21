@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.646';
+	$setup_info['property']['version']		= '0.9.17.650';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -133,6 +133,7 @@
 		'fm_tts_tickets',
 		'fm_tts_history',
 		'fm_tts_views',
+		'fm_department',
 		'fm_ecoart',
 		'fm_ecoavvik',
 		'fm_ecobilag_process_code',
@@ -149,6 +150,7 @@
 		'fm_ecomva',
 		'fm_ecouser',
 		'fm_eco_periodization',
+		'fm_eco_periodization_outline',
 		'fm_event',
 		'fm_event_action',
 		'fm_event_exception',
@@ -168,11 +170,6 @@
 		'fm_entity_category',
 		'fm_entity_lookup',
 		'fm_entity_history',
-		'fm_entity_1_1',
-		'fm_entity_1_2',
-		'fm_entity_1_3',
-		'fm_entity_2_1',
-		'fm_entity_2_2',
 		'fm_custom',
 		'fm_custom_cols',
 		'fm_orders',

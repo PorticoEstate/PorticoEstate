@@ -201,6 +201,11 @@
 							'text'	=> lang('budget account'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'budget_account') )
 						),
+						'department'	=> array
+						(
+							'text'	=> lang('department'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'department') )
+						),
 						'accounting_dimb'	=> array
 						(
 							'text'	=> lang('Accounting dim b'),
@@ -240,6 +245,11 @@
 						(
 							'text'	=> lang('periodization'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization') )
+						),
+						'periodization_outline'	=> array
+						(
+							'text'	=> lang('periodization outline'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization_outline') )
 						),
 						'accounting_config'	=> array
 						(
@@ -396,6 +406,11 @@
 						(
 							'text'	=> lang('Workorder Detail Categories'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'wo_hours') )
+						),
+						'workorder_recalculate'	=> array
+						(
+							'text'	=> lang('Workorder recalculate actual cost'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.recalculate') )
 						),
 						'ticket'	=> array
 						(

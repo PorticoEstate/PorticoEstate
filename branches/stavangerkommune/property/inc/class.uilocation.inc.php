@@ -1249,7 +1249,21 @@ JS;
 				$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_READ,$this->user_id,".location.{$type_id}");
+//				$values_combo_box[5]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_READ,$this->user_id,".location.{$type_id}");
+				$_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC',	'account_lastname', '', -1);
+				$values_combo_box[5]  = array();
+				foreach($_users as $_user)
+				{
+					$values_combo_box[5][] = array
+					(
+						'id'	=> $_user->id,
+						'name'	=> $_user->__toString(),
+					
+					);
+				}
+				unset($_users);
+				unset($_user);
+
 				array_unshift ($values_combo_box[5],array('id'=> (-1*$GLOBALS['phpgw_info']['user']['account_id']),'name'=>lang('mine roles')));
 				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);

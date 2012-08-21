@@ -40,21 +40,22 @@
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 *
-		 * @return controller_soparty the storage object
+		 * @return controller_socontrol_item_list the storage object
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol_item_list');
 			}
 			return self::$so;
 		}
 
 		/**
-		 * Function for adding a new activity to the database. Updates the activity object.
+		 * Inserts a new control item list to database
 		 *
-		 * @param activitycalendar_activity $activity the party to be added
-		 * @return bool true if successful, false otherwise
+		 * @param $control_item_list control item list object to be inserted
+		 * @return id of inserted control item list if successful, 0 if not successful
 		 */
 		function add(&$control_item_list)
 		{
@@ -70,7 +71,8 @@
 
 			$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			if(isset($result)) {
+			if($result)
+			{
 				// return the new control item ID
 				return $this->db->get_last_insert_id('controller_control_item_list', 'id');
 			}
@@ -80,6 +82,12 @@
 			}
 		}
 
+		/**
+		 * Updates an existing control item list in database
+		 *
+		 * @param $control_item_list control item list object to be updated
+		 * @return id of inserted control item list if successful, 0 if not successful
+		 */
 		function update($control_item_list)
 		{
 			$id = intval($control_item_list->get_id());
@@ -92,14 +100,14 @@
 
 			$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 
 		/**
-		 * Get single control_item_list
+		 * Get single control_item_list object
 		 * 
 		 * @param	$id	id of the control_item_list to return
-		 * @return a controller_control_item_list
+		 * @return  control item list object
 		 */
 		function get_single($id)
 		{
@@ -109,30 +117,49 @@
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
-			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr', true), 'int'));
+			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
+			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
+			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
+			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
 			return $control_item_list;
 		}
 
+		/**
+		 * Get single control_item_list object
+		 * 
+		 * @param	$control_id	control id
+		 * @param	$control_item_id	control id
+		 * @return  control item list object
+		 */
 		function get_single_2($control_id, $control_item_id)
 		{
+			$control_id = (int) $control_id;
+			$control_item_id = (int) $control_item_id;
+
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			$this->db->next_record();
 
-			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr', true), 'int'));
+			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
+			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
+			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
+			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
 
 			return $control_item_list;
 		}
 		
+		/**
+		 * Get control item objects from database as objects or as arrays 
+		 * 
+		 * @param	$control_group_id	control group id
+		 * @param $return_type return data as objects or as arrays
+		 * @return  array with control items
+		*/
 		function get_control_items($control_group_id, $return_type = "return_object")
 		{
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  = "SELECT * ";
@@ -141,25 +168,39 @@
 			
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+			while ($this->db->next_record())
+			{
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 
 				if($return_type == "return_object")
+				{
 					$results[] = $control_item;
+				}
 				else
+				{
 					$results[] = $control_item->toArray();
+				}
 			}
 
 			return $results;
 		}
 
+		/**
+		 * Get control item objects from database as objects or as arrays 
+		 * 
+		 * @param	$control_id	control id
+		 * @param $return_type return data as objects or as arrays
+		 * @return  array with control items
+		*/
 		function get_control_items_by_control($control_id, $returnType = "return_object")
 		{
+			$control_id = (int) $control_id;
+
 			$results = array();
 
 			$sql  = "SELECT ci.* ";
@@ -169,26 +210,42 @@
 									
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+			while ($this->db->next_record())
+			{
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
 				if($returnType == "return_array")
+				{
 					$results[] = $control_item->toArray();
+				}
 				else
+				{
 					$results[] = $control_item;
+				}
 			}
 			
 			return $results;
 		}
 
+		/**
+		 * Get control item objects from database as objects or as arrays 
+		 * 
+		 * @param	$control_id	control id
+		 * @param	$control_group_id	control group id
+		 * @param $return_type return data as objects or as arrays
+		 * @return  array with control items
+		*/
 		function get_control_items_by_control_and_group($control_id, $control_group_id, $returnType = "return_array")
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  =	"SELECT ci.* ";
@@ -201,26 +258,42 @@
 			
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 
-			while ($this->db->next_record()) {
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+			while ($this->db->next_record())
+			{
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+				$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
 				if($returnType == "return_array")
+				{
 					$results[] = $control_item->toArray();
+				}
 				else
+				{
 					$results[] = $control_item;
+				}
 			}
 
 			return $results;
 		}
 
+		/**
+		 * Get control item objects with control item options from database as objects or as arrays 
+		 * 
+		 * @param	$control_id	control id
+		 * @param	$control_group_id	control group id
+		 * @param $return_type return data as objects or as arrays
+		 * @return array with control items
+		*/
 		function get_control_items_and_options_by_control_and_group($control_id, $control_group_id, $return_type = "return_array")
 		{
+			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
 			$results = array();
 
 			$sql  =	"SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.* ";
@@ -237,74 +310,114 @@
 			$control_item_id = 0;
 			$control_item = null;
 			$control_item_array = array();
-			while ($this->db->next_record()) {
-				if( $this->db->f('ci_id', true) != $control_item_id ){
-					if($control_item_id != 0){
+			while ($this->db->next_record())
+			{
+				if( $this->db->f('ci_id') != $control_item_id )
+				{
+					if($control_item_id)
+					{
 						$control_item->set_options_array($options_array);
 						
 						if($return_type == "return_array")
+						{
 							$control_item_array[] = $control_item->toArray();
+						}
 						else
+						{
 							$control_item_array[] = $control_item;
+						}
 					}
 						
-					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+					$control_item->set_required($this->unmarshal($this->db->f('required'), 'boolean'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 					$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 
 					$options_array = array();
 				}
 				
-				$control_item_option = new controller_control_item_option($this->db->f('option_value', true), $this->db->f('control_item_id', true));
-				$control_item_option->set_id($this->db->f('cio_id', true));
+				$control_item_option = new controller_control_item_option($this->db->f('option_value', true), $this->db->f('control_item_id'));
+				$control_item_option->set_id($this->db->f('cio_id'));
 				
 				if($return_type == "return_array")
+				{
 					$options_array[] = $control_item_option->toArray();
+				}
 				else
+				{
 					$options_array[] = $control_item_option;
-				 
-				
+				}
+
 				$control_item_id = $control_item->get_id();
 			}
 			
-			if($control_item != null){
+			if($control_item != null)
+			{
 				$control_item->set_options_array($options_array);
 
-				if($return_type == "return_array"){
+				if($return_type == "return_array")
+				{
 					$control_item_array[] = $control_item->toArray();
-				}else{
+				}
+				else
+				{
 					$control_item_array[] = $control_item;
 				}
 				
 				return $control_item_array;
-			}else {
+			}
+			else
+			{
 				return null;
 			}
 		}
 		
-		// Deletes control list item defines by control id and control item id
+		/**
+		 * Delete a control item list from database 
+		 * 
+		 * @param	$control_id	control id
+		 * @param	$control_group_id	control group id
+		 * @return true if successful, false otherwise
+		*/
 		function delete($control_id, $control_item_id)
 		{
+			$control_id = (int) $control_id;
+			$control_item_id = (int) $control_item_id;
+
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
 
-			return isset($result);
+			return $result;
 		}
 		
-		// Deletes all control items that a control has
+		/**
+		 * Deletes all control items related to a control 
+		 * 
+		 * @param	$control_id	control id
+		 * @return true if successful, false otherwise
+		*/
 		function delete_control_items($control_id)
 		{
+			$control_id = (int) $control_id;
 			$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 
-			return isset($result);
+			return $result;
 		}
 
-		// Deletes all control items that a control has
+		/**
+		 * Deletes all control items within a group related to a control 
+		 * 
+		 * @param	$control_id	control id
+		 * @param	$control_group_id	control group id
+		 * @return true if successful, false otherwise
+		*/
 		function delete_control_items_for_group_list($control_id, $control_group_id)
 		{
+ 			$control_id = (int) $control_id;
+			$control_group_id = (int) $control_group_id;
+
   			$sql  = "DELETE FROM controller_control_item_list "; 
   			$sql .= "USING controller_control_item ";
   			$sql .= "WHERE control_id = $control_id ";
@@ -313,7 +426,7 @@
 			
 			$result = $this->db->query($sql);
 			
-			return isset($result);
+			return $result;
 		}
 
 		function get_id_field_name($extended_info = false){}

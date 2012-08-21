@@ -82,6 +82,7 @@
 			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
 			$district_id 	= isset($data['district_id'])?$data['district_id']:'';
 			$invoice_id		= $data['invoice_id'] ? $data['invoice_id'] :'';
+			$ecodimb 		= isset($data['ecodimb'])?$data['ecodimb']:'';
 
 			$join_tables	= '';
 			$filtermethod	= '';
@@ -118,6 +119,12 @@
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where typeid='$cat_id' ";
+				$where= 'AND';
+			}
+
+			if($ecodimb)
+			{
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where= 'AND';
 			}
 
@@ -197,6 +204,7 @@
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
 				$sql_count = 'SELECT count(bilagsnr) as cnt, sum(godkjentbelop) AS sum_amount FROM (SELECT DISTINCT bilagsnr, sum(godkjentbelop) as godkjentbelop '. substr($sql2,strripos($sql2,'FROM')) .' GROUP BY bilagsnr) AS t';
+		//_debug_array($sql_count);
 				$this->db->query($sql_count,__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records 		= $this->db->f('cnt');
@@ -617,6 +625,7 @@
 				$workorder_id 	= isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id']:0;
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
+				$ecodimb 		= isset($data['ecodimb'])?$data['ecodimb']:'';
 			}
 
 			$where = 'AND';
@@ -671,6 +680,12 @@
 			if ($cat_id>0)
 			{
 				$filtermethod .= " $where typeid = $cat_id";
+				$where= 'AND';
+			}
+
+			if($ecodimb)
+			{
+				$filtermethod .= " $where dimb = " . (int)$ecodimb;
 				$where= 'AND';
 			}
 
@@ -1298,7 +1313,7 @@
 
 			if(isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$sql = "SELECT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
+				$sql = "SELECT DISTINCT fm_ecodimb.* FROM fm_ecodimb {$this->db->join} fm_ecodimb_role_user ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
 				. ' WHERE fm_ecodimb_role_user.user_id = ' . (int) $this->account_id . ' ORDER BY descr ASC';
 				$include_selected = true;
 			}

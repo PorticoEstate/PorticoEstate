@@ -5,7 +5,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 
-	class status_checker {
+	class check_list_status_updater {
 		
 		public function __construct()
 		{
@@ -23,7 +23,6 @@
 			$num_pending_cases = 0;
 					
 			foreach($check_items as $check_item){
-				
 				foreach($check_item->get_cases_array() as $case){
 					
 					if($case->get_status() == controller_check_item_case::STATUS_OPEN){

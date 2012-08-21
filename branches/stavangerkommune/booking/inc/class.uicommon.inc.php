@@ -36,6 +36,7 @@
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
 
+
 	/**
 	 * Reformat an ISO timestamp into norwegian format
 	 * 
@@ -68,26 +69,6 @@
 		return $text;
 	}
 
-	/**
-	 * Generates a javascript translator object/hash for the specified fields.
-	 */
-	function js_lang()
-	{
-		$keys = func_get_args();
-		$strings = array();
-		foreach($keys as $key) { $strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key); }
-		return json_encode($strings);
-	}
-	
-	/**
-	 * Creates an array of translated strings.
-	 */
-	function lang_array()
-	{
-		$keys = func_get_args();
-		foreach($keys as &$key) $key = lang($key);
-		return $keys;
-	}
 	
 	abstract class booking_uicommon
 	{
@@ -147,6 +128,17 @@
 			}
 		}
 		
+
+		/**
+		 * Creates an array of translated strings.
+		 */
+		function lang_array()
+		{
+			$keys = func_get_args();
+			foreach($keys as &$key) $key = lang($key);
+			return $keys;
+		}
+
 		private function get_ui_session_key() {
 			return $this->ui_session_key;
 		}
@@ -358,9 +350,9 @@
 							
 			$data['yui_booking_i18n'] = array(
 				'Calendar' => array(
-					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
-					'WEEKDAYS_FULL' => json_encode(lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
-					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
+					'WEEKDAYS_SHORT' => json_encode($this->lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
+					'WEEKDAYS_FULL' => json_encode($this->lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
+					'MONTHS_LONG' => json_encode($this->lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 				),
 				'DataTable' => array(
 					'MSG_EMPTY' => json_encode(lang('No records found.')),

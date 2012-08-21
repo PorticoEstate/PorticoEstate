@@ -41,6 +41,21 @@
 
 		var tableYUI;
 
+
+		this.onChangeSelect = function(type)
+		{
+			var myselect=document.getElementById("sel_"+ type);
+			for (var i=0; i<myselect.options.length; i++)
+			{
+				if (myselect.options[i].selected==true)
+				{
+					break;
+				}
+			}
+			eval("path_values." +type +"='"+myselect.options[i].value+"'");
+			execute_ds();
+		}
+
 	/********************************************************************************/
 		this.particular_setting = function()
 		{

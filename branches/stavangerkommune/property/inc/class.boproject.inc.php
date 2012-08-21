@@ -41,6 +41,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $allrows;
 
 		var $public_functions = array
 			(
@@ -77,6 +78,7 @@
 			$wo_hour_cat_id			= phpgw::get_var('wo_hour_cat_id', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$criteria_id			= phpgw::get_var('criteria_id', 'int');
+			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
 
@@ -401,6 +403,11 @@
 
 		function read($data = array())
 		{
+			if(isset($this->allrows) && $this->allrows)
+			{
+				$data['allrows'] = true;
+			}
+
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
@@ -500,27 +507,37 @@
 			}
 
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values['start_date']			= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
-			$values['end_date']			= isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat) : '';
-			$workorder_data				= $this->so->project_workorder_data($project_id);
+			$values['start_date']	= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
+			$values['end_date']		= isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat) : '';
+			$workorder_data			= $this->so->project_workorder_data($project_id);
 
-			$sum_workorder_budget = 0;
 			$sum_deviation = 0;
-			$sum_workorder_calculation = 0;
-			$sum_workorder_actual_cost = 0;
 
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
-				$sum_workorder_budget+= $workorder_data[$i]['budget'];
 				$sum_deviation+= $workorder_data[$i]['deviation'];
-				$sum_workorder_calculation+= $workorder_data[$i]['calculation'];
-				$sum_workorder_actual_cost+= $workorder_data[$i]['actual_cost'];
 
+				$_cost = (float)number_format(0, 2, ',', '');
+				if(abs($workorder_data[$i]['contract_sum']) > 0)
+				{
+					$_cost = (float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
+				}
+				else if(abs($workorder_data[$i]['calculation']) > 0)
+				{
+					$_cost = (float)number_format($workorder_data[$i]['calculation'] * $tax, 2, ',', '');
+				}
+				else if(abs($workorder_data[$i]['budget']) > 0)
+				{
+					$_cost = (float)number_format($workorder_data[$i]['budget'] * $tax, 2, ',', '');
+				}
+				
+				$values['workorder_budget'][$i]['cost'] = $_cost;
+				
 				$values['workorder_budget'][$i]['title']=htmlspecialchars_decode($workorder_data[$i]['title']);
 				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
-				$values['workorder_budget'][$i]['contract_sum']=(float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
-				$values['workorder_budget'][$i]['budget']= $workorder_data[$i]['budget'];
-				$values['workorder_budget'][$i]['calculation']=(float)number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
+	//			$values['workorder_budget'][$i]['contract_sum']=(float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
+	//			$values['workorder_budget'][$i]['budget']= $workorder_data[$i]['budget'];
+	//			$values['workorder_budget'][$i]['calculation']=(float)number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
 				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
 				$values['workorder_budget'][$i]['actual_cost'] = (float)number_format($workorder_data[$i]['actual_cost'] ? $workorder_data[$i]['actual_cost'] : 0, 2, ',', '');
@@ -545,10 +562,7 @@
 			}
 			if($workorder_data)
 			{
-				$values['sum_workorder_budget']= number_format($sum_workorder_budget, 2, ',', '');
 				$values['deviation']= $sum_deviation;
-				$values['sum_workorder_calculation']= number_format($sum_workorder_calculation*$tax, 2, ',', '');
-				$values['sum_workorder_actual_cost']= number_format($sum_workorder_actual_cost, 2, ',', '');
 			}
 
 			if($values['location_code'])
@@ -838,5 +852,10 @@
 		public function get_budget($project_id)
 		{
 			return $this->so->get_budget($project_id);
+		}
+
+		public function get_periodizations_with_outline()
+		{
+			return $this->so->get_periodizations_with_outline();
 		}
 	}

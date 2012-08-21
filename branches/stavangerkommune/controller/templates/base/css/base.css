@@ -127,12 +127,6 @@ dl.proplist-col {
     margin: 1em 0;
     padding-left: 2em;
 }
-dl.proplist dt,
-dl.proplist-col dt { 
-    font-weight: bolder; 
-    font-size: 90%; 
-    margin: .8em 0 .1em 0;
-}
 
 dl.proplist-col,
 dl.form-col {
@@ -351,38 +345,21 @@ h1 img, li img {
 
 /* ==========================================   SELECTORS, IDS AND CLASSES    =========================================== */
 
-input{
-  margin: 0 13px 0 0;
-  padding: 3px 6px;
-}
-
 input[type="radio"] {
   margin: 0 5px 0 2px;
   padding: 3px 6px;
 }
 
-#innertoolbar-button, input[type="submit"] {
-  background: none repeat scroll 0 0 #4F9AEA;
-  border: 1px solid #4685C8;
-  border-radius: 4px 4px 4px 4px;
-  color: #FFFFFF;
-  cursor: pointer;
-  padding: 5px 20px;
+input[type="checkbox"] {
+  margin: 5px;
 }
 
-#innertoolbar-button {
-    font-size: 1em;
-    line-height: 1.2em;
-    min-height: 1.2em;
-    padding: 2px 15px;
+input[type="text"] {
+    padding: 5px 5px 2px;
 }
 
-.row input[type="submit"] {
-  padding: 2px 10px;
-}
-
-select{
-  padding: 3px 1px 3px 4px;
+select {
+	padding: 4px;
 }
 	
 fieldset {
@@ -401,6 +378,32 @@ a {
   color: #0066CC;
   text-decoration: none;
 }
+
+#innertoolbar-button, input[type="submit"] {
+  background: none repeat scroll 0 0 #4F9AEA;
+  border: 1px solid #4685C8;
+  border-radius: 4px 4px 4px 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+ 	filter:chroma(color=#000000);
+  padding: 5px 20px;
+}
+
+#innertoolbar-button {
+  font-size: 1em;
+  line-height: 1.2em;
+  min-height: 1.2em;
+  padding: 2px 15px;
+}
+
+a#innertoolbar-button {
+  padding: 3px 15px;
+}
+
+.row input[type="submit"] {
+  padding: 2px 10px;
+}
+
 
 .info, .error, .warning {
   font-weight: normal;
@@ -438,9 +441,10 @@ a {
 }
 
 .yui-skin-sam .yui-button .first-child {
-  border: 0;
-  margin:0;
+    border: 0 none;
+    margin: 0 10px 0 0;
 }
+
 .yui-skin-sam .yui-button {
   background: none;
   border:0;
@@ -492,8 +496,14 @@ h1 img{
     width: 100%;
 }
 
-#control_item_details label{
-	margin-right: 10px;
+#control_item_details label {
+  display: block;
+  margin-bottom: 2px;
+  margin-right: 10px;
+}
+
+#control_item_details label.line{
+	display: inline-block;
 }
 
 #control_item_details label.top {
@@ -519,7 +529,8 @@ h1 img{
 }
 
 #control_item_details .control_item_type .active {
-    background: none repeat scroll 0 0 #0F6CCF;
+    background: none repeat scroll 0 0 #F57056;
+    border: 1px solid #CB563F;
 }
 
 #control_item_details input[type=radio] {
@@ -645,6 +656,10 @@ ul.items li.list_item{
 	padding: 5px;
 }
 
+#control_items form{
+	margin-bottom: 20px;
+}
+
 /* =======================================  DRAG LIST  ========================================= */
 
 .drag_group{
@@ -696,6 +711,10 @@ ul.expand_list .expand_item {
 dl.proplist, dl.proplist-col {
   margin: 0;
   padding-left: 0;
+}
+
+#details .proplist dd, #details .proplist-col dd{
+  margin-bottom: 0.5em;
 }
 
 .frm_save_order input[type='submit']{
@@ -772,16 +791,6 @@ ul.row li{
 }
 
 /* =======================================  GENERAL CLASSES  ========================================= */
-.content-wrp {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #eee;
-  margin-bottom: 20px;
-  padding: 15px;
-}
-
-.content-wrp .yui-skin-sam .yui-dt table {
-    border: 1px solid #CCCCCC;
-}
 
 .box {
     background: none repeat scroll 0 0 #EDF5FF;
@@ -820,7 +829,6 @@ ul.row li{
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    margin-right: 10px;
     padding: 5px 10px;
     text-decoration: none;
 }
@@ -865,11 +873,15 @@ ul.row li{
 	margin-top:0;
 }
 
-.content-wrp{
-  background: none repeat scroll 0 0 #EDF5FF;
-  border: 1px solid #DBE5EF;
-  margin-top: 1em;
-  padding: 1em;
+.content-wrp {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #DEE1E4;
+    margin-top: 1em;
+    padding: 0;
+}
+
+.content-wrp .yui-skin-sam .yui-dt table {
+    border: 1px solid #CCCCCC;
 }
 
 /* =======================================  CHECK LIST DETAILS ========================================= */
@@ -882,12 +894,27 @@ input.id {
 }
 
 input.date {
-    width: 65px;
-    text-align: right;
+  text-align: right;
+  width: 65px;
 }
 
 /* =======================================  CHECK LIST  ========================================= */
+#check-list-heading .box-1 {
+	float:left; 
+	width:71%;
+}
 
+#check-list-heading .box-2 {
+	float:right; 
+	width:25%;
+}
+
+#check-list-heading .box-2 a{
+	font-weight: normal;
+  padding: 0 0 5px;
+  text-align: center;
+}
+		
 .check_list li div {
     float: left;
     margin: 5px;
@@ -969,9 +996,8 @@ input.date {
     vertical-align: top;
 }
 
-#check_list_details .col_2 {
-    margin-left: 15%;
-    width: 19%;
+#check_list_details .col_1 {
+    width: 46%;
 }
 
 /* =======================================  TAB CHECK LIST DETAILS ========================================= */
@@ -1006,24 +1032,25 @@ h3.check_item_details{
 /* =======================================  CHECK ITEM  ========================================= */
 
 .check_item div{
-    margin: 5px 0;
-    clear:left;
+  margin: 5px 0;
+  clear:left;
 }
 
 .check_item textarea {
-    display: block;
-    height: 100px;
-    margin-top: 6px;
-    width: 63%;
+  display: block;
+  height: 100px;
+  margin-top: 6px;
+  width: 63%;
 }
 
 .check_item label{
 	width:150px;	
 }
 
-.new_item a#innertoolbar-button{
-	background: grey;
-	font-weight: bold;
+.new_item a#innertoolbar-button {
+    background: none repeat scroll 0 0 #FCF0DD;
+    border: 1px solid #CDBFAC;
+    color: #333333;
 }
 
 #frm_save_check_items input[type="submit"]{
@@ -1050,24 +1077,55 @@ ul.check_list {
 
 /* ====================================  CALENDAR  ========================================= */
 #control_plan .top h3 {
-    float: left;
-    font-size: 19px;
-    margin: 0;
+  clear: left;
+  float: left;
+  font-size: 19px;
+  margin-bottom: 1em;
+  margin-top: 0;
+  padding: 0;
 }
 
-#control_plan .top h3 .year{
-   margin-left:5px;
+#control_plan .top h3 .month {
+  margin-right: 5px;
 }
 
 #control_plan .middle {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border-color: #DBE5EF;
-    border-style: solid solid none;
-    border-width: 1px 1px 0;
-    clear: both;
-    margin-top: 1em;
-    overflow: hidden;
-    padding: 1em 1em 0;
+  background: none repeat scroll 0 0 #EDF5FF;
+  border-color: #DBE5EF;
+  border-style: solid solid none;
+  border-width: 1px 1px 0;
+  clear: both;
+  margin-top: 1em;
+  overflow: hidden;
+  padding: 1em 1em 0;
+}
+
+#control_plan h2 {
+  background: none repeat scroll 0 0 #FFFFFF;
+  color: #000000;
+  float: left;
+  font-size: 23px;
+  padding: 0.2em 0.5em;
+}
+
+#control_plan h2.components {
+  margin-top: 40px;
+}
+
+#control_plan h3 {
+    padding-left: 1em;
+}
+
+#cal-filters {
+  clear: left;
+  float: left;
+  margin-top: 1em;
+}
+
+#cal_wrp h3 {
+  clear: both;
+  font-size: 1.4em;
+  margin-bottom: 5px;
 }
 
 /* =============================  SEARCH LOCATION BOX  ======================= */
@@ -1076,17 +1134,36 @@ ul.check_list {
     margin-bottom: 10px;
 }
 
-#search-location-name { 
-	width: 16em; 
+#search-location-name {
+    margin: 2px 0 0;
+    width: 16em;
 }
 
 #choose-my-location {
-    float: right;
-    margin-right: 10px;
+  float: right;
+  margin-right: 10px;
 }
 
 #choose-building {
+  float: left;
+}
+
+#filters {
+    clear: left;
     float: left;
+}
+
+#cal-filters.select-box {
+  background: none repeat scroll 0 0 #DEEAF8;
+  border: 1px solid #BDD3ED;
+}
+
+#cal-filters .filter {
+    float: left;
+}
+
+#cal-filters .filter.first {
+    margin-right: 1em;
 }
 
 .month_view #choose-building {
@@ -1113,24 +1190,35 @@ ul.check_list {
   text-align: justify;	
 }
 
+.select-box a.last{
+  padding: 0;
+}
+
 #choose-loc .btn {
     display: inline-block;
     font-size: 0.9em;
     padding: 2px 8px;
 }
 
+#choose-loc .btn.first {
+    margin-right: 0.3em;
+}
+
 #choose-loc .btn.active{
 	background: #3F7EC1;	
+}
+#choose-loc label {
+	display: inline-block;
 }
 
 /* ==================  COLOR MAP ============================= */
 
 ul#icon_color_map {
-    background: none repeat scroll 0 0 #FEFBF4;
-    border: 1px solid #DDDDDD;
-    border-radius: 5px 5px 5px 5px;
-    float: right;
-    padding: 1em;
+  background: none repeat scroll 0 0 #FEFBF4;
+  border: 1px solid #DDDDDD;
+  border-radius: 5px 5px 5px 5px;
+  float: right;
+  padding: 1em;
 }
 
 ul#icon_color_map li {
@@ -1143,35 +1231,43 @@ ul#icon_color_map span{
 }
 
 #calendar {
-    table-layout: fixed;
-    width: 100%;
+  clear: both;
+  table-layout: fixed;
+  width: 100%;
 }
 
 #calendar th {
-    font-weight: bold;
-    font-size:15px;
-    background:none;
+  font-weight: bold;
+  font-size:15px;
+  background:none;
 }
 
 #calendar th, #calendar td {
-    padding: 10px;
-    text-align: center;
+  padding: 10px;
+  text-align: center;
 }
 
 #calendar.month th, #calendar.month td {
-    padding: 5px 3px;
+  padding: 5px 3px;
 }
 
 #calendar .even {
-    background: none repeat scroll 0 0 #DEEAF8;
+  background: none repeat scroll 0 0 #DEEAF8;
+}
+
+#calendar h3 {
+  padding-left: 1em;
+  text-align: left;
 }
 
 #cal_wrp {
-    border: 1px solid #DBE5EF;
     background: none repeat scroll 0 0 #EDF5FF;
     border-top: none;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: #DBE5EF;
     clear: both;
-    padding: 1em;
+    padding: 0 1em 1em;
 }
 
 .control_details_wrp div {
@@ -1185,12 +1281,17 @@ ul#icon_color_map span{
 	width: 150px;
 }
 
+#calendar .location-name, #calendar .component-type {
+	width: 150px;
+	text-align: left;
+}
+
 #calendar .frequency {
     margin-right: 10px;
     width: 100px;
 }
 
-#calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location_name {
+#calendar .frequency, #calendar .title, #calendar .assigned, #calendar .location-name {
     text-align: left;
 }
 
@@ -1204,7 +1305,12 @@ ul#icon_color_map span{
 
 .cal_info_msg {
 	font-size: 16px;
-    padding: 40px 20px;	
+  padding: 40px 20px;	
+}
+
+#calendar .cal_info_msg td{
+	text-align: left;
+	
 }
 
 #showYear{
@@ -1265,6 +1371,8 @@ a.view_info_box {
     display: block;
     font-size: 10px;
     font-weight: bold;
+    height: 15px;
+    padding-top: 1px;
     text-align: center;
     text-decoration: none;
 }
@@ -1295,8 +1403,8 @@ a.view_info_box {
     display: none;
     float: none;
     font-size: 12px;
-    height: 200px;
     left: 40px;
+    overflow: hidden;
     padding: 10px;
     position: absolute;
     text-align: left;
@@ -1304,28 +1412,34 @@ a.view_info_box {
     width: 400px;
     z-index: 1;
 }
+
 #info_box h3 {
  	background: none repeat scroll 0 0 #D1E3F8;
     margin: 0 0 10px;
     padding: 5px 0;
     text-align: center;
 }
+
 #info_box h5 {
     font-size: 13px;
     font-weight: bold;
     margin: 0 0 4px;
     text-align: left;
 }
+
 #info_box .check_item {
  	width: 100% 	
 }
+
 #info_box .check_item label{
  	display:inline;
  	margin-left:20px; 	
 }
+
 #info_box .case {
  	text-align:left; 	
 }
+
 .empty_list{
 	font-size: 16px;
     font-weight: bold;
@@ -1336,32 +1450,46 @@ a.view_info_box {
   	margin-left: 14px;
     margin-top: 5px;	
 }
+
 #data_paginator, #loc_paginator{
 	margin:8px;	
 	clear:left;
 }
+
 ul#filters li, ul#search_list li{
 	float:left;	
 }
+
 ul#filters input[type="text"], ul#filters select {
     margin-right: 5px;
     padding: 3px;
 }
+
 #choose_control select {
+    float: left;
     margin-right: 5px;
 }
+
+#choose_control form {
+    float: left;
+}
+
 ul#search_list input[type="submit"] {
     margin: 0;
     padding: 2px 15px;
 }
+
 ul#search_list input[type="text"] {
     margin: 0 5px 0 0;
     padding: 3px;
 }
-#queryForm{
-	overflow:hidden;
-	margin: 20px;
+
+#queryForm {
+    clear: both;
+    margin: 20px;
+    overflow: hidden;
 }
+
 fieldset.add_check_list div{
 	padding:2px; 
 }
@@ -1424,6 +1552,8 @@ ul.check_items h5{
 	font-size: 13px;
 }
 
+/* ======================== TAB MENU ========================== */
+
 .tab_menu a {
     background: none repeat scroll 0 0 #F9F5F0;
     border: 1px solid #F0F0F0;
@@ -1445,11 +1575,19 @@ ul.check_items h5{
 	border-bottom: 0;	
 }
 
+#tab_content {
+  background: none repeat scroll 0 0 #EDF5FF;
+  border: 1px solid #DBE5EF;
+  padding: 0 20px 20px;
+}
+
 /* ======================== CHECK LIST MENU ========================== */
 #check_list_menu {
+    clear: both;
     margin: 0 0 20px;
     overflow: hidden;
 }
+
 #check_list_menu a {
     background: none repeat scroll 0 0 #F4EDE3;
     border: 1px solid #EDE4D8;
@@ -1463,16 +1601,20 @@ ul.check_items h5{
     text-decoration: none;
     width: 185px;
 }
+
 #check_list_menu a.active {
  	background: none repeat scroll 0 0 #CAE3FB;
     border: 1px solid #CAE3FB;
 }
+
 #check_list_menu .left_btns {
     float: left;
 }
+
 #check_list_menu .right_btns {
     float: right;
 }
+
 #check_list_menu .right_btns a {
     background: none repeat scroll 0 0 #F57056;
     border-color: #EE836F -moz-use-text-color #CB563F;
@@ -1725,15 +1867,6 @@ ul#groups {
 ul#groups h4{
     margin: 4px 0;
 }
-.input_error_msg {
-    background: none repeat scroll 0 0 #FBE3E4;
-    border-bottom-right-radius: 4px;
-    color: #D12F19;
-    display: inline-block;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    padding: 4px 5px;
-}
 
 input.focus, select.focus{
 	border: 2px solid #dae6f4;
@@ -1747,19 +1880,54 @@ div.controller_checklist {
 /* =====================  CONTROL LOCATION  ===================== */
 
 #choose_control {
-    float: right;
-    width: 500px;
+  float: left;
+  margin: 20px;
+  width: 500px;
+}	
+#choose_control h4 {
+  display: block;
+  font-size: 17px;
+  margin: 5px 0;
 }
 
 #choose_control select {
-    width: 245px;
+  width: 245px;
 }
 
-.error_msg {
-  	color: red;
-    display: none;
-    font-size: 14px;
-    padding: 7px 0;
+#choose-location {
+    clear: both;
+    margin: 20px;
+}
+
+#queryForm #choose-location {
+    margin: 0;
+}
+
+#choose-location h4{
+  display: block;
+  font-size: 17px;
+  margin: 5px 0;
+}
+
+#comp-filters label {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#comp-filters .select-box {
+    background: none repeat scroll 0 0 #DEEAF8;
+    border: 1px solid #BDD3ED;
+    float: left;
+    height: 40px;
+    margin-right: 5px;
+}
+
+#comp-filters .filter {
+    float: left;
+}
+
+#choose-location #datatable-container{
+  margin: 20px 0;
 }
 
 #control_area_list {
@@ -1774,16 +1942,36 @@ div.controller_checklist {
 	margin:20px;
 }
 	
+#select_all {
+	float: right;
+	margin-right: 805px;	
+}
+
+#save_location {
+	margin-left:20px;
+	margin-bottom:20px;
+}
+	
 /* ==========================  CONTROL DETAILS   ============================ */
 
 #control_details label {
-    display: inline-block;
-    font-weight: bold;
-    width: 100px;
+  display: inline-block;
+  font-weight: bold;
+  width: 100px;
+}
+
+#control_details input, #control_details select {
+  display: inline-block;
+}
+
+#control_details .input_error_msg {
+  display: block;
+  text-align: center;
+  width: 692px;
 }
 
 #control_details .date {
-    margin-right:0;
+  margin-right:0;
 }
 
 #control_details #select_all{
@@ -1795,24 +1983,25 @@ div.controller_checklist {
 	margin-bottom: 20px;	
 }
 
-.help_text {
-    background: none repeat scroll 0 0 #CCDBED;
-    display: none;
-    margin-left: 5px;
-    padding: 6px 10px;
-    vertical-align: baseline;
-}
-.help_text.ext {
-    margin-left: 0;
+#control_details .proplist-col dd{
+	margin-bottom: 1em;	
 }
 
-#repeat_interval{
-	width: 20px;	
+#repeat_interval {
+  width: 28px;
 }
 	
 /* =============================  CONTROL GROUP AND ITEMS  ======================= */
 #control_group_tabview .yui-content{
 	padding: 10px;	
+}
+
+#frm_save_control_groups .itemlist {
+		margin-bottom: 1em;
+}
+
+#frm_save_control_groups .itemlist li{
+		margin-bottom: 0.5em;
 }
 
 ul.control_groups li ul {
@@ -1936,4 +2125,57 @@ table.yui-skin-sam {
 
 p.no_items_msg {
 	padding: 5px;	
+}
+
+.no-comp-msg {
+  font-size: 16px;
+  padding-left: 12px;
+}
+
+.option-list-heading {
+	margin-bottom: 5px;	
+}
+
+.option-list{
+	margin-top: 5px;	
+}
+.option-list{
+	padding-left:10px;	
+}
+
+.input_error_msg {
+  background: none repeat scroll 0 0 #FBE3E4;
+  border-bottom-right-radius: 4px;
+  color: #D12F19;
+  display: inline-block;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
+
+.error_msg {
+  color: red;
+  display: none;
+  font-size: 14px;
+  padding: 7px 0;
+}
+
+.help_text {
+  background: none repeat scroll 0 0 #CCDBED;
+  color: #414851;
+  display: none;
+  padding: 6px 10px 5px;
+  text-align: center;
+  vertical-align: baseline;
+}
+
+.help_text.line {
+  margin-left: 5px;
+}
+
+.help_text.below {
+  margin-left: 0;
+  width: 505px;
 }

@@ -28,17 +28,15 @@
  	* @version $Id$
 	*/	
 
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.soprocedure');
-	phpgw::import_class('controller.socontrol_area');
 	phpgw::import_class('controller.socontrol');
 
 	include_class('controller', 'procedure', 'inc/model/');
 
-	class controller_uiprocedure extends controller_uicommon
+	class controller_uiprocedure extends phpgwapi_uicommon
 	{
 		private $so;
-		private $so_control_area;
 		private $_category_acl;
 		private $so_control;
 		private $so_control_group_list;
@@ -60,12 +58,11 @@
 		{
 			parent::__construct();
 
-			$this->so = CreateObject('controller.soprocedure');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
+			$this->so = CreateObject('controller.soprocedure');			
 			$this->so_control = CreateObject('controller.socontrol');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			
 			$config	= CreateObject('phpgwapi.config','controller');
@@ -76,7 +73,6 @@
 
 		public function index()
 		{
-			//self::set_active_menu('controller::control_item2::control_item_list2');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
@@ -118,7 +114,13 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							)
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('t_new_procedure'),
+								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
+								'class' => 'new_item'
+							),
 						),
 					),
 				),
@@ -158,7 +160,6 @@
 					)
 				),
 			);
-//_debug_array($data);
 
 			self::render_template_xsl(array( 'procedure/procedures_datatable', 'datatable' ), $data);
 		}

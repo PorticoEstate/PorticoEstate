@@ -993,6 +993,7 @@
 
 			$datatable = array();
 			$values_combo_box = array();
+			$dry_run = false;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -1032,28 +1033,34 @@
 				array_unshift ($values_combo_box[1],$default_value);
 
 				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
-				$values_combo_box[2] =  $cat_filter['cat_list'];
-				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
-				array_unshift ($values_combo_box[2],$default_value);
-				
-				foreach($values_combo_box[2] as &$entry)
+				foreach($cat_filter['cat_list'] as $_cat)
 				{
-					$entry['id'] = $entry['cat_id'];
+					$values_combo_box[2][] = array
+					(
+						'id' => $_cat['cat_id'],
+						'name' => $_cat['name'],
+						'selected' => $_cat['selected'] ? 1 : 0
+					);
 				}
+				
+				array_unshift ($values_combo_box[2],array ('id'=>'', 'name'=>lang('no category')));
 
-//_debug_array($values_combo_box[2]);die();
+//_debug_array($values_combo_box[2]);
 
 				$values_combo_box[3] =  $this->bo->get_b_group_list($this->grouping);
 				$default_value = array ('id'=>'','name'=>lang('no grouping'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
-				foreach($values_combo_box[4] as & $_dimb)
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'department'));
+				array_unshift ($values_combo_box[4], array ('id'=>'','name'=>lang('department')));
+
+				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[5] as & $_dimb)
 				{
 					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
 				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
-				array_unshift ($values_combo_box[4],$default_value);
+				array_unshift ($values_combo_box[5],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -1141,12 +1148,24 @@
 								array
 								( //boton 	USER
 									//	'id' => 'btn_user_id',
+									'id' => 'sel_department',
+									'name' => 'department',
+									'value'	=> lang('department'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[4],
+									'onchange'=> 'onChangeSelect("department");',
+									'tab_index' => 5
+								),
+								array
+								( //boton 	USER
+									//	'id' => 'btn_user_id',
 									'id' => 'sel_dimb_id',
 									'name' => 'dimb_id',
 									'value'	=> lang('dimb'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $values_combo_box[4],
+									'values' => $values_combo_box[5],
 									'onchange'=> 'onChangeSelect("dimb_id");',
 									'tab_index' => 5
 								),
@@ -1209,6 +1228,7 @@
 						)
 					)
 				);
+				$dry_run = true;
 			}
 
 			$uicols = array (
@@ -1247,17 +1267,27 @@
 					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);	
 
-			$location_list = array();
 
-			$location_list = $this->bo->read_obligations(); 
+			//FIXME
+			if($dry_run)
+			{
+				$location_list = array();
+
+			}
+		//	else
+			{
+				$location_list = $this->bo->read_obligations();
+			}
+
 			//_debug_array($location_list);
+	
 			$entry = $content = array();
 			$j = 0;
 			//cramirez: add this code because  "mktime" functions fire an error
 			if($this->year == "")
 			{
 				$today = getdate();
-				$this->year = $today[year];
+				$this->year = $today['year'];
 			}
 
 			if (isset($location_list) && is_array($location_list))
@@ -1283,10 +1313,10 @@
 							'budget_cost'		=> number_format($entry['budget_cost'], 0, ',', ' '),
 							'obligation_ex'		=> $entry['obligation'],
 							'obligation'		=> number_format($entry['obligation'], 0, ',', ' '),
-							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$b_account, 'start_date'=> $start_date, 'end_date'=> $end_date)),
+							'link_obligation'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index', 'filter'=>'all', 'paid'=>1, 'district_id'=> $entry['district_id'], 'b_group'=> $entry['grouping'], 'b_account' =>$entry['b_account'], 'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'status_id' => 'all')),
 							'actual_cost_ex'	=> $entry['actual_cost'],
 							'actual_cost'		=> number_format($entry['actual_cost'], 0, ',', ' '),
-							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$b_account,  'start_date'=> $start_date, 'end_date'=> $end_date, 'submit_search'=>true)),
+							'link_actual_cost'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume', 'district_id'=> $entry['district_id'], 'b_account_class'=> $entry['grouping'], 'b_account' =>$entry['b_account'],  'start_date'=> $start_date, 'end_date'=> $end_date, 'ecodimb' => $entry['ecodimb'], 'submit_search'=>true)),
 							'diff_ex'			=> $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
 							'diff'				=> number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' ')
 						);	
@@ -1538,7 +1568,7 @@
 
 					'lang_year'						=> lang('year'),
 					'lang_year_statustext'			=> lang('Budget year'),
-					'year'							=> $this->bocommon->select_list($values['year'],$this->bo->get_year_list()),
+					'year'							=> $this->bocommon->select_list($values['year']?$values['year']:date('Y'),$this->bo->get_year_list()),
 
 					'lang_district'					=> lang('District'),
 					'lang_no_district'				=> lang('no district'),

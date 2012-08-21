@@ -28,12 +28,12 @@
     * @version $Id$
     */	
 
-    phpgw::import_class('controller.uicommon');
+    phpgw::import_class('phpgwapi.uicommon');
     phpgw::import_class('controller.sodocument');
     phpgw::import_class('controller.soprocedure');
     include_class('controller', 'document', 'inc/model/');
 
-    class controller_uidocument extends controller_uicommon
+    class controller_uidocument extends phpgwapi_uicommon
     {
         private $so;
         private $so_procedure;
@@ -289,15 +289,19 @@
         {	
             $document_id = intval(phpgw::get_var('id'));
             $document = $this->so->get_single($document_id);
+            
+            $procedure_id = intval(phpgw::get_var('procedure_id'));
+            $procedure = $this->so_procedure->get_single($procedure_id);
+
             $document_properties = $this->get_type_and_id($document);
             
-            if(!$this->check_permissions($document,$document_properties))
+            /*if(!$this->check_permissions($document,$document_properties))
             {
                 $this->render('permission_denied.php');
                 return;
-            }
+            }*/
             
-            $result = rental_sodocument::get_instance()->delete_document_from_vfs
+            $result = $this->so->delete_document_from_vfs
             (
                 $document_properties['document_type'],	
                 $document_properties['id'],
@@ -306,7 +310,10 @@
             
             if($result)
             {
-                return $this->so->delete_document($document_id);
+                $this->so->delete_document($document_id);
+                $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 
+                            												'procedure_id' => $procedure->get_id(), 
+                            												'tab' => 'documents'));
             } 
             // TODO: communicate error/message to user
             return false;
@@ -429,6 +436,8 @@
                     $doc_array = $document->toArray();
                     $doc_array['link'] = self::link(array('menuaction' => 'controller.uidocument.view', 
                     									'id' => $doc_array['id']));
+                    $doc_array['delete_link'] = self::link(array('menuaction' => 'controller.uidocument.delete', 
+                    									'id' => $doc_array['id'], 'procedure_id' => $procedure_id));
                     $table_values[] = array('document' => $doc_array);
                 }
                 

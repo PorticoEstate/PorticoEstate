@@ -517,7 +517,7 @@
 
 		function read_obligations($data)
 		{
-			//_debug_array($data);			
+			//_debug_array($data);
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter			= isset($data['filter']) ? $data['filter'] : 'none';
 			$query			= isset($data['query']) ? $data['query'] : '';
@@ -532,6 +532,7 @@
 			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$details		= isset($data['details']) ? $data['details'] : '';
 			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
+			$department		= isset($data['department'])  && $data['department'] ? (int)$data['department'] : 0;
 
 			if(!$year)
 			{
@@ -545,14 +546,20 @@
 
 			$start_date = mktime(1, 1, 1, 1, 1, $year);
 			$end_date = mktime  (23, 59, 59, 12, 31, $year);
-//			$filtermethod .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
-			$filtermethod .= " AND fm_workorder_status.closed IS NULL AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+			$filtermethod .= " WHERE fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+//			$filtermethod .= " WHERE fm_workorder_status.closed IS NULL AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
 
-			$where = 'WHERE';
+			$where = 'AND';
 
+			$cat_ids = array();
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$cat_ids = $this->get_sub_cats($cat_id);
+			}
+
+			if($cat_ids)
+			{
+				$filtermethod .= " $where fm_project.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -568,6 +575,23 @@
 				$where = 'AND';
 			}
 
+			$_department_dimb = array();
+			if ($department > 0)
+			{
+				$_department_dimb[] = -1;//block in case no one found
+				$this->db->query("SELECT id FROM fm_ecodimb WHERE department = $department ",__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$_department_dimb[] = $this->db->f('id');
+				}
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_workorder.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';
+			}
+
 			if ($grouping > 0)
 			{
 				$filtermethod .= " $where fm_b_account.category='$grouping' ";
@@ -580,6 +604,19 @@
 				$query = $this->db->db_addslashes($query);
 			}
  */
+			$config						= CreateObject('phpgwapi.config','property');
+			$config->read();
+
+			if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+			{
+				$_join_district =	"{$this->join} fm_locations ON fm_workorder.location_code = fm_locations.location_code"
+									. " {$this->join} fm_location1 ON fm_location1.loc1 = fm_locations.loc1";
+			}
+			else
+			{
+				$_join_district = "{$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
+			}
+
 			if( $details )
 			{
 				$b_account_field = 'id';
@@ -589,16 +626,17 @@
 				$b_account_field = 'category';
 			}
 
-			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
+			$sql = "SELECT fm_workorder_status.closed, sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
-				. " $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " $this->join fm_b_account ON fm_workorder.account_id = fm_b_account.id"
-				. " $this->join fm_project ON  fm_workorder.project_id = fm_project.id"
-				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1"
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
+				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
+				. " {$_join_district}"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " {$filtermethod} {$querymethod} GROUP BY fm_workorder_status.closed,fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
 
-			//_debug_array($sql);die();
+			//_debug_array($sql);
+			//die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			$sum_obligation_cost = 0;
@@ -607,18 +645,22 @@
 			while ($this->db->next_record())
 			{
 				$_combined_cost = round($this->db->f('combined_cost'));
-				$sum_obligation_cost += $_combined_cost;
 				$_hits = $this->db->f('hits');
 				$sum_hits += $_hits;
 
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_combined_cost;
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
+				if(!$this->db->f('closed'))
+				{
+					$sum_obligation_cost += $_combined_cost;
+					$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_combined_cost;
+				}
+
+				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
-			//_debug_array($obligations);die();
+//			_debug_array($obligations);
 
 			//----------- ad hoc order
 			$filtermethod = "WHERE fm_tts_tickets.vendor_id > 0 AND budget > 0";
@@ -630,9 +672,9 @@
 
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_tts_tickets.cat_id = " . (int)$cat_id;
+				$filtermethod .= " $where fm_tts_tickets.cat_id IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -645,6 +687,12 @@
 			if ($dimb_id > 0)
 			{
 				$filtermethod .= " $where fm_tts_tickets.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_tts_tickets.ecodimb IN (" . implode(',', $_department_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -671,14 +719,14 @@
 				$_hits = $this->db->f('hits');
 				$sum_hits += $_hits;
 
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_budget;
+				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_hits;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
-			//_debug_array($obligations);die();
 
+			//_debug_array($obligations);die();
 
 			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
 				. " FROM fm_tts_tickets"
@@ -713,7 +761,7 @@
 			$filtermethod = '';
 			$where = 'AND';
 			if ($grouping > 0)
-			{	
+			{
 				$filtermethod .= " $where fm_b_account.category='$grouping' ";
 /*
 				if (!$details)
@@ -728,6 +776,12 @@
  */
 			}
 
+			if($cat_ids)
+			{
+				$filtermethod .= " $where fm_budget.category IN (". implode(',', $cat_ids) . ')';
+				$where = 'AND';
+			}
+
 			if ($district_id > 0)
 			{
 				$filtermethod .= " $where district_id='$district_id' ";
@@ -739,6 +793,13 @@
 				$filtermethod .= " $where ecodimb={$dimb_id}";
 				$where = 'AND';
 			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';
+			}
+
 
 			if( $details )
 			{
@@ -770,9 +831,9 @@
 			$filtermethod = '';
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_project.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_workorder.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -794,6 +855,13 @@
 				$where = 'AND';
 			}
 
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where dimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';
+			}
+
+
 			$start_periode = date('Ym',mktime(2,0,0,1,1,$year));
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
 
@@ -803,35 +871,75 @@
 			{
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
-			
-//-------start check paid-----------
-			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
+
+
+//-------start check paid workorder-----------
+			$sql = "SELECT fm_workorder.id,fm_workorder_status.closed,combined_cost, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
 				. " FROM fm_ecobilagoverf"
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
 				. " {$this->join} fm_workorder ON fm_ecobilagoverf.pmwrkord_code = fm_workorder.id"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " WHERE periode >= $start_periode AND periode <= $end_periode {$filtermethod}"
-				. " GROUP BY fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
+				. " GROUP BY fm_workorder.id, fm_workorder_status.closed,combined_cost, fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-
+//_debug_array($sql);
 			while ($this->db->next_record())
 			{
+//continue;
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
+
+				$_combined_cost = $this->db->f('combined_cost');
+
+				if($this->db->f('closed'))
+				{
+					$_diff_obligation = 0;
+				}
+				else if($_combined_cost > 0)
+				{
+					if(($_combined_cost - $_actual_cost) > 0)
+					{
+						$_diff_obligation = $_actual_cost;
+					}
+					else
+					{
+						$_diff_obligation = $_combined_cost;
+					}
+				}
+				else if($_combined_cost < 0)
+				{
+					if(($_combined_cost - $_actual_cost) < 0)
+					{
+						$_diff_obligation = $_actual_cost;
+					}
+					else
+					{
+						$_diff_obligation = $_combined_cost;
+					}
+				}
+				else
+				{
+					$_diff_obligation = 0;
+				}
+
+				$sum_obligation_cost -= $_diff_obligation;
 				$sum_actual_cost += $_actual_cost;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] -= $_diff_obligation;
 				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[(int)$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
-		
+
+//			_debug_array($obligations);
 //-------end check paid-----------
 
-//-------start check active invoices-----------
-			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
+//-------start check active invoices, workorder-----------
+			$sql = "SELECT fm_workorder.id,combined_cost, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, sum(godkjentbelop) as actual_cost,dimb,mvakode"
 				. " FROM fm_ecobilag"
 				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_location1 ON fm_ecobilag.loc1 = fm_location1.loc1"
@@ -839,15 +947,49 @@
 				. " {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code = fm_workorder.id"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " WHERE (periode >= 0 AND periode <= $end_periode OR periode IS NULL) {$filtermethod}"
-				. " GROUP BY fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
+				. " GROUP BY fm_workorder.id, combined_cost, fm_b_account.{$b_account_field}, district_id, dimb, mvakode";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
+//continue;
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
+
+				$_combined_cost = $this->db->f('combined_cost');
+
+				if($_combined_cost > 0)
+				{
+					if(($_combined_cost - $_actual_cost) > 0)
+					{
+						$_diff_obligation = $_actual_cost;
+					}
+					else
+					{
+						$_diff_obligation = $_combined_cost;
+					}
+				}
+				else if($_combined_cost < 0)
+				{
+					if(($_combined_cost - $_actual_cost) < 0)
+					{
+						$_diff_obligation = $_actual_cost;
+					}
+					else
+					{
+						$_diff_obligation = $_combined_cost;
+					}
+				}
+				else
+				{
+					$_diff_obligation = 0;
+				}
+
+				$sum_obligation_cost -= $_diff_obligation;
+
 				$sum_actual_cost += $_actual_cost;
+				$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] -= $_diff_obligation;
 				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('dimb')] += $_actual_cost;
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[(int)$this->db->f('district_id')] = true;
@@ -861,9 +1003,9 @@
 			$filtermethod = " fm_s_agreement_budget.year = $year";
 			$where = 'AND';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_s_agreement.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_s_agreement.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -876,6 +1018,12 @@
 			if ($dimb_id > 0)
 			{
 				$filtermethod .= " $where fm_s_agreement_budget.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -904,7 +1052,7 @@
 			}
 
 
-//-------start check paid-----------
+//-------start check paid service agreement-----------
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilagoverf.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
 				. " FROM fm_ecobilagoverf"
@@ -921,7 +1069,7 @@
 				$_actual_cost = round($this->db->f('actual_cost'));
 				$_account_value = $this->db->f($b_account_field);
 				$_dimb = (int)$this->db->f('ecodimb');
-				
+
 				$sum_actual_cost += $_actual_cost;
 				$actual_cost[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
 				$obligations[$_account_value][$_dummy_district][$_dimb] -= $_actual_cost;
@@ -932,14 +1080,14 @@
 
 //-------end check paid-----------
 
-//-------start check active invoices-----------
+//-------start check active invoices service agreement-----------
 
 			$filtermethod = '';
 			$where = 'WHERE';
 
-			if ($cat_id > 0)
+			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_s_agreement.category = " . (int)$cat_id;
+				$filtermethod .= " $where fm_s_agreement.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -955,7 +1103,11 @@
 				$where = 'AND';
 			}
 
-
+			if($_department_dimb)
+			{
+				$filtermethod .= " $where fm_s_agreement_budget.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$where = 'AND';
+			}
 
 			$sql = "SELECT fm_b_account.{$b_account_field} as {$b_account_field}, sum(fm_ecobilag.godkjentbelop) as actual_cost,fm_s_agreement_budget.ecodimb"
 				. " FROM fm_ecobilag"
@@ -972,7 +1124,7 @@
 				$_actual_cost = round($this->db->f('actual_cost'));
 				$_account_value = $this->db->f($b_account_field);
 				$_dimb = (int)$this->db->f('ecodimb');
-				
+
 				$sum_actual_cost += $_actual_cost;
 				$actual_cost[$_account_value][$_dummy_district][$_dimb] += $_actual_cost;
 				$obligations[$_account_value][$_dummy_district][$_dimb] -= $_actual_cost;
@@ -1031,7 +1183,7 @@
 							{
 								$result[] = array(
 									'grouping'		=> $details ? '' : $b_account, 
-									'b_account'		=> $b_account,
+									'b_account'		=> $details ? $b_account : '',
 									'district_id'	=> $district_id,
 									'ecodimb'		=> $dimb,
 									'actual_cost'	=> isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb] ? round($actual_cost[$b_account][$district_id][$dimb]) : 0,
@@ -1050,14 +1202,14 @@
 			//cramirez
 			if($this->total_records == 0)
 			{
-				return $result;				
+				return $result;
 			}
 
 			if(!$allrows)
 			{
 				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])?intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']):15;
 
-				//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));				
+				//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));
 				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
 
 				$out = array_chunk($result, $num_rows);

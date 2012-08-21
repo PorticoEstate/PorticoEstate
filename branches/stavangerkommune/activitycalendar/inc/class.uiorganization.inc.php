@@ -81,144 +81,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		unset($org_info);
 		unset($contact1);
 		unset($contact2);
-		if($type)
-		{
-			$sogroup = activitycalendar_sogroup::get_instance();
-			$soactivity = activitycalendar_soactivity::get_instance();
-			$socontact = activitycalendar_socontactperson::get_instance();
-			$group_array = $sogroup->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
-			if(count($group_array) > 0){
-				$keys = array_keys($group_array);
-				$group = $group_array[$keys[0]];
-			}
-			if(isset($_POST['save_group'])) // The user has pressed the save button
-			{
-				$desc = phpgw::get_var('group_description');
-				$group->set_description($desc);
-				
-				$contact1 = array();
-				$contact1['id'] = phpgw::get_var('contact1_id');
-				$contact1['name'] = phpgw::get_var('contact1_name');
-				$contact1['phone'] = phpgw::get_var('contact1_phone');
-				$contact1['mail'] = phpgw::get_var('contact1_email');
-				$contact1['org_id'] = 0;
-				$contact1['group_id'] = $group->get_id();
-				
-				$contact2 = array();
-				$contact2['id'] = phpgw::get_var('contact2_id');
-				$contact2['name'] = phpgw::get_var('contact2_name');
-				$contact2['phone'] = phpgw::get_var('contact2_phone');
-				$contact2['mail'] = phpgw::get_var('contact2_email');
-				$contact2['org_id'] = 0;
-				$contact2['group_id'] = $group->get_id();
-				
-				if($sogroup->update_local($group))
-				{
-					$socontact->update_local_contact_person($contact1);
-					$socontact->update_local_contact_person($contact2);
-					$message = lang('messages_saved_form');	
-				}
-				else
-				{
-					$error = lang('messages_form_error');
-				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $group->get_id(), 'type' => 'group', 'saved_ok' => 'yes'));
-			}
-			else if(isset($_POST['store_group'])) // The user has pressed the store button
-			{
-				$desc = phpgw::get_var('group_description');				
-				$orgid = $group->get_organization_id();
-				
-				$group_info = array();
-				$group_info['name'] = $group->get_name(); //new
-				$group_info['organization_id'] = $orgid; 
-				$group_info['description'] = $desc;
-				
-				$contact1_id = phpgw::get_var('contact1_id');
-				$contact2_id = phpgw::get_var('contact2_id');
-				
-				$contact1_name = phpgw::get_var('contact1_name');
-				$contact1_phone = phpgw::get_var('contact1_phone');
-				$contact1_email = phpgw::get_var('contact1_email');
-				
-				$contact2_name = phpgw::get_var('contact2_name');
-				$contact2_phone = phpgw::get_var('contact2_phone');
-				$contact2_email = phpgw::get_var('contact2_email');
-
-				
-				$new_group_id = $sogroup->transfer_group($group_info);
-				if($new_group_id)
-				{
-					//update activity with new org id
-					//add contact persons to booking
-					$contact1 = array();
-					$contact1['name'] = $contact1_name;
-					$contact1['phone'] = $contact1_phone;
-					$contact1['mail'] = $contact1_email;
-					$contact1['group_id'] = $new_group_id;
-					$soactivity->add_contact_person_group($contact1);
-					
-					$contact2 = array();
-					$contact2['name'] = $contact2_name;
-					$contact2['phone'] = $contact2_phone;
-					$contact2['mail'] = $contact2_email;
-					$contact2['group_id'] = $new_group_id;
-					$soactivity->add_contact_person_group($contact2);
-					
-					$message = lang('messages_saved_form');	
-					
-					//get organization_id for the group:
-					$group_org_id = $sogroup->get_orgid_from_group($new_group_id);
-					
-					//get affected activities and update with new org id
-					$update_activities = $soactivity->get_activities_for_update($id, true);
-					var_dump($update_activities);
-					foreach($update_activities as $act)
-					{
-						$act->set_organization_id($group_org_id);
-						$act->set_group_id($new_group_id);
-						$act->set_new_org(false);
-						$soactivity->store($act);
-						var_dump($act);
-					}
-					
-					//set local group as stored
-					$group->set_change_type('added');
-					$group->set_transferred(true);
-					$sogroup->update_local($group);
-					$message = lang('messages_saved_form');
-					
-					$contact_persons = $socontact->get_booking_contact_persons($group->get_id(), true);
-        			$cp1 = $contact_persons[0];
-        			$cp2 = $contact_persons[1];
-				}
-				else
-				{
-					$error = lang('messages_form_error');
-				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $group->get_id(), 'type' => 'group', 'saved_ok' => 'yes'));
-			}
-			
-			$contact_persons = $socontact->get_local_contact_persons($group->get_id(), true);
-			$cp1 = $contact_persons[0];
-			$cp2 = $contact_persons[1];
-			
-			$data = array
-			(
-				'group' 	=> $group,
-				'contactperson1' => $cp1,
-				'contactperson2' => $cp2,
-				'editable' => true,
-				'cancel_link' => $cancel_link,
-				'errorMsgs' => $errorMsgs,
-				'infoMsgs' => $infoMsgs
-			);
-			return $this->render('group.php', $data);
-			
-		}
-		else
-		{
-			//var_dump('org');
 			$so_org = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
 			$so_contact = activitycalendar_socontactperson::get_instance();
@@ -230,54 +92,18 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			//var_dump($org);
 			$districts = $so_activity->get_districts();
 			
-			if(isset($_POST['save_organization'])) // The user has pressed the save button
-			{
-				$org->set_organization_number(phpgw::get_var('orgno'));
-				$org->set_district(phpgw::get_var('org_district'));
-				$org->set_homepage(phpgw::get_var('homepage'));
-				$org->set_email(phpgw::get_var('email'));
-				$org->set_phone(phpgw::get_var('phone'));
-				$org->set_address(phpgw::get_var('address'));
-				$org->set_description(phpgw::get_var('org_description'));
-				
-				$contact1 = array();
-				$contact1['id'] = phpgw::get_var('contact1_id');
-				$contact1['name'] = phpgw::get_var('contact1_name');
-				$contact1['phone'] = phpgw::get_var('contact1_phone');
-				$contact1['mail'] = phpgw::get_var('contact1_email');
-				$contact1['org_id'] = $org->get_id();
-				$contact1['group_id'] = 0;
-				
-				$contact2 = array();
-				$contact2['id'] = phpgw::get_var('contact2_id');
-				$contact2['name'] = phpgw::get_var('contact2_name');
-				$contact2['phone'] = phpgw::get_var('contact2_phone');
-				$contact2['mail'] = phpgw::get_var('contact2_email');
-				$contact2['org_id'] = $org->get_id();
-				$contact2['group_id'] = 0;
-				
-				if($so_org->update_local($org))
-				{
-					$so_contact->update_local_contact_person($contact1);
-					$so_contact->update_local_contact_person($contact2);
-					$message = lang('messages_saved_form');	
-				}
-				else
-				{
-					$error = lang('messages_form_error');
-				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
-			}
-			else if(isset($_POST['store_organization'])) // The user has pressed the store button
+			if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
-				$address_tmp = phpgw::get_var('address');
+				$address = phpgw::get_var('address');
+                                $zip = phpgw::get_var('zip_code');
+                                $city = phpgw::get_var('city');
 				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-				$address_array = explode(",",$address_tmp);
+				//$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
 				
 				$org_info = array();
@@ -293,8 +119,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['phone'] = $phone;
 				$org_info['email'] = $email;
 				$org_info['description'] = $desc;
-				$org_info['street'] = $address_array[0];
-				$org_info['zip'] = $address_array[1];
+				$org_info['street'] = $address;
+				$org_info['zip'] = $zip;
+                                $org_info['postaddress'] = $city;
 				$org_info['activity_id'] = '';
 				$org_info['district'] = $district;
 				
@@ -322,20 +149,14 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact1['org_id'] = $new_org_id;
 					$so_activity->add_contact_person_org($contact1);
 					
-					$contact2 = array();
-					$contact2['name'] = $contact2_name;
-					$contact2['phone'] = $contact2_phone;
-					$contact2['mail'] = $contact2_email;
-					$contact2['org_id'] = $new_org_id;
-					$so_activity->add_contact_person_org($contact2);
-					
 					$message = lang('messages_saved_form');	
 					
 					//get affected activities and update with new org id
 					$update_activities = $so_activity->get_activities_for_update($id);
 					//var_dump($update_activities);
-					foreach($update_activities as $act)
+					foreach($update_activities as $act_id)
 					{
+					    $act = $so_activity->get_single($act_id);
 						$act->set_organization_id($new_org_id);
 						$act->set_new_org(false);
 						$so_activity->store($act);
@@ -361,9 +182,11 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
-				$address_tmp = phpgw::get_var('address');
+				$address = phpgw::get_var('address');
+                                $zip = phpgw::get_var('zip_code');
+                                $city = phpgw::get_var('city');
 				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-				$address_array = explode(",",$address_tmp);
+				//$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
 				
 				$org_info = array();
@@ -379,8 +202,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['phone'] = $phone;
 				$org_info['email'] = $email;
 				$org_info['description'] = $desc;
-				$org_info['street'] = $address_array[0];
-				$org_info['zip'] = $address_array[1];
+				$org_info['street'] = $address;
+				$org_info['zip_code'] = $zip;
+                                $org_info['city'] = $city;
 				$org_info['activity_id'] = '';
 				$org_info['district'] = $district;
 				
@@ -441,7 +265,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			);
 			
 			return $this->render('organization.php', $data);
-		}
 	}
 	
 	public function show()
@@ -451,7 +274,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$type = phpgw::get_var('type');
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiorganization.changed_organizations'));
 		$socontact = activitycalendar_socontactperson::get_instance();
-		if($type)
+/*		if($type)
 		{
 			if(isset($_POST['edit_group'])) // The user has pressed the save button
 			{
@@ -488,7 +311,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			return $this->render('group.php', $data);
 		}
 		else
-		{
+		{*/
 			//var_dump('org');
 			if(isset($_POST['edit_organization'])) // The user has pressed the save button
 			{
@@ -523,7 +346,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			);
 			
 			return $this->render('organization.php', $data);
-		}
+		//}
 	}
 	
 	

@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $order_sent_adress; // in case we want to resend the order as an reminder
+		var $allrows;
 
 		var $public_functions = array
 			(
@@ -76,31 +77,27 @@
 			$start_date			= phpgw::get_var('start_date');
 			$end_date			= phpgw::get_var('end_date');
 			$b_group			= phpgw::get_var('b_group');
+			$ecodimb			= phpgw::get_var('ecodimb');
 			$paid				= phpgw::get_var('paid', 'bool');
 			$b_account			= phpgw::get_var('b_account');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$criteria_id		= phpgw::get_var('criteria_id', 'int');
+			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start		= $start ? $start : 0;
 			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
-			if(array_key_exists('b_account',$_POST) || array_key_exists('b_account',$_GET) )
-			{
-				$this->b_account = $b_account;
-			}
 			if(array_key_exists('district_id',$_POST) || array_key_exists('district_id',$_GET) )
 			{
 				$this->district_id = $district_id;
 			}
 
-			if(isset($paid))
-			{
-				$this->paid = $paid;
-			}
-			if(isset($b_group))
-			{
-				$this->b_group = $b_group;
-			}
+			$this->paid = $paid;
+
+			$this->b_group = $b_group;
+			$this->ecodimb = $ecodimb;
+			$this->b_account = $b_account;
+
 			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET) )
 			{
 				$this->query = $query;
@@ -151,11 +148,11 @@
 			$this->cat_id			= isset($data['cat_id']) ? $data['cat_id']: '';
 			$this->status_id		= isset($data['status_id']) ? $data['status_id']: '';
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id']: '';
-			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
-			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
-			$this->b_group			= isset($data['b_group']) ? $data['b_group']: '';
-			$this->paid				= isset($data['paid']) ? $data['paid']: '';
-			$this->b_account		= isset($data['b_account']) ? $data['b_account']: '';
+	//		$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
+	//		$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
+	//		$this->b_group			= isset($data['b_group']) ? $data['b_group']: '';
+	//		$this->paid				= isset($data['paid']) ? $data['paid']: '';
+	//		$this->b_account		= isset($data['b_account']) ? $data['b_account']: '';
 			$this->district_id		= isset($data['district_id']) ? $data['district_id']: '';
 			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
 		}
@@ -224,6 +221,13 @@
 				(
 					'id' => 'contract_sum',
 					'name'=> lang('contract sum'),
+					'sortable'	=> true
+				);
+
+			$columns['approved'] = array
+				(
+					'id'		=> 'approved',
+					'name'		=> lang('approved'),
 					'sortable'	=> true
 				);
 
@@ -448,12 +452,16 @@
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
+			if(isset($this->allrows) && $this->allrows)
+			{
+				$data['allrows'] = true;
+			}
 
 			$workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'wo_hour_cat_id' => $this->wo_hour_cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
-				'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
+				'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
 				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
 
 			$this->total_records = $this->so->total_records;
@@ -525,7 +533,7 @@
 			$config->read();
 			$tax = 1+($config->config_data['fm_tax'])/100;
 			$workorder['calculation']	= $workorder['calculation'] * $tax;
-			$workorder['actual_cost']	= $workorder['act_mtrl_cost'] + $workorder['act_vendor_cost'];
+	//		$workorder['actual_cost']	= $workorder['act_mtrl_cost'] + $workorder['act_vendor_cost'];
 
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
@@ -798,5 +806,15 @@
 				$user['selected'] = $user['id'] == $selected ? true : false;
 			}
 			return $ser_list;
+		}
+
+		/**
+		* Recalculate actual cost from payment history for all workorders
+		*
+		* @return void
+		*/
+		function recalculate()
+		{
+			$this->so->recalculate();
 		}
 	}

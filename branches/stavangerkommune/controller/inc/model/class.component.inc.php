@@ -31,20 +31,23 @@
 	include_class('controller', 'model', 'inc/model/');
 	include_class('controller', 'date_helper', 'inc/helper/');
 
-	class controller_control extends controller_model
+	class controller_component extends controller_model
 	{
-		public static $so;
-		
 		protected $type;
 		protected $id;
+		protected $location_id;
 		protected $guid;
 		protected $xml;
+		// Not a table column
+		protected $xml_short_desc;
+		protected $type_str;
 		protected $location_code;
+		protected $p_location_code;
 		protected $loc_1;
 		protected $address;
 		
 		// Objects
-		protected $controls_list_array = array();
+		protected $controls_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -67,6 +70,13 @@
 		
 		public function get_id() { return $this->id; }
 		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+		
+		public function get_location_id() { return $this->location_id; }
+		
 		public function set_guid($guid)
 		{
 			$this->guid = $guid;
@@ -74,13 +84,19 @@
 		
 		public function get_guid() { return $this->guid; }
 		
-		
 		public function set_xml($xml)
 		{
 			$this->xml = $xml;
 		}
 		
 		public function get_xml() { return $this->xml; }
+		
+		public function set_xml_short_desc($xml_short_desc)
+		{
+			$this->xml_short_desc = $xml_short_desc;
+		}
+		
+		public function get_xml_short_desc() { return $this->xml_short_desc; }
 		
 		public function set_location_code($location_code)
 		{
@@ -103,12 +119,19 @@
 		
 		public function get_address() { return $this->address; }
 		
-		public function set_controls_list_array($controls_list_array)
+		public function set_type_str($type_str)
 		{
-			$this->controls_list_array = $controls_list_array;
+			$this->type_str = $type_str;
 		}
 		
-		public function get_controls_list_array() { return $this->controls_list_array; }
+		public function get_type_str() { return $this->type_str; }
+		
+		public function set_controls_array($controls_array)
+		{
+			$this->controls_array = $controls_array;
+		}
+		
+		public function get_controls_array() { return $this->controls_array; }
 		
 		public function serialize()
 		{

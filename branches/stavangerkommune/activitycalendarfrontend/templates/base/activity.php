@@ -4,26 +4,36 @@
 	$act_so = activitycalendar_soactivity::get_instance();
 	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
-<div class="yui-content" style="width: 100%;">
+<div class="yui-content">
 	<div id="details">
-	
-	<?php if($message){?>
-	<div class="success">
-		<?php echo $message;?>
+    	<?php if($message){?>
+    	<div class="success">
+    		<?php echo $message;?>
+    	</div>
+    	<?php }else if($error){?>
+    	<div class="error">
+    		<?php echo $error;?>
+    	</div>
+    	<?php }?>
 	</div>
-	<?php }else if($error){?>
-	<div class="error">
-		<?php echo $error;?>
-	</div>
-	<?php }?>
-	</div>
+	<DIV class="pageTop">
 		<h1><?php echo lang('activity') ?></h1>
-		<form action="#" method="post">
-			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
-			<dl class="proplist-col" style="width: 60%">
-				<h2><?php echo lang('what')?></h2>
+	</DIV>
+	<form action="#" method="post">
+		<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
+		<dl class="proplist-col">
+                    <div class="form-buttons">
+                        <?php
+                            if ($change_request) {?>
+                                <input type="submit" name="activity_ok" value="<?php echo lang('activity_ok')?>" />
+                                <input type="submit" name="change_request" value="<?php echo lang('change_activity')?>" />
+                        <?php }
+                        ?>
+                    </div>
+			<FIELDSET title="Hva">
+				<LEGEND>Hva</LEGEND>
 				<dt>
-					<label for="title"><?php echo lang('title') ?></label>
+					<label for="title"><?php echo lang('activity_title') ?></label>
 				</dt>
 				<dd>
 					<?php echo $activity->get_title();?>
@@ -45,6 +55,8 @@
 						}
 					?>
 				</dd>
+			</FIELDSET>
+			<FIELDSET id="hvem"><legend>For hvem</legend>
 				<dt>
 					<label for="target"><?php echo lang('target') ?></label>
 				</dt>
@@ -61,6 +73,28 @@
 					?>
 				</dd>
 				<dt>
+					<input type="checkbox" name="special_adaptation" id="special_adaptation"<?php echo $activity->get_special_adaptation() ? ' checked="checked"' : '' ?> disabled="disabled" /><label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
+				</dt>
+			</FIELDSET>
+			<FIELDSET title="hvor">
+				<LEGEND>Hvor og når</LEGEND>
+				<?php if($activity->get_internal_arena()) { ?>
+				<dt>
+					<label for="arena"><?php echo lang('building') ?></label>
+				</dt>
+				<dd>
+					<?php echo activitycalendar_soarena::get_instance()->get_building_name($activity->get_internal_arena()); ?>
+				</dd>
+				<?php }?>
+				<?php if($activity->get_arena()) { ?>
+				<dt>
+					<label for="arena"><?php echo lang('arena') ?></label>
+				</dt>
+				<dd>
+					<?php echo activitycalendar_soarena::get_instance()->get_arena_name($activity->get_arena()); ?>
+				</dd>
+				<?php  } ?>
+				<dt>
 					<label for="district"><?php echo lang('district') ?></label>
 				</dt>
 				<dd>
@@ -76,77 +110,28 @@
 					?>
 				</dd>
 				<dt>
-					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
-				</dt>
-				<dd>
-					<input type="checkbox" name="special_adaptation" id="special_adaptation"<?php echo $activity->get_special_adaptation() ? ' checked="checked"' : '' ?> disabled="disabled" />
-				</dd>
-				<hr />
-				<h2><?php echo lang('where_when')?></h2>
-				<dt>
-					<?php if($activity->get_internal_arena()) { ?>
-					<label for="arena"><?php echo lang('building') ?></label>
-					<?php }?>
-				</dt>
-				<dd>
-					<?php
-						if($activity->get_internal_arena()){
-							echo activitycalendar_soarena::get_instance()->get_building_name($activity->get_internal_arena());
-						}
-					?>
-				</dd>
-				<dt>
-					<?php if($activity->get_arena()) { ?>
-					<label for="arena"><?php echo lang('arena') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php
-						if($activity->get_arena()){
-							echo activitycalendar_soarena::get_instance()->get_arena_name($activity->get_arena());
-						}
-					?>
-				</dd>
-				<dt>
 					<label for="time"><?php echo lang('time') ?></label>
 				</dt>
 				<dd>
 					<?php echo $activity->get_time();?>
 				</dd>
-				<dt>
-					<label for="office"><?php echo lang('office') ?></label>
-				</dt>
-				<dd>
-					<?php
-						if($activity->get_office()){
-							echo $act_so->get_office_name($activity->get_office());
-						}
-					?>
-				</dd>
-				<hr />
-				<h2><?php echo lang('who')?></h2>
-				<dt>
-					<label for="organization_id"><?php echo lang('organization') ?></label>
-				</dt>
+			</FIELDSET>
+			<FIELDSET id="arr">
+				<legend>Arrangør</legend>
 				<dd>
 					<?php echo $organization->get_name();?>
-					<?php if(!$activity->get_new_org()){?>
-						<a href="index.php?menuaction=activitycalendarfrontend.uiactivity.edit_organization_values&amp;organization_id=<?php echo $organization->get_id();?>"><?php echo lang('edit_organization');?></a>
-					<?php }?>
+                                    <?php if(!$change_request)
+                                    {
+                                        if(!$activity->get_new_org()){?>
+						<a href="index.php?menuaction=activitycalendarfrontend.uiactivity.edit_organization_values&amp;organization_id=<?php echo $organization->get_id();?>" target="_blank"><?php echo lang('edit_organization');?></a>
+					<?php }
+                                    }?>
 				</dd>
-				<dt>
-					<label for="group_id" id="group_label"><?php echo lang('group') ?></label>
-				</dt>
-				<dd>
-					<?php 
-					if($activity->get_group_id()){
-						echo $group->get_name();?>
-				<?php }
-					?>
-				</dd>
+				<br/>
+				<LEGEND>Kontaktperson</LEGEND>
 				<dt>
 					<?php if($activity->get_contact_person_1()) { ?>
-					<label for="contact_person_1"><?php echo lang('contact_person_1') ?></label>
+					<label for="contact_person_1"><?php echo lang('contact_person') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -155,32 +140,31 @@
 					<label for="contact1_phone">Telefon</label>
 					<?php echo isset($contact1)?$contact1->get_phone():''?><br/>
 					<label for="contact1_mail">E-post</label>
-					<?php echo isset($contact1)?$contact1->get_email():''?><br/>
+					<?php echo isset($contact1)?$contact1->get_email():''?>
 				</dd>
-				<dt>
-					<?php if($activity->get_contact_person_2()) { ?>
-					<label for="contact_person_2"><?php echo lang('contact_person_2') ?></label>
-					<?php  } ?>
+			</FIELDSET>
+			<FIELDSET>
+				<BR>
+                <dt>
+                	<LABEL for="office">Kulturkontor</label>
 				</dt>
 				<dd>
-					<label for="contact2_name">Navn</label>
-					<?php echo isset($contact2)?$contact2->get_name():''?><br/>
-					<label for="contact2_phone">Telefon</label>
-					<?php echo isset($contact2)?$contact2->get_phone():''?><br/>
-					<label for="contact2_mail">E-post</label>
-					<?php echo isset($contact2)?$contact2->get_email():''?><br/>
+					<?php
+						if($activity->get_office()){
+							echo $act_so->get_office_name($activity->get_office());
+						}
+					?>
 				</dd>
-			    
-			</dl>
-			<div class="form-buttons">
-				<?php
-					if ($editable) {
-						echo '<input type="submit" name="save_activity" value="' . lang('save') . '" onclick="return allOK();"/>';
-					}
-				?>
-			</div>
-			
-		</form>
-		
-	</div>
+		    </FIELDSET>
+                    <br/><br/>
+                    <div class="form-buttons">
+                        <?php
+                            if ($change_request) {?>
+                                <input type="submit" name="activity_ok" value="<?php echo lang('activity_ok')?>" />
+                                <input type="submit" name="change_request" value="<?php echo lang('change_activity')?>" />
+                        <?php }
+                        ?>
+                    </div>
+                </dl>
+	</form>
 </div>

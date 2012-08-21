@@ -39,11 +39,12 @@
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 *
-		 * @return controller_socontrol_group the storage object
+		 * @return controller_socase the storage object
 		 */
 		public static function get_instance()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socase');
 			}
 			return self::$so;
@@ -53,26 +54,35 @@
 
 		function populate(int $object_id, &$object){}
 
+		/**
+		 * Get single case object from database  
+		 * 
+		 * @param	$case id id of case to be returned
+		 * @return case object
+		*/
 		public function get_single($case_id)
 		{
+			$case_id = (int) $case_id;
+			
 			$sql = "SELECT * FROM controller_check_item_case "; 
-			$sql .= "WHERE id = $case_id";
+			$sql .= "WHERE id = {$case_id}";
 			
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
-			if($this->db->next_record()) {
-				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
-				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
-				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
-				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+			if($this->db->next_record())
+			{
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
-				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
-				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
-				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
-				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
+				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 					
 				return $case;
 			}
@@ -82,36 +92,57 @@
 			}
 		}
 		
+		/**
+		 * Get cases for message  
+		 * 
+		 * @param	$location_id location id
+		 * @param	$location_item_id location item id
+		 * @param $return_type return data as objects or as arrays
+		 * @return array of case object represented as objects or arrays
+		*/
 		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
 		{
+			$location_id		= (int) $location_id;
+			$location_item_id	= (int) $location_item_id;
+
 			$sql = "SELECT * FROM controller_check_item_case "; 
 			$sql .= "WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
 
 			$this->db->query($sql);
 
-			while ($this->db->next_record()) {
-				$case = new controller_check_item_case($this->unmarshal($this->db->f('id', true), 'int'));
-				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id', true), 'int'));
-				$case->set_status($this->unmarshal($this->db->f('status', true), 'int'));
-				$case->set_location_id($this->unmarshal($this->db->f('location_id', true), 'int'));
-				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id', true), 'int'));
+			while ($this->db->next_record())
+			{
+				$case = new controller_check_item_case($this->unmarshal($this->db->f('id'), 'int'));
+				$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
+				$case->set_status($this->unmarshal($this->db->f('status'), 'int'));
+				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
-				$case->set_user_id($this->unmarshal($this->db->f('user_id', true), 'int'));	
-				$case->set_entry_date($this->unmarshal($this->db->f('entry_date', true), 'int'));
-				$case->set_modified_date($this->unmarshal($this->db->f('modified_date', true), 'int'));
-				$case->set_modified_by($this->unmarshal($this->db->f('modified_by', true), 'int'));
-				$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));	
+				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
+				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
+				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				
 				if($return_type == "return_object")
+				{
 					$cases_array[] = $case;
+				}
 				else
+				{
 					$cases_array[] = $case->toArray();
+				}
 			}
 
 			return $cases_array;
 		}
 		
-		
+		/**
+		 * Inserts a new case in database  
+		 * 
+		 * @param	$case to inserted
+		 * @return true or false
+		*/
 		function add(&$case)
 		{
 			$cols = array(
@@ -142,12 +173,18 @@
 
 			$result = $this->db->query('INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
-			return isset($result) ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
+			return $result ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
 		}
 
+		/**
+		 * Updates an existing case object in database  
+		 * 
+		 * @param	$case to updated
+		 * @return true or false
+		*/
 		function update($case)
 		{
-			$id = $case->get_id();
+			$id = (int) $case->get_id();
 			
 			$values = array(
 				'check_item_id = ' . $this->marshal($case->get_check_item_id(), 'int'),
@@ -164,7 +201,7 @@
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if( isset($result) )
+			if( $result )
 			{
 				return $id;
 			}
@@ -174,11 +211,18 @@
 			}
 		}
 		
+		/**
+		 * Delete case in database  
+		 * 
+		 * @param	$case_id case to be deleted
+		 * @return true or false
+		*/
 		function delete($case_id)
 		{
+			$case_id = (int) $case_id;
 			$status = $this->db->query("DELETE FROM controller_check_item_case WHERE id = $case_id");
 					
-			if( isset($status) )
+			if( $status )
 			{
 				return true;
 			}

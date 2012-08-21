@@ -76,7 +76,7 @@
 	 * Generates a javascript translator object/hash for the specified fields.
 	 */
 
-	/*
+	
 	function js_lang()
 	{
 		$keys = func_get_args();
@@ -87,7 +87,7 @@
 		}
 		return json_encode($strings);
 	}
-	*/
+	
 
 	/**
 	* cleans up a backtrace array and converts it to a string
@@ -828,7 +828,7 @@ HTML;
 		* Load the app include files if the exists                                *
 		\*************************************************************************/
 		/* Then the include file */
-		if (! preg_match ("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction']))
+		if (! preg_match ("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') )
 		{
 			include_once(PHPGW_APP_INC . '/functions.inc.php');
 		}

@@ -6351,7 +6351,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Update property version from 0.9.17.644 to 0.9.17.645
 	* Add view on fm_ecobilag
 	*/
 	$test[] = '0.9.17.644';
@@ -6394,7 +6394,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.643 to 0.9.17.644
+	* Update property version from 0.9.17.645 to 0.9.17.646
 	* Add optional inheritance of location from project to order
 	*/
 	$test[] = '0.9.17.645';
@@ -6420,3 +6420,240 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.646 to 0.9.17.647
+	* Update values
+	*/
+	$test[] = '0.9.17.646';
+	function property_upgrade0_9_17_646()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT project_id, sum(budget) AS sum_budget FROM fm_project_budget GROUP BY project_id",__LINE__,__FILE__);
+
+		$values = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$values[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('project_id'),
+				'budget'		=> (int)$GLOBALS['phpgw_setup']->oProc->f('sum_budget')
+			);
+		}
+
+		foreach ($values as $entry)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET budget = {$entry['budget']} WHERE id =  {$entry['id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM fm_workorder",__LINE__,__FILE__);
+
+		$orders = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[$GLOBALS['phpgw_setup']->oProc->f('id')] = true;
+		}
+
+		execMethod('property.soXport.update_actual_cost_from_archive',$orders);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.647';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.647 to 0.9.17.648
+	* Implement periodizations at project budgetting
+	*/
+	$test[] = '0.9.17.647';
+	function property_upgrade0_9_17_647()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_department',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'parent_id' => array('type' => 'int','precision' => '4','nullable' => true),
+					'name' => array('type' => 'varchar','precision' => '60','nullable' => False),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_on' => array('type' => 'int','precision' => 4,'nullable' => true)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_department  (id, name, created_on, created_by) VALUES (1, 'Department'," . time() . ",6 ) ",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb','department',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecodimb SET department = 1",__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb','department',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.648';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.648 to 0.9.17.649
+	* Enable periodization of budget at project
+	*/
+	$test[] = '0.9.17.648';
+	function property_upgrade0_9_17_648()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_eco_periodization_outline',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'periodization_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'month' => array('type' => 'int','precision' => '4','nullable' => true),
+					'value' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => false,'default' => '0.00'),
+					'remark' => array('type' => 'varchar','precision' => '60','nullable' => False),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array('fm_eco_periodization' => array('periodization_id' => 'id') ),
+				'uc' => array('periodization_id', 'month')
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_eco_periodization','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true,
+			'default' => 0
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_eco_periodization SET active = 1",__LINE__,__FILE__);
+
+		$sql = 'SELECT fm_project_budget.* FROM fm_project_budget JOIN fm_project ON fm_project_budget.project_id = fm_project.id';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$budgets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$budgets[] = array
+			(
+				'project_id'	=> $GLOBALS['phpgw_setup']->oProc->f('project_id'),
+				'year'			=> $GLOBALS['phpgw_setup']->oProc->f('year'),
+				'month'			=> 0,
+				'budget'		=> $GLOBALS['phpgw_setup']->oProc->f('budget'),
+				'user_id'		=> $GLOBALS['phpgw_setup']->oProc->f('user_id'),
+				'entry_date'	=> $GLOBALS['phpgw_setup']->oProc->f('entry_date'),
+				'modified_date'	=> $GLOBALS['phpgw_setup']->oProc->f('modified_date'),
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_project_budget');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_budget',  array(
+				'fd' => array(
+					'project_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('project_id','year','month'),
+				'fk' => array('fm_project' => array('project_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		foreach ($budgets as $budget)
+		{
+			$cols = implode(',', array_keys($budget));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($budget));
+			$sql = "INSERT INTO fm_project_budget ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.649';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.649 to 0.9.17.650
+	* Enable join to locations on loc1
+	*/
+	$test[] = '0.9.17.649';
+	function property_upgrade0_9_17_649()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_locations','loc1',array(
+			'type'		=> 'varchar',
+			'precision'	=> 10,
+			'nullable'	=> true
+			)
+		);
+
+
+		$sql = 'SELECT id, location_code FROM fm_locations';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$locations = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$location_arr	= explode('-', $GLOBALS['phpgw_setup']->oProc->f('location_code'));
+			$locations[] = array
+			(
+				'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'loc1'		=> $location_arr[0]
+			);
+		}
+
+		foreach ($locations as $location)
+		{
+			$sql = "UPDATE fm_locations SET loc1 = '{$location['loc1']}' WHERE id = {$location['id']}";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_locations','loc1',array(
+			'type'		=> 'varchar',
+			'precision'	=> 10,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.650';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}	

@@ -126,7 +126,7 @@
 
 		function anleggsnr_to_objekt($anleggsnr,$meter_table)
 		{
-			$this->db->query("SELECT $meter_table.ext_meter_id,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
+			$this->db->query("SELECT $meter_table.maaler_nr,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
 				. " FROM $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
 				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id WHERE $meter_table.ext_system_id='$anleggsnr'");
 
@@ -141,7 +141,7 @@
 
 			$maalerinfo['loc1']=$loc1;
 			$maalerinfo['dima']=$dima;
-			$maalerinfo['maalernr']=$this->db->f('ext_meter_id');
+			$maalerinfo['maalernr']=$this->db->f('maaler_nr');
 			$maalerinfo['district']=$this->db->f('district_id');
 			return $maalerinfo;
 

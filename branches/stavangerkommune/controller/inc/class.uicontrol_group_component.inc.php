@@ -30,11 +30,10 @@
 
 
 	phpgw::import_class('phpgwapi.yui');
-	phpgw::import_class('controller.uicommon');
-	phpgw::import_class('controller.socontrol_area');
+	phpgw::import_class('phpgwapi.uicommon');
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicontrol_group_component extends controller_uicommon
+	class controller_uicontrol_group_component extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -46,14 +45,12 @@
 		var $type_id;
 		var $location_code;
 
-		private $so_control_area;
 		private $so_control_group;
 		private $so_control;  
 		private $so_bim;
 
 		var $public_functions = array(
 										'index' => true,
-										'add_component_to_control_group' => true,
 										'get_component_types_by_category' => true
 									);
 
@@ -63,11 +60,8 @@
 
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control_area 		= CreateObject('controller.socontrol_area');
 			$this->so_control_group		= CreateObject('controller.socontrol_group');
 			$this->so_control			= CreateObject('controller.socontrol');
-			//$this->so_bim				= CreateObject('bim.sobimitem_impl');
-			//$this->so_bim				= new sobimitem_impl();
 
 			$this->type_id				= $this->bo->type_id;
 
@@ -86,94 +80,8 @@
 
 			self::set_active_menu('controller::control_group::component_for_control_group');
 		}
-
+		
 		function index()
-		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->query();
-			}
-			$bim_types = $this->so_control->get_bim_types();
-
-			// Sigurd: START as categories
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-
-			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
-			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-			$control_areas_array = array();
-			foreach($control_areas['cat_list'] as $cat_list)
-			{
-				$control_areas_array[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-			// END as categories
-			
-			$control_groups_array = $this->so_control_group->get_control_groups_by_control_area($control_areas_array[1]['id']);
-			//_debug_array($control_groups_array);
-			//$control_id = $control_groups_array[0]['id'];
-			array_unshift($control_groups_array,array ('id'=>'','group_name'=> lang('select value')));
-
-//			if($control_id == null)
-//				$control_id = 0;
-
-			$tabs = array( array(
-						'label' => lang('View_component_for_control_group')
-					), array(
-						'label' => lang('Add_component_for_control_group'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_group_component.add_component_to_control_group'))
-					));
-
-			$data = array(
-				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'					=> "view_component_for_control_group",
-				'control_area_array' 	=> $control_areas_array,
-				'control_group_array'	=> $control_groups_array,
-				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_group_component.index','phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ControlId'),
-							'sortable'	=> true,
-						),
-						array(
-							'key'	=>	'title',
-							'label'	=>	lang('Title'),
-							'sortable'	=>	false
-						),
-						array(
-							'key' => 'bim_id',
-							'label' => lang('Bim_id'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'bim_name',
-							'label' => lang('Bim_name'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'bim_type',
-							'label' => lang('Bim_type'),
-							'sortable'	=> false
-						)
-					)
-				)
-			);
-
-
-			phpgwapi_yui::load_widget('paginator');
-
-			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-
-			self::render_template_xsl(array('control_group_component_tabs', 'common', 'view_component_for_control_group'), $data);
-		}
-
-		function add_component_to_control_group()
 		{
 			if(phpgw::get_var('save_component'))
 			{
@@ -207,7 +115,7 @@
 				}
 
 				$bim_types = $this->so_control->get_bim_types();
-
+				
 				// Sigurd: START as categories
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
@@ -225,16 +133,8 @@
 				}
 				// END as categories
 
-				$tabs = array( array(
-							'label' => lang('View_component_for_control_group'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_group_component.index'))
-
-						), array(
-							'label' => lang('Add_component_for_control_group')
-						));
 
 				$data = array(
-					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 					'view'						=> "add_component_to_control_group",
 					'control_group_filters'		=> array(
 					'control_area_array' 		=> $control_areas_array,
@@ -244,23 +144,18 @@
 						'bim_types' 			=> $bim_types
 					),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'controller.uicontrol_group_component.add_component_to_control_group', 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction' => 'controller.uicontrol_group_component.index', 'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
-								'key' => 'id',
+								'key' => 'location_id',
 								'label' => lang('ID'),
 								'sortable'	=> true,
 								'formatter' => 'YAHOO.portico.formatLink'
 							),
 							array(
-								'key'	=>	'guid',
-								'label'	=>	lang('GUID'),
+								'key'	=>	'name',
+								'label'	=>	lang('Name'),
 								'sortable'	=>	false
-							),
-							array(
-								'key' => 'type',
-								'label' => lang('type'),
-								'sortable'	=> false
 							),
 							array(
 								'key' => 'checked',
@@ -270,21 +165,13 @@
 								'className' => 'mychecks'
 							),
 							array(
-								'key' => 'actions',
+								'key' => 'test',
+								'label' => lang('Zip code'),
 								'hidden' => true
 							),
-							array(
-								'key' => 'labels',
-								'hidden' => true
-							),
-							array(
-								'key' => 'ajax',
-								'hidden' => true
-							)
 						)
 					)
 				);
-
 
 				phpgwapi_yui::load_widget('paginator');
 
@@ -317,23 +204,8 @@
 		public function get_component()
 		{
 
-			/*$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query					= phpgw::get_var('query');
-			$sort					= phpgw::get_var('sort');
-			$order					= phpgw::get_var('order');
-			$filter					= phpgw::get_var('filter', 'int');
-			$cat_id					= phpgw::get_var('cat_id');
-			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
-			$district_id			= phpgw::get_var('district_id', 'int');
-			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
-			$status					= phpgw::get_var('status');
-			$type_id				= phpgw::get_var('type_id', 'int');
-			$allrows				= phpgw::get_var('allrows', 'bool');
-			$location_code			= phpgw::get_var('location_code');*/
-
 			$control_group_id = phpgw::get_var('control_group_id');
-			//var_dump($control_group_id);
-			
+
 			$type_id = phpgw::get_var('bim_type_id');
 
 			$start = phpgw::get_var('startIndex');
@@ -342,14 +214,33 @@
 
 			$sort = "ASC";
 
-			$component_list = $this->so_control->getAllBimItems(10,$type_id);
-			//var_dump($component_list); 
+			$entity       = CreateObject('property.soadmin_entity');
+ 			$entity_list	= $entity->read(array('allrows' => true));
+			
+ 			$components_arr = array();
+ 			
+			foreach($entity_list as $entry)
+      {
+        //pr hovedregister...
+        $cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
+    		$component_arr = array();
+    
+        foreach ($cat_list as $category)
+				{
+    			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$category['entity_id']}.{$category['id']}");
+    		
+    			$component_arr['location_id'] = $location_id;
+    			$component_arr['name'] = $category['name'];
+    			$components_arr[] = $component_arr;
+				}
+      }
 
 			$results = array();
-			foreach($component_list as $component)
+			foreach($components_arr as $component)
 			{
 				$component['checked'] = false;
+				$component['test'] = "test";
 				$results['results'][]= $component;
 				$i++;
 			}
@@ -360,7 +251,7 @@
 			$results['dir'] = "ASC";
 
 			array_walk($results['results'], array($this, 'add_links'), array($type));
-
+			
 			return $this->yui_results($results);
 		}
 
@@ -375,10 +266,6 @@
 			$value['ajax'][] = false;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('show');
-
-			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'location_code' => $value['location_code'])));
-			$value['labels'][] = lang('add_location');
 		}
 
 		public function get_component_types_by_category()
@@ -391,7 +278,6 @@
 				else
 					$ifc = false;
 			}
-
 
 			$bim_types = $this->so_control->get_bim_types($ifc);
 			if(count($bim_types)>0)

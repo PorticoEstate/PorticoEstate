@@ -47,6 +47,7 @@
 		protected $completed_date;
 		protected $location_code;
 		protected $component_id;
+		protected $location_id;
 		
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
@@ -54,6 +55,9 @@
 		
 		// Objects
 		protected $check_item_array = array();
+		// Array that contains error messages. Is populted in function validate
+		protected $error_msg_array = array();
+		
 		protected $control;
 		
 		/**
@@ -136,6 +140,13 @@
 		}
 		
 		public function get_component_id() { return $this->component_id; }
+		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+		
+		public function get_location_id() { return $this->location_id; }
 
 		public function get_num_open_cases() { return $this->num_open_cases; }
 		
@@ -158,19 +169,77 @@
 		
 		public function get_control() { return $this->control; }
 		
+		public function get_error_msg_array() { return $this->error_msg_array; }
+		
+		public function set_error_msg_array( $error_msg_array )
+		{
+			$this->error_msg_array = $error_msg_array;
+		}
+		
 		public function serialize()
 		{
 			return array(
-				'id' => $this->get_id(),
-				'control_id' => $this->get_control_id(),
-				'status' => $this->get_status(),
-				'comment' => $this->get_comment(),
-				'deadline' => $this->get_deadline(),
-				'planned_date' => $this->get_planned_date(),
-				'completed_date' => $this->get_completed_date(),
-				'location_code' => $this->get_location_code(),
-				'component_id' => $this->get_component_id(),
-				'num_open_cases' => $this->get_num_open_cases()
+				'id' 							=> $this->get_id(),
+				'control_id' 			=> $this->get_control_id(),
+				'status' 					=> $this->get_status(),
+				'comment' 				=> $this->get_comment(),
+				'deadline' 				=> $this->get_deadline(),
+				'planned_date' 		=> $this->get_planned_date(),
+				'completed_date' 	=> $this->get_completed_date(),
+				'location_code' 	=> $this->get_location_code(),
+				'component_id' 		=> $this->get_component_id(),
+				'location_id' 		=> $this->get_location_id(),
+				'num_open_cases' 	=> $this->get_num_open_cases()
 			);
+		}
+		
+		public function validate()
+		{
+			$status = true;
+	
+			// Validate CONTROL ID
+			if( empty( $this->control_id ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['control_id'] = "error_msg_4";
+		  }
+		 
+		  // Validate STATUS		  		  
+			if( $this->status != 0 and $this->status != 1 )
+		  { 
+		  	$status = false;
+		  	$this->error_msg_array['status'] = "error_msg_2";
+		  }
+		  
+			// Validate STATUS ON PLANNED DATE		  		  
+			if( $this->status == 0 and ( $this->planned_date == '' or $this->planned_date == 0) )
+		  { 
+		  	$status = false;
+		  	$this->error_msg_array['status'] = "error_msg_7";
+		  }
+
+		  // Validate COMPLETED DATE when STATUS:DONE		  		  
+			if( ($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['completed_date'] = "error_msg_5";
+		  }
+	
+		  // Validate DEADLINE	  		  
+			if( empty( $this->deadline ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['deadline'] = "error_msg_1";
+		  }
+	
+			// Validate connection to COMPONENT/LOCATION
+			if( empty( $this->location_code ) && empty( $this->component_id ) )
+		  {
+		  	echo "FAILED: " . $this->location_code; 
+		  	$status = false;
+		  	$this->error_msg_array['location_code'] = "error_msg_6";
+		  }
+	
+		  return $status;
 		}
 	}

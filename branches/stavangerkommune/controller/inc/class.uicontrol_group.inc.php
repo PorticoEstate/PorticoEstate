@@ -28,17 +28,16 @@
  	* @version $Id$
 	*/	
 
-	phpgw::import_class('controller.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.socontrol_group_list');
-	phpgw::import_class('controller.socontrol_area');
 
 	include_class('controller', 'control_group', 'inc/model/');
 
-	class controller_uicontrol_group extends controller_uicommon
+	class controller_uicontrol_group extends phpgwapi_uicommon
 	{
 		private $so;
 		private $so_procedure;
@@ -49,13 +48,13 @@
 
 		public $public_functions = array
 		(
-			'index'									=>	true,
-			'query'									=>	true,
-			'edit'									=>	true,
-			'view'									=>	true,
-			'add'									=>	true,
-			'save_group_and_item_order'				=>	true,
-			'get_control_groups_by_control_area' 	=> true
+			'index'																=>	true,
+			'query'																=>	true,
+			'edit'																=>	true,
+			'view'																=>	true,
+			'add'																	=>	true,
+			'save_group_and_item_order'						=>	true,
+			'get_control_groups_by_control_area' 	=>  true
 		);
 
 		public function __construct()
@@ -63,7 +62,6 @@
 			parent::__construct();
 			$this->so = CreateObject('controller.socontrol_group');
 			$this->so_procedure = CreateObject('controller.soprocedure');
-			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
@@ -118,7 +116,13 @@
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
-							)
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('New control group'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add')),
+								'class' => 'new_item'
+							),
 						),
 					),
 				),

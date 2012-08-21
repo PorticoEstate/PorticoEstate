@@ -13,6 +13,7 @@
 	$extra_cols = array(array("key" => "change_type", "label" => lang('change_type'), "sortable" => true, "index" => 5));
 	include('organization_list_partial.php');
 ?>
+<?php /*?>
 <h2><?php echo lang('group')?></h2>
 <?php
 	$list_form = true;
@@ -21,7 +22,7 @@
 	$nosearch = true;
 	$extra_cols = array(array("key" => "change_type", "label" => lang('change_type'), "sortable" => true, "index" => 5));
 	include('organization_list_partial.php');
-?>
+*/?>
 <h2><?php echo lang('activities') ?></h2>
 <?php
  	$list_form = true;

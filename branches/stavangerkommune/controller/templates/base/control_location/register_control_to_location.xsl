@@ -20,10 +20,10 @@
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
-	<div class="yui-content">
-		<div id="control_details">
-			<xsl:call-template name="yui_booking_i18n"/>
-			<xsl:apply-templates select="control_filters" />
+	<div class="content-wrp">
+		<div>
+			<xsl:call-template name="yui_phpgw_i18n"/>
+			<xsl:call-template name="control_filters" />
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="paging"/>
 			<xsl:apply-templates select="datatable"/>
@@ -32,7 +32,52 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="control_filters" name="control_filters" xmlns:php="http://php.net/xsl"></xsl:template>
+<xsl:template name="control_filters" xmlns:php="http://php.net/xsl">
+	
+	<div id="choose_control">
+		<!-- 
+			When control area is chosen, an ajax request is executed. 
+			The operation fetches controls from db and populates the control list.
+			The ajax opearation is handled in ajax.js 
+		-->
+		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div>
+		 <h4>Velg kontroll</h4> 
+		 <select id="control_area_list" name="control_area_list">
+		   <option value="">Velg kontrollområde</option>
+			 <xsl:for-each select="control_areas_array">
+				  <option value="{id}">
+				    <xsl:if test="id = //current_control_area_id">
+				      <xsl:attribute name="selected">selected</xsl:attribute>
+				    </xsl:if>
+				    <xsl:value-of select="name"/>
+				  </option>
+			  </xsl:for-each>
+		  </select>
+		  
+		 <form id="loc_form" action="" method="GET">
+			<select id="control_id" name="control_id">
+				<xsl:choose>
+					<xsl:when test="controls_array/child::node()">
+						<xsl:for-each select="controls_array">
+							<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
+							<option value="{$control_id}">
+							  <xsl:if test="control_id = //current_control_id">
+				          <xsl:attribute name="selected">selected</xsl:attribute>
+				        </xsl:if>
+								<xsl:value-of select="title"/>
+							</option>				
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<option>
+							Ingen kontroller
+						</option>
+					</xsl:otherwise>
+				</xsl:choose>
+			</select>
+		</form>
+	</div>
+</xsl:template>
 
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
 
@@ -52,11 +97,13 @@
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
+	<div id="choose-location">
+		<h4>Velg bygg/eiendom</h4>
 	  <ul id="filters">
 	  	<li>
 			<input type="hidden" id="hidden_control_id" name="control_id">
 				<xsl:attribute name="value">
-					<xsl:value-of select="//control_id"/>
+					<xsl:value-of select="//current_control_id"/>
 				</xsl:attribute>
 			</input>
 
@@ -112,6 +159,7 @@
 		  	<input type="submit" name="search" value="{$lang_search}" title = "{$lang_search}" />
 		  </li>	  		
 	  </ul>
+	</div>
 </xsl:template>
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">

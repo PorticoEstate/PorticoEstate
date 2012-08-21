@@ -71,6 +71,10 @@
 			{
 				return $this->db->db_addslashes($value);
 			}
+			else if($type == 'string' & $value == '')
+			{
+				return 'NULL';
+			}
 
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
@@ -89,17 +93,25 @@
 			{
 				return (boolean)$value;
 			}
-			elseif($value === null || $value == 'NULL')
+			else if($type == 'boolean')
+			{
+				return (boolean) $value;
+			}
+			else if($type == 'int')
+			{
+				return (int) $value;
+			}
+			else if($type == 'float')
+			{
+				return (float) $value;
+			}
+			else if($type == 'string')
+			{
+				return (string) $value;
+			}
+			else if($value === null || $value == 'NULL')
 			{
 				return null;
-			}
-			elseif($type == 'int')
-			{
-				return intval($value);
-			}
-			elseif($type == 'float')
-			{
-				return floatval($value);
 			}
 			return $value;
 		}
@@ -148,7 +160,8 @@
 		/**
 		 * Method for retrieving the db-object (security "forgotten")
 		 */
-		public function get_db(){
+		public function get_db()
+		{
 			return $this->db;
 		}
 
@@ -335,8 +348,10 @@
 
 		public function store(&$object)
 		{
-			if ($object->validates()) {
-				if ($object->get_id() > 0) {
+			if ($object->validates())
+			{
+				if ($object->get_id() > 0)
+				{
 					// We can assume this composite came from the database since it has an ID. Update the existing row
 					return $this->update($object);
 				}
@@ -350,5 +365,4 @@
 			// The object did not validate
 			return false;
 		}
-
 	}

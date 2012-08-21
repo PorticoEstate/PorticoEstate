@@ -4,10 +4,69 @@
 
 <div id="main_content" class="medium">
 	
-	<h1>Utførelse av kontroll: <xsl:value-of select="control/title"/></h1>
-	<h2>Sjekkliste for: <xsl:value-of select="location_array/loc1_name"/></h2>
+	<div id="check-list-heading">
+		<div class="box-1">
+			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+			<xsl:choose>
+				<xsl:when test="type = 'component'">
+					<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="location_level = 1">
+							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+						</xsl:when>
+						<xsl:otherwise>
+								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		<div class="box-2 select-box">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (år)
+			</a>
+			<a class="last">
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
+					<xsl:text>&amp;year=</xsl:text>
+					<xsl:value-of select="current_year"/>
+					<xsl:text>&amp;month=</xsl:text>
+					<xsl:value-of select="current_month_nr"/>
+					<xsl:text>&amp;location_code=</xsl:text>
+					<xsl:choose>
+					  <xsl:when test="type = 'component'">
+						  <xsl:value-of select="building_location_code"/>
+						</xsl:when>
+						<xsl:otherwise>
+						  <xsl:value-of select="location_array/location_code"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				Kontrolplan for bygg/eiendom (måned)
+			</a>
+		</div>
+		
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
+		<xsl:call-template name="check_list_tab_menu" />
+	</div>
+		
 	
-	<xsl:call-template name="check_list_tab_menu" />
 
 	<div id="view_cases">
 
@@ -28,7 +87,7 @@
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -45,7 +104,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
-											<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+											<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
 												<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -80,7 +139,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -116,7 +175,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.register_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>

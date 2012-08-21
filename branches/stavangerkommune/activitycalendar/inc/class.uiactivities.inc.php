@@ -9,6 +9,12 @@ include_class('activitycalendar', 'activity', 'inc/model/');
 
 class activitycalendar_uiactivities extends activitycalendar_uicommon
 {
+    protected $so_org;
+	protected $so_group;
+	protected $so_contact;
+	protected $so_activity;
+	protected $so_arena;
+
 	public $public_functions = array
 	(
 		'index'     		=> true,
@@ -19,7 +25,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		'edit'				=> true,
 		'download'			=> true,
 		'send_mail'			=> true,
-		'get_organization_groups'	=> true
+		'get_organization_groups'	=> true,
+                'create_groups'                 => true
 	);
 	
 	public function __construct()
@@ -27,6 +34,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		parent::__construct();
 		$this->bo_org = CreateObject('booking.boorganization');
 		$this->bo_group = CreateObject('booking.bogroup');
+		$this->so_org = activitycalendar_soorganization::get_instance();
+		$this->so_group = activitycalendar_sogroup::get_instance();
+		$this->so_contact = activitycalendar_socontactperson::get_instance();
+		$this->so_activity = activitycalendar_soactivity::get_instance();
+		$this->so_arena = activitycalendar_soarena::get_instance();
 		self::set_active_menu('activitycalendar::activities');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
@@ -75,7 +87,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$errorMsgs = array();
 		$infoMsgs = array();
 
-		$activity = activitycalendar_soactivity::get_instance()->get_single((int)phpgw::get_var('id'));
+		$activity = $this->so_activity->get_single((int)phpgw::get_var('id'));
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
 		$saved_OK = phpgw::get_var('saved_ok');
 		if($saved_OK)
@@ -109,53 +121,67 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
 		$activity_id = (int)phpgw::get_var('id');
-		$so_activity = activitycalendar_soactivity::get_instance();
-		$so_arena = activitycalendar_soarena::get_instance();
-		$so_org = activitycalendar_soorganization::get_instance();
-		//var_dump($activity_id);
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
-		$categories = $so_activity->get_categories();
-		$targets = $so_activity->get_targets();
-		$offices = $so_activity->select_district_list();
-		$districts = $so_activity->get_districts();
-		$buildings = $so_arena->get_buildings();
-				
+		$categories = $this->so_activity->get_categories();
+		$targets = $this->so_activity->get_targets();
+		$offices = $this->so_activity->select_district_list();
+		$districts = $this->so_activity->get_districts();
+		$buildings = $this->so_arena->get_buildings();
 		// Retrieve the activity object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
 		{	
-			$activity = $so_activity->get_single($activity_id); 
+			$activity = $this->so_activity->get_single($activity_id); 
 		}
 		else
 		{
 			$activity = new activitycalendar_activity();
 		}
+		$new_group = $activity->get_new_group();
 		$g_id = phpgw::get_var('group_id');
 		$o_id = phpgw::get_var('organization_id');
-		if(isset($g_id) && $g_id > 0)
+		if($new_group)
 		{
-			$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
-			$desc = activitycalendar_sogroup::get_instance()->get_description($g_id);
+		    $persons = $this->so_group->get_contacts_local($activity->get_group_id());
+			$desc = $this->so_group->get_description_local($activity->get_group_id());
+		}
+		else if(isset($g_id) && $g_id > 0)
+		{
+			$persons = $this->so_group->get_contacts($g_id);
+			$desc = $this->so_group->get_description($g_id);
 		}
 		else if(isset($o_id) && $o_id > 0)
 		{
-			$persons = $so_org->get_contacts($o_id);
-			$desc = $so_org->get_description($o_id);
+			$persons = $this->so_org->get_contacts($o_id);
+			$desc = $this->so_org->get_description($o_id);
 		}
 		
 		if(strlen($desc) > 254)
 		{
 			$desc = substr($desc,0,254);
 		}
-		$arenas = $so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+		$arenas = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
 		if($activity->get_new_org())
 		{
-			$org_name = $so_org->get_organization_name_local($activity->get_organization_id());
+			$org_name = $this->so_org->get_organization_name_local($activity->get_organization_id());
 		}
 		else
 		{
-			$organizations = $so_org->get(null, null, 'org.name', true, null, null, null);
+			$organizations = $this->so_org->get(null, null, 'org.name', true, null, null, null);
 		}
-		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
+		if($new_group)
+		{
+		    $group_array = $this->so_group->get(null, null, null, null, null, null, array('group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
+		    //var_dump($group_array);
+	        if(count($group_array) > 0){
+		        $keys = array_keys($group_array);
+		        $local_group = $group_array[$keys[0]];
+		        //$group_name = $local_group->get_name();
+	        }  
+		}
+		else
+		{
+		    $groups = $this->so_group->get(null, null, null, null, null, null, null);
+		}
 
 		if(isset($_POST['save_activity'])) // The user has pressed the save button
 		{
@@ -163,7 +189,6 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			{
 				$old_state = $activity->get_state();
 				$new_state = phpgw::get_var('state');
-				
 				// ... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
@@ -206,8 +231,67 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				
 				if($target_ok && $district_ok)
 				{
-					if($so_activity->store($activity)) // ... and then try to store the object
+					if($this->so_activity->store($activity)) // ... and then try to store the object
 					{
+    					if($new_group && $new_state == 3)
+    				    {
+    				        //transfer group to booking
+        				    $group_array = $this->so_group->get(null, null, null, null, null, null, array('group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
+        			        if(count($group_array) > 0){
+        				    $keys = array_keys($group_array);
+        				        $group = $group_array[$keys[0]];
+        			        } 
+        				
+        				    $group_info = array();
+        				    $group_info['name'] = $group->get_name(); //new
+        				    $group_info['organization_id'] = $activity->get_organization_id(); 
+        				    $group_info['description'] = $group->get_description();
+        				    
+        				    $contacts = $this->so_contact->get_local_contact_persons($group->get_id(), true);
+        				    $contact_1 = $contacts[0];
+    
+            				$new_group_id = $this->so_group->transfer_group($group_info);
+        				    if($new_group_id)
+            				{
+            					//update activity with new org id
+            					//add contact persons to booking
+            					$contact1 = array();
+            					$contact1['name'] = $contact_1->get_name();
+            					$contact1['phone'] = $contact_1->get_phone();
+            					$contact1['mail'] = $contact_1->get_email();
+            					$contact1['group_id'] = $new_group_id;
+            					$this->so_activity->add_contact_person_group($contact1);
+            					
+            					$message = lang('messages_saved_form');	
+            					
+            					//get organization_id for the group:
+            					$group_org_id = $this->so_group->get_orgid_from_group($new_group_id);
+            					
+            					//get affected activities and update with new org id
+            					$update_activities = $this->so_activity->get_activities_for_update($group->get_id(), true);
+
+            					foreach($update_activities as $act_id)
+            					{
+            					    $act = $this->so_activity->get_single($act_id);
+            						$act->set_organization_id($group_org_id);
+            						$act->set_group_id($new_group_id);
+            						$act->set_new_org(false);
+            						$act->set_new_group(false);
+            						$this->so_activity->store($act);
+            					}
+            					
+            					//set local group as stored
+            					$group->set_change_type('added');
+            					$group->set_transferred(true);
+    
+            					$this->so_group->update_local($group);
+            					$message = lang('messages_saved_form');
+            					//var_dump($new_group_id);
+            					$contact_persons = $this->so_contact->get_booking_contact_persons($new_group_id, true);
+            					//var_dump(2);
+                    			$cp1 = $contact_persons[0];
+            			    }
+    				    }
 						$message = lang('messages_saved_form');	
 					}
 					else
@@ -217,19 +301,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	
 					if($new_state == 3 || $new_state == 5 )
 					{
-						$kontor = $so_activity->get_office_name($activity->get_office());
+						$kontor = $this->so_activity->get_office_name($activity->get_office());
 						$subject = lang('mail_subject_update');
 						$body = lang('mail_body_state_' . $new_state, $kontor);
 						
-						if(isset($g_id) && $g_id > 0)
+						if($activity->get_group_id() && $activity->get_group_id() > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(),$subject,$body);
 						}
-						else if (isset($o_id) && $o_id > 0)
+						else if ($activity->get_organization_id() && $activity->get_organization_id() > 0)
 						{
 							$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(),$subject,$body);
 						}
 					}
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
@@ -250,6 +334,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 							'organizations' => $organizations,
 							'org_name' => $org_name,
 							'groups' => $groups,
+						    'local_group' => $local_group,
 							'arenas' => $arenas,
 							'buildings' => $buildings,
 							'categories' => $categories,
@@ -271,6 +356,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			$error = lang('org_not_transferred');
 			$editable = false;
 		}
+		//var_dump($local_group);
 
 		return $this->render('activity.php', array
 			(
@@ -278,6 +364,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'organizations' => $organizations,
 				'org_name' => $org_name,
 				'groups' => $groups,
+				'local_group' => $local_group,
 				'arenas' => $arenas,
 				'buildings' => $buildings,
 				'categories' => $categories,
@@ -434,14 +521,17 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$link_text = "<a href='http://www.bergen.kommune.no/aktivby/registreringsskjema/ny/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		//$link_text = "<a href='{$mailBaseURL}?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
-    		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                $office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                $uid = $GLOBALS['phpgw_info']['user']['account_id'];
+		$user_office_id =  activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
+                $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($user_office_id);
     		if($activity->get_state() == 2)
     		{
-    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name) . '<br/><br/>'.$office_footer;
     		}
     		else
     		{
-    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);
+    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name) . '<br/><br/>'.$office_footer;
     		}
 	    	
 	    	//var_dump($subject);
@@ -451,17 +541,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	    	if($activity->get_group_id() && $activity->get_group_id() > 0)
 	    	{
 	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
-	    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+	    		else*/ 
+	    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
 	    	}
 	    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 	    	{
 	    		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
-	    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+	    		else*/ 
+	    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    			activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
 	    	}
 	    }
@@ -506,18 +598,20 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
     		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
-    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
     			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
-    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+    		else */
+    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
     			activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
     	}
     	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
     	{
     		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
     		$activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
-    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
+/*    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
 				activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
-    		else if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
+    		else */
+    		if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
 	    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
     	}
     	
@@ -652,5 +746,35 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		return $returnHTML;
 	}
+        
+        public function create_groups()
+        {
+            $activities = $this->so_activity->get_activities_without_groups();
+            
+            foreach ($activities as $a)
+            {
+                $group_info = array();
+                $title_new = $a['title'];
+                    if(strlen($title_new) > 50)
+		{
+			$title_new = substr($title_new,0,49);
+		}
+                $group_info['name'] = $title_new;
+                $group_info['organization_id'] =  $a['organization'];
+                $group_info['description'] = $a['description'];
+                
+                //add new group
+                $new_group_id = $this->so_group->add_new_group_from_activity($group_info);
+                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id);
+                $this->so_activity->update_activity_group($a['id'], $new_group_id);
+                $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
+                foreach ($cp as $c)
+                {
+                    $c->set_group_id($new_group_id);
+                    $contact_id = $this->so_contact->add_new_group_contact($c);
+                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name']);
+                    //_debug_array($c);
+                }
+            }
+        }
 }
-?>

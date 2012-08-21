@@ -5,10 +5,10 @@ controller	common	no	Kontroll
 Register control item	controller	no	Legg til nytt kontrollpunkt
 Edit control item	controller	no	Endre kontrollpunkt
 View control item	controller	no	Vis kontrollpunkt
-control_item_type_1	controller	no	Ved innskriving av kommentar i et kommentarfelt
+control_item_type_1	controller	no	Ved innskriving av kommentar
 control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
 control_item_type_3	controller	no	Ved valg av verdi fra nedtrekksliste
-control_item_type_4	controller	no	Ved valg av verdi fra Radioknapper
+control_item_type_4	controller	no	Ved valg av verdi fra radioknapper
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
 Calendar_overview	controller	no	Kontrollplan
@@ -350,3 +350,12 @@ add components for control	controller	no	Legg til knytning mellom kontroll og ko
 location category	controller	no	Lokaliseringskategori
 select add	controller	no	Velg for å legge til
 select delete	controller	no	Velg for sletting
+error_msg_1	controller	no	Vennligst fyll inn dette feltet
+error_msg_2	controller	no	Vennligst velg en verdi i listen
+error_msg_3	controller	no	Vennligst angi sluttdato etter startdato
+error_msg_4	controller	no	Sjekklisten må være tilknyttet en kontroll
+error_msg_5	controller	no	Vennligst angi når kontrollen ble utført
+error_msg_6	controller	no	Kontrollen må være knyttet mot en komponent/lokasjon
+error_msg_7	controller	no	Vennligst endre status for kontroll eller angi planlagtdato
+error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
+error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden

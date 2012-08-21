@@ -1,11 +1,11 @@
 activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
 Activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
 office	activitycalendarfrontend	no	Hovedansvarlig kulturkontor
-arena	activitycalendarfrontend	no	Arena
+arena	activitycalendarfrontend	no	Lokale
 description	activitycalendarfrontend	no	Beskrivelse
 date_start	activitycalendarfrontend	no	Startdato
 date_end	activitycalendarfrontend	no	Sluttdato
-special_adaptation	activitycalendarfrontend	no	Spesielt tilpasset for utviklingshemmede
+special_adaptation	activitycalendarfrontend	no	Ja, aktiviteten er spesielt tilpasset for utviklingshemmede
 target	activitycalendarfrontend	no	Målgruppe
 contact_person_1	activitycalendarfrontend	no	Kontaktperson 1
 contact_person_2	activitycalendarfrontend	no	Kontaktperson 2
@@ -57,7 +57,7 @@ building	activitycalendarfrontend	no	Kommunale bygg
 title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
-messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
+messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret.<br/>Når aktiviteten er godkjent av kulturkontoret vil den vises på kommunens nettsider.
 messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
 change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
@@ -71,12 +71,14 @@ where_when	activitycalendarfrontend	no	HVOR/NÅR
 who	activitycalendarfrontend	no	HVEM
 arena_helptext	activitycalendarfrontend	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.<br/>Dersom ikke arena som skal benyttes finnes i listen, kan du registrere en ny.<br/>Velg "Ny arena" i nedtrekksmenyen for Eksterne bygg og oppgi deretter riktig navn og adresse på arenaen.
 new_arena	activitycalendarfrontend	no	Ny Arena
+register_new_arena	activitycalendarfrontend	no	Registrer nytt lokale
 external_arena	activitycalendarfrontend	no	Eksterne bygg
 category_helptext	activitycalendarfrontend	no	Velg kategori
 target_helptext	activitycalendarfrontend	no	Velg målgruppe(r)
 district_helptext	activitycalendarfrontend	no	Velg bydel(er) hvor aktiviteten foregår
 adaptation_helptext	activitycalendarfrontend	no	Kryss av om aktiviteten er spesielt tilpasset
 time_helptext	activitycalendarfrontend	no	Oppgi tidspunkt for aktiviteten, f.eks. onsdag kl. 20-21
+time	activitycalendarfrontend	no	Dag og tid
 office_helptext	activitycalendarfrontend	no	Oppgi kontor som saksbehandler aktiviteten
 contact_info	activitycalendarfrontend	no	Kontaktinformasjon for kulturkontoret
 contact_info_helptext	activitycalendarfrontend	no	Hentes fra booking/organisasjonsregister ved lagring.
@@ -92,14 +94,24 @@ activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker �
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
 address	activitycalendarfrontend	no	Adresse
-activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for organisasjonen.<br/>Du velger organisasjon og aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
+activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for aktiviteten.<br/>Du velger først organisasjon og deretter aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
 mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
+mail_body_update	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
 mail_subject_update	activitycalendarfrontend	no	Melding fra AktivBy - Aktivitetsoversikt
 save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå videre til Ny aktivitet
 new_organization	activitycalendarfrontend	no	Ny organisasjon
 organization_saved_form	activitycalendarfrontend	no	Organisasjonen er opprettet i aktivitetsoversikten.<br/>Du kan nå registrere en aktivitet tilknyttet den nye organisasjonen.
-required_fields	activitycalendarfrontend	no	Felter merket med (*) er påkrevde felt.
+required_fields	activitycalendarfrontend	no	Felt merket med (*) er påkrevde felt.
 mailBaseURL	activitycalendarfrontend	no	Base-URL for e-post
 ajaxURL	activitycalendarfrontend	no	URL for AJAX-kall
 Anonymous_user	activitycalendarfrontend	no	Brukernavn for frontend
 Anonymous_password	activitycalendarfrontend	no	Passord for frontend
+new_activity_helptext	activitycalendarfrontend	no	Hvem arrangerer aktiviteten?
+responsible	activitycalendarfrontend	no	Arrangør
+choose_org	activitycalendarfrontend	no	Velg organisasjon
+activity_title	activitycalendarfrontend	no	Navn på aktiviteten
+location	activitycalendarfrontend	no	Lokale
+contact_person	activitycalendarfrontend	no	Kontaktperson for aktiviteten
+activity_ok_message	activitycalendarfrontend	no	Aktiviteten er lagret uten endringer
+activity_ok	activitycalendarfrontend	no	Opplysningene er korrekte
+change_activity	activitycalendarfrontend	no	Endre opplysningene
