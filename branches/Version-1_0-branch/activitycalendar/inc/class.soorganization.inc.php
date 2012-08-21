@@ -738,7 +738,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			$district = '';
 		}
-		$activity_id = $org_info['activity_id'];
+		$activity_id = 1;
 		$show_in_portal = 1; 
 		
 		$values = array(
@@ -754,7 +754,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			'activity_id = ' . $this->marshal($activity_id, 'int'),
 			'show_in_portal = 1'
 		);
-		
+
 		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
 	}
 	

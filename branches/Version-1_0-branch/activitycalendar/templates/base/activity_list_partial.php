@@ -114,7 +114,7 @@
 		'index.php?menuaction=activitycalendar.uiactivities.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_toggle_activity_category', '<?php echo $list_id ?>_ctrl_search_query', 'date_updated'],
+		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_toggle_activity_category', '<?php echo $list_id ?>_ctrl_search_query', 'date_change'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -185,6 +185,14 @@
 	{
 		$uid = $GLOBALS['phpgw_info']['user']['account_id'];
 		$user_office =  activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
+                if($user_office && $user_office == 1)
+                {
+                    $user_office = 2;
+                }
+                else if($user_office == 2)
+                {
+                    $user_office = 1;
+                }
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">

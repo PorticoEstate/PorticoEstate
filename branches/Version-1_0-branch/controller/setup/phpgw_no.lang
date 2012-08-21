@@ -359,3 +359,4 @@ error_msg_6	controller	no	Kontrollen må være knyttet mot en komponent/lokasjon
 error_msg_7	controller	no	Vennligst endre status for kontroll eller angi planlagtdato
 error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
 error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden
+role at location	controller	no	Tildeling av rolle

@@ -266,24 +266,15 @@ function allOK()
 				<fieldset title="<?php echo lang('what')?>">
 					<legend>Hva</legend>
     				<dt>
-    					<label for="title"><?php echo lang('activity_title') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-  href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-  target="name"><IMG alt="Hjelp" 
-  src="/aktivitetsoversikt/images/hjelp.gif"></A></label>
+    					<label for="title"><?php echo lang('activity_title') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_title')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
     				</dt>
     				<dd>
     					<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="83"/>
     				</dd>
-    				<DT><LABEL for="org_description"><?php echo lang('description')?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                      href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                      target="name"><IMG alt="Hjelp" 
-                      src="/aktivitetsoversikt/images/hjelp.gif"></A></LABEL></DT>
+    				<DT><LABEL for="org_description"><?php echo lang('description')?> (*) <a onclick="alert('<?php echo lang('help_new_activity_description')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL></DT>
                     <DD><TEXTAREA cols="80" rows="4" name="description" id="description"></TEXTAREA></DD>
     				<dt>
-    					<label for="category"><?php echo lang('category') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                          href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                          target="name"><IMG alt="Hjelp" 
-                          src="/aktivitetsoversikt/images/hjelp.gif"></A></label>
+    					<label for="category"><?php echo lang('category') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_category')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
     				</dt>
     				<dd>
     					<?php
@@ -302,10 +293,7 @@ function allOK()
 				</fieldset>
 				<fieldset id="hvem"><legend>For hvem</legend>
     				<dt>
-    					<label for="target"><?php echo lang('target') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                          href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                          target="name"><IMG alt="Hjelp" 
-                          src="/aktivitetsoversikt/images/hjelp.gif"></A>
+    					<label for="target"><?php echo lang('target') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_target')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
                         </label>
     				</dt>
     				<dd>
@@ -323,20 +311,14 @@ function allOK()
     				<dt>
     					<input type="checkbox" name="special_adaptation" id="special_adaptation" />
     					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
-    					<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                          href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                          target="name"><IMG alt="Hjelp" 
-                          src="/aktivitetsoversikt/images/hjelp.gif"></A>
+    					<a onclick="alert('<?php echo lang('help_new_activity_spec_adapt')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
     				</dt>
 				</fieldset>
 				<fieldset title="hvor">
 					<LEGEND>Hvor og når</LEGEND>
 					<dt>
 					<br/>
-					<label for="arena"><?php echo lang('location') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                      href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                      target="name"><IMG alt="Hjelp" 
-                      src="/aktivitetsoversikt/images/hjelp.gif"></A>
+					<label for="arena"><?php echo lang('location') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_location')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
                     </label>
     				</dt>
     				<dd>
@@ -400,10 +382,7 @@ function allOK()
                   	</DIV>
     				<dt>
     					<br/>
-    					<label for="district"><?php echo lang('district') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                          href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                          target="name"><IMG alt="Hjelp" 
-                          src="/aktivitetsoversikt/images/hjelp.gif"></A>
+    					<label for="district"><?php echo lang('district') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_district')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
       					</label>
     				</dt>
     				<dd>
@@ -418,19 +397,14 @@ function allOK()
     				</dd>
     				<dt>
     					<br/>
-    					<label for="time"><?php echo lang('time') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-      href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-      target="name"><IMG alt="Hjelp" 
-      src="/aktivitetsoversikt/images/hjelp.gif"></A></label>
+    					<label for="time"><?php echo lang('time') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_time')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
     				</dt>
     				<dd>
     					<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" size="80" />
     				</dd>
 				</fieldset>
 				<FIELDSET id="arr"><LEGEND>Kontaktperson</LEGEND><BR>
-				Kontaktperson for aktiviteten <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                  href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                  target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A><BR>
+				Kontaktperson for aktiviteten <a onclick="alert('<?php echo lang('help_new_activity_contact_person')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a><BR>
                  <DT><LABEL for="contact_name">Navn (*)</LABEL></DT>
                   <DD><INPUT name="contact_name" id="contact_name" size="80" type="text"></DD>
                   <DT><LABEL for="contact_phone">Telefon (*)</LABEL></DT>
@@ -442,11 +416,7 @@ function allOK()
 				</FIELDSET>
     			<FIELDSET>
     				<BR>
-                    <DT><LABEL for="office">Hvilket kulturkontor skal motta registreringen (*) <A 
-                      onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                      href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                      target="name"><IMG alt="Hjelp" 
-                      src="/aktivitetsoversikt/images/hjelp.gif"></A></LABEL></DT>
+                    <DT><LABEL for="office">Hvilket kulturkontor skal motta registreringen (*) <a onclick="alert('<?php echo lang('help_new_activity_office')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL></DT>
     				<dd>
     					<?php
     					$selected_office = $activity->get_office();
