@@ -301,6 +301,13 @@
 				$activity->set_new_group($new_group);
 				$target_ok = false;
 				$district_ok = false;
+                                
+                                if($get_org_from_local)
+                                {
+                                    //update new organization with district-id from activity.
+                                    $this->so_organization->update_org_district_local($organization->get_id(), $activity->get_district());
+                                }
+                                
 				if($activity->get_target() && $activity->get_target() != '')
 				{
 					$target_ok = true;
@@ -819,6 +826,7 @@
                                         $org_info['streetnumber'] = phpgw::get_var('number');
 					$org_info['zip'] = phpgw::get_var('postzip');
 					$org_info['postaddress'] = phpgw::get_var('postaddress');
+                                        $org_info['district'] = $organization->get_district();
 					$org_info['status'] = "change";
 					$org_info['original_org_id'] = $org_id;
 					$o_id = $this->so_activity->add_organization_local($org_info);
