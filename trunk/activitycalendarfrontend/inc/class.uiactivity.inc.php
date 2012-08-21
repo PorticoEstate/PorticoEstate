@@ -39,7 +39,7 @@
 		public function add()
 		{
 			//$GLOBALS['phpgw']->redirect_link('/activitycalendarfrontend/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.edit', 'action' => 'new_activity'));
-			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );			
+			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
 			$c = createobject('phpgwapi.config','activitycalendarfrontend');
 			$c->read();
 			$config = $c->config_data;
