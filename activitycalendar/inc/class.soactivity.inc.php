@@ -620,6 +620,20 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return $result;
 	}
 	
+        function get_office_description($office_id)
+	{
+            $result = "Ingen";
+            if($office_id != null)
+            {
+		$sql = "SELECT description FROM bb_office where id=$office_id";
+                var_dump($sql);
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record()){
+                    $result = $this->db->f('description');
+		}
+            }
+            return $result;
+	}
 	
 	function get_target_name($target_id)
 	{
@@ -1475,6 +1489,20 @@ class activitycalendar_soactivity extends activitycalendar_socommon
             $ts_now = strtotime('now');
 			
             $values = "last_change_date = " . $this->marshal($ts_now, 'int');
+
+            $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
+
+            return isset($result);
+        }
+        
+        function update_activity_group($activity_id, $group_id)
+        {
+            $id = intval($activity_id);
+            $g_id = intval($group_id);
+			
+            $values = "group_id = " . $g_id;
+            var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
+            //die;
 
             $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
 

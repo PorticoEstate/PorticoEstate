@@ -406,7 +406,7 @@ organization_saved_form	activitycalendar	no	Organisasjonen ble lagret
 group_saved_form	activitycalendar	no	Gruppen ble lagret
 published	activitycalendar	no	Publisert
 contactperson_not_set	activitycalendar	no	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
-description_helptext	activitycalendar	no	Hentes fra booking/organisasjonsregister ved lagring/oppdatering.
+description_helptext	activitycalendar	no	Hentes fra booking/grupperegister ved lagring/oppdatering.
 back_to_list	activitycalendar	no	Tilbake til oversikt
 target_not_selected	activitycalendar	no	Målgruppe må velges!
 district_not_selected	activitycalendar	no	Distrikt må velges!
