@@ -148,6 +148,10 @@ div.identifier-header label {
     padding-top: 1em;
 }
 
+.form-buttons input[type=submit]{
+    margin-right: 5px;
+}
+
 .form-buttons button {
     margin-right: .5em;
 }
@@ -566,6 +570,16 @@ h1 img{
 	border: 1px solid #CCD2D9;
 }
 
+#add_control_item_list_value .btn{
+  margin-left: 5px;
+  vertical-align: middle;
+  padding: 2px 10px;
+}
+
+#add_control_item_list_value input{
+  vertical-align: middle;
+}
+
 ul#control_item_options{
 	margin-bottom: 1em;
 }
@@ -592,11 +606,11 @@ ul#control_item_options .btn.delete {
     background: none repeat scroll 0 0 #EEEEEE;
     border: 1px solid #CCCCCC;
     color: #333333;
-    font-size: 1.1em;
     font-weight: normal;
-    margin: 0 0 0 2px;
+    margin: 0 0 0 4px;
+    padding: 2px 10px;
     text-align: center;
-    width: 45px;
+    width: 49px;
 }
 
 #frm_control_items{
@@ -2137,14 +2151,19 @@ p.no_items_msg {
 }
 
 .option-list-heading {
-	margin-bottom: 5px;	
+    margin: 0 0 10px;
 }
 
 .option-list{
 	margin-top: 5px;	
 }
+
 .option-list{
 	padding-left:10px;	
+}
+
+.option-list li{
+  margin-bottom: 5px;  
 }
 
 .input_error_msg {

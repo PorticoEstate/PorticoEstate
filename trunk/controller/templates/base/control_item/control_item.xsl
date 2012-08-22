@@ -70,7 +70,7 @@
 						<xsl:choose>
 							<xsl:when test="view">
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>
-								<xsl:value-of select="php:function('lang', $lang_type)" />
+								<h4 class="option-list-heading"><xsl:value-of select="php:function('lang', $lang_type)" /></h4>
 								
 								<xsl:if test="control_item/options_array/child::node()">								
 									<h4 class="option-list-heading">Verdier i liste</h4>
@@ -109,13 +109,11 @@
 														</div>
 													</xsl:otherwise>
 												</xsl:choose>
-									
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
 										<xsl:for-each select="control_item/control_item_types">
 											<xsl:variable name="current_type"><xsl:value-of select="." /></xsl:variable>
-											
 												<xsl:choose>
 													<xsl:when test="//control_item/type = $current_type">
 														<div class="control_item_type">
@@ -138,7 +136,6 @@
 														</div>
 													</xsl:otherwise>
 												</xsl:choose>
-																					
 									</xsl:for-each>
 								</xsl:otherwise>
 								</xsl:choose>
@@ -149,7 +146,6 @@
 								<xsl:when test="control_item/options_array/child::node()">
 									<div id="add_control_item_option_panel"  style="display:block;">
 										<hr />
-										
 										<xsl:choose>
 											<xsl:when test="//control_item/type = 'control_item_type_3'">
 												<h2 class="type">Nedtrekksliste</h2>	
@@ -171,7 +167,7 @@
 												<li>
 													<label>Listeverdi<span class="order_nr"><xsl:number /></span></label>
 													<xsl:variable name="option_value"><xsl:value-of select="option_value" /></xsl:variable>
-													<input type="" name="option_values[]" value="{$option_value}" />
+													<input type="text" name="option_values[]" value="{$option_value}" />
 													<span class="btn delete">Slett</span>
 												</li>
 											</xsl:for-each>
@@ -179,7 +175,7 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="" name="option_value" />
+											<input type="text" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
@@ -187,7 +183,6 @@
 								<xsl:otherwise>
 									<div id="add_control_item_option_panel">
 										<hr />
-										
 										<h2 class="type"></h2>
 										<h3>Legg til verdier som listen skal inneholde</h3>
 	
@@ -199,7 +194,7 @@
 	
 										<div id="add_control_item_list_value" class="row">
 											<label>Ny listeverdi</label>
-											<input type="" name="option_value" />
+											<input type="text" name="option_value" />
 											<input class="btn" type="button" value="Legg til" />
 										</div>
 									</div>
