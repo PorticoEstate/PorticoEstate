@@ -43,7 +43,7 @@ class year_calendar_agg {
     	else
     	{
     		$this->calendar_array[ $month_nr ]["status"] = "CONTROLS_REGISTERED";
-    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "year" => $this->year, "month" => $month_nr);
+    		$this->calendar_array[ $month_nr ]["info"] = array("view" => $this->view, "control_id" => $this->control->get_id(), "location_code" =>  $this->location_code, "year" => $this->year, "month" => $month_nr);
     	}
     }
 	}
