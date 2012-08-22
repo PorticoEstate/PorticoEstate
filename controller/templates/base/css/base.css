@@ -525,12 +525,16 @@ h1 img{
 }
 
 #control_item_details .control_item_type {
-    margin-top: 0.5em;
+  margin-top: 0.5em;
+}
+
+.control_item_type .btn {
+  margin-right: 5px;	
 }
 
 #control_item_details .control_item_type .active {
-    background: none repeat scroll 0 0 #F57056;
-    border: 1px solid #CB563F;
+  background: none repeat scroll 0 0 #F57056;
+  border: 1px solid #CB563F;
 }
 
 #control_item_details input[type=radio] {

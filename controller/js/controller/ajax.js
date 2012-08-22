@@ -6,48 +6,17 @@ $(document).ready(function(){
 		
 	}
 	
-	/* ================================  SEARCH LOCATION BOX  ========================== */
-	
-	// Changes location level between building and property in serch location select box
-	$("#choose-loc a").click(function(){
+	$("#component_form").submit(function(event){
+		var selected_control_group = $("#control_group_id option:selected").val();  
 		
-		$("#choose-loc a").removeClass("active");
-		$(this).addClass("active");
+		if( isNaN( selected_control_group ) ){
+			event.preventDefault();
+			
+			$("#control_group_details .error_msg").show();
+		}
 		
-		var loc_type = $(this).attr("href");
-		
-		$("#loc_type").val( loc_type.substring(9, 10) );
-		$("#search-location-name").focus();
-
-		$( "#search-location-name" ).autocomplete( "search");
-		
-		return false;
 	});
-
 	
-	$(".selectLocation").change(function () {
-		 var location_code = $(this).val();
-		 var thisForm = $(this).parents("form");
-
-		 var period_type = $(thisForm).find("input[name='period_type']").val();
-		 var year = $(thisForm).find("input[name='year']").val();
-		 var month = $(thisForm).find("input[name='month']").val();
-		 
-		 if(period_type == 'view_month')
-		 {
-			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
-			 var baseUrl = phpGWLink('index.php', oArgs, false);
-			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
-		 }
-		 else
-		 {
-			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
-			 var baseUrl = phpGWLink('index.php', oArgs, false);
-			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
-		 }
-		
-		 window.location.href = requestUrl;
-    });
 		
 	/* ================================  CONTROL LOCATION ================================== */
 	
@@ -145,7 +114,7 @@ $(document).ready(function(){
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
 				  if( data != null){
-					  htmlString  = "<option>Velg kontroll</option>"
+					  htmlString  = "<option>Velg kontrollgruppe</option>"
 					  var obj = jQuery.parseJSON(data);
 						
 					  $.each(obj, function(i) {
@@ -927,6 +896,49 @@ $(document).ready(function(){
 	
 	
 	/* ==================================  CALENDAR ===================================== */ 
+	
+    // SEARCH LOCATION BOX
+	
+	// Changes location level between building and property in serch location select box
+	$("#choose-loc a").click(function(){
+		
+		$("#choose-loc a").removeClass("active");
+		$(this).addClass("active");
+		
+		var loc_type = $(this).attr("href");
+		
+		$("#loc_type").val( loc_type.substring(9, 10) );
+		$("#search-location-name").focus();
+
+		$( "#search-location-name" ).autocomplete( "search");
+		
+		return false;
+	});
+
+	
+	$(".selectLocation").change(function () {
+		 var location_code = $(this).val();
+		 var thisForm = $(this).parents("form");
+
+		 var period_type = $(thisForm).find("input[name='period_type']").val();
+		 var year = $(thisForm).find("input[name='year']").val();
+		 var month = $(thisForm).find("input[name='month']").val();
+		 
+		 if(period_type == 'view_month')
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
+			 var requestUrl = baseUrl + "&location_code=" + location_code + "&year=" + year + "&month=" + month;
+		 }
+		 else
+		 {
+			 var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+			 var baseUrl = phpGWLink('index.php', oArgs, false);
+			 var requestUrl = baseUrl +  "&location_code=" + location_code + "&year=" + year;
+		 }
+		
+		 window.location.href = requestUrl;
+    });
 	
 	// CALENDAR FILTERS  
 	$("#filter-repeat_type").change(function () {

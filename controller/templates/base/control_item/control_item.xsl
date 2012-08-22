@@ -28,7 +28,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/title" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<input type="" name="title" id="title" size="80"  class="required">
+							<input type="text" name="title" id="title" size="80"  class="required">
 								<xsl:attribute name="value"><xsl:value-of select="control_item/title"/></xsl:attribute>
 							</input>
 						</xsl:when>
