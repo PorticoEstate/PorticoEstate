@@ -189,7 +189,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity_district = $this->get_office_from_user($filters['user_id']);
 				if($activity_district && $activity_district != '')
 				{
-					$filter_clauses[] = "activity.office = '{$activity_district}'";
+                                    if($activity_district == 1)
+                                        $activity_district_corr = 2;
+                                    else if ($activity_district == 2)
+                                        $activity_district_corr = 1;
+                                    else
+                                        $activity_district_corr = (int)$activity_district;
+                                    
+                                    $filter_clauses[] = "activity.office = '{$activity_district_corr}'";
 				}
 			}
 			if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
@@ -224,7 +231,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity_district = $this->get_office_from_user($filters['user_id']);
 				if($activity_district && $activity_district != '')
 				{
-					$filter_clauses[] = "activity.office = '{$activity_district}'";
+                                    if($activity_district == 1)
+                                        $activity_district = 2;
+                                    else if ($activity_district == 2)
+                                        $activity_district = 1;
+                                    
+                                    $filter_clauses[] = "activity.office = '{$activity_district}'";
 				}
 			}
 			if(isset($filters['updated_date_hidden']) && $filters['updated_date_hidden'] != "")
@@ -622,7 +634,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
         function get_office_description($office_id)
 	{
-            $result = "Ingen";
+            $result = "";
             if($office_id != null)
             {
 		$sql = "SELECT description FROM bb_office where id=$office_id";
