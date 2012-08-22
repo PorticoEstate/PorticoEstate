@@ -783,14 +783,14 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 
                 //add new group
                 $new_group_id = $this->so_group->add_new_group_from_activity($group_info);
-                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id);
+                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id . "<br/>");
                 $this->so_activity->update_activity_group($a['id'], $new_group_id);
                 $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
                 foreach ($cp as $c)
                 {
                     $c->set_group_id($new_group_id);
                     $contact_id = $this->so_contact->add_new_group_contact($c);
-                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name']);
+                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name'] . "<br/>");
                     //_debug_array($c);
                 }
             }
