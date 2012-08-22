@@ -1513,7 +1513,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
             $g_id = intval($group_id);
 			
             $values = "group_id = " . $g_id;
-            var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
+            //var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
             //die;
 
             $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
