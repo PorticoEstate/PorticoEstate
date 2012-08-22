@@ -204,7 +204,11 @@
 		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
 			$role_id = (int) $role_id;
-			$repeat_type = (int) $repeat_type;
+			
+			if($repeat_type != null)
+			{
+			  $repeat_type = (int) $repeat_type;
+			}
 
 			$controls_array = array();
 			
@@ -215,7 +219,7 @@
 			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
 			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
 			
-			if( $repeat_type )
+			if( $repeat_type =! null)
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
