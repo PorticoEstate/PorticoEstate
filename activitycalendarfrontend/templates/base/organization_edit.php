@@ -115,7 +115,7 @@ function isOK()
 						<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
 							href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
 							target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A><BR/>
-						<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" value="<?php echo $organization->get_address()?>"><BR/>
+						<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" value="<?php echo $organization->get_address()?>" autocomplete="off"><BR/>
 						<DIV id="address_container"></DIV>
 					</DT>
 					<DT style="clear: right; float: left;"><LABEL for="number">Husnummer</LABEL><BR/>

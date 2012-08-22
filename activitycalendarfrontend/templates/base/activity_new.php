@@ -11,7 +11,7 @@ $(document).ready(function(){
     var text = document.getElementById("displayText");
     //ele.hide();
     $("#toggleText").hide();
-    text.innerHTML = "Ikke i listen? Registrer ny organisasjon";
+    text.innerHTML = "Ikke i listen? Registrer nytt lokale";
  });
  
 function toggle() {
