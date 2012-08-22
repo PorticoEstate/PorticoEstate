@@ -202,7 +202,7 @@
 				// Edit control item
 				if($control_item_id > 0)
 				{
-					$control_item = $this->so->get_single_with_options($control_item_id , "return_object"); 
+					$control_item_array = $this->so->get_single_with_options($control_item_id , "return_array"); 
 				}
 				// New control item
 				else
@@ -210,9 +210,6 @@
 					$control_item = new controller_control_item();
 				}	
 			}
-			
-			$control_item_array = array();
-			$control_item_array = $control_item->toArray();
 			
 			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
