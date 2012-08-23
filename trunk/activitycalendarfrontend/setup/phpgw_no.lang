@@ -126,7 +126,10 @@ help_new_activity_description	activitycalendarfrontend	no	Gi en KORT beskrivelse
 help_new_activity_category	activitycalendarfrontend	no	Velg den kategorien som passer best for din aktivitet.
 help_new_activity_target	activitycalendarfrontend	no	Velg en eller flere målgrupper.
 help_new_activity_spec_adapt	activitycalendarfrontend	no	Hak av dersom aktiviteten passer for utviklingshemmede.
-help_new_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere. \\n\\nVelg eksisterende lokale eller registrer nytt, dersom det ikke finnes i listen.
+help_new_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere. \\n\\nVelg «Registrer nytt lokale» dersom du ikke finner det i listen.
+help_new_arena	activitycalendarfrontend	no	Her skriver du inn lokalets navn, gateadresse, husnummer, postnummer og poststed.
+help_new_arena_name	activitycalendarfrontend	no	Skriv inn lokalets navn.\\n\\nLokalets navn vil vises i aktivitetsoversikten på kommunens nettsider. Det er derfor viktig at du velger et navn som gir mening for publikum, f.eks. «Grendahuset på Nymark». 
+help_new_arena_address	activitycalendarfrontend	no	For å unngå feil innskriving av gateadresse, er feltet for «Gateadresse» koplet mot kommunens gateregister med oversikt over alle gatenavn i Bergen. Begynn å fylle ut feltet og velg rett gatenavn som løsningen foreslår.
 help_new_activity_district	activitycalendarfrontend	no	Velg bydelen hvor aktiviteten foregår.
 help_new_activity_time	activitycalendarfrontend	no	Skriv inn dag og klokkeslett når aktiviteten foregår, f.eks. slik «Mandag kl. 20 – 21» eller slik «Hver andre tirsdag kl. 19 – 21».
 help_new_activity_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for aktiviteten.

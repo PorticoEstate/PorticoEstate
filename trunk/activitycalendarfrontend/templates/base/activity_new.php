@@ -277,7 +277,7 @@ function allOK()
     					<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="83"/>
     				</dd>
     				<DT><LABEL for="org_description"><?php echo lang('description')?> (*) <a onclick="alert('<?php echo lang('help_new_activity_description')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL></DT>
-                    <DD><TEXTAREA cols="80" rows="4" name="description" id="description"></TEXTAREA></DD>
+                                <DD><TEXTAREA cols="80" rows="4" name="description" id="description"></TEXTAREA></DD>
     				<dt>
     					<label for="category"><?php echo lang('category') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_category')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
     				</dt>
@@ -353,21 +353,13 @@ function allOK()
                     	<dl>
                     	<DT>
                       		<label for="new_arena"><?php echo lang('register_new_arena') ?></label>
-                      			<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                      			href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                      			target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A>
+                      			<a onclick="alert('<?php echo lang('help_new_arena')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
                     	</DT>
-                      	<DT><LABEL for="arena_name"><?php echo lang('name') ?> (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                              href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                              target="name"><IMG alt="Hjelp" 
-                              src="/aktivitetsoversikt/images/hjelp.gif"></A></LABEL></DT>
+                      	<DT><LABEL for="arena_name"><?php echo lang('name') ?> (*) <a onclick="alert('<?php echo lang('help_new_arena_name')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL></DT>
                     	<DD><INPUT id="arena_name" name="arena_name" size="50" type="text"></DD>
                       	<DT style="margin-right: 20px; float: left;">
                       	<LABEL 
-                            for="arena_address">Gateadresse (*) <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-                            href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-                            target="name"><IMG alt="Hjelp" 
-                            src="/aktivitetsoversikt/images/hjelp.gif"></A>
+                            for="arena_address">Gateadresse (*) <a onclick="alert('<?php echo lang('help_new_arena_address')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
                         </LABEL><BR>
                         <INPUT id="arena_address" 
                             onkeyup="javascript:get_address_search_arena()" name="arena_address" size="50" 
