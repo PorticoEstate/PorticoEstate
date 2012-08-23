@@ -852,6 +852,11 @@
 				}
 				else
 				{
+                                    $c = createobject('phpgwapi.config','activitycalendarfrontend');
+                                    $c->read();
+                                    $config = $c->config_data;
+
+                                    $ajaxUrl = $c->config_data['AJAXURL'];
 					$organization = $this->so_organization->get_single($org_id);
 					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array('organization_id' => $org_id));
 					foreach($person_arr as $p)
@@ -865,7 +870,8 @@
 							'contact1' => $persons[0],
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error')
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                        'ajaxURL' => $ajaxUrl
 						)
 					);
 				}

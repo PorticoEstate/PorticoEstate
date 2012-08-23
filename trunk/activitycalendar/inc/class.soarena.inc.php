@@ -305,11 +305,11 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				//$result_arr = $this->db->f('name');
-				//if($curr_index == 0){
-				    //$result_arr[] = "<option value='0'>Velg gateadresse</option>";
-				//}
+				if($curr_index == 0){
+                                    $result_arr[] = "<option value='0'>Velg gateadresse</option>";
+				}
 				$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
-				//$curr_index++;
+				$curr_index++;
 			}
 		}
 		$result = implode(' ' , $result_arr);
