@@ -11,7 +11,7 @@ function get_address_search()
 	div_address.style.display="block";
 
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
-	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
 var divcontent_start = "<select name=\"address_select\" id=\"address_select\" size\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
