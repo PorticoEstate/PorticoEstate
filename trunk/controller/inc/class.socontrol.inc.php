@@ -219,7 +219,7 @@
 			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
 			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
 			
-			if( $repeat_type =! null)
+			if( $repeat_type != null)
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
@@ -293,7 +293,7 @@
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
 			$sql  .= "bim_item.type as component_type, bim_item.id as component_id, bim_item.location_code, bim_item.address, ";
-			$sql  .= "bim_item.xml_representation as xml, cl.location_id, fm_responsibility_role.name AS responsibility_name ";
+			$sql  .= "cl.location_id, fm_responsibility_role.name AS responsibility_name ";
 			$sql  .= "FROM controller_control_component_list cl ";
 			$sql  .= "JOIN fm_bim_item bim_item on cl.component_id = bim_item.id ";
 			$sql  .= "JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id ";
@@ -349,7 +349,6 @@
 					$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
 					$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
-					$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 					$component->set_loc_1($this->unmarshal($this->db->f('loc_1', true), 'string'));
 					$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
@@ -522,7 +521,6 @@
 				$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
 				$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
-				$component->set_xml($this->unmarshal($this->db->f('xml', true), 'string'));
 				$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$component->set_loc_1($this->unmarshal($this->db->f('loc_1', true), 'string'));
 				$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
