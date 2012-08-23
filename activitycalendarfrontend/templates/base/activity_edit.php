@@ -151,7 +151,7 @@ function allOK()
 		alert("Tittel må fylles ut!");
 		return false;
 	}
-	if(document.getElementById('description').value == null || document.getElementById('description').value == '')
+	if(document.getElementsByTagName('textarea')[0].value == null || document.getElementsByTagName('textarea')[0].value == '')
 	{
 		alert("Beskrivelse må fylles ut!");
 		return false;
