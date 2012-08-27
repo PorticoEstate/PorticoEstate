@@ -522,9 +522,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$link_text = "<a href='{$mailBaseURL}?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
                 $office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+                /*
                 $uid = $GLOBALS['phpgw_info']['user']['account_id'];
 		$user_office_id =  activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
                 $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($user_office_id);
+                 */
+                $office_id = $activity->get_office();
+                if($office_id == 1)
+                    $office_id_new = 2;
+                else if($office_id == 2)
+                    $office_id_new = 1;
+                else
+                    $office_id_new = (int)$office_id;
+                $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($office_id_new);
     		if($activity->get_state() == 2)
     		{
     			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name) . '<br/><br/>'.$office_footer;
@@ -582,7 +592,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$link_text = "http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
     		$link_text = "<a href='http://www.bergen.kommune.no/aktivitetsoversikt/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}'>Rediger opplysninger for {$activity->get_title()}</a>";
     		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
-    		$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name);
+                $office_id = $activity->get_office();
+                if($office_id == 1)
+                    $office_id_new = 2;
+                else if($office_id == 2)
+                    $office_id_new = 1;
+                else
+                    $office_id_new = (int)$office_id;
+                $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($office_id_new);
+    		$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name) . $office_footer;
     	}
     	else
     	{
@@ -765,14 +783,14 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 
                 //add new group
                 $new_group_id = $this->so_group->add_new_group_from_activity($group_info);
-                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id);
+                var_dump("lagt til gruppen " . $group_info['name'] . " med id " . $new_group_id . "<br/>");
                 $this->so_activity->update_activity_group($a['id'], $new_group_id);
                 $cp = $this->so_contact->get_booking_contact_persons($a['organization']);
                 foreach ($cp as $c)
                 {
                     $c->set_group_id($new_group_id);
                     $contact_id = $this->so_contact->add_new_group_contact($c);
-                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name']);
+                    var_dump("Lagt til kontaktperson " . $c->get_name() . " på gruppe " . $group_info['name'] . "<br/>");
                     //_debug_array($c);
                 }
             }
