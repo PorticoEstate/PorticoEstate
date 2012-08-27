@@ -1,4 +1,4 @@
-    <?php
+<?php
 	phpgw::import_class('activitycalendar.soorganization');
 	phpgw::import_class('activitycalendar.sogroup');
 	phpgw::import_class('activitycalendar.soarena');
@@ -252,7 +252,7 @@
 			return self::$so;
 		}
 		
-		public function serialize($do_export=false)
+		public function serialize()
 		{
 		    $so_org = activitycalendar_soorganization::get_instance();
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -337,13 +337,6 @@
 				$contact_1 = "";
 				$contact_2 = "";
 			}
-                        
-                        $contact_person_1_name = $this->get_contact_person_1()?$this->get_contact_person_1()->get_name():'';
-                        $contact_person_1_phone = $this->get_contact_person_1()?$this->get_contact_person_1()->get_phone():'';
-                        $contact_person_1_mail = $this->get_contact_person_1()?$this->get_contact_person_1()->get_email():'';
-                        $contact_person_2_name = $this->get_contact_person_2()?$this->get_contact_person_2()->get_name():'';
-                        $contact_person_2_phone = $this->get_contact_person_2()?$this->get_contact_person_2()->get_phone():'';
-                        $contact_person_2_mail = $this->get_contact_person_2()?$this->get_contact_person_2()->get_email():'';
 			
 			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
 			{
@@ -355,35 +348,8 @@
 			}
 			
 			$activity_district = $this->get_so()->get_district_name($this->get_district());
-                        if($do_export)
-                        {
-                            //var_dump($this);
-                            return array(
-				'id' => $this->get_id(),
-				'title' => $this->get_title(),
-				'organization_id' => $org_name,
-				'group_id' => $group_name,
-				'district' => $activity_district,
-				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
-				'category' => $this->get_so()->get_category_name($this->get_category()),
-				'state' => lang('state_'.$this->get_state()),
-				'description' => $desc,
-				'arena' => $arena_name,
-				'time' => $this->get_time(),
-				'contact_person_1_name' => $contact_person_1_name,
-                                'contact_person_1_phone' => $contact_person_1_phone,
-                                'contact_person_1_mail' => $contact_person_1_mail,
-				'contact_person_2_name' => $contact_person_2_name,
-                                'contact_person_2_phone' => $contact_person_2_phone,
-                                'contact_person_2_mail' => $contact_person_2_mail,
-				'special_adaptation' => $this->get_special_adaptation(),
-				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
-				'frontend' => $this->get_frontend()
-                            );
-                        }
-                        else
-                        {
-                            return array(
+			
+			return array(
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
 				'organization_id' => $org_name,
@@ -400,8 +366,135 @@
 				'special_adaptation' => $this->get_special_adaptation(),
 				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
 				'frontend' => $this->get_frontend()
-                            );
-                        }
+			);
+		}
+		
+	    public function serialize_for_export()
+		{
+		    $so_org = activitycalendar_soorganization::get_instance();
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(isset($this->group_id) && $this->get_group_id() > 0)
+			{
+				if($this->get_new_group())
+				{
+					$group_name = activitycalendar_sogroup::get_instance()->get_group_name_local($this->get_group_id());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_group_id(), true));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_1()->get_id());
+					if($this->get_contact_person_2())
+					{
+					    $contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name_local($this->get_contact_person_2()->get_id());
+					}
+					else
+					{
+					    $contact_2  = null;
+					}
+					$desc = activitycalendar_sogroup::get_instance()->get_description_local($this->get_group_id());
+				}
+				else
+				{
+					$group_name = activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_group_id(), true));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1()->get_id());
+					if($this->get_contact_person_2())
+					{
+					    $contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2()->get_id());
+					}
+					else
+					{
+					    $contact_2  = null;
+					}
+					$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
+				}
+				$o_id = $this->get_organization_id(); 
+				if($this->get_new_org())
+				{
+				    $org_name = $so_org->get_organization_name_local($o_id);
+				}
+				else
+				{
+				    $org_name = $so_org->get_organization_name($o_id);
+				}
+				
+			}
+			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
+			{
+				if($this->get_new_org())
+				{
+					$org_name = activitycalendar_soorganization::get_instance()->get_organization_name_local($this->get_organization_id());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_local_contact_persons($this->get_organization_id()));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1()->get_id());
+					if($this->get_contact_person_2())
+					{
+					    $contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2()->get_id());
+					}
+					else
+					{
+					    $contact_2  = null;
+					}
+					$desc = activitycalendar_soorganization::get_instance()->get_description_local($this->get_organization_id());
+				}
+				else
+				{
+					$org_name = activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id());
+					$this->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($this->get_organization_id()));
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1()->get_id());
+					if($this->get_contact_person_2())
+					{
+    					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2()->get_id());
+	    			}
+					else
+					{
+					    $contact_2  = null;
+					}
+					$desc = activitycalendar_soorganization::get_instance()->get_description($this->get_organization_id());
+				}
+			} 
+			else
+			{
+				$contact_1 = "";
+				$contact_2 = "";
+			}
+			
+			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
+			{
+				$arena_name = activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena());
+			}
+			else
+			{
+				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena());
+			}
+			
+			$activity_district = $this->get_so()->get_district_name($this->get_district());
+			
+			$contact_person_1_name = $this->get_contact_person_1()?$this->get_contact_person_1()->get_name():'';
+            $contact_person_1_phone = $this->get_contact_person_1()?$this->get_contact_person_1()->get_phone():'';
+            $contact_person_1_mail = $this->get_contact_person_1()?$this->get_contact_person_1()->get_email():'';
+            $contact_person_2_name = $this->get_contact_person_2()?$this->get_contact_person_2()->get_name():'';
+            $contact_person_2_phone = $this->get_contact_person_2()?$this->get_contact_person_2()->get_phone():'';
+            $contact_person_2_mail = $this->get_contact_person_2()?$this->get_contact_person_2()->get_email():'';
+			
+			return array(
+				'id' => $this->get_id(),
+				'title' => $this->get_title(),
+				'organization_id' => $org_name,
+				'group_id' => $group_name,
+				'district' => $activity_district,
+				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
+				'category' => $this->get_so()->get_category_name($this->get_category()),
+				'state' => lang('state_'.$this->get_state()),
+				'description' => $desc,
+				'arena' => $arena_name,
+				'time' => $this->get_time(),
+				'contact_person_1_name' => $contact_person_1_name,
+                'contact_person_1_phone' => $contact_person_1_phone,
+                'contact_person_1_mail' => $contact_person_1_mail,
+    			'contact_person_2_name' => $contact_person_2_name,
+                'contact_person_2_phone' => $contact_person_2_phone,
+                'contact_person_2_mail' => $contact_person_2_mail,
+				'special_adaptation' => $this->get_special_adaptation(),
+				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
+				'frontend' => $this->get_frontend()
+			);
 		}
 	}
 ?>

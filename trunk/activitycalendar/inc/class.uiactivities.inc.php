@@ -440,15 +440,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			if(isset($result))
 			{
 				// ... add a serialized result
-                            if($export)
-                            {
-                                $rows[] = $result->serialize(true);
-                            }
-                            else
-                            {
-                                $rows[] = $result->serialize();
-                            }
-                            $mail_rows[] = $result;
+                if($export)
+                {
+                    $rows[] = $result->serialize_for_export();
+                }
+                else
+                {
+                    $rows[] = $result->serialize();
+                }
+                $mail_rows[] = $result;
 			}
 		}
 		
