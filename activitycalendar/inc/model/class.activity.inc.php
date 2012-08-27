@@ -1,4 +1,4 @@
-<?php
+    <?php
 	phpgw::import_class('activitycalendar.soorganization');
 	phpgw::import_class('activitycalendar.sogroup');
 	phpgw::import_class('activitycalendar.soarena');
@@ -252,7 +252,7 @@
 			return self::$so;
 		}
 		
-		public function serialize()
+		public function serialize($do_export=false)
 		{
 		    $so_org = activitycalendar_soorganization::get_instance();
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -337,6 +337,13 @@
 				$contact_1 = "";
 				$contact_2 = "";
 			}
+                        
+                        $contact_person_1_name = $this->get_contact_person_1()?$this->get_contact_person_1()->get_name():'';
+                        $contact_person_1_phone = $this->get_contact_person_1()?$this->get_contact_person_1()->get_phone():'';
+                        $contact_person_1_mail = $this->get_contact_person_1()?$this->get_contact_person_1()->get_email():'';
+                        $contact_person_2_name = $this->get_contact_person_2()?$this->get_contact_person_2()->get_name():'';
+                        $contact_person_2_phone = $this->get_contact_person_2()?$this->get_contact_person_2()->get_phone():'';
+                        $contact_person_2_mail = $this->get_contact_person_2()?$this->get_contact_person_2()->get_email():'';
 			
 			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
 			{
@@ -348,8 +355,35 @@
 			}
 			
 			$activity_district = $this->get_so()->get_district_name($this->get_district());
-			
-			return array(
+                        if($do_export)
+                        {
+                            //var_dump($this);
+                            return array(
+				'id' => $this->get_id(),
+				'title' => $this->get_title(),
+				'organization_id' => $org_name,
+				'group_id' => $group_name,
+				'district' => $activity_district,
+				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
+				'category' => $this->get_so()->get_category_name($this->get_category()),
+				'state' => lang('state_'.$this->get_state()),
+				'description' => $desc,
+				'arena' => $arena_name,
+				'time' => $this->get_time(),
+				'contact_person_1_name' => $contact_person_1_name,
+                                'contact_person_1_phone' => $contact_person_1_phone,
+                                'contact_person_1_mail' => $contact_person_1_mail,
+				'contact_person_2_name' => $contact_person_2_name,
+                                'contact_person_2_phone' => $contact_person_2_phone,
+                                'contact_person_2_mail' => $contact_person_2_mail,
+				'special_adaptation' => $this->get_special_adaptation(),
+				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
+				'frontend' => $this->get_frontend()
+                            );
+                        }
+                        else
+                        {
+                            return array(
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
 				'organization_id' => $org_name,
@@ -366,7 +400,8 @@
 				'special_adaptation' => $this->get_special_adaptation(),
 				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
 				'frontend' => $this->get_frontend()
-			);
+                            );
+                        }
 		}
 	}
 ?>
