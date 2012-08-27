@@ -436,12 +436,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$rows = array();
 		$mail_rows = array();
 		foreach($result_objects as $result) {
-			//var_dump($result);
+//			var_dump($result);
 			if(isset($result))
 			{
 				// ... add a serialized result
-				$rows[] = $result->serialize();
-				$mail_rows[] = $result;
+                            if($export)
+                            {
+                                $rows[] = $result->serialize(true);
+                            }
+                            else
+                            {
+                                $rows[] = $result->serialize();
+                            }
+                            $mail_rows[] = $result;
 			}
 		}
 		
