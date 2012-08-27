@@ -151,7 +151,7 @@ function allOK()
 		alert("Tittel må fylles ut!");
 		return false;
 	}
-	if(document.getElementById('description').value == null || document.getElementById('description').value == '')
+	if(document.getElementsByTagName('textarea')[0].value == null || document.getElementsByTagName('textarea')[0].value == '')
 	{
 		alert("Beskrivelse må fylles ut!");
 		return false;
@@ -179,6 +179,11 @@ function allOK()
 	if(document.getElementById('contact_phone').value == null || document.getElementById('contact_phone').value == '')
 	{
 		alert("Telefonnummer til kontaktperson må fylles ut!");
+		return false;
+	}
+        if(document.getElementById('contact_phone').value != null && (document.getElementById('contact_phone').vaule.length < 8 && document.getElementById('contact_phone').value.length > 8))
+	{
+		alert("Telefonnummer må inneholde 8 siffer!");
 		return false;
 	}
 	if(document.getElementById('contact_mail').value == null || document.getElementById('contact_mail').value == '')
@@ -285,7 +290,7 @@ function allOK()
 					<LEGEND>Hvor og når</LEGEND>
     				<dt>
     					<br/>
-    					<label for="arena"><?php echo lang('arena') ?> (*) <a onclick="alert('<?php echo lang('help_edit_activity_location')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
+    					<label for="arena"><?php echo lang('location') ?> (*) <a onclick="alert('<?php echo lang('help_edit_activity_location')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
                         </label>
     					<br/>
     				</dt>

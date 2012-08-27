@@ -439,10 +439,25 @@
 		 * @param $component id component id
 		 * @return void
 		 */
-		function add_component_to_control_group($control_group_id, $component_id)
+		function add_component_to_control_group($control_group_id, $location_id)
 		{
 			$sql =  "INSERT INTO controller_control_group_component_list (control_group_id, location_id) values($control_group_id, $location_id)";
 			$this->db->query($sql);
+		}
+		
+	  function exist_component_control_group($control_group_id, $location_id)
+		{
+			$sql =  "SELECT * FROM controller_control_group_component_list WHERE control_group_id=$control_group_id AND location_id=$location_id";
+			$this->db->query($sql);
+			
+			if($this->db->next_record())
+			{
+				return true;				
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		function get_control_group_ids_for_control($control_id)
@@ -476,7 +491,7 @@
 
 			while ($this->db->next_record())
 			{
-				$results[] = $this->db->f('component_id');
+				$results[] = $this->db->f('location_id');
 			}
 
 			return $results;
