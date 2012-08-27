@@ -154,7 +154,7 @@
 						<a href="registration/main.php" target="_blank">{lang_new_user}</a>
 					</p>
 					</p>
-						<a href="registration/main.php?menuaction=registration.boreg.lostpw1" target="_blank">{lang_forgotten_password}</a>.
+						<a href="registration/main.php?menuaction=registration.uireg.lostpw1" target="_blank">{lang_forgotten_password}</a>.
 					 </p>
 
 					<div id="lock"></div>

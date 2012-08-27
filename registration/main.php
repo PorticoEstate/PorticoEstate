@@ -45,6 +45,7 @@
 				'step1'				=> true,
 				'tos'				=> true,
 				'ready_to_activate'	=> true,
+				'lostpw1'			=> true,
 				'email_sent_lostpw'	=> true
 			),
 			'boreg'	=> array
