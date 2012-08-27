@@ -255,7 +255,7 @@
 			$end = $end->format('Y-m-d H:i');
 			$building_id = intval($building_id);
 			$results = array();
-			$this->db->query("SELECT bb_allocation.id AS id FROM bb_allocation JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1) WHERE bb_season.building_id=$building_id AND ((bb_allocation.from_ >= '$start' AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start' AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))", __LINE__, __FILE__);
+			$this->db->query("SELECT bb_allocation.id AS id FROM bb_allocation JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1) WHERE bb_season.building_id=$building_id AND bb_season.active=1 AND bb_season.status='PUBLISHED' AND ((bb_allocation.from_ >= '$start' AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start' AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
@@ -269,7 +269,7 @@
 			$end = $end->format('Y-m-d H:i');
 			$building_id = intval($building_id);
 			$results = array();
-			$this->db->query("SELECT bb_booking.id AS id FROM bb_booking JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1) WHERE bb_season.building_id=$building_id AND ((bb_booking.from_ >= '$start' AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start' AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start' AND bb_booking.to_ > '$end'))", __LINE__, __FILE__);
+			$this->db->query("SELECT bb_booking.id AS id FROM bb_booking JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1) WHERE bb_season.building_id=$building_id AND bb_season.active=1 AND bb_season.status='PUBLISHED' AND ((bb_booking.from_ >= '$start' AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start' AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start' AND bb_booking.to_ > '$end'))", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
