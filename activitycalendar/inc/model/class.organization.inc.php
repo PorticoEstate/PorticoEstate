@@ -157,11 +157,12 @@
 		public function serialize()
 		{
 			$so_org = activitycalendar_soorganization::get_instance();
+                        $so_act = activitycalendar_soactivity::get_instance();
 			return array(
 				'id' => $this->get_id(),
 				'name' => $this->get_name(),
 				'organization_number' => $this->get_organization_number(),
-				'district' => $this->get_district(),
+				'district' => (($this->get_change_type() == "new" || $this->get_change_type() == "change") && $this->get_district() && is_numeric($this->get_district()))?$so_act->get_district_from_id($this->get_district()):$this->get_district(),
 				'description' => $this->get_description(),
 				'homepage'	=>	$this->get_homepage(),
 				'email'	=>	$this->get_email(),
