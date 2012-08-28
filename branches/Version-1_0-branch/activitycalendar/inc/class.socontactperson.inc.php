@@ -336,7 +336,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
     		}
     		else
     		{
-	    		$q1="SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE organization_id='{$id}'";
+	    		$q1="SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE organization_id='{$id}' and group_id='0'";
     		}
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){

@@ -430,18 +430,25 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
-		}
+		}                                                                                                                                                                                           
 		
 		//Create an empty row set
 		$rows = array();
 		$mail_rows = array();
 		foreach($result_objects as $result) {
-			//var_dump($result);
+//			var_dump($result);
 			if(isset($result))
 			{
 				// ... add a serialized result
-				$rows[] = $result->serialize();
-				$mail_rows[] = $result;
+                if($export)
+                {
+                    $rows[] = $result->serialize_for_export();
+                }
+                else
+                {
+                    $rows[] = $result->serialize();
+                }
+                $mail_rows[] = $result;
 			}
 		}
 		
