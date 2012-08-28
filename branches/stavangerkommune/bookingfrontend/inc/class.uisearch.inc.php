@@ -31,7 +31,7 @@
 				);
 			}
 			
-			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg") : array('search' => $search);
+			$params = is_null($search) ? array('baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}", 'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg") : array('search' => $search);
 
 			self::render_template('search', $params);
 		}

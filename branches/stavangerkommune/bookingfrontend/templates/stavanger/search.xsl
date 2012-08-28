@@ -42,7 +42,8 @@
 		<div style="text-align:center;">
 			<img alt="" >
 				<xsl:attribute name="src">
-					<xsl:value-of select="frontimage"/> 
+					<xsl:value-of select="baseurl"/> 
+					/phpgwapi/templates/stavanger/images/newlayout/forsidebilde.jpg
 				</xsl:attribute>
 			</img>
 		</div>	
