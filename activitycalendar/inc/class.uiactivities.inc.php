@@ -430,7 +430,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
-		}
+		}                                                                                                                                                                                           
 		
 		//Create an empty row set
 		$rows = array();
