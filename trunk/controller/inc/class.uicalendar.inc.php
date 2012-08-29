@@ -123,12 +123,12 @@
 			if($level == 1){
 				// Fetches all controls for the components for a location within time period
 				$filter = "bim_item.location_code = '$location_code' ";
-				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+				$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
 			}else
 			{
 				// Fetches all controls for the components for a location within time period
 				$filter = "bim_item.location_code LIKE '$location_code%' ";
-				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+				$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
 			}
 			
 			// Fetches all control ids with check lists for specified time period
@@ -264,12 +264,12 @@
 			if($level == 1){
 				// Fetches all controls for the components for a location within time period
 				$filter = "bim_item.location_code = '$location_code' ";
-				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+				$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
 			}else
 			{
 				// Fetches all controls for the components for a location within time period
 				$filter = "bim_item.location_code LIKE '$location_code%' ";
-				$components_with_controls_array = $this->so_control->get_controls_by_component($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
+				$components_with_controls_array = $this->so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_object", $role, $filter);	
 			}
 			
 			// Loops through controls with repeat type day or week
