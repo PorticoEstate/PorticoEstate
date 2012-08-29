@@ -638,7 +638,6 @@ class activitycalendar_soactivity extends activitycalendar_socommon
             if($office_id != null)
             {
 		$sql = "SELECT description FROM bb_office where id=$office_id";
-                var_dump($sql);
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
                     $result = $this->db->f('description');
