@@ -38,28 +38,42 @@ return;
 		{
 			if(!isset($this->pswin_param['email_user']) || ! $this->pswin_param['email_user'])
 			{
-			    throw new Exception('Email user not defined');			
+//			    throw new Exception('Email user not defined');			
 			}
 
-				require_once 'SMSReceive.php';
+			require_once 'SMSReceive.php';
 
-				$options=array();
-				$options['soap_version'] = SOAP_1_1;
-				$options['location'] = $this->pswin_param['receive_url'];
-				$options['uri']		= "http://sms.pswin.com/SOAP/SMS.asmx";
-				$options['trace']		= 1;
-				$options['proxy_host']	= $this->pswin_param['proxy_host'];
-				$options['proxy_port']	= $this->pswin_param['proxy_port'];
-				$options['encoding']	= 'iso-8859-1';//'UTF-8';
+			$options=array();
+			$options['soap_version'] = SOAP_1_2;
+			$options['location'] = 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php';//$this->pswin_param['receive_url'];
+			$options['uri']		= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
+			$options['trace']		= 1;
+		//	$options['proxy_host']	= $this->pswin_param['proxy_host'];
+		//	$options['proxy_port']	= $this->pswin_param['proxy_port'];
+			$options['encoding']	= 'iso-8859-1';//'UTF-8';
 
-				$receive = new SMSReceive('', $options);
+			$wdsl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wdsl';
 
-				$ReceiveSMSMessage = new ReceiveSMSMessage();
-				
-				$ReturnValue = $receive->ReceiveSMSMessage($ReceiveSMSMessage);
+			$receive = new SMSReceive($wdsl, $options);
 
-				$result = $ReturnValue->ReceiveSMSMessageResult;
+			$IncomingSMSMessage = new IncomingSMSMessage();
+			$IncomingSMSMessage->ReceiverNumber = '26112';
+			$IncomingSMSMessage->SenderNumber = '26112';
+			$IncomingSMSMessage->Text = '';
+			$IncomingSMSMessage->Network = '';
+			$IncomingSMSMessage->Address = '';
+			$IncomingSMSMessage->Position = '';
+		
 
+			$ReceiveSMSMessage = new ReceiveSMSMessage();
+	
+			$ReceiveSMSMessage->m = $IncomingSMSMessage;
+
+			$ReturnValue = $receive->ReceiveSMSMessage($ReceiveSMSMessage);
+
+			$result = $ReturnValue->ReceiveSMSMessageResult;
+
+	_debug_array($result);die();
 
 			$sms = array();
 

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://pswin.com/SOAP/Receive" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://pswin.com/SOAP/Receive" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://pswin.com/SOAP/Receive">
+      <s:element name="ReceiveSMSMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:IncomingSMSMessage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IncomingSMSMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReceiverNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SenderNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Network" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Address" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Position" nillable="true" type="tns:GSMPosition" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GSMPosition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Longitude" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Lattitude" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Radius" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Council" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CouncilNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SubPlace" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZipCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReceiveSMSMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReceiveSMSMessageResult" type="tns:ReturnValue" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReturnValue">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Code" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reference" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReceiveDeliveryReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="dr" type="tns:DeliveryReport" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeliveryReport">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReceiverNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeliveryTime" nillable="true" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reference" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReceiveDeliveryReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReceiveDeliveryReportResult" type="tns:ReturnValue" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReceiveMMSMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:IncomingMMSMessage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IncomingMMSMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReceiverNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SenderNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Subject" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Network" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Address" nillable="true" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Position" nillable="true" type="tns:GSMPosition" />
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReceiveMMSMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReceiveMMSMessageResult" type="tns:ReturnValue" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ReceiveSMSMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:ReceiveSMSMessage" />
+  </wsdl:message>
+  <wsdl:message name="ReceiveSMSMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:ReceiveSMSMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReceiveDeliveryReportSoapIn">
+    <wsdl:part name="parameters" element="tns:ReceiveDeliveryReport" />
+  </wsdl:message>
+  <wsdl:message name="ReceiveDeliveryReportSoapOut">
+    <wsdl:part name="parameters" element="tns:ReceiveDeliveryReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReceiveMMSMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:ReceiveMMSMessage" />
+  </wsdl:message>
+  <wsdl:message name="ReceiveMMSMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:ReceiveMMSMessageResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SMSReceiveSoap">
+    <wsdl:operation name="ReceiveSMSMessage">
+      <wsdl:input message="tns:ReceiveSMSMessageSoapIn" />
+      <wsdl:output message="tns:ReceiveSMSMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveDeliveryReport">
+      <wsdl:input message="tns:ReceiveDeliveryReportSoapIn" />
+      <wsdl:output message="tns:ReceiveDeliveryReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveMMSMessage">
+      <wsdl:input message="tns:ReceiveMMSMessageSoapIn" />
+      <wsdl:output message="tns:ReceiveMMSMessageSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SMSReceiveSoap" type="tns:SMSReceiveSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ReceiveSMSMessage">
+      <soap:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveSMSMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveDeliveryReport">
+      <soap:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveDeliveryReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveMMSMessage">
+      <soap:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveMMSMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SMSReceiveSoap12" type="tns:SMSReceiveSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ReceiveSMSMessage">
+      <soap12:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveSMSMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveDeliveryReport">
+      <soap12:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveDeliveryReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReceiveMMSMessage">
+      <soap12:operation soapAction="http://pswin.com/SOAP/Receive/ReceiveMMSMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SMSReceive">
+    <wsdl:port name="SMSReceiveSoap" binding="tns:SMSReceiveSoap">
+      <soap:address location="http://sms.pswin.com/SOAP/Receive.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SMSReceiveSoap12" binding="tns:SMSReceiveSoap12">
+      <soap12:address location="http://sms.pswin.com/SOAP/Receive.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
