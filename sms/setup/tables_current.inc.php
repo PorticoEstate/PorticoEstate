@@ -235,7 +235,8 @@
 				'p_gpid' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
 				'p_credit' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
 				'p_sms_type' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'unicode' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0')
+				'unicode' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
+				'external_id' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
 			'pk' => array('smslog_id'),
 			'fk' => array(),

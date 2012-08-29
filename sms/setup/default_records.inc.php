@@ -46,6 +46,7 @@
 	$db->query("INSERT INTO phpgw_config2_section (id, location_id, name, descr) VALUES (" . (4 + $num_sections) . ", $location_id, 'uplink', 'The Uplink Gateway')");
 	$db->query("INSERT INTO phpgw_config2_section (id, location_id, name, descr) VALUES (" . (5 + $num_sections) . ", $location_id, 'kannel', 'The Kannel Gateway')");
 	$db->query("INSERT INTO phpgw_config2_section (id, location_id, name, descr) VALUES (" . (6 + $num_sections) . ", $location_id, 'carrot', 'The Carrot Gateway')");
+	$db->query("INSERT INTO phpgw_config2_section (id, location_id, name, descr) VALUES (" . (7 + $num_sections) . ", $location_id, 'pswin', 'The Pswin Gateway')");
 
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 1,'listbox', 'gateway_module_get', 'Active gateway module GET')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (1 + $num_sections) . ", 2,'listbox', 'gateway_module_send', 'Active gateway module SEND')");
@@ -87,19 +88,38 @@
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (6 + $num_sections) . ", 11, 'text', 'differentiator', 'differentiator')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (6 + $num_sections) . ", 12, 'listbox', 'type', 'Send type')");
 
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 1, 'text', 'wsdl', 'pswin wsdl')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 2, 'text', 'send_url', 'send url using GET')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 3, 'text', 'service_url', 'service_url using SOAP')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 4, 'text', 'login', 'pswin login')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 5, 'password', 'password', 'Carrot password')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 6, 'text', 'proxy_host', 'proxy_host')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 7, 'text', 'proxy_port', 'proxy_port')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 8, 'text', 'originator', 'originator')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 9, 'listbox', 'type', 'Send type')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 10, 'text', 'receive_url', 'receive_url using SOAP')");
+
+
 
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 1, 'gnokii')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 2, 'clickatell')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 3, 'uplink')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 4, 'kannel')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 5, 'carrot')");
+	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 6, 'pswin')");
+	
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 1, 'gnokii')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 2, 'clickatell')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 3, 'uplink')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 4, 'kannel')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 5, 'carrot')");
+	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 6, 'pswin')");
+
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (6 + $num_sections) . ", 12, 1, 'GET')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (6 + $num_sections) . ", 12, 2, 'SOAP')");
+
+	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (7 + $num_sections) . ", 9, 1, 'GET')");
+	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (7 + $num_sections) . ", 9, 2, 'SOAP')");
 
 	$db->query("INSERT INTO phpgw_config2_value (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 1, 'gnokii')");
 	$db->query("INSERT INTO phpgw_config2_value (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 2, 1, '99999999')");
