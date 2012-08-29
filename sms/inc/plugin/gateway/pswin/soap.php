@@ -28,6 +28,11 @@
 	*/
 
 
+	/*
+		Example testurl:
+		http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php?domain=default
+	*/
+
 	$GLOBALS['phpgw_info'] = array();
 
 	$GLOBALS['phpgw_info']['flags'] = array
@@ -69,23 +74,23 @@
 
 	require_once PHPGW_API_INC.'/functions.inc.php';
 
-	$headers = getallheaders();
-	if(ereg('Basic',$headers['Authorization']))
-	{
-		$tmp = $headers['Authorization'];
-		$tmp = str_replace(' ','',$tmp);
-		$tmp = str_replace('Basic','',$tmp);
-		$auth = base64_decode(trim($tmp));
-		list($login,$password) = split(':',$auth);
+	$c	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('sms', 'run'));
 
-		if($GLOBALS['phpgw']->session->create($login, $password))
+	$login = $c->config_data['common']['anonymous_user'];
+	$passwd = $c->config_data['common']['anonymous_pass'];
+
+	$_POST['submitit'] = "";
+
+	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+
+	if(!$GLOBALS['sessionid'])
+	{
+		$lang_denied = lang('Anonymous access not correctly configured');
+		if($GLOBALS['phpgw']->session->reason)
 		{
-			$GLOBALS['phpgw_info']['flags']['authed'] = true;
+			$lang_denied = $GLOBALS['phpgw']->session->reason;
 		}
-		else
-		{
-			$GLOBALS['phpgw_info']['message']['errors'][] = 'not authenticated';
-		}
+		$GLOBALS['phpgw_info']['message']['errors'][] = $lang_denied;
 	}
 
 	/**
@@ -93,9 +98,6 @@
 	*/
 
 	$wdsl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wdsl';
-
-//_debug_array($wdsl);
-
 
 	$options = array
 	(
@@ -147,6 +149,11 @@
 
 	function ReceiveSMSMessage($ReceiveSMSMessage)
 	{
+		if($error = check_error())
+		{
+			return $error;
+		}
+
 		$filename = '/tmp/test_soap.txt';
 		$fp = fopen($filename, "wb");
 		fwrite($fp,serialize($ReceiveSMSMessage));
@@ -166,15 +173,39 @@
 		return $ReceiveSMSMessageResponse;
 	} 
 
+	function check_error()
+	{
+		if( isset($GLOBALS['phpgw_info']['message']['errors']) && $GLOBALS['phpgw_info']['message']['errors'] )
+		{
+    		$error = 'Error(s): ' . implode(' ## AND ## ', $GLOBALS['phpgw_info']['message']['errors']);
+    		return new SoapFault("phpgw", $error);
+		}
+
+		//to be sure...
+		if( !$GLOBALS['phpgw_info']['flags']['authed'] )
+		{
+    		return new SoapFault("phpgw", 'not authenticated');
+		}	
+	}
 
 	function ReceiveDeliveryReport($DeliveryReport)
 	{
+		if($error = check_error())
+		{
+			return $error;
+		}
+
 		return '';
 	}
 
 
 	function hello($someone)
 	{
+		if($error = check_error())
+		{
+			return $error;
+		}
+
 		return "Hello " . $someone . " ! - SOAP 1.2";
 	} 
 
@@ -207,6 +238,14 @@
 	}
 	else
 	{
+
+		if( isset($GLOBALS['phpgw_info']['message']['errors']) && $GLOBALS['phpgw_info']['message']['errors'] )
+		{
+    		$error = 'Error(s): ' . implode(' ## AND ## ', $GLOBALS['phpgw_info']['message']['errors']);
+    		echo $error;
+			$GLOBALS['phpgw']->common->phpgw_exit(True);
+		}
+
 		echo "This SOAP server can handle following functions: ";
 
 		_debug_array($functions = $GLOBALS['server']->getFunctions());
