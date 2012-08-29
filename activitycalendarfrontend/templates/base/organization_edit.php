@@ -13,7 +13,7 @@ function get_address_search()
 	//url = "/aktivby/registreringsskjema/ny/index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 	url = "<?php echo $ajaxURL?>index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
 
-var divcontent_start = "<select name=\"address_select\" id=\"address_select\" size\"5\" onChange='setAddressValue(this)'>";
+var divcontent_start = "<select name=\"address_select\" id=\"address_select\" size=\"5\" onChange='setAddressValue(this)'>";
 var divcontent_end = "</select>";
 	
 	var callback = {
@@ -52,6 +52,11 @@ function isOK()
 	if(document.getElementById('org_contact1_phone').value == null || document.getElementById('org_contact1_phone').value == '')
 	{
 		alert("Telefonnummer til kontaktperson må fylles ut!");
+		return false;
+	}
+        if(document.getElementById('org_contact1_phone').value != null && document.getElementById('org_contact1_phone').value.length < 8)
+	{
+		alert("Telefonnummer må inneholde minst 8 siffer!");
 		return false;
 	}
 	if(document.getElementById('org_contact1_mail').value == null || document.getElementById('org_contact1_mail').value == '')

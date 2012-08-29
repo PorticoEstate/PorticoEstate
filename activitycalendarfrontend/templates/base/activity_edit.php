@@ -181,9 +181,9 @@ function allOK()
 		alert("Telefonnummer til kontaktperson må fylles ut!");
 		return false;
 	}
-        if(document.getElementById('contact_phone').value != null && (document.getElementById('contact_phone').vaule.length < 8 && document.getElementById('contact_phone').value.length > 8))
+        if(document.getElementById('contact_phone').value != null && document.getElementById('contact_phone').value.length < 8)
 	{
-		alert("Telefonnummer må inneholde 8 siffer!");
+		alert("Telefonnummer må inneholde minst 8 siffer!");
 		return false;
 	}
 	if(document.getElementById('contact_mail').value == null || document.getElementById('contact_mail').value == '')
