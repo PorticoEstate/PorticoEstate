@@ -1015,7 +1015,7 @@ input.date {
 }
 
 #check_list_details .col_1 {
-    width: 46%;
+    width: 50%;
 }
 
 /* =======================================  TAB CHECK LIST DETAILS ========================================= */
@@ -2174,8 +2174,8 @@ p.no_items_msg {
   margin-bottom: 5px;
   margin-top: 5px;
   padding: 5px;
-  width: 100%;
   text-align: center;
+  width: 90%;
 }
 
 .error_msg {
