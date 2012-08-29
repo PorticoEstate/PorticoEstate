@@ -200,39 +200,34 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
-
+		
 		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
-		{
-			$role_id = (int) $role_id;
-			
-			if($repeat_type != null)
-			{
-			  $repeat_type = (int) $repeat_type;
-			}
-
+		{			
 			$controls_array = array();
 			
 			$sql  = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name, ccl.location_id, ccl.component_id ";
 			$sql .= "FROM controller_control_component_list ccl "; 
-			$sql .= "LEFT JOIN controller_control c on ccl.control_id=c.id ";
+			$sql .= "LEFT JOIN controller_control c on ccl.control_id = c.id ";
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql .= "LEFT JOIN fm_bim_item ON fm_bim_item.id = ccl.component_id ";
-			$sql .= "WHERE fm_bim_item.loc1 = '$location_code' ";
-			
+			$sql .= "WHERE fm_bim_item.location_code LIKE '$location_code%' ";
+
 			if( $repeat_type != null)
 			{
+				$repeat_type = (int) $repeat_type;
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
 			if( $role_id)
 			{
+					$role_id = (int) $role_id;
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}
 			
-			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
-			$sql .= "OR c.end_date > $from_date AND c.start_date < $to_date)";
+			$sql .= "AND ((c.start_date <= $to_date AND c.end_date IS NULL) ";
+			$sql .= "OR (c.start_date <= $to_date AND c.end_date > $from_date ))";
 
 			$this->db->query($sql);
-			
+
 			while($this->db->next_record())
 			{
 				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
@@ -249,11 +244,8 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-//Sigurd 3.august 2010:
-				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
-//
-				if($return_type == "return_object")
+
+        if($return_type == "return_object")
 				{
 					$controls_array[] = $control;
 				}
@@ -263,14 +255,7 @@
 				}
 			}
 
-			if( count( $controls_array ) > 0 )
-			{
-				return $controls_array; 
-			}
-			else
-			{
-				return null;
-			}
+			return $controls_array; 
 		}
 		
 		/**
@@ -284,11 +269,8 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array of components as objects or arrays
 		 */
-		public function get_controls_by_component($location_code, $from_date, $to_date, $repeat_type = '', $return_type = "return_object", $role_id = 0, $filter = null)
+		public function get_controls_by_component($from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0, $filter = null)
 		{
-			$role_id = (int) $role_id;
-			$repeat_type = (int) $repeat_type;
-
 			$controls_array = array();
 			
 			$sql   = "SELECT c.id as control_id, c.*, ";
@@ -300,15 +282,16 @@
 			$sql  .= "JOIN controller_control c on cl.control_id = c.id ";
 			$sql  .= "JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			$sql  .= "AND bim_item.type = bim_type.id ";
-			$sql  .= "AND bim_item.type = bim_type.id ";
 			
-			if( $repeat_type)
+			if( $repeat_type != null)
 			{
+				$repeat_type = (int) $repeat_type;
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if( $role_id)
+			if( $role_id )
 			{
-			    $sql .= "AND c.responsibility_id = $role_id ";
+				$role_id = (int) $role_id;
+			  $sql .= "AND c.responsibility_id = $role_id ";
 			}
 			    
 			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
@@ -316,10 +299,10 @@
 			
 			if($filter != null)
 			{
-				$sql  .= "AND " . $filter;	
+				$sql .= "AND " . $filter;	
 			}
 			
-			$sql  .= "ORDER BY bim_item.id ";
+			$sql .= "ORDER BY bim_item.id ";
 			 
 			$this->db->query($sql);
 			

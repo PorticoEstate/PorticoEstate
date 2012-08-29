@@ -543,58 +543,34 @@ $(document).ready(function(){
 		
 		var check_list_id = $("#check_list_id").val();
 			
-			var statusFieldVal = $("#status").val();
-			var statusRow = $("#status").closest(".row");
-			var plannedDateVal = $("#planned_date").val();
-			var plannedDateRow = $("#planned_date").closest(".row");
-			var completedDateVal = $("#completed_date").val();
-			var completedDateRow = $("#completed_date").closest(".row");
-			
-			// Checks that COMPLETE DATE is set if status is set to DONE 
-			if(statusFieldVal == 1 & completedDateVal == ''){
-				e.preventDefault();
-				// Displays error message above completed date
-				$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
-	    	}
-			else if(statusFieldVal == 0 && completedDateVal != ''){
-				e.preventDefault();
-				// Displays error message above completed date
-				$(statusRow).before("<div class='input_error_msg'>Vennligst endre status til utført</div>");
+		var statusFieldVal = $("#status").val();
+		var statusRow = $("#status").closest(".row");
+		var plannedDateVal = $("#planned_date").val();
+		var plannedDateRow = $("#planned_date").closest(".row");
+		var completedDateVal = $("#completed_date").val();
+		var completedDateRow = $("#completed_date").closest(".row");
+		
+		$(thisForm).find('.input_error_msg').remove();
+		
+		// Checks that COMPLETE DATE is set if status is set to DONE 
+		if(statusFieldVal == 1 & completedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(completedDateRow).before("<div class='input_error_msg'>Vennligst angi når kontrollen ble utført</div>");
+    	}
+		else if(statusFieldVal == 0 && completedDateVal != ''){
+			e.preventDefault();
+			// Displays error message above completed date
+			$(statusRow).before("<div class='input_error_msg'>Vennligst endre status til utført eller slett utførtdato</div>");
+		}
+		else if(statusFieldVal == 0 & plannedDateVal == ''){
+			e.preventDefault();
+			// Displays error message above planned date
+			if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
+			{
+			  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
 			}
-			else if(statusFieldVal == 0 & plannedDateVal == ''){
-				e.preventDefault();
-				// Displays error message above planned date
-				if( !$(plannedDateRow).prev().hasClass("input_error_msg") )
-				{
-				  $(plannedDateRow).before("<div class='input_error_msg'>Vennligst endre status for kontroll eller angi planlagtdato</div>");	
-				}
-			}	
-			/*
-			else{
-	    		$(".input_error_msg").hide();
-	    		
-				$.ajax({
-					  type: 'POST',
-					  url: requestUrl + "&phpgw_return_as=json&" + $(thisForm).serialize(),
-					  success: function(data) {
-						  if(data){
-			    			  var obj = jQuery.parseJSON(data);
-				    		
-			    			  if(obj.status == "updated"){
-				    			  var submitBnt = $(thisForm).find("input[type='submit']");
-				    			  $(submitBnt).val("Lagret");	
-				    				  
-				    			  // Changes text on save button back to original
-				    			  window.setTimeout(function() {
-									$(submitBnt).val('Lagre detaljer');
-									$(submitBnt).addClass("not_active");
-				    			  }, 1000);
-							  }
-						  }
-						}
-				});
-	    	}
-	    	*/
+		}	
 	});
 	
 	// Display submit button on click
