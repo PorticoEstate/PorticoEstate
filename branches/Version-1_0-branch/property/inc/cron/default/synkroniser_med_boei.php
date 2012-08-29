@@ -380,7 +380,7 @@
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (1, '{$objekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (1, '{$objekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$obj_msg[]=$objekt_utf[$i]['loc1'];
 			}
@@ -436,7 +436,7 @@
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (2, '{$bygg_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (2, '{$bygg_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$bygg_msg[]=$bygg_utf[$i]['location_code'];
 			}
@@ -500,7 +500,7 @@
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (3, '{$seksjon_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (3, '{$seksjon_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$seksjon_msg[]=$seksjon_utf[$i]['location_code'];
 			}
@@ -591,7 +591,7 @@
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
-				$this->db->query("INSERT INTO fm_locations (level, location_code) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_locations (level, location_code, loc1) VALUES (4, '{$leieobjekt_utf[$i]['location_code']}', '{$objekt_utf[$i]['loc1']}')",__LINE__,__FILE__);
 
 				$leieobjekt_msg[]=$leieobjekt_utf[$i]['location_code'];
 			}

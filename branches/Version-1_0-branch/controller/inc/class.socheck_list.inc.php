@@ -246,6 +246,47 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
+	function get_check_list_for_control_by_date($control_id, $deadline_ts, $status = null, $location_code, $location_id, $component_id, $type)
+	{
+	  $sql  = "SELECT * "; 
+		$sql .= "FROM controller_check_list ";
+		$sql .= "WHERE control_id = {$control_id} ";
+		$sql .= "AND deadline = {$deadline_ts}";		
+
+		if($type == "location")
+		{
+			$sql .= "AND location_code = '{$location_code}' ";	
+		}
+		else if($type == "component")
+		{
+			$sql .= "AND location_id = '{$location_id}' AND component_id = '{$component_id}' ";
+		}
+		
+		if($status != null)
+		{
+			$sql .= "AND status = {$status} ";
+		}
+
+		$this->db->query($sql);
+		
+		$check_list = null;
+		if( $this->db->next_record() )
+		{
+			$check_list = new controller_check_list($this->unmarshal($this->db->f('id'), 'int'));
+			$check_list->set_status($this->unmarshal($this->db->f('status'), 'int'));
+			$check_list->set_comment($this->unmarshal($this->db->f('comment'), 'string'));
+			$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
+			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));	
+			$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+			$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
+			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+		}
+				
+		return $check_list;
+	}
+	
 	/**
 	 * Get check list objects for a control on a location with set planned date
 	 *
@@ -283,15 +324,12 @@ class controller_socheck_list extends controller_socommon
 		$check_list = null;
 		while ($this->db->next_record())
 		{
-		
 			if( $this->db->f('cl_id') != $check_list_id )
 			{
-				
 				if($check_list_id)
 				{
 					$check_list_array[] = $check_list;
 				}
-				
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment'), 'string'));

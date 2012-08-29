@@ -57,8 +57,6 @@
 		protected $responsibility_name;
 		protected $control_area_id;
 		protected $control_area_name;
-		protected $location_id;
-		protected $component_id;
 
 		// Objects
 		protected $check_lists_array = array();
@@ -235,32 +233,6 @@
 			$this->error_msg_array = $error_msg_array;
 		}
 		
-
-
-//Sigurd 3.august 2010: needed for socontrol::get_controls_for_components_by_location() 
-
-		public function set_location_id($location_id)
-		{
-			$this->location_id = $location_id;
-		}
-
-		public function get_location_id()
-		{
-			return $this->location_id;
-		}
-
-		public function set_component_id($component_id)
-		{
-			$this->component_id = $component_id;
-		}
-
-		public function get_component_id()
-		{
-			return $this->component_id;
-		}
-
-//
-
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
