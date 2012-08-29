@@ -38,14 +38,14 @@ return;
 		{
 			if(!isset($this->pswin_param['email_user']) || ! $this->pswin_param['email_user'])
 			{
-//			    throw new Exception('Email user not defined');			
+//			    throw new Exception('Email user not defined');
 			}
 
 			require_once 'SMSReceive.php';
 
 			$options=array();
 			$options['soap_version'] = SOAP_1_2;
-			$options['location'] = 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php';//$this->pswin_param['receive_url'];
+			$options['location'] = 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php?domain=default';//$this->pswin_param['receive_url'];
 			$options['uri']		= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
 			$options['trace']		= 1;
 		//	$options['proxy_host']	= $this->pswin_param['proxy_host'];
