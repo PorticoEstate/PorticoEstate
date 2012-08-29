@@ -180,7 +180,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
 			else if(isset($_POST['update_organization'])) // The user has pressed the store button
 			{
@@ -261,7 +261,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org->set_transferred(true);
 				$so_org->update_local($org);
 				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $org->get_id(), 'saved_ok' => 'yes'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uidashboard.index'));
 			}
 			
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
