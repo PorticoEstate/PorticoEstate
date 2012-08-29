@@ -149,6 +149,11 @@ function isOK()
 		alert("Telefonnummer til kontaktperson må fylles ut!");
 		return false;
 	}
+        if(document.getElementById('org_contact1_phone').value != null && document.getElementById('org_contact1_phone').value.length < 8)
+	{
+		alert("Telefonnummer må inneholde minst 8 siffer!");
+		return false;
+	}
 	if(document.getElementById('org_contact1_mail').value == null || document.getElementById('org_contact1_mail').value == '')
 	{
 		alert("E-post for kontaktperson må fylles ut!");
