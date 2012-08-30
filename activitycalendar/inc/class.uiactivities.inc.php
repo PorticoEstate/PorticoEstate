@@ -758,8 +758,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						$gr_id = (int)$group_id; 
 						if($gr_id == (int)$group->get_id())
 						{
-							$selected_group = " selected";
+							$selected_group = " selected='selected'";
 						}
+                                                else
+                                                {
+                                                    $selected_group = "";
+                                                }
 					}
 					$group_html[] = "<option value='" . $group->get_id() . "'". $selected_group . ">" . $group->get_name() . "</option>";
 				}
