@@ -45,16 +45,22 @@
 	$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 	$styling  = "\n".'<!-- BEGIN checklist info -->'."\n ";
-	$styling .= "<style> .home_portal_content a{color:#0066CC;text-decoration: none;text-transform: uppercase;} .home_portal{margin: 20px 10px 0;} "; 
-	$styling .= " .home-box {background: none repeat scroll 0 0 #EDF5FF; border-color: #DBE5EF; border-radius: 4px; margin: 20px;}";
-	$styling .= " .home-box .home_portal{margin: 0;border: 1px solid #DEEAF8;} .home_portal_content{padding:10px;} ";
-	$styling .= " .home_portal_title h2{ background: #DEEAF8; margin: 0; padding: 5px 10px;} .home_portal_content ul li{padding: 7px 0;}";
-	$styling .= " .home_portal_content .title{display:inline-block;width:300px;margin:0 20px 0 0;} .home_portal_content .control-area{display:inline-block;width:200px;}";
-	$styling .= " .home_portal_content .control{display:inline-block;width:300px;} .home_portal_content .date{display:inline-block;width:300px;}";
-	$styling .= " .home_portal_content a span{cursor: pointer;vertical-align: middle;}";
+	$styling .= "<style>"; 
+	$styling .= " .home_portal_content a { color:#0066CC;text-decoration: none;text-transform: uppercase;} .home_portal{margin:20px 20px 0 10px;} "; 
+	$styling .= " .home-box { background: none repeat scroll 0 0 #EDF5FF; border-color: #DBE5EF; border-radius: 4px; margin: 5px 20px 20px;}";
+	$styling .= " .home-box .home_portal { margin: 0;border: 1px solid #DEEAF8;}";
+	$styling .= " .home_portal_content { padding:5px 10px;}";
+	$styling .= " .home_portal_title h2 { font-size: 13px;font-weight: bold;text-transform:uppercase; background: #DEEAF8; margin: 0; padding: 2px 10px; color: #1C3C6F;}";
+	$styling .= " .property_tickets .home_portal_title h2 { font-size: 20px; padding: 5px 10px;}";
+	$styling .= " .home_portal_content ul li { padding: 3px 0;}";
+	$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}"; 
+	$styling .= " .home_portal .control-area { width:200px;}";
+	$styling .= " .home_portal .control { width:300px;}";
+	$styling .= " .home_portal .date { width:300px;}";
+	$styling .= " .home_portal span { display: table-cell;cursor: pointer;vertical-align: middle;}";
+	$styling .= "  h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
 	$styling .= "</style>"; 
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
-	
 	echo $styling;
 		
 	// Fetches my properties	
@@ -205,7 +211,7 @@
 		
 	$portalbox0 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "Mine glemte kontroller",
+		'title'		=> "<span class='title heading'>Lokasjonsnavn</span><span class='control-area heading'>Kontrollområde</span><span class='control heading'>Tittel på kontroll</span><span class='date heading'>Fristdato</span>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -216,7 +222,7 @@
 
 	// Sorts my_undone_controls by deadline date
 	usort($my_undone_controls, "sort_cmp");
-	
+		
 	foreach($my_undone_controls as $my_undone_control)
 	{
 	
@@ -281,12 +287,8 @@
 		}
 	}
 	
-	echo "\n".'<!-- BEGIN checklist info -->'."\n <div class='home-box'>".$portalbox0->draw()."</div>\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine glemte kontroller</h2><div class='home-box'>".$portalbox0->draw()."</div>\n".'<!-- END checklist info -->'."\n";
 
-	
-	
-	
-	
 	
 	/* =======================================  PLANNED CONTROLS FOR CURRENT USER  ================================= */
 
@@ -325,7 +327,7 @@
 	
 	$portalbox1 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "Mine planlagte kontroller",
+		'title'		=> "<span class='title heading'>Lokasjonsnavn</span><span class='control-area heading'>Kontrollområde</span><span class='control heading'>Tittel på kontroll</span><span class='date heading'>Fristdato</span>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -387,7 +389,7 @@
 		}
 		$tmp++;
 	}
-	echo "\n".'<!-- BEGIN checklist info -->'."\n<div class='home-box'>".$portalbox1->draw()."</div>\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n<h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>".$portalbox1->draw()."</div>\n".'<!-- END checklist info -->'."\n";
 
 	
 	
@@ -396,7 +398,7 @@
 	
 	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "Mine tildelte kontroller",
+		'title'		=> "<span class='title heading'>Lokasjonsnavn</span><span class='control-area heading'>Kontrollområde</span><span class='control heading'>Tittel på kontroll</span><span class='date heading'>Fristdato</span>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -580,7 +582,7 @@
 		}
 	}
 	
-	echo "\n".'<!-- BEGIN checklist info -->'."\n <div class='home-box'>".$portalbox2->draw()."</div>\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>".$portalbox2->draw()."</div>\n".'<!-- END checklist info -->'."\n";
 	
 	
 	
