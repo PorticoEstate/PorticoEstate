@@ -380,9 +380,9 @@ activity_helptext	activitycalendar	no	Aktivitetsoversikten henter kontaktinforma
 mail_subject_update	activitycalendar	no	Melding fra AktivBy - Aktivitetsoversikt
 mail_body_update	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Ber om at du kontrollerer at data er korrekt, og eventuelt endrer.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
 mail_body_update_frontend	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
-mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet er registrert og vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden: https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %1 kulturkontor
-mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i kommuneportalen.<br/><br/>Mvh %1 kulturkontor
-mail_body_state_5	activitycalendar	no	Ditt forslag til aktivitet er behandlet, men vil ikke bli publisert i kommuneportalen.<br/><br/>Mvh %1 kulturkontor
+mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet %1 er registrert og vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden: https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %2 kulturkontor
+mail_body_state_4	activitycalendar	no	Ditt forslag til ny aktivitet: %1 er behandlet og vil bli  publisert i kommuneportalen.<br/><br/>Mvh %1 kulturkontor
+mail_body_state_5	activitycalendar	no	Ditt forslag til ny aktivitet: %1 er behandlet, men vil ikke bli publisert i kommuneportalen.<br/>Dersom du har spørsmål, ta gjerne kontakt med oss.    <br/><br/>Mvh %2 kulturkontor
 send_mail	activitycalendar	no	Send e-post
 marked_as	activitycalendar	no	Status
 address_number	activitycalendar	no	Husnummer
