@@ -299,7 +299,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						$error = lang('messages_form_error');
 					}
 	
-					if($new_state == 3 || $new_state == 5 )
+					if($old_state != $new_state && ($new_state == 3 || $new_state == 5))
 					{
 						$kontor = $this->so_activity->get_office_name($activity->get_office());
 						$subject = lang('mail_subject_update');
@@ -544,11 +544,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($office_id_new);
     		if($activity->get_state() == 2)
     		{
-    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_name) . '<br/><br/>'.$office_footer;
+    			$body = lang('mail_body_update_frontend', $activity->get_title(), $link_text, $office_footer, $office_name);
     		}
     		else
     		{
-    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name) . '<br/><br/>'.$office_footer;
+    			$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_footer, $office_name);
     		}
 	    	
 	    	//var_dump($subject);
@@ -607,7 +607,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 else
                     $office_id_new = (int)$office_id;
                 $office_footer = activitycalendar_soactivity::get_instance()->get_office_description($office_id_new);
-    		$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_name) . $office_footer;
+    		$body = lang('mail_body_update', $activity->get_title(), $link_text, $office_footer, $office_name);
     	}
     	else
     	{
