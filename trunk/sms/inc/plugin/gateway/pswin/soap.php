@@ -3,7 +3,7 @@
 	* phpGroupWare
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2000-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@
 	require_once '../../../../../header.inc.php';
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
-	$GLOBALS['phpgw_info']['flags']['authed'] = false;
+
 	$GLOBALS['phpgw_info']['message']['errors'] = array();
 
 	if(!isset($_GET['domain']) || !$_GET['domain'])
@@ -103,9 +103,7 @@
 	(
 		'uri'          => "http://test-uri/", # the name space of the SOAP service
 		'soap_version' => SOAP_1_2,
-	//	'actor'        => "...", # the actor
 		'encoding'     => "UTF-8", # the encoding name
-	//	'classmap'     => "...", # a map of WSDL types to PHP classes
 	);
 
 	ini_set("soap.wsdl_cache_enabled","0");
@@ -123,6 +121,19 @@
 		 */
 		public $ReceiveSMSMessageResult;
 	}
+
+	/**
+	 * ReceiveDeliveryReportResponse
+	 */
+	class ReceiveDeliveryReportResponse
+	{
+		/**
+		 * @access public
+		 * @var ReturnValue
+		 */
+		public $ReceiveDeliveryReportResult;
+	}
+
 	
 	/**
 	 * ReturnValue
@@ -147,32 +158,6 @@
 	}
 	
 
-	function ReceiveSMSMessage($ReceiveSMSMessage)
-	{
-		if($error = check_error())
-		{
-			return $error;
-		}
-
-		$filename = '/tmp/test_soap.txt';
-		$fp = fopen($filename, "wb");
-		fwrite($fp,serialize($ReceiveSMSMessage));
-		if(fclose($fp))
-		{
-			$file_written=True;
-		}
-
-		$ReceiveSMSMessageResponse = new ReceiveSMSMessageResponse();
-		$ReturnValue = new ReturnValue();
-		$ReturnValue->Code = '200';
-		$ReturnValue->Description = '';
-		$ReturnValue->Reference = '';
-		
-		$ReceiveSMSMessageResponse->ReceiveSMSMessageResult = $ReturnValue;
-
-		return $ReceiveSMSMessageResponse;
-	} 
-
 	function check_error()
 	{
 		if( isset($GLOBALS['phpgw_info']['message']['errors']) && $GLOBALS['phpgw_info']['message']['errors'] )
@@ -180,13 +165,77 @@
     		$error = 'Error(s): ' . implode(' ## AND ## ', $GLOBALS['phpgw_info']['message']['errors']);
     		return new SoapFault("phpgw", $error);
 		}
-
-		//to be sure...
-		if( !$GLOBALS['phpgw_info']['flags']['authed'] )
-		{
-    		return new SoapFault("phpgw", 'not authenticated');
-		}	
 	}
+
+
+	function ReceiveSMSMessage($ReceiveSMSMessage)
+	{
+		if($error = check_error())
+		{
+			return $error;
+		}
+
+		$ReceiveSMSMessageResponse = new ReceiveSMSMessageResponse();
+		$ReturnValue = new ReturnValue();
+		$ReturnValue->Code = '500';
+		$ReturnValue->Description = '';
+		$ReturnValue->Reference = '';
+
+		$value_set = array
+		(
+			'type'				=> 'sms', // report
+			'data'				=> $GLOBALS['phpgw']->db->db_addslashes(serialize($ReceiveSMSMessage)),
+			'entry_date'		=> time(),
+			'modified_date'		=> time(),
+		);
+
+		$cols = implode(',', array_keys($value_set));
+		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		{
+			$ReturnValue->Code = '200';		
+		}
+		
+		$ReceiveSMSMessageResponse->ReceiveSMSMessageResult = $ReturnValue;
+
+		return $ReceiveSMSMessageResponse;
+	} 
+
+
+
+	function ReceiveMMSMessage($ReceiveMMSMessage)
+	{
+		if($error = check_error())
+		{
+			return $error;
+		}
+
+		$ReceiveMMSMessageResponse = new ReceiveMMSMessageResponse();
+		$ReturnValue = new ReturnValue();
+		$ReturnValue->Code = '500';
+		$ReturnValue->Description = '';
+		$ReturnValue->Reference = '';
+
+		$value_set = array
+		(
+			'type'				=> 'mms', // report
+			'data'				=> base64_encode(serialize($ReceiveMMSMessage)),
+			'entry_date'		=> time(),
+			'modified_date'		=> time(),
+		);
+
+		$cols = implode(',', array_keys($value_set));
+		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		{
+			$ReturnValue->Code = '200';		
+		}
+		
+		$ReceiveMMSMessageResponse->ReceiveSMSMessageResult = $ReturnValue;
+
+		return $ReceiveMMSMessageResult;
+	} 
+
 
 	function ReceiveDeliveryReport($DeliveryReport)
 	{
@@ -195,7 +244,30 @@
 			return $error;
 		}
 
-		return '';
+		$ReceiveDeliveryReportResponse = new ReceiveDeliveryReportResponse();
+		$ReturnValue = new ReturnValue();
+		$ReturnValue->Code = '500';
+		$ReturnValue->Description = '';
+		$ReturnValue->Reference = '';
+		
+		$value_set = array
+		(
+			'type'				=> 'report',
+			'data'				=> $GLOBALS['phpgw']->db->db_addslashes(serialize($DeliveryReport)),
+			'entry_date'		=> time(),
+			'modified_date'		=> time(),
+		);
+
+		$cols = implode(',', array_keys($value_set));
+		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		{
+			$ReturnValue->Code = '200';		
+		}
+		
+		$ReceiveDeliveryReportResponse->ReceiveDeliveryReportResult = $ReturnValue;
+
+		return $ReceiveDeliveryReportResponse;
 	}
 
 
@@ -210,8 +282,9 @@
 	} 
 
 	$functions = array();
-	$functions[] = 'hello';
+//	$functions[] = 'hello';
 	$functions[] = 'ReceiveSMSMessage';
+	$functions[] = 'ReceiveMMSMessage';
 	$functions[] = 'ReceiveDeliveryReport';
 
 	$GLOBALS['server']->addFunction($functions);
@@ -227,18 +300,10 @@
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
-/*
-		$filename = '/tmp/test_request_xml.txt';
-		$fp = fopen($filename, "wb");
-		fwrite($fp,serialize($request_xml));
-		fclose($fp);
-*/
-
 		$GLOBALS['server']->handle($request_xml);
 	}
 	else
 	{
-
 		if( isset($GLOBALS['phpgw_info']['message']['errors']) && $GLOBALS['phpgw_info']['message']['errors'] )
 		{
     		$error = 'Error(s): ' . implode(' ## AND ## ', $GLOBALS['phpgw_info']['message']['errors']);
