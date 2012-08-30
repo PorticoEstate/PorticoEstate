@@ -376,12 +376,11 @@
 			$this->_checkArguments($args, $validParameters);
 			$result =  $this->__soapCall("ReceiveSMSMessage", $args);
 
-/*
 			echo("<H1>Dumping request headers:</H1></br>" .$this->__getLastRequestHeaders());
 			echo("</br><H1>Dumping request:</H1></br>".$this->__getLastRequest());
 			echo("</br><H1>Dumping response headers:</H1></br>"	.$this->__getLastResponseHeaders());
 			echo("</br><H1>Dumping response:</H1></br>".$this->__getLastResponse());
-*/
+
 			return $result;
 		}
 	

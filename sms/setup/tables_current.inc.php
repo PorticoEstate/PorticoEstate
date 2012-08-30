@@ -309,5 +309,21 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
+		),
+
+		'phpgw_sms_reveived_data' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),,/*sms/mms/report*/
+				'data' => array('type' => 'text', 'nullable' => False),
+				'status' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
 		)
+
 	);
