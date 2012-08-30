@@ -2669,22 +2669,26 @@
 				if ($supervisor_id && $need_approval)
 				{
 					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
-					$supervisor_email[] = array
+					if(isset($prefs['email']) && $prefs['email'])
+					{
+						$supervisor_email[] = array
 						(
 							'id'	  => $supervisor_id,
 							'address' => $prefs['email'],
 						);
-					if ( isset($prefs['approval_from']) )
+					}
+
+					if ( isset($prefs['approval_from'])  && $prefs['approval_from'])
 					{
 						$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
-						if(isset($prefs2['email']))
+						if(isset($prefs2['email']) && $prefs2['email'])
 						{
 							$supervisor_email[] = array
-								(
-									'id'	  => $prefs['approval_from'],
-									'address' => $prefs2['email'],
-								);
+							(
+								'id'	  => $prefs['approval_from'],
+								'address' => $prefs2['email'],
+							);
 							$supervisor_email = array_reverse($supervisor_email);
 						}
 						unset($prefs2);
@@ -3106,6 +3110,7 @@
 			}
 			
 			//----------------------------------------------datatable settings--------			
+//_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl));
 			$this->cats->set_appname('property','.project');
