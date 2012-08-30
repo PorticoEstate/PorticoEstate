@@ -177,8 +177,6 @@
 
 		$ReceiveSMSMessageResponse = new ReceiveSMSMessageResponse();
 		$ReturnValue = new ReturnValue();
-		$ReturnValue->Code = '500';
-		$ReturnValue->Description = '';
 		$ReturnValue->Reference = '';
 
 		$value_set = array
@@ -191,17 +189,33 @@
 
 		$cols = implode(',', array_keys($value_set));
 		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
-		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		
+		$GLOBALS['phpgw']->db->Exception_On_Error = true;
+		
+		try
 		{
-			$ReturnValue->Code = '200';		
+			$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_received_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+		}
+
+		catch(PDOException $e)
+		{
+		}
+
+		if ( $e )
+		{
+			$ReturnValue->Description = $e->getMessage();
+			$ReturnValue->Code = 500;	
+		}
+		else
+		{
+			$ReturnValue->Description = 'All is good';
+			$ReturnValue->Code = 200;		
 		}
 		
 		$ReceiveSMSMessageResponse->ReceiveSMSMessageResult = $ReturnValue;
 
 		return $ReceiveSMSMessageResponse;
-	} 
-
-
+	}
 
 	function ReceiveMMSMessage($ReceiveMMSMessage)
 	{
@@ -226,7 +240,7 @@
 
 		$cols = implode(',', array_keys($value_set));
 		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
-		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_received_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
 		{
 			$ReturnValue->Code = '200';		
 		}
@@ -260,7 +274,7 @@
 
 		$cols = implode(',', array_keys($value_set));
 		$values	= $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
-		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_reveived_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
+		if(	$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_sms_received_data ({$cols}) VALUES ({$values})",__LINE__,__FILE__))
 		{
 			$ReturnValue->Code = '200';		
 		}
@@ -300,6 +314,12 @@
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
+/*
+		$filename = '/tmp/test_soap.txt';
+		$fp = fopen($filename, "wb");
+		fwrite($fp,serialize($request_xml));
+		fclose($fp);
+*/
 		$GLOBALS['server']->handle($request_xml);
 	}
 	else

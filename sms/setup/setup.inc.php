@@ -50,7 +50,7 @@
 		'phpgw_sms_tblusergroupphonebook_public',
 		'phpgw_sms_tbluserinbox',
 		'phpgw_sms_tbluserphonebook',
-		'phpgw_sms_reveived_data'
+		'phpgw_sms_received_data'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

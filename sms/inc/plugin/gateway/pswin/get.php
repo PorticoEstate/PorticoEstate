@@ -15,37 +15,74 @@
 
 		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="")
 		{
-return;
-		    // p_status :
-		    // 0 = pending
-		    // 1 = delivered
-		    // 2 = failed
-
-			if($result['statuscode'] == 1)
-			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,1);			
-			}
-			else if($result['statuscode'] == 5)
-			{
-			    $this->setsmsdeliverystatus($smslog_id,$uid,2);			
-			}
-
-		    return;
+		    // nothing
 		}
-
-
 
 		function gw_set_incoming_action()
 		{
-			$test_receive = true;
+			$strip_code = isset($this->pswin_param['strip_code']) && $this->pswin_param['strip_code'] ? $this->pswin_param['strip_code'] : '';
+			
+			$test_receive = false;
 			
 			if ($test_receive)
 			{
 				$this->test_receive();
 			}
 
-			
+			$sql = 'SELECT * FROM phpgw_sms_received_data WHERE status = 0 AND type = \'sms\'';
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 
+			$messages = array();
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$messages[] = array
+				(
+					'id'			=> $GLOBALS['phpgw']->db->f('id'),
+					'type'			=> $GLOBALS['phpgw']->db->f('type'),
+					'entry_date'	=> $GLOBALS['phpgw']->db->f('entry_date'),
+					'data'			=> unserialize($GLOBALS['phpgw']->db->f('data',true))
+				);
+			}
+
+//			_debug_array($messages);
+
+
+			foreach($messages as $entry)
+			{
+				$message =  $entry['data']->m->Text;
+				if($strip_code)
+				{
+					$message_arr = explode(strtolower($strip_code), strtolower($message));
+					$message = ucfirst(trim($message_arr[1]));
+				}
+				
+			    $array_target_code = explode(' ',$message);
+//_debug_array($array_target_code);
+			    $target_code = strtoupper(trim($array_target_code[0]));
+
+			    $message = $array_target_code[1];
+
+			    for ($i=2;$i<count($array_target_code);$i++)
+			    {
+					$message .= " {$array_target_code[$i]}";
+			    }
+				
+				$sms_datetime	= $entry['entry_date'];
+				$sms_sender		= $entry['data']->m->SenderNumber;
+/*
+_debug_array($sms_datetime);
+_debug_array($sms_sender);
+_debug_array($target_code);
+_debug_array($message);
+*/
+				if (parent::setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
+				{
+					$sql = 'UPDATE phpgw_sms_received_data SET status = 1 WHERE id =' . (int) $entry['id'];
+//_debug_array($sql);
+					$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+				}			
+			}
+//			die();
 
 		}
 
@@ -56,7 +93,7 @@ return;
 
 			$options=array();
 			$options['soap_version']	= SOAP_1_2;
-			$options['location']		= 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php?domain=test';//$this->pswin_param['receive_url'];
+			$options['location']		= 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php?domain=bbb';//$this->pswin_param['receive_url'];
 			$options['uri']				= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
 			$options['trace']			= 1;
 		//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
@@ -86,26 +123,8 @@ return;
 
 			$result = $ReturnValue->ReceiveSMSMessageResult;
 
-	_debug_array($result);die();
+			_debug_array($result);
 
-			$sms = array();
 
-			foreach($sms as $entry)
-			{
-				$sms_datetime	= $entry[''];
-				$sms_sender		= $entry[''];
-				$target_code	= $entry[''];
-				$message		= $entry['message'];
-				
-				if (!parent::setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
-				{
-					$bofelamimail->flagMessages($_flag = 'unread', array($entry['uid']));
-				}			
-			}
-
-			if($connectionStatus == 'true')
-			{
-				$bofelamimail->closeConnection();
-			}
 		}
 	}
