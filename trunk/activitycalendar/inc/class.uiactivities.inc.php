@@ -233,7 +233,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				{
 					if($this->so_activity->store($activity)) // ... and then try to store the object
 					{
-    					if($new_group && $new_state == 3)
+    					if($new_group)
     				    {
     				        //transfer group to booking
         				    $group_array = $this->so_group->get(null, null, null, null, null, null, array('group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
@@ -298,12 +298,14 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 					{
 						$error = lang('messages_form_error');
 					}
+                                        
+                                        $activity = $this->so_activity->get_single($activity_id);
 	
 					if($old_state != $new_state && ($new_state == 3 || $new_state == 5))
 					{
 						$kontor = $this->so_activity->get_office_name($activity->get_office());
 						$subject = lang('mail_subject_update');
-						$body = lang('mail_body_state_' . $new_state, $kontor);
+						$body = lang('mail_body_state_' . $new_state, $activity->get_title(), $kontor);
 						
 						if($activity->get_group_id() && $activity->get_group_id() > 0)
 						{
