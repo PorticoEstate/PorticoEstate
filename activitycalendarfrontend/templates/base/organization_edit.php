@@ -101,25 +101,19 @@ function isOK()
 			<dl class="proplist-col">
     			<input type="hidden" name="organization_id" id="organization_id" value="<?php echo $organization->get_id()?>" />
     			<DIV style="overflow: auto;">
-					<P>Endre organisasjon <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-						href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-						target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A>
+					<P>Endre organisasjon <a onclick="alert('<?php echo lang('help_edit_activity_org')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
 					</P> 
 					Felt merket med (*) er påkrevde felt <BR/><BR/>
 					<P></P>
 					
 					<dt><label for="orgname">Organisasjonsnavn (*)</label>
-  						<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-  							href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-  							target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A>
+  						<a onclick="alert('<?php echo lang('help_organization_name')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
   					</dt>
 					<dd><input type="text" name="orgname" id="orgname" size="80" value="<?php echo $organization->get_name()?>"/></dd>
 					<dt><label for="orgno">Organisasjonsnummer</label></dt>
 					<dd><input type="text" name="orgno" value="<?php echo $organization->get_organization_number()?>"/></dd>
 					<DT style="margin-right: 20px; float: left;"><label for="street">Gateadresse</label>
-						<A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" 
-							href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" 
-							target="name"><IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A><BR/>
+						<a onclick="alert('<?php echo lang('help_streetaddress')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a><BR/>
 						<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" value="<?php echo $organization->get_address()?>" autocomplete="off"><BR/>
 						<DIV id="address_container"></DIV>
 					</DT>
@@ -133,13 +127,11 @@ function isOK()
                     	<INPUT name="postaddress" size="40" type="text" value="<?php echo $organization->get_city()?>"/>
                     </DT><BR><BR>
 				</DIV>
-				<DT><LABEL for="homepage">Hjemmeside <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" target="name">
-					<IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A></LABEL>
+				<DT><LABEL for="homepage">Hjemmeside <a onclick="alert('<?php echo lang('help_homepage')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL>
 				</DT>
             	<DD><INPUT name="homepage" value="<?php echo $organization->get_homepage()?>" size="80" type="text"></DD><BR/><BR/>
             	<DIV style="overflow: auto;">
-            		Kontaktperson for organisasjonen <A onclick="window.open('hjelp.html','name','height=255, width=350,toolbar=no,directories=no,status=no, menubar=no,scrollbars=no,resizable=no'); return false;" href="http://dl-web.dropbox.com/u/44022695/Aktivitetsoversikt/hjelp.html" target="name">
-            		<IMG alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></A><BR/>
+            		Kontaktperson for organisasjonen <a onclick="alert('<?php echo lang('help_contact_person')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a><BR/>
                     <DT><LABEL for="contact1_name">Navn (*)</LABEL></DT>
                     <DD><INPUT name="org_contact1_name" id="org_contact1_name" size="80" type="text" value="<?php echo isset($contact1)?$contact1->get_name():''?>"></DD>
                     <DT><LABEL for="contact1_phone">Telefon (*)</LABEL></DT>
