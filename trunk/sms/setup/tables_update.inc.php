@@ -531,7 +531,7 @@
 
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_sms_reveived_data', array(
+			'phpgw_sms_received_data', array(
 				'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => False),
 					'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),/*sms/mms/report*/

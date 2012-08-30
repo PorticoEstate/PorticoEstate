@@ -102,6 +102,7 @@
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 8, 'text', 'originator', 'originator')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 9, 'listbox', 'type', 'Send type')");
 	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 10, 'text', 'receive_url', 'receive_url using SOAP')");
+	$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES (" . (7 + $num_sections) . ", 11, 'text', 'strip_code', 'Strip code from message')");
 
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 1, 'gnokii')");
 	$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES (" . (1 + $num_sections) . ", 1, 2, 'clickatell')");
