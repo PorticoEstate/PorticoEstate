@@ -10,7 +10,7 @@
 	*/
 
 	$setup_info['sms']['name']      = 'sms';
-	$setup_info['sms']['version']   = '0.9.17.511';
+	$setup_info['sms']['version']   = '0.9.17.512';
 	$setup_info['sms']['app_order'] = 8;
 	$setup_info['sms']['enable']    = 1;
 	$setup_info['sms']['app_group']	= 'office';
@@ -50,6 +50,7 @@
 		'phpgw_sms_tblusergroupphonebook_public',
 		'phpgw_sms_tbluserinbox',
 		'phpgw_sms_tbluserphonebook',
+		'phpgw_sms_received_data'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

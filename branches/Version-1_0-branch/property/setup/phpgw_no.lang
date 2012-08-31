@@ -113,6 +113,7 @@ add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
 addressmasters	common	no	AddresseMaster
 address	property	no	Adresse
+address not defined	property	no	Adresse er ikke definert
 adds a new project - then a new workorder	property	no	legger til nytt prosjekt - så bestilling
 adds a new workorder to an existing project	property	no	legger til ny bestilling til eksisterende prosjekt
 add selected request to project	property	no	Legg valgte tiltak til prosjektet

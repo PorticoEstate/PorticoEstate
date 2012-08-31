@@ -1333,22 +1333,30 @@
 															<xsl:value-of select="php:function('lang', 'ask for approval')"/>
 														</td>
 														<td>
-															<table>
-																<xsl:for-each select="value_approval_mail_address">
-																	<tr>
-																		<td>
-																		  <input type="checkbox" name="values[approval][{id}]" value="{address}">
-																		    <xsl:attribute name="title">
-																		      <xsl:value-of select="php:function('lang', 'ask for approval')"/>
-																		    </xsl:attribute>
-																		  </input>
-																		</td>
-																		<td valign="top">
-																		  <xsl:value-of select="address"/>
-																		</td>
-																	</tr>
-																</xsl:for-each>
-															</table>
+
+														<xsl:choose>
+															<xsl:when test="value_approval_mail_address!=''">
+																<table>
+																	<xsl:for-each select="value_approval_mail_address">
+																		<tr>
+																			<td>
+																			  <input type="checkbox" name="values[approval][{id}]" value="{address}">
+																			    <xsl:attribute name="title">
+																			      <xsl:value-of select="php:function('lang', 'ask for approval')"/>
+																			    </xsl:attribute>
+																			  </input>
+																			</td>
+																			<td valign="top">
+																			  <xsl:value-of select="address"/>
+																			</td>
+																		</tr>
+																	</xsl:for-each>
+																</table>
+															</xsl:when>
+															<xsl:otherwise>
+																<b><xsl:value-of select="php:function('lang', 'address not defined')"/></b>
+															</xsl:otherwise>
+														</xsl:choose>
 														</td>
 													</tr>
 												</xsl:when>
