@@ -2,11 +2,12 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-  <div id="main_content">
+<div id="main_content">
 
-    <h1>Kontroller</h1>
-    <div class="content-wrp">
-      <xsl:call-template name="datatable" />
-    </div>
+	<h1>Kontroller</h1>
+
+  <div class="content-wrp">
+	  <xsl:call-template name="datatable" />
   </div>
+</div>
 </xsl:template>

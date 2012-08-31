@@ -1,4 +1,4 @@
 <!-- $Id$ -->
-<xsl:template name="dummy">
-</xsl:template>
+	<xsl:template name="dummy">
+	</xsl:template>
 

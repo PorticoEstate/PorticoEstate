@@ -2,7 +2,7 @@
 <xsl:template name="common" xmlns:php="http://php.net/xsl">
 
 
-  <script type="text/javascript">
+<script type="text/javascript">
 
 <![CDATA[
 
@@ -106,21 +106,18 @@
 		
 		]]>
 		
-    this.table = new YAHOO.widget.DataTable(
-    this.properties.container,
-    this.properties.columns,
-    this.source,
-    {
-    paginator: this.paginator,
-    dynamicData: true,
-    MSG_EMPTY: '
-    <xsl:value-of select="php:function('lang', 'DATATABLE_MSG_EMPTY')"/>',
-    MSG_ERROR: '
-    <xsl:value-of select="php:function('lang', 'DATATABLE_MSG_ERROR')"/>',
-    MSG_LOADING: '
-    <xsl:value-of select="php:function('lang', 'DATATABLE_MSG_LOADING')"/>'
-    }
-    );
+		this.table = new YAHOO.widget.DataTable(
+			this.properties.container,
+			this.properties.columns,
+			this.source,
+			{
+				paginator: this.paginator,
+				dynamicData: true,
+				MSG_EMPTY: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_EMPTY')"/>',
+				MSG_ERROR: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_ERROR')"/>',
+				MSG_LOADING: '<xsl:value-of select="php:function('lang', 'DATATABLE_MSG_LOADING')"/>'
+			}
+		);
 		
 		<![CDATA[
 
@@ -379,29 +376,20 @@
 			var source_properties = eval("new " + variableName + "()");
 
 ]]>
-    // ... create a paginator for this datasource
+			// ... create a paginator for this datasource
 
-    var pag = new YAHOO.widget.Paginator({
-    rowsPerPage: 10,
-    alwaysVisible: true,
-    rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-    firstPageLinkLabel: "&lt;&lt; 
-    <xsl:value-of select="php:function('lang', 'first')"/>",
-    previousPageLinkLabel: "&lt; 
-    <xsl:value-of select="php:function('lang', 'previous')"/>",
-    nextPageLinkLabel: "
-    <xsl:value-of select="php:function('lang', 'next')"/> &gt;",
-    lastPageLinkLabel: "
-    <xsl:value-of select="php:function('lang', 'last')"/> &gt;&gt;",
-    template			: "{RowsPerPageDropdown}
-    <xsl:value-of select="php:function('lang', 'elements_pr_page')"/>.{CurrentPageReport}
-    <br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-    pageReportTemplate	: "
-    <xsl:value-of select="php:function('lang', 'shows_from')"/> {startRecord} 
-    <xsl:value-of select="php:function('lang', 'to')"/> {endRecord} 
-    <xsl:value-of select="php:function('lang', 'of_total')"/> {totalRecords}.",
-    containers: [source_properties.paginator]
-    });
+			var pag = new YAHOO.widget.Paginator({
+				rowsPerPage: 10,
+				alwaysVisible: true,
+				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
+				firstPageLinkLabel: "&lt;&lt; <xsl:value-of select="php:function('lang', 'first')"/>",
+				previousPageLinkLabel: "&lt; <xsl:value-of select="php:function('lang', 'previous')"/>",
+				nextPageLinkLabel: "<xsl:value-of select="php:function('lang', 'next')"/> &gt;",
+				lastPageLinkLabel: "<xsl:value-of select="php:function('lang', 'last')"/> &gt;&gt;",
+				template			: "{RowsPerPageDropdown}<xsl:value-of select="php:function('lang', 'elements_pr_page')"/>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<xsl:value-of select="php:function('lang', 'shows_from')"/> {startRecord} <xsl:value-of select="php:function('lang', 'to')"/> {endRecord} <xsl:value-of select="php:function('lang', 'of_total')"/> {totalRecords}.",
+				containers: [source_properties.paginator]
+			});
 			
 <![CDATA[
 			
@@ -543,5 +531,5 @@
 
 ]]>
 
-  </script>
+</script>
 </xsl:template>
