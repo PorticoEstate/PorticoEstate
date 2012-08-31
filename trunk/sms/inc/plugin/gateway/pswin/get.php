@@ -57,7 +57,7 @@
 				}
 				
 			    $array_target_code = explode(' ',$message);
-//_debug_array($array_target_code);
+
 			    $target_code = strtoupper(trim($array_target_code[0]));
 
 			    $message = $array_target_code[1];
@@ -67,9 +67,10 @@
 					$message .= " {$array_target_code[$i]}";
 			    }
 				
-				$sms_datetime	= $entry['entry_date'];
+				$sms_datetime	= date($GLOBALS['phpgw']->db->datetime_format(),$entry['entry_date']);
 				$sms_sender		= $entry['data']->m->SenderNumber;
 /*
+_debug_array($array_target_code);
 _debug_array($sms_datetime);
 _debug_array($sms_sender);
 _debug_array($target_code);
@@ -93,7 +94,7 @@ _debug_array($message);
 
 			$options=array();
 			$options['soap_version']	= SOAP_1_2;
-			$options['location']		= 'http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php?domain=bbb';//$this->pswin_param['receive_url'];
+			$options['location']		= $this->pswin_param['receive_url'];
 			$options['uri']				= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
 			$options['trace']			= 1;
 		//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
@@ -124,7 +125,5 @@ _debug_array($message);
 			$result = $ReturnValue->ReceiveSMSMessageResult;
 
 			_debug_array($result);
-
-
 		}
 	}
