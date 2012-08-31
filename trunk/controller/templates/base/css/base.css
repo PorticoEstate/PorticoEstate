@@ -1108,14 +1108,15 @@ ul.check_list {
 }
 
 #control_plan .middle {
-  background: none repeat scroll 0 0 #EDF5FF;
-  border-color: #DBE5EF;
-  border-style: solid solid none;
-  border-width: 1px 1px 0;
-  clear: both;
-  margin-top: 1em;
-  overflow: hidden;
-  padding: 1em 1em 0;
+    background: none repeat scroll 0 0 #EDF5FF;
+    border-color: #DBE5EF;
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
+    clear: both;
+    margin-top: 1em;
+    overflow: hidden;
+    padding: 1em 1em 0;
 }
 
 #control_plan h2 {
@@ -1279,13 +1280,13 @@ ul#icon_color_map span{
 }
 
 #cal_wrp {
-    background: none repeat scroll 0 0 #EDF5FF;
-    border-top: none;
-    border-style: solid;
-    border-width: 0 1px 1px 1px;
-    border-color: #DBE5EF;
-    clear: both;
-    padding: 0 1em 1em;
+  background: none repeat scroll 0 0 #EDF5FF;
+  border-color: #DBE5EF;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  clear: both;
+  padding: 0 1em 1em;
 }
 
 .control_details_wrp div {
