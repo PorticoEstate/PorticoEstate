@@ -420,6 +420,14 @@
 			{
 			//	$db_query = "SELECT uid,email,mobile FROM phpgw_sms_tblUser WHERE username='$target_user'";
 				$uid = $GLOBALS['phpgw']->accounts->name2id($target_user);
+				if(!$uid)
+				{
+					//Try lowercase
+					if($target_user == 'Admins')
+					{
+						$uid = $GLOBALS['phpgw']->accounts->name2id('admins');
+					}
+				}
 			//	$GLOBALS['phpgw']->preferences->account_id = $uid;
 			//	$GLOBALS['phpgw']->preferences->read();
 				$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
@@ -427,12 +435,9 @@
 
 				if ($uid)
 				{
-					$message = $this->db->db_addslashes($message);
-					$db_query = "
-					INSERT INTO phpgw_sms_tbluserinbox
-					(in_sender,in_uid,in_msg,in_datetime)
-					VALUES ('$sms_sender',$uid,'$message','$sms_datetime')
-					";
+					$message = $this->db->db_addslashes(ucfirst(strtolower($message)));
+
+					$db_query = "INSERT INTO phpgw_sms_tbluserinbox (in_sender,in_uid,in_msg,in_datetime) VALUES ('$sms_sender',$uid,'$message','$sms_datetime')";
 
 					$this->db->query($db_query,__LINE__,__FILE__);
 
