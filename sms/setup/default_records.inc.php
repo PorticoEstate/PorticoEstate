@@ -24,6 +24,7 @@
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 
+/*
 	$db->query("SELECT id FROM phpgw_config2_section WHERE location_id = '$location_id'");
 	
 	$old_sections = array();
@@ -39,6 +40,7 @@
 		$db->query('DELETE FROM phpgw_config2_choice WHERE section_id IN (' . explode(',',$old_sections ) . ')');
 		$db->query('DELETE FROM phpgw_config2_value WHERE section_id IN (' . explode(',',$old_sections ) . ')');
 	}
+*/
 
 	$db->query("DELETE FROM phpgw_locations where app_id = {$app_id} AND name != 'run'");
 	$db->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
@@ -52,7 +54,7 @@
 
 // -- start config
 
-	$db->query("SELECT count(*) as num_sections FROM phpgw_config2_section");
+	$db->query("SELECT max(id) as num_sections FROM phpgw_config2_section");
 	$db->next_record();
 	$num_sections = (int)$db->f('num_sections');
 
