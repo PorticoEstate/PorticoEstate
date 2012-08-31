@@ -314,7 +314,7 @@
 		'phpgw_sms_received_data' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
-				'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),,/*sms/mms/report*/
+				'type' => array('type' => 'varchar', 'precision' => 15, 'nullable' => False),/*sms/mms/report*/
 				'data' => array('type' => 'text', 'nullable' => False),
 				'status' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
