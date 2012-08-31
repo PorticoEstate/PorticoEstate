@@ -3,7 +3,7 @@
 	* phpGroupWare - sms: A SMS Gateway
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package sms
@@ -23,6 +23,22 @@
 	$app_id = $db->f('app_id');
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+
+	$db->query("SELECT id FROM phpgw_config2_section WHERE location_id = '$location_id'");
+	
+	$old_sections = array();
+	while($db->next_record())
+	{
+		$old_sections[] = $db->f('id');
+	}
+	
+	if ($old_sections)
+	{
+		$db->query('DELETE FROM phpgw_config2_section WHERE id IN (' . explode(',',$old_sections ) . ')');
+		$db->query('DELETE FROM phpgw_config2_attrib WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+		$db->query('DELETE FROM phpgw_config2_choice WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+		$db->query('DELETE FROM phpgw_config2_value WHERE section_id IN (' . explode(',',$old_sections ) . ')');
+	}
 
 	$db->query("DELETE FROM phpgw_locations where app_id = {$app_id} AND name != 'run'");
 	$db->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
