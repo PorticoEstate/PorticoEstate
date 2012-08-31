@@ -363,7 +363,7 @@ function allOK()
                         </LABEL><BR>
                         <INPUT id="arena_address" 
                             onkeyup="javascript:get_address_search_arena()" name="arena_address" size="50" 
-                    		type="text"><BR>
+                    		type="text" autocomplete="off"><BR>
                       	<DIV id="arena_address_container"></DIV></DT>
                     	<DT style="clear: right; float: left;"><LABEL 
                       		for="arena_number">Husnummer</LABEL><BR><INPUT name="arena_number" size="5" 

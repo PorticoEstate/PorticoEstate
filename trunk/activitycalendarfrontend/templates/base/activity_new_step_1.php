@@ -221,7 +221,7 @@ function isOK()
 						<dd><input type="text" name="orgno"/></dd>
 						<DT style="margin-right: 20px; float: left;"><label for="street">Gateadresse
 							<a onclick="alert('<?php echo lang('help_streetaddress')?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label><br/>
-  							<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text"><BR/>
+                                                    <INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" autocomplete="off"><BR/>
 							<DIV id="address_container"></DIV>
 						</DT>
 						<DT style="clear: right; float: left;"><LABEL for="number">Husnummer</LABEL><BR/>

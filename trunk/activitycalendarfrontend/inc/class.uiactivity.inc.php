@@ -63,65 +63,70 @@
 			{
 				if($o_id_new == "new_org")
 				{
-					//add new organization to internal activitycalendar organization register
-    				$org_info['name'] = phpgw::get_var('orgname');
-    				$org_info['orgnr'] = phpgw::get_var('orgno');
-    				$org_info['homepage'] = phpgw::get_var('homepage');
-    				$org_info['street'] = phpgw::get_var('address');
-    				$org_info['streetnumber'] = phpgw::get_var('number');
-    				$org_info['zip'] = phpgw::get_var('postzip');
-    				$org_info['postaddress'] = phpgw::get_var('postaddress');
-    				$org_info['status'] = "new";
-    				$o_id = $this->so_activity->add_organization_local($org_info);
-    				
-    				//add contact persons
-    				$contact1 = array();
-    				$contact1['name'] = phpgw::get_var('org_contact1_name');
-    				$contact1['phone'] = phpgw::get_var('org_contact1_phone');
-    				$contact1['mail'] = phpgw::get_var('org_contact1_mail');
-    				$contact1['org_id'] = $o_id;
-    				$contact1['group_id'] = 0;
-    				$this->so_activity->add_contact_person_local($contact1);
-    				
-    				$person_arr = $this->so_contact->get_local_contact_persons($o_id);
-    				foreach($person_arr as $p)
-    				{
-    					$persons[] = $p;
-    				}
-    				
-    				$person_ids = $this->so_organization->get_contacts_local($o_id);
-    				$desc = phpgw::get_var('org_description');
-    				$organization = $this->so_organization->get_organization_local($o_id);
-    				$new_org = true;
-    
-    				$organization = $this->so_organization->get_organization_local($o_id);
-    				$person_arr = $this->so_organization->get_contacts_local_as_objects($o_id);
-    				foreach($person_arr as $p)
-    				{
-    					//var_dump($p);
-    					$persons[] = $p;
-    				}
-    				
-    				$message = lang('organization_saved_form');
-    				
-    				$this->render('activity_new.php', array
-    					(
-    						'activity' 	=> $activity,
-    						'new_organization' => true,
-    						'organization' => $organization,
-    						'contact1' => $persons[0],
-    						'arenas' => $arenas,
-    						'buildings' => $buildings,
-    						'categories' => $categories,
-    						'targets' => $targets,
-    						'districts' => $districts,
-    						'offices' => $offices,
-    						'editable' => true,
-    						'message' => isset($message) ? $message : phpgw::get_var('message'),
-    						'error' => isset($error) ? $error : phpgw::get_var('error'),
-    						'ajaxURL' => $ajaxUrl
-    					)
-    				);
+                                    //add new organization to internal activitycalendar organization register
+                                    $org_homepage = phpgw::get_var('homepage');
+                                    if($org_homepage == 'http://')
+                                    {
+                                        $org_homepage = "";
+                                    }
+                                    $org_info['name'] = phpgw::get_var('orgname');
+                                    $org_info['orgnr'] = phpgw::get_var('orgno');
+                                    $org_info['homepage'] = $org_homepage;
+                                    $org_info['street'] = phpgw::get_var('address');
+                                    $org_info['streetnumber'] = phpgw::get_var('number');
+                                    $org_info['zip'] = phpgw::get_var('postzip');
+                                    $org_info['postaddress'] = phpgw::get_var('postaddress');
+                                    $org_info['status'] = "new";
+                                    $o_id = $this->so_activity->add_organization_local($org_info);
+
+                                    //add contact persons
+                                    $contact1 = array();
+                                    $contact1['name'] = phpgw::get_var('org_contact1_name');
+                                    $contact1['phone'] = phpgw::get_var('org_contact1_phone');
+                                    $contact1['mail'] = phpgw::get_var('org_contact1_mail');
+                                    $contact1['org_id'] = $o_id;
+                                    $contact1['group_id'] = 0;
+                                    $this->so_activity->add_contact_person_local($contact1);
+
+                                    $person_arr = $this->so_contact->get_local_contact_persons($o_id);
+                                    foreach($person_arr as $p)
+                                    {
+                                            $persons[] = $p;
+                                    }
+
+                                    $person_ids = $this->so_organization->get_contacts_local($o_id);
+                                    $desc = phpgw::get_var('org_description');
+                                    $organization = $this->so_organization->get_organization_local($o_id);
+                                    $new_org = true;
+
+                                    $organization = $this->so_organization->get_organization_local($o_id);
+                                    $person_arr = $this->so_organization->get_contacts_local_as_objects($o_id);
+                                    foreach($person_arr as $p)
+                                    {
+                                            //var_dump($p);
+                                            $persons[] = $p;
+                                    }
+
+                                    $message = lang('organization_saved_form');
+
+                                    $this->render('activity_new.php', array
+                                            (
+                                                    'activity' 	=> $activity,
+                                                    'new_organization' => true,
+                                                    'organization' => $organization,
+                                                    'contact1' => $persons[0],
+                                                    'arenas' => $arenas,
+                                                    'buildings' => $buildings,
+                                                    'categories' => $categories,
+                                                    'targets' => $targets,
+                                                    'districts' => $districts,
+                                                    'offices' => $offices,
+                                                    'editable' => true,
+                                                    'message' => isset($message) ? $message : phpgw::get_var('message'),
+                                                    'error' => isset($error) ? $error : phpgw::get_var('error'),
+                                                    'ajaxURL' => $ajaxUrl
+                                            )
+                                    );
 				}
 				else
 				{
