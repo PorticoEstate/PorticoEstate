@@ -95,8 +95,8 @@ send_change_request	activitycalendarfrontend	no	Send inn endringsønske
 edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
 address	activitycalendarfrontend	no	Adresse
 activity_edit_helptext_step1	activitycalendarfrontend	no	Skal du endre opplysninger knyttet til en aktivitet må du være registrert som kontaktperson for aktiviteten.<br/>Du velger først organisasjon og deretter aktivitet i bildet under, og får en e-post i retur med en lenke til endringsskjema.
-mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
-mail_body_update	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
+mail_body_update_frontend	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br><br/> Mvh %4 kulturkontor
+mail_body_update	activitycalendarfrontend	no	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
 mail_subject_update	activitycalendarfrontend	no	Melding fra AktivBy - Aktivitetsoversikt
 save_organization_next	activitycalendarfrontend	no	Lagre organisasjon og gå videre til Ny aktivitet
 new_organization	activitycalendarfrontend	no	Ny organisasjon
@@ -135,3 +135,4 @@ help_new_activity_time	activitycalendarfrontend	no	Skriv inn dag og klokkeslett 
 help_new_activity_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for aktiviteten.
 help_new_activity_office	activitycalendarfrontend	no	Det kommunale kulturkontoret mottar registreringen. Velg kulturkontoret i den bydelen hvor aktiviteten foregår.
 help_edit_activity_location	activitycalendarfrontend	no	Du må spesifisere hvor aktiviteten foregår.\\n\\nListen er sortert i «Kommunale bygg» og «Eksterne bygg», dvs. bygg som brukere av løsningen har registrert tidligere.
+help_edit_activity_org	activitycalendarfrontend	no	Her kan du endre opplysninger som tidligere er registrert for din organisasjon.

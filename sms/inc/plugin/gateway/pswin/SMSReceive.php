@@ -322,10 +322,12 @@
 		 * @param string $wsdl WSDL location for this service
 		 * @param array $options Options for the SoapClient
 		 */
-		public function __construct($wsdl="http://sms.pswin.com/SOAP/Receive.asmx?wsdl", $options=array())
+		public function __construct($wsdl='', $options=array())
 		{
-			foreach(self::$classmap as $wsdlClassName => $phpClassName) {
-			    if(!isset($options['classmap'][$wsdlClassName])) {
+			foreach(self::$classmap as $wsdlClassName => $phpClassName)
+			{
+			    if(!isset($options['classmap'][$wsdlClassName]))
+			    {
 			        $options['classmap'][$wsdlClassName] = $phpClassName;
 			    }
 			}
@@ -372,7 +374,14 @@
 			);
 			$args = func_get_args();
 			$this->_checkArguments($args, $validParameters);
-			return $this->__soapCall("ReceiveSMSMessage", $args);
+			$result =  $this->__soapCall("ReceiveSMSMessage", $args);
+
+			echo("<H1>Dumping request headers:</H1></br>" .$this->__getLastRequestHeaders());
+			echo("</br><H1>Dumping request:</H1></br>".$this->__getLastRequest());
+			echo("</br><H1>Dumping response headers:</H1></br>"	.$this->__getLastResponseHeaders());
+			echo("</br><H1>Dumping response:</H1></br>".$this->__getLastResponse());
+
+			return $result;
 		}
 	
 	
