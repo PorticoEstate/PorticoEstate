@@ -5,28 +5,30 @@
 
 
 
-<xsl:call-template name="yui_phpgw_i18n"/>
+  <xsl:call-template name="yui_phpgw_i18n"/>
 
-<div id="main_wrp">
+  <div id="main_wrp">
 
-<h1>Legg verdier til liste</h1>
+    <h1>Legg verdier til liste</h1>
 	
-<div class="yui-content">
-	<div id="details">
-		<form id="frm_add_control_item_option" action="index.php?menuaction=controller.uicontrol_item_option.save" method="post">
-			<input type="hidden" name="control_item_id">
-				<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
-			</input>
+    <div class="yui-content">
+      <div id="details">
+        <form id="frm_add_control_item_option" action="index.php?menuaction=controller.uicontrol_item_option.save" method="post">
+          <input type="hidden" name="control_item_id">
+            <xsl:attribute name="value">
+              <xsl:value-of select="control_item/id"/>
+            </xsl:attribute>
+          </input>
 			
-			<ul id="control_item_options"></ul>
+          <ul id="control_item_options"></ul>
 			
-			<div class="row">
-				<label>Valgverdi</label>
-				<input type="text" name="label" />
-				<input type="submit" value="Lagre" />
-			</div>
-		</form>
-	</div>
-</div>
-</div>
+          <div class="row">
+            <label>Valgverdi</label>
+            <input type="text" name="label" />
+            <input type="submit" value="Lagre" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </xsl:template>
