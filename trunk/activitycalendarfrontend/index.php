@@ -8,7 +8,7 @@ $GLOBALS['phpgw_info']['flags'] = array(
 
 $GLOBALS['phpgw_info']['flags']['session_name'] = 'activitycalendarfrontendsession';
 $GLOBALS['phpgw_remote_user_fallback'] = 'sql';
-include_once('../header.inc.php');
+include_once '../header.inc.php';
 
 // Make sure we're always logged in
 if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify()) {
@@ -126,12 +126,12 @@ if (!isset($GLOBALS['phpgw_info']['flags']['noheader']) || !$GLOBALS['phpgw_info
   \************************************************************************ */
 /* Then the include file */
 if (!preg_match("/phpgwapi/i", PHPGW_APP_INC) && file_exists(PHPGW_APP_INC . '/functions.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction'])) {
-  include_once(PHPGW_APP_INC . '/functions.inc.php');
+  include_once PHPGW_APP_INC . '/functions.inc.php';
 }
 if (!@$GLOBALS['phpgw_info']['flags']['noheader'] &&
         !@$GLOBALS['phpgw_info']['flags']['noappheader'] &&
         file_exists(PHPGW_APP_INC . '/header.inc.php') && !isset($GLOBALS['phpgw_info']['menuaction'])) {
-  include_once(PHPGW_APP_INC . '/header.inc.php');
+  include_once PHPGW_APP_INC . '/header.inc.php';
 }
 
 /////////////////////////////////////////////////////////////////////////////
