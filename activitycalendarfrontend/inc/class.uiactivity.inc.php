@@ -16,15 +16,15 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 
 	private $so_organization;
 	public $public_functions = array
-		(
-		'add' => true,
-		'edit' => true,
-		'view' => true,
-		'index' => true,
-		'get_organization_groups' => true,
-		'get_address_search' => true,
-		'edit_organization_values' => true,
-		'get_organization_activities' => true
+			(
+			'add' => true,
+			'edit' => true,
+			'view' => true,
+			'index' => true,
+			'get_organization_groups' => true,
+			'get_address_search' => true,
+			'edit_organization_values' => true,
+			'get_organization_activities' => true
 	);
 
 	public function __construct() {
@@ -104,21 +104,21 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 
 				$this->render('activity_new.php', array
 					(
-					'activity' => $activity,
-					'new_organization' => true,
-					'organization' => $organization,
-					'contact1' => $persons[0],
-					'arenas' => $arenas,
-					'buildings' => $buildings,
-					'categories' => $categories,
-					'targets' => $targets,
-					'districts' => $districts,
-					'offices' => $offices,
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'ajaxURL' => $ajaxUrl
-						)
+						'activity' => $activity,
+						'new_organization' => true,
+						'organization' => $organization,
+						'contact1' => $persons[0],
+						'arenas' => $arenas,
+						'buildings' => $buildings,
+						'categories' => $categories,
+						'targets' => $targets,
+						'districts' => $districts,
+						'offices' => $offices,
+						'editable' => true,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
+					)
 				);
 			} else {
 				$new_org = false;
@@ -135,22 +135,22 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$activity->set_contact_persons($pers);
 
 				$this->render('activity_new.php', array
-					(
-					'activity' => $activity,
-					'new_organization' => false,
-					'organization' => $organization,
-					'contact1' => $persons[0],
-					'arenas' => $arenas,
-					'buildings' => $buildings,
-					'categories' => $categories,
-					'targets' => $targets,
-					'districts' => $districts,
-					'offices' => $offices,
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'ajaxURL' => $ajaxUrl
-						)
+						(
+						'activity' => $activity,
+						'new_organization' => false,
+						'organization' => $organization,
+						'contact1' => $persons[0],
+						'arenas' => $arenas,
+						'buildings' => $buildings,
+						'categories' => $categories,
+						'targets' => $targets,
+						'districts' => $districts,
+						'offices' => $offices,
+						'editable' => true,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
+								)
 				);
 			}
 		} else if (isset($_POST['save_activity'])) {
@@ -304,21 +304,21 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 				$this->render('activity.php', array
-					(
-					'activity' => $activity,
-					'organization' => $organization,
-					'group' => $group,
-					'contact1' => $persons[0],
-					'arenas' => $arenas,
-					'buildings' => $buildings,
-					'categories' => $categories,
-					'targets' => $targets,
-					'districts' => $districts,
-					'offices' => $offices,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'ajaxURL' => $ajaxUrl
-						)
+						(
+						'activity' => $activity,
+						'organization' => $organization,
+						'group' => $group,
+						'contact1' => $persons[0],
+						'arenas' => $arenas,
+						'buildings' => $buildings,
+						'categories' => $categories,
+						'targets' => $targets,
+						'districts' => $districts,
+						'offices' => $offices,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
+								)
 				);
 			} else {
 				if (!$target_ok) {
@@ -328,35 +328,35 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 					$error .= "<br/>" . lang('district_not_selected');
 				}
 				return $this->render('activity_new.php', array
-							(
-							'activity' => $activity,
-							'organizations' => $organizations,
-							'organization' => $organization,
-							'contact1' => $persons[0],
-							'contact2' => $persons[1],
-							'org_name' => $org_name,
-							'new_org' => $new_org,
-							'groups' => $groups,
-							'arenas' => $arenas,
-							'buildings' => $buildings,
-							'categories' => $categories,
-							'targets' => $targets,
-							'districts' => $districts,
-							'offices' => $offices,
-							'editable' => true,
-							'cancel_link' => $cancel_link,
-							'message' => isset($message) ? $message : phpgw::get_var('message'),
-							'error' => isset($error) ? $error : phpgw::get_var('error'),
-							'ajaxURL' => $ajaxUrl
-								)
+										(
+										'activity' => $activity,
+										'organizations' => $organizations,
+										'organization' => $organization,
+										'contact1' => $persons[0],
+										'contact2' => $persons[1],
+										'org_name' => $org_name,
+										'new_org' => $new_org,
+										'groups' => $groups,
+										'arenas' => $arenas,
+										'buildings' => $buildings,
+										'categories' => $categories,
+										'targets' => $targets,
+										'districts' => $districts,
+										'offices' => $offices,
+										'editable' => true,
+										'cancel_link' => $cancel_link,
+										'message' => isset($message) ? $message : phpgw::get_var('message'),
+										'error' => isset($error) ? $error : phpgw::get_var('error'),
+										'ajaxURL' => $ajaxUrl
+												)
 				);
 			}
 		} else {
 			return $this->render('activity_new_step_1.php', array
-						(
-						'organizations' => $organizations,
-						'ajaxURL' => $ajaxUrl
-							)
+									(
+									'organizations' => $organizations,
+									'ajaxURL' => $ajaxUrl
+											)
 			);
 		}
 	}
@@ -371,10 +371,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 		}
 
 		$data = array
-			(
-			'activity' => $activity,
-			'errorMsgs' => $errorMsgs,
-			'infoMsgs' => $infoMsgs
+				(
+				'activity' => $activity,
+				'errorMsgs' => $errorMsgs,
+				'infoMsgs' => $infoMsgs
 		);
 
 		$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -413,11 +413,11 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 			$this->send_email_to_selection(array($activity));
 			$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
 			return $this->render('activity_edit_step_1.php', array
-						(
-						'activities' => $activities,
-						'message' => $message,
-						'ajaxURL' => $ajaxUrl
-							)
+									(
+									'activities' => $activities,
+									'message' => $message,
+									'ajaxURL' => $ajaxUrl
+											)
 			);
 			//}
 		} else {
@@ -427,21 +427,21 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 				$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array('edit_from_frontend' => 'yes'));
 				return $this->render('activity_edit_step_1.php', array
-							(
-							'activities' => $activities,
-							'organizations' => $organizations,
-							'ajaxURL' => $ajaxUrl
-								)
+										(
+										'activities' => $activities,
+										'organizations' => $organizations,
+										'ajaxURL' => $ajaxUrl
+												)
 				);
 			}
 			if (!isset($secret_param) || $secret_param == '') {
 				//select activity to edit
 				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 				return $this->render('activity_edit_step_1.php', array
-							(
-							'activities' => $activities,
-							'ajaxURL' => $ajaxUrl
-								)
+										(
+										'activities' => $activities,
+										'ajaxURL' => $ajaxUrl
+												)
 				);
 			} else {
 				// Retrieve the activity object or create a new one
@@ -450,10 +450,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				} else {
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					return $this->render('activity_edit_step_1.php', array
-								(
-								'activities' => $activities,
-								'ajaxURL' => $ajaxUrl
-									)
+											(
+											'activities' => $activities,
+											'ajaxURL' => $ajaxUrl
+													)
 					);
 				}
 
@@ -461,10 +461,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 					//select activity to edit
 					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array('activity_state' => 3));
 					return $this->render('activity_edit_step_1.php', array
-								(
-								'activities' => $activities,
-								'ajaxURL' => $ajaxUrl
-									)
+											(
+											'activities' => $activities,
+											'ajaxURL' => $ajaxUrl
+													)
 					);
 				}
 
@@ -559,21 +559,21 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 							$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 							$this->render('activity.php', array
-								(
-								'activity' => $activity,
-								'organization' => $organization,
-								'group' => $group,
-								'contact1' => $persons_array_tmp[0],
-								'arenas' => $arenas,
-								'buildings' => $buildings,
-								'categories' => $categories,
-								'targets' => $targets,
-								'districts' => $districts,
-								'offices' => $offices,
-								'message' => isset($message) ? $message : phpgw::get_var('message'),
-								'error' => isset($error) ? $error : phpgw::get_var('error'),
-								'ajaxURL' => $ajaxUrl
-									)
+									(
+									'activity' => $activity,
+									'organization' => $organization,
+									'group' => $group,
+									'contact1' => $persons_array_tmp[0],
+									'arenas' => $arenas,
+									'buildings' => $buildings,
+									'categories' => $categories,
+									'targets' => $targets,
+									'districts' => $districts,
+									'offices' => $offices,
+									'message' => isset($message) ? $message : phpgw::get_var('message'),
+									'error' => isset($error) ? $error : phpgw::get_var('error'),
+									'ajaxURL' => $ajaxUrl
+											)
 							);
 						} else {
 							if (!$target_ok) {
@@ -583,24 +583,24 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 								$error .= "<br/>" . lang('district_not_selected');
 							}
 							return $this->render('activity_edit.php', array
-										(
-										'activity' => $activity,
-										'organization' => $organization,
-										'contact1' => $persons_array[0],
-										'org_name' => $org_name,
-										'group' => $group,
-										'arenas' => $arenas,
-										'buildings' => $buildings,
-										'categories' => $categories,
-										'targets' => $targets,
-										'districts' => $districts,
-										'offices' => $offices,
-										'editable' => true,
-										'cancel_link' => $cancel_link,
-										'message' => isset($message) ? $message : phpgw::get_var('message'),
-										'error' => isset($error) ? $error : phpgw::get_var('error'),
-										'ajaxURL' => $ajaxUrl
-											)
+													(
+													'activity' => $activity,
+													'organization' => $organization,
+													'contact1' => $persons_array[0],
+													'org_name' => $org_name,
+													'group' => $group,
+													'arenas' => $arenas,
+													'buildings' => $buildings,
+													'categories' => $categories,
+													'targets' => $targets,
+													'districts' => $districts,
+													'offices' => $offices,
+													'editable' => true,
+													'cancel_link' => $cancel_link,
+													'message' => isset($message) ? $message : phpgw::get_var('message'),
+													'error' => isset($error) ? $error : phpgw::get_var('error'),
+													'ajaxURL' => $ajaxUrl
+															)
 							);
 						}
 					}
@@ -608,33 +608,6 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 					$this->render('activity_edit.php', array
-						(
-						'activity' => $activity,
-						'organization' => $organization,
-						'group' => $group,
-						'contact1' => $persons_array[0],
-						'arenas' => $arenas,
-						'buildings' => $buildings,
-						'categories' => $categories,
-						'targets' => $targets,
-						'districts' => $districts,
-						'offices' => $offices,
-						'editable' => true,
-						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'ajaxURL' => $ajaxUrl
-							)
-					);
-				} else if (isset($_POST['activity_ok'])) { // The user has pressed the save button
-					if (isset($activity)) { // If an activity object is created
-						$activity->set_frontend(true);
-
-						if ($this->so_activity->save_with_no_changes($activity)) { // ... and then try to store the object
-							$message = lang('activity_ok_message');
-						}
-						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-
-						$this->render('activity.php', array
 							(
 							'activity' => $activity,
 							'organization' => $organization,
@@ -646,33 +619,60 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 							'targets' => $targets,
 							'districts' => $districts,
 							'offices' => $offices,
+							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error'),
 							'ajaxURL' => $ajaxUrl
-								)
+									)
+					);
+				} else if (isset($_POST['activity_ok'])) { // The user has pressed the save button
+					if (isset($activity)) { // If an activity object is created
+						$activity->set_frontend(true);
+
+						if ($this->so_activity->save_with_no_changes($activity)) { // ... and then try to store the object
+							$message = lang('activity_ok_message');
+						}
+						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+						$this->render('activity.php', array
+								(
+								'activity' => $activity,
+								'organization' => $organization,
+								'group' => $group,
+								'contact1' => $persons_array[0],
+								'arenas' => $arenas,
+								'buildings' => $buildings,
+								'categories' => $categories,
+								'targets' => $targets,
+								'districts' => $districts,
+								'offices' => $offices,
+								'message' => isset($message) ? $message : phpgw::get_var('message'),
+								'error' => isset($error) ? $error : phpgw::get_var('error'),
+								'ajaxURL' => $ajaxUrl
+										)
 						);
 					}
 				} else {
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 					$this->render('activity.php', array
-						(
-						'activity' => $activity,
-						'organization' => $organization,
-						'group' => $group,
-						'contact1' => $persons_array[0],
-						'arenas' => $arenas,
-						'buildings' => $buildings,
-						'categories' => $categories,
-						'targets' => $targets,
-						'districts' => $districts,
-						'offices' => $offices,
-						'editable' => false,
-						'change_request' => true,
-						'message' => isset($message) ? $message : phpgw::get_var('message'),
-						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'ajaxURL' => $ajaxUrl
-							)
+							(
+							'activity' => $activity,
+							'organization' => $organization,
+							'group' => $group,
+							'contact1' => $persons_array[0],
+							'arenas' => $arenas,
+							'buildings' => $buildings,
+							'categories' => $categories,
+							'targets' => $targets,
+							'districts' => $districts,
+							'offices' => $offices,
+							'editable' => false,
+							'change_request' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error'),
+							'ajaxURL' => $ajaxUrl
+									)
 					);
 				}
 			}
@@ -731,9 +731,13 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 			if (isset($_POST['save_org'])) { //save updated organization info
 				$organization = $this->so_organization->get_single($org_id);
 
+				$org_homepage = phpgw::get_var('homepage');
+				if ($org_homepage == 'http://') {
+					$org_homepage = "";
+				}
 				$org_info['name'] = phpgw::get_var('orgname');
 				$org_info['orgnr'] = phpgw::get_var('orgno');
-				$org_info['homepage'] = phpgw::get_var('homepage');
+				$org_info['homepage'] = $org_homepage;
 				$org_info['street'] = phpgw::get_var('address');
 				$org_info['streetnumber'] = phpgw::get_var('number');
 				$org_info['zip'] = phpgw::get_var('postzip');
@@ -755,10 +759,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$message = lang('change_request_ok', $org_info['name']);
 
 				$this->render('organization_reciept.php', array
-					(
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error')
-						)
+						(
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error')
+								)
 				);
 			} else {
 				$c = createobject('phpgwapi.config', 'activitycalendarfrontend');
@@ -773,14 +777,14 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				}
 
 				$this->render('organization_edit.php', array
-					(
-					'organization' => $organization,
-					'contact1' => $persons[0],
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'ajaxURL' => $ajaxUrl
-						)
+						(
+						'organization' => $organization,
+						'contact1' => $persons[0],
+						'editable' => true,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error'),
+						'ajaxURL' => $ajaxUrl
+								)
 				);
 			}
 		}
@@ -819,10 +823,10 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				$message = lang('change_request_ok', $group_info['name']);
 
 				$this->render('group_reciept.php', array
-					(
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error')
-						)
+						(
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error')
+								)
 				);
 			} else {
 				$group = $this->so_group->get_single($group_id);
@@ -832,14 +836,14 @@ class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities 
 				}
 
 				$this->render('group_edit.php', array
-					(
-					'group' => $group,
-					'contact1' => $persons[0],
-					'contact2' => $persons[1],
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error')
-						)
+						(
+						'group' => $group,
+						'contact1' => $persons[0],
+						'contact2' => $persons[1],
+						'editable' => true,
+						'message' => isset($message) ? $message : phpgw::get_var('message'),
+						'error' => isset($error) ? $error : phpgw::get_var('error')
+								)
 				);
 			}
 		}
