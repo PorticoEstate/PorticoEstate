@@ -212,7 +212,7 @@
 		
 	$portalbox0 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "<div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='control heading'>Tittel på kontroll</div><div class='date heading'>Fristdato</div>",
+		'title'		=> "<div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='date heading'>Fristdato</div>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -255,7 +255,7 @@
 				$location_name = $location_array["loc1_name"];
 				
 				$portalbox0->data[] = array(		  	
-					'text' => "<div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+					'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
 				);
 			}
@@ -267,7 +267,7 @@
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$portalbox0->data[] = array(		  	
-					'text' => "<div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+					'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
 				);
 			}	
@@ -281,7 +281,7 @@
 			$location_name = $location_array["loc1_name"];
 				
 			$portalbox0->data[] = array(		  	
-				'text' => "<div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+				'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
 			);
 		}
@@ -327,7 +327,7 @@
 	
 	$portalbox1 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "<div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='control heading'>Tittel på kontroll</div><div class='date heading'>Fristdato</div>",
+		'title'		=> "<div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='date heading'>Fristdato</div>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -371,7 +371,7 @@
 			$next_date = "Planlagt: " . date($dateformat, $check_list->get_planned_date());
 			$portalbox1_data[] = array(
 				$check_list->get_planned_date(), array(
-					'text' => "<div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$current_control["title"]}</div> <div class='date'>{$next_date}</div>",
+					'text' => "<div class='control'>{$current_control["title"]}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>{$next_date}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list->get_id()))
 			));
 		}
@@ -397,7 +397,7 @@
 	
 	$portalbox2 = CreateObject('phpgwapi.listbox', array
 	(
-		'title'		=> "<div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='control heading'>Tittel på kontroll</div><div class='date heading'>Fristdato</div>",
+		'title'		=> "<div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='date heading'>Fristdato</div>",
 		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -547,7 +547,7 @@
 				$location_name = $location_array["loc1_name"];
 				
 				$portalbox2->data[] = array(		  	
-					'text' => "<div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+					'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
 				);
 			}
@@ -559,7 +559,7 @@
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
     		
 				$portalbox2->data[] = array(		  	
-					'text' => "<div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+					'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
 				);
 			}	
@@ -573,7 +573,7 @@
 			$location_name = $location_array["loc1_name"];
 				
 			$portalbox0->data[] = array(		  	
-				'text' => "<div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div> <div class='control'>{$my_control['title']}</div> <div class='date'>Fristdato {$date_str}</div>",
+				'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
 				'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
 			);
 		}	
