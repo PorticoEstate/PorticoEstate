@@ -142,7 +142,7 @@
 					<DD><INPUT name="org_contact2_mail" id="org_contact2_mail" size="50" type="text" value="<?php echo isset($contact1) ? $contact1->get_email() : '' ?>"></DD>
 				</DIV>
 				<div class="form-buttons">
-					<input type="submit" name="save_org" value="<?php echo lang('send_change_request') ?>"/>
+					<input type="submit" name="save_org" value="<?php echo lang('send_change_request') ?>" onclick="return isOK();"/>
 				</div>
 			</dl>
 		</form>
