@@ -103,7 +103,6 @@
 	$to_date_ts =  mktime(0, 0, 0, date("n"), date("j"), date("Y") );
 	
 	// Fetches controls current user is responsible for
-	$my_controls = array();
 	foreach($my_locations as $location)
 	{
 		$controls = array();
