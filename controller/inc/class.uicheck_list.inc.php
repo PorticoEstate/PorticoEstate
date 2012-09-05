@@ -730,7 +730,7 @@
 				'check_list' 									=> $check_list->toArray()
 			);
 			
-			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases'), $data );			
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases', 'check_list/case_row'), $data );			
 		}
 		
 		function view_closed_cases()
