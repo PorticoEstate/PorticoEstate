@@ -151,7 +151,7 @@
 															<option value="0" SELECTED="SELECTED">Åpen</option>
 															<option value="1" >Lukket</option>
 															<option value="2" >Venter på tilbakemelding</option>
-												   		</select>
+												   	</select>
 												   </div>
 											       <div class="row">
 											         <label class="comment">Velg verdi fra liste</label>
