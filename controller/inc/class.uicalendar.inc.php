@@ -174,7 +174,7 @@
 			  
 			  $components_calendar_array[] = array("component" => $component->toArray(), "controls_calendar" => $controls_components_calendar_array);
 			}
-			
+						
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 		
 			$property_array = execMethod('property.solocation.read', array('type_id' => 1, 'allrows' => true));
