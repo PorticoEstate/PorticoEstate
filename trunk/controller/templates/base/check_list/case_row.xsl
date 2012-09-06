@@ -145,7 +145,7 @@
                           </input>
                         </div>
                       </xsl:when>
-                      <xsl:when test="$control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+                      <xsl:when test="$control_item_type = 'control_item_type_3'">
                         <!--  MEASUREMENT -->
                         <div class="row">
                           <label class="comment">Velg verdi fra liste</label>
@@ -159,6 +159,20 @@
                               </option>	
                             </xsl:for-each>
                           </select>
+                        </div>
+                      </xsl:when>
+                      <xsl:when test="$control_item_type = 'control_item_type_4'">
+                        <!--  MEASUREMENT -->
+                        <div class="row">
+                          <label class="comment">Velg verdi fra liste</label>
+                            <xsl:for-each select="../control_item/options_array">
+                          		<input type="radio" name="measurement" value="female">
+                          		 <xsl:attribute name="value">
+                                  <xsl:value-of select="option_value"/>
+                                </xsl:attribute>
+                                </input>
+                          		<xsl:value-of select="option_value"/>
+                            </xsl:for-each>
                         </div>
                       </xsl:when>
                     </xsl:choose>

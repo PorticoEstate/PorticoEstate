@@ -644,7 +644,9 @@ $(document).ready(function(){
 	    				var type = $(thisForm).find("input[name=control_item_type]").val();
 	    				
 		    			if(type == "control_item_type_1"){
+		    				var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 	    					
+	    					$(clickRow).find(".case_info .case_status").empty().text( case_status );
 	    				}
 		    			else if(type == "control_item_type_2"){
 	    					var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
@@ -654,12 +656,20 @@ $(document).ready(function(){
 	    					var measurement_text = $(thisForm).find("input[name='measurement']").val();
 		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
 	    				}
-	    				else if(type == "control_item_type_3" | type == "control_item_type_4"){
+	    				else if(type == "control_item_type_3"){
 	    					var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
 	    					
 	    					$(clickRow).find(".case_info .case_status").empty().text( case_status );
 	    					
 	    					var measurement_text = $(thisForm).find("select[name='measurement'] option:selected").val();
+		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
+	    				}
+	    				else if(type == "control_item_type_4"){
+	    					var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
+	    					
+	    					$(clickRow).find(".case_info .case_status").empty().text( case_status );
+	    					
+	    					var measurement_text = $(thisForm).find("input:radio[name='measurement']:checked").val();
 		    				$(clickRow).find(".case_info .measurement").text(measurement_text);
 	    				}
 		    			
