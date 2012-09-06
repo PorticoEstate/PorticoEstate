@@ -2299,7 +2299,8 @@ JS;
 
 // ---- START INTEGRATION -------------------------
 
-				$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', $this->acl_location));
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$custom_config	= CreateObject('admin.soconfig',$location_id);
 				$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 //_debug_array($custom_config->config_data);die();
 			// required settings:
