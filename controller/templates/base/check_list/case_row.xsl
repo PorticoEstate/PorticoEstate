@@ -104,8 +104,14 @@
                     <xsl:value-of select="id"/>
                     <xsl:text>&amp;check_list_id=</xsl:text>
                     <xsl:value-of select="//check_list/id"/>
+                    <xsl:text>&amp;control_item_type=</xsl:text>
+                    <xsl:value-of select="//control_item/type" />
                     <xsl:text>&amp;phpgw_return_as=json</xsl:text>
                   </xsl:attribute>
+                  <input type="hidden" name="control_item_type">
+                   <xsl:attribute name="value"><xsl:value-of select="//control_item/type" /></xsl:attribute>
+                 	</input>
+                 	
                   <xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
                     <!--  STATUS -->
                     <div class="row first">
@@ -143,7 +149,7 @@
                         <!--  MEASUREMENT -->
                         <div class="row">
                           <label class="comment">Velg verdi fra liste</label>
-                          <select name="option_value">
+                          <select name="measurement">
                             <xsl:for-each select="../control_item/options_array">
                               <option>
                                 <xsl:attribute name="value">
