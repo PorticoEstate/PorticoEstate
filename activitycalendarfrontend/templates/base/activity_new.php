@@ -155,6 +155,11 @@
 			alert("Beskrivelse må fylles ut!");
 			return false;
 		}
+		if(document.getElementById('description').value.length > 254)
+		{
+			alert("Beskrivelse kan maksimalt være 255 tegn!");
+			return false;
+		}
 		if(document.getElementById('category').value == null || document.getElementById('category').value == 0)
 		{
 			alert("Kategori må fylles ut!");
@@ -280,7 +285,7 @@
 					<label for="title"><?php echo lang('activity_title') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_title') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
 				</dt>
 				<dd>
-					<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="83"/>
+					<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="83" maxlength="254"/>
 				</dd>
 				<DT><LABEL for="org_description"><?php echo lang('description') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_description') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL></DT>
 				<DD><TEXTAREA cols="80" rows="4" name="description" id="description"></TEXTAREA></DD>
@@ -407,7 +412,7 @@
 					<label for="time"><?php echo lang('time') ?> (*) <a onclick="alert('<?php echo lang('help_new_activity_time') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label>
 				</dt>
 				<dd>
-					<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" size="80" />
+					<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" size="80" maxlength="254" />
 				</dd>
 			</fieldset>
 			<FIELDSET id="arr"><LEGEND>Kontaktperson</LEGEND><BR>
