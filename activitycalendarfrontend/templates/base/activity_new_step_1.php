@@ -215,9 +215,9 @@
 									<dt><label for="orgname">Organisasjonsnavn (*)</label>
 										<a onclick="alert('<?php echo lang('help_organization_name') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
 									</dt>
-									<dd><input type="text" name="orgname" id="orgname" size="80"/></dd>
+									<dd><input type="text" name="orgname" id="orgname" size="80" maxlength="254"/></dd>
 									<dt><label for="orgno">Organisasjonsnummer</label></dt>
-									<dd><input type="text" name="orgno"/></dd>
+									<dd><input type="text" name="orgno" maxlength="254"/></dd>
 									<DT style="margin-right: 20px; float: left;"><label for="street">Gateadresse
 										<a onclick="alert('<?php echo lang('help_streetaddress') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></label><br/>
 										<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" autocomplete="off"><BR/>
@@ -235,11 +235,11 @@
 								</DIV>
 								<DT><LABEL for="homepage">Hjemmeside <a onclick="alert('<?php echo lang('help_homepage') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a></LABEL>
 								</DT>
-								<DD><INPUT name="homepage" value="http://" size="80" type="text"></DD><BR/><BR/>
+								<DD><INPUT name="homepage" value="http://" size="80" type="text" maxlength="254"></DD><BR/><BR/>
 								<DIV style="overflow: hidden;">
 									Kontaktperson for organisasjonen <a onclick="alert('<?php echo lang('help_contact_person') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a><BR/>
 									<DT><LABEL for="contact1_name">Navn (*)</LABEL></DT>
-									<DD><INPUT name="org_contact1_name" id="org_contact1_name" size="80" type="text"></DD>
+									<DD><INPUT name="org_contact1_name" id="org_contact1_name" size="80" type="text" maxlength="254"></DD>
 									<DT><LABEL for="contact1_phone">Telefon (*)</LABEL></DT>
 									<DD><INPUT name="org_contact1_phone" id="org_contact1_phone" type="text"></DD>
 									<DT><LABEL for="contact1_mail">E-post (*)</LABEL></DT>
