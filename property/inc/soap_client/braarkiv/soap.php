@@ -140,12 +140,12 @@
 _debug_array($LoginResponse);
 	$secKey = $LoginResponse->LoginResult;
 
-
+/*
 	$searchDocument = new searchDocument();
 	$searchDocument->secKey = $secKey;
 	$searchDocument->baseclassname = 'Eiendomsarkiver';
-	$searchDocument->classname = 'Eiendomsarkiv';
-	$searchDocument->where = "bygningsnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
+	$searchDocument->classname = 'Byggesak';
+	$searchDocument->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
 //	$searchDocument->where = "Regdato > '2006-01-25'";
 	$searchDocument->maxhits = '1';
 
@@ -156,30 +156,27 @@ _debug_array($searchDocument);
 	$searchDocumentResult = $searchDocumentResponse->searchDocumentResult;
 
 
+_debug_array($searchDocumentResponse);
 
+*/
 
-
-/*
 
 	$searchAndGetDocumentsWithVariants = new searchAndGetDocumentsWithVariants();
 
 	$searchAndGetDocumentsWithVariants->secKey = $secKey;
 	$searchAndGetDocumentsWithVariants->baseclassname = 'Eiendomsarkiver';
-//	$searchAndGetDocumentsWithVariants->classname = 'Eiendomsarkiv';
-//	$searchAndGetDocumentsWithVariants->where = "bygningsnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
+	$searchAndGetDocumentsWithVariants->classname = 'Byggesak';
+	$searchAndGetDocumentsWithVariants->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
 	$searchAndGetDocumentsWithVariants->maxhits = '1';
 
 
-_debug_array($searchAndGetDocumentsWithVariants);
+//_debug_array($searchAndGetDocumentsWithVariants);
 
 	$searchAndGetDocumentsWithVariantsResponse = $Services->searchAndGetDocumentsWithVariants($searchAndGetDocumentsWithVariants);
 
-	$searchAndGetDocumentsWithVariantsResult = $searchDocumentResponse->searchAndGetDocumentsWithVariantsResult;
+	$searchAndGetDocumentsWithVariantsResult = $searchAndGetDocumentsWithVariantsResponse->searchAndGetDocumentsWithVariantsResult;
 
-_debug_array($searchAndGetDocumentsWithVariantsResponse);
-*/
-
-
+_debug_array($searchAndGetDocumentsWithVariantsResult);
 
 
 
