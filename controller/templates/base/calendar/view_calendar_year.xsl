@@ -60,7 +60,6 @@ function chooseLocation( label, value ){
 </script>
 
 <div id="main_content">
-
 	<div id="control_plan">
 		<div class="top">
 			<xsl:choose>
@@ -176,8 +175,16 @@ function chooseLocation( label, value ){
 						    </xsl:otherwise>
 					    </xsl:choose>
 							<td class="title">
-				      			<span><xsl:value-of select="control/title"/></span>
-							</td>
+			      			<a class="show-control-details">
+										<xsl:attribute name="href">
+											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
+											<xsl:text>&amp;control_id=</xsl:text>
+											<xsl:value-of select="control/id"/>
+											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="control/title"/>
+									</a> 
+								</td>
 							<td class="assigned">
 				      			<span><xsl:value-of select="control/responsibility_name"/></span>
 							</td>
@@ -261,7 +268,15 @@ function chooseLocation( label, value ){
 						        </xsl:otherwise>
 						    </xsl:choose>
 								<td class="title">
-					      			<span><xsl:value-of select="control/title"/></span>
+			      			<a class="show-control-details">
+										<xsl:attribute name="href">
+											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
+											<xsl:text>&amp;control_id=</xsl:text>
+											<xsl:value-of select="control/id"/>
+											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="control/title"/>
+									</a> 
 								</td>
 								<td class="assigned">
 					      			<span><xsl:value-of select="control/responsibility_name"/></span>
