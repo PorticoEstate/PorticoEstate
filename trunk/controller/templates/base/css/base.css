@@ -1695,8 +1695,9 @@ fieldset.location_details div{
   display: none;
   left: 50%;
   position: absolute;
-  top: 50%;
+  top: 30%;
   width: 500px;
+  margin-left: -250px;
   z-index: 2;
 }
 
