@@ -6,6 +6,11 @@ $(document).ready(function(){
 		
 	}
 	
+	$("#curtain").click(function() {
+		$("#curtain").hide();
+		$("#popupBox").hide();
+	});
+	
 	$("#component_form").submit(function(event){
 		var selected_control_group = $("#control_group_id option:selected").val();  
 		
@@ -17,12 +22,38 @@ $(document).ready(function(){
 		
 	});
 	
+	$(".show-control-details").click(function() {
+		var clickElem = $(this);
+
+		var requestUrl = $(clickElem).attr("href");
 		
+		 $.ajax({
+			  type: 'POST',
+			  url: requestUrl,
+			  success: function(data) {
+				  if(data){
+	    			  	    			
+		    		  $("#popupBox").show();
+		    		  $("#popupBox").html( data );
+		    		  $("#curtain").show();
+	    		  }
+			  },
+        	  error: function(XMLHttpRequest, textStatus, errorThrown) {
+        		  if (XMLHttpRequest.status === 401) {
+        			location.href = '/';
+        		  }
+        	  }
+			});
+		
+		return false;
+	});
+	 
+	
 	/* ================================  CONTROL LOCATION ================================== */
 	
 	// Update location category based on location type
 	$("#type_id").change(function () {
-		var location_type_id = $(this).val();
+		 var location_type_id = $(this).val();
 		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          
@@ -1023,6 +1054,17 @@ function clear_form( form ){
         }
     });
 }
+
+function timestampToDate($timestamp){
+	var date = new Date($timestamp * 1000);
+	var year    = date.getFullYear();
+	var month   = date.getMonth();
+	var day     = date.getDay();
+	
+	var dateStr = day + "/" + month + "-" + year; 
+	
+	return dateStr;
+} 
 
 //Updates order number for hidden field and number in front of row
 function update_order_nr_for_row(element, sign){
