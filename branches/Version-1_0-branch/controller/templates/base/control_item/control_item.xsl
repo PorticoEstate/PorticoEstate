@@ -82,7 +82,6 @@
 								</xsl:if>
 							</xsl:when>
 							<xsl:when test="editable">
-							
 								<!-- ==============  RADIOBUTTONS FOR CHOOSING CONTROL ITEM TYPE  ==============  -->
 								<xsl:choose>
 								<xsl:when test="control_item/type = ''">
@@ -200,7 +199,6 @@
 									</div>
 								</xsl:otherwise>
 								</xsl:choose>
-									
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="lang_type"><xsl:value-of select="control_item/type" /></xsl:variable>

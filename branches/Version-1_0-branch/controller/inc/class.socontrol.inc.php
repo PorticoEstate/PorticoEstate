@@ -147,8 +147,9 @@
 			    $sql .= "AND c.responsibility_id = $role_id ";
 			}
 			
-			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
-			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date)";
+			$sql .= "AND ((c.start_date <= $to_date AND c.end_date IS NULL) ";
+			$sql .= "OR (c.start_date <= $to_date AND c.end_date > $from_date ))";
+			
 
 			$this->db->query($sql);
 
@@ -294,8 +295,8 @@
 			  $sql .= "AND c.responsibility_id = $role_id ";
 			}
 			    
-			$sql .= "AND (c.start_date <= $from_date AND c.end_date IS NULL ";
-			$sql .= "OR c.start_date > $from_date AND c.start_date < $to_date) ";
+			$sql .= "AND ((c.start_date <= $to_date AND c.end_date IS NULL) ";
+			$sql .= "OR (c.start_date <= $to_date AND c.end_date > $from_date ))";
 			
 			if($filter != null)
 			{

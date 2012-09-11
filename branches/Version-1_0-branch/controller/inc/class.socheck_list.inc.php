@@ -362,6 +362,7 @@ class controller_socheck_list extends controller_socommon
 	 * @param $location_code location code
 	 * @return array with check list objects
 	 */
+	/* Tror ikke vi bruker denne: Torstein 6/9-2012
 	function get_open_check_lists_for_control($control_id, $location_code, $from_date)
 	{
 		$control_id = (int) $control_id;
@@ -414,6 +415,7 @@ class controller_socheck_list extends controller_socommon
 			return null;
 		}
 	}
+	*/
 	
 	/**
 	 * Get array with control id and number of open cases within time period
@@ -481,7 +483,7 @@ class controller_socheck_list extends controller_socommon
 			$sql .= "AND c.repeat_type $repeat_type_expr ";
 		}
 		
-		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
+	  $sql .= "AND (deadline > $from_date_ts) AND (deadline < $to_date_ts) ";
 		$sql .= "ORDER BY c.id;";
 		
 		$this->db->query($sql);
@@ -556,7 +558,7 @@ class controller_socheck_list extends controller_socommon
 			$sql .= "AND c.repeat_type $repeat_type_expr ";
 		}
 		
-		$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
+		$sql .= "AND (deadline > $from_date_ts) AND (deadline < $to_date_ts) ";
 		$sql .= "ORDER BY c.id;";
 		
 		$this->db->query($sql);

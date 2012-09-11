@@ -2,7 +2,7 @@ activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
 Activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
 office	activitycalendarfrontend	no	Hovedansvarlig kulturkontor
 arena	activitycalendarfrontend	no	Lokale
-description	activitycalendarfrontend	no	Beskrivelse
+description	activitycalendarfrontend	no	Beskrivelse (max 255 tegn)
 date_start	activitycalendarfrontend	no	Startdato
 date_end	activitycalendarfrontend	no	Sluttdato
 special_adaptation	activitycalendarfrontend	no	Ja, aktiviteten er spesielt tilpasset for utviklingshemmede
@@ -109,7 +109,7 @@ Anonymous_password	activitycalendarfrontend	no	Passord for frontend
 new_activity_helptext	activitycalendarfrontend	no	Hvem arrangerer aktiviteten?
 responsible	activitycalendarfrontend	no	Arrangør
 choose_org	activitycalendarfrontend	no	Velg organisasjon
-activity_title	activitycalendarfrontend	no	Navn på aktiviteten
+activity_title	activitycalendarfrontend	no	Navn på aktiviteten (max 255 tegn)
 location	activitycalendarfrontend	no	Lokale
 contact_person	activitycalendarfrontend	no	Kontaktperson for aktiviteten
 activity_ok_message	activitycalendarfrontend	no	Aktiviteten er lagret uten endringer
@@ -121,8 +121,8 @@ help_new_activity_org	activitycalendarfrontend	no	I aktivitetsoversikten må en 
 help_streetaddress	activitycalendarfrontend	no	For å unngå feil innskriving av gateadresse, er feltet for «Gateadresse» koplet mot kommunens gateregister med oversikt over alle gatenavn i Bergen. Begynn å fylle ut feltet og velg rett gatenavn som løsningen foreslår.
 help_homepage	activitycalendarfrontend	no	Dersom organisasjonen/aktiviteten har egen internettside, så kan du skrive den inn her.
 help_contact_person	activitycalendarfrontend	no	Skriv inn navn, telefonnummer og e-postadresse til kontaktperson for organisasjonen.\\n\\nDersom organisasjon og aktivitet har samme kontaktperson, skal du likevel skrive inn kontaktopplysninger. Det gjør ingen ting om disse opplysningene senere også skrives inn på aktiviteten.\\n\\nI aktivitetsoversikten på kommunens internettsider, er det opplysningene skrevet inn på kontaktperson for aktiviteten som vil vises, ikke kontaktperson for organisasjonen.
-help_new_activity_title	activitycalendarfrontend	no	Skriv inn navnet på aktiviteten.
-help_new_activity_description	activitycalendarfrontend	no	Gi en KORT beskrivelse av hva aktiviteten går ut på. Skriv helst kun én setning, maksimalt to.
+help_new_activity_title	activitycalendarfrontend	no	Skriv inn navnet på aktiviteten. (max 255 tegn)
+help_new_activity_description	activitycalendarfrontend	no	Gi en KORT beskrivelse av hva aktiviteten går ut på. Skriv helst kun én setning, maksimalt to. (max 255 tegn)
 help_new_activity_category	activitycalendarfrontend	no	Velg den kategorien som passer best for din aktivitet.
 help_new_activity_target	activitycalendarfrontend	no	Velg en eller flere målgrupper.
 help_new_activity_spec_adapt	activitycalendarfrontend	no	Hak av dersom aktiviteten passer for utviklingshemmede.

@@ -20,7 +20,6 @@
 								<xsl:value-of select="//current_location/location_code"/>
 						  </xsl:when>
 					  </xsl:choose>
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;month=</xsl:text>
