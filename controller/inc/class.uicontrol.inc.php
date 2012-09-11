@@ -68,6 +68,7 @@
 			'save_control_items'						=>	true,
 			'view_check_list'								=>	true,
 			'get_controls_by_control_area'	=>	true,
+    	'get_control_details'						=>	true
 		);
 
 		public function __construct()
@@ -606,6 +607,19 @@
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/sort_check_list'), $data);
+		}
+		
+		public function get_control_details()
+		{
+			$control_id = phpgw::get_var('control_id');
+		  $control = $this->so->get_single($control_id);
+			
+		  $data = array
+			(
+				'control'						=> $control->toArray()
+			);
+		  
+			self::render_template_xsl('control/control_details', $data);
 		}
 		
 		function make_tab_menu($control_id){
