@@ -9,80 +9,8 @@
 	</xsl:call-template>	
 	
 	<div class="tab_item active">
-		<h2>Målinger</h2>
-		<xsl:choose>
-			<xsl:when test="closed_check_items_and_measurements/child::node()">
-				
-			<ul class="check_items">
-				<xsl:for-each select="closed_check_items_and_measurements">
-					<xsl:choose>
-					 	<xsl:when test="cases_array/child::node()">
-					 		<li class="check_item_case">
-						 		<h4><span><xsl:value-of select="control_item/title"/></span></h4>
-						 		<ul>		
-									<xsl:for-each select="cases_array">
-										<xsl:variable name="cases_id"><xsl:value-of select="id"/></xsl:variable>
-										<li>
-										<!--  ==================== COL1: ORDERNR ===================== -->
-										<div class="col_1">
-											<span class="order_nr"><xsl:number /></span>.
-										</div>
-										
-										<!--  ==================== COL2: CASE CONTENT ===================== -->
-										<div class="col_2">
-											<!--  =============== SHOW CASE INFO ============= -->
-											<div class="case_info">
-											
-												<!--  MEASUREMENT -->
-												<div class="row">
-													<label>Måleverdi:</label> 
-													<span class="measurement"><xsl:value-of select="measurement"/></span>
-												</div>
-												<!--  DESCRIPTION -->
-												<div class="row">
-													<label>Beskrivelse:</label> 
-												</div>
-												<div class="case_descr"><xsl:value-of select="descr"/></div>
-											</div>
-										</div>
-										<!--  ==================== COL3: MESSAGE LINK ===================== -->
-										<div class="col_3">
-											<xsl:choose>
-												<xsl:when test="location_item_id > 0">
-													<a target="_blank">
-															<xsl:attribute name="href">
-																<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
-																<xsl:text>&amp;id=</xsl:text>
-																<xsl:value-of select="location_item_id"/>
-															</xsl:attribute>
-															Vis melding
-														</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<span class="message">Ingen melding</span>
-												</xsl:otherwise>
-											</xsl:choose>
-										</div>	
-										
-										</li>
-									</xsl:for-each>
-								</ul>
-					 		</li>
-					 	</xsl:when>
-				 	</xsl:choose>
-				</xsl:for-each>
-			</ul>
-					
-			</xsl:when>
-			<xsl:otherwise>
-				<p>Ingen lukkede målinger</p>
-			</xsl:otherwise>
-		</xsl:choose>
-		
-		<h2 class="last">Saker</h2>
 		<xsl:choose>
 			<xsl:when test="closed_check_items_and_cases/child::node()">
-				
 			<ul class="check_items">
 				<xsl:for-each select="closed_check_items_and_cases">
 					<xsl:choose>

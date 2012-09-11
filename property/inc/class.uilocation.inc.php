@@ -292,6 +292,9 @@
 					$integrationurl = "{$_config_section_data['url']}{$_sep}{$_param}";
 					$integrationurl .= "&{$_config_section_data['auth_key_name']}={$response}";
 
+
+					//in the form: sakstittel=__loc1__.__loc4__
+
 					$_config_section_data['location_data']= htmlspecialchars_decode($_config_section_data['location_data']);
 
 					$parameters_integration = array();
@@ -1988,6 +1991,8 @@ JS;
 				)
 			);
 
+			unset($_values);
+
 			$location_types	= $this->bo->location_types;
 			$config			= $this->bo->config;
 
@@ -2179,7 +2184,6 @@ JS;
 
 				}
 				unset($attributes_groups);
-				unset($values['attributes']);
 			}
 
 			$documents = array();
@@ -2295,7 +2299,8 @@ JS;
 
 // ---- START INTEGRATION -------------------------
 
-				$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', $this->acl_location));
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+				$custom_config	= CreateObject('admin.soconfig',$location_id);
 				$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 //_debug_array($custom_config->config_data);die();
 			// required settings:
@@ -2355,8 +2360,15 @@ JS;
 						$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 						$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
+						/*
+						* 'parametres' In the form:
+						* <targetparameter1>=__<attrbute_name1>__&<targetparameter2>=__<attrbute_name2>__&
+						* Example: objId=__id__&lon=__posisjon_lengde__&lat=__posisjon_bredde__
+						*/
+
 						parse_str($_config_section_data['parametres'], $output);
 
+						$_values = array();
 						foreach ($output as $_dummy => $_substitute)
 						{
 							$_keys[] = $_substitute;
@@ -2405,6 +2417,8 @@ JS;
 						}
 
 						$arguments = array($_config_section_data['auth_key_name'] => $response);
+
+						//in the form: sakstittel=__loc1__.__loc4__
 
 						if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
 						{
@@ -2458,6 +2472,8 @@ JS;
 				}
 // ---- END INTEGRATION -------------------------
 			}
+
+			unset($values['attributes']);
 
 			$data = array
 			(

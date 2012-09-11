@@ -109,9 +109,9 @@
 					<dt><label for="orgname">Organisasjonsnavn (*)</label>
 						<a onclick="alert('<?php echo lang('help_organization_name') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a>
 					</dt>
-					<dd><input type="text" name="orgname" id="orgname" size="80" value="<?php echo $organization->get_name() ?>"/></dd>
+					<dd><input type="text" name="orgname" id="orgname" size="80" value="<?php echo $organization->get_name() ?>" maxlength="254"/></dd>
 					<dt><label for="orgno">Organisasjonsnummer</label></dt>
-					<dd><input type="text" name="orgno" value="<?php echo $organization->get_organization_number() ?>"/></dd>
+					<dd><input type="text" name="orgno" value="<?php echo $organization->get_organization_number() ?>" maxlength="254"/></dd>
 					<DT style="margin-right: 20px; float: left;"><label for="street">Gateadresse</label>
 						<a onclick="alert('<?php echo lang('help_streetaddress') ?>'); return false;" href="#"><img alt="Hjelp" src="/aktivitetsoversikt/images/hjelp.gif"></a><BR/>
 						<INPUT id="address" onkeyup="javascript:get_address_search()" name="address" size="50" type="text" value="<?php echo $organization->get_address() ?>" autocomplete="off"><BR/>

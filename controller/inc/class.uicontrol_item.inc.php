@@ -194,7 +194,7 @@
 
 		public function edit( $control_item = null )
 		{
-			// NOT REDIRECT
+			// NO REDIRECT
 			if($control_item == null)
 			{
 				$control_item_id = phpgw::get_var('id');
@@ -208,6 +208,7 @@
 				else
 				{
 					$control_item = new controller_control_item();
+					$control_item_array = $control_item->toArray();
 				}	
 			}
 			
@@ -223,7 +224,7 @@
 			// Hack to fix display of &nbsp; char
 			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
 			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
-
+			
 			$data = array
 			(
 				'editable' 				=> true,

@@ -206,12 +206,19 @@ function chooseLocation( label, value ){
 						            <xsl:attribute name="class">even</xsl:attribute>
 						        </xsl:otherwise>
 						    </xsl:choose>
-							
 								<td class="title">
-					      			<span><xsl:value-of select="control/title"/></span>
+			      			<a class="show-control-details">
+										<xsl:attribute name="href">
+											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
+											<xsl:text>&amp;control_id=</xsl:text>
+											<xsl:value-of select="control/id"/>
+											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="control/title"/>
+									</a> 
 								</td>
 								<td class="assigned">
-					      			<span><xsl:value-of select="control/responsibility_name"/></span>
+					        <span><xsl:value-of select="control/responsibility_name"/></span>
 								</td>
 								<td class="frequency">
 					      			<span>
@@ -266,18 +273,24 @@ function chooseLocation( label, value ){
 			
 				<xsl:for-each select="controls_calendar">
 				  		<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
-				  	
 				  		<tr>
 							<xsl:choose>
-						        <xsl:when test="(position() mod 2) != 1">
-						            <xsl:attribute name="class">odd</xsl:attribute>
-						        </xsl:when>
-						        <xsl:otherwise>
-						            <xsl:attribute name="class">even</xsl:attribute>
-						        </xsl:otherwise>
+				        <xsl:when test="(position() mod 2) != 1">
+				            <xsl:attribute name="class">odd</xsl:attribute>
+				        </xsl:when>
+				        <xsl:otherwise>
+				            <xsl:attribute name="class">even</xsl:attribute>
+				        </xsl:otherwise>
 						    </xsl:choose>
 								<td class="title">
-					      			<span><xsl:value-of select="control/title"/></span>
+					      	<a id="showControlDetails">
+										<xsl:attribute name="href">
+											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
+											<xsl:text>&amp;control_id=</xsl:text>
+											<xsl:value-of select="control/id"/>
+										</xsl:attribute>
+										<xsl:value-of select="control/title"/>
+									</a> 
 								</td>
 								<td class="assigned">
 					      			<span><xsl:value-of select="control/responsibility_name"/></span>
