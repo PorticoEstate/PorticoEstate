@@ -118,13 +118,13 @@
 	require_once 'services.php';
 
 	$options=array();
-	$options['soap_version']	= SOAP_1_2;
+	$options['soap_version']	= SOAP_1_1;
 	$options['location']		= $location_url;
 	$options['uri']				= $location_url;
-	$options['trace']			= 1;
-	//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
-	//	$options['proxy_port']		= $this->pswin_param['proxy_port'];
-	$options['encoding']		= 'iso-8859-1';//'UTF-8';
+	$options['trace']			= false;
+//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
+//	$options['proxy_port']		= $this->pswin_param['proxy_port'];
+	$options['encoding']		= 'UTF-8';
 
 	$wdsl = null;
 	$wdsl = 'http://braarkiv.adm.bgo/service/services.asmx?WSDL';
@@ -137,7 +137,7 @@
 	$Login->password = 'hb776';
 
 	$LoginResponse = $Services->Login($Login);
-_debug_array($LoginResponse);
+//_debug_array($LoginResponse);
 	$secKey = $LoginResponse->LoginResult;
 
 /*
@@ -167,17 +167,81 @@ _debug_array($searchDocumentResponse);
 	$searchAndGetDocumentsWithVariants->baseclassname = 'Eiendomsarkiver';
 	$searchAndGetDocumentsWithVariants->classname = 'Byggesak';
 	$searchAndGetDocumentsWithVariants->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
-	$searchAndGetDocumentsWithVariants->maxhits = '1';
+	$searchAndGetDocumentsWithVariants->maxhits = '20';
 
 
 //_debug_array($searchAndGetDocumentsWithVariants);
 
 	$searchAndGetDocumentsWithVariantsResponse = $Services->searchAndGetDocumentsWithVariants($searchAndGetDocumentsWithVariants);
 
-	$searchAndGetDocumentsWithVariantsResult = $searchAndGetDocumentsWithVariantsResponse->searchAndGetDocumentsWithVariantsResult;
+	$Result = $searchAndGetDocumentsWithVariantsResponse->searchAndGetDocumentsWithVariantsResult;
+	
+	$_result = array();
+	if(isset($Result->ExtendedDocument) && !is_array($Result->ExtendedDocument))
+	{
+		$_result = array('ExtendedDocument' => array($Result->ExtendedDocument));
+	}
+	else
+	{
+		$_result =array('ExtendedDocument' => $Result->ExtendedDocument);
+	}
 
-_debug_array($searchAndGetDocumentsWithVariantsResult);
+//_debug_array($_result);
+	$html =<<<HTML
+	<table>
+HTML;
 
+
+	foreach($_result['ExtendedDocument'][0]->Attributes->Attribute as $attribute)
+	{
+		$html .='<th>';
+		$html .=$attribute->Name;
+		$html .'</th>';
+	}
+
+	foreach ($_result['ExtendedDocument'] as $entry)
+	{
+		$html .= '<tr>';
+/*
+		$html .='<td>';
+		$html .=$entry->Variants->Variant[0]->FileName;
+		$html .='</td>';
+*/
+		foreach($entry->Attributes->Attribute as $attribute)
+		{
+			$html .='<td>';
+
+			if(is_array($attribute->Value->anyType))
+			{
+				$html .= '<table>';
+
+				foreach($attribute->Value->anyType as $value)
+				{
+					$html .= '<tr>';
+					$html .= '<td>';
+					$html .= $value->enc_value->GNr;
+  					$html .= '/' . $value->enc_value->BNr;
+					$html .= '</td>';
+					$html .= '</tr>';
+				}
+				$html .= '</table>';
+			}
+			else
+			{
+				$html .=$attribute->Value->anyType;
+			}
+			$html .='</td>';
+		}
+
+		$html .= '</tr>';
+	}
+
+	$html .=<<<HTML
+	</table>
+HTML;
+
+
+	echo $html;
 
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
