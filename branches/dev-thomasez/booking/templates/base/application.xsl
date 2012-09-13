@@ -223,11 +223,19 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
+			<xsl:if test="config/application_terms">
+				<p>
+					<xsl:value-of select="config/application_terms"/>
+				</p>		
+			</xsl:if>
 			<br />
 			<div id='regulation_documents'>&nbsp;</div>
 			<br />
-			<p><xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" /></p>
+			<xsl:if test="config/application_terms2">
+				<p>
+					<xsl:value-of select="config/application_terms2"/>
+				</p>		
+			</xsl:if>
 		</dl>
 
         <div class="clr"/>

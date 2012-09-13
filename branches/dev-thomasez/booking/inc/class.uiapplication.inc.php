@@ -633,6 +633,9 @@
 		
 		public function show()
 		{
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$application_text = $config->config_data;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
@@ -732,6 +735,6 @@
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations,'comments' => $comments));
+								  'num_associations'=>$num_associations,'comments' => $comments,'config' => $application_text));
 		}
 	}
