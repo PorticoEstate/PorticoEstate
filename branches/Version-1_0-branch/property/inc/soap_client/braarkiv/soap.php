@@ -75,21 +75,23 @@
 
 	require_once PHPGW_API_INC.'/functions.inc.php';
 
-
-
 	$location_id	= phpgw::get_var('location_id', 'int');
 	$section	= phpgw::get_var('section', 'string');
 	$bygningsnr = (int) phpgw::get_var('bygningsnr', 'int');
+	$fileid = phpgw::get_var('fileid', 'string');
+
+	if(!$fileid && !$bygningsnr)
+	{
+		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
+	}
 
 	$c	= CreateObject('admin.soconfig',$location_id);
 
-
 	$login = $c->config_data[$section]['anonymous_user'];
 	$passwd = $c->config_data[$section]['anonymous_pass'];
-	$location_url = 'http://braarkiv.adm.bgo/service/services.asmx';//$c->config_data['common']['location_url'];
-
-//_debug_array($_REQUEST);
-//_debug_array($c->config_data[$section]);
+	$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
+	$braarkiv_user =  $c->config_data[$section]['braarkiv_user'];
+	$braarkiv_pass =  $c->config_data[$section]['braarkiv_pass'];
 
 	$_POST['submitit'] = "";
 
@@ -121,66 +123,179 @@
 	$options['soap_version']	= SOAP_1_2;
 	$options['location']		= $location_url;
 	$options['uri']				= $location_url;
-	$options['trace']			= 1;
-	//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
-	//	$options['proxy_port']		= $this->pswin_param['proxy_port'];
-	$options['encoding']		= 'iso-8859-1';//'UTF-8';
+	$options['trace']			= false;
+	$options['encoding']		= 'UTF-8';
 
-	$wdsl = null;
-	$wdsl = 'http://braarkiv.adm.bgo/service/services.asmx?WSDL';
+	$wdsl = "{$location_url}?WSDL";
 
 	$Services = new Services($wdsl, $options);
 	
 	$Login = new Login();
 	
-	$Login->userName = 'hb776';
-	$Login->password = 'hb776';
+	$Login->userName = $braarkiv_user;
+	$Login->password = $braarkiv_pass;
 
 	$LoginResponse = $Services->Login($Login);
-_debug_array($LoginResponse);
+
 	$secKey = $LoginResponse->LoginResult;
 
+	if($fileid)
+	{
+		$getAvailableFileVariants = new getAvailableFileVariants();
+		$getAvailableFileVariants->secKey = $secKey;
+		$getAvailableFileVariants->documentId = $fileid;
+		
+		$getAvailableFileVariantsResponse = $Services->getAvailableFileVariants($getAvailableFileVariants);
 
-	$searchDocument = new searchDocument();
-	$searchDocument->secKey = $secKey;
-	$searchDocument->baseclassname = 'Eiendomsarkiver';
-	$searchDocument->classname = 'Eiendomsarkiv';
-	$searchDocument->where = "bygningsnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
-//	$searchDocument->where = "Regdato > '2006-01-25'";
-	$searchDocument->maxhits = '1';
+		$getFileAsByteArray = new getFileAsByteArray();
+		$getFileAsByteArray->secKey = $secKey;
+		$getFileAsByteArray->documentId = $fileid;
+		$getFileAsByteArray->variant = 'PDFJPG80';
+		$getFileAsByteArray->versjon = 1;
+		
+		$getFileAsByteArrayResponse = $Services->getFileAsByteArray($getFileAsByteArray);
+		
+		$getFileAsByteArrayResult = $getFileAsByteArrayResponse->getFileAsByteArrayResult;
 
-_debug_array($searchDocument);
+		if($getFileAsByteArrayResult)
+		{
+			$file = base64_decode($getFileAsByteArrayResult);
 
-	$searchDocumentResponse = $Services->searchDocument($searchDocument);
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header("{$fileid}.pdf", 'application/pdf');
 
-	$searchDocumentResult = $searchDocumentResponse->searchDocumentResult;
+			echo $file;
 
-
-
-
-
-/*
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+	}
 
 	$searchAndGetDocumentsWithVariants = new searchAndGetDocumentsWithVariants();
 
 	$searchAndGetDocumentsWithVariants->secKey = $secKey;
 	$searchAndGetDocumentsWithVariants->baseclassname = 'Eiendomsarkiver';
-//	$searchAndGetDocumentsWithVariants->classname = 'Eiendomsarkiv';
-//	$searchAndGetDocumentsWithVariants->where = "bygningsnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
-	$searchAndGetDocumentsWithVariants->maxhits = '1';
-
-
-_debug_array($searchAndGetDocumentsWithVariants);
+	$searchAndGetDocumentsWithVariants->classname = 'Byggesak';
+	$searchAndGetDocumentsWithVariants->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
+	$searchAndGetDocumentsWithVariants->maxhits = '-1';
 
 	$searchAndGetDocumentsWithVariantsResponse = $Services->searchAndGetDocumentsWithVariants($searchAndGetDocumentsWithVariants);
 
-	$searchAndGetDocumentsWithVariantsResult = $searchDocumentResponse->searchAndGetDocumentsWithVariantsResult;
+	$Result = $searchAndGetDocumentsWithVariantsResponse->searchAndGetDocumentsWithVariantsResult;
+	
+	$_result = array();
+	if(isset($Result->ExtendedDocument) && !is_array($Result->ExtendedDocument))
+	{
+		$_result = array('ExtendedDocument' => array($Result->ExtendedDocument));
+	}
+	else
+	{
+		$_result =array('ExtendedDocument' => $Result->ExtendedDocument);
+	}
 
-_debug_array($searchAndGetDocumentsWithVariantsResponse);
-*/
+	$html =<<<HTML
+	<table>
+HTML;
 
+	if(!$Result)
+	{
+		echo "<H2> Ingen treff </H2>";
+		$GLOBALS['phpgw']->common->phpgw_exit();
+	}
 
+	$Logout = new Logout();
+	$Logout->secKey = $secKey;
+	$Services->Logout($Logout);
 
+	$skip_field = array
+	(
+		'ASTA_Signatur',
+		'Adresse',
+		'Sakstype',
+		'Saksnr',
+		'Tiltakstype',
+		'Tiltaksart',
+		'Gradering',
+		'Skjerming',
+		'BrukerID',
+		'Team'
+	);
 
+	$html .='<th>';
+	$html .='Last ned';
+	$html .'</th>';
+
+	$location_id	= phpgw::get_var('location_id', 'int');
+	$section	= phpgw::get_var('section', 'string');
+
+	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php',array('domain' => $_GET['domain'], 'location_id' => $location_id, 'section' => $section));
+
+	foreach($_result['ExtendedDocument'][0]->Attributes->Attribute as $attribute)
+	{
+		if(in_array($attribute->Name, $skip_field))
+		{
+			continue;
+		}
+		$html .='<th>';
+		$html .=$attribute->Name;
+		$html .'</th>';
+
+	}
+
+	foreach ($_result['ExtendedDocument'] as $entry)
+	{
+		$html .= '<tr>';
+		$html .='<td>';
+		$html .="<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
+		$html .='</td>';
+
+		foreach($entry->Attributes->Attribute as $attribute)
+		{
+			if(in_array($attribute->Name, $skip_field))
+			{
+				continue;
+			}
+
+			$html .='<td>';
+
+			if(is_array($attribute->Value->anyType))
+			{
+				$html .= '<table>';
+
+				foreach($attribute->Value->anyType as $value)
+				{
+					$html .= '<tr>';
+					$html .= '<td>';
+
+					if(isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
+					{
+						$html .= $value->enc_value->GNr;
+  						$html .= '/' . $value->enc_value->BNr;
+					}
+					else
+					{
+						$html .= $value;					
+					}
+
+					$html .= '</td>';
+					$html .= '</tr>';
+
+				}
+				$html .= '</table>';
+			}
+			else
+			{
+				$html .=$attribute->Value->anyType;
+			}
+			$html .='</td>';
+		}
+
+		$html .= '</tr>';
+	}
+
+	$html .=<<<HTML
+	</table>
+HTML;
+
+	echo $html;
 
 	$GLOBALS['phpgw']->common->phpgw_exit();
