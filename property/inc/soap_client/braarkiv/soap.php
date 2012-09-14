@@ -241,12 +241,14 @@ HTML;
 
 	}
 
+//_debug_array($_result['ExtendedDocument']);
+	$case_array = array();
 	foreach ($_result['ExtendedDocument'] as $entry)
 	{
-		$html .= '<tr>';
-		$html .='<td>';
-		$html .="<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
-		$html .='</td>';
+		$_html = '<tr>';
+		$_html .='<td>';
+		$_html .="<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
+		$_html .='</td>';
 
 		foreach($entry->Attributes->Attribute as $attribute)
 		{
@@ -255,41 +257,55 @@ HTML;
 				continue;
 			}
 
-			$html .='<td>';
+			if($attribute->Name =='Saksdato')
+			{
+				$_key = strtotime($attribute->Value->anyType);
+			}
+
+			$_html .='<td>';
 
 			if(is_array($attribute->Value->anyType))
 			{
-				$html .= '<table>';
+				$_html .= '<table>';
 
 				foreach($attribute->Value->anyType as $value)
 				{
-					$html .= '<tr>';
-					$html .= '<td>';
+					$_html .= '<tr>';
+					$_html .= '<td>';
 
 					if(isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
 					{
-						$html .= $value->enc_value->GNr;
-  						$html .= '/' . $value->enc_value->BNr;
+						$_html .= $value->enc_value->GNr;
+  						$_html .= '/' . $value->enc_value->BNr;
 					}
 					else
 					{
-						$html .= $value;					
+						$_html .= $value;					
 					}
 
-					$html .= '</td>';
-					$html .= '</tr>';
+					$_html .= '</td>';
+					$_html .= '</tr>';
 
 				}
-				$html .= '</table>';
+				$_html .= '</table>';
 			}
 			else
 			{
-				$html .=$attribute->Value->anyType;
+				$_html .=$attribute->Value->anyType;
 			}
-			$html .='</td>';
+			$_html .='</td>';
 		}
 
-		$html .= '</tr>';
+		$_html .= '</tr>';
+
+		$case_array[$_key][] = $_html;
+	}
+
+	ksort($case_array);
+//_debug_array($case_array);
+	foreach($case_array as $case)
+	{
+		$html .= implode('',$case);	
 	}
 
 	$html .=<<<HTML
