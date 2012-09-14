@@ -46,16 +46,19 @@
 
 //			_debug_array($messages);
 
-
 			foreach($messages as $entry)
 			{
 				$message =  $entry['data']->m->Text;
-				if($strip_code)
+				if($strip_code && stripos($message,"{$strip_code} ")===0 )
 				{
-					$message_arr = explode(strtolower($strip_code), strtolower($message));
-					$message = ucfirst(trim($message_arr[1]));
+					$strip_code = strtolower($strip_code); 
+					$strip_code_len = strlen($strip_code);
+					$message_len = strlen($message);
+					
+					$message = trim(substr($message, $strip_code_len));
 				}
 				
+//			_debug_array($message);
 			    $array_target_code = explode(' ',$message);
 
 			    $target_code = strtoupper(trim($array_target_code[0]));
@@ -69,13 +72,7 @@
 				
 				$sms_datetime	= date($GLOBALS['phpgw']->db->datetime_format(),$entry['entry_date']);
 				$sms_sender		= $entry['data']->m->SenderNumber;
-/*
-_debug_array($array_target_code);
-_debug_array($sms_datetime);
-_debug_array($sms_sender);
-_debug_array($target_code);
-_debug_array($message);
-*/
+
 				if (parent::setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
 				{
 					$sql = 'UPDATE phpgw_sms_received_data SET status = 1 WHERE id =' . (int) $entry['id'];
@@ -84,7 +81,6 @@ _debug_array($message);
 				}			
 			}
 //			die();
-
 		}
 
 
@@ -97,8 +93,8 @@ _debug_array($message);
 			$options['location']		= $this->pswin_param['receive_url'];
 			$options['uri']				= "http://localhost/~sn5607/savannah_trunk/sms/inc/plugin/gateway/pswin/soap.php";
 			$options['trace']			= 1;
-		//	$options['proxy_host']		= $this->pswin_param['proxy_host'];
-		//	$options['proxy_port']		= $this->pswin_param['proxy_port'];
+			$options['proxy_host']		= $this->pswin_param['proxy_host'];
+			$options['proxy_port']		= $this->pswin_param['proxy_port'];
 			$options['encoding']		= 'iso-8859-1';//'UTF-8';
 
 			$wdsl = PHPGW_SERVER_ROOT . '/sms/inc/plugin/gateway/pswin/Receive.wdsl';
@@ -125,5 +121,6 @@ _debug_array($message);
 			$result = $ReturnValue->ReceiveSMSMessageResult;
 
 			_debug_array($result);
+die();
 		}
 	}
