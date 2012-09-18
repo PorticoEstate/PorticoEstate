@@ -788,7 +788,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity['district_name']		= $soap ? $this->get_district_name($activity['district']) : utf8_decode($this->get_district_name($activity['district']));
 				$activity['category_name']		= $soap ? $this->get_category_name($activity['category']) : utf8_decode($this->get_category_name($activity['category']));
 				$activity['description']		= $this->get_activity_description($activity['organization_id'],$activity['group_id']);
-				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
+				$activity['arena_info']			= $this->get_all_arena_info($activity['arena'], $activity['internal_arena']);
 				$activity['internal_arena_info']= $this->get_internal_arena_info($activity['internal_arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
@@ -941,6 +941,34 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'organization_id'	=> $this->db->f('organization_id')
 			);
 
+		}
+		return $result;
+	}
+	
+	function get_all_arena_info($arena_id, $int_arena_id)
+	{
+		$result = array();
+		if($arena_id && is_numeric($arena_id))
+		{
+			$arena_id = (int)$arena_id;
+			$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'arena_name' => $this->soap ? $this->db->f('arena_name') : utf8_decode($this->db->f('arena_name')),
+				'address' => $this->soap ? $this->db->f('address') : utf8_decode($this->db->f('address'))
+			);
+		}
+		else if($int_arena_id && is_numeric($int_arena_id))
+		{
+			$int_arena_id = (int)$int_arena_id;
+			$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$int_arena_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'arena_name' => $this->soap ? $this->db->f('name') : utf8_decode($this->db->f('name')),
+				'address' => $this->soap ? $this->db->f('street') : utf8_decode($this->db->f('street'))
+			);
 		}
 		return $result;
 	}
