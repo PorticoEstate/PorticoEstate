@@ -245,8 +245,10 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 
-        if($return_type == "return_object")
+        		if($return_type == "return_object")
 				{
 					$controls_array[] = $control;
 				}
@@ -354,7 +356,9 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-				
+				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+			
 				if($return_type == "return_object")
 				{
 					$controls_array[] = $control;
@@ -387,6 +391,7 @@
 				return null;
 			}
 		}
+
 
 		/**
 		 * Get controls with a control area

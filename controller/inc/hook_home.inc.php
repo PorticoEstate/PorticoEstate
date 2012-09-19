@@ -34,6 +34,9 @@
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 				
+	$location_array = array();
+	$component_short_desc = array();
+	
 	$so_check_list = CreateObject('controller.socheck_list');
 	$so_control = CreateObject('controller.socontrol');
 	
@@ -191,7 +194,7 @@
 						
 			$date_generator = new date_generator($my_control["start_date"], $my_control["end_date"], $from_date_ts, $to_date_ts, $my_control["repeat_type"], $my_control["repeat_interval"]);
 			$deadline_dates_for_control = $date_generator->get_dates();
-			
+
 			$check_list_array = array();
 			foreach($deadline_dates_for_control as $deadline_ts)
 			{
@@ -207,7 +210,7 @@
 					
 					$check_list = $so_check_list->get_check_list_for_control_by_date($my_control['id'], $deadline_ts, null, null, $component['location_id'], $component['id'], "component"	);
 				}
-				
+
 				$control_id = $my_control['id'];
 				
 				if($check_list == null & $control_type == "location")
@@ -278,8 +281,11 @@
 				if($check_list_type == "location")
 				{
 					$location_code = $my_undone_control[4];
-					$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-					$location_name = $location_array["loc1_name"];
+					if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+					{
+						$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+					}
+					$location_name = $location_array[$location_code]["loc1_name"];
 					
 					if(count( $controls_on_date) > 1 )
 					{
@@ -302,7 +308,15 @@
 					$location_id = $my_undone_control[4];
 					$component_id = $my_undone_control[5];
 					
-					$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+					if(!isset($component_short_desc[$location_id][$component_id]))
+					{
+						$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+					}
+	
+					if($component_short_desc[$location_id][$component_id])
+					{
+						$short_desc_arr = $component_short_desc[$location_id][$component_id];
+					}
 	    		
 					if(count( $controls_on_date) > 1 )
 					{
@@ -325,9 +339,12 @@
 				$check_list_id = $my_undone_control[3];
 				$location_code = $my_undone_control[4];
 					
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-				$location_name = $location_array["loc1_name"];
-				
+				if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+				{
+					$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				}
+				$location_name = $location_array[$location_code]["loc1_name"];
+			
 				if(count( $controls_on_date) > 1 )
 				{
 					$portalbox0->data[] = array(		  	
@@ -362,6 +379,7 @@
 	$controls_for_location_array = array();
 	foreach($my_locations as $location)
 	{
+
 		$controls = array();
 		$controls_loc = $so_control->get_controls_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"] );
 		$controls_comp = $so_control->get_controls_for_components_by_location($location["location_code"], $from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"] );
@@ -378,10 +396,11 @@
 	    
 		$controls_for_location_array[] = array($location["location_code"], $controls);
 	}
-	
+
 	$controls_array = array();
 	$control_dates = array();
-	foreach($controls_for_location_array as $control_arr){
+	foreach($controls_for_location_array as $control_arr)
+	{
 		$current_location = $control_arr[0];
 		$controls_for_loc_array = $control_arr[1];
 		foreach($controls_for_loc_array as $control)
@@ -390,7 +409,7 @@
 			$controls_array[] = array($current_location, $control, $date_generator->get_dates());
 		}
 	}
-	
+
 	$portalbox1 = CreateObject('phpgwapi.listbox', array
 	(
 		'title'		=> "<div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div><div class='date heading'>Fristdato</div>",
@@ -415,13 +434,24 @@
 		$curr_location = $control_instance[0];
 		$current_control = $control_instance[1];
 		$check_lists = $so_check_list->get_planned_check_lists_for_control($current_control["id"], $curr_location, $current_control['location_id'], $current_control['component_id']);
-		$location_array = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
-		$location_name = $location_array["loc1_name"];
+
+		if(!isset($location_array[$curr_location]) || !$location_array[$curr_location])
+		{
+			$location_array[$curr_location] = execMethod('property.bolocation.read_single', array('location_code' => $curr_location));
+		}
+		$location_name = $location_array[$curr_location]["loc1_name"];
+
 		if(isset($current_control['component_id']) && $current_control['component_id'])
 		{
-			if($short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $current_control['location_id'], 'id' => $current_control['component_id'])))
+//_debug_array($current_control);
+			if(!isset($component_short_desc[$current_control['location_id']][$current_control['component_id']]))
 			{
-				$location_name .= "::{$short_desc}";
+				$component_short_desc[$current_control['location_id']][$current_control['component_id']] = execMethod('property.soentity.get_short_description', array('location_id' => $current_control['location_id'], 'id' => $current_control['component_id']));
+			}
+			
+			if($component_short_desc[$current_control['location_id']][$current_control['component_id']])
+			{
+				$location_name .= "::{$component_short_desc[$current_control['location_id']][$current_control['component_id']]}";
 			}
 		}
 
@@ -490,11 +520,13 @@
 				    
 		$level = count(explode('-', $location_code));
 
-		if($level == 1){
+		if($level == 1)
+		{
 			// Fetches all controls for the components for a location within time period
 			$filter = "bim_item.location_code = '$location_code' ";
 			$components_with_controls_array = $so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"], $filter);	
-		}else
+		}
+		else
 		{
 			// Fetches all controls for the components for a location within time period
 			$filter = "bim_item.location_code LIKE '$location_code%' ";
@@ -507,11 +539,11 @@
 		}
 
 		if( count($components_with_controls_array) > 0 )
-	  {
+		{
 			foreach($components_with_controls_array as $component)
 			{
-	    	$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
-	    }
+		    	$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
+			}
 		}
 	}
 	
@@ -541,10 +573,10 @@
 				// Daily, monthly yearly control: Todate in one month
 				$to_date_ts =  mktime(0, 0, 0, date("n")+1, date("j"), date("Y") ); 
 			}
-						
+
 			$date_generator = new date_generator($my_control["start_date"], $my_control["end_date"], $from_date_ts, $to_date_ts, $my_control["repeat_type"], $my_control["repeat_interval"]);
 			$deadline_dates_for_control = $date_generator->get_dates();
-			
+
 			$check_list_array = array();
 			foreach($deadline_dates_for_control as $deadline_ts)
 			{
@@ -570,7 +602,7 @@
 					{
 						$component = $container_arr[3];
 						$my_assigned_controls[$deadline_ts][] =  array("add", $deadline_ts, $my_control, "component", $component['location_id'], $component['id'] );
-		      }
+		      		}
 				}
 				else if($check_list->get_status() == controller_check_list::STATUS_NOT_DONE)
 				{
@@ -579,7 +611,7 @@
 			}
 		}
 	}
-	
+
 	// Sorts my_undone_controls by deadline date
 	//usort($my_undone_controls, "sort_cmp");
 	foreach($my_assigned_controls as $date_ts => $assigned_controls_on_date)
@@ -618,9 +650,13 @@
 				if($check_list_type == "location")
 				{
 					$location_code = $my_assigned_control[4];
-					$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-					$location_name = $location_array["loc1_name"];
-					
+
+					if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+					{
+						$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+					}
+					$location_name = $location_array[$location_code]["loc1_name"];
+			
 					
 				if(count( $assigned_controls_on_date) > 1 )
 					{
@@ -642,8 +678,16 @@
 					$location_id = $my_assigned_control[4];
 					$component_id = $my_assigned_control[5];
 					
-					$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
-	    		
+					if(!isset($component_short_desc[$location_id][$component_id]))
+					{
+						$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+					}
+	
+					if($component_short_desc[$location_id][$component_id])
+					{
+						$short_desc_arr = $component_short_desc[$location_id][$component_id];
+					}
+
 					if(count( $assigned_controls_on_date) > 1 )
 					{
 						$portalbox2->data[] = array(		  	
@@ -665,9 +709,12 @@
 				$check_list_id = $my_assigned_control[3];
 				$location_code = $my_assigned_control[4];
 					
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-				$location_name = $location_array["loc1_name"];
-					
+				if(!isset($location_array[$location_code]) || !$location_array[$location_code])
+				{
+					$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				}
+				$location_name = $location_array[$location_code]["loc1_name"];
+
 				if(count( $assigned_controls_on_date ) > 1 )
 				{
 					$portalbox2->data[] = array(		  	
