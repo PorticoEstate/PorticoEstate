@@ -364,18 +364,26 @@
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 					
-			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, $dateformat );
 			
-			if($planned_date != ''){
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-			}else{
+			if($planned_date != '')
+			{
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, $dateformat );
+			}
+			else
+			{
 				$planned_date_ts = 0;
 			} 
 			
-			if($completed_date != ''){
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+			if($completed_date != '')
+			{
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, $dateformat );
 				$status = controller_check_list::STATUS_DONE;
-			}else{
+			}
+			else
+			{
 				$completed_date_ts = 0;
 			}		
 

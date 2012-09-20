@@ -86,8 +86,9 @@
 				$check_list_status_info->set_check_list_id( $this->check_list->get_id() );
 			}
 			
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$check_list_status_info->set_control_id( $this->check_list->get_control_id() );
-			$check_list_status_info->set_deadline_date_txt( date("d/m-Y", $this->check_list->get_deadline()) );
+			$check_list_status_info->set_deadline_date_txt( date($dateformat, $this->check_list->get_deadline()) );
 			$check_list_status_info->set_deadline_date_ts( $this->check_list->get_deadline() );
 			$check_list_status_info->set_type( $this->type );
 			
