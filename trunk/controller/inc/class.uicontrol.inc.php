@@ -280,14 +280,16 @@
 			
 			$data = array
 			(
-				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'									=> "control_details",
-				'editable' 							=> true,
-				'control'								=> ($control != null) ? $control->toArray() : null,
+				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'						=> "control_details",
+				'editable' 					=> true,
+				'control'					=> ($control != null) ? $control->toArray() : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
-				'role_array'						=> $role_array,
-				'repeat_type_array'			=> $repeat_type_array
+				'role_array'				=> $role_array,
+				'repeat_type_array'			=> $repeat_type_array,
+				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+				'action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.save_control_details'))
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -302,6 +304,8 @@
 			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
 			
 			$this->use_yui_editor(array('description'));
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 		}
 		
 		/**
@@ -612,11 +616,12 @@
 		public function get_control_details()
 		{
 			$control_id = phpgw::get_var('control_id');
-		  $control = $this->so->get_single($control_id);
-			
-		  $data = array
+			$control = $this->so->get_single($control_id);
+
+			$data = array
 			(
-				'control'						=> $control->toArray()
+				'control'						=> $control->toArray(),
+				'dateformat' 					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 			);
 		  
 			self::render_template_xsl('control/control_details', $data);

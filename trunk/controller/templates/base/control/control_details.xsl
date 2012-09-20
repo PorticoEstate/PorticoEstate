@@ -1,7 +1,6 @@
 <!-- $Id: control.xsl 9951 2012-08-31 10:14:12Z vator $ -->
 <xsl:template match="data" name="control_details" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
-
+<xsl:variable name="date_format"><xsl:value-of select="dateformat"/></xsl:variable>
 	<div id="show-control-details-box">
 	 <h3>Detaljer for kontroll</h3>
 	 	

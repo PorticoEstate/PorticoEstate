@@ -448,7 +448,7 @@
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 					
 					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
-					$calendar_array = $year_calendar->build_calendar($agg_open_cases_pr_month_array);
+					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 					$locations_with_calendar_array[] = array( "location" => $location, "calendar_array" => $calendar_array );
 				}
 
