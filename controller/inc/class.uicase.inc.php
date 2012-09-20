@@ -340,7 +340,8 @@
 			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id'=>$check_list_id, 'message_ticket_id'=>$message_ticket_id));
 		}
 		
-		function view_case_message(){
+		function view_case_message()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$message_ticket_id = phpgw::get_var('message_ticket_id');
 				
@@ -389,21 +390,49 @@
 			
 			$data = array
 			(
-				'control'									=> $control->toArray(),
-				'message_ticket_id'				=> $message_ticket_id,
-				'message_ticket'					=> $message_ticket,
-				'category'								=> $category[0]['name'],
-				'location_array'					=> $location_array,
-				'component_array'					=> $component_array,
-				'control_array'						=> $control->toArray(),
-				'check_list'							=> $check_list->toArray(),
-				'check_items_and_cases'		=> $check_items_and_cases,
-				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month,
-				'date_format' 						=> $date_format,
-				'type'				 						=> $type,
-				'building_location_code' 	=> $building_location_code,
-				'location_level'				 	=> $level
+				'control'						=> $control->toArray(),
+			//	'message_ticket_id'				=> $message_ticket_id,
+				'message_ticket'				=> $message_ticket,
+				'category'						=> $category[0]['name'],
+				'location_array'				=> $location_array,
+				'component_array'				=> $component_array,
+				'control_array'					=> $control->toArray(),
+				'check_list'					=> $check_list->toArray(),
+				'check_items_and_cases'			=> $check_items_and_cases,
+			//	'current_year' 					=> $year,
+			//	'current_month_nr' 				=> $month,
+				'date_format' 					=> $date_format,
+				'type'				 			=> $type,
+				'building_location_code' 		=> $building_location_code,
+				'location_level'			 	=> $level,
+				'dateformat' 					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+				'url_calendar_for_year'			=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_year', 
+																					'year'			=> $year,
+																					'location_code'	=> $type == 'component' ? $building_location_code : $location_array['location_code']
+																				)
+																			),
+				'url_calendar_for_month'		=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_month', 
+																					'year'			=> $year,
+																					'location_code'	=> $type == 'component' ? $building_location_code : $location_array['location_code']
+																				)
+																			),
+				'url_ticket_view'				=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'property.uitts.view', 
+																					'id'			=> $message_ticket_id
+																				)
+																			),
+
+				'url_ticket_new'				=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'controller.uicase.create_case_message', 
+																					'check_list_id'	=> $check_list->get_id()
+																				)
+																			),
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
