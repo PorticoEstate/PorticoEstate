@@ -29,8 +29,12 @@
 			$options['location']	= $this->sms_param['service_url'];
 			$options['uri']			= "http://soa01a.srv.bergenkom.no/biz/bk/sms/SmsService-v1";
 			$options['trace']		= 1;
-			$options['proxy_host']	= $this->sms_param['proxy_host'];
-			$options['proxy_port']	= $this->sms_param['proxy_port'];
+			
+			if(isset($this->sms_param['proxy_host']) && $this->sms_param['proxy_host'])
+			{
+				$options['proxy_host']	= $this->sms_param['proxy_host'];
+				$options['proxy_port']	= $this->sms_param['proxy_port'];
+			}
 			$options['encoding']	= 'iso-8859-1';//'UTF-8';
 			$options['login']		= $this->sms_param['login'];
 			$options['password']	= $this->sms_param['password'];
@@ -90,6 +94,11 @@
 
 		function gw_set_delivery_status($gp_code="",$uid="",$smslog_id="",$p_datetime="",$p_update="",$external_id=0)
 		{
+			if(!$external_id)
+			{
+				return;
+			}
+
 			require_once 'SmsService.php';
 
 			$options=array();
@@ -97,8 +106,13 @@
 			$options['location']	= $this->sms_param['service_url'];
 			$options['uri']			= "http://soa01a.srv.bergenkom.no/biz/bk/sms/SmsService-v1";
 			$options['trace']		= 1;
-			$options['proxy_host']	= $this->sms_param['proxy_host'];
-			$options['proxy_port']	= $this->sms_param['proxy_port'];
+
+			if(isset($this->sms_param['proxy_host']) && $this->sms_param['proxy_host'])
+			{
+				$options['proxy_host']	= $this->sms_param['proxy_host'];
+				$options['proxy_port']	= $this->sms_param['proxy_port'];
+			}
+
 			$options['encoding']	= 'iso-8859-1';//'UTF-8';
 			$options['login']		= $this->sms_param['login'];
 			$options['password']	= $this->sms_param['password'];
