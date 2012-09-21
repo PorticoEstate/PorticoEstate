@@ -27,7 +27,7 @@
 			<a href="{url_calendar_for_year}">
 				Kontrolplan for bygg/eiendom (år)
 			</a>
-			<a class="last" href="{url_calendar_for_year}">
+			<a class="last" href="{url_calendar_for_month}">
 				Kontrolplan for bygg/eiendom (måned)
 			</a>
 		</div>

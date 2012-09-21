@@ -570,13 +570,14 @@
 				$location_with_check_lists = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $control->get_repeat_type());	
 					
 				$check_lists_array = $location_with_check_lists["check_lists_array"];
-					
-				$month_calendar = new month_calendar($control, $year, $month, null, $location_code, "location");
+
+
+				$month_calendar = new month_calendar($control, $year, $month, null, $curr_location_code, "location");
 				$calendar_array = $month_calendar->build_calendar( $check_lists_array );
 
 				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
 			}
-			
+
 			foreach( $components_for_control_array as $component )
 			{
 				$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
