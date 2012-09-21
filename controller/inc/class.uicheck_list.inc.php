@@ -501,12 +501,13 @@
 				'current_month_nr' 				=> $month
 			);
 
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
@@ -559,7 +560,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    		$component->set_xml_short_desc( $short_desc );
+    			$component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -578,20 +579,21 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
-				'location_array'					=> $location_array,
-				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
-				'type' 										=> $type,
-				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month,
+				'control' 					=> $control->toArray(),
+				'check_list' 				=> $check_list->toArray(),
+				'location_array'			=> $location_array,
+				'component_array'			=> $component_array,
+		//		'date_format' 				=> $date_format,
+				'type' 						=> $type,
+				'current_year' 				=> $year,
+				'current_month_nr' 			=> $month,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 					=> $level
+				'location_level' 			=> $level
 			);
 
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
@@ -718,7 +720,9 @@
 				'current_month_nr' 									=> $month
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('core');
+
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			

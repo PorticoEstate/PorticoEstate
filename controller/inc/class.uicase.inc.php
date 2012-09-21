@@ -28,6 +28,11 @@
  	* @version $Id: class.uicheck_list.inc.php 8419 2011-12-23 09:54:15Z vator $
 	*/
 	
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socase');
@@ -255,12 +260,14 @@
 				$data['building_array'] = $building_array;
 			}
 						
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/create_case_message'), $data);
 		}
@@ -456,12 +463,14 @@
 																			),
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/view_case_message'), $data);
 		}

@@ -28,6 +28,11 @@
  	* @version $Id$
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
   phpgw::import_class('phpgwapi.uicommon');
   phpgw::import_class('property.boevent');
   phpgw::import_class('controller.socontrol');
@@ -293,19 +298,13 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			//$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			//$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
-			
-			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
-			
+		
 			$this->use_yui_editor(array('description'));
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
 		}
 		
 		/**
@@ -411,8 +410,9 @@
 				'control_groups'	=> $control_groups,
 			);
 			
+			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
@@ -527,8 +527,10 @@
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
@@ -604,8 +606,10 @@
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
