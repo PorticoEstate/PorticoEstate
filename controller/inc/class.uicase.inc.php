@@ -215,23 +215,43 @@
 			
 			$data = array
 			(
-				'categories'							=> $categories,
-				'check_list'							=> $check_list->toArray(),
-				'control'									=> $control->toArray(),
+				'categories'				=> $categories,
+				'check_list'				=> $check_list->toArray(),
+				'control'					=> $control->toArray(),
 				'check_items_and_cases'		=> $check_items_and_cases,
-				'date_format' 						=> $date_format,
-				'location_array'					=> $location_array,
-				'component_array'					=> $component_array,
+				'date_format' 				=> $date_format,
+				'location_array'			=> $location_array,
+				'component_array'			=> $component_array,
 				'building_location_code'	=> $building_location_code,
-				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month,
-				'type' 										=> $type,
-				'location_level' 					=> $level
+		//		'current_year' 				=> $year,
+		//		'current_month_nr' 			=> $month,
+				'type' 						=> $type,
+				'location_level' 			=> $level,
+				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+				'action'					=>	$GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'controller.uicase.send_case_message')),
+				'url_calendar_for_year'		=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_year', 
+																					'year'			=> $year,
+																					'location_code'	=> $type == 'component' ? $building_location_code : $location_array['location_code']
+																				)
+																			),
+				'url_calendar_for_month'	=>	$GLOBALS['phpgw']->link('/index.php', array
+																				(
+																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_month', 
+																					'year'			=> $year,
+																					'month'			=> $month,
+																					'location_code'	=> $type == 'component' ? $building_location_code : $location_array['location_code']
+																				)
+																			),
 			);
 						
-			if(count( $buildings_array ) > 0){
+			if(count( $buildings_array ) > 0)
+			{
 				$data['buildings_array']  = $buildings_array;
-			}else{
+			}
+			else
+			{
 				$data['building_array'] = $building_array;
 			}
 						
@@ -417,6 +437,7 @@
 																				(
 																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_month', 
 																					'year'			=> $year,
+																					'month'			=> $month,
 																					'location_code'	=> $type == 'component' ? $building_location_code : $location_array['location_code']
 																				)
 																			),

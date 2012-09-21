@@ -28,6 +28,14 @@
  	* @version $Id$
 	*/
 	
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+	/**
+	* Import the yui class
+	*/
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socheck_list');
@@ -264,12 +272,12 @@
 				'location_level' 			=> $level
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+	//		phpgwapi_jquery::load_widget('core');
+			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
-			
 			self::render_template_xsl('check_list/add_check_list', $data);
 		}
 		
@@ -337,12 +345,12 @@
 				'location_level' 					=> $level
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('deadline_date');
+
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}

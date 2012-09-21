@@ -1,6 +1,6 @@
 <!-- $Id: edit_check_list.xsl 8513 2012-01-07 10:38:09Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div id="main_content" class="medium">
 		

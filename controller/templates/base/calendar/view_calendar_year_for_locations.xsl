@@ -1,6 +1,6 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div id="main_content">
 

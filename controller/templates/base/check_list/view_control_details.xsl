@@ -1,5 +1,5 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
