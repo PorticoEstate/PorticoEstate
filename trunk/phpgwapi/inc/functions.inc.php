@@ -89,6 +89,25 @@
 	}
 	
 
+
+	/**
+	 * Get global phpgw_info from XSLT templates
+	 * @param string on the format 'user|preferences|common|dateformat'
+	 * @return array or string depending on if param is representing a node
+	 */
+
+	function get_phpgw_info($key)
+	{
+		$_keys = explode('|',$key);
+		
+		$ret = $GLOBALS['phpgw_info'];
+		foreach ($_keys as $_var)
+		{
+			$ret = $ret[$_var];
+		}
+		return $ret;
+	}
+
 	/**
 	* cleans up a backtrace array and converts it to a string
 	*
