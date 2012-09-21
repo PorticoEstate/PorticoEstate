@@ -28,7 +28,12 @@
  	* @version $Id$
 	*/	
 
-  phpgw::import_class('phpgwapi.uicommon');
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socheck_list');
 	
 	include_class('controller', 'check_list', 'inc/model/');
@@ -212,10 +217,10 @@
 				'current_repeat_type' 			=> $repeat_type
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+
+			phpgwapi_jquery::load_widget('autocomplete');
+
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_manager', 
 																			'calendar/icon_color_map', 'calendar/select_my_locations', 
@@ -401,10 +406,9 @@
 																			'calendar/select_buildings_on_property', 'calendar/nav_calendar_year',
 																			'calendar/calendar_filters'), $data);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('autocomplete');
+
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
 		}
 
 		public function view_calendar_year_for_locations()
@@ -531,7 +535,8 @@
 			self::render_template_xsl( array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager', 
 											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
@@ -616,7 +621,8 @@
 			self::render_template_xsl( array('calendar/view_calendar_month_for_locations', 'calendar/check_list_status_manager', 
 											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_month'), $data);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
