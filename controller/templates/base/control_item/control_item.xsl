@@ -17,7 +17,8 @@
 </xsl:choose>
 	
 	<div id="control_item_details">
-		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicontrol_item.save')" /></xsl:variable>
+		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
 				<dt>
