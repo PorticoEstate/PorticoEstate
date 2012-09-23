@@ -1635,18 +1635,27 @@
 				while ($this->db->next_record())
 				{
 					$periode = $this->db->f('periode');
+
 					$year = substr( $periode, 0, 4 );
 	//				$month = substr( $periode, 4, 2 );
-					
+
 					$_found = false;
-					for ($i=0;$i<13;$i++)
+					if(isset($project_budget[$periode]))
 					{
-						$_period = $year . sprintf("%02s", $i);
-						if(isset($project_budget[$_period]))
+						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+						$_found = true;
+					}
+					else
+					{
+						for ($i=0;$i<13;$i++)
 						{
-							$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
-							$_found = true;
-							break;
+							$_period = $year . sprintf("%02s", $i);
+							if(isset($project_budget[$_period]))
+							{
+								$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+								$_found = true;
+								break;
+							}
 						}
 					}
 					
@@ -1655,7 +1664,7 @@
 						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
 					}
 				}
-
+//_debug_array($orders);die();
 				$sql = "SELECT sum(godkjentbelop) AS actual_cost, pmwrkord_code AS order, periode FROM fm_ecobilag WHERE pmwrkord_code IN ({$_order_filter}) GROUP BY pmwrkord_code, periode ORDER BY pmwrkord_code, periode ASC ";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
@@ -1670,14 +1679,22 @@
 					}
 
 					$_found = false;
-					for ($i=0;$i<13;$i++)
+					if(isset($project_budget[$periode]))
 					{
-						$_period = $year . sprintf("%02s", $i);
-						if(isset($project_budget[$_period]))
+						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+						$_found = true;
+					}
+					else
+					{
+						for ($i=0;$i<13;$i++)
 						{
-							$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
-							$_found = true;
-							break;
+							$_period = $year . sprintf("%02s", $i);
+							if(isset($project_budget[$_period]))
+							{
+								$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+								$_found = true;
+								break;
+							}
 						}
 					}
 					
