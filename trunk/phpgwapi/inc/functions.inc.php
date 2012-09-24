@@ -115,7 +115,6 @@
 	 * @param string $params on the format 'param1:value1,param2:value2'
 	 * @return string containing url
 	 */
-
 	function get_phpgw_link($path, $params)
 	{
 		$link_data = array();
@@ -129,16 +128,20 @@
 				$link_data[trim($__param_set[0])] = trim($__param_set[1]);
 			}
 		}
-/*
-_debug_array($path);
-_debug_array($link_data);
-_debug_array($GLOBALS['phpgw']->link($path, $link_data));
-*/
-		$ret = $GLOBALS['phpgw']->link($path, $link_data);
-		return str_replace('&amp;', '&', $ret);
+		$ret = $GLOBALS['phpgw']->link($path, $link_data, true);
+		return $ret;
 	}
 
-
+	/**
+	 * Fix global phpgw_link from XSLT templates by adding session id and click_history
+	 * @return string containing parts of url
+	 */
+	function get_phpgw_session_url()
+	{
+		$base_url	= $GLOBALS['phpgw']->link('/', array(), true);
+		$url_parts = parse_url($base_url);
+		return $url_parts['query'];
+	}
 
 	/**
 	* cleans up a backtrace array and converts it to a string
