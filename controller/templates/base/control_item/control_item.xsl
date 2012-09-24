@@ -17,7 +17,7 @@
 </xsl:choose>
 	
 	<div id="control_item_details">
-		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicontrol_item.save')" /></xsl:variable>
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol_item.save')" /></xsl:variable>
 		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
@@ -319,12 +319,15 @@
 						<input type="submit" name="cancel_control_item" value="{$lang_cancel}" title = "{$lang_cancel}" />
 					</xsl:when>
 					<xsl:otherwise>
-						<a class="btn">
-							<xsl:attribute name="href">
-								<xsl:>index.php?menuaction=controller.uicontrol_item.edit</xsl:>
-								<xsl:>&amp;id=</xsl:>
-								<xsl:value-of select="control_item/id"/>
-							</xsl:attribute>
+						<xsl:variable name="url_argument">
+							<xsl:text>menuaction:controller.uicontrol_item.edit</xsl:text>
+							<xsl:text>,id:</xsl:text>
+							<xsl:value-of select="control_item/id"/>
+						</xsl:variable>
+
+						<xsl:variable name="action_url2"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument)" /></xsl:variable>
+
+						<a class="btn" href="{$action_url2}">
 							<xsl:value-of select="php:function('lang', 'edit')" />
 						</a>
 					</xsl:otherwise>

@@ -73,7 +73,7 @@
 	<!-- ==================  CHECKLIST DETAILS  ===================== -->
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
-			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicheck_list.save_check_list')" /></xsl:variable>
+			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.save_check_list')" /></xsl:variable>
 			<form id="frm_update_check_list" action="{$action_url}" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />

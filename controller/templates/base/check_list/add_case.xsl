@@ -75,7 +75,7 @@
 		
 		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
 		
-		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicase.add_case,phpgw_return_as:json')" /></xsl:variable>
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case,phpgw_return_as:json')" /></xsl:variable>
 
 		<ul class="control_groups">
 			<xsl:for-each select="control_groups_with_items_array">

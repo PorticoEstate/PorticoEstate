@@ -15,13 +15,17 @@
 					
 			<!-- =====================  VIEW OVERVIEW FOR YEAR  ================= -->
 			<div id="calNav">
+				<xsl:variable name="url_argument">
+						<xsl:text>menuaction:controller.uicalendar.view_calendar_year_for_locations</xsl:text>
+						<xsl:text>,year:</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>,control_id:</xsl:text>
+						<xsl:value-of select="control/id"/>
+				</xsl:variable>
+
 				<a class="showPrev month">
 					<xsl:attribute name="href">
-						<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_year_for_locations</xsl:text>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="current_year"/>
-						<xsl:text>&amp;control_id=</xsl:text>
-						<xsl:value-of select="control/id"/>
+					  <xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument)" />
 					</xsl:attribute>
 					Årsoversikt
 				</a>
