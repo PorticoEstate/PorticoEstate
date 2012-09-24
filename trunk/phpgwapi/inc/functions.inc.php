@@ -129,7 +129,13 @@
 				$link_data[trim($__param_set[0])] = trim($__param_set[1]);
 			}
 		}
-		return $GLOBALS['phpgw']->link($path, $link_data);
+/*
+_debug_array($path);
+_debug_array($link_data);
+_debug_array($GLOBALS['phpgw']->link($path, $link_data));
+*/
+		$ret = $GLOBALS['phpgw']->link($path, $link_data);
+		return str_replace('&amp;', '&', $ret);
 	}
 
 
