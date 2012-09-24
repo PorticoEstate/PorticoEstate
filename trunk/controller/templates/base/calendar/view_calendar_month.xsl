@@ -138,13 +138,18 @@ function chooseLocation( label, value ){
 		<div class="middle">
 		
 		<!-- =====================  SHOW CALENDAR FOR YEAR  ================= -->
+
+          <xsl:variable name="url_argument_showYear">
+				<xsl:text>menuaction:controller.uicalendar.view_calendar_for_year</xsl:text>
+				<xsl:text>,year:</xsl:text>
+				<xsl:value-of select="current_year"/>
+				<xsl:text>,location_code:</xsl:text>
+				<xsl:value-of select="current_location/location_code"/>
+          </xsl:variable>
+
 		<a id="showYear">
 			<xsl:attribute name="href">
-				<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-				<xsl:text>&amp;year=</xsl:text>
-				<xsl:value-of select="current_year"/>
-				<xsl:text>&amp;location_code=</xsl:text>
-				<xsl:value-of select="current_location/location_code"/>
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument_showYear)" />
 			</xsl:attribute>
 			<img height="20" src="controller/images/left_arrow_simple_light_blue.png" />Årsoversikt
 		</a>
@@ -152,13 +157,16 @@ function chooseLocation( label, value ){
 		<!-- =====================  CHOOSE ANOTHER BUILDING ON PROPERTY  ================= -->
 			<div id="choose-building" class="select-box">
 				<xsl:if test="location_level > 1">
+					<xsl:variable name="url_argument_showYears">
+						<xsl:text>menuaction:controller.uicalendar.view_calendar_for_year</xsl:text>
+						<xsl:text>,year:</xsl:text>
+						<xsl:value-of select="current_year"/>
+						<xsl:text>,location_code:</xsl:text>
+						<xsl:value-of select="current_location/loc1"/>
+					</xsl:variable>
 					<a>
 						<xsl:attribute name="href">
-							<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-							<xsl:text>&amp;year=</xsl:text>
-							<xsl:value-of select="current_year"/>
-							<xsl:text>&amp;location_code=</xsl:text>
-							<xsl:value-of select="current_location/loc1"/>
+							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument_showYears)" />
 						</xsl:attribute>
 						Vis kontrollplan for eiendom
 					</a> 
@@ -207,12 +215,16 @@ function chooseLocation( label, value ){
 						        </xsl:otherwise>
 						    </xsl:choose>
 								<td class="title">
-			      			<a class="show-control-details">
+								<xsl:variable name="url_argument_control_details">
+									<xsl:text>menuaction:controller.uicontrol.get_control_details</xsl:text>
+									<xsl:text>,control_id:</xsl:text>
+										<xsl:value-of select="control/id"/>
+									<xsl:text>,phpgw_return_as:stripped_html</xsl:text>
+								</xsl:variable>
+
+			      					<a class="show-control-details">
 										<xsl:attribute name="href">
-											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
-											<xsl:text>&amp;control_id=</xsl:text>
-											<xsl:value-of select="control/id"/>
-											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument_control_details)" />
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 
@@ -283,11 +295,15 @@ function chooseLocation( label, value ){
 				        </xsl:otherwise>
 						    </xsl:choose>
 								<td class="title">
-					      	<a id="showControlDetails">
+									<xsl:variable name="url_argument_showControlDetails">
+										<xsl:text>menuaction:controller.uicontrol.get_control_details</xsl:text>
+										<xsl:text>,control_id:</xsl:text>
+										<xsl:value-of select="control/id"/>
+									</xsl:variable>
+		
+							      	<a id="showControlDetails">
 										<xsl:attribute name="href">
-											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
-											<xsl:text>&amp;control_id=</xsl:text>
-											<xsl:value-of select="control/id"/>
+											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument_showControlDetails)" />
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 

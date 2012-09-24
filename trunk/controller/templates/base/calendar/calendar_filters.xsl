@@ -6,10 +6,10 @@
   <form id="cal-filters" class="select-box" method="post">
     <xsl:choose>
       <xsl:when test="$view_period = 'month'">
-        <xsl:attribute name="action">index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:attribute>
+        <xsl:attribute name="action"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:uicalendar.view_calendar_for_month')" /></xsl:attribute>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:attribute name="action">index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:attribute>
+        <xsl:attribute name="action"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:uicalendar.view_calendar_for_year')" /></xsl:attribute>
       </xsl:otherwise>	
     </xsl:choose>
 
