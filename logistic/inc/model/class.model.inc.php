@@ -113,8 +113,7 @@
 						$control_item_arr[$_class_method_part[1]] = $this->$class_method();
 					}
 				}
-
-	//			_debug_array($control_item_arr);
+				
 				return $control_item_arr;
 			}
 
