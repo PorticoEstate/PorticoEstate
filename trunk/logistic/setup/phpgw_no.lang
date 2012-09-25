@@ -4,3 +4,15 @@ project	logistic	no	Prosjekt
 activity	logistic	no	Aktivitet
 booking	logistic	no	Booking
 requirement	logistic	no	Behov
+Project name	logistic	no	Navn
+Project type	logistic	no	Type
+Project description	logistic	no	Beskrivelse
+ID	logistic	no	ID
+t_new_project	logistic	no	Nytt prosjekt
+t_new_project_type	logistic	no	Ny prosjekttype
+Project_type	logistic	no	Prosjekttype
+settings	logistic	no	innstillinger
+Project types	logistic	no	Prosjekttyper
+Project type name	logistic	no	Navn
+Project title	logistic	no	Prosjektnavn
+Description	logistic	no	Beskrivelse
