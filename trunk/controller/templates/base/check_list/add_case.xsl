@@ -2,6 +2,8 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <div id="main_content" class="medium">
 	
 	<div id="check-list-heading">
@@ -38,6 +40,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (år)
 			</a>
@@ -57,6 +60,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (måned)
 			</a>

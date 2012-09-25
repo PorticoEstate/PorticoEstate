@@ -2,6 +2,8 @@
 
 <xsl:param name="active_tab" />
 
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <div class="tab_menu">
 		<a id="view_open_cases">
 			<xsl:if test="$active_tab = 'view_open_cases'">
@@ -12,6 +14,7 @@
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			Åpne saker
 		</a>
@@ -24,6 +27,7 @@
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			Lukkede saker
 		</a>

@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content" class="medium">
 		
@@ -54,6 +55,7 @@
 										<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_list</xsl:text>
 										<xsl:text>&amp;check_list_id=</xsl:text>
 											<xsl:value-of select="id"/>
+										<xsl:value-of select="$session_url"/>
 									</xsl:attribute>
 									<xsl:if test="deadline != ''">
 						  				<xsl:value-of select="php:function('date', $date_format, number(deadline))"/>
@@ -84,6 +86,7 @@
 				<xsl:text>index.php?menuaction=controller.uicheck_list.control_calendar_status_overview</xsl:text>
 				<xsl:text>&amp;control_id=</xsl:text>
 					<xsl:value-of select="control_as_array/id"/>
+					<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			<div>
 				Se kalenderoversikt for kontroll

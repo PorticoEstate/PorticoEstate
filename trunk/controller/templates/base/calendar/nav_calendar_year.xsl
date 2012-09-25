@@ -1,8 +1,7 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="nav_calendar_year" xmlns:php="http://php.net/xsl">
-
 <xsl:param name="view" />
-
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <div id="calNav">
 	<a class="showPrev">
 		<xsl:attribute name="href">
@@ -20,6 +19,7 @@
 			</xsl:choose>
 			<xsl:text>&amp;year=</xsl:text>
 			<xsl:value-of select="current_year - 1"/>
+			<xsl:value-of select="$session_url"/>
 		</xsl:attribute>
 		<img height="17" src="controller/images/left_arrow_simple_light_blue.png" />
 		<xsl:value-of select="current_year - 1"/>
@@ -43,6 +43,7 @@
 			</xsl:choose>
 			<xsl:text>&amp;year=</xsl:text>
 			<xsl:value-of select="current_year + 1"/>
+			<xsl:value-of select="$session_url"/>
 		</xsl:attribute>
 		<xsl:value-of select="current_year + 1"/>
 		<img height="17" src="controller/images/right_arrow_simple_light_blue.png" />

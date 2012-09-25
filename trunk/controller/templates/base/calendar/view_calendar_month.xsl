@@ -2,6 +2,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 <xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <script>
 <xsl:text>
 
@@ -145,6 +147,7 @@ function chooseLocation( label, value ){
 				<xsl:value-of select="current_year"/>
 				<xsl:text>&amp;location_code=</xsl:text>
 				<xsl:value-of select="current_location/location_code"/>
+				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 			<img height="20" src="controller/images/left_arrow_simple_light_blue.png" />Årsoversikt
 		</a>
@@ -159,6 +162,7 @@ function chooseLocation( label, value ){
 							<xsl:value-of select="current_year"/>
 							<xsl:text>&amp;location_code=</xsl:text>
 							<xsl:value-of select="current_location/loc1"/>
+							<xsl:value-of select="$session_url"/>
 						</xsl:attribute>
 						Vis kontrollplan for eiendom
 					</a> 
@@ -213,6 +217,7 @@ function chooseLocation( label, value ){
 											<xsl:text>&amp;control_id=</xsl:text>
 											<xsl:value-of select="control/id"/>
 											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+											<xsl:value-of select="$session_url"/>
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 
@@ -288,6 +293,7 @@ function chooseLocation( label, value ){
 											<xsl:text>index.php?menuaction=controller.uicontrol.get_control_details</xsl:text>
 											<xsl:text>&amp;control_id=</xsl:text>
 											<xsl:value-of select="control/id"/>
+											<xsl:value-of select="$session_url"/>
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 

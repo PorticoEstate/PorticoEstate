@@ -1,6 +1,7 @@
 <!-- $Id: edit_check_list.xsl 8513 2012-01-07 10:38:09Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content" class="medium">
 		
@@ -94,6 +95,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (år)
 			</a>
@@ -113,6 +115,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (måned)
 			</a>
@@ -130,6 +133,7 @@
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
 		</a>
 	
