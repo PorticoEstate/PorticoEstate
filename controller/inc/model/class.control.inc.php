@@ -57,8 +57,6 @@
 		protected $responsibility_name;
 		protected $control_area_id;
 		protected $control_area_name;
-		protected $location_id;
-		protected $component_id;
 
 		// Objects
 		protected $check_lists_array = array();
@@ -235,27 +233,6 @@
 			$this->error_msg_array = $error_msg_array;
 		}
 
-		public function set_component_id($component_id)
-		{
-			$this->component_id = $component_id;
-		}
-		
-		public function get_component_id()
-		{
-			return $this->component_id;
-		}
-
-
-		public function set_location_id($location_id)
-		{
-			$this->location_id = $location_id;
-		}
-		
-		public function get_location_id()
-		{
-			return $this->location_id;
-		}
-
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -315,9 +292,7 @@
 				'control_area_name' => $this->get_control_area_name(),
 			  	'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
-				'responsibility_name' => $this->get_responsibility_name(),
-				'component_id'		=>  $this->get_component_id(),
-				'location_id'		=>  $this->get_location_id()
+				'responsibility_name' => $this->get_responsibility_name()
 			);
 		}
 				
