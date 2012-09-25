@@ -1,6 +1,7 @@
 <!-- $Id: view_calendar_year.xsl 9206 2012-04-23 06:21:38Z vator $ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content">
 
@@ -41,6 +42,7 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
 								<xsl:variable name="month_str">short_month <xsl:value-of select="."/> capitalized</xsl:variable>
@@ -106,6 +108,7 @@
 									<xsl:number/>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="//control/id"/>
+									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
 								<xsl:variable name="month_str">short_month <xsl:value-of select="."/> capitalized</xsl:variable>

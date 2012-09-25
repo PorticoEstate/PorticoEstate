@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 	
 <script>
 <xsl:text>
@@ -110,6 +111,7 @@ function chooseLocation( label, value ){
 							<xsl:value-of select="current_year"/>
 							<xsl:text>&amp;location_code=</xsl:text>
 							<xsl:value-of select="current_location/loc1"/>
+							<xsl:value-of select="$session_url"/>
 						</xsl:attribute>
 						Vis kontrollplan for eiendom
 					</a> 
@@ -152,6 +154,7 @@ function chooseLocation( label, value ){
 									<xsl:value-of select="//current_location/location_code"/>
 									<xsl:text>&amp;month=</xsl:text>
 									<xsl:number/>
+									<xsl:value-of select="$session_url"/>
 								</xsl:attribute>
 								
 								<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
@@ -181,6 +184,7 @@ function chooseLocation( label, value ){
 											<xsl:text>&amp;control_id=</xsl:text>
 											<xsl:value-of select="control/id"/>
 											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+											<xsl:value-of select="$session_url"/>
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 
@@ -246,6 +250,7 @@ function chooseLocation( label, value ){
 										<xsl:value-of select="//current_location/location_code"/>
 										<xsl:text>&amp;month=</xsl:text>
 										<xsl:number/>
+										<xsl:value-of select="$session_url"/>
 									</xsl:attribute>
 									
 									<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
@@ -274,6 +279,7 @@ function chooseLocation( label, value ){
 											<xsl:text>&amp;control_id=</xsl:text>
 											<xsl:value-of select="control/id"/>
 											<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+											<xsl:value-of select="$session_url"/>
 										</xsl:attribute>
 										<xsl:value-of select="control/title"/>
 									</a> 
