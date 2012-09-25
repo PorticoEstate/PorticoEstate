@@ -1,37 +1,10 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content" class="medium">
 		
-	<!--  =======================  CALENDAR  ================================== -->
-	<script>
-		$(function() {
-			$( "#planned_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy',
-				changeMonth: true,
-				changeYear: true
-			});
-			$( "#completed_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy',
-				changeMonth: true,
-				changeYear: true 
-			});
-			$( "#deadline_date" ).datepicker({ 
-				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-				dateFormat: 'dd/mm-yy',
-				changeMonth: true,
-				changeYear: true 
-			});
-			
-		});
-	</script>
-	
 	<!-- ==================  EDIT CHECKLIST  ========================= -->
 	
 	<div id="check-list-heading">
@@ -68,6 +41,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (år)
 			</a>
@@ -87,6 +61,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (måned)
 			</a>
@@ -101,7 +76,8 @@
 	<!-- ==================  CHECKLIST DETAILS  ===================== -->
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
-			<form id="frm_update_check_list" action="index.php?menuaction=controller.uicheck_list.save_check_list" method="post">	
+			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicheck_list.save_check_list')" /></xsl:variable>
+			<form id="frm_update_check_list" action="{$action_url}" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
 			

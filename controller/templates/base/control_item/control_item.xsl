@@ -2,7 +2,7 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:call-template name="yui_phpgw_i18n"/>
 
 <div id="main_content">
@@ -17,7 +17,8 @@
 </xsl:choose>
 	
 	<div id="control_item_details">
-		<form action="index.php?menuaction=controller.uicontrol_item.save" method="post">
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicontrol_item.save')" /></xsl:variable>
+		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value="{control_item/id}" />
 			<dl class="proplist">
 				<dt>
@@ -323,6 +324,7 @@
 								<xsl:>index.php?menuaction=controller.uicontrol_item.edit</xsl:>
 								<xsl:>&amp;id=</xsl:>
 								<xsl:value-of select="control_item/id"/>
+								<xsl:value-of select="$session_url"/>
 							</xsl:attribute>
 							<xsl:value-of select="php:function('lang', 'edit')" />
 						</a>

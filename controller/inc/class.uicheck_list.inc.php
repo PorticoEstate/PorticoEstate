@@ -28,6 +28,14 @@
  	* @version $Id$
 	*/
 	
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+	/**
+	* Import the yui class
+	*/
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socheck_list');
@@ -264,12 +272,12 @@
 				'location_level' 			=> $level
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+	//		phpgwapi_jquery::load_widget('core');
+			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			self::add_stylesheet('controller/templates/base/css/jquery-ui.custom.css');
-			
 			self::render_template_xsl('check_list/add_check_list', $data);
 		}
 		
@@ -337,12 +345,12 @@
 				'location_level' 					=> $level
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('deadline_date');
+
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
 		}
@@ -364,18 +372,26 @@
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 					
-			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, "d/m-Y" );
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, $dateformat );
 			
-			if($planned_date != ''){
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, "d/m-Y" );
-			}else{
+			if($planned_date != '')
+			{
+				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, $dateformat );
+			}
+			else
+			{
 				$planned_date_ts = 0;
 			} 
 			
-			if($completed_date != ''){
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, "d/m-Y" );
+			if($completed_date != '')
+			{
+				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, $dateformat );
 				$status = controller_check_list::STATUS_DONE;
-			}else{
+			}
+			else
+			{
 				$completed_date_ts = 0;
 			}		
 
@@ -485,12 +501,13 @@
 				'current_month_nr' 				=> $month
 			);
 
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
@@ -543,7 +560,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    		$component->set_xml_short_desc( $short_desc );
+    			$component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -562,20 +579,21 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
-				'location_array'					=> $location_array,
-				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
-				'type' 										=> $type,
-				'current_year' 						=> $year,
-				'current_month_nr' 				=> $month,
+				'control' 					=> $control->toArray(),
+				'check_list' 				=> $check_list->toArray(),
+				'location_array'			=> $location_array,
+				'component_array'			=> $component_array,
+		//		'date_format' 				=> $date_format,
+				'type' 						=> $type,
+				'current_year' 				=> $year,
+				'current_month_nr' 			=> $month,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 					=> $level
+				'location_level' 			=> $level
 			);
 
-			self::add_javascript('controller', 'controller', 'jquery.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
@@ -702,7 +720,9 @@
 				'current_month_nr' 									=> $month
 			);
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('core');
+
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			

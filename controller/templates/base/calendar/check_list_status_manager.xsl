@@ -1,7 +1,8 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="check_list_status_manager" xmlns:php="http://php.net/xsl">
- 
+
   <xsl:param name="location_code" />
+  <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
  
   <xsl:choose>
     <xsl:when test="status = 'CONTROL_REGISTERED'">
@@ -26,6 +27,7 @@
               <xsl:value-of select="info/location_code"/>  
             </xsl:otherwise>
           </xsl:choose>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_yellow_ring.png" />
       </a>
@@ -36,6 +38,7 @@
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
           <xsl:text>&amp;check_list_id=</xsl:text>
           <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_yellow.png" />
       </a>
@@ -62,6 +65,7 @@
               <xsl:value-of select="info/location_code"/>  
             </xsl:otherwise>
           </xsl:choose>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
@@ -72,6 +76,7 @@
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
           <xsl:text>&amp;check_list_id=</xsl:text>
           <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
@@ -82,6 +87,7 @@
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
           <xsl:text>&amp;check_list_id=</xsl:text>
           <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
@@ -92,6 +98,7 @@
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
           <xsl:text>&amp;check_list_id=</xsl:text>
           <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <span class="ext_info">
           <xsl:value-of select="info/id"/>
@@ -107,6 +114,7 @@
             <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
             <xsl:text>&amp;check_list_id=</xsl:text>
             <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
           </xsl:attribute>
           <span class="ext_info">
             <xsl:value-of select="info/id"/>
@@ -123,6 +131,7 @@
             <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
             <xsl:text>&amp;check_list_id=</xsl:text>
             <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
           </xsl:attribute>
           <span class="ext_info">
             <xsl:text>&amp;check_list_id=</xsl:text>
@@ -157,6 +166,7 @@
             <xsl:value-of select="//current_year"/>
             <xsl:text>&amp;month=</xsl:text>
             <xsl:number />
+ 		 <xsl:value-of select="$session_url"/>
           </xsl:attribute>
           <span class="ext_info">
             <xsl:text>&amp;check_list_id=</xsl:text>
@@ -186,6 +196,7 @@
           <xsl:value-of select="//current_year"/>
           <xsl:text>&amp;month=</xsl:text>
           <xsl:number />
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
@@ -209,6 +220,7 @@
           <xsl:value-of select="info/month"/>
           <xsl:text>&amp;year=</xsl:text>
           <xsl:value-of select="info/year"/>
+ 		 <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_yellow_ring.png" />
       </a>

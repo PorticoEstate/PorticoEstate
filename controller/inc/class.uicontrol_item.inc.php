@@ -28,6 +28,11 @@
  	* @version $Id$
 	*/
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
@@ -235,9 +240,10 @@
 
 			$this->use_yui_editor(array('what_to_do','how_to_do'));
 			
-			self::add_javascript('controller', 'controller', 'jquery.js');
+			phpgwapi_jquery::load_widget('core');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 
 			self::render_template_xsl('control_item/control_item', $data);
 		}

@@ -1,10 +1,10 @@
 <!-- $Id: procedure_item.xsl 8485 2012-01-05 08:21:03Z erikhl $ -->
 
-<xsl:template match="data">
-	
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <div id="view-procedures">
 	<h2>Prosedyrer</h2>
-	
 	<div class="box">
 		<h3>Prosedyre for kontroll</h3>
 		<h4><xsl:value-of select="control_procedure/title"/>
@@ -18,6 +18,7 @@
 					<xsl:text>&amp;location_code=</xsl:text>
 					<xsl:value-of select="location/location_code"/>
 					<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Skriv ut
 			</a>
@@ -54,6 +55,7 @@
 							<xsl:text>&amp;location_code=</xsl:text>
 							<xsl:value-of select="//location/location_code"/>
 							<xsl:text>&amp;phpgw_return_as=stripped_html</xsl:text>
+							<xsl:value-of select="$session_url"/>
 						</xsl:attribute>
 						Skriv ut
 					</a>

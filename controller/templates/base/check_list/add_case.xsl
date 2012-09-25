@@ -2,6 +2,8 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <div id="main_content" class="medium">
 	
 	<div id="check-list-heading">
@@ -38,6 +40,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (år)
 			</a>
@@ -57,6 +60,7 @@
 						  <xsl:value-of select="location_array/location_code"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
 				Kontrolplan for bygg/eiendom (måned)
 			</a>
@@ -75,6 +79,8 @@
 		
 		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
 		
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicase.add_case,phpgw_return_as:json')" /></xsl:variable>
+
 		<ul class="control_groups">
 			<xsl:for-each select="control_groups_with_items_array">
 			<xsl:choose>
@@ -87,7 +93,7 @@
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -104,7 +110,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
-											<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
+											<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 												<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -139,7 +145,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
@@ -175,7 +181,7 @@
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
-												<form class="frm_register_case expand_item" action="index.php?menuaction=controller.uicase.add_case&amp;phpgw_return_as=json" method="post">
+												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>

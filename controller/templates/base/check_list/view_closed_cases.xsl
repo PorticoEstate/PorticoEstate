@@ -1,7 +1,9 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 
-<xsl:template match="data">
-	
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
+
 <div id="view_cases">
 	
 	<xsl:call-template name="cases_tab_menu">
@@ -44,6 +46,7 @@
 															<xsl:text>&amp;check_list_id=</xsl:text>
 															<xsl:value-of select="//check_list/id"/>
 															<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+															<xsl:value-of select="$session_url"/>
 														</xsl:attribute>
 														åpne
 													</a>
@@ -57,6 +60,7 @@
 																	<xsl:text>&amp;check_list_id=</xsl:text>
 																	<xsl:value-of select="//check_list/id"/>
 																	<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+																	<xsl:value-of select="$session_url"/>
 																</xsl:attribute>
 																slett
 															</a>
@@ -74,6 +78,7 @@
 																<xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
 																<xsl:text>&amp;id=</xsl:text>
 																<xsl:value-of select="location_item_id"/>
+																<xsl:value-of select="$session_url"/>
 															</xsl:attribute>
 															Vis melding
 														</a>

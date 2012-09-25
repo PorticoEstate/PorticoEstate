@@ -3,7 +3,7 @@
 <xsl:template name="case_row" xmlns:php="http://php.net/xsl">
 
   <xsl:param name="control_item_type" />
-	
+  <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
   <li class="check_item_case">
     <xsl:choose>
       <xsl:when test="cases_array/child::node()">
@@ -75,6 +75,7 @@
                         <xsl:text>&amp;check_list_id=</xsl:text>
                         <xsl:value-of select="//check_list/id"/>
                         <xsl:text>&amp;phpgw_return_as=json</xsl:text>
+						<xsl:value-of select="$session_url"/>
                       </xsl:attribute>
                       lukk
                     </a>
@@ -88,6 +89,7 @@
                             <xsl:text>&amp;check_list_id=</xsl:text>
                             <xsl:value-of select="//check_list/id"/>
                             <xsl:text>&amp;phpgw_return_as=json</xsl:text>
+							<xsl:value-of select="$session_url"/>
                           </xsl:attribute>
                           slett
                         </a>
@@ -107,6 +109,7 @@
                     <xsl:text>&amp;control_item_type=</xsl:text>
                     <xsl:value-of select="//control_item/type" />
                     <xsl:text>&amp;phpgw_return_as=json</xsl:text>
+					<xsl:value-of select="$session_url"/>
                   </xsl:attribute>
                   <input type="hidden" name="control_item_type">
                    <xsl:attribute name="value"><xsl:value-of select="//control_item/type" /></xsl:attribute>
@@ -200,6 +203,7 @@
                         <xsl:text>index.php?menuaction=property.uitts.view</xsl:text>
                         <xsl:text>&amp;id=</xsl:text>
                         <xsl:value-of select="location_item_id"/>
+						<xsl:value-of select="$session_url"/>
                       </xsl:attribute>
                       Vis melding
                     </a>

@@ -1,26 +1,7 @@
 <!-- $Id$ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format">d/m-Y</xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
-
-<script>
-	$(function() {
-		$( "#planned_date" ).datepicker({ 
-			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-			dateFormat: 'dd/mm-yy',
-			changeMonth: true,
-			changeYear: true
-		});
-		$( "#completed_date" ).datepicker({ 
-			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
-			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
-			dateFormat: 'dd/mm-yy',
-			changeMonth: true,
-			changeYear: true 
-		});
-	});
-</script>
 
 <!-- ==================  ADD CHECKLIST  ========================= -->
 

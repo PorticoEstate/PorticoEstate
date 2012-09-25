@@ -28,6 +28,11 @@
  	* @version $Id$
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
   phpgw::import_class('phpgwapi.uicommon');
   phpgw::import_class('property.boevent');
   phpgw::import_class('controller.socontrol');
@@ -280,28 +285,26 @@
 			
 			$data = array
 			(
-				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'									=> "control_details",
-				'editable' 							=> true,
-				'control'								=> ($control != null) ? $control->toArray() : null,
+				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'						=> "control_details",
+				'editable' 					=> true,
+				'control'					=> ($control != null) ? $control->toArray() : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
-				'role_array'						=> $role_array,
-				'repeat_type_array'			=> $repeat_type_array
+				'role_array'				=> $role_array,
+				'repeat_type_array'			=> $repeat_type_array,
+				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+				'action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.save_control_details'))
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
-			//$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			//$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-			
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
-			
-			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
-			
+		
 			$this->use_yui_editor(array('description'));
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+			self::render_template_xsl(array('control/control_tabs', 'control/control'), $data);
 		}
 		
 		/**
@@ -407,8 +410,9 @@
 				'control_groups'	=> $control_groups,
 			);
 			
+			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
@@ -523,8 +527,10 @@
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
@@ -600,8 +606,10 @@
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::add_javascript('controller', 'controller', 'jquery.js');
+//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
@@ -612,11 +620,12 @@
 		public function get_control_details()
 		{
 			$control_id = phpgw::get_var('control_id');
-		  $control = $this->so->get_single($control_id);
-			
-		  $data = array
+			$control = $this->so->get_single($control_id);
+
+			$data = array
 			(
-				'control'						=> $control->toArray()
+				'control'						=> $control->toArray(),
+				'dateformat' 					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 			);
 		  
 			self::render_template_xsl('control/control_details', $data);

@@ -28,6 +28,10 @@
  	* @version $Id$
 	*/	
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
 
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
@@ -172,9 +176,10 @@
 				);
 
 				phpgwapi_yui::load_widget('paginator');
+				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-				self::add_javascript('controller', 'controller', 'jquery.js');
+//				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_group_component_tabs', 'common', 'add_component_to_control_group'), $data);
