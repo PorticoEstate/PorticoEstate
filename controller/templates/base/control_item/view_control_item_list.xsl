@@ -49,15 +49,12 @@
 			</xsl:for-each>
 		</ul>
 		<div>
-			<xsl:variable name="url_argument">
-				<xsl:text>menuaction:controller.uicheck_list.save_check_list</xsl:text>
-				<xsl:text>,control_id:</xsl:text>
-				<xsl:value-of select="control_as_array/id"/>
-			</xsl:variable>
-
-			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', $url_argument)" /></xsl:variable>
-
-			<a href="{$action_url}">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:text>index.php?menuaction=controller.uicheck_list.save_check_list</xsl:text>
+					<xsl:text>&amp;control_id=</xsl:text>
+						<xsl:value-of select="control_as_array/id"/>
+				</xsl:attribute>
 				Lag sjekkliste for kontroll
 			</a>		
 		</div>
