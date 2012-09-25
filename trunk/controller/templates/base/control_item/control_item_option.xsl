@@ -13,7 +13,7 @@
 	
 <div class="yui-content">
 	<div id="details">
-		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol_item_option.save')" /></xsl:variable>
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicontrol_item_option.save')" /></xsl:variable>
 		<form id="frm_add_control_item_option" action="{$action_url}" method="post">
 			<input type="hidden" name="control_item_id">
 				<xsl:attribute name="value"><xsl:value-of select="control_item/id"/></xsl:attribute>
