@@ -202,7 +202,7 @@
 		 * @return array with controls as objects or arrays
 		 */
 		
-		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
+		public function get_controls_for_components_by_location($location_code, $from_date, $to_date, $repeat_type, $role_id = 0)
 		{			
 			$controls_array = array();
 			
@@ -231,31 +231,25 @@
 
 			while($this->db->next_record())
 			{
-				$control = new controller_control($this->unmarshal($this->db->f('id'), 'int'));
-				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
-				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
-				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
-				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
-				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
-				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
-				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
-				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
-				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
-				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
-				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
-
-        		if($return_type == "return_object")
-				{
-					$controls_array[] = $control;
-				}
-				else
-				{
-					$controls_array[] = $control->toArray();
-				}
+	
+				$controls_array[] = array
+				(
+					'id'					=> $this->db->f('id'),
+					'title'					=> $this->db->f('title', true),
+					'description'			=> $this->db->f('description', true),
+					'start_date'			=> $this->db->f('start_date'),
+					'end_date'				=> $this->db->f('end_date'),
+					'procedure_id'			=> $this->db->f('procedure_id'),
+					'requirement_id'		=> $this->db->f('requirement_id'),
+					'costresponsibility_id'	=> $this->db->f('costresponsibility_id'),
+					'responsibility_id'		=> $this->db->f('responsibility_id'),
+					'responsibility_name'	=> $this->db->f('responsibility_name', true),
+					'control_area_id'		=> $this->db->f('control_area_id'),
+					'repeat_type'			=> $this->db->f('repeat_type'),
+					'repeat_interval'		=> $this->db->f('repeat_interval'),
+					'component_id'			=> $this->db->f('component_id'),
+					'location_id'			=> $this->db->f('location_id')
+				);
 			}
 
 			return $controls_array; 
@@ -356,8 +350,6 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
-				$control->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
-				$control->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 			
 				if($return_type == "return_object")
 				{

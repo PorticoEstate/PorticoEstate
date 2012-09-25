@@ -254,7 +254,9 @@
 				
 				phpgwapi_yui::load_widget('paginator');
 				
-				self::add_javascript('controller', 'controller', 'jquery.js');
+				phpgwapi_jquery::load_widget('core');
+
+//				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 				self::add_javascript('controller', 'yahoo', 'register_control_to_location.js');
 	

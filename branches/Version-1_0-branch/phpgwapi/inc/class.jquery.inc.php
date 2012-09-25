@@ -81,6 +81,9 @@
 						"js/jquery-1.7.2{$_type}",
 						"js/jquery-ui-1.8.19.custom{$_type}"
 					);
+
+					$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/jquery/css/ui-lightness/jquery-ui-1.8.19.custom.css');
+
 					break;
 
 				default:
