@@ -15,8 +15,25 @@
   	</func:result>
 </func:function>
 
-<xsl:template match="data">
-	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+
+<div id="main_content">
+	<xsl:choose>
+		<xsl:when test="datatable_name">
+			<h1>
+				<xsl:value-of select="datatable_name"/>
+			</h1>
+		</xsl:when>
+	</xsl:choose>
+  <div id="activity" class="content-wrp">
+	  <xsl:call-template name="datatable" />
+  </div>
+</div>
+</xsl:template>
+
+
+<xsl:template name="datatable">
+	<iframe id="yui-history-iframe" src="phpgwapi/js/yahoo/history/assets/blank.html"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	<xsl:call-template name="yui_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -29,10 +46,10 @@
 </xsl:template>
 
 <xsl:template match="toolbar">
-    <div id="toolbar">
-		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
+	<div id="toolbar">
+		  <table class='yui-skin-sam'>
 			<tr>
-        <xsl:for-each select="item">
+		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
@@ -41,15 +58,15 @@
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
 					<div class="date-picker">
-                	<input id="filter_{name}" name="filter_{name}" type="text">
+					<input id="filter_{name}" name="filter_{name}" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
 						</input>
-                </div>
+				</div>
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
-					<td valign="top" width="160px">
-						<div style="width:140px">
+					<td class="auto">
+						<div class="auto">
 							<input id="filter_{name}_name" name="filter_{name}_name" type="text">
 								<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/></xsl:attribute>
 							</input>
@@ -80,12 +97,14 @@
 							</xsl:if>
 
 							<![CDATA[
+//							var oAC = YAHOO.portico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
+//															 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+
 							var oArgs = {menuaction: app + '.ui'+ui+'.index'};
 							var requestUrl = phpGWLink('index.php', oArgs, true);
 							requestUrl += 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container';
-							alert('FIXME: autocompleteHelper::requestUrl ' + requestUrl );
+						//	alert('FIXME: autocompleteHelper::requestUrl ' + requestUrl );
 
-							var oAC = YAHOO.portico.autocompleteHelper(requestUrl);
 
 							if (requestGenerator) {
 								oAC.generateRequest = requestGenerator;
@@ -95,8 +114,10 @@
 								oAC.itemSelectEvent.subscribe(itemSelectCallback);
 							}
 
-							YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function() {
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "") {
+							YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function()
+							{
+								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
+								{
 									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
 									if (onClearSelectionCallback) {
 										onClearSelectionCallback();
@@ -104,8 +125,10 @@
 								}
 							});
 
-							YAHOO.portico.addPreSerializeQueryFormListener(function(form) {
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "") {
+							YAHOO.portico.addPreSerializeQueryFormListener(function(form)
+							{
+								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
+								{
 									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
 								} 
 							});
@@ -116,23 +139,24 @@
 				</xsl:when>
 				<xsl:when test="type = 'filter'">
 					<td valign="top">
-                    <xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-                	<select name="{$name}" onMouseout="window.status='';return true;">
-                        <xsl:for-each select="list">
-                    		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-							<xsl:if test="id = ''">
-		                    	<option value="{$id}" selected="selected">
+					<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+					
+					<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
+						<xsl:for-each select="list">
+							<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+							<xsl:if test="id = 'NEW'">
+								<option value="{$id}" selected="selected">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
-							<xsl:if test="id != ''">
-		                    	<option value="{$id}">
+							<xsl:if test="id != 'NEW'">
+								<option value="{$id}">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
-                        </xsl:for-each>
-                	</select>
-                    </td>
+						</xsl:for-each>
+					</select>
+					</td>
 				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">
@@ -142,19 +166,20 @@
 						<xsl:attribute name="onclick"><xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/></xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="phpgw:conditional(not(value), '', value)"/></xsl:attribute>
 						<xsl:attribute name="href"><xsl:value-of select="phpgw:conditional(not(href), '', href)"/></xsl:attribute>
+						<xsl:attribute name="class"><xsl:value-of select="phpgw:conditional(not(class), '', class)"/></xsl:attribute>
 					</input>
 					</td>
 				</xsl:otherwise>
 			</xsl:choose>
-        </xsl:for-each>
+		</xsl:for-each>
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
-				<thead style="background:none">
+				<thead>
 					<tr>
 						<xsl:for-each select="item">
 							<td>
 								<xsl:if test="name">
-									<label style='margin:auto 0.25em'>
+									<label>
 										<xsl:attribute name="for"><xsl:value-of select="phpgw:conditional(not(name), '', name)"/></xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
@@ -165,7 +190,7 @@
 				</thead>
 			</xsl:if>
 		</table>
-    </div>
+	</div>
 </xsl:template>
 
 <xsl:template match="form/list_actions">
@@ -199,14 +224,18 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:apply-templates select="toolbar"/>
+		<xsl:apply-templates select="toolbar"/>
 	</form>
+
+	<form id="update_table_dummy" method='POST' action='' >
+	</form>
+
 </xsl:template>
 
 <xsl:template match="datatable">
 	<div id="message"/>
-    <div id="paginator"/>
-    <div id="datatable-container"/>
+	<div id="paginator"/>
+	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
 </xsl:template>
 
@@ -214,13 +243,13 @@
 	<script>
 		YAHOO.portico.setupDatasource = function() {
 			<xsl:if test="source">
-	            YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
+				YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
 					YAHOO.portico.initialSortedBy = false;
 					YAHOO.portico.initialFilters = false;
 					<xsl:if test="sorted_by">
 						YAHOO.portico.initialSortedBy = {key: '<xsl:value-of select="sorted_by/key"/>', dir: '<xsl:value-of select="sorted_by/dir"/>'};
 					</xsl:if>
-	        </xsl:if>
+			</xsl:if>
 
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
@@ -252,14 +281,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden=1">
+						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="editor">
 						editor: <xsl:value-of select="editor"/>,
 					    </xsl:if>
@@ -268,6 +297,15 @@
 				</xsl:for-each>
 			];
 		}
+		
+		<xsl:choose>
+			<xsl:when test="//actions != ''">
+  				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
+			</xsl:when>
+			<xsl:otherwise>
+				var actions = new Array();
+			</xsl:otherwise>	
+		</xsl:choose>
 
 		<xsl:choose>
 			<xsl:when test="//js_lang != ''">
