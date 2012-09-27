@@ -28,8 +28,8 @@
 	*/
 	phpgw::import_class('logistic.socommon');
 
-	include_class('logistic', 'activity', 'inc/model/');
-	
+	include_class('logistic', 'activity', '/inc/model/');
+
 	class logistic_soactivity extends logistic_socommon
 	{
 		protected static $so;
@@ -47,8 +47,8 @@
 			}
 			return self::$so;
 		}
-		
-		protected function add(logistic_activity &$activity)
+
+		protected function add(&$activity)
 		{
 			$cols = array(
 				'name',
@@ -60,7 +60,7 @@
 				'update_user',
 				'update_date'
 			);
-			
+
 			$values = array(
 				$this->marshal($activity->get_name(), 'string'),
 				$this->marshal($activity->get_parent_id(), 'int'),
@@ -71,7 +71,7 @@
 				$this->marshal($activity->get_update_user(), 'int'),
 				$this->marshal(strtotime('now'), 'int')
 			);
-			
+
 			$sql = 'INSERT INTO lg_activity (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
@@ -84,13 +84,13 @@
 			{
 				return 0;
 			}
-			
+
 		}
-		
-		protected function update(logistic_activity $activity)
+
+		protected function update($activity)
 		{
 			$id = intval($activity->get_id());
-			
+
 			$values = array(
 				'name=' . $this->marshal($activity->get_name(), 'string'),
 				'parent_id=' . $this->marshal($activity->get_parent_id(), 'int'),
@@ -101,7 +101,7 @@
 				'update_user=' . $this->marshal($activity->get_update_user(), 'int'),
 				'update_date=' . $this->marshal(strtotime('now'), 'int')
 			);
-			
+
 			$result = $this->db->query('UPDATE lg_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 			return $result;
@@ -150,7 +150,7 @@
 			if(isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "activity.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-			}/*
+			}
 			if(isset($filters['project']) && !$filters['project'] == '')
 			{
 				$filter_clauses[] = "activity.project_id = {$this->marshal($filters['project'], 'int')}";
@@ -159,7 +159,7 @@
 			{
 				$filter_clauses[] = "activity.responsible_user_id = {$this->marshal($filters['user'], 'int')}";
 			}
-*/
+
 			if(count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
@@ -192,7 +192,7 @@
 			if($activity == null)
 			{
 				$activity = new logistic_activity((int) $activity_id);
-				
+
 				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$activity->set_parent_id($this->unmarshal($this->db->f('parent_id'), 'int'));
 				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
@@ -202,8 +202,7 @@
 				$activity->set_update_date($this->unmarshal($this->db->f('update_date'), 'int'));
 				$activity->set_update_user($this->unmarshal($this->db->f('update_user'), 'int'));
 			}
-		
+
 			return $activity;
 		}
 	}
-?>
