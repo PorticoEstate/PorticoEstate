@@ -95,6 +95,9 @@
 
 	$_POST['submitit'] = "";
 
+	//avoid confusion
+	$GLOBALS['phpgw_info']['server']['usecookies'] = false;
+
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 	if(!$GLOBALS['sessionid'])
@@ -196,15 +199,16 @@
 	<table>
 HTML;
 
+	$Logout = new Logout();
+	$Logout->secKey = $secKey;
+	$Services->Logout($Logout);
+
 	if(!$Result)
 	{
 		echo "<H2> Ingen treff </H2>";
 		$GLOBALS['phpgw']->common->phpgw_exit();
 	}
 
-	$Logout = new Logout();
-	$Logout->secKey = $secKey;
-	$Services->Logout($Logout);
 
 	$skip_field = array
 	(
