@@ -10,9 +10,17 @@ Project description	logistic	no	Beskrivelse
 ID	logistic	no	ID
 t_new_project	logistic	no	Nytt prosjekt
 t_new_project_type	logistic	no	Ny prosjekttype
+t_new_activity	logistic	no	Ny aktivitet
 Project_type	logistic	no	Prosjekttype
 settings	logistic	no	innstillinger
 Project types	logistic	no	Prosjekttyper
 Project type name	logistic	no	Navn
 Project title	logistic	no	Prosjektnavn
 Description	logistic	no	Beskrivelse
+all_types	logistic	no	Alle
+Activity name	logistic	no	Aktivitetsnavn
+Start date	logistic	no	Startdato
+End date	logistic	no	Sluttdato
+Responsible user	logistic	no	Ansvarlig
+my_activities	logistic	no	Mine aktiviteter
+No records found	logistic	no	Ingen data

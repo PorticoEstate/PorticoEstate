@@ -109,7 +109,7 @@
 					break;
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'project_query', $search_for);
-					//$filters = array();
+					$filters = array('project_type' => phpgw::get_var('project_type'));
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
@@ -171,7 +171,7 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter',
-								'name' => 'project_types',
+								'name' => 'project_type',
 								'text' => lang('Project_type').':',
 								'list' => $project_type_array,
 							),
