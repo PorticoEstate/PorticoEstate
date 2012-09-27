@@ -232,12 +232,26 @@
 
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
-		        	YAHOO.portico.actions = <xsl:value-of select="//datatable/actions"/>;
+					YAHOO.portico.actions = [
+						<xsl:for-each select="//datatable/actions">
+							{
+								my_name: "<xsl:value-of select="my_name"/>",
+								text: "<xsl:value-of select="text"/>",
+								<xsl:if test="parameters">
+									parameters: <xsl:value-of select="parameters"/>,
+							    </xsl:if>
+								action: "<xsl:value-of select="action"/>"
+							}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+						</xsl:for-each>
+					];
 				</xsl:when>
 				<xsl:otherwise>
 					YAHOO.portico.actions = [];
 				</xsl:otherwise>
 			</xsl:choose>
+
+			YAHOO.portico.editor_action = "<xsl:value-of select="//datatable/editor_action"/>";
+			YAHOO.portico.disable_left_click = "<xsl:value-of select="//datatable/disable_left_click"/>";
 
 			YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
@@ -253,6 +267,9 @@
 					    </xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
+					    </xsl:if>
+						<xsl:if test="editor">
+						editor: <xsl:value-of select="editor"/>,
 					    </xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
