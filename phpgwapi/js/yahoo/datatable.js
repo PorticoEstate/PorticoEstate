@@ -112,7 +112,7 @@ YAHOO.portico.initializeDataTable = function()
 			var field = oArgs.editor.getColumn().field;
 			var value = oArgs.newData;
 			var id = oArgs.editor.getRecord().getData().id;
-console.log(oArgs.editor.getRecord());
+//console.log(oArgs.editor.getRecord());
 			var action = oArgs.editor.getDataTable().editor_action;
 
 			// Translate to unix time if the editor is a calendar.
@@ -140,11 +140,9 @@ console.log(oArgs.editor.getRecord());
 			var oArgs_edit = {menuaction:action,field:field,value:value,id:id};
 			var edit_Url = phpGWLink('index.php', oArgs_edit,true);
 
-alert(edit_Url);
-
 			var request = YAHOO.util.Connect.asyncRequest(
 					'GET',
-					'index.php?menuaction=' + action + "&amp;field=" + field + "&amp;value=" + value + "&amp;id=" + id,
+					edit_Url,
 					{
 						success: ajaxResponseSuccess,
 						failure: ajaxResponseFailure,
@@ -376,7 +374,7 @@ alert(edit_Url);
 		 		oDiv.style.color = '#009900';
 		 		oDiv.style.fontWeight = 'bold';
 		 		div_message.appendChild(oDiv);
-			alert(message_delete);
+//			alert(message_delete);
 		 		message_delete = "";
 			}
 
