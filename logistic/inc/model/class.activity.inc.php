@@ -27,8 +27,8 @@
  	* @version $Id $
 	*/
 
-		include_class('logistic', 'model' , 'inc/model/');
-		
+		include_class('logistic', 'model', '/inc/model/');
+
 		class logistic_activity extends logistic_model
 		{
 				public static $so;
@@ -46,11 +46,12 @@
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
 				* the database the ID should be empty so the database can add one according to its logic.
-				* 
+				*
 				* @param int $id the id of this project
 				*/
 				public function __construct(int $id = null)
 				{
+					echo "1";
 					$this->id = (int)$id;
 				}
 
@@ -71,74 +72,74 @@
 
 				public function get_name()
 				{
-					return $this->title; 
+					return $this->title;
 				}
-				
+
 				public function set_parent_id($parent_id)
 				{
 					$this->parent_id = $parent_id;
 				}
-				
+
 				public function get_parent_id()
 				{
 					return $this->parent_id;
 				}
-				
+
 				public function set_project_id($project_id)
 				{
 					$this->project_id = $project_id;
 				}
-				
+
 				public function get_project_id()
 				{
 					return $this->project_id;
 				}
-				
+
 				public function set_start_date($start_date)
 				{
 					$this->start_date = $start_date;
 				}
-				
+
 				public function get_start_date()
 				{
 					return $this->start_date;
 				}
-				
+
 				public function set_end_date($end_date)
 				{
 					$this->end_date = $end_date;
 				}
-				
+
 				public function get_end_date()
 				{
 					return $this->end_date;
 				}
-				
+
 				public function set_responsible_user_id($responsible_user_id)
 				{
 					$this->responsible_user_id = $responsible_user_id;
 				}
-				
+
 				public function get_responsible_user_id()
 				{
 					return $this->responsible_user_id;
 				}
-				
+
 				public function set_update_user($user_id)
 				{
 					$this->update_user = $user_id;
 				}
-				
+
 				public function get_update_user()
 				{
 					return $this->update_user;
 				}
-				
+
 				public function set_update_date($date)
 				{
 					$this->update_date = $date;
 				}
-				
+
 				public function get_update_date()
 				{
 					return $this->update_date;
@@ -146,7 +147,7 @@
 
 				/**
 				* Get a static reference to the storage object associated with this model object
-				* 
+				*
 				* @return the storage object
 				*/
 				public static function get_so()
@@ -171,4 +172,3 @@
 					);
 				}
 		}
-?>
