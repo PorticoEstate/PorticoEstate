@@ -195,6 +195,7 @@
 			$project_type_array = $this->so->get_project_types();
 
 			$data = array(
+				'datatable_name'	=> lang('project'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -253,7 +254,7 @@
 				),
 			);
 
-			self::render_template_xsl(array('project_datatable', 'datatable'), $data);
+			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
 		public function project_types()
@@ -280,6 +281,7 @@
 			{
 				//list project types
 				$data = array(
+				'datatable_name'	=> lang('project types'),
 					'form' => array(
 						'toolbar' => array(
 							'item' => array(
@@ -325,7 +327,7 @@
 					),
 				);
 
-				self::render_template_xsl(array('project_types_datatable', 'datatable'), $data);
+				self::render_template_xsl(array('datatable_common'), $data);
 			}
 		}
 

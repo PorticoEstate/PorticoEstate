@@ -57,7 +57,7 @@
 			{
 				return $this->query();
 			}
-			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
@@ -65,6 +65,7 @@
 			$user_array = $this->get_user_array();
 
 			$data = array(
+				'datatable_name'	=> lang('activity'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -138,7 +139,7 @@
 				),
 			);
 
-			self::render_template_xsl(array('activity_datatable', 'datatable'), $data);
+			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
 		public function query()
