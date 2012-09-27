@@ -10,7 +10,7 @@ Project description	logistic	no	Beskrivelse
 ID	logistic	no	ID
 t_new_project	logistic	no	Nytt prosjekt
 t_new_project_type	logistic	no	Ny prosjekttype
-t_new_activity	logistic	no	Ny aktivitet
+t_new_activity	logistic	no	Opprett ny aktivitet på dette prosjektet
 Project_type	logistic	no	Prosjekttype
 settings	logistic	no	innstillinger
 Project types	logistic	no	Prosjekttyper
