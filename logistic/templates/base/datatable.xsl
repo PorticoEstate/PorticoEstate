@@ -274,7 +274,7 @@
 				</xsl:for-each>
 			];
 		}
-<!--		
+		
 		<xsl:choose>
 			<xsl:when test="//actions != ''">
   				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
@@ -283,7 +283,7 @@
 				var actions = new Array();
 			</xsl:otherwise>	
 		</xsl:choose>
--->
+
 		<xsl:choose>
 			<xsl:when test="//js_lang != ''">
 				var lang = <xsl:value-of select="//js_lang"/>;
