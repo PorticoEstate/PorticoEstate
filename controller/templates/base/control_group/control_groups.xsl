@@ -6,7 +6,7 @@
 	
 		<h2><xsl:value-of select="control_area/title"/></h2>
 		
-		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', 'index.php', 'menuaction:controller.uicontrol.save_control_groups')" /></xsl:variable>
+		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_groups')" /></xsl:variable>
 
 		<form id="frm_save_control_groups" action="{$action_url}" method="post">
 			<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
