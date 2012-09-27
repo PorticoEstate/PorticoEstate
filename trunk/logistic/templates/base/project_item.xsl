@@ -6,7 +6,7 @@
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
 	<div class="identifier-header">
-		<h1><img src="{img_go_home}" /> 
+		<h1><img src="{img_go_home}" />
 				<xsl:value-of select="php:function('lang', 'Project')" />
 		</h1>
 	</div>
@@ -43,7 +43,7 @@
 							<xsl:value-of select="project/project_type_label" />
 						</xsl:otherwise>
 					</xsl:choose>
-					</dd>	
+					</dd>
 					<dt>
 						<label for="description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
 					</dt>
@@ -58,7 +58,7 @@
 					</xsl:choose>
 					</dd>
 				</dl>
-				
+
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">
@@ -69,7 +69,9 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
+							<xsl:variable name="lang_new_activity"><xsl:value-of select="php:function('lang', 't_new_activity')" /></xsl:variable>
 							<input type="submit" name="edit_project" value="{$lang_edit}" title = "{$lang_edit}" />
+							<input type="submit" name="new_activity" value="{$lang_new_activity}" title = "{$lang_new_activity}" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

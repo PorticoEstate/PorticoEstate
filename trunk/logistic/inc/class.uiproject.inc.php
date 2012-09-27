@@ -150,9 +150,35 @@
 				{
 					array_walk(
 									$result_data['results'], array($this, '_add_links'), "logistic.uiproject.view");
+									//$result_data['results'], array($this, 'add_actions'), array('project'));
 				}
 			}
 			return $this->yui_results($result_data);
+		}
+
+		public function add_actions(&$value, $key, $params)
+		{
+			$value['ajax'] = array();
+			$value['actions'] = array();
+			$value['labels'] = array();
+
+			$type = $params[0];
+
+			switch($type)
+			{
+				default:
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $value['id'])));
+					$value['labels'][] = lang('Show activity');
+
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.edit', 'id' => $value['id'])));
+					$value['labels'][] = lang('Edit activity');
+
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.add')));
+					$value['labels'][] = lang('New activity');
+			}
 		}
 
 		public function index()
@@ -309,6 +335,10 @@
 			if (isset($_POST['edit_project']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.edit', 'id' => $project_id));
+			}
+			else if (isset($_POST['new_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.add', 'project_id' => $project_id));
 			}
 			else
 			{
