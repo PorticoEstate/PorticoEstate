@@ -144,6 +144,10 @@
 			{
 				$filter_clauses[] = "{$table_alias}.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
+			if(isset($filters['project_type']) && !$filters['project_type'] == '')
+			{
+				$filter_clauses[] = "{$table_alias}.project_type_id = {$this->marshal($filters['project_type'], 'int')}";
+			}
 
 			if(count($filter_clauses))
 			{
@@ -171,7 +175,7 @@
 			{
 				$cols .= "* ";
 			}
-			//var_dump($sort_field);
+
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
@@ -198,6 +202,28 @@
 			return $project;
 		}
 		
+		public function get_projects()
+		{
+			$project_array = array();
+			$project_array[] = array(
+				'id' => '',
+				'name' => lang('all_types'),
+				'selected' => 1
+			);
+			$sql = "SELECT id, name FROM lg_project";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$project_array[] = array(
+						'id' => $this->db->f('id'),
+						'name' => $this->unmarshal($this->db->f('name'), 'string')
+						);
+			}
+			return $project_array;
+		}
+
+
 		private function get_project_type_label($id)
 		{
 			$sql = "SELECT name FROM lg_project_type where id=$id";
@@ -212,6 +238,11 @@
 		public function get_project_types()
 		{
 			$project_type_array = array();
+			$project_type_array[] = array(
+				'id' => '',
+				'name' => lang('all_types'),
+				'selected' => 1
+			);
 			$sql = "SELECT * FROM lg_project_type";
 			$this->db->query($sql, __LINE__, __FILE__);
 

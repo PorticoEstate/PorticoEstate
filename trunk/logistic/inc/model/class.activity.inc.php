@@ -27,7 +27,7 @@
  	* @version $Id $
 	*/
 
-		include_class('logistic', 'model' , 'inc/model');
+		include_class('logistic', 'model' , 'inc/model/');
 		
 		class logistic_activity extends logistic_model
 		{
@@ -40,6 +40,8 @@
 				protected static $start_date;
 				protected static $end_date;
 				protected static $responsible_user_id;
+				protected static $update_user;
+				protected static $update_date;
 
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -121,6 +123,26 @@
 				{
 					return $this->responsible_user_id;
 				}
+				
+				public function set_update_user($user_id)
+				{
+					$this->update_user = $user_id;
+				}
+				
+				public function get_update_user()
+				{
+					return $this->update_user;
+				}
+				
+				public function set_update_date($date)
+				{
+					$this->update_date = $date;
+				}
+				
+				public function get_update_date()
+				{
+					return $this->update_date;
+				}
 
 				/**
 				* Get a static reference to the storage object associated with this model object
@@ -130,7 +152,7 @@
 				public static function get_so()
 				{
 					if (self::$so == null) {
-						self::$so = CreateObject('logistic.soproject');
+						self::$so = CreateObject('logistic.soactivity');
 					}
 
 					return self::$so;
