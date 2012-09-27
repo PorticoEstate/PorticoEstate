@@ -45,7 +45,8 @@
 				'view_project_type' => true,
 				'edit_project_type' => true,
 				'add' => true,
-				'edit' => true
+				'edit' => true,
+				'edit_something' =>true
 		);
 		
 		public function __construct() {
@@ -160,7 +161,8 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+//			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			
@@ -195,6 +197,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
+					'editor_action' => 'logistic.uiproject.edit_something',
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -210,7 +213,8 @@
 						array(
 							'key' => 'description',
 							'label' => lang('Project description'),
-							'sortable'	=> false
+							'sortable'	=> false,
+							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
 						),
 						array(
 							'key' => 'project_type_label',
@@ -228,13 +232,20 @@
 			self::render_template_xsl(array( 'project_datatable', 'datatable' ), $data);
 		}
 		
+
+		public function edit_something()
+		{
+			return 'kvittering';
+		}
+
 		public function project_types()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::project_types";
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+//			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			
@@ -474,4 +485,3 @@
 			}
 		}
 	}
-?>
