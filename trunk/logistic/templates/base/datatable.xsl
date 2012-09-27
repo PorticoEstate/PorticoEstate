@@ -284,5 +284,10 @@
 			</xsl:otherwise>	
 		</xsl:choose>
 -->
+		<xsl:choose>
+			<xsl:when test="//js_lang != ''">
+				var lang = <xsl:value-of select="//js_lang"/>;
+			</xsl:when>
+		</xsl:choose>
 	</script>
 </xsl:template>
