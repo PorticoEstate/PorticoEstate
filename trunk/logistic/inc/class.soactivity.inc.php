@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id:$
+ 	* @version $Id$
 	*/
 	phpgw::import_class('logistic.socommon');
 
