@@ -41,7 +41,6 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
-	include_class('controller', 'date_helper', 'inc/helper/');
 		
 	class controller_uicontrol_location extends phpgwapi_uicommon
 	{
