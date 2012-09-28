@@ -76,7 +76,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			
@@ -98,6 +98,7 @@
 			// END as categories
 
 			$data = array(
+				'datatable_name'		=> 'Prosedyrer', //lang('procedures'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -161,7 +162,7 @@
 				),
 			);
 
-			self::render_template_xsl(array( 'procedure/procedures_datatable', 'datatable' ), $data);
+			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 
 		public function edit()
@@ -615,7 +616,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 			// YUI variables for paging and sorting
@@ -635,7 +637,8 @@
 
 			$exp_param 	= phpgw::get_var('export');
 			$export = false;
-			if(isset($exp_param)){
+			if(isset($exp_param) && $exp_param)
+			{
 				$export=true;
 				$num_of_objects = null;
 			}
@@ -654,7 +657,8 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach($result_objects as $result) {
+			foreach($result_objects as $result)
+			{
 				if(isset($result))
 				{
 					$rows[] = $result->serialize();
@@ -671,7 +675,8 @@
 
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
-			if(!$export){
+			if(!$export)
+			{
 				//Add action column to each row in result table
 				array_walk(
 					$result_data['results'],

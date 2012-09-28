@@ -95,11 +95,12 @@
 				);		
 			}
 			// END categories
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
+				'datatable_name'	=> 'Kontrollgrupper', //lang('control groups'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -169,7 +170,7 @@
 			);
 //_debug_array($data);
 
-			self::render_template_xsl(array( 'control_group/control_groups_datatable', 'datatable' ), $data);
+			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 
 		/**
@@ -644,7 +645,7 @@
 			$sort_field		= phpgw::get_var('sort');
 			if($sort_field == null)
 			{
-				$sort_field = 'control_group_id';
+				$sort_field = 'controller_control_group.id';
 			}
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			//Create an empty result set

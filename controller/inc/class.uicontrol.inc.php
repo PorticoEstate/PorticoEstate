@@ -117,7 +117,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
@@ -139,6 +139,7 @@
 			// END categories
 
 			$data = array(
+				'datatable_name'	=> 'Kontroller',//lang('controls'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -240,7 +241,7 @@
 				),
 			);
 
-			self::render_template_xsl(array( 'control/controls_datatable', 'datatable' ), $data);
+			self::render_template_xsl(array( 'datatable_common' ), $data);
 		}
 		
 		/**
@@ -816,7 +817,7 @@
 			
 			if($sort_field == null)
 			{
-				$sort_field = 'control_group_id';
+				$sort_field = 'controller_control.id';
 			}
 			
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;

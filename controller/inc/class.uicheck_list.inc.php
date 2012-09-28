@@ -101,11 +101,12 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
+				'datatable_name'	=> 'Sjekkliste (Ikke i bruk)',
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -184,7 +185,7 @@
 				),
 			);
 
-			self::render_template_xsl('datatable', $data);
+			self::render_template_xsl('datatable_common', $data);
 		}
 		
 		/**
