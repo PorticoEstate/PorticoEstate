@@ -51,8 +51,8 @@
 		protected function add(&$activity)
 		{
 			$cols = array(
+				'parent_activity_id',	
 				'name',
-				'parent_id',
 				'project_id',
 				'start_date',
 				'end_date',
@@ -61,9 +61,19 @@
 				'update_date'
 			);
 
+			if( $activity->get_project_id() == '')
+			{
+				$activity->set_project_id(1);
+			}
+			
+			if( $activity->get_responsible_user_id() == '')
+			{
+				$activity->set_responsible_user_id(1);
+			}
+			
 			$values = array(
-				$this->marshal($activity->get_name(), 'string'),
 				$this->marshal($activity->get_parent_id(), 'int'),
+				$this->marshal($activity->get_name(), 'string'),
 				$this->marshal($activity->get_project_id(), 'int'),
 				$this->marshal($activity->get_start_date(), 'int'),
 				$this->marshal($activity->get_end_date(), 'int'),
@@ -74,7 +84,7 @@
 
 			$sql = 'INSERT INTO lg_activity (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 			$result = $this->db->query($sql, __LINE__,__FILE__);
-
+						
 			if($result)
 			{
 				// Return the new activity ID
@@ -84,7 +94,6 @@
 			{
 				return 0;
 			}
-
 		}
 
 		protected function update($activity)
@@ -93,7 +102,7 @@
 
 			$values = array(
 				'name=' . $this->marshal($activity->get_name(), 'string'),
-				'parent_id=' . $this->marshal($activity->get_parent_id(), 'int'),
+				'parent_activity_id=' . $this->marshal($activity->get_parent_id(), 'int'),
 				'project_id=' . $this->marshal($activity->get_project_id(), 'int'),
 				'start_date=' . $this->marshal($activity->get_start_date(), 'int'),
 				'end_date=' . $this->marshal($activity->get_end_date(), 'int'),
@@ -104,7 +113,15 @@
 
 			$result = $this->db->query('UPDATE lg_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			return $result;
+			if($result)
+			{
+				// Return the new activity ID
+				return $this->db->get_last_insert_id('lg_activity', 'id');
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		protected function get_id_field_name()
