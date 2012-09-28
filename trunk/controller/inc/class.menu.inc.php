@@ -67,7 +67,7 @@
 											'component_for_check_list' => array
 											(
 												'text'	=> lang('component'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_location.register_control_to_component') ),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_register_to_component.index') ),
 												'image'	=> array('property', 'entity_1')
 											)
 										)
