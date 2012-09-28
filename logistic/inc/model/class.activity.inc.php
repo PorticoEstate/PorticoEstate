@@ -72,7 +72,7 @@
 
 				public function get_name()
 				{
-					return $this->title;
+					return $this->name;
 				}
 
 				public function set_parent_id($parent_id)
@@ -163,8 +163,8 @@
 				{
 					return array(
 						'id' => $this->get_id(),
-						'name' => $this->get_name(),
 						'parent_id' => $this->get_parent_id(),
+						'name' => $this->get_name(),
 						'project_id' => $this->get_project_id(),
 						'start_date' => $this->get_start_date(),
 						'end_date' => $this->get_end_date(),

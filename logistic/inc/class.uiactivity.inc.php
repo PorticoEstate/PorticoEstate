@@ -29,7 +29,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
-
+	
 	include_class('logistic', 'actvity');
 
 	class logistic_uiactivity extends phpgwapi_uicommon
@@ -39,6 +39,9 @@
 		private $so_project;
 		public $public_functions = array(
 			'query' => true,
+			'add' 	=> true,
+			'edit' => true,
+			'view' => true,
 			'index' => true
 		);
 
@@ -229,7 +232,123 @@
 
 			return $this->yui_results($result_data);
 		}
+		
+		public function add()
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit'));
+		}
 
+		public function edit()
+		{
+			$activity_id = phpgw::get_var('id');
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so->get_single($activity_id);
+			}
+			else
+			{
+				$activity = new logistic_activity();
+			}
+
+			$activity->set_project_id(phpgw::get_var('project_id'));
+			
+			if (isset($_POST['save_activity']))
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$activity->set_id(phpgw::get_var('id'));
+				$activity->set_name(phpgw::get_var('name'));
+				$activity->set_update_user($user_id);
+							
+				if(phpgw::get_var('start_date','string') != '')
+				{
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+					$activity->set_start_date($start_date_ts);
+				}
+				else
+				{
+					$activity->set_start_date(0);
+				}
+										
+				if( phpgw::get_var('end_date','string') != '')
+				{
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+					$activity->set_end_date($end_date_ts);
+				}
+				else
+				{
+					$activity->set_end_date(0);
+				}
+				
+				$activity_id = $this->so->store($activity);
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
+			}
+			else if (isset($_POST['cancel_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id));
+			}
+			else
+			{
+				$data = array
+					(
+					'activity' => $activity->toArray(),
+					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+					'editable' => true,
+					'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				);
+
+				$this->use_yui_editor('description');
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
+				
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+				
+				self::render_template_xsl(array('activity_item'), $data);
+			}
+		}
+
+		
+		public function view()
+		{
+			$activity_id = phpgw::get_var('id');
+			$project_id = phpgw::get_var('project_id');
+			if (isset($_POST['edit_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'id' => $activity_id, 'project_id' => $project_id));
+			}
+			else if (isset($_POST['new_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project_id));
+			}
+			else
+			{
+				if ($activity_id && is_numeric($activity_id))
+				{
+					$activity = $this->so->get_single($activity_id);
+				}
+
+				$activity_array = $activity->toArray();
+
+				if ($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+				
+				$activity->set_project_id($project_id);
+
+				$data = array
+					(
+						'activity' => $activity->toArray(),
+						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+						'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
+				self::render_template_xsl(array('activity_item'), $data);
+			}
+		}
+		
 		private function get_user_array()
 		{
 			$user_array = array();
@@ -245,5 +364,4 @@
 
 			return $user_array;
 		}
-
 	}

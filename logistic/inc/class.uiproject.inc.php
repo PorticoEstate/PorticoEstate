@@ -45,7 +45,8 @@
 			'edit_project_type' => true,
 			'edit_project_type_name' => true,
 			'add' => true,
-			'edit' => true
+			'edit' => true,
+			'edit_something' => true
 		);
 
 		public function __construct()
@@ -150,35 +151,9 @@
 				{
 					array_walk(
 									$result_data['results'], array($this, '_add_links'), "logistic.uiproject.view");
-									//$result_data['results'], array($this, 'add_actions'), array('project'));
 				}
 			}
 			return $this->yui_results($result_data);
-		}
-
-		public function add_actions(&$value, $key, $params)
-		{
-			$value['ajax'] = array();
-			$value['actions'] = array();
-			$value['labels'] = array();
-
-			$type = $params[0];
-
-			switch($type)
-			{
-				default:
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('Show activity');
-
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('Edit activity');
-
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'logistic.uiactivity.add')));
-					$value['labels'][] = lang('New activity');
-			}
 		}
 
 		public function index()
@@ -187,7 +162,7 @@
 			{
 				return $this->query();
 			}
-
+//			self::add_javascript('logistic', 'yahoo', 'datatable.js');
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -224,6 +199,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
+					'editor_action' => 'logistic.uiproject.edit_something',
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -239,7 +215,8 @@
 						array(
 							'key' => 'description',
 							'label' => lang('Project description'),
-							'sortable' => false
+							'sortable' => false,
+							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
 						),
 						array(
 							'key' => 'project_type_label',
@@ -254,7 +231,12 @@
 				),
 			);
 
-			self::render_template_xsl(array('datatable_common'), $data);
+			self::render_template_xsl('datatable_common', $data);
+		}
+
+		public function edit_something()
+		{
+			return 'kvittering';
 		}
 
 		public function project_types()
@@ -281,7 +263,6 @@
 			{
 				//list project types
 				$data = array(
-				'datatable_name'	=> lang('project types'),
 					'form' => array(
 						'toolbar' => array(
 							'item' => array(
@@ -327,7 +308,7 @@
 					),
 				);
 
-				self::render_template_xsl(array('datatable_common'), $data);
+				self::render_template_xsl(array('project_types_datatable', 'datatable'), $data);
 			}
 		}
 
@@ -340,7 +321,7 @@
 			}
 			else if (isset($_POST['new_activity']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.add', 'project_id' => $project_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project_id));
 			}
 			else
 			{
