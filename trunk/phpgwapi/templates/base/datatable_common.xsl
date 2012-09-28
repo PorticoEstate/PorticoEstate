@@ -298,6 +298,7 @@
 			];
 		}
 		
+<!--
 		<xsl:choose>
 			<xsl:when test="//actions != ''">
   				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
@@ -306,6 +307,8 @@
 				var actions = new Array();
 			</xsl:otherwise>	
 		</xsl:choose>
+-->
+		var actions = new Array();
 
 		<xsl:choose>
 			<xsl:when test="//js_lang != ''">
