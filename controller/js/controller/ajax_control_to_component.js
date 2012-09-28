@@ -47,7 +47,7 @@ $(document).ready(function()
 
 
 	$("#entity_id").change(function () {
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_category_by_entity', entity_id: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_category_by_entity', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString = "";
@@ -88,7 +88,7 @@ $(document).ready(function()
 
 
 	$("#location_type").change(function () {
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_type_category', location_type: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_location_type_category', location_type: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString = "";
@@ -167,7 +167,7 @@ $(document).ready(function()
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString = "";
@@ -207,7 +207,7 @@ $(document).ready(function()
 
 	$("#part_of_town_id").change(function ()
 	{
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:1, part_of_town_id: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_locations', child_level:1, part_of_town_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString  = "<option value=''>Velg</option>";
@@ -244,7 +244,7 @@ $(document).ready(function()
 
 	$("#loc1").change(function ()
 	{
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_locations', child_level:2, location_code: $(this).val()};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_locations', child_level:2, location_code: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
          var htmlString  = "<option value=''>Velg</option>";
@@ -440,7 +440,7 @@ function update_loc(level)
 function get_table_def()
 {
 	var oArgs = {
-		menuaction:'controller.uicontrol_location.get_entity_table_def',
+		menuaction:'controller.uicontrol_register_to_component.get_entity_table_def',
 		entity_id:$("#entity_id").val(),
 		cat_id:$("#cat_id").val()
 	};
@@ -498,7 +498,7 @@ function init_component_table()
 	}
 
 	var oArgs = {
-		menuaction:'controller.uicontrol_location.query2',
+		menuaction:'controller.uicontrol_register_to_component.query',
 		entity_id:$("#entity_id").val(),
 		cat_id:cat_id,
 		district_id:$("#district_id").val(),
@@ -540,7 +540,7 @@ function update_component_table()
 		}
 
 		var oArgs = {
-			menuaction:'controller.uicontrol_location.query2',
+			menuaction:'controller.uicontrol_register_to_component.query',
 			entity_id:$("#entity_id").val(),
 			cat_id:$("#cat_id").val(),
 			district_id:$("#district_id").val(),
