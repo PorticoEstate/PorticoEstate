@@ -105,6 +105,7 @@
 			// END categories
 
 			$data = array(
+				'datatable_name'	=> 'Kontrollpunkter', //lang(control items),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -175,9 +176,9 @@
 			
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('datatable');
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 		
-			self::render_template_xsl( array( 'control_item/control_items_datatable', 'datatable' ), $data);
+			self::render_template_xsl( array( 'datatable_common' ), $data);
 		}
 
 		/**
@@ -369,34 +370,41 @@
 				$filters['control_groups'] = $ctrl_group; 
 			}
 
+
 			$search_for = phpgw::get_var('query');
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 
 			// YUI variables for paging and sorting
-			$start_index	= phpgw::get_var('startIndex', 'int');
+			$start_index	= (int)phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field		= phpgw::get_var('sort');
 			if($sort_field == null)
 			{
-				$sort_field = 'control_item_id';
+				$sort_field = 'id';
 			}
+
 			if(phpgw::get_var('sort_dir') == 'desc')
+			{
 				$sort_ascending = false;
+			}
 			else
+			{
 				$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			}
 			//Create an empty result set
 			$records = array();
 
 			//Retrieve a contract identifier and load corresponding contract
 			$control_item_id = phpgw::get_var('control_item_id');
-			if(isset($control_item_id))
+			if(isset($control_item_id) && $control_item_id)
 			{
 				$control_item = $this->so->get_single($control_item_id);
 			}
