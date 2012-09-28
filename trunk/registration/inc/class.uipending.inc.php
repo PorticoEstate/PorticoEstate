@@ -229,6 +229,7 @@
 
 
 			$data = array(
+				'datatable_name' => lang('Pending for approval'),
 				'js_lang'	=>js_lang('edit', 'add'),
 				'form' => array(
 					'toolbar' => array(
