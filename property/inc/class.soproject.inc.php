@@ -863,13 +863,13 @@
 			return $this->db->f('power_meter');
 		}
 
-		function project_workorder_data($project_id = '')
+		function project_workorder_data($project_id = 0)
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
 			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
-				. " fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
+				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id as b_account_id"
 				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " WHERE project_id={$project_id}");
 
@@ -885,6 +885,7 @@
 					'vendor_id'			=> $this->db->f('vendor_id'),
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
+					'closed'			=> !!$this->db->f('closed'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
 					'contract_sum'		=> (int)$this->db->f('contract_sum'),
 					'addition_percentage'	=> (int)$this->db->f('addition')

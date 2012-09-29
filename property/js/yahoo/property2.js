@@ -345,6 +345,7 @@
 		newTD.style.fontWeight = 'bolder';
 		newTD.style.textAlign = 'right';
 		newTD.style.paddingRight = '0.8em';
+		newTD.style.whiteSpace = 'nowrap';
 		newTD.appendChild(document.createTextNode(sum));
 		newTR.appendChild(newTD);
   	}
