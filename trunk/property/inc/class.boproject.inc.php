@@ -512,6 +512,8 @@
 			$workorder_data			= $this->so->project_workorder_data($project_id);
 
 			$sum_deviation = 0;
+//combined_cost
+//diff
 
 			for ($i=0;$i<count($workorder_data);$i++)
 			{
@@ -544,6 +546,10 @@
 				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
 //				$values['workorder_budget'][$i]['paid_percent'] = (int)$workorder_data[$i]['paid_percent'];
 				$values['workorder_budget'][$i]['addition_percentage'] = $workorder_data[$i]['addition_percentage'];
+
+
+				$values['workorder_budget'][$i]['combined_cost'] = $workorder_data[$i]['closed'] ? 0 : ($_cost - $workorder_data[$i]['actual_cost']);
+				$values['workorder_budget'][$i]['diff'] = $_cost - $values['workorder_budget'][$i]['combined_cost'] - $values['workorder_budget'][$i]['actual_cost'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
