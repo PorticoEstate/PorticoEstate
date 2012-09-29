@@ -117,6 +117,7 @@
 	 */
 	function get_phpgw_link($path, $params)
 	{
+		$path = '/' . ltrim($path, '/');
 		$link_data = array();
 
 		$_param_sets = explode(',',$params);
