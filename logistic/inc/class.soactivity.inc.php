@@ -116,7 +116,7 @@
 			if($result)
 			{
 				// Return the new activity ID
-				return $this->db->get_last_insert_id('lg_activity', 'id');
+				return $id;
 			}
 			else
 			{

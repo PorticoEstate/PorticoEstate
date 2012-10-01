@@ -51,7 +51,7 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<input class="date" id="start_date" name="start_date" type="text">
-						    	<xsl:if test="activity/start_date != 0">
+						    	<xsl:if test="activity/start_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>	
@@ -68,7 +68,7 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<input class="date" id="end_date" name="end_date" type="text">
-						    	<xsl:if test="activity/end_date != 0">
+						    	<xsl:if test="activity/end_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>	

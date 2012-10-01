@@ -294,7 +294,6 @@
 					'activity' => $activity->toArray(),
 					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' => true,
-					'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 				);
 
 				$this->use_yui_editor('description');
