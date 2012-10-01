@@ -29,7 +29,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
-	
+
 	include_class('logistic', 'actvity');
 
 	class logistic_uiactivity extends phpgwapi_uicommon
@@ -90,12 +90,6 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('t_new_activity'),
-								'href' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
-								'class' => 'new_item'
 							),
 						),
 					),
@@ -232,7 +226,7 @@
 
 			return $this->yui_results($result_data);
 		}
-		
+
 		public function add()
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit'));
@@ -251,14 +245,14 @@
 			}
 
 			$activity->set_project_id(phpgw::get_var('project_id'));
-			
+
 			if (isset($_POST['save_activity']))
 			{
 				$user_id = $GLOBALS['phpgw_info']['user']['id'];
 				$activity->set_id(phpgw::get_var('id'));
 				$activity->set_name(phpgw::get_var('name'));
 				$activity->set_update_user($user_id);
-							
+
 				if(phpgw::get_var('start_date','string') != '')
 				{
 					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
@@ -268,7 +262,7 @@
 				{
 					$activity->set_start_date(0);
 				}
-										
+
 				if( phpgw::get_var('end_date','string') != '')
 				{
 					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
@@ -278,9 +272,9 @@
 				{
 					$activity->set_end_date(0);
 				}
-				
+
 				$activity_id = $this->so->store($activity);
-				
+
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
 			}
 			else if (isset($_POST['cancel_activity']))
@@ -298,15 +292,15 @@
 
 				$this->use_yui_editor('description');
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
-				
+
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-				
+
 				self::render_template_xsl(array('activity_item'), $data);
 			}
 		}
 
-		
+
 		public function view()
 		{
 			$activity_id = phpgw::get_var('id');
@@ -333,7 +327,7 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				
+
 				$activity->set_project_id($project_id);
 
 				$data = array
@@ -347,7 +341,7 @@
 				self::render_template_xsl(array('activity_item'), $data);
 			}
 		}
-		
+
 		private function get_user_array()
 		{
 			$user_array = array();

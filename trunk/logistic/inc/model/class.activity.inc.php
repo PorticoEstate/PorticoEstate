@@ -161,14 +161,19 @@
 
 				public function serialize()
 				{
+					$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+					$project_name = $this->get_so()->get_project_name($this->get_project_id());
+					$responsible_user = $this->get_so()->get_responsible_user($this->get_responsible_user_id());
+
 					return array(
 						'id' => $this->get_id(),
 						'parent_id' => $this->get_parent_id(),
 						'name' => $this->get_name(),
 						'project_id' => $this->get_project_id(),
-						'start_date' => $this->get_start_date(),
-						'end_date' => $this->get_end_date(),
-						'responsible_user_id' => $this->get_responsible_user_id()
+						'project_name' => $project_name,
+						'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
+						'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
+						'responsible_user_id' => $responsible_user
 					);
 				}
 		}

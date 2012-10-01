@@ -51,7 +51,7 @@
 		protected function add(&$activity)
 		{
 			$cols = array(
-				'parent_activity_id',	
+				'parent_activity_id',
 				'name',
 				'project_id',
 				'start_date',
@@ -65,12 +65,12 @@
 			{
 				$activity->set_project_id(1);
 			}
-			
+
 			if( $activity->get_responsible_user_id() == '')
 			{
 				$activity->set_responsible_user_id(1);
 			}
-			
+
 			$values = array(
 				$this->marshal($activity->get_parent_id(), 'int'),
 				$this->marshal($activity->get_name(), 'string'),
@@ -84,7 +84,7 @@
 
 			$sql = 'INSERT INTO lg_activity (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 			$result = $this->db->query($sql, __LINE__,__FILE__);
-						
+
 			if($result)
 			{
 				// Return the new activity ID
@@ -221,5 +221,35 @@
 			}
 
 			return $activity;
+		}
+
+		public function get_project_name($id)
+		{
+			if($id && is_numeric($id))
+			{
+				$result = $this->db->query('SELECT name FROM lg_project WHERE id='.$id, __LINE__,__FILE__);
+
+				while($this->db->next_record())
+				{
+					// Return the new activity ID
+					return $this->db->f('name');
+				}
+			}
+		}
+
+		public function get_responsible_user($user_id)
+		{
+			if($user_id && is_numeric($user_id))
+			{
+				$account = $GLOBALS['phpgw']->accounts->get($user_id);
+				if(isset($account))
+				{
+				 return $account->__toString();
+				}
+				else
+				{
+					return lang('nobody');
+				}
+			}
 		}
 	}
