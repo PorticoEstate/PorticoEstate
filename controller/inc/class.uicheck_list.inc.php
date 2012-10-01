@@ -39,13 +39,13 @@
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('controller.socheck_list');
+	phpgw::import_class('phpgwapi.datetime');
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
-	include_class('controller', 'date_helper', 'inc/helper/');
-	
+		
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
 		private $so;
@@ -101,11 +101,12 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
 			$data = array(
+				'datatable_name'	=> 'Sjekkliste (Ikke i bruk)',
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -184,7 +185,7 @@
 				),
 			);
 
-			self::render_template_xsl('datatable', $data);
+			self::render_template_xsl('datatable_common', $data);
 		}
 		
 		/**
@@ -373,12 +374,11 @@
 			$comment = phpgw::get_var('comment', 'string');
 					
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$deadline_date_ts = date_helper::get_timestamp_from_date( $deadline_date, $dateformat );
+			$deadline_date_ts = phpgwapi_datetime::date_to_timestamp( $deadline_date );
 			
 			if($planned_date != '')
 			{
-				$planned_date_ts = date_helper::get_timestamp_from_date( $planned_date, $dateformat );
+				$planned_date_ts = phpgwapi_datetime::date_to_timestamp( $planned_date );
 			}
 			else
 			{
@@ -387,7 +387,7 @@
 			
 			if($completed_date != '')
 			{
-				$completed_date_ts = date_helper::get_timestamp_from_date( $completed_date, $dateformat );
+				$completed_date_ts = phpgwapi_datetime::date_to_timestamp( $completed_date );
 				$status = controller_check_list::STATUS_DONE;
 			}
 			else

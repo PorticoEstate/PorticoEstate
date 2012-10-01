@@ -77,6 +77,45 @@
 				)     
 			);
 			
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
+			{
+				$menus['admin'] = array
+				(
+					'index'	=> array
+					(
+						'text'	=> lang('Configuration'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'logistic') )
+					),
+					'acl'	=> array
+					(
+						'text'	=> lang('Configure Access Permissions'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'logistic') )
+					),
+					'project_types'	=> array
+					(
+						'text'	=> lang('Project types'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiproject.project_types') )
+					),
+/*					'control_cats'	=> array
+					(
+						'text'	=> lang('Control area'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'controller', 'location' => '.control', 'global_cats' => 'true', 'menu_selection' => 'admin::controller::control_cats') )
+					),
+					'role_at_location'	=> array
+					(
+						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.responsiblility_role', 'menu_selection' => 'admin::controller::role_at_location') ),
+						'text'	=>	lang('role at location'),
+						'image'	=> array('property', 'responsibility_role')
+					),
+					'controller_document_types'	=> array
+					(
+						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'controller.uidocument.document_types', 'menu_selection' => 'admin::controller::controller_document_types') ),
+						'text'	=>	lang('Document types')
+					)*/
+				);
+			}
+			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;

@@ -41,9 +41,20 @@
 
 		}
 
-		function add_listener($name)
+		function add_listener($name, $type = 'date')
 		{
-			$this->_input_modern($name);
+			switch($type)
+			{
+				case 'datetime':
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");	
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$_type = 'datetime';
+					break;
+				default:
+					$_type = 'date';
+			}
+
+			$this->_input_modern($name, $_type);
 		}
 
 		/**
@@ -52,11 +63,11 @@
 		* @access private
 		* @param string $name the element ID
 		*/
-		function _input_modern($id)
+		function _input_modern($id, $type)
 		{
 			$js = <<<JS
 			$(function() {
-				$( "#{$id}" ).datepicker({ 
+				$( "#{$id}" ).{$type}picker({ 
 					dateFormat: '{$this->dateformat}',
 					showWeek: true,
 					changeMonth: true,

@@ -29,7 +29,7 @@
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
-	include_class('controller', 'date_helper', 'inc/helper/');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class controller_control extends controller_model
 	{
@@ -257,14 +257,14 @@
 				
 				if(phpgw::get_var('start_date','string') != '')
 				{
-					$start_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('start_date','string'), $dateformat );
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
 					$this->set_start_date($start_date_ts);
 				}else
 					$this->set_start_date(0);
 								
 				if( phpgw::get_var('end_date','string') != '')
 				{
-					$end_date_ts = date_helper::get_timestamp_from_date( phpgw::get_var('end_date','string'), $dateformat );
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
 					$this->set_end_date( $end_date_ts );
 				}else
 				{

@@ -98,6 +98,116 @@ YAHOO.portico.initializeDataTable = function()
     };
     myDataTable.sortColumn = handleSorting;
 
+	/* Inline editor from 'rental'*/
+
+
+	myDataTable.editor_action = YAHOO.portico.editor_action;
+
+		// Handle mouseover and click events for inline editing
+		myDataTable.subscribe("cellMouseoverEvent", highlightEditableCell);
+		myDataTable.subscribe("cellMouseoutEvent", myDataTable.onEventUnhighlightCell);
+		myDataTable.subscribe("cellClickEvent", myDataTable.onEventShowCellEditor);
+
+		myDataTable.subscribe("editorSaveEvent", function(oArgs) {
+			var field = oArgs.editor.getColumn().field;
+			var value = oArgs.newData;
+			var id = oArgs.editor.getRecord().getData().id;
+//console.log(oArgs.editor.getRecord());
+			var action = oArgs.editor.getDataTable().editor_action;
+
+			// Translate to unix time if the editor is a calendar.
+			if (oArgs.editor._sType == 'date') {
+				var selectedDate = oArgs.editor.calendar.getSelectedDates()[0];
+				//alert("selDate1: " + selectedDate);
+				// Make sure we're at midnight GMT
+				selectedDate = selectedDate.toString().split(" ");
+				//for(var e=0;e<selectedDate.length;e++){
+				//	alert("element " + e + ": " + selectedDate[e]);
+				//}
+				if(selectedDate[3] == "00:00:00"){
+				//	alert("seldate skal byttes!");
+					selectedDate = selectedDate.slice(0,3).join(" ") + " " + selectedDate[5] + " 00:00:00 GMT"; 
+				}
+				else{
+					selectedDate = selectedDate.slice(0,4).join(" ") + " 00:00:00 GMT";
+				}
+				//selectedDate = selectedDate.toString().split(" ").slice(0, 4).join(" ") + " 00:00:00 GMT";
+				//alert("selDate2: " + selectedDate);
+				var value = Math.round(Date.parse(selectedDate) / 1000);
+				//alert("selDate3 value: " + value);
+			}
+
+			var oArgs_edit = {menuaction:action,field:field,value:value,id:id};
+			var edit_Url = phpGWLink('index.php', oArgs_edit,true);
+
+			var request = YAHOO.util.Connect.asyncRequest(
+					'GET',
+					edit_Url,
+					{
+						success: ajaxResponseSuccess,
+						failure: ajaxResponseFailure,
+						args:oArgs.editor.getDataTable()
+					}
+				);
+		});
+
+/*
+		// Don't set the row to be left-clickable if the table is editable by inline editors.
+		// In that case we use cellClickEvents instead
+		var table_should_be_clickable = true;
+		for (i in YAHOO.portico.columnDefs) {
+			if (YAHOO.portico.columnDefs[i].editor) {
+				//table_should_be_clickable = false;
+			}
+		}
+
+		if (table_should_be_clickable && !YAHOO.portico.disable_left_click) {
+			//... create a handler for regular clicks on a table row
+			myDataTable.subscribe("rowClickEvent", function(e,obj) {
+				YAHOO.util.Event.stopEvent(e);
+
+				var target = e.target;
+				var record = this.getRecord(target);
+				var row = this.getRow(target);
+				//once you get here you can access values like ..
+				//record.getData("ColumnName") or row.rowIndex
+
+				//... trigger first action on row click
+			//	var row = obj.table.getTrEl(e.target);
+				if(row)
+				{
+			//		var record = obj.table.getRecord(row);
+					//... check whether this action should be an AJAX call
+					if(record.getData().ajax[0]) {
+						var request = YAHOO.util.Connect.asyncRequest(
+							'GET',
+							//... execute first action
+							record.getData().actions[0],
+							{
+								success: ajaxResponseSuccess,
+								failure: ajaxResponseFailure,
+								args:obj.table
+							}
+						);
+					} else {
+						//... execute first action
+						window.location = record.getData().actions[0];
+					}
+				}
+			},this);
+
+			//... highlight rows on mouseover.  This too only happens if the table is
+			// not editable.
+			myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+			myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+		}
+
+*/
+
+
+	/*  Inline editor from 'rental'*/
+
+
 	/* Start from Property*/
 
   /********************************************************************************
@@ -252,6 +362,32 @@ YAHOO.portico.initializeDataTable = function()
 	}
 
 
+		//... calback methods for handling ajax calls
+		var ajaxResponseSuccess = function(o){
+			message_delete = o.responseText.toString().replace("\"","").replace("\"","");
+			delete_content_div("message",1);
+			if(message_delete != "")
+			{
+		 		oDiv=document.createElement("DIV");
+		 		txtNode = document.createTextNode(message_delete);
+		 		oDiv.appendChild(txtNode);
+		 		oDiv.style.color = '#009900';
+		 		oDiv.style.fontWeight = 'bold';
+		 		div_message.appendChild(oDiv);
+//			alert(message_delete);
+		 		message_delete = "";
+			}
+
+			var state = YAHOO.util.History.getCurrentState('state');
+			handleHistoryNavigation(state);
+		};
+
+		var ajaxResponseFailure = function(o)
+		{
+			alert('feil');
+		};
+
+
 	var delete_record = function(sUrl)
 	{
 		var callback =	{	success: function(o){
@@ -398,6 +534,14 @@ YAHOO.portico.initializeDataTable = function()
 
 
 };
+
+	var highlightEditableCell = function(oArgs) {
+		var elCell = oArgs.target;
+		if(YAHOO.util.Dom.hasClass(elCell, "yui-dt-editable")) {
+			myDataTable.highlightCell(elCell);
+		}
+	};
+
 
 
 	onDownloadClick = function()

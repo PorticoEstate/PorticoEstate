@@ -29,7 +29,6 @@
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
-	include_class('controller', 'date_helper', 'inc/helper/');
 
 	class controller_component extends controller_model
 	{

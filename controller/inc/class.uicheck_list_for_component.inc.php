@@ -198,7 +198,7 @@
 				'lists' => $lists
 			);
 
-			//self::add_javascript('controller', 'yahoo', 'datatable.js');
+			//self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			self::add_javascript('controller', 'controller', 'controller_datatable_test.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -206,7 +206,7 @@
 
 			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'equipmens_location', 'controller' );
 
-			//self::render_template_xsl('datatable', $data);
+			//self::render_template_xsl('datatable_common', $data);
 			self::render_template_xsl('component', $data);
 */
 			if(phpgw::get_var('phpgw_return_as') == 'json') {

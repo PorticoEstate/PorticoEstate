@@ -477,18 +477,20 @@
 		
         public function document_types()
         {
-            if(phpgw::get_var('phpgw_return_as') == 'json') {
+            if(phpgw::get_var('phpgw_return_as') == 'json')
+            {
                 return $this->get_document_types();
                 self::render_template_xsl(array('procedure/procedure_tabs', 
                 								'common', 
                 								'procedure/procedure_documents'), 
                                         $data);
     	    }
-        	self::add_javascript('controller', 'yahoo', 'datatable.js');
+        	self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
         	phpgwapi_yui::load_widget('datatable');
         	phpgwapi_yui::load_widget('paginator');
         
         	$data = array(
+        		'datatable_name'	=> 'Dokument typer',
         		'form' => array(
         	    ),
         		'datatable' => array(
@@ -514,6 +516,6 @@
         		),
         	);
     
-            self::render_template_xsl('datatable', $data);
+            self::render_template_xsl('datatable_common', $data);
         }
     }

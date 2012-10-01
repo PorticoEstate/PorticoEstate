@@ -1,13 +1,24 @@
-	var formatterCheckLocation = function(elCell, oRecord, oColumn, oData)
+	var main_source;
+	var oArgs_edit = {menuaction:'registration.uipending.edit'};
+	var edit_Url = phpGWLink('index.php', oArgs_edit);
+
+	formatLinkPending = function(elCell, oRecord, oColumn, oData)
+	{
+		var id = oRecord.getData(oColumn.key);
+		elCell.innerHTML = '<a href="' + edit_Url + '&id=' + id + '">' + lang['edit'] + '</a>'; 
+	};
+
+
+	var formatterCheckPending = function(elCell, oRecord, oColumn, oData)
 	{
 		var checked = '';
 		var hidden = '';
-		if(oRecord.getData('location_registered'))
+		if(oRecord.getData('reg_approved'))
 		{
 			checked = "checked = 'checked'";
-			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[control_location_orig][]\" value=\""+oRecord.getData('location_code')+"\"/>";
+			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[pending_users_orig][]\" value=\""+oRecord.getData('reg_id')+"\"/>";
 		}
-		elCell.innerHTML = hidden + "<center><input type=\"checkbox\" class=\"mychecks\"" + checked + "value=\""+oRecord.getData('location_code')+"\" name=\"values[control_location][]\"/></center>";
+		elCell.innerHTML = hidden + "<center><input type=\"checkbox\" class=\"mychecks\"" + checked + "value=\""+oRecord.getData('reg_id')+"\" name=\"values[pending_users][]\"/></center>";
 	}
 
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
@@ -43,26 +54,9 @@
 		}
 	}
 	
-	function saveLocationToControl()
+	function onSave()
 	{
-		var control_id_value = document.getElementById('control_id').value;
-		
-		if( !(control_id_value > 0) )
-		{
-			var choose_control_elem = document.getElementById('choose_control');
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
-						
-			error_elem.style.display = 'block';
-			
-			return false;
-		}
-		else
-		{
-			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
-			error_elem.style.display = 'none';
-		}
-
-		var divs = YAHOO.util.Dom.getElementsByClassName('location_submit');
+		var divs = YAHOO.util.Dom.getElementsByClassName('user_submit');
 		var mydiv = divs[divs.length-1];
 
 		// styles for dont show
@@ -84,14 +78,6 @@
 			mydiv.appendChild(myclone);
 		}
 
-
-		var control_id_field = document.createElement('input');
-		control_id_field.setAttribute('name', 'control_id');
-		control_id_field.setAttribute('type', 'text');
-		control_id_field.setAttribute('value', control_id_value);
-		mydiv.appendChild(control_id_field);
-
-/*
 		if( !(true) )
 		{
 			var datatable_container_elem = document.getElementById('datatable-container');
@@ -106,7 +92,7 @@
 			var error_elem = YAHOO.util.Dom.getElementsByClassName('error_msg')[0];
 			error_elem.style.display = 'none';
 		}
-*/
+
 		mydiv.style.display = "none";
 	}
 
