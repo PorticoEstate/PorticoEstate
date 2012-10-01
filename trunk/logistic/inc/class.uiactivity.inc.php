@@ -136,6 +136,32 @@
 				),
 			);
 
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'parent_id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new',
+						'text' 			=> lang('add sub activity'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uiactivity.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+
+
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
