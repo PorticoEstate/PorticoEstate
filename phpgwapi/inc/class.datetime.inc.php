@@ -839,9 +839,9 @@
 		}
 
 		/**
-		* Convert a date araray to a unix timestamp
+		* Convert a date array to a unix timestamp
 		*
-		* @param array $date the date array to convert, must contain keys day, month & year
+		* @param string $date the date to convert, must contain keys day, month & year
 		* @return int unix timestamp
 		*/
 		public static function date_to_timestamp($datestr = '')
@@ -851,8 +851,48 @@
 				return 0;
 			}
 
+			if( strpos($datestr, ':') )
+			{
+				return self::datetime_to_timestamp($datestr);
+			}
+
 			$date_array	= self::date_array($datestr);
 			return mktime (13, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+		}
+
+
+		/**
+		* Convert a datetime to a unix timestamp
+		*
+		* @param string $date the date convert
+		* @return int unix timestamp
+		*/
+		public static function datetime_to_timestamp($datestr = '')
+		{
+			if ( !$datestr )
+			{
+				return 0;
+			}
+
+			$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(substr_count($datestr, ':') == 1 )
+			{
+				$format .= ' H:i';
+			}
+			else if(substr_count($datestr, ':') == 2 )
+			{
+				$format .= ' H:i:s';
+			}
+			
+			$date = DateTime::createFromFormat("{$format}", $datestr);
+			if($date)
+			{
+				return $date->getTimestamp();
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/**
