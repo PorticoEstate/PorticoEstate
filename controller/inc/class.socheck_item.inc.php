@@ -280,52 +280,7 @@
 				return null;
 			}
 		}
-		
-	/* Later ikke til at denne er i bruk: Torstein 10.07.12
-		public function get_check_items($check_list_id, $status, $type, $return_type = "return_object"){
-			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, "; 
-			$sql .= "coi.id as coi_id, coi.title, coi.required, coi.what_to_do, coi.how_to_do, coi.control_group_id, coi.type "; 
-			$sql .= "FROM controller_check_item ci "; 
-			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
-			$sql .= "WHERE ci.check_list_id = $check_list_id ";
-			
-			if($status == 'open')
-				$sql .= "AND ci.status = 0 ";
-			else if($status == 'handled')
-				$sql .= "AND ci.status = 1 ";
 				
-			if($type != null)
-				$sql .= "AND coi.type = '$type'";
-				
-			$this->db->query($sql);
-			
-			while ($this->db->next_record()) {
-				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
-				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-				
-				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
-				$control_item->set_title($this->db->f('title', true), 'string');
-				$control_item->set_required($this->db->f('required', true), 'string');
-				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
-				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
-				$control_item->set_control_group_id($this->db->f('control_group_id', true), 'string');
-				$control_item->set_type($this->db->f('type', true), 'string');
-				
-				if($return_type == "return_array"){
-					$check_item->set_control_item($control_item->toArray());
-					$check_items_array[] = $check_item->toArray();
-				}
-				else{
-					$check_item->set_control_item($control_item);
-					$check_items_array[] = $check_item;
-				}
-			}
-			
-			return $check_items_array;
-		}
-		*/
-		
 		/**
 		 * Get check item objects from database including control item and related cases 
 		 * 
