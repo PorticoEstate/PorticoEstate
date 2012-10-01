@@ -275,9 +275,10 @@
 			if (isset($_POST['save_activity']))
 			{
 				$user_id = $GLOBALS['phpgw_info']['user']['id'];
-				$activity->set_id(phpgw::get_var('id'));
-				$activity->set_name(phpgw::get_var('name'));
-				$activity->set_update_user($user_id);
+				$activity->set_id( phpgw::get_var('id') );
+				$activity->set_name( phpgw::get_var('name') );
+				$activity->set_update_user( $user_id );
+				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
 
 				if(phpgw::get_var('start_date','string') != '')
 				{
@@ -309,8 +310,13 @@
 			}
 			else
 			{
+				
+				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+				
+				
 				$data = array
 					(
+					'user_array' => $accounts,
 					'activity' => $activity->toArray(),
 					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' => true,

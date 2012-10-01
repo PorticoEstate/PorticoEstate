@@ -78,6 +78,34 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
+					<dt>
+						<label for="end_date">Ansvarlig</label>
+					</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="editable">
+								<select name="responsible_user_id">
+					        <xsl:for-each select="user_array">
+					        	<xsl:variable name="full_name">
+					        		<xsl:value-of disable-output-escaping="yes" select="account_firstname"/><xsl:text> </xsl:text>
+					        		<xsl:value-of disable-output-escaping="yes" select="account_lastname"/>
+					        	</xsl:variable>
+					        	<option value="{account_id}">
+					        		<xsl:if test="activity/responsible_user_id = account_id">
+						        		<xsl:attribute name="selected">
+	        								selected
+        								</xsl:attribute>
+						        	</xsl:if>
+					          	<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
+					          </option>
+					        </xsl:for-each>
+					      </select>
+					      </xsl:when>
+							<xsl:otherwise>
+							<span><xsl:value-of select="activity/responsible_user_id"/></span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
 				</dl>
 				
 				<div class="form-buttons">
