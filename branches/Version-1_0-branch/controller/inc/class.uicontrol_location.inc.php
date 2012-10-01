@@ -41,7 +41,6 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
-	include_class('controller', 'date_helper', 'inc/helper/');
 		
 	class controller_uicontrol_location extends phpgwapi_uicommon
 	{
@@ -67,12 +66,9 @@
 			'view_locations_for_control' 		=> true,
 			'register_control_to_location' 		=> true,
 			'register_control_to_location_2'	=> true,
-			'register_control_to_component'		=> true,
-			'edit_component'					=> true,
 			'get_locations_for_control' 		=> true,
 			'get_location_category'				=> true,
 			'get_district_part_of_town'			=> true,
-			'query2'							=> true,
 			'get_category_by_entity'			=> true,
 			'get_entity_table_def'				=> true,
 			'get_locations'						=> true,
@@ -418,124 +414,6 @@
 			return $category_list;
 		}
 
-		function register_control_to_component()
-		{
-		    self::set_active_menu('controller::control::component_for_check_list');
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$receipt = array();
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				return $this->query2();
-			}
-
-			$msgbox_data = array();
-			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
-			{
-				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-			}
-
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array())
-			);	
-
-			$GLOBALS['phpgw']->translation->add_app('property');
-			$entity			= CreateObject('property.soadmin_entity');
-			$entity_list 	= $entity->read(array('allrows' => true));
-
-			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-
-			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
-			$location_type_list = execMethod('property.soadmin_location.select_location_type');
-
-			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($location_type_list ,array ('id'=>'','name'=>lang('select')));
-
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-
-			$control_area = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-
-								
-			$control_area_list = array();
-			foreach($control_area['cat_list'] as $cat_list)
-			{
-				$control_area_list[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-
-			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
-
-			
-					
-			$data = array
-			(
-				'td_count'						=> '""',
-		//		'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
-				'msgbox_data'					=> $msgbox_data,
-				'control_area_list'		=> array('options' => $control_area_list),
-				'filter_form' 					=> array
-													(
-														'control_area_list'		=> array('options' => $control_area_list),
-														'entity_list' 			=> array('options' => $entity_list),
-														'district_list' 		=> array('options' => $district_list),
-														'part_of_town_list'		=> array('options' => $part_of_town_list),
-														'location_type_list'	=> array('options' => $location_type_list),
-													),
-				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_location.edit_component'))
-			);
-
-
-
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
-			$theme = 'ui-lightness';
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/development-bundle/themes/{$theme}/jquery.ui.autocomplete.css");
-
-
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
-
-			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
-	//		self::add_javascript('controller', 'yahoo', 'register_control_to_component.js');
-			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
-
-			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
-		}
-	
 
 		public function get_location_type_category()
 		{
@@ -627,100 +505,4 @@
 			return $locations;
 		}
 
-
-
-		public function query2()
-		{
-			$entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
-			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-			$control_registered	= phpgw::get_var('control_registered', 'bool');
-
-			if(!$entity_id && !$cat_id)
-			{
-				$values = array();
-			}
-			else
-			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				$boentity	= CreateObject('property.boentity',false, 'entity');
-				$boentity->results = $results;
-				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
-			}		
-
-			foreach($values as &$entry)
-			{
-				$checked = '';
-				if($this->so_control->check_control_component($control_id,$location_id,$entry['id']))
-				{
-					$checked =  'checked = "checked" disabled = "disabled"';
-					$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
-				}
-				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
-			}
-
-			
-			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$return_data['recordsReturned'] = count($values);
-			$return_data['totalRecords'] = $boentity->total_records;
-			$return_data['startIndex'] = $this->start;
-			$return_data['sort'] = 'location_code';
-			$return_data['dir'] = "ASC";
-			$return_data['pageSize'] = $results;
-			$return_data['activePage'] = floor($this->start / $results) + 1;
-			$return_data['records'] = $values;
-
-			return $return_data;
-		}
-
-		public function edit_component()
-		{
-			if($values = phpgw::get_var('values'))
-			{
-				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
-				{
-					$receipt['error'][]=true;
-					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
-				}
-				if(!$receipt['error'])
-				{
-
-					if($this->so_control->register_control_to_component($values))
-					{
-						$result =  array
-						(
-							'status'	=> 'updated'
-						);
-					}
-					else
-					{
-						$result =  array
-						(
-							'status'	=> 'error'
-						);
-					}
-				}
-			}
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
-				{
-					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-					$result['receipt'] = $receipt;
-				}
-				else
-				{
-					$result['receipt'] = array();
-				}
-				return $result;
-			}
-			else
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'));
-			}
-		}
 	}

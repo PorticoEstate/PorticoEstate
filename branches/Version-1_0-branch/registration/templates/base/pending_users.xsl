@@ -126,13 +126,13 @@
 			];
 
 		var main_source = '<xsl:value-of select="source"/>';
-		var main_columnDefs = YAHOO.portico.columnDefs;
-		var main_form = 'queryForm';
-		var main_filters = ['status_id', 'responsibility_roles_list'];
-		var main_container = 'datatable-container';
-		var main_table_id = 'datatable';
-		var main_pag = 'data_paginator';
-		var related_table = new Array('users_table');
+//		var main_columnDefs = YAHOO.portico.columnDefs;
+//		var main_form = 'queryForm';
+//		var main_filters = ['status_id', 'responsibility_roles_list'];
+//		var main_container = 'datatable-container';
+//		var main_table_id = 'datatable';
+//		var main_pag = 'data_paginator';
+//		var related_table = new Array('users_table');
 	
 //		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
 		

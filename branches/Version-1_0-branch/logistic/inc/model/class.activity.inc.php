@@ -28,25 +28,30 @@
 	*/
 
 		include_class('logistic', 'model', '/inc/model/');
-		
-		class logistic_project extends logistic_model
+
+		class logistic_activity extends logistic_model
 		{
 				public static $so;
 
 				protected static $id;
 				protected static $name;
-				protected static $project_type_id;
-				protected static $project_type_label;
-				protected static $description;
+				protected static $parent_id;
+				protected static $project_id;
+				protected static $start_date;
+				protected static $end_date;
+				protected static $responsible_user_id;
+				protected static $update_user;
+				protected static $update_date;
 
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
 				* the database the ID should be empty so the database can add one according to its logic.
-				* 
+				*
 				* @param int $id the id of this project
 				*/
 				public function __construct(int $id = null)
 				{
+//					echo "1";
 					$this->id = (int)$id;
 				}
 
@@ -67,48 +72,88 @@
 
 				public function get_name()
 				{
-					return $this->name; 
+					return $this->name;
 				}
-				
-				public function set_project_type_id($project_type_id)
+
+				public function set_parent_id($parent_id)
 				{
-					$this->project_type_id = $project_type_id;
+					$this->parent_id = $parent_id;
 				}
-				
-				public function get_project_type_id()
+
+				public function get_parent_id()
 				{
-					return $this->project_type_id;
+					return $this->parent_id;
 				}
-				
-				public function set_project_type_label($project_type_label)
+
+				public function set_project_id($project_id)
 				{
-					$this->project_type_label = $project_type_label;
+					$this->project_id = $project_id;
 				}
-				
-				public function get_project_type_label()
+
+				public function get_project_id()
 				{
-					return $this->project_type_label;
+					return $this->project_id;
 				}
-				
-				public function set_description($description)
+
+				public function set_start_date($start_date)
 				{
-					$this->description = $description;
+					$this->start_date = $start_date;
 				}
-				
-				public function get_description()
+
+				public function get_start_date()
 				{
-					return $this->description;
+					return $this->start_date;
 				}
-				
+
+				public function set_end_date($end_date)
+				{
+					$this->end_date = $end_date;
+				}
+
+				public function get_end_date()
+				{
+					return $this->end_date;
+				}
+
+				public function set_responsible_user_id($responsible_user_id)
+				{
+					$this->responsible_user_id = $responsible_user_id;
+				}
+
+				public function get_responsible_user_id()
+				{
+					return $this->responsible_user_id;
+				}
+
+				public function set_update_user($user_id)
+				{
+					$this->update_user = $user_id;
+				}
+
+				public function get_update_user()
+				{
+					return $this->update_user;
+				}
+
+				public function set_update_date($date)
+				{
+					$this->update_date = $date;
+				}
+
+				public function get_update_date()
+				{
+					return $this->update_date;
+				}
+
 				/**
 				* Get a static reference to the storage object associated with this model object
-				* 
+				*
 				* @return the storage object
 				*/
 				public static function get_so()
 				{
 					if (self::$so == null) {
-						self::$so = CreateObject('logistic.soproject');
+						self::$so = CreateObject('logistic.soactivity');
 					}
 
 					return self::$so;
@@ -116,13 +161,19 @@
 
 				public function serialize()
 				{
+					$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+					$project_name = $this->get_so()->get_project_name($this->get_project_id());
+					$responsible_user = $this->get_so()->get_responsible_user($this->get_responsible_user_id());
+
 					return array(
 						'id' => $this->get_id(),
+						'parent_id' => $this->get_parent_id(),
 						'name' => $this->get_name(),
-						'project_type_id' => $this->get_project_type_id(),
-						'project_type_label' => $this->get_project_type_label(),
-						'description' => $this->get_description()
+						'project_id' => $this->get_project_id(),
+						'project_name' => $project_name,
+						'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
+						'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
+						'responsible_user_id' => $responsible_user
 					);
 				}
 		}
-?>

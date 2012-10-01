@@ -68,7 +68,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'get_groups'  			=> true,
                         'remove_old_activities'         => true,
 		);
-	
+
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
@@ -81,7 +81,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return self::$so;
 	}
-	
+
 	/**
 	 * Generate SQL query
 	 *
@@ -155,7 +155,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 
 		$filter_clauses = array();
-		
+
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "activity.id = {$id}";
@@ -195,7 +195,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
                                         $activity_district_corr = 1;
                                     else
                                         $activity_district_corr = (int)$activity_district;
-                                    
+
                                     $filter_clauses[] = "activity.office = '{$activity_district_corr}'";
 				}
 			}
@@ -235,7 +235,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
                                         $activity_district = 2;
                                     else if ($activity_district == 2)
                                         $activity_district = 1;
-                                    
+
                                     $filter_clauses[] = "activity.office = '{$activity_district}'";
 				}
 			}
@@ -245,7 +245,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$filter_clauses[] = "activity.last_change_date < {$ts_query}";
 			}
 		}
-		
+
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -282,8 +282,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.secret';
 			$columns[] = 'activity.frontend';
 			$columns[] = 'activity.new_org';
-			$columns[] = 'activity.new_group';			
-			
+			$columns[] = 'activity.new_group';
+
 			$cols = implode(',',$columns);
 		}
 
@@ -291,7 +291,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
-		
+
 		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
@@ -334,7 +334,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		$id = intval($activity->get_id());
 		$ts_now = strtotime('now');
-			
+
 		$values = array(
 			'title = '     . $this->marshal($activity->get_title(), 'string'),
 			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
@@ -358,18 +358,18 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'new_org = '			.($activity->get_new_org() ? "true" : "false"),
 			'new_group = '			.($activity->get_new_group() ? "true" : "false")
 		);
-		
+
 		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
 		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 		return isset($result);
 	}
-	
+
 	function import_activity($activity)
 	{
 		$id = intval($activity->get_id());
 		$ts_now = strtotime('now');
-		
+
 		$columns = array(
 			'title',
 			'organization_id',
@@ -392,7 +392,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'secret',
 			'special_adaptation'
 		);
-			
+
 		$values = array(
 			$this->marshal($activity->get_title(), 'string'),
 			$this->marshal($activity->get_organization_id(), 'int'),
@@ -415,7 +415,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$this->marshal($this->generate_secret(),'string'),
 			($activity->get_special_adaptation() ? "true" : "false")
 		);
-		
+
 		$result = $this->db->query('INSERT INTO activity_activity (' . join(',', $columns) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
 		return isset($result);
@@ -465,7 +465,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
 			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
 			$activity->set_new_group($this->unmarshal($this->db->f('new_group', 'bool')));
-			
+
 			if($activity->get_group_id() && $activity->get_group_id() > 0)
 			{
 				if($activity->get_new_group())
@@ -496,12 +496,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 					$activity->set_contact_persons($contacts);
 				}
 			}
-			
+
 		}
 
 		return $activity;
 	}
-	
+
 	function get_category_name($category_id)
 	{
 		$result = "Ingen";
@@ -515,7 +515,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
 	function get_categories()
 	{
 		$categories = array();
@@ -529,7 +529,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $categories;
 	}
-	
+
 	function select_district_list()
 	{
 		$this->db->query("SELECT id, descr FROM fm_district where id >'0' AND NOT descr LIKE '%vrige%' ORDER BY id ", __LINE__, __FILE__);
@@ -544,26 +544,26 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		return $district;
 	}
-	
+
 	function get_district_from_name($name)
 	{
 		$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$result = $this->db->f('part_of_town_id');
-		}	
+		}
 		return $result;
 	}
-	
+
 	function get_district_from_id($d_id)
 	{
 		$this->db->query("SELECT name FROM fm_part_of_town where part_of_town_id={$d_id} ", __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$result = $this->db->f('name');
-		}	
+		}
 		return $result;
 	}
-	
-	
+
+
 	function get_district_name($district_id)
 	{
 		//$result = "Ingen";
@@ -582,7 +582,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
     	return "";
 	}
-	
+
 	function get_districts()
 	{
 		$this->db->query("SELECT part_of_town_id, name FROM fm_part_of_town district_id ", __LINE__, __FILE__);
@@ -601,8 +601,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		return $district;
 	}
-	
-	
+
+
 	function get_office_from_user($user_id)
 	{
 		if(user_id)
@@ -617,7 +617,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $office_id;
 	}
-	
+
 	function get_office_name($district_id)
 	{
 		$result = "Ingen";
@@ -631,7 +631,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
         function get_office_description($office_id)
 	{
             $result = "";
@@ -645,7 +645,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
             }
             return $result;
 	}
-	
+
 	function get_target_name($target_id)
 	{
 		$result = "Ingen";
@@ -659,7 +659,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
 	function get_targets()
 	{
 		$targets = array();
@@ -677,7 +677,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $targets;
 	}
-	
+
 	function get_category_from_name($name)
 	{
     	if($name != null)
@@ -690,7 +690,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
 	function get_target_from_sort_id($id)
 	{
     	if($id != null && is_numeric($id))
@@ -703,7 +703,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
 	function get_orgid_from_orgno($orgno)
 	{
     	if($orgno != null)
@@ -716,7 +716,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return $result;
 	}
-	
+
 	function update_org_description($org_id, $description)
 	{
     	if($org_id != null)
@@ -726,7 +726,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
     	}
 		return isset($result);
 	}
-	
+
 	function set_org_active($org_id)
 	{
 		if($org_id != null)
@@ -736,7 +736,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return isset($result);
 	}
-	
+
 	function get_activities($parameters = array())
 	{
 		$soap = isset($parameters['soap']) && $parameters['soap'] ? true : false;
@@ -752,7 +752,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$sql = "SELECT * FROM activity_activity where state in (2,3,5) {$whereclause_date}";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
-		{			
+		{
 		    $gr = $this->db->f('group_id');
 			$activities[]= array
 			(
@@ -776,7 +776,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		foreach ($activities as &$activity)
 		{
 				if($activity['group_id'] && !$activity['group_id'] == '' && !$activity['group_id'] == 0)
-				{   
+				{
 					$activity['group_info']			= $this->get_group_info($activity['group_id']);
 					$activity['organization_info']	= $this->get_org_info($activity['group_info']['organization_id']);
 				}
@@ -795,7 +795,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 //_debug_array($activities);
 		return $activities;
 	}
-	
+
 	function get_contact_person($org_id, $group_id, $cont_pers)
 	{
 		if($group_id)
@@ -817,7 +817,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_activity_description($org_id, $group_id)
 	{
 		if($group_id)
@@ -838,7 +838,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 
 	function get_organizations()
 	{
@@ -865,7 +865,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 //	_debug_array($organizations);
 		return $organizations;
 	}
-	
+
 	function get_org_info($org_id)
 	{
 		$result = array();
@@ -886,7 +886,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_groups()
 	{
 		$groups = array();
@@ -924,7 +924,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 	}
 
-	
+
 	function get_group_info($group_id)
 	{
 		$result = array();
@@ -944,7 +944,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_all_arena_info($arena_id, $int_arena_id)
 	{
 		$result = array();
@@ -972,7 +972,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_arena_info($arena_id)
 	{
 		$result = array();
@@ -989,7 +989,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_internal_arena_info($arena_id)
 	{
 		$result = array();
@@ -1006,7 +1006,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
-	
+
 	function get_statuscodes()
 	{
 		$statuscodes[] = array('id' => '0', 'name' => utf8_decode('Ingen'));
@@ -1018,7 +1018,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		return $statuscodes;
 	}
-	
+
 	function get_targetgroups()
 	{
 		$sql = "SELECT * FROM bb_agegroup where active=1 AND NOT name like 'Tilskuer%' ORDER BY sort";
@@ -1032,7 +1032,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $targets;
 	}
-	
+
 	function get_category_list()
 	{
 		$sql = "SELECT * FROM bb_activity where active=1 and parent_id=1";
@@ -1091,8 +1091,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$district = '';
 		}
 		$activity_id = $org_info['activity_id'];
-		$show_in_portal = 1; 
-		
+		$show_in_portal = 1;
+
 		$values = array(
 			'name = ' . $this->marshal($name, 'string'),
 			'homepage = ' . $this->marshal($homepage, 'string'),
@@ -1106,7 +1106,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'activity_id = ' . $this->marshal($activity_id, 'int'),
 			'show_in_portal = 1'
 		);
-		
+
 		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
 	}
 	function add_organization($org_info)
@@ -1131,8 +1131,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		$district = $org_info['district'];
 		$activity_id = $org_info['activity_id'];
-		$show_in_portal = 1; 
-		
+		$show_in_portal = 1;
+
 		$columns[] = 'name';
 		$columns[] = 'homepage';
 		$columns[] = 'phone';
@@ -1146,7 +1146,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'activity_id';
 		$columns[] = 'show_in_portal';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$homepage}'";
 		$values[] = "'{$phone}'";
@@ -1160,7 +1160,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
-		
+
 		$sql = "INSERT INTO bb_organization ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
@@ -1172,7 +1172,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			return 0;
 		}
 	}
-	
+
 	function add_organization_local($org_info)
 	{
 		$name = $org_info['name'];
@@ -1192,7 +1192,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		{
 			$original_org_id = 0;
 		}
-		
+
 		$columns[] = 'name';
 		$columns[] = 'homepage';
 		$columns[] = 'phone';
@@ -1207,7 +1207,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'change_type';
 		$columns[] = 'original_org_id';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$homepage}'";
 		$values[] = "'{$phone}'";
@@ -1222,7 +1222,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "'{$status}'";
 		$values[] = $original_org_id;
 		$vals = implode(',',$values);
-		
+
 		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
 		$sql = "INSERT INTO activity_organization ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
@@ -1235,29 +1235,29 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			return 0;
 		}
 	}
-	
+
 	function add_group($group_info)
 	{
 		$name = $group_info['name'];
 		$orgid = $group_info['organization_id'];
 		$description = $group_info['description'];
 		$activity_id = $group_info['activity_id'];
-		$show_in_portal = 1; 
-		
+		$show_in_portal = 1;
+
 		$columns[] = 'name';
 		$columns[] = 'description';
 		$columns[] = 'organization_id';
 		$columns[] = 'activity_id';
 		$columns[] = 'show_in_portal';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$description}'";
 		$values[] = "'{$orgid}'";
 		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
-		
+
 		$sql = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
@@ -1269,26 +1269,26 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			return 0;
 		}
 	}
-	
+
 	function add_group_local($group_info)
 	{
 		$name = $group_info['name'];
 		$orgid = $group_info['organization_id'];
 		$description = $group_info['description'];
 		$status = $group_info['status'];
-		
+
 		$columns[] = 'name';
 		$columns[] = 'description';
 		$columns[] = 'organization_id';
 		$columns[] = 'change_type';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$description}'";
 		$values[] = "'{$orgid}'";
 		$values[] = "'{$status}'";
 		$vals = implode(',',$values);
-		
+
 		$sql = "INSERT INTO activity_group ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		if(isset($result))
@@ -1300,7 +1300,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			return 0;
 		}
 	}
-	
+
 	function delete_contact_persons($org_id)
 	{
 		if($org_id)
@@ -1318,7 +1318,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			return isset($result);
 		}*/
 	}
-	
+
 	function add_contact_person_org($contact)
 	{
 		$name = $contact['name'];
@@ -1326,60 +1326,60 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$mail = $contact['mail'];
 		$org_id = $contact['org_id'];
 		$ssn = '';
-		
+
 		$columns[] = 'name';
 		$columns[] = 'ssn';
 		$columns[] = 'phone';
 		$columns[] = 'email';
 		$columns[] = 'organization_id';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$ssn}'";
 		$values[] = "'{$phone}'";
 		$values[] = "'{$mail}'";
 		$values[] = $org_id;
 		$vals = implode(',',$values);
-		
+
 		$sql = "INSERT INTO bb_organization_contact ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		return isset($result);
 	}
-	
+
 	function update_contact_person_org($contact)
 	{
-		
+
 	}
-	
+
 	function add_contact_person_group($contact)
 	{
 		$name = $contact['name'];
 		$phone = $contact['phone'];
 		$mail = $contact['mail'];
 		$org_id = $contact['group_id'];
-		
+
 		$columns[] = 'name';
 		$columns[] = 'phone';
 		$columns[] = 'email';
 		$columns[] = 'group_id';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$phone}'";
 		$values[] = "'{$mail}'";
 		$values[] = $org_id;
 		$vals = implode(',',$values);
-		
+
 		$sql = "INSERT INTO bb_group_contact ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		return isset($result);
 	}
-	
+
 	function update_contact_person_group($contact)
 	{
-		
+
 	}
-	
+
 	function add_contact_person_local($contact)
 	{
 		$name = $contact['name'];
@@ -1387,17 +1387,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$mail = $contact['mail'];
 		$org_id = $contact['org_id'];
 		$group_id = $contact['group_id'];
-		
+
 		$columns[] = 'name';
 		$columns[] = 'phone';
 		$columns[] = 'email';
 		$columns[] = 'organization_id';
 		$columns[] = 'group_id';
 		$columns[] = 'address';
-		$columns[] = 'zipcode'; 
+		$columns[] = 'zipcode';
 		$columns[] = 'city';
 		$cols = implode(',',$columns);
-		
+
 		$values[] = "'{$name}'";
 		$values[] = "'{$phone}'";
 		$values[] = "'{$mail}'";
@@ -1407,13 +1407,13 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "''";
 		$values[] = "''";
 		$vals = implode(',',$values);
-		
+
 		//var_dump("INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})");
 		$sql = "INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})";
     	$result = $this->db->query($sql, __LINE__, __FILE__);
 		return isset($result);
 	}
-	
+
 	function get_activities_for_update($org_id, $group = false)
 	{
 		$activity_ids = array();
@@ -1431,10 +1431,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		{
 		    $activity_ids[] = $this->db->f('id');
 		}
-		
+
 		return $activity_ids;
 	}
-	
+
 	function get_connected_activities($org_id)
 	{
 		$activities = array();
@@ -1442,7 +1442,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
-		{			
+		{
 			$activity = new activitycalendar_activity((int) $this->db->f('id'));
 
 			$activity->set_title($this->unmarshal($this->db->f('title'), 'string'));
@@ -1464,35 +1464,35 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
 			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
 			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
-			
+
 			$activities[] = $activity;
 		}
-		
+
 		return $activities;
 	}
-	
+
 	function update_organization_connection($activity_id, $organization_id)
 	{
 		$id = intval($activity_id);
 		$org_id = intval($organization_id);
-		
+
                 $result = $this->db->query("UPDATE activity_activity SET organization_id={$org_id} WHERE id={$id}", __LINE__,__FILE__);
 
 		return isset($result);
 	}
-        
+
         function get_activities_without_groups()
         {
             $activities = array();
             $sql_activities = "select a.*, o.description as org_desc from activity_activity a, bb_organization o where (a.group_id is null or a.group_id = 0) and o.id = a.organization_id";
             $this->db->query($sql_activities, __LINE__, __FILE__);
             while($this->db->next_record())
-            {                
+            {
                 $activity_id = $this->db->f('id');
                 $activity_title = $this->db->f('title');
                 $activity_organization = $this->db->f('organization_id');
                 $description = $this->db->f('org_desc');
-                
+
                 $activities[] = array(
                     'id'=>$activity_id,
                     'title'=>$activity_title,
@@ -1502,7 +1502,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
             }
             return $activities;
         }
-        
+
         /*
          * Function to be run once.
          * Generates new groups based on activity where group is not registered.
@@ -1512,33 +1512,34 @@ class activitycalendar_soactivity extends activitycalendar_socommon
         {
             //TODO
         }
-        
-                
+
+
         function remove_old_activities()
         {
-            $sql = "delete from activity_activity where id in (1293,1294,1297,1299)"; //1293,1294,1297,1299
+            //$sql = "delete from activity_activity where id in (1293,1294,1297,1299)"; //1293,1294,1297,1299
+						$sql = "delete from activity_activity where id=1285";
             $result = $this->db->query($sql, __LINE__, __FILE__);
-            
+
             return isset($result);
         }
-        
+
         function save_with_no_changes($activity)
         {
             $id = intval($activity->get_id());
             $ts_now = strtotime('now');
-			
+
             $values = "last_change_date = " . $this->marshal($ts_now, 'int');
 
             $result = $this->db->query("UPDATE activity_activity SET {$values} WHERE id={$id}", __LINE__,__FILE__);
 
             return isset($result);
         }
-        
+
         function update_activity_group($activity_id, $group_id)
         {
             $id = intval($activity_id);
             $g_id = intval($group_id);
-			
+
             $values = "group_id = " . $g_id;
             //var_dump("UPDATE activity_activity SET {$values} WHERE id={$id}");
             //die;

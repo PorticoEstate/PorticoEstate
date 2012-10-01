@@ -133,7 +133,10 @@ var  myPaginator_4, myDataTable_4;
   		tmp_sum2 = getTotalSum('calculation',2,paginator,datatable);
   		tmp_sum3 = getTotalSum('contract_sum',2,paginator,datatable);
 */
-  		tmp_sum4 = getTotalSum('actual_cost',2,paginator,datatable);
+  		tmp_sum4 = getTotalSum('combined_cost',2,paginator,datatable);
+  		tmp_sum5 = getTotalSum('actual_cost',2,paginator,datatable);
+  		tmp_sum6 = getTotalSum('diff',2,paginator,datatable);
+
 
   		if(typeof(tableYUI1)=='undefined')
   		{
@@ -156,6 +159,8 @@ var  myPaginator_4, myDataTable_4;
 //		td_sum(tmp_sum3);
 		td_empty(1);
 		td_sum(tmp_sum4);
+		td_sum(tmp_sum5);
+		td_sum(tmp_sum6);
 		td_empty(5);
 
 		myfoot = tableYUI1.createTFoot();
