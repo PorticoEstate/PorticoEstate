@@ -4,7 +4,9 @@ $phpgw_baseline = array(
 		'lg_project_type' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false)
+						'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -16,7 +18,9 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'description' => array('type' => 'text', 'nullable' => false)
+						'description' => array('type' => 'text', 'nullable' => false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array('lg_project_type' => array('project_type_id' => 'id')),
@@ -33,6 +37,8 @@ $phpgw_baseline = array(
 						'start_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 						'end_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 						'responsible_user_id' => array('type' => 'int', 'precision' => 4, 'nullable'=> false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'update_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'update_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
 				),
@@ -49,7 +55,9 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'date_from' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'date_to' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+						'date_to' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array('lg_activity' => array('activity_id' => 'id')),
@@ -61,7 +69,9 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'resource_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'no_of_elements' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+						'no_of_elements' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
@@ -76,7 +86,9 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'article_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'type' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+						'type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
@@ -92,7 +104,9 @@ $phpgw_baseline = array(
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'attribute_name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => false),
 						'attribute_type' => array('type' => 'varchar', 'precision' => 255, 'nullable' => false),
-						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
@@ -106,7 +120,9 @@ $phpgw_baseline = array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'type_requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array('lg_bim_item_type_requirement' => array('type_requirement_id' => 'id')),
@@ -119,7 +135,9 @@ $phpgw_baseline = array(
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'tracking' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+						'tracking' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array('fm_bim_item' => array('item_id' => 'id', 'type' => 'type')),
