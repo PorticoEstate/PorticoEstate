@@ -28,6 +28,7 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'parent_activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 						'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+						'description' => array('type' => 'text', 'nullable' => false),
 						'project_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'start_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 						'end_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
