@@ -145,7 +145,36 @@
 
 			return $ret;
 		}
+				
+		/**
+		 * Get activity items
+		 * @return array containing activities
+		*/
+		public function get_activities()
+		{
+			$results = array();
+			
+			$sql = "select a.* from lg_activity a";
 
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			while($this->db->next_record())
+			{
+				$activity = new logistic_activity((int) $this->unmarshal($this->db->f('id'), 'int'));
+				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$activity->set_parent_id($this->unmarshal($this->db->f('parent_id'), 'int'));
+				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
+				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$activity->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$activity->set_responsible_user_id($this->unmarshal($this->db->f('responsible_user_id'), 'int'));
+				$activity->set_update_date($this->unmarshal($this->db->f('update_date'), 'int'));
+				$activity->set_update_user($this->unmarshal($this->db->f('update_user'), 'int'));
+
+				$results[] = $activity->toArray();
+			}
+			return $results;
+		}
+		
 		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 		{
 			$clauses = array('1=1');
