@@ -198,7 +198,6 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
-					'editor_action' => 'logistic.uiproject.edit_something',
 					'field' => array(
 						array(
 							'key' => 'name',
