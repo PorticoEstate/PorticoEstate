@@ -62,16 +62,6 @@
 				'update_date'
 			);
 
-			if( $activity->get_project_id() == '')
-			{
-				$activity->set_project_id(1);
-			}
-
-			if( $activity->get_responsible_user_id() == '')
-			{
-				$activity->set_responsible_user_id(1);
-			}
-
 			$values = array(
 				$this->marshal($activity->get_parent_id(), 'int'),
 				$this->marshal($activity->get_name(), 'string'),
@@ -145,7 +135,18 @@
 
 			return $ret;
 		}
+/*
+		public function get_single(int $id)
+		{
+			$sql = "SELECT * FROM lg_activity WHERE id = {$id}";
+			$this->db->query( $sql, __LINE__, __FILE__ );
+			$this->db->next_record();
+			
+			$activity = $this->populate( $this->unmarshal($this->db->f('id'), 'int') );
 				
+			return $activity;
+		}
+	*/	
 		/**
 		 * Get activity items
 		 * @return array containing activities
@@ -154,24 +155,18 @@
 		{
 			$results = array();
 			
-			$sql = "select a.* from lg_activity a";
+			$sql = "SELECT * FROM lg_activity";
+			$db_loc		   = clone $GLOBALS['phpgw']->db;
+			$db_loc->query( $sql, __LINE__, __FILE__ );
 
-			$this->db->query($sql, __LINE__, __FILE__);
-			
-			while($this->db->next_record())
+			while( $db_loc->next_record() )
 			{
-				$activity = new logistic_activity((int) $this->unmarshal($this->db->f('id'), 'int'));
-				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
-				$activity->set_parent_id($this->unmarshal($this->db->f('parent_id'), 'int'));
-				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
-				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
-				$activity->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
-				$activity->set_responsible_user_id($this->unmarshal($this->db->f('responsible_user_id'), 'int'));
-				$activity->set_update_date($this->unmarshal($this->db->f('update_date'), 'int'));
-				$activity->set_update_user($this->unmarshal($this->db->f('update_user'), 'int'));
-
+				echo "dsfsdf";
+				$activity = $this->populate( $this->unmarshal($this->db->f('id'), 'int') );
+				
 				$results[] = $activity->toArray();
 			}
+			print_r($results);
 			return $results;
 		}
 		
