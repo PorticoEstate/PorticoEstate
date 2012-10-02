@@ -362,17 +362,26 @@
 			}
 			else
 			{
-
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-
+				$parent_activity_id = phpgw::get_var('parent_id');
+				$activity->set_parent_id($parent_activity_id);
+			  $parent_activity = $this->so->get_single($parent_activity_id);
+			  				
+			  $activities = $this->so->get_activities();
+				
 				$data = array
-					(
-					'user_array' => $accounts,
+				(
+					'responsible_users' => $accounts,
+					'activities' => $activities,
 					'activity' => $activity->toArray(),
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' => true,
 				);
+				
+				if($parent_activity > 0)
+				{
+					$data['parent_activity'] = $parent_activity->toArray();
+				}
 
 				$this->use_yui_editor('description');
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
@@ -383,7 +392,6 @@
 				self::render_template_xsl(array('activity_item'), $data);
 			}
 		}
-
 
 		public function view()
 		{
