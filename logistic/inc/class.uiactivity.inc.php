@@ -146,6 +146,11 @@
 							'name'		=> 'parent_id',
 							'source'	=> 'id'
 						),
+						array
+						(
+							'name'		=> 'activity_id',
+							'source'	=> 'id'
+						),
 					)
 				);
 
@@ -156,6 +161,50 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new_requirement',
+						'text' 			=> lang('t_new_requirement'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uirequirement.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_requirements',
+						'text' 			=> lang('t_view_requirements'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uirequirement.index'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new_booking',
+						'text' 			=> lang('t_new_booking'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uibooking.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_bookings',
+						'text' 			=> lang('t_view_bookings'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uibooking.index'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
@@ -270,7 +319,10 @@
 				$activity = new logistic_activity();
 			}
 
-			$activity->set_project_id(phpgw::get_var('project_id'));
+			if(phpgw::get_var('project_id') && phpgw::get_var('project_id') > 0)
+			{
+				$activity->set_project_id(phpgw::get_var('project_id'));
+			}
 
 			if (isset($_POST['save_activity']))
 			{
@@ -310,10 +362,10 @@
 			}
 			else
 			{
-				
+
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-				
-				
+
+
 				$data = array
 					(
 					'user_array' => $accounts,
