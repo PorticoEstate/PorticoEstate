@@ -310,6 +310,8 @@
 		public function edit()
 		{
 			$activity_id = phpgw::get_var('id');
+			$parent_activity_id = phpgw::get_var('parent_id');
+			
 			if ($activity_id && is_numeric($activity_id))
 			{
 				$activity = $this->so->get_single($activity_id);
@@ -364,12 +366,15 @@
 			{
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-				$parent_activity_id = phpgw::get_var('parent_id');
-				$activity->set_parent_id($parent_activity_id);
-			  $parent_activity = $this->so->get_single($parent_activity_id);
+				if($parent_activity_id > 0)
+				{
+					$activity->set_parent_id($parent_activity_id);
+			 		$parent_activity = $this->so->get_single($parent_activity_id);
+				}
 			  				
 			  $activities = $this->so->get_activities();
-				
+			  echo "Skriver ut: ";
+				print_r( $activities );
 				$data = array
 				(
 					'responsible_users' => $accounts,
@@ -378,7 +383,7 @@
 					'editable' => true,
 				);
 				
-				if($parent_activity > 0)
+				if($parent_activity_id > 0)
 				{
 					$data['parent_activity'] = $parent_activity->toArray();
 				}
@@ -389,6 +394,7 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
+				self::add_javascript('logistic', 'logistic', 'ajax.js');
 				self::render_template_xsl(array('activity_item'), $data);
 			}
 		}
