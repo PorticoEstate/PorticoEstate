@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+	alert("!");
 	$("#select_activity").change(function () {
 		
 		alert("!");
