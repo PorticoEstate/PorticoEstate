@@ -11,6 +11,10 @@ ID	logistic	no	ID
 t_new_project	logistic	no	Nytt prosjekt
 t_new_project_type	logistic	no	Ny prosjekttype
 t_new_activity	logistic	no	Opprett ny aktivitet på dette prosjektet
+t_new_requirement	logistic	no	Registrer nytt behov på denne aktiviteten
+t_view_requirements	logistic	no	Vis registrerte behov på denne aktiviteten
+t_new_booking	logistic	no	Registrer ny booking på denne aktiviteten
+t_view_bookings	logistic	no	Vis registrerte bookinger på denne aktiviteten
 Project_type	logistic	no	Prosjekttype
 settings	logistic	no	innstillinger
 Project types	logistic	no	Prosjekttyper

@@ -45,8 +45,7 @@
 			'edit_project_type' => true,
 			'edit_project_type_name' => true,
 			'add' => true,
-			'edit' => true,
-			'edit_something' => true
+			'edit' => true
 		);
 
 		public function __construct()
@@ -231,12 +230,30 @@
 				),
 			);
 
-			self::render_template_xsl('datatable_common', $data);
-		}
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'project_id',
+							'source'	=> 'id'
+						),
+					)
+				);
 
-		public function edit_something()
-		{
-			return 'kvittering';
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new_activity',
+						'text' 			=> lang('t_new_activity'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uiactivity.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			self::render_template_xsl('datatable_common', $data);
 		}
 
 		public function project_types()
