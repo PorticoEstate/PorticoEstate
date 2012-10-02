@@ -6,12 +6,46 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
-	<div class="identifier-header">
-		<h1><img src="{img_go_home}" /> 
-				<xsl:value-of select="php:function('lang', 'Add activity')" />
-		</h1>
+	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
+		
+		<xsl:choose>
+			<xsl:when test="parent_activity/id &gt; 0">
+				<h1 style="float:left;"> 
+					<xsl:value-of select="parent_activity/name" disable-output-escaping="yes"/>::<xsl:value-of select="php:function('lang', 'Add sub activity')" />
+				</h1>
+				
+				<div style="float: left; margin-left: 130px;" class="select-box">
+					<label>Velg en annen hovedaktivitet</label>
+					
+					<form action="#">
+						<input type="hidden" name="activity_id" value="{activity/id}" />
+						<input type="hidden" name="parent_id" value="{parent_activity/id}" />
+												
+						<select id="select_activity" name="parent_activity_id" class="selectLocation">
+							<option>Velg aktivitet</option>
+							<xsl:for-each select="activities">
+			        	<option value="{id}">
+			        		<xsl:if test="activity/parent_id = id">
+				        		<xsl:attribute name="selected">
+			    						selected
+			   						</xsl:attribute>
+				        	</xsl:if>
+			          	<xsl:value-of disable-output-escaping="yes" select="name"/>
+				        </option>
+						  </xsl:for-each>
+						</select>					
+					</form>
+				</div>		
+			</xsl:when>
+			<xsl:otherwise>
+				<h1 style="float:left;"> 
+					<xsl:value-of select="php:function('lang', 'Add activity')" />
+				</h1>
+			</xsl:otherwise>
+		</xsl:choose>
 	</div>
-	<div class="yui-content">
+
+	<div class="yui-content" style="padding: 20px;">
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
@@ -85,7 +119,7 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<select name="responsible_user_id">
-					        <xsl:for-each select="user_array">
+					        <xsl:for-each select="responsible_users">
 					        	<xsl:variable name="full_name">
 					        		<xsl:value-of disable-output-escaping="yes" select="account_firstname"/><xsl:text> </xsl:text>
 					        		<xsl:value-of disable-output-escaping="yes" select="account_lastname"/>
