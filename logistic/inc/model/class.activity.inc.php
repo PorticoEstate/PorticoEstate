@@ -35,6 +35,7 @@
 
 				protected static $id;
 				protected static $name;
+				protected static $description;
 				protected static $parent_id;
 				protected static $project_id;
 				protected static $start_date;
@@ -73,6 +74,16 @@
 				public function get_name()
 				{
 					return $this->name;
+				}
+
+				public function set_description($description)
+				{
+					$this->description = $description;
+				}
+
+				public function get_description()
+				{
+					return $this->description;
 				}
 
 				public function set_parent_id($parent_id)
@@ -169,6 +180,7 @@
 						'id' => $this->get_id(),
 						'parent_id' => $this->get_parent_id(),
 						'name' => $this->get_name(),
+						'description' => $this->get_description(),
 						'project_id' => $this->get_project_id(),
 						'project_name' => $project_name,
 						'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
