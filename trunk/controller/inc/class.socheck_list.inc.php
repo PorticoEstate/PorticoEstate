@@ -354,68 +354,6 @@ class controller_socheck_list extends controller_socommon
 			return null;
 		}
 	}
-		 
-	/**
-	 * Get check list objects for a control on a location after specitied date
-	 *
-	 * @param $control_id control id
-	 * @param $location_code location code
-	 * @return array with check list objects
-	 */
-	/* Tror ikke vi bruker denne: Torstein 6/9-2012
-	function get_open_check_lists_for_control($control_id, $location_code, $from_date)
-	{
-		$control_id = (int) $control_id;
-
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
-		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
-		$sql .= "FROM controller_check_list cl ";
-		$sql .= "WHERE cl.control_id = {$control_id} ";
-		$sql .= "AND cl.location_code = '{$location_code}' "; 
-		$sql .= "AND (cl.planned_date IS NULL OR cl.planned_date < $from_date) ";
-		$sql .= "AND cl.deadline < $from_date ";
-		$sql .= "AND cl.completed_date IS NULL ";
-		$sql .= "ORDER BY cl.id;";
-		
-		$this->db->query($sql);
-		
-		$check_list_id = 0;
-		$check_list = null;
-		while ($this->db->next_record())
-		{
-		
-			if( $this->db->f('cl_id') != $check_list_id )
-			{
-				if($check_list_id)
-				{
-					$check_list_array[] = $check_list;
-				}
-				
-				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id'), 'int'));
-				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
-				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
-				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
-				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));	
-				$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
-				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
-				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
-				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
-			}
-			$check_list_id =  $check_list->get_id();
-		}
-		
-		if($check_list != null)
-		{
-			$check_list_array[] = $check_list;
-			return $check_list_array;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	*/
 	
 	/**
 	 * Get array with control id and number of open cases within time period
