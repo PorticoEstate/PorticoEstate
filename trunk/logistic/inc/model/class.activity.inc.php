@@ -52,7 +52,6 @@
 				*/
 				public function __construct(int $id = null)
 				{
-//					echo "1";
 					$this->id = (int)$id;
 				}
 
