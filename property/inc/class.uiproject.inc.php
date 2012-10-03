@@ -1680,10 +1680,15 @@
 			if($id)
 			{
 				$content_budget = $this->bo->get_budget($id);
-				$lang_delete = lang('Check to delete year');
+				$lang_delete = lang('Check to delete period');
+				$lang_delete = lang('Check to close period');
 				foreach($content_budget as & $b_entry)
 				{
-					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_year][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
+					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
+					
+					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
+					$b_entry['closed'] = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
+					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
 					$value_remainder -= $b_entry['sum_orders'];
 					$value_remainder -= $b_entry['actual_cost'];
 				}
@@ -1715,6 +1720,8 @@
 														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+														array('key' => 'closed_orig','hidden' => true),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
 
