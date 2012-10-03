@@ -26,7 +26,7 @@
 	* @package property
 	* @subpackage logistic
  	* @version $Id$
-	*/	
+	*/
 
 	phpgw::import_class('logistic.socommon');
 
@@ -52,11 +52,13 @@
 
 		protected function add(&$project)
 		{
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			$now = time();
 			$name = $project->get_name();
 			$description = $project->get_description();
-			$type_id = $project->geT_project_type_id();
+			$type_id = $project->get_project_type_id();
 
-			$sql = "INSERT INTO lg_project (name, description, project_type_id) VALUES ('$name','$description',$type_id)";
+			$sql = "INSERT INTO lg_project (name, description, project_type_id, create_user, create_date) VALUES ('$name','$description',$type_id, $user_id, $now)";
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
@@ -69,8 +71,8 @@
 				return 0;
 			}
 		}
-		
-		
+
+
 		protected function update($project)
 		{
 			$id = intval($project->get_id());
@@ -201,7 +203,7 @@
 
 			return $project;
 		}
-		
+
 		public function get_projects()
 		{
 			$project_array = array();
@@ -228,13 +230,13 @@
 		{
 			$sql = "SELECT name FROM lg_project_type where id=$id";
 			$this->db->query($sql, __LINE__, __FILE__);
-			
+
 			while ($this->db->next_record())
 			{
 				return $this->db->f('name');
 			}
 		}
-		
+
 		public function get_project_types()
 		{
 			$project_type_array = array();
@@ -255,7 +257,7 @@
 			}
 			return $project_type_array;
 		}
-		
+
 		public function update_project_type($id, $name)
 		{
 			$sql = "UPDATE lg_project_type set name='{$name}' where id={$id}";
@@ -270,10 +272,12 @@
 				return 0;
 			}
 		}
-		
+
 		public function add_project_type($name)
 		{
-			$sql = "INSERT INTO lg_project_type (name) VALUES ('{$name}')";
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			$now = time();
+			$sql = "INSERT INTO lg_project_type (name, create_user, create_date) VALUES ('{$name}', $user_id, $now)";
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
