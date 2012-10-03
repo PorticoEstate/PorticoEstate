@@ -42,7 +42,8 @@
 			'add' 	=> true,
 			'edit' => true,
 			'view' => true,
-			'index' => true
+			'index' => true,
+			'test' => true
 		);
 
 		public function __construct()
@@ -53,7 +54,7 @@
 			$this->so_project = createObject('logistic.soproject');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
 		}
-
+		
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -340,6 +341,7 @@
 				$activity->set_name( phpgw::get_var('name') );
 				$activity->set_update_user( $user_id );
 				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
+				$activity->set_description( phpgw::get_var('description') );
 
 				if(phpgw::get_var('start_date','string') != '')
 				{
