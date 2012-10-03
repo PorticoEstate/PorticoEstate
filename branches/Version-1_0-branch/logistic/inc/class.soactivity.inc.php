@@ -53,6 +53,7 @@
 			$cols = array(
 				'parent_activity_id',
 				'name',
+				'description',
 				'project_id',
 				'start_date',
 				'end_date',
@@ -61,19 +62,10 @@
 				'update_date'
 			);
 
-			if( $activity->get_project_id() == '')
-			{
-				$activity->set_project_id(1);
-			}
-
-			if( $activity->get_responsible_user_id() == '')
-			{
-				$activity->set_responsible_user_id(1);
-			}
-
 			$values = array(
 				$this->marshal($activity->get_parent_id(), 'int'),
 				$this->marshal($activity->get_name(), 'string'),
+				$this->marshal($activity->get_description(), 'string'),
 				$this->marshal($activity->get_project_id(), 'int'),
 				$this->marshal($activity->get_start_date(), 'int'),
 				$this->marshal($activity->get_end_date(), 'int'),
@@ -102,6 +94,7 @@
 
 			$values = array(
 				'name=' . $this->marshal($activity->get_name(), 'string'),
+				'description=' . $this->marshal($activity->get_description(), 'string'),
 				'parent_activity_id=' . $this->marshal($activity->get_parent_id(), 'int'),
 				'project_id=' . $this->marshal($activity->get_project_id(), 'int'),
 				'start_date=' . $this->marshal($activity->get_start_date(), 'int'),
@@ -142,7 +135,7 @@
 
 			return $ret;
 		}
-
+		
 		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 		{
 			$clauses = array('1=1');
@@ -211,6 +204,7 @@
 				$activity = new logistic_activity((int) $activity_id);
 
 				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 				$activity->set_parent_id($this->unmarshal($this->db->f('parent_id'), 'int'));
 				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
 				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));

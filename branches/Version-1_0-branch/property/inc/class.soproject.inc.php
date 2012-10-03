@@ -1226,9 +1226,18 @@
 
 			$this->db->query("UPDATE fm_project SET $value_set WHERE id= {$project['id']}",__LINE__,__FILE__);
 
-			if($project['delete_b_year'])
+			$_closed_period = array
+			(
+				'closed_b_period' => isset($project['closed_b_period']) && $project['closed_b_period'] ? $project['closed_b_period'] : array(),
+				'closed_orig_b_period' => isset($project['closed_orig_b_period']) && $project['closed_orig_b_period'] ? $project['closed_orig_b_period'] : array()
+			);
+
+			$this->close_period_from_budget($project['id'], $_closed_period);
+			unset($_close_period);
+
+			if($project['delete_b_period'])
 			{
-				$this->delete_year_from_budget($project['id'], $project['delete_b_year']);
+				$this->delete_period_from_budget($project['id'], $project['delete_b_year']);
 			}
 
 			if($project['budget'])
@@ -1598,6 +1607,7 @@
 		function get_budget($project_id)
 		{
 			$project_id = (int) $project_id;
+			$closed_period = array();
 
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
@@ -1612,6 +1622,7 @@
 				$period = $year . sprintf("%02s", $month);
 				
  				$project_budget[$period] = (int)$this->db->f('budget');
+ 				$closed_period[$period] = !!$this->db->f('closed');
 			}
 			unset($year);			
 
@@ -1878,13 +1889,14 @@
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
 				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
+				$entry['closed'] = $closed_period[$entry['period']];
 			}
 
 //_debug_array( $values);die();
 			return $values;
 		}
 
-		function delete_year_from_budget($project_id, $data)
+		function delete_period_from_budget($project_id, $data)
 		{
 			$project_id = (int) $project_id;
 			foreach($data as $entry)
@@ -1893,6 +1905,47 @@
 				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
+		}
+
+		function close_period_from_budget($project_id, $data)
+		{
+			$project_id = (int) $project_id;
+			$close_period = array();
+			$open_period = array();
+
+			foreach($data['closed_orig_b_period'] as $period)
+			{
+				if(!in_array($period, $data['closed_b_period']))
+				{
+					$open_period[] = $period;
+				}
+			}
+
+			foreach($data['closed_b_period'] as $period)
+			{
+				if(!in_array($period, $data['closed_orig_b_period']))
+				{
+					$close_period[] = $period;
+				}
+			}
+
+			foreach ($close_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET closed = 1 WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			foreach ($open_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET closed = 0 WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+//_debug_array($close_period);
+//_debug_array($open_period);die();
+
+
 		}
 
 		function update_request_status($project_id='',$status='',$category=0,$coordinator=0)

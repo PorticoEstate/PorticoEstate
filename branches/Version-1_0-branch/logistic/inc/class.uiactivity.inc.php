@@ -53,7 +53,7 @@
 			$this->so_project = createObject('logistic.soproject');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
 		}
-
+		
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -146,6 +146,11 @@
 							'name'		=> 'parent_id',
 							'source'	=> 'id'
 						),
+						array
+						(
+							'name'		=> 'activity_id',
+							'source'	=> 'id'
+						),
 					)
 				);
 
@@ -156,6 +161,50 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new_requirement',
+						'text' 			=> lang('t_new_requirement'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uirequirement.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_requirements',
+						'text' 			=> lang('t_view_requirements'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uirequirement.index'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'new_booking',
+						'text' 			=> lang('t_new_booking'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uibooking.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'view_bookings',
+						'text' 			=> lang('t_view_bookings'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uibooking.index'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
@@ -229,7 +278,7 @@
 					$rows[] = $result->serialize();
 				}
 			}
-
+			
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -261,6 +310,8 @@
 		public function edit()
 		{
 			$activity_id = phpgw::get_var('id');
+			$parent_activity_id = phpgw::get_var('parent_id');
+			
 			if ($activity_id && is_numeric($activity_id))
 			{
 				$activity = $this->so->get_single($activity_id);
@@ -270,7 +321,17 @@
 				$activity = new logistic_activity();
 			}
 
-			$activity->set_project_id(phpgw::get_var('project_id'));
+			if(phpgw::get_var('project_id') && phpgw::get_var('project_id') > 0)
+			{
+				$activity->set_project_id(phpgw::get_var('project_id'));
+			}
+			
+			if($parent_activity_id > 0)
+			{
+				$activity->set_parent_id( $parent_activity_id );
+				$parent_activity = $this->so->get_single( $parent_activity_id );
+				$activity->set_project_id( $parent_activity->get_project_id() );
+			}
 
 			if (isset($_POST['save_activity']))
 			{
@@ -279,6 +340,7 @@
 				$activity->set_name( phpgw::get_var('name') );
 				$activity->set_update_user( $user_id );
 				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
+				$activity->set_description( phpgw::get_var('description') );
 
 				if(phpgw::get_var('start_date','string') != '')
 				{
@@ -310,17 +372,23 @@
 			}
 			else
 			{
-				
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 				
+			  $activities = $this->so->get();
+				$activities_array = $this->convert_to_array( $activities );
 				
 				$data = array
-					(
-					'user_array' => $accounts,
+				(
+					'responsible_users' => $accounts,
+					'activities' => $activities_array,
 					'activity' => $activity->toArray(),
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' => true,
 				);
+				
+				if($parent_activity_id > 0)
+				{
+					$data['parent_activity'] = $parent_activity->toArray();
+				}
 
 				$this->use_yui_editor('description');
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
@@ -328,10 +396,22 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
+				self::add_javascript('logistic', 'logistic', 'ajax.js');
 				self::render_template_xsl(array('activity_item'), $data);
 			}
 		}
-
+		
+		function convert_to_array($object_list)
+		{
+			$converted_array = array();
+			
+			foreach($object_list as $object)
+			{
+				$converted_array[] = $object->toArray();
+			}
+			
+			return $converted_array; 
+		}
 
 		public function view()
 		{
