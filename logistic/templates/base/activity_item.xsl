@@ -50,6 +50,7 @@
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
 				<input type="hidden" name="project_id" value="{activity/project_id}" />
+				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
 					<dt>
