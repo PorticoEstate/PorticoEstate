@@ -135,40 +135,6 @@
 
 			return $ret;
 		}
-/*
-		public function get_single(int $id)
-		{
-			$sql = "SELECT * FROM lg_activity WHERE id = {$id}";
-			$this->db->query( $sql, __LINE__, __FILE__ );
-			$this->db->next_record();
-			
-			$activity = $this->populate( $this->unmarshal($this->db->f('id'), 'int') );
-				
-			return $activity;
-		}
-	*/	
-		/**
-		 * Get activity items
-		 * @return array containing activities
-		*/
-		public function get_activities()
-		{
-			$results = array();
-			
-			$sql = "SELECT * FROM lg_activity";
-			$db_loc		   = clone $GLOBALS['phpgw']->db;
-			$db_loc->query( $sql, __LINE__, __FILE__ );
-
-			while( $db_loc->next_record() )
-			{
-				echo "dsfsdf";
-				$activity = $this->populate( $this->unmarshal($this->db->f('id'), 'int') );
-				
-				$results[] = $activity->toArray();
-			}
-			print_r($results);
-			return $results;
-		}
 		
 		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 		{
