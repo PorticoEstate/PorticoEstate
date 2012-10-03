@@ -42,8 +42,7 @@
 			'add' 	=> true,
 			'edit' => true,
 			'view' => true,
-			'index' => true,
-			'test' => true
+			'index' => true
 		);
 
 		public function __construct()
