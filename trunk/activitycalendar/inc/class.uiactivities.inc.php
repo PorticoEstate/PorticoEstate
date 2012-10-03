@@ -58,7 +58,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $this->render('activity_list.php');
 
     }
-	
+
     /**
      * Displays info about one single billing job.
      */
@@ -109,8 +109,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $buildings = $this->so_arena->get_buildings();
         // Retrieve the activity object or create a new one
         if(isset($activity_id) && $activity_id > 0)
-        {	
-            $activity = $this->so_activity->get_single($activity_id); 
+        {
+            $activity = $this->so_activity->get_single($activity_id);
         }
         else
         {
@@ -156,7 +156,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             $keys = array_keys($group_array);
             $local_group = $group_array[$keys[0]];
             //$group_name = $local_group->get_name();
-        }  
+        }
         }
         else
         {
@@ -228,11 +228,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                             if(count($group_array) > 0){
                                 $keys = array_keys($group_array);
                                 $group = $group_array[$keys[0]];
-                            } 
+                            }
 
                             $group_info = array();
                             $group_info['name'] = $group->get_name(); //new
-                            $group_info['organization_id'] = $activity->get_organization_id(); 
+                            $group_info['organization_id'] = $activity->get_organization_id();
                             $group_info['description'] = $group->get_description();
 
                             $contacts = $this->so_contact->get_local_contact_persons($group->get_id(), true);
@@ -250,7 +250,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                                 $contact1['group_id'] = $new_group_id;
                                 $this->so_activity->add_contact_person_group($contact1);
 
-                                $message = lang('messages_saved_form');	
+                                $message = lang('messages_saved_form');
 
                                 //get organization_id for the group:
                                 $group_org_id = $this->so_group->get_orgid_from_group($new_group_id);
@@ -280,14 +280,17 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                                 $cp1 = $contact_persons[0];
                             }
                         }
-                        $message = lang('messages_saved_form');	
+                        $message = lang('messages_saved_form');
                     }
                     else
                     {
                         $error = lang('messages_form_error');
                     }
 
-                    $activity = $this->so_activity->get_single($activity_id);
+										if(isset($activity_id) && $activity_id > 0)
+										{
+												$activity = $this->so_activity->get_single($activity_id);
+										}
 
                     if($old_state != $new_state && ($new_state == 3 || $new_state == 5))
                     {
@@ -304,7 +307,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                         {
                             $activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
                             activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(),$subject,$body);
-                        }   
+                        }
                     }
                     $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
                 }
@@ -335,7 +338,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                                 'cancel_link' => $cancel_link,
                                 'message' => isset($message) ? $message : phpgw::get_var('message'),
                                 'error' => isset($error) ? $error : phpgw::get_var('error')
-                            )	
+                            )
                     );
                 }
             }
@@ -365,7 +368,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                     'cancel_link' => $cancel_link,
                     'message' => isset($message) ? $message : phpgw::get_var('message'),
                     'error' => isset($error) ? $error : phpgw::get_var('error')
-                )	
+                )
         );
     }
 
@@ -420,7 +423,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 $result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
                 $object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
                 break;
-        }                                                                                                                                                                                           
+        }
 
         //Create an empty row set
         $rows = array();
@@ -452,7 +455,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         if($email)
         {
             //var_dump($mail_rows);
-            $this->send_email_to_selection($mail_rows);	
+            $this->send_email_to_selection($mail_rows);
         }
         else
         {
@@ -503,7 +506,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 break;
         }
     }
-    
+
     function send_email_to_selection($activities)
     {
         $c = createobject('phpgwapi.config','activitycalendarfrontend');
@@ -550,7 +553,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 $activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_group_id(), true));
 /*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
                         activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
-                else*/ 
+                else*/
                 if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
                     activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_1(), $subject, $body);
             }
@@ -559,26 +562,26 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                 $activity->set_contact_persons(activitycalendar_socontactperson::get_instance()->get_booking_contact_persons($activity->get_organization_id()));
 /*	    		if($activity->get_contact_person_2() && $activity->get_contact_person_2()->get_email())
                         activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
-                else*/ 
+                else*/
                 if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
                     activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
             }
         }
-    	
+
     	//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
-    	
+
     }
-    
+
     public function send_mail()
     {
         $c = createobject('phpgwapi.config','activitycalendarfrontend');
         $c->read();
         $config = $c->config_data;
-		
+
         $mailBaseURL = $c->config_data['mailBaseURL'];
     	$activity_id = (int)phpgw::get_var('activity_id');
     	$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
-    	
+
     	$message_type = phpgw::get_var('message_type');
     	if($message_type)
     	{
@@ -604,11 +607,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             $subject = "dette er en test";
             $body = "testmelding fra Aktivitetsoversikt";
     	}
-    	
+
 //    	var_dump($subject);
 //    	var_dump($body);
 //    	var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
-    	
+
     	if($activity->get_group_id() && $activity->get_group_id() > 0)
     	{
             //$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
@@ -629,11 +632,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             if($activity->get_contact_person_1() && $activity->get_contact_person_1()->get_email())
                 activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_1(), $subject, $body);
     	}
-    	
+
     	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
-    	
+
     }
-    
+
     function send_mailnotification_to_organization($contact_person, $subject, $body)
     {
 
@@ -648,7 +651,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
         //$from = "erik.holm-larsen@bouvet.no";
 
-        if (strlen(trim($body)) == 0) 
+        if (strlen(trim($body)) == 0)
         {
             return false;
         }
@@ -658,7 +661,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 
         //var_dump($mailtoAddress);
         //var_dump($mailtoAddress.';'.$from.';'.$subject);
-        if (strlen($mailtoAddress) > 0) 
+        if (strlen($mailtoAddress) > 0)
         {
             try
             {
@@ -681,7 +684,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             }
         }
     }
-    
+
     function send_mailnotification_to_group($contact_person, $subject, $body)
     {
         if (!is_object($GLOBALS['phpgw']->send))
@@ -694,7 +697,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
         //$from = "tester@bouvet.no";
 
-        if (strlen(trim($body)) == 0) 
+        if (strlen(trim($body)) == 0)
         {
             return false;
         }
@@ -702,7 +705,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         $mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person->get_id());
         //$mailtoaddress = "erik.holm-larsen@bouvet.no";
         //var_dump($mailtoAddress.';'.$from.';'.$subject);
-        if (strlen($mailtoAddress) > 0) 
+        if (strlen($mailtoAddress) > 0)
         {
             try
             {
@@ -725,11 +728,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             }
         }
     }
-	
+
     public function get_organization_groups()
     {
-        $GLOBALS['phpgw_info']['flags']['noheader'] = true; 
-        $GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+        $GLOBALS['phpgw_info']['flags']['noheader'] = true;
+        $GLOBALS['phpgw_info']['flags']['nofooter'] = true;
         $GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
         $org_id = phpgw::get_var('orgid');
@@ -746,7 +749,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
                     $selected = "";
                     if($group_id && $group_id > 0)
                     {
-                        $gr_id = (int)$group_id; 
+                        $gr_id = (int)$group_id;
                         if($gr_id == (int)$group->get_id())
                         {
                             $selected_group = " selected='selected'";
@@ -766,7 +769,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 
         return $returnHTML;
     }
-        
+
     public function create_groups()
     {
         $activities = $this->so_activity->get_activities_without_groups();
