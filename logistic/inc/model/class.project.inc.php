@@ -33,11 +33,11 @@
 		{
 				public static $so;
 
-				protected static $id;
-				protected static $name;
-				protected static $project_type_id;
-				protected static $project_type_label;
-				protected static $description;
+				protected $id;
+				protected $name;
+				protected $project_type_id;
+				protected $project_type_label;
+				protected $description;
 
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
