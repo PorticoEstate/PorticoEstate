@@ -1,11 +1,11 @@
 <?php
 	$setup_info['logistic']['name'] = 'logistic';
-	$setup_info['logistic']['version'] = '0.0.1';
+	$setup_info['logistic']['version'] = '0.0.2';
 	$setup_info['logistic']['app_order'] = 70;
 	$setup_info['logistic']['enable'] = 1;
 	$setup_info['logistic']['app_group']	= 'office';
-	
-	$setup_info['logistic']['tables'] = array 
+
+	$setup_info['logistic']['tables'] = array
 	(
 			'lg_project',
 			'lg_project_type',

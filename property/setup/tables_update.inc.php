@@ -6656,4 +6656,27 @@
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.650';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
-	}	
+	}
+
+	/**
+	* Update property version from 0.9.17.650 to 0.9.17.651
+	* Enable to close periode on budget
+	*/
+	$test[] = '0.9.17.650';
+	function property_upgrade0_9_17_650()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','closed',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.651';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -33,15 +33,19 @@
 		{
 				public static $so;
 
-				protected static $id;
-				protected static $name;
-				protected static $parent_id;
-				protected static $project_id;
-				protected static $start_date;
-				protected static $end_date;
-				protected static $responsible_user_id;
-				protected static $update_user;
-				protected static $update_date;
+				protected $id;
+				protected $name;
+				protected $description;
+				protected $parent_id;
+				protected $project_id;
+				protected $start_date;
+				protected $end_date;
+				protected $responsible_user_id;
+				protected $update_user;
+				protected $update_date;
+				
+				// Arrays
+				protected $sub_activities = array();
 
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -51,7 +55,6 @@
 				*/
 				public function __construct(int $id = null)
 				{
-//					echo "1";
 					$this->id = (int)$id;
 				}
 
@@ -73,6 +76,16 @@
 				public function get_name()
 				{
 					return $this->name;
+				}
+
+				public function set_description($description)
+				{
+					$this->description = $description;
+				}
+
+				public function get_description()
+				{
+					return $this->description;
 				}
 
 				public function set_parent_id($parent_id)
@@ -144,6 +157,16 @@
 				{
 					return $this->update_date;
 				}
+				
+				public function set_sub_activities($sub_activities)
+				{
+					$this->sub_activities = $sub_activities;
+				}
+				
+				public function get_sub_activities()
+				{
+					return $this->sub_activities;
+				}
 
 				/**
 				* Get a static reference to the storage object associated with this model object
@@ -169,11 +192,31 @@
 						'id' => $this->get_id(),
 						'parent_id' => $this->get_parent_id(),
 						'name' => $this->get_name(),
+						'description' => $this->get_description(),
 						'project_id' => $this->get_project_id(),
 						'project_name' => $project_name,
 						'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
 						'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
 						'responsible_user_id' => $responsible_user
 					);
+				}
+
+				public function toArray()
+				{
+					$converted_obj_array = parent::toArray();
+					
+					$converted_obj_array['sub_activities'] = array();
+					
+					foreach($this->sub_activities as $activitiy)
+					{
+						// Checks if object to be converted is not the same as this object, 
+						// otherwise an eternal loop will happen
+						if($activitiy != $this)
+						{
+							$converted_obj_array['sub_activities'][] = $activitiy->toArray();
+						}
+					}
+								
+					return $converted_obj_array;
 				}
 		}
