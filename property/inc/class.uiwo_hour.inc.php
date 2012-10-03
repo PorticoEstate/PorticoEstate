@@ -1532,6 +1532,20 @@ HTML;
 
 				$subject  = lang('Workorder').": ".$workorder_id;
 
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				$_address = array();
+				foreach($address_element as $entry)
+				{
+					$_address[] = "{$entry['text']}: {$entry['value']}";
+				}
+				
+				if($_address)
+				{
+					$subject .= ', ' . implode(', ', $_address);
+				}
+				unset($_address);
+				unset($address_element);
+
 				$attachments = array();
 				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
