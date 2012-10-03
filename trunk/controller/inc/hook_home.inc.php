@@ -63,6 +63,8 @@
 	$styling .= " .home_portal li div { display: block;float:left;cursor: pointer;vertical-align: middle;}";
 	$styling .= " .home_portal_title h2 div{ display:block;float:left;cursor: pointer;vertical-align: middle;}";
 	$styling .= "  h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
+	$styling .= "  h4.expand_trigger img { vertical-align:middle;margin-right:3px; }";
+	$styling .= "  h4.expand_trigger span { vertical-align:middle; }";
 	$styling .= "  .expand_list{ display:none; }";
 	$styling .= "</style>"; 
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
@@ -602,7 +604,7 @@
 					{
 						$component = $container_arr[3];
 						$my_assigned_controls[$deadline_ts][] =  array("add", $deadline_ts, $my_control, "component", $component['location_id'], $component['id'] );
-		      		}
+		      }
 				}
 				else if($check_list->get_status() == controller_check_list::STATUS_NOT_DONE)
 				{
@@ -623,7 +625,7 @@
 		{
 			$portalbox2->data[] = array(		  	
 //					'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span><span style='display:inline-block;width:200px;'>" . date($dateformat, $date_ts) . "</span></h4><ul class='expand_list'>"
-					'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Frist: "  . date($dateformat, $date_ts) .  "</span><span style='display:inline-block;width:200px;'>Antall kontroller: " .  count($controls_on_date) . "</span></h4><ul class='expand_list'>"
+					'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Frist: "  . date($dateformat, $date_ts) .  "</span><span style='display:inline-block;width:200px;'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span></h4><ul class='expand_list'>"
 				);
 		}
 		
