@@ -209,7 +209,12 @@
 					
 					foreach($this->sub_activities as $activitiy)
 					{
-						$converted_obj_array['sub_activities'][] = $activitiy->toArray();
+						// Checks if object to be converted is not the same as this object, 
+						// otherwise an eternal loop will happen
+						if($activitiy != $this)
+						{
+							$converted_obj_array['sub_activities'][] = $activitiy->toArray();
+						}
 					}
 								
 					return $converted_obj_array;
