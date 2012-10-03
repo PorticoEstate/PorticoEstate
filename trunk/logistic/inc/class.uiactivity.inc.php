@@ -278,7 +278,7 @@
 					$rows[] = $result->serialize();
 				}
 			}
-
+			
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -325,6 +325,13 @@
 			{
 				$activity->set_project_id(phpgw::get_var('project_id'));
 			}
+			
+			if($parent_activity_id > 0)
+			{
+				$activity->set_parent_id( $parent_activity_id );
+				$parent_activity = $this->so->get_single( $parent_activity_id );
+				$activity->set_project_id( $parent_activity->get_project_id() );
+			}
 
 			if (isset($_POST['save_activity']))
 			{
@@ -365,20 +372,14 @@
 			else
 			{
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-
-				if($parent_activity_id > 0)
-				{
-					$activity->set_parent_id($parent_activity_id);
-			 		$parent_activity = $this->so->get_single($parent_activity_id);
-				}
-			  				
-			  $activities = $this->so->get_activities();
-			  echo "Skriver ut: ";
-				print_r( $activities );
+				
+			  $activities = $this->so->get();
+				$activities_array = $this->convert_to_array( $activities );
+				
 				$data = array
 				(
 					'responsible_users' => $accounts,
-					'activities' => $activities,
+					'activities' => $activities_array,
 					'activity' => $activity->toArray(),
 					'editable' => true,
 				);
@@ -397,6 +398,18 @@
 				self::add_javascript('logistic', 'logistic', 'ajax.js');
 				self::render_template_xsl(array('activity_item'), $data);
 			}
+		}
+		
+		function convert_to_array($object_list)
+		{
+			$converted_array = array();
+			
+			foreach($object_list as $object)
+			{
+				$converted_array[] = $object->toArray();
+			}
+			
+			return $converted_array; 
 		}
 
 		public function view()
