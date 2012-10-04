@@ -43,7 +43,8 @@
 			'index' => true,
 			'add' => true,
 			'edit' => true,
-			'view' => true
+			'view' => true,
+			'test' => true
 		);
 
 		public function __construct()
@@ -135,7 +136,7 @@
 			{
 				//Add action column to each row in result table
 				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uiproject.view");
+								$result_data['results'], array($this, '_add_links'), "logistic.uirequirement.view");
 			}
 			return $this->yui_results($result_data);
 		}
@@ -208,11 +209,63 @@
 						'text' 			=> lang('t_book_requirement'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uiactivity.edit'
+							'menuaction'	=> 'logistic.uibooking.add'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 
 			self::render_template_xsl('datatable_common', $data);
+		}
+
+		public function view()
+		{
+			$requirement_id = phpgw::get_var('id');
+
+			if(isset($_POST['edit_requirement']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit', 'id' => $requirement_id));
+			}
+			else
+			{
+				if ($requirement_id && is_numeric($requirement_id))
+				{
+					$requirement = $this->so->get_single($requirement_id);
+				}
+
+				$requirement_array = $requirement->toArray();
+
+				if ($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+
+				$data = array
+					(
+					'value_id' => !empty($requirement) ? $requirement->get_id() : 0,
+					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+					'project' => $requirement_array,
+					'view' => 'view_requirement'
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project') . '::' . lang('Requirement');
+				self::render_template_xsl(array('requirement_item'), $data);
+			}
+		}
+
+		public function edit()
+		{
+			$requirement_id = phpgw::get_var('id');
+		}
+
+		public function add()
+		{
+			$activity_id = phpgw::get_var('activity_id');
+		}
+
+		public function test()
+		{
+			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+			_debug_array($entity_list);
 		}
 	}
