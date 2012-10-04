@@ -28,7 +28,7 @@
 	*/
 
 		include_class('logistic', 'model', '/inc/model/');
-		
+
 		class logistic_project extends logistic_model
 		{
 				public static $so;
@@ -42,7 +42,7 @@
 				/**
 				* Constructor.  Takes an optional ID.  If a contract is created from outside
 				* the database the ID should be empty so the database can add one according to its logic.
-				* 
+				*
 				* @param int $id the id of this project
 				*/
 				public function __construct(int $id = null)
@@ -67,42 +67,42 @@
 
 				public function get_name()
 				{
-					return $this->name; 
+					return $this->name;
 				}
-				
+
 				public function set_project_type_id($project_type_id)
 				{
 					$this->project_type_id = $project_type_id;
 				}
-				
+
 				public function get_project_type_id()
 				{
 					return $this->project_type_id;
 				}
-				
+
 				public function set_project_type_label($project_type_label)
 				{
 					$this->project_type_label = $project_type_label;
 				}
-				
+
 				public function get_project_type_label()
 				{
 					return $this->project_type_label;
 				}
-				
+
 				public function set_description($description)
 				{
 					$this->description = $description;
 				}
-				
+
 				public function get_description()
 				{
 					return $this->description;
 				}
-				
+
 				/**
 				* Get a static reference to the storage object associated with this model object
-				* 
+				*
 				* @return the storage object
 				*/
 				public static function get_so()
