@@ -14,3 +14,18 @@
 		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.2';
 		return $GLOBALS['setup_info']['logistic']['currentver'];
 	}
+
+	/* Update Logistic from v 0.0.2 to 0.0.3
+	* Add locations
+	*/
+
+	$test[] = '0.0.2';
+	function logistic_upgrade0_0_2()
+	{
+		$GLOBALS['phpgw']->locations->add('.', 'Topp', 'logistic');
+		$GLOBALS['phpgw']->locations->add('.project', 'Prosjekt', 'logistic');
+		$GLOBALS['phpgw']->locations->add('.activity', 'Aktivitet', 'logistic');
+
+		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.3';
+		return $GLOBALS['setup_info']['logistic']['currentver'];
+	}
