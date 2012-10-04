@@ -266,6 +266,14 @@
 		public function test()
 		{
 			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+
 			_debug_array($entity_list);
+
+			foreach($entity_list as $entry)
+			{
+				$cat_list = execMethod('property.soadmin_entity.read_category',(array('allrows'=>true,'entity_id'=>$entry['id'])));
+				_debug_array($cat_list);
+			}
+
 		}
 	}
