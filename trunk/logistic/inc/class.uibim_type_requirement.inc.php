@@ -27,6 +27,8 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
+
+	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soproject');
 
@@ -251,6 +253,9 @@
 				);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+
+			phpgwapi_jquery::load_widget('core');
+
 			self::add_javascript('logistic', 'logistic', 'ajax.js');
 			self::render_template_xsl(array('bim_type_requirement_item'), $data);
 		}
