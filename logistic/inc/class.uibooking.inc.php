@@ -1,45 +1,39 @@
 <?php
-	/**
-	* phpGroupWare - controller: a part of a Facilities Management System.
-	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
-	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
-	*
-	* phpGroupWare is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* phpGroupWare is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with phpGroupWare; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	*
-	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	* @internal Development of this application was funded by http://www.bergen.kommune.no/
-	* @package property
-	* @subpackage controller
- 	* @version $Id: class.uicheck_list.inc.php 8628 2012-01-21 10:42:05Z vator $
-	*/
-	
-	phpgw::import_class('phpgwapi.yui');
 
 	/**
-	* Import the jQuery class
-	*/
-	phpgw::import_class('phpgwapi.jquery');
-
+	 * phpGroupWare - logistic: a part of a Facilities Management System.
+	 *
+	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
+	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
+	 * @package property
+	 * @subpackage logistic
+	 * @version $Id: class.uiactivity.inc.php 10101 2012-10-03 09:46:51Z vator $
+	 */
 	phpgw::import_class('phpgwapi.uicommon');
-		
-	class controller_uicontrol_register_to_component extends phpgwapi_uicommon
+	phpgw::import_class('logistic.sobooking');
+
+	
+	class logistic_uibooking extends phpgwapi_uicommon
 	{
+		
 		var $cat_id;
 		var $start;
 		var $query;
@@ -51,26 +45,21 @@
 		
 		private $bo;
 		private $bocommon;
-		private $so_control;
-	
-		var $public_functions = array
-		(
-			'index'								=> true,
-			'query'								=> true,
-			'edit_component'					=> true,
-			'get_location_category'				=> true,
-			'get_district_part_of_town'			=> true,
-			'get_category_by_entity'			=> true,
-			'get_entity_table_def'				=> true,
-			'get_locations'						=> true,
-			'get_location_type_category'		=> true
+
+		private $so;
+		public $public_functions = array(
+			'query' => true,
+			'add' 	=> true,
+			'edit' => true,
+			'view' => true,
+			'index' => true
 		);
 
-		function __construct()
+		public function __construct()
 		{
 			parent::__construct();
 			
-			$this->bo					= CreateObject('property.bolocation',true);
+		  $this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control 			= CreateObject('controller.socontrol');
 			
@@ -88,276 +77,101 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
-			
-			self::set_active_menu('controller::control::location_for_check_list');
-		}	
-	
 
-
-		function index()
+			$this->so = createObject('logistic.sobooking');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::booking";
+		}
+		
+		public function index()
 		{
-		    self::set_active_menu('controller::control::component_for_check_list');
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$receipt = array();
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
+			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
 
-			$msgbox_data = array();
-			if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
-			{
-				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-			}
+			$user_array = $this->get_user_array();
 
-			$myColumnDefs = array();
-			$datavalues = array();
-			$myButtons	= array();
-
-			$datavalues[] = array
-			(
-				'name'				=> "0",
-				'values' 			=> json_encode(array()),
-				'total_records'		=> 0,
-				'permission'   		=> "''",
-				'is_paginator'		=> 1,
-				'edit_action'		=> "''",
-				'footer'			=> 0
-			);
-
-			$myColumnDefs[0] = array
-			(
-				'name'		=> "0",
-				'values'	=>	json_encode(array())
-			);	
-
-			$GLOBALS['phpgw']->translation->add_app('property');
-			$entity			= CreateObject('property.soadmin_entity');
-			$entity_list 	= $entity->read(array('allrows' => true));
-
-			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
-
-			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
-			$location_type_list = execMethod('property.soadmin_location.select_location_type');
-
-			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
-			array_unshift($location_type_list ,array ('id'=>'','name'=>lang('select')));
-
-			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	= true;
-
-			$control_area = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-
-								
-			$control_area_list = array();
-			foreach($control_area['cat_list'] as $cat_list)
-			{
-				$control_area_list[] = array
-				(
-					'id' 	=> $cat_list['cat_id'],
-					'name'	=> $cat_list['name'],
-				);		
-			}
-
-			array_unshift ($control_area_list ,array ('id'=>'','name'=>lang('select')));
-
-			
-					
-			$data = array
-			(
-				'td_count'						=> '""',
-				'datatable'						=> $datavalues,
-				'myColumnDefs'					=> $myColumnDefs,
-				'myButtons'						=> $myButtons,
-
-				'msgbox_data'					=> $msgbox_data,
-				'control_area_list'		=> array('options' => $control_area_list),
-				'filter_form' 					=> array
-													(
-														'control_area_list'		=> array('options' => $control_area_list),
-														'entity_list' 			=> array('options' => $entity_list),
-														'district_list' 		=> array('options' => $district_list),
-														'part_of_town_list'		=> array('options' => $part_of_town_list),
-														'location_type_list'	=> array('options' => $location_type_list),
-													),
-				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_location.edit_component'))
-			);
-
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
-
-			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
-			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
-
-			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
-		}
-
-		
-		/*
-		 * Return categories based on chosen location
-		 */
-		public function get_location_category()
-		{
-			$type_id = phpgw::get_var('type_id');
-		 	$category_types = $this->bocommon->select_category_list(array(
-																		'format'=>'filter',
-																		'selected' => 0,
-																		'type' =>'location',
-																		'type_id' =>$type_id,
-																		'order'=>'descr'
-																	));
-			$default_value = array ('id'=>'','name'=>lang('no category selected'));
-			array_unshift($category_types,$default_value);
-			return json_encode( $category_types );
-		}
-		
-		/*
-		 * Return parts of town based on chosen district
-		 */
-		public function get_district_part_of_town()
-		{
-			$district_id = phpgw::get_var('district_id');
-			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',null,$district_id);
-			$default_value = array ('id'=>'','name'=>lang('no part of town'));
-			array_unshift($part_of_town_list,$default_value);
-
-			return json_encode( $part_of_town_list );
-		}
-
-
-		/*
-
-		 * Return parts of town based on chosen district
-		 */
-		public function get_category_by_entity()
-		{
-			$entity_id		= phpgw::get_var('entity_id');
-			$entity			= CreateObject('property.soadmin_entity');
-
-			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
-
-			return $category_list;
-		}
-
-
-		public function get_location_type_category()
-		{
-			$location_type			= phpgw::get_var('location_type', 'int');
-
-			$values  = $this->bocommon->select_category_list(array
-					(
-						'format'=>'filter',
-					//	'selected' => $this->cat_id,
-						'type' =>'location',
-						'type_id' =>$location_type,
-						'order'=>'descr'
+			$data = array(
+				'datatable_name'	=> lang('booking'),
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'filter',
+								'name' => 'project',
+								'text' => lang('Project') . ':',
+								'list' => $project_array,
+							),
+							array('type' => 'filter',
+								'name' => 'user',
+								'text' => lang('Responsible user') . ':',
+								'list' => $user_array,
+							),
+							array('type' => 'text',
+								'text' => lang('search'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'logistic.uibooking.index', 'phpgw_return_as' => 'json')),
+					'field' => array(
+					array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+						),		
+						array(
+							'key' => 'location_code',
+							'label' => lang('Location code'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'address',
+							'label' => lang('Address'),
+							'sortable' => false
+						)
 					)
-				);
-
-			return $values;
-		}
-
-
-		public function get_entity_table_def()
-		{
-			$entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$boentity	= CreateObject('property.boentity',false, 'entity');
-			$boentity->read(array('dry_run' => true));
-			$uicols = $boentity->uicols;
-			$columndef = array();
-
-			$columndef[] = array
-			(
-				'key'		=> 'select',
-				'label'		=> lang('select'),
-				'sortable'	=> false,
-				'formatter'	=> false,
-				'hidden'	=> false,
-				'formatter' => '',
-				'className' => ''
+				),
 			);
 
-			$columndef[] = array
-			(
-				'key'		=> 'delete',
-				'label'		=> lang('delete'),
-				'sortable'	=> false,
-				'formatter'	=> false,
-				'hidden'	=> false,
-				'formatter' => '',
-				'className' => ''
-			);
-
-			$count_fields = count($uicols['name']);
-
-			for ($i=0;$i<$count_fields;$i++)
-			{
-				if( $uicols['name'][$i])
-				{
-					$columndef[] = array
-					(
-						'key'		=> $uicols['name'][$i],
-						'label'		=> $uicols['descr'][$i],
-						'sortable'	=> $uicols['sortable'][$i],
-						'formatter'	=> $uicols['formatter'][$i],
-						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
-						'className'	=> $uicols['classname'][$i],
-					);
-				}
-			}
-
-//_debug_array($columndef);
-			return $columndef;
+			self::render_template_xsl(array('datatable_common'), $data);
 		}
-
-
-		public function get_locations()
-		{
-			$location_code = phpgw::get_var('location_code');
-			$child_level = phpgw::get_var('child_level', 'int', 'REQUEST', 1);
-			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
-
-			$criteria = array
-			(
-				'location_code'		=> $location_code,
-				'child_level'		=> $child_level,
-				'field_name'		=> "loc{$child_level}_name",
-				'part_of_town_id'	=> $part_of_town_id
-			);
-	
-			$locations = execMethod('property.solocation.get_children',$criteria);
-			return $locations;
-		}
-
-
 
 		public function query()
 		{
-			$entity_id			= phpgw::get_var('entity_id', 'int');
+		  $entity_id			= phpgw::get_var('entity_id', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
 			$results 			= phpgw::get_var('results', 'int');
 			$control_registered	= phpgw::get_var('control_registered', 'bool');
-
-			if(!$entity_id && !$cat_id)
+/*
+ 			if(!$entity_id && !$cat_id)
 			{
 				$values = array();
 			}
 			else
 			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				$boentity	= CreateObject('property.boentity',false, 'entity');
+			*/
+			$entity_id = 3;
+			$cat_id = 1;
+				$location_id = 2295;//$GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
+				//$boentity	= CreateObject('property.boentity',false, 'entity');
+				$boentity	= CreateObject('property.boentity',false, 'entity', $entity_id, $cat_id);
 				$boentity->results = $results;
-				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
-			}		
+				//$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
+				$values = $boentity->read();
+			//}		
 
 			foreach($values as &$entry)
 			{
@@ -384,51 +198,171 @@
 			return $return_data;
 		}
 
-		public function edit_component()
+		public function add()
 		{
-			if($values = phpgw::get_var('values'))
-			{
-				if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'property'))
-				{
-					$receipt['error'][]=true;
-					phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
-				}
-				if(!$receipt['error'])
-				{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.edit'));
+		}
 
-					if($this->so_control->register_control_to_component($values))
-					{
-						$result =  array
-						(
-							'status'	=> 'updated'
-						);
-					}
-					else
-					{
-						$result =  array
-						(
-							'status'	=> 'error'
-						);
-					}
-				}
-			}
-
-			if(phpgw::get_var('phpgw_return_as') == 'json')
+		public function edit()
+		{
+			$activity_id = phpgw::get_var('id');
+			$parent_activity_id = phpgw::get_var('parent_id');
+			
+			if ($activity_id && is_numeric($activity_id))
 			{
-				if( $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
-				{
-					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
-					$result['receipt'] = $receipt;
-				}
-				else
-				{
-					$result['receipt'] = array();
-				}
-				return $result;
+				$activity = $this->so->get_single($activity_id);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_location.register_control_to_component'));
+				$activity = new logistic_activity();
 			}
+
+			if(phpgw::get_var('project_id') && phpgw::get_var('project_id') > 0)
+			{
+				$activity->set_project_id(phpgw::get_var('project_id'));
+			}
+			
+			if($parent_activity_id > 0)
+			{
+				$activity->set_parent_id( $parent_activity_id );
+				$parent_activity = $this->so->get_single( $parent_activity_id );
+				$activity->set_project_id( $parent_activity->get_project_id() );
+			}
+
+			if (isset($_POST['save_activity']))
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$activity->set_id( phpgw::get_var('id') );
+				$activity->set_name( phpgw::get_var('name') );
+				$activity->set_update_user( $user_id );
+				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
+				$activity->set_description( phpgw::get_var('description') );
+
+				if(phpgw::get_var('start_date','string') != '')
+				{
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+					$activity->set_start_date($start_date_ts);
+				}
+				else
+				{
+					$activity->set_start_date(0);
+				}
+
+				if( phpgw::get_var('end_date','string') != '')
+				{
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+					$activity->set_end_date($end_date_ts);
+				}
+				else
+				{
+					$activity->set_end_date(0);
+				}
+
+				$activity_id = $this->so->store($activity);
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
+			}
+			else if (isset($_POST['cancel_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id));
+			}
+			else
+			{
+				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+				
+			  $activities = $this->so->get();
+				$activities_array = $this->convert_to_array( $activities );
+				
+				$data = array
+				(
+					'responsible_users' => $accounts,
+					'activities' => $activities_array,
+					'activity' => $activity->toArray(),
+					'editable' => true,
+				);
+				
+				if($parent_activity_id > 0)
+				{
+					$data['parent_activity'] = $parent_activity->toArray();
+				}
+
+				$this->use_yui_editor('description');
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
+
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+				self::add_javascript('logistic', 'logistic', 'ajax.js');
+				self::render_template_xsl(array('activity_item'), $data);
+			}
+		}
+		
+		function convert_to_array($object_list)
+		{
+			$converted_array = array();
+			
+			foreach($object_list as $object)
+			{
+				$converted_array[] = $object->toArray();
+			}
+			
+			return $converted_array; 
+		}
+
+		public function view()
+		{
+			$activity_id = phpgw::get_var('id');
+			$project_id = phpgw::get_var('project_id');
+			if (isset($_POST['edit_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'id' => $activity_id, 'project_id' => $project_id));
+			}
+			else if (isset($_POST['new_activity']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project_id));
+			}
+			else
+			{
+				if ($activity_id && is_numeric($activity_id))
+				{
+					$activity = $this->so->get_single($activity_id);
+				}
+
+				$activity_array = $activity->toArray();
+
+				if ($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+
+				$activity->set_project_id($project_id);
+
+				$data = array
+					(
+						'activity' => $activity->toArray(),
+						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+						'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
+				self::render_template_xsl(array('activity_item'), $data);
+			}
+		}
+
+		private function get_user_array()
+		{
+			$user_array = array();
+			$user_array[] = array(
+				'id' => '',
+				'name' => lang('all_types')
+			);
+			$user_array[] = array(
+				'id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'name' => lang('my_activities'),
+				'selected' => 1
+			);
+
+			return $user_array;
 		}
 	}
