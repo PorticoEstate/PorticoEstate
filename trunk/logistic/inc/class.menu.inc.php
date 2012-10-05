@@ -74,11 +74,11 @@
 										'image'	=> array('property', 'location_tenant'),
 								),
 						)
-				)     
+				)
 			);
-			
+
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
-				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'logistic'))
 			{
 				$menus['admin'] = array
 				(
@@ -97,6 +97,10 @@
 						'text'	=> lang('Project types'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiproject.project_types') )
 					),
+					'bim_type_requirement' => array(
+						'text' => lang('Bim type requirement'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.index') )
+					)
 /*					'control_cats'	=> array
 					(
 						'text'	=> lang('Control area'),
@@ -115,7 +119,7 @@
 					)*/
 				);
 			}
-			
+
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
