@@ -28,7 +28,7 @@
 	 * @version $Id: class.uiactivity.inc.php 10101 2012-10-03 09:46:51Z vator $
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
-	phpgw::import_class('logistic.sobooking');
+//	phpgw::import_class('logistic.sobooking');
 
 	
 	class logistic_uibooking extends phpgwapi_uicommon
@@ -78,7 +78,7 @@
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
 
-			$this->so = createObject('logistic.sobooking');
+//			$this->so = createObject('logistic.sobooking');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::booking";
 		}
 		
@@ -186,16 +186,15 @@
 
 			
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$return_data['recordsReturned'] = count($values);
-			$return_data['totalRecords'] = $boentity->total_records;
-			$return_data['startIndex'] = $this->start;
-			$return_data['sort'] = 'location_code';
-			$return_data['dir'] = "ASC";
-			$return_data['pageSize'] = $results;
-			$return_data['activePage'] = floor($this->start / $results) + 1;
-			$return_data['records'] = $values;
 
-			return $return_data;
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = count($values);
+			$result_data['start'] = $params['start'];
+			$result_data['sort'] = $params['sort'];
+			$result_data['dir'] = $params['dir'];
+
+			return $this->yui_results($result_data);
 		}
 
 		public function add()
