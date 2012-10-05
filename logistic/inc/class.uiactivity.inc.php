@@ -341,6 +341,10 @@
 				$activity->set_update_user( $user_id );
 				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
 				$activity->set_description( phpgw::get_var('description') );
+				
+				if( $activity->get_id() == '' | $activity->get_id() == 0){
+					$activity->set_create_user( $user_id );	
+				}
 
 				if(phpgw::get_var('start_date','string') != '')
 				{
