@@ -738,7 +738,7 @@
 			$import = CreateObject('property.import');
 
 			$importfile = $import->importfile();
-			$id		= phpgw::get_var('id', 'int');
+			$id		= phpgw::get_var('id');
 			if(isset($importfile) && is_file($importfile) && !phpgw::get_var('cancel'))
 			{
 				$list = $this->bo->read_details(0);
@@ -1643,14 +1643,14 @@ die();
 			{
 				return;
 			}
-			$id	= phpgw::get_var('id', 'int');
+			$id	= phpgw::get_var('id');
 			if($id)
 			{
 				$list = $this->bo->read_details($id);
 			}
 			else
 			{
-				$list = $this->bo->read($id);
+				$list = $this->bo->read();
 			}
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
