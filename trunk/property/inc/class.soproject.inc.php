@@ -1817,6 +1817,13 @@
 						}
 						
 						$_actual_cost += $order['actual_cost'];
+
+						//override if periode is closed
+						if(isset($closed_period[$period]) && $closed_period[$period])
+						{
+							$_sum_orders = 0;
+						}
+
 					}
 
 					unset($orders[$period]);
@@ -1863,12 +1870,18 @@
 					}
 
 					$_actual_cost += $order['actual_cost'];
+
+					//override if periode is closed
+					if(isset($closed_period[$period]) && $closed_period[$period])
+					{
+						$_sum_orders = 0;
+					}
 				}
 
 				$values[] = array
 				(
 					'project_id'		=> $project_id,
-					'period'				=> $period,
+					'period'			=> $period,
 					'budget'			=> 0,
 					'sum_orders'		=> $_sum_orders,
 					'actual_cost'		=> $_actual_cost,
@@ -1889,6 +1902,7 @@
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
 				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
+	//			$entry['deviation'] = $entry['budget'] - $entry['actual_cost'];
 				$entry['closed'] = $closed_period[$entry['period']];
 			}
 
