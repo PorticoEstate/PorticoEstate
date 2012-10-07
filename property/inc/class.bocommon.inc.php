@@ -1591,6 +1591,85 @@
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
 		 */
+		function excel_out_ny($list,$name,$descr,$input_type=array())
+		{
+			phpgw::import_class('phpgwapi.phpexcel');
+
+
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename,'application/vnd.ms-excel');
+
+			$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
+			$cacheSettings = array( 'memoryCacheSize' => '8MB');
+			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+
+			$objPHPExcel = new PHPExcel();
+
+			$objPHPExcel->getProperties()->setCreator($GLOBALS['phpgw_info']['user']['fullname'])
+							 ->setLastModifiedBy($GLOBALS['phpgw_info']['user']['fullname'])
+							 ->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}")
+							 ->setSubject("Office 2007 XLSX Document")
+							 ->setDescription("document for Office 2007 XLSX, generated using PHP classes.")
+							 ->setKeywords("office 2007 openxml php")
+							 ->setCategory("downloaded file");
+
+			$count_uicols_name=count($name);
+
+			$m=0;
+			for ($k=0;$k<$count_uicols_name;$k++)
+			{
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
+				{
+
+					$objPHPExcel->setActiveSheetIndex(0)
+		            	->setCellValueByColumnAndRow($m, 1, $descr[$k]);
+					$m++;
+				}
+			}
+
+			$j=0;
+			if (isset($list) && is_array($list))
+			{
+				foreach($list as $entry)
+				{
+					$m=0;
+					for ($k=0;$k<$count_uicols_name;$k++)
+					{
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
+						{
+							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				$line = 1;
+
+				foreach($content as $row)
+				{
+					$line++;
+					$rows = count($row);
+					for ($i=0; $i < $rows; $i++)
+					{
+						$objPHPExcel->setActiveSheetIndex(0)
+			            	->setCellValueByColumnAndRow($i, $line, $row[$i]);
+					}
+				}
+			}
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$objPHPExcel->setActiveSheetIndex(0);
+
+			// Save Excel 2007 file
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+//			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->save('php://output');
+
+		}
+
 		function excel_out($list,$name,$descr,$input_type=array())
 		{
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';

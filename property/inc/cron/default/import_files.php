@@ -152,20 +152,16 @@
 		function import_vaktprotokoll()
 		{
 			$filename = 'Vakthendelser.xls';
-			$data = CreateObject('phpgwapi.excelreader');
 
-			$data->setOutputEncoding('CP1251');
-			$data->read(PHPGW_SERVER_ROOT . "/property/inc/excelreader/test/{$filename}");
+			phpgw::import_class('phpgwapi.phpexcel');
 
-			for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++)
+			$path = PHPGW_SERVER_ROOT . "/property/inc/excelreader/test/{$filename}";
+			$objPHPExcel = PHPExcel_IOFactory::load($path);
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
+			for ($i = 1; $i <= count($data); $i++)
 			{
-				for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++)
-				{
-					echo "\"".$data->sheets[0]['cells'][$i][$j]."\",";
-				}
-				echo "\n";
+				echo "\"".print_r($data[$i]);
 			}
 		}
 	}
-
-
