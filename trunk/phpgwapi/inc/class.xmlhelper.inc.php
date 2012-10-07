@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage xml
-	* @version $Id: class.xmlhelper.inc.php 4908 2010-02-24 20:49:33Z sigurd $
+	* @version $Id$
 	*/
 
 	class phpgwapi_xmlhelper
