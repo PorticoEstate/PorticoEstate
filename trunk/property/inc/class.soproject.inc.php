@@ -1018,13 +1018,14 @@
 					$project['ecodimb'],
 					$project['b_account_id'],
 					$project['contact_id'],
-					$project['inherit_location']
+					$project['inherit_location'],
+					$project['budget_periodization'],
 				);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location,periodization_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['budget'])
@@ -1192,7 +1193,8 @@
 				'ecodimb'			=> $project['ecodimb'],
 				'account_group'		=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id'],
-				'inherit_location'	=> $project['inherit_location']
+				'inherit_location'	=> $project['inherit_location'],
+				'periodization_id'	=> $project['budget_periodization'],
 			);
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $project['id']);
@@ -1717,12 +1719,22 @@
 				}
 			}
 
+			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('periodization_id'))
+			{
+				$_use_periodization = true;
+			}
+			else
+			{
+				$_use_periodization = false;			
+			}
+
 			$config = CreateObject('phpgwapi.config','property');
 			$config->read();
 			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-//			$sql = "SELECT fm_workorder.id, EXTRACT(YEAR from to_timestamp(start_date) ) as year, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition"
-			$sql = "SELECT fm_workorder.id, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition"
+			$sql = "SELECT fm_workorder.id, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition, start_date"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
@@ -1732,19 +1744,32 @@
 
 			while ($this->db->next_record())
 			{
-				$year = date('Y');
 				$_found = false;
+				$_start_date = $this->db->f('start_date');
+				$_order_period = date('Ym', $_start_date);
 				
-				//move to current
-				$check_months = array(0, date('m'));
+				$year = date('Y');
 				
-				foreach ($check_months as $i)
+				if($_use_periodization)
 				{
-					$periode = $year . sprintf("%02s", $i);
+					$periode = $_order_period;
 					if(isset($project_budget[$periode]))
 					{
 						$_found = true;
-						break;
+					}
+				}
+
+				if(!$_found) //move to current
+				{
+					$check_months = array(0, date('m'));
+					foreach ($check_months as $i)
+					{
+						$periode = $year . sprintf("%02s", $i);
+						if(isset($project_budget[$periode]))
+						{
+							$_found = true;
+							break;
+						}
 					}
 				}
 					
