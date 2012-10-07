@@ -7,7 +7,7 @@
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
-	* @version $Id: class.jscal.inc.php 3415 2009-08-23 17:09:49Z sigurd $
+	* @version $Id$
 	*/
 
 	/**

@@ -26,7 +26,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package phpgwapi
 	* @subpackage utilities
- 	* @version $Id: class.uicommon.inc.php 9470 2012-05-31 11:10:20Z vator $
+ 	* @version $Id$
 	*/	
 
 	phpgw::import_class('phpgwapi.yui');

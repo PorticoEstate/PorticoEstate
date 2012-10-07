@@ -7,7 +7,7 @@
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
-	 * @version $Id: class.yui.inc.php 7951 2011-10-26 13:48:40Z sigurdne $
+	 * @version $Id$
 	 */
 
 	/*
