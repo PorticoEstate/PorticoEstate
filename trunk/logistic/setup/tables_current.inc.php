@@ -119,6 +119,7 @@ $phpgw_baseline = array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'type_requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'cust_attribute_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
