@@ -148,13 +148,21 @@
 
 		public function query()
 		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'query' => phpgw::get_var('query'),
+				'sort' => phpgw::get_var('sort'),
+				'dir' => phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+			
 		  $entity_id			= phpgw::get_var('entity_id', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
 			$results 			= phpgw::get_var('results', 'int');
-			$control_registered	= phpgw::get_var('control_registered', 'bool');
+			
 /*
  			if(!$entity_id && !$cat_id)
 			{
@@ -184,16 +192,15 @@
 				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
 			}
 
-			
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = count($values);
+			$result_data['total_records'] = $boentity->total_records;
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
-
+			
 			return $this->yui_results($result_data);
 		}
 
