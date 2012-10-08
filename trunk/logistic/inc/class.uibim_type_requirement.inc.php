@@ -44,7 +44,10 @@
 			'query' => true,
 			'index' => true,
 			'edit' => true,
-			'add' => true
+			'add' => true,
+			'view' => true,
+			'get_bim_level1' => true,
+			'get_bim_level2' => true
 		);
 
 		public function __construct()
@@ -212,51 +215,79 @@
 			self::render_template_xsl('datatable_common', $data);
 		}
 
-		public function edit()
-		{
-
-		}
-
 		public function add()
 		{
-			$custom	= createObject('phpgwapi.custom_fields');
-			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.edit'));
+		}
 
-			//_debug_array($entity_list);
-
-			foreach($entity_list as &$entry)
+		public function edit()
+		{
+			$req_type_id = phpgw::get_var('id');
+			if($req_type_id && is_numeric($req_type_id))
 			{
-				$cat_list = execMethod('property.soadmin_entity.read_category',(array('allrows'=>true,'entity_id'=>$entry['id'])));
-				//_debug_array($cat_list);
-
-				foreach($cat_list as &$cat)
-				{
-					$attrib_data = $custom->find('property',".entity.{$cat['entity_id']}.{$cat[id]}", 0, '','','',true, true);
-					$cat['attrib'] = $attrib_data;
-				//_debug_array($attrib_data);
-				}
-
-				$entry['cat_list'] = $cat_list;
-
+				$req_type = $this->so->get_single($req_type_id);
+			}
+			else
+			{
+				$req_type = new logistic_bim_item_type_requirement();
 			}
 
-			//var_dump($entity_list);
-			array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
-			$project_type_array = $this->so_project->get_project_types();
+			if (isset($_POST['save']))
+			{
+				$req_type->set_location_id(phpgw::get_var('location_id'));
+				$req_type->set_project_type_id(phpgw::get_var('project_type_id'));
+				$cust_attr_ids = phpgw::get_var('attributes');
+				$req_type->set_cust_attribute_id(implode(',', $cust_attr_ids));
 
-			$data = array
-					(
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-					'entities' => $entity_list,
-					'project_types' => $project_type_array,
-					'editable' => true
-				);
+				$req_type_id = $this->so->store($req_type);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.view', 'id' => $req_type_id));
+			}
+			else if (isset($_POST['cancel']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.view', 'id' => $req_type_id));
+			}
+			else
+			{
+				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
+				$project_type_array = $this->so_project->get_project_types();
 
-			phpgwapi_jquery::load_widget('core');
+				$data = array
+						(
+						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+						'entities' => $entity_list,
+						'project_types' => $project_type_array,
+						'editable' => true
+					);
 
-			self::add_javascript('logistic', 'logistic', 'ajax.js');
-			self::render_template_xsl(array('bim_type_requirement_item'), $data);
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+
+				phpgwapi_jquery::load_widget('core');
+
+				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
+				self::render_template_xsl(array('bim_type_requirement_item'), $data);
+			}
+		}
+
+		public function get_bim_level1()
+		{
+			$entity_id		= phpgw::get_var('entity_id');
+			$entity			= CreateObject('property.soadmin_entity');
+
+			$category_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
+
+			return $category_list;
+		}
+
+		public function get_bim_level2()
+		{
+			$custom	= createObject('phpgwapi.custom_fields');
+			$entity_id		= phpgw::get_var('entity_id');
+			$cat_id		= phpgw::get_var('cat_id');
+
+			$attrib_data = $custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
+
+			return $attrib_data;
 		}
 	}

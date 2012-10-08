@@ -16,73 +16,59 @@
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang','Project title')" /></label>
 					</dt>
-					<dd>
-						<xsl:for-each select="entities">
-							<xsl:value-of disable-output-escaping="yes" select="name"/><br/>
-							<i><xsl:value-of disable-output-escaping="yes" select="descr"/></i><br/>
-							<ul>
-								<xsl:for-each select="cat_list">
-									<li>
-										<xsl:value-of disable-output-escaping="yes" select="name"/><br/>
-										<i><xsl:value-of disable-output-escaping="yes" select="descr"/></i><br/>
-											<xsl:for-each select="attrib">
-													<xsl:value-of disable-output-escaping="yes" select="name"/><br/>
-													<i><xsl:value-of disable-output-escaping="yes" select="descr"/></i>
-											</xsl:for-each>
-									</li>
-								</xsl:for-each>
-							</ul>
-							<br/>
-						</xsl:for-each>
-					</dd>
 					<dt>
 						<label>Prosjekttype</label>
 					</dt>
 					<dd>
-						<select name="project_type" id="project_type">
-							<xsl:for-each select="project_types">
-								<option value="{id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:for-each>
-						</select>
+						<xsl:choose>
+							<xsl:when test="editable">
+								<select name="project_type_id" id="project_type_id">
+									<xsl:for-each select="project_types">
+										<option value="{id}">
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="project_type_id" />
+							</xsl:otherwise>
+						</xsl:choose>
 					</dd>
-					<dt>
-						<label>BIM</label>
-					</dt>
-					<dd>
-						<select name="level0" id="level0">
-							<xsl:for-each select="entities">
-								<option value="{id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</dd>
-					<dt>
-						<label>BIM2</label>
-					</dt>
-					<dd>
-						<select name="level1" id="level1">
-							<xsl:for-each select="entities/cat_list">
-								<option value="{id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</dd>
-					<dt>
-						<label>BIM3</label>
-					</dt>
-					<dd>
-						<select name="level2" id="level2">
-							<xsl:for-each select="entities/cat_list/attrib">
-								<option value="{id}">
-									<xsl:value-of select="name"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<dt>
+								<label>BIM</label>
+							</dt>
+							<dd>
+								<select name="location_id" id="location_id">
+									<xsl:for-each select="entities">
+										<option value="{id}">
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</dd>
+							<dt>
+								<label>BIM2</label>
+							</dt>
+							<dd>
+								<select name="categories" id="categories">
+								</select>
+							</dd>
+							<dt>
+								<label>BIM3</label>
+							</dt>
+							<dd>
+								<div id="attributes">
+								</div>
+							</dd>
+						</xsl:when>
+						<xsl:otherwise>
+							Visningsmodus!
+							<xsl:value-of select="cust_attribute_id" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</dl>
 				<div class="form-buttons">
 					<xsl:choose>

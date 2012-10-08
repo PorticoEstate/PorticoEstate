@@ -3,6 +3,7 @@ Logistic	common	no	Logistikk
 project	logistic	no	Prosjekt
 activity	logistic	no	Aktivitet
 booking	logistic	no	Booking
+allocation	logistic	no	Beholdning
 requirement	logistic	no	Behov
 Project name	logistic	no	Navn
 Project type	logistic	no	Type

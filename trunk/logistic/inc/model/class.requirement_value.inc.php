@@ -35,7 +35,8 @@
 
 		protected static $id;
 		protected static $requirement_id;
-		protected static $bim_item_type_requirement_id;
+		protected $location_id;
+		protected $cust_attribute_id;
 		protected static $value;
 
 		/**
@@ -69,14 +70,24 @@
 			return $this->requirement_id;
 		}
 
-		public function set_bim_item_type_requirement_id($bim_item_type_requirement_id)
+		public function set_location_id($location_id)
 		{
-			$this->bim_item_type_requirement_id = $bim_item_type_requirement_id;
+			$this->location_id = $location_id;
 		}
 
-		public function get_bim_item_type_requirement_id()
+		public function get_location_id()
 		{
-			return $this->bim_item_type_requirement_id;
+			return $this->location_id;
+		}
+
+		public function set_cust_attribute_id($cust_attribute_id)
+		{
+			$this->cust_attribute_id = $cust_attribute_id;
+		}
+
+		public function get_cust_attribute_id()
+		{
+			return $this->cust_attribute_id;
 		}
 
 		public function set_value($value)

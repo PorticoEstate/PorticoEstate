@@ -36,8 +36,7 @@
 		protected static $id;
 		protected static $location_id;
 		protected static $project_type_id;
-		protected static $attribute_name;
-		protected static $attribute_type;
+		protected static $cust_attribute_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -80,24 +79,14 @@
 			return $this->project_type_id;
 		}
 
-		public function set_attribute_name($attribute_name)
+		public function set_cust_attribute_id($cust_attribute_id)
 		{
-			$this->attribute_name = $attribute_name;
+			$this->cust_attribute_id = $cust_attribute_id;
 		}
 
-		public function get_attribute_name()
+		public function get_cust_attribute_id()
 		{
-			return $this->attribute_name;
-		}
-
-		public function set_attribute_type($attribute_type)
-		{
-			$this->attribute_type = $attribute_type;
-		}
-
-		public function get_attribute_type()
-		{
-			return $this->attribute_type;
+			return $this->cust_attribute_id;
 		}
 
 		/**
@@ -108,7 +97,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('logistic.sobim_item_type_requirement');
+				self::$so = CreateObject('logistic.sobim_type_requirement');
 			}
 
 			return self::$so;

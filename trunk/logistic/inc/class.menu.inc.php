@@ -69,7 +69,7 @@
 								),
 								'booking' => array
 								(
-										'text'	=> lang('booking'),
+										'text'	=> lang('allocation'),
 										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uibooking.index') ),
 										'image'	=> array('property', 'location_tenant'),
 								),
