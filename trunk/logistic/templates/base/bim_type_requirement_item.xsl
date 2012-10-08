@@ -31,7 +31,7 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="project_type_id" />
+								<xsl:value-of select="req_type/project_type_id" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -65,8 +65,11 @@
 							</dd>
 						</xsl:when>
 						<xsl:otherwise>
-							Visningsmodus!
-							<xsl:value-of select="cust_attribute_id" />
+							<xsl:value-of select="entity/name" />
+							<xsl:value-of select="category/name" />
+							<xsl:for-each select="attributes">
+								<xsl:value-of select="name" /><br/>
+							</xsl:for-each>
 						</xsl:otherwise>
 					</xsl:choose>
 				</dl>
