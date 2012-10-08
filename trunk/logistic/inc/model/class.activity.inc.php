@@ -42,7 +42,7 @@
 				protected $end_date;
 				protected $responsible_user_id;
 				protected $create_user;
-  		  protected $create_date,
+  		  protected $create_date;
 				protected $update_user;
 				protected $update_date;
 				
