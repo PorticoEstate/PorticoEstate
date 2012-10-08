@@ -253,14 +253,81 @@
 			}
 		}
 
-		public function edit()
-		{
-			$requirement_id = phpgw::get_var('id');
-		}
-
 		public function add()
 		{
-			$activity_id = phpgw::get_var('activity_id');
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
+		}
+
+		public function edit()
+		{
+			$activity_id = phpgw::get_var('id');
+						
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so->get_single($activity_id);
+			}
+			
+			if (isset($_POST['save_requirement']))
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$requirement->set_id( phpgw::get_var('id') );
+				$requirement->set_name( phpgw::get_var('name') );
+				$requirement->set_update_user( $user_id );
+				$requirement->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
+				$requirement->set_description( phpgw::get_var('description') );
+				
+				if( $activity->get_id() == '' | $activity->get_id() == 0){
+					$activity->set_create_user( $user_id );	
+				}
+
+				if(phpgw::get_var('start_date','string') != '')
+				{
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+					$activity->set_start_date($start_date_ts);
+				}
+				else
+				{
+					$activity->set_start_date(0);
+				}
+
+				if( phpgw::get_var('end_date','string') != '')
+				{
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+					$activity->set_end_date($end_date_ts);
+				}
+				else
+				{
+					$activity->set_end_date(0);
+				}
+
+				$activity_id = $this->so->store($activity);
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
+			}
+			else if (isset($_POST['cancel_requirement']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $activity_id));
+			}
+			else
+			{
+				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+				
+				$data = array
+				(
+					'editable' => true,
+				);
+				
+				if($activity_id > 0)
+				{
+					$data['activity'] = $activity->toArray();
+				}
+				
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+				self::add_javascript('logistic', 'logistic', 'ajax.js');
+				self::render_template_xsl(array('requirement/requirement'), $data);
+			}
 		}
 
 		public function test()
