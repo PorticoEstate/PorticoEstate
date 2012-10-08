@@ -35,6 +35,7 @@
 
 		protected static $id;
 		protected static $requirement_id;
+		protected $bim_type_requirement_id;
 		protected $location_id;
 		protected $cust_attribute_id;
 		protected static $value;
@@ -68,6 +69,16 @@
 		public function get_requirement_id()
 		{
 			return $this->requirement_id;
+		}
+
+		public function set_bim_type_requirement_id($bim_type_requirement_id)
+		{
+			$this->bim_type_requirement_id = $bim_type_requirement_id;
+		}
+
+		public function get_bim_type_requirement_id()
+		{
+			return $this->bim_type_requirement_id;
 		}
 
 		public function set_location_id($location_id)

@@ -63,3 +63,16 @@
 		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.4';
 		return $GLOBALS['setup_info']['logistic']['currentver'];
 	}
+
+	$test[] = '0.0.4';
+	function logistic_upgrade0_0_4()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_requirement_value','requirement_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+
+		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.5';
+		return $GLOBALS['setup_info']['logistic']['currentver'];
+	}
