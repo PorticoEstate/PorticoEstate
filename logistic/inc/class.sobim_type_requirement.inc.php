@@ -45,7 +45,24 @@
 
 		protected function add(&$object)
 		{
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			$now = time();
+			$loc_id = $object->get_location_id();
+			$cust_attribute_id = $object->get_cust_attribute_id();
+			$type_id = $project->get_project_type_id();
 
+			$sql = "INSERT INTO lg_bim_item_type_requirement (location_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ('$loc_id','$cust_attribute_id',$type_id, $user_id, $now)";
+			$result = $this->db->query($sql, __LINE__,__FILE__);
+
+			if($result)
+			{
+				// Set the new bim_item_type_requirement ID
+				return $this->db->get_last_insert_id('lg_bim_item_type_requirement', 'id');
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		protected function get_id_field_name()
