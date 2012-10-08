@@ -234,7 +234,8 @@
 
 			if (isset($_POST['save']))
 			{
-				$req_type->set_location_id(phpgw::get_var('location_id'));
+				$req_type->set_entity_id(phpgw::get_var('entity_id'));
+				$req_type->set_category_id(phpgw::get_var('category_id'));
 				$req_type->set_project_type_id(phpgw::get_var('project_type_id'));
 				$cust_attr_ids = phpgw::get_var('attributes');
 				$req_type->set_cust_attribute_id(implode(',', $cust_attr_ids));

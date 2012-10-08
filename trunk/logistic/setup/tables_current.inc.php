@@ -101,7 +101,8 @@ $phpgw_baseline = array(
 		'lg_bim_item_type_requirement' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'entity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'category_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'cust_attribute_id' => array('type' => 'varchar', 'precision' => 255, 'nullable' => false),
 						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),

@@ -33,10 +33,11 @@
 	{
 		public static $so;
 
-		protected static $id;
-		protected static $location_id;
-		protected static $project_type_id;
-		protected static $cust_attribute_id;
+		protected $id;
+		protected $entity_id;
+		protected $category_id;
+		protected $project_type_id;
+		protected $cust_attribute_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -59,14 +60,24 @@
 			return $this->id;
 		}
 
-		public function set_location_id($location_id)
+		public function set_entity_id($entity_id)
 		{
-			$this->location_id = $location_id;
+			$this->entity_id = $entity_id;
 		}
 
-		public function get_location_id()
+		public function get_entity_id()
 		{
-			return $this->location_id;
+			return $this->entity_id;
+		}
+
+		public function set_category_id($category_id)
+		{
+			$this->category_id = $category_id;
+		}
+
+		public function get_category_id()
+		{
+			return $this->category_id;
 		}
 
 		public function set_project_type_id($project_type_id)

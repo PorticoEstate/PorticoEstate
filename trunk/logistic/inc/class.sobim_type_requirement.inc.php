@@ -47,11 +47,12 @@
 		{
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$now = time();
-			$loc_id = $object->get_location_id();
+			$entity_id = $object->get_entity_id();
+			$category_id = $object->get_category_id();
 			$cust_attribute_id = $object->get_cust_attribute_id();
-			$type_id = $project->get_project_type_id();
+			$type_id = $object->get_project_type_id();
 
-			$sql = "INSERT INTO lg_bim_item_type_requirement (location_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ('$loc_id','$cust_attribute_id',$type_id, $user_id, $now)";
+			$sql = "INSERT INTO lg_bim_item_type_requirement (entity_id, category_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ($entity_id,$category_id,'$cust_attribute_id',$type_id, $user_id, $now)";
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
@@ -144,8 +145,9 @@
 			{
 				$bim_item_type_requirement = new logistic_bim_item_type_requirement((int) $id);
 
-				$bim_item_type_requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
-				$bim_item_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'int'));
+				$bim_item_type_requirement->set_entity_id($this->unmarshal($this->db->f('entity_id'), 'int'));
+				$bim_item_type_requirement->set_category_id($this->unmarshal($this->db->f('category_id'), 'int'));
+				$bim_item_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'string'));
 				$bim_item_type_requirement->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
 			}
 
