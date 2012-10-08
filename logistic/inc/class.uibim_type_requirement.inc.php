@@ -98,9 +98,6 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			//Retrieve a project identifier and load corresponding project
-			$project_id = phpgw::get_var('project_id');
-
 			$exp_param = phpgw::get_var('export');
 			$export = false;
 			if (isset($exp_param))
@@ -168,8 +165,8 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter',
-								'name' => 'bim_type',
-								'text' => lang('Bim types') . ':',
+								'name' => 'entity_type',
+								'text' => lang('Entity types') . ':',
 								'list' => $entity_list,
 							),
 							array('type' => 'text',
@@ -194,8 +191,13 @@
 					'source' => self::link(array('menuaction' => 'logistic.uibim_type_requirement.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'location_id',
-							'label' => lang('Location'),
+							'key' => 'entiry_id',
+							'label' => lang('Entity'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'category_id',
+							'label' => lang('Category'),
 							'sortable' => true
 						),
 						array(
@@ -290,5 +292,32 @@
 			$attrib_data = $custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
 
 			return $attrib_data;
+		}
+
+		public function view()
+		{
+			$entity_so	= CreateObject('property.soadmin_entity');
+			$custom	= createObject('phpgwapi.custom_fields');
+			$req_type_id = phpgw::get_var('id');
+			if($req_type_id && is_numeric($req_type_id))
+			{
+				$req_type = $this->so->get_single($req_type_id);
+				$entity = $entity_so->read_single($req_type->get_entity_id());
+				$category = $entity_so->read_single_category($req_type->get_entity_id(),$req_type->get_category_id());
+
+				$project_type_array = $this->so_project->get_project_types();
+
+				$data = array
+						(
+						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+						'req_type' => $req_type,
+						'entity' => $entity,
+						'category' => $category,
+						'attributes' => $attributes
+					);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+				self::render_template_xsl(array('bim_type_requirement_item'), $data);
+			}
 		}
 	}

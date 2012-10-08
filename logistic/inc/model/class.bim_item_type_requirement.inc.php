@@ -113,4 +113,15 @@
 
 			return self::$so;
 		}
+
+		public function serialize()
+		{
+			return array(
+				'id' => $this->get_id(),
+				'entity_id' => $this->get_entity_id(),
+				'category_id' => $this->get_category_id(),
+				'atributes' => $this->get_cust_attribute_id(),
+				'project_type_id' => $this->get_project_type_id()
+			);
+		}
 	}

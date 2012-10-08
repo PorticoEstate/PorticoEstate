@@ -76,7 +76,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'project', // alias
+					'table'			=> 'type_requirement', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
@@ -89,7 +89,7 @@
 		{
 			$clauses = array('1=1');
 
-			if($search_for)
+			/*if($search_for)
 			{
 				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
 				$like_clauses = array();
@@ -103,12 +103,12 @@
 				{
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
-			}
+			}*/
 
 			$filter_clauses = array();
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "lg_bim_item_type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
 
 			if(count($filter_clauses))
@@ -139,11 +139,11 @@
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $id, &$bim_item_type_requirement)
+		protected function populate(int $req_id, &$bim_item_type_requirement)
 		{
 			if($bim_item_type_requirement == null)
 			{
-				$bim_item_type_requirement = new logistic_bim_item_type_requirement((int) $id);
+				$bim_item_type_requirement = new logistic_bim_item_type_requirement((int) $req_id);
 
 				$bim_item_type_requirement->set_entity_id($this->unmarshal($this->db->f('entity_id'), 'int'));
 				$bim_item_type_requirement->set_category_id($this->unmarshal($this->db->f('category_id'), 'int'));
@@ -151,7 +151,7 @@
 				$bim_item_type_requirement->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
 			}
 
-			return $project;
+			return $bim_item_type_requirement;
 		}
 
 		protected function update($object)
