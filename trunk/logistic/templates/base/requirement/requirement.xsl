@@ -7,9 +7,23 @@
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
 	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
-		<h1 style="float:left;"> 
-			<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
-		</h1>
+		<xsl:choose>
+			<xsl:when test="activity/id &gt 0">
+				<h1 style="float:left;"> 
+					<span>
+						<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
+					</span>
+					<span>
+						{activity/name}
+					</span>
+				</h1>
+			</xsl:when>
+			<xsl:otherwise>
+				<h1 style="float:left;"> 
+					<xsl:value-of select="php:function('lang', 'Add requirement')" />
+				</h1>
+			</xsl:otherwise>
+		</xsl:choose>
 	</div>
 
 	<div class="yui-content" style="padding: 20px;">
@@ -51,6 +65,49 @@
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<dt>
+								<label>BIM</label>
+							</dt>
+							<dd>
+								<select name="location_id" id="location_id">
+									<xsl:for-each select="entity_list">
+										<option value="{id}">
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</dd>
+							<dt>
+								<label>BIM2</label>
+							</dt>
+							<dd>
+								<select name="categories" id="categories">
+								</select>
+							</dd>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="entity/name" />
+							<xsl:value-of select="category/name" />
+							<xsl:for-each select="attributes">
+								<xsl:value-of select="name" /><br/>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+					<dt>
+						<label for="no_of_items">Antall</label>
+					</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="editable">
+								<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" />
+							</xsl:when>
+							<xsl:otherwise>
+							<span>{requirement/no_of_items}</span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
