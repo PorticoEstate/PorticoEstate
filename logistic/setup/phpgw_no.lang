@@ -32,3 +32,4 @@ Project type name updated		logistic	no	Prosjekttypenavn oppdatert
 Add activity	logistic	no	Legg til aktivitet
 Add sub activity	logistic	no	Legg til subaktivitet
 Add requirement to activity	logistic	no	Legg krav til aktiviteten
+Add requirement	logistic	no	Legg til krav
