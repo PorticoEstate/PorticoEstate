@@ -76,3 +76,33 @@
 		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.5';
 		return $GLOBALS['setup_info']['logistic']['currentver'];
 	}
+
+	$test[] = '0.0.5';
+	function logistic_upgrade0_0_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('lg_bim_item_type_requirement', array(), 'cust_attribute_id_id');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_bim_item_type_requirement','cust_attribute_id',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => True
+		));
+
+		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.6';
+		return $GLOBALS['setup_info']['logistic']['currentver'];
+	}
+
+	$test[] = '0.0.6';
+	function logistic_upgrade0_0_6()
+	{
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('lg_bim_item_type_requirement','location_id','entity_id');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_bim_item_type_requirement','category_id',array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => True
+		));
+
+		$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.7';
+		return $GLOBALS['setup_info']['logistic']['currentver'];
+	}
