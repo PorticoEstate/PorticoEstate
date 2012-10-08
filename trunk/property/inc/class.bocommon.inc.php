@@ -1591,18 +1591,17 @@
 		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
 		 */
-		function excel_out_ny($list,$name,$descr,$input_type=array())
+		function excel_out($list,$name,$descr,$input_type=array())
 		{
 			phpgw::import_class('phpgwapi.phpexcel');
 
-
-			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xlsx';
 
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename,'application/vnd.ms-excel');
 
 			$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
-			$cacheSettings = array( 'memoryCacheSize' => '8MB');
+			$cacheSettings = array( 'memoryCacheSize' => '32MB');
 			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
 			$objPHPExcel = new PHPExcel();
@@ -1615,6 +1614,9 @@
 							 ->setKeywords("office 2007 openxml php")
 							 ->setCategory("downloaded file");
 
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$objPHPExcel->setActiveSheetIndex(0);
+
 			$count_uicols_name=count($name);
 
 			$m=0;
@@ -1622,9 +1624,7 @@
 			{
 				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
-
-					$objPHPExcel->setActiveSheetIndex(0)
-		            	->setCellValueByColumnAndRow($m, 1, $descr[$k]);
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, 1, $descr[$k]);
 					$m++;
 				}
 			}
@@ -1647,6 +1647,7 @@
 				}
 
 				$line = 1;
+				$col = 'A';
 
 				foreach($content as $row)
 				{
@@ -1654,23 +1655,25 @@
 					$rows = count($row);
 					for ($i=0; $i < $rows; $i++)
 					{
-						$objPHPExcel->setActiveSheetIndex(0)
-			            	->setCellValueByColumnAndRow($i, $line, $row[$i]);
+						$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, $line, $row[$i]);
+					//	$objPHPExcel->setActiveSheetIndex(0)->setCellValue($col . $i,  $row[$i] );
 					}
+					$col++;
 				}
 			}
 
-			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-			$objPHPExcel->setActiveSheetIndex(0);
-
 			// Save Excel 2007 file
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-//			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-			$objWriter->save('php://output');
+//			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->setUseDiskCaching(true, $GLOBALS['phpgw_info']['server']['temp_dir']);
+			$objWriter->setOffice2003Compatibility(true);
+//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
+//			die();
 
+			$objWriter->save('php://output');
 		}
 
-		function excel_out($list,$name,$descr,$input_type=array())
+		function excel_out_old($list,$name,$descr,$input_type=array())
 		{
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
@@ -1721,6 +1724,9 @@
 					}
 				}
 			}
+//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
+//			die();
+
 			$workbook->close();
 		}
 

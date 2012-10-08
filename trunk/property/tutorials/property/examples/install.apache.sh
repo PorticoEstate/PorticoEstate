@@ -257,6 +257,7 @@ export LDFLAGS=-lstdc++ &&\
  --with-gettext \
  --with-snmp \
  --with-curl \
+ --enable-zip \
  $ORACLE_PDO &&\
 make &&\
 make install &&\
