@@ -311,10 +311,13 @@
 			else
 			{
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-				
+
+				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+		
 				$data = array
 				(
 					'editable' => true,
+					'entity_list' => $entity_list
 				);
 				
 				if($activity_id > 0)
@@ -325,7 +328,7 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'ajax.js');
+				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
 				self::render_template_xsl(array('requirement/requirement'), $data);
 			}
 		}
