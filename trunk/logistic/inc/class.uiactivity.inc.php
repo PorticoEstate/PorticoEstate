@@ -27,6 +27,7 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
+
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
 
@@ -60,6 +61,7 @@
 			{
 				return $this->query();
 			}
+			
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -208,8 +210,6 @@
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
-
-
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
