@@ -59,7 +59,7 @@
 				'end_date',
 				'responsible_user_id',
 				'create_user',
-				'create_date'
+				'create_date',
 				'update_user',
 				'update_date'
 			);
@@ -73,7 +73,7 @@
 				$this->marshal($activity->get_end_date(), 'int'),
 				$this->marshal($activity->get_responsible_user_id(), 'int'),
 				$this->marshal($activity->get_create_user(), 'int'),
-				$this->marshal(strtotime('now'), 'int')
+				$this->marshal(strtotime('now'), 'int'),
 				$this->marshal($activity->get_update_user(), 'int'),
 				$this->marshal(strtotime('now'), 'int')
 			);
@@ -104,8 +104,6 @@
 				'start_date=' . $this->marshal($activity->get_start_date(), 'int'),
 				'end_date=' . $this->marshal($activity->get_end_date(), 'int'),
 				'responsible_user_id=' . $this->marshal($activity->get_responsible_user_id(), 'int'),
-				'create_user=' . $this->marshal($activity->get_create_user(), 'int'),
-				'create_date=' . $this->marshal(strtotime('now'), 'int')
 				'update_user=' . $this->marshal($activity->get_update_user(), 'int'),
 				'update_date=' . $this->marshal(strtotime('now'), 'int')
 			);
