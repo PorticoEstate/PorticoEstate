@@ -8,7 +8,7 @@
 <div class="yui-navset yui-navset-top">
 	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
 		<xsl:choose>
-			<xsl:when test="activity/id &gt 0">
+			<xsl:when test="activity/id != '' or activity/id != 0">
 				<h1 style="float:left;"> 
 					<span>
 						<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
@@ -30,9 +30,7 @@
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
-				<input type="hidden" name="project_id" value="{activity/project_id}" />
-				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
-				
+							
 				<dl class="proplist-col">
 					<dt>
 						<label for="start_date">Startdato</label>
@@ -41,13 +39,13 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<input class="date" id="start_date" name="start_date" type="text">
-						    	<xsl:if test="activity/start_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
+						    	<xsl:if test="requirement/start_date != ''">
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>	
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -58,13 +56,13 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<input class="date" id="end_date" name="end_date" type="text">
-						    	<xsl:if test="activity/end_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
+						    	<xsl:if test="requirement/end_date != ''">
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>	
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
