@@ -33,6 +33,20 @@
 	* @subpackage utilities
 	*/
 
+	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir'])  
+			|| !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) )
+	{
+		if ( substr(PHP_OS, 3) == 'WIN' )
+		{
+			$GLOBALS['phpgw_info']['server']['temp_dir'] = 'c:/temp';
+		}
+		else
+		{
+			$GLOBALS['phpgw_info']['server']['temp_dir'] = '/tmp/';
+		}
+	}
+
+
 	/**
 	* Include the PHPExcel class
 	* @see PHPExcel
