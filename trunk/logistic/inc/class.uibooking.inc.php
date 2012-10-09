@@ -211,95 +211,52 @@
 
 		public function edit()
 		{
-			$activity_id = phpgw::get_var('id');
-			$parent_activity_id = phpgw::get_var('parent_id');
+			$activity_id = phpgw::get_var('activity_id');
+			$allocation_id = phpgw::get_var('id');
 			
 			if ($activity_id && is_numeric($activity_id))
 			{
 				$activity = $this->so->get_single($activity_id);
 			}
-			else
-			{
-				$activity = new logistic_activity();
-			}
-
-			if(phpgw::get_var('project_id') && phpgw::get_var('project_id') > 0)
-			{
-				$activity->set_project_id(phpgw::get_var('project_id'));
-			}
 			
-			if($parent_activity_id > 0)
+			if (isset($_POST['save_allocation']))
 			{
-				$activity->set_parent_id( $parent_activity_id );
-				$parent_activity = $this->so->get_single( $parent_activity_id );
-				$activity->set_project_id( $parent_activity->get_project_id() );
+				$allocation = new logistic_requirement_resource_allocation();
+				$allocation->set_id(phpgw::get_var('id'));
+				$allocation->set_requirement_id(phpgw::get_var('requirement_id'));
+				$allocation->set_article_id(phpgw::get_var('article_id'));
+				$allocation->set_type(phpgw::get_var('type'));
+				
+				$allocation_id = $this->so->store($allocation);
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.view', 'id' => $allocation_id));
 			}
-
-			if (isset($_POST['save_activity']))
+			else if (isset($_POST['cancel_booking']))
 			{
-				$user_id = $GLOBALS['phpgw_info']['user']['id'];
-				$activity->set_id( phpgw::get_var('id') );
-				$activity->set_name( phpgw::get_var('name') );
-				$activity->set_update_user( $user_id );
-				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
-				$activity->set_description( phpgw::get_var('description') );
-
-				if(phpgw::get_var('start_date','string') != '')
-				{
-					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
-					$activity->set_start_date($start_date_ts);
-				}
-				else
-				{
-					$activity->set_start_date(0);
-				}
-
-				if( phpgw::get_var('end_date','string') != '')
-				{
-					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
-					$activity->set_end_date($end_date_ts);
-				}
-				else
-				{
-					$activity->set_end_date(0);
-				}
-
-				$activity_id = $this->so->store($activity);
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
-			}
-			else if (isset($_POST['cancel_activity']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.view', 'id' => $requirement_id));
 			}
 			else
 			{
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-				
-			  $activities = $this->so->get();
-				$activities_array = $this->convert_to_array( $activities );
-				
+
+				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+		
 				$data = array
 				(
-					'responsible_users' => $accounts,
-					'activities' => $activities_array,
-					'activity' => $activity->toArray(),
 					'editable' => true,
+					'entity_list' => $entity_list
 				);
 				
-				if($parent_activity_id > 0)
+				if($activity_id > 0)
 				{
-					$data['parent_activity'] = $parent_activity->toArray();
+					$data['activity'] = $activity;
 				}
-
-				$this->use_yui_editor('description');
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
-
+				
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'ajax.js');
-				self::render_template_xsl(array('activity_item'), $data);
+				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
+				self::render_template_xsl(array('requirement/requirement'), $data);
 			}
 		}
 		
