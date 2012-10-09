@@ -67,10 +67,10 @@
 										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uirequirement.index') ),
 										'image'	=> array('property', 'location_tenant'),
 								),
-								'booking' => array
+								'allocation' => array
 								(
 										'text'	=> lang('allocation'),
-										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uibooking.index') ),
+										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uiallocation.index') ),
 										'image'	=> array('property', 'location_tenant'),
 								),
 						)
