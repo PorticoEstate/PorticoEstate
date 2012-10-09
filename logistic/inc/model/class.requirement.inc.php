@@ -31,7 +31,6 @@
 
 	class logistic_requirement extends logistic_model
 	{
-
 		public static $so;
 		
 		protected $id;
