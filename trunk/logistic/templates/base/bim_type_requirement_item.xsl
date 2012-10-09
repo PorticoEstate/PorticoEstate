@@ -4,7 +4,7 @@
 <div class="yui-navset yui-navset-top">
 	<div class="identifier-header">
 		<h1><img src="{img_go_home}" />
-				<xsl:value-of select="php:function('lang', 'Project')" />
+				<xsl:value-of select="php:function('lang', 'Administrate requirements')" />
 		</h1>
 	</div>
 	<div class="yui-content">
@@ -14,10 +14,7 @@
 				</input>
 				<dl class="proplist-col">
 					<dt>
-						<label for="name"><xsl:value-of select="php:function('lang','Project title')" /></label>
-					</dt>
-					<dt>
-						<label>Prosjekttype</label>
+						<label><xsl:value-of select="php:function('lang', 'Project_type')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -25,51 +22,96 @@
 								<select name="project_type_id" id="project_type_id">
 									<xsl:for-each select="project_types">
 										<option value="{id}">
+											<xsl:if test="selected">
+												<xsl:attribute name="selected" value="selected" />
+											</xsl:if>
 											<xsl:value-of select="name"/>
 										</option>
 									</xsl:for-each>
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="req_type/project_type_id" />
+								<xsl:value-of select="project_type/name" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
 					<xsl:choose>
 						<xsl:when test="editable">
 							<dt>
-								<label>BIM</label>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
 							</dt>
 							<dd>
-								<select name="location_id" id="location_id">
+								<select name="entity_id" id="entity_id">
 									<xsl:for-each select="entities">
 										<option value="{id}">
+											<xsl:if test="selected">
+												<xsl:attribute name="selected" value="selected" />
+											</xsl:if>
 											<xsl:value-of select="name"/>
 										</option>
 									</xsl:for-each>
 								</select>
 							</dd>
 							<dt>
-								<label>BIM2</label>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
 							</dt>
 							<dd>
-								<select name="categories" id="categories">
+								<select name="category_id" id="category_id">
+									<xsl:if test="req_type/category_id">
+										<xsl:for-each select="categories">
+											<option value="{id}">
+												<xsl:if test="selected">
+													<xsl:attribute name="selected" value="selected" />
+												</xsl:if>
+												<xsl:value-of select="name"/>
+											</option>
+										</xsl:for-each>
+									</xsl:if>
 								</select>
 							</dd>
 							<dt>
-								<label>BIM3</label>
+								<label><xsl:value-of select="php:function('lang', 'Attributes')" /></label>
 							</dt>
 							<dd>
 								<div id="attributes">
+									<xsl:if test="attributes != null">
+										<xsl:if test="req_type/cust_attribute_id">
+											<xsl:for-each select="attributes">
+												<xsl:choose>
+													<xsl:when test="checked">
+														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}' checked='checked'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
+													</xsl:when>
+													<xsl:otherwise>
+														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:for-each>
+										</xsl:if>
+									</xsl:if>
 								</div>
 							</dd>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="entity/name" />
-							<xsl:value-of select="category/name" />
-							<xsl:for-each select="attributes">
-								<xsl:value-of select="name" /><br/>
-							</xsl:for-each>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="entity/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="category/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Chosen attributes')" /></label>
+							</dt>
+							<dd>
+								<xsl:for-each select="attributes">
+									<xsl:value-of select="input_text" /> (<xsl:value-of select="trans_datatype" />)<br/>
+								</xsl:for-each>
+							</dd>
 						</xsl:otherwise>
 					</xsl:choose>
 				</dl>

@@ -156,7 +156,25 @@
 
 		protected function update($object)
 		{
+			$id = intval($object->get_id());
 
+			$values = array(
+				'entity_id = ' . $this->marshal($object->get_entity_id(), 'int'),
+				'category_id = ' . $this->marshal($object->get_category_id(), 'int'),
+				'cust_attribute_id = ' . $this->marshal($object->get_cust_attribute_id(), 'string'),
+				'project_type_id = ' . $this->marshal($object->get_project_type_id(), 'int')
+			);
+
+			$result = $this->db->query('UPDATE lg_bim_item_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+
+			if( $result )
+			{
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		public static function get_instance()

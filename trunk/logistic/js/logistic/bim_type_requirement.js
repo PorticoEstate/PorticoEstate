@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	 $("#location_id").change(function () {
+	 $("#entity_id").change(function () {
 		 var oArgs = {menuaction:'logistic.uibim_type_requirement.get_bim_level1', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -21,19 +21,19 @@ $(document).ready(function(){
 						htmlString  += "<option value='" + data[i].id + "'" + selected + ">" + data[i].name + "</option>";
 		  		});
 
-					$("#categories").html( htmlString );
+					$("#category_id").html( htmlString );
 				}
 				else
 				{
 					htmlString  += "";
-					$("#categories").html( htmlString );
+					$("#category_id").html( htmlString );
 				}
 			}
 		});
 	 });
 
-	 $("#categories").change(function () {
-		 var oArgs = {menuaction:'logistic.uibim_type_requirement.get_bim_level2', entity_id: $("#location_id").val(), cat_id: $(this).val()};
+	 $("#category_id").change(function () {
+		 var oArgs = {menuaction:'logistic.uibim_type_requirement.get_bim_level2', entity_id: $("#entity_id").val(), cat_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		 var htmlString = "";

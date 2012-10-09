@@ -191,20 +191,25 @@
 					'source' => self::link(array('menuaction' => 'logistic.uibim_type_requirement.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'entiry_id',
-							'label' => lang('Entity'),
-							'sortable' => true
-						),
-						array(
-							'key' => 'category_id',
-							'label' => lang('Category'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
+						),
+						array(
+							'key' => 'entity_label',
+							'label' => lang('Entity'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'category_label',
+							'label' => lang('Category'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'project_type_label',
+							'label' => lang('Project_type'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'link',
@@ -224,6 +229,8 @@
 
 		public function edit()
 		{
+			$entity_so	= CreateObject('property.soadmin_entity');
+			$custom	= createObject('phpgwapi.custom_fields');
 			$req_type_id = phpgw::get_var('id');
 			if($req_type_id && is_numeric($req_type_id))
 			{
@@ -254,14 +261,46 @@
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
 				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
-				$project_type_array = $this->so_project->get_project_types();
+				if($req_type->get_entity_id())
+				{
+					foreach ($entity_list as &$e)
+					{
+						if($e['id'] == $req_type->get_entity_id())
+						{
+							$e['selected'] = 1;
+						}
+					}
+					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$req_type->get_entity_id()));
+					foreach ($category_list as &$c)
+					{
+						if($c['id'] == $req_type->get_category_id())
+						{
+							$c['selected'] = 1;
+						}
+					}
+
+					$attributes = $custom->find('property',".entity.{$req_type->get_entity_id()}.{$req_type->get_category_id()}", 0, '','','',true, true);
+					$selected_attributes = explode(',', $req_type->get_cust_attribute_id());
+					foreach ($attributes as &$a)
+					{
+						if(in_array($a['id'], $selected_attributes))
+						{
+							$a['checked'] = 'checked';
+						}
+					}
+				}
+				$project_type_array = $this->so_project->get_project_types($req_type->get_project_type_id());
 
 				$data = array
 						(
+						'value_id' => !empty($req_type) ? $req_type->get_id() : 0,
 						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'entities' => $entity_list,
+						'categories' => $category_list,
+						'attributes' => $attributes,
 						'project_types' => $project_type_array,
-						'editable' => true
+						'editable' => true,
+						'req_type' => $req_type
 					);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
@@ -299,21 +338,43 @@
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$custom	= createObject('phpgwapi.custom_fields');
 			$req_type_id = phpgw::get_var('id');
+			if(isset($_POST['edit']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.edit', 'id' => $req_type_id));
+			}
+
 			if($req_type_id && is_numeric($req_type_id))
 			{
 				$req_type = $this->so->get_single($req_type_id);
 				$entity = $entity_so->read_single($req_type->get_entity_id());
 				$category = $entity_so->read_single_category($req_type->get_entity_id(),$req_type->get_category_id());
+				$all_attributes = $custom->find('property',".entity.{$req_type->get_entity_id()}.{$req_type->get_category_id()}", 0, '','','',true, true);
+				$attributes = array();
+				$selected_attributes = explode(',', $req_type->get_cust_attribute_id());
+				foreach ($all_attributes as $attr)
+				{
+					if(in_array($attr['id'], $selected_attributes))
+					{
+						$attributes[] = $attr;
+					}
+				}
 
-				$project_type_array = $this->so_project->get_project_types();
+				$objects = $this->so_project->get(null, null, null, null, null, 'project_type', array('id' => $req_type->get_project_type_id()));
+				if (count($objects) > 0)
+				{
+					$keys = array_keys($objects);
+					$project_type = $objects[$keys[0]];
+				}
 
 				$data = array
 						(
+						'value_id' => !empty($req_type) ? $req_type->get_id() : 0,
 						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'req_type' => $req_type,
 						'entity' => $entity,
 						'category' => $category,
-						'attributes' => $attributes
+						'attributes' => $attributes,
+						'project_type' => $project_type
 					);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
