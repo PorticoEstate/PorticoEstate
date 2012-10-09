@@ -173,15 +173,19 @@
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Project name'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+						),		
+						array(
+							'key' => 'date_from',
+							'label' => lang('From date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'date_to',
+							'label' => lang('To date'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'link',
