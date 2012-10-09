@@ -56,27 +56,15 @@ $phpgw_baseline = array(
 						'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'date_from' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'date_to' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				),
-				'pk' => array('id'),
-				'fk' => array('lg_activity' => array('activity_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-		),
-		'lg_requirement_resource_type' => array(
-				'fd' => array(
-						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'resource_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'no_of_elements' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'no_of_elements' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
-						'lg_requirement' => array('requirement_id' => 'id'),
-						'fm_bim_type' => array('resource_type_id' => 'id')
+						'lg_activity' => array('activity_id' => 'id'),
+						'phpgw_locations' => array('location_id' => 'location_id')
 				),
 				'ix' => array(),
 				'uc' => array()
@@ -85,15 +73,16 @@ $phpgw_baseline = array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'article_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
 						'lg_requirement' => array('requirement_id' => 'id'),
-						'fm_bim_item' => array('article_id' => 'id', 'type' => 'type')
+						'fm_bim_item' => array('resource_id' => 'id', 'type' => 'type'),
+						'phpgw_locations' => array('location_id' => 'location_id')
 				),
 				'ix' => array(),
 				'uc' => array()
@@ -101,17 +90,17 @@ $phpgw_baseline = array(
 		'lg_bim_item_type_requirement' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'entity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'category_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'cust_attribute_id' => array('type' => 'varchar', 'precision' => 255, 'nullable' => false),
-						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'project_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'cust_attribute_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
 						'lg_project_type' => array('project_type_id' => 'id'),
-						'phpgw_locations' => array('location_id' => 'location_id')
+						'phpgw_locations' => array('location_id' => 'location_id'),
+						'phpgw_cust_attribute' => array('cust_attribute_id' => 'id'),
 				),
 				'ix' => array(),
 				'uc' => array()
@@ -121,14 +110,16 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'type_requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'cust_attribute_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+						'operator' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'fk' => array('lg_bim_item_type_requirement' => array('type_requirement_id' => 'id')),
+				'fk' => array(
+						'lg_bim_item_type_requirement' => array('type_requirement_id' => 'id'),
+						'lg_requirement' => array('requirement_id' => 'id')
+				),
 				'ix' => array(),
 				'uc' => array()
 		),
@@ -137,13 +128,14 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'type' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'tracking' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'fk' => array('fm_bim_item' => array('item_id' => 'id', 'type' => 'type')),
+				'fk' => array(
+						'fm_bim_item' => array('item_id' => 'id'),
+						'phpgw_locations' => array('location_id' => 'location_id') 
+				),
 				'ix' => array(),
 				'uc' => array()
 		)
