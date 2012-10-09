@@ -74,9 +74,9 @@
 							</dt>
 							<dd>
 								<div id="attributes">
-									<xsl:if test="attributes != null">
-										<xsl:if test="req_type/cust_attribute_id">
-											<xsl:for-each select="attributes">
+									<xsl:if test="req_type/cust_attribute_id">
+										<xsl:for-each select="attributes">
+											<xsl:if test="input_text">
 												<xsl:choose>
 													<xsl:when test="checked">
 														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}' checked='checked'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
@@ -85,8 +85,8 @@
 														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
 													</xsl:otherwise>
 												</xsl:choose>
-											</xsl:for-each>
-										</xsl:if>
+											</xsl:if>
+										</xsl:for-each>
 									</xsl:if>
 								</div>
 							</dd>
