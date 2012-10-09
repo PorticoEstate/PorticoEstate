@@ -28,10 +28,9 @@
 	 * @version $Id: class.uiactivity.inc.php 10101 2012-10-03 09:46:51Z vator $
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
-//	phpgw::import_class('logistic.sobooking');
 
 	
-	class logistic_uibooking extends phpgwapi_uicommon
+	class logistic_uiallocation extends phpgwapi_uicommon
 	{
 		
 		var $cat_id;
@@ -78,8 +77,7 @@
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
 
-//			$this->so = createObject('logistic.sobooking');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::booking";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::allocation";
 		}
 		
 		public function index()
@@ -95,7 +93,7 @@
 			$user_array = $this->get_user_array();
 
 			$data = array(
-				'datatable_name'	=> lang('booking'),
+				'datatable_name'	=> lang('allocation'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -122,7 +120,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uibooking.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uiallocation.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 					array(
 							'key' => 'id',
@@ -206,7 +204,7 @@
 
 		public function add()
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.edit'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.edit'));
 		}
 
 		public function edit()
@@ -229,11 +227,11 @@
 				
 				$allocation_id = $this->so->store($allocation);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.view', 'id' => $allocation_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.view', 'id' => $allocation_id));
 			}
-			else if (isset($_POST['cancel_booking']))
+			else if (isset($_POST['cancel_allocation']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibooking.view', 'id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.view', 'id' => $requirement_id));
 			}
 			else
 			{
