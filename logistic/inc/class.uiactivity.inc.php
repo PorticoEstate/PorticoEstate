@@ -191,22 +191,22 @@
 
 			$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'new_booking',
-						'text' 			=> lang('t_new_booking'),
+						'my_name'		=> 'new_allocation',
+						'text' 			=> lang('t_new_allocation'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uibooking.edit'
+							'menuaction'	=> 'logistic.uiallocation.edit'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 
 			$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'view_bookings',
-						'text' 			=> lang('t_view_bookings'),
+						'my_name'		=> 'view_allocations',
+						'text' 			=> lang('t_view_allocations'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uibooking.index'
+							'menuaction'	=> 'logistic.uiallocation.index'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
