@@ -30,9 +30,9 @@
 
 	phpgw::import_class('logistic.socommon');
 
-	include_class('logistic', 'bim_item_type_requirement', 'inc/model/');
+	include_class('logistic', 'resource_type_requirement', 'inc/model/');
 
-	class logistic_sobim_type_requirement extends logistic_socommon
+	class logistic_soresource_type_requirement extends logistic_socommon
 	{
 		protected static $so;
 		private $local_db;
@@ -47,18 +47,17 @@
 		{
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$now = time();
-			$entity_id = $object->get_entity_id();
-			$category_id = $object->get_category_id();
+			$location_id = $object->get_location_id();
 			$cust_attribute_id = $object->get_cust_attribute_id();
 			$type_id = $object->get_project_type_id();
 
-			$sql = "INSERT INTO lg_bim_item_type_requirement (entity_id, category_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ($entity_id,$category_id,'$cust_attribute_id',$type_id, $user_id, $now)";
+			$sql = "INSERT INTO lg_resource_type_requirement (location_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ($location_id,$cust_attribute_id,$type_id, $user_id, $now)";
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
 			{
 				// Set the new bim_item_type_requirement ID
-				return $this->db->get_last_insert_id('lg_bim_item_type_requirement', 'id');
+				return $this->db->get_last_insert_id('lg_resource_type_requirement', 'id');
 			}
 			else
 			{
@@ -120,7 +119,7 @@
 
 			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
-			$tables = "lg_bim_item_type_requirement type_requirement";
+			$tables = "lg_resource_type_requirement type_requirement";
 
 			if($return_count) // We should only return a count
 			{
@@ -139,19 +138,18 @@
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $req_id, &$bim_item_type_requirement)
+		protected function populate(int $req_id, &$resource_type_requirement)
 		{
-			if($bim_item_type_requirement == null)
+			if($resource_type_requirement == null)
 			{
-				$bim_item_type_requirement = new logistic_bim_item_type_requirement((int) $req_id);
+				$resource_type_requirement = new logistic_resource_type_requirement((int) $req_id);
 
-				$bim_item_type_requirement->set_entity_id($this->unmarshal($this->db->f('entity_id'), 'int'));
-				$bim_item_type_requirement->set_category_id($this->unmarshal($this->db->f('category_id'), 'int'));
-				$bim_item_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'string'));
-				$bim_item_type_requirement->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
+				$resource_type_requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$resource_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'string'));
+				$resource_type_requirement->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
 			}
 
-			return $bim_item_type_requirement;
+			return $resource_type_requirement;
 		}
 
 		protected function update($object)
@@ -159,13 +157,12 @@
 			$id = intval($object->get_id());
 
 			$values = array(
-				'entity_id = ' . $this->marshal($object->get_entity_id(), 'int'),
-				'category_id = ' . $this->marshal($object->get_category_id(), 'int'),
-				'cust_attribute_id = ' . $this->marshal($object->get_cust_attribute_id(), 'string'),
+				'location_id = ' . $this->marshal($object->get_location_id(), 'int'),
+				'cust_attribute_id = ' . $this->marshal($object->get_cust_attribute_id(), 'int'),
 				'project_type_id = ' . $this->marshal($object->get_project_type_id(), 'int')
 			);
 
-			$result = $this->db->query('UPDATE lg_bim_item_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			$result = $this->db->query('UPDATE lg_resource_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 			if( $result )
 			{
@@ -181,7 +178,7 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('logistic.sobim_type_requirement');
+				self::$so = CreateObject('logistic.soresource_type_requirement');
 			}
 			return self::$so;
 		}

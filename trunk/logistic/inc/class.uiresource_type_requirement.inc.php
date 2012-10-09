@@ -34,7 +34,7 @@
 
 	include_class('logistic', 'project');
 
-	class logistic_uibim_type_requirement extends phpgwapi_uicommon
+	class logistic_uiresource_type_requirement extends phpgwapi_uicommon
 	{
 
 		private $so;
@@ -54,7 +54,7 @@
 		{
 			parent::__construct();
 
-			$this->so = CreateObject('logistic.sobim_type_requirement');
+			$this->so = CreateObject('logistic.soresource_type_requirement');
 			$this->so_project = CreateObject('logistic.soproject');
 
 			$read    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
@@ -64,7 +64,7 @@
 
 			$manage  = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::bim_type_requirement";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::logistic::resource_type_requirement";
 		}
 
 		public function query()
@@ -141,7 +141,7 @@
 			{
 				//Add action column to each row in result table
 				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uibim_type_requirement.view");
+								$result_data['results'], array($this, '_add_links'), "logistic.uiresource_type_requirement.view");
 			}
 			return $this->yui_results($result_data);
 		}
@@ -160,7 +160,7 @@
 			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
 			$data = array(
-				'datatable_name'	=> lang('bim_type_requirement'),
+				'datatable_name'	=> lang('resource_type_requirement'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -181,14 +181,14 @@
 							array(
 								'type' => 'link',
 								'value' => lang('t_new_type_requirement'),
-								'href' => self::link(array('menuaction' => 'logistic.uibim_type_requirement.add')),
+								'href' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.add')),
 								'class' => 'new_item'
 							),
 						),
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uibim_type_requirement.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -224,7 +224,7 @@
 
 		public function add()
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.edit'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.edit'));
 		}
 
 		public function edit()
@@ -243,18 +243,23 @@
 
 			if (isset($_POST['save']))
 			{
-				$req_type->set_entity_id(phpgw::get_var('entity_id'));
-				$req_type->set_category_id(phpgw::get_var('category_id'));
+				$entity_id = phpgw::get_var('entity_id');
+				$category_id = phpgw::get_var('category_id');
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+				$req_type->set_location_id($location_id);
 				$req_type->set_project_type_id(phpgw::get_var('project_type_id'));
 				$cust_attr_ids = phpgw::get_var('attributes');
-				$req_type->set_cust_attribute_id(implode(',', $cust_attr_ids));
+				foreach ($cust_attr_ids as $attr_id)
+				{
+					$req_type->set_cust_attribute_id($attr_id);
+					$req_type_id = $this->so->store($req_type);
+				}
 
-				$req_type_id = $this->so->store($req_type);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.view', 'id' => $req_type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.view', 'location_id' => $location_id));
 			}
 			else if (isset($_POST['cancel']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.view', 'id' => $req_type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.index'));
 			}
 			else
 			{
@@ -307,8 +312,8 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
-				self::render_template_xsl(array('bim_type_requirement_item'), $data);
+				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
+				self::render_template_xsl(array('resource_type_requirement_item'), $data);
 			}
 		}
 
@@ -340,7 +345,7 @@
 			$req_type_id = phpgw::get_var('id');
 			if(isset($_POST['edit']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uibim_type_requirement.edit', 'id' => $req_type_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.edit', 'id' => $req_type_id));
 			}
 
 			if($req_type_id && is_numeric($req_type_id))
@@ -378,7 +383,7 @@
 					);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('bim_type_requirement_item'), $data);
+				self::render_template_xsl(array('resource_type_requirement_item'), $data);
 			}
 		}
 	}
