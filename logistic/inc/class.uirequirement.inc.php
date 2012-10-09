@@ -213,7 +213,7 @@
 						'text' 			=> lang('t_book_requirement'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uibooking.add'
+							'menuaction'	=> 'logistic.uiallocation.add'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
