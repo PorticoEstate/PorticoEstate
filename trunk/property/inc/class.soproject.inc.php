@@ -1239,7 +1239,7 @@
 
 			if($project['delete_b_period'])
 			{
-				$this->delete_period_from_budget($project['id'], $project['delete_b_year']);
+				$this->delete_period_from_budget($project['id'], $project['delete_b_period']);
 			}
 
 			if($project['budget'])
@@ -1610,12 +1610,13 @@
 		{
 			$project_id = (int) $project_id;
 			$closed_period = array();
+			$project_budget = array();
+			$project_order_amount = array();
 
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$project_budget = array();
 			while ($this->db->next_record())
 			{
 				$year = $this->db->f('year');
@@ -1624,6 +1625,7 @@
 				$period = $year . sprintf("%02s", $month);
 				
  				$project_budget[$period] = (int)$this->db->f('budget');
+ 				$project_order_amount[$period] = $this->db->f('order_amount');
  				$closed_period[$period] = !!$this->db->f('closed');
 			}
 			unset($year);			
@@ -1729,6 +1731,7 @@
 			{
 				$_use_periodization = false;			
 			}
+
 
 			$config = CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -1941,7 +1944,7 @@
 			foreach($data as $entry)
 			{
 				$when = explode('_', $entry);
-				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year = " . (int) $when[0] . ' AND month = ' . (int) $when[1];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 		}
