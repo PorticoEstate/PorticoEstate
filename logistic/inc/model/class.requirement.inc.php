@@ -33,11 +33,14 @@
 	{
 
 		public static $so;
-		protected static $requirement_id;
-		protected static $activity_id;
-		protected static $date_from;
-		protected static $date_to;
-
+		
+		protected $id;
+		protected $activity_id;
+		protected $date_from;
+		protected $date_to;
+		protected $no_of_elements;
+		protected $location_id;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -46,17 +49,37 @@
 		 */
 		public function __construct(int $id = null)
 		{
-			$this->requirement_id = (int) $id;
+			$this->id = (int) $id;
+		}
+		
+		public function set_id($id)
+		{
+			$this->id = $id;
 		}
 
-		public function set_requirement_id($id)
+		public function get_id()
 		{
-			$this->requirement_id = $id;
+			return $this->id;
 		}
 
-		public function get_requirement_id()
+		public function set_no_of_elements($no_of_elements)
 		{
-			return $this->requirement_id;
+			$this->no_of_elements = $no_of_elements;
+		}
+
+		public function get_no_of_elements()
+		{
+			return $this->no_of_elements;
+		}
+		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+
+		public function get_location_id()
+		{
+			return $this->location_id;
 		}
 
 		public function set_activity_id($activity_id)
