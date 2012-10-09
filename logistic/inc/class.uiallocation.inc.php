@@ -28,7 +28,9 @@
 	 * @version $Id: class.uiactivity.inc.php 10101 2012-10-03 09:46:51Z vator $
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
-
+	phpgw::import_class('logistic.soactivity');
+	include_class('logistic', 'activity');
+	
 	
 	class logistic_uiallocation extends phpgwapi_uicommon
 	{
@@ -44,8 +46,8 @@
 		
 		private $bo;
 		private $bocommon;
-
-		private $so;
+		private $so_activity;
+		
 		public $public_functions = array(
 			'query' => true,
 			'add' 	=> true,
@@ -60,7 +62,8 @@
 			
 		  $this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
-			$this->so_control 			= CreateObject('controller.socontrol');
+			
+			$this->so_activity = createObject('logistic.soactivity');
 			
 			$this->type_id				= $this->bo->type_id;
 			
@@ -177,18 +180,7 @@
 				$boentity->results = $results;
 				//$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
 				$values = $boentity->read();
-			//}		
-
-			foreach($values as &$entry)
-			{
-				$checked = '';
-				if($this->so_control->check_control_component($control_id,$location_id,$entry['id']))
-				{
-					$checked =  'checked = "checked" disabled = "disabled"';
-					$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
-				}
-				$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
-			}
+			//}	
 
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
@@ -214,7 +206,7 @@
 			
 			if ($activity_id && is_numeric($activity_id))
 			{
-				$activity = $this->so->get_single($activity_id);
+				$activity = $this->so_activity->get_single($activity_id);
 			}
 			
 			if (isset($_POST['save_allocation']))
@@ -225,24 +217,22 @@
 				$allocation->set_article_id(phpgw::get_var('article_id'));
 				$allocation->set_type(phpgw::get_var('type'));
 				
-				$allocation_id = $this->so->store($allocation);
+	//			$allocation_id = $this->so->store($allocation);
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.view', 'id' => $allocation_id));
 			}
 			else if (isset($_POST['cancel_allocation']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.view', 'id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiallocation.view', 'id' => $allocation_id));
 			}
 			else
 			{
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 		
 				$data = array
 				(
 					'editable' => true,
-					'entity_list' => $entity_list
 				);
 				
 				if($activity_id > 0)
@@ -250,11 +240,7 @@
 					$data['activity'] = $activity;
 				}
 				
-				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-
-				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
-				self::render_template_xsl(array('requirement/requirement'), $data);
+				self::render_template_xsl(array('allocation/allocation_item'), $data);
 			}
 		}
 		
