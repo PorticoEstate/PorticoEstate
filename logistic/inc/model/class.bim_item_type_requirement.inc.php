@@ -116,12 +116,23 @@
 
 		public function serialize()
 		{
+			$entity_so	= CreateObject('property.soadmin_entity');
+			$project_so = CreateObject('logistic.soproject');
+			$entity = $entity_so->read_single($this->get_entity_id());
+			$category = $entity_so->read_single_category($this->get_entity_id(),$this->get_category_id());
+			$entity_label = $entity['name'];
+			$category_label = $category['name'];
+			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
+
 			return array(
 				'id' => $this->get_id(),
 				'entity_id' => $this->get_entity_id(),
+				'entity_label' => $entity_label,
 				'category_id' => $this->get_category_id(),
+				'category_label' => $category_label,
 				'atributes' => $this->get_cust_attribute_id(),
-				'project_type_id' => $this->get_project_type_id()
+				'project_type_id' => $this->get_project_type_id(),
+				'project_type_label' => $project_type_label
 			);
 		}
 	}

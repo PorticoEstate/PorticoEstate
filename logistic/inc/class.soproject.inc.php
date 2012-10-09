@@ -233,7 +233,7 @@
 		}
 
 
-		private function get_project_type_label($id)
+		public function get_project_type_label($id)
 		{
 			$sql = "SELECT name FROM lg_project_type where id=$id";
 			$this->db3->query($sql, __LINE__, __FILE__);
@@ -244,23 +244,44 @@
 			}
 		}
 
-		public function get_project_types()
+		public function get_project_types($selected_id = null)
 		{
 			$project_type_array = array();
-			$project_type_array[] = array(
-				'id' => '',
-				'name' => lang('all_types'),
-				'selected' => 1
-			);
+			if(!$selected_id)
+			{
+				$project_type_array[] = array(
+					'id' => '',
+					'name' => lang('all_types'),
+					'selected' => 1
+				);
+			}
+			else
+			{
+				$project_type_array[] = array(
+					'id' => '',
+					'name' => lang('all_types')
+				);
+			}
 			$sql = "SELECT * FROM lg_project_type";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
+				if(!$selected_id == null && $this->db->f('id') == $selected_id)
+				{
 				$project_type_array[] = array(
+						'id' => $this->db->f('id'),
+						'name' => $this->unmarshal($this->db->f('name'), 'string'),
+						'selected' => 1
+						);
+				}
+				else
+				{
+					$project_type_array[] = array(
 						'id' => $this->db->f('id'),
 						'name' => $this->unmarshal($this->db->f('name'), 'string')
 						);
+				}
 			}
 			return $project_type_array;
 		}
