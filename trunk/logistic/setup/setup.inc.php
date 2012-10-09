@@ -1,6 +1,6 @@
 <?php
 	$setup_info['logistic']['name'] = 'logistic';
-	$setup_info['logistic']['version'] = '0.0.7';
+	$setup_info['logistic']['version'] = '0.0.1';
 	$setup_info['logistic']['app_order'] = 70;
 	$setup_info['logistic']['enable'] = 1;
 	$setup_info['logistic']['app_group']	= 'office';
@@ -11,9 +11,8 @@
 			'lg_project_type',
 			'lg_activity',
 			'lg_requirement',
-			'lg_requirement_resource_type',
 			'lg_requirement_resource_allocation',
-			'lg_bim_item_type_requirement',
+			'lg_resource_type_requirement',
 			'lg_requirement_value',
 			'lg_calendar'
 	);
