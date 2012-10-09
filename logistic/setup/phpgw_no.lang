@@ -2,7 +2,7 @@ logistic	common	no	Logistikk
 Logistic	common	no	Logistikk
 project	logistic	no	Prosjekt
 activity	logistic	no	Aktivitet
-booking	logistic	no	Booking
+allocation	logistic	no	Beholdning
 requirement	logistic	no	Behov
 Project name	logistic	no	Navn
 Project type	logistic	no	Type
@@ -13,8 +13,9 @@ t_new_project_type	logistic	no	Ny prosjekttype
 t_new_activity	logistic	no	Opprett ny aktivitet på dette prosjektet
 t_new_requirement	logistic	no	Registrer nytt behov på denne aktiviteten
 t_view_requirements	logistic	no	Vis registrerte behov på denne aktiviteten
-t_new_booking	logistic	no	Registrer ny booking på denne aktiviteten
-t_view_bookings	logistic	no	Vis registrerte bookinger på denne aktiviteten
+t_new_allocation	logistic	no	Registrer ny booking på denne aktiviteten
+t_view_allocations	logistic	no	Vis registrerte bookinger på denne aktiviteten
+t_new_type_requirement	logistic	no	Nytt type-krav
 Project_type	logistic	no	Prosjekttype
 settings	logistic	no	innstillinger
 Project types	logistic	no	Prosjekttyper
@@ -30,3 +31,23 @@ my_activities	logistic	no	Mine aktiviteter
 Project type name updated		logistic	no	Prosjekttypenavn oppdatert
 Add activity	logistic	no	Legg til aktivitet
 Add sub activity	logistic	no	Legg til subaktivitet
+Entity	logistic	no	Entitet
+Category	logistic	no	Kategori
+Attributes	logistic	no	Attributter
+Chosen attributes	logistic	no	Valgte attributter
+Administrate requirements	logistic	no	Administrer type-krav
+bim_type_requirement	logistic	no	Type-krav
+Varchar	logistic	no	Text
+Contact	logistic	no	Kontakt
+Entity types	logistic	no	Entitetstyper
+select value	logistic	no	Velg
+Listbox	logistic	no	Nedtrekksliste
+Custom listboks	logistic	no	Egendefinert nedtrekksliste
+Memo	logistic	no	Tekstfelt
+Integer	logistic	no	Tall
+Muliple radio	logistic	no	Flervalgs radioknapp
+Muliple checkbox	logistic	no	Flervalgs avkrysningsboks
+event	logistic	no	Hendelse
+Link	logistic	no	Lenke
+Add requirement to activity	logistic	no	Legg krav til aktiviteten
+Add requirement	logistic	no	Legg til krav

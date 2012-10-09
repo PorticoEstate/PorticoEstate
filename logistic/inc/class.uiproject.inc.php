@@ -54,6 +54,13 @@
 
 			$this->so = CreateObject('logistic.soproject');
 
+			$read    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_READ, 'logistic');//1
+			$add     = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_ADD, 'logistic');//2
+			$edit    = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_EDIT, 'logistic');//4
+			$delete  = $GLOBALS['phpgw']->acl->check('.project', PHPGW_ACL_DELETE, 'logistic');//8
+
+			$manage  = $GLOBALS['phpgw']->acl->check('.project', 16, 'logistic');//16
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project";
 		}
 
@@ -88,7 +95,7 @@
 			$result_objects = array();
 			$result_count = 0;
 
-			//Retrieve a contract identifier and load corresponding contract
+			//Retrieve a project identifier and load corresponding project
 			$project_id = phpgw::get_var('project_id');
 
 			$exp_param = phpgw::get_var('export');
@@ -117,7 +124,7 @@
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
-
+			//var_dump($result_objects);
 			//Create an empty row set
 			$rows = array();
 			foreach ($result_objects as $result)
@@ -161,7 +168,7 @@
 			{
 				return $this->query();
 			}
-//			self::add_javascript('logistic', 'yahoo', 'datatable.js');
+
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -359,7 +366,7 @@
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-					'project' => $project_array,
+					'project' => $project,
 					'view' => 'view_project'
 				);
 
@@ -394,7 +401,7 @@
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-					'project' => $project_array
+					'project' => $project
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');

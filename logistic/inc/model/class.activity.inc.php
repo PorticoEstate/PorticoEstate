@@ -41,6 +41,8 @@
 				protected $start_date;
 				protected $end_date;
 				protected $responsible_user_id;
+				protected $create_user;
+  		  protected $create_date;
 				protected $update_user;
 				protected $update_date;
 				
@@ -138,9 +140,9 @@
 					return $this->responsible_user_id;
 				}
 
-				public function set_update_user($user_id)
+				public function set_update_user($update_user)
 				{
-					$this->update_user = $user_id;
+					$this->update_user = $update_user;
 				}
 
 				public function get_update_user()
@@ -156,6 +158,26 @@
 				public function get_update_date()
 				{
 					return $this->update_date;
+				}
+				
+				public function set_create_user($create_user)
+				{
+					$this->create_user = $create_user;
+				}
+
+				public function get_create_user()
+				{
+					return $this->create_user;
+				}
+
+				public function set_create_date($create_date)
+				{
+					$this->create_date = $create_date;
+				}
+
+				public function get_create_date()
+				{
+					return $this->create_date;
 				}
 				
 				public function set_sub_activities($sub_activities)

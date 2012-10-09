@@ -27,6 +27,7 @@
 	 * @subpackage logistic
 	 * @version $Id$
 	 */
+
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
 
@@ -60,6 +61,7 @@
 			{
 				return $this->query();
 			}
+			
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -189,27 +191,25 @@
 
 			$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'new_booking',
-						'text' 			=> lang('t_new_booking'),
+						'my_name'		=> 'new_allocation',
+						'text' 			=> lang('t_new_allocation'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uibooking.edit'
+							'menuaction'	=> 'logistic.uiallocation.edit'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 
 			$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'view_bookings',
-						'text' 			=> lang('t_view_bookings'),
+						'my_name'		=> 'view_allocations',
+						'text' 			=> lang('t_view_allocations'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uibooking.index'
+							'menuaction'	=> 'logistic.uiallocation.index'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
-
-
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
@@ -341,6 +341,10 @@
 				$activity->set_update_user( $user_id );
 				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
 				$activity->set_description( phpgw::get_var('description') );
+				
+				if( $activity->get_id() == '' | $activity->get_id() == 0){
+					$activity->set_create_user( $user_id );	
+				}
 
 				if(phpgw::get_var('start_date','string') != '')
 				{

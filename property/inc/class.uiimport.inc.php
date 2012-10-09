@@ -373,29 +373,33 @@ HTML;
 			return $result;
 		}
 
+
 		protected function getexceldata($path, $skipfirstline = true)
 		{
-			$data = CreateObject('phpgwapi.excelreader');
-			$data->setOutputEncoding('CP1251');
-			$data->read($path);
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($path);
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
 			$result = array();
 
 			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
 
 			if ($skipfirstline)
 			{
-				$this->fields = array_values($data->sheets[0]['cells'][1]);
+				$this->fields = array_values($data[1]);
 			}
 			
-			$rows = $data->sheets[0]['numRows']+1;
+			$rows = count($data)+1;
 
-			for ($i=$start; $i<$rows; $i++ ) //First data entry on row 2
+			for ($i=$start; $i<$rows; $i++ )
 			{
 				$_result = array();
-				foreach($data->sheets[0]['cells'][$i] as $key => $value)
+				$j=0;
+				foreach($data[$i] as $key => $value)
 				{
-					$_key = $key - 1;
-					$_result[$_key] = utf8_encode(trim($value));
+					$_result[$j] = trim($value);
+					$j++;
 				}
 				$result[] = $_result;
 			}
