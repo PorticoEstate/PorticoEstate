@@ -29,13 +29,12 @@
 	 */
 	include_class('logistic', 'model', '/inc/model/');
 
-	class logistic_bim_item_type_requirement extends logistic_model
+	class logistic_resource_type_requirement extends logistic_model
 	{
 		public static $so;
 
 		protected $id;
-		protected $entity_id;
-		protected $category_id;
+		protected $location_id;
 		protected $project_type_id;
 		protected $cust_attribute_id;
 
@@ -60,24 +59,14 @@
 			return $this->id;
 		}
 
-		public function set_entity_id($entity_id)
+		public function set_location_id($location_id)
 		{
-			$this->entity_id = $entity_id;
+			$this->location_id = $location_id;
 		}
 
-		public function get_entity_id()
+		public function get_location_id()
 		{
-			return $this->entity_id;
-		}
-
-		public function set_category_id($category_id)
-		{
-			$this->category_id = $category_id;
-		}
-
-		public function get_category_id()
-		{
-			return $this->category_id;
+			return $this->location_id;
 		}
 
 		public function set_project_type_id($project_type_id)
@@ -108,7 +97,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('logistic.sobim_type_requirement');
+				self::$so = CreateObject('logistic.soresource_type_requirement');
 			}
 
 			return self::$so;
@@ -118,20 +107,20 @@
 		{
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$project_so = CreateObject('logistic.soproject');
-			$entity = $entity_so->read_single($this->get_entity_id());
-			$category = $entity_so->read_single_category($this->get_entity_id(),$this->get_category_id());
+			$l_loc =  $GLOBALS['phpgw']->locations->get_id('property',".entity.{$this->get_entity_id()}.{$this->get_category_id()}");
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($l_loc);
+			$entity_arr = explode('.',$loc_arr['location']);
+
+			$entity = $entity_so->read_single($entity_arr[2]);
+			$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
 			$entity_label = $entity['name'];
 			$category_label = $category['name'];
 			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
 
 			return array(
-				'id' => $this->get_id(),
-				'entity_id' => $this->get_entity_id(),
+				'id' => $l_loc,
 				'entity_label' => $entity_label,
-				'category_id' => $this->get_category_id(),
 				'category_label' => $category_label,
-				'atributes' => $this->get_cust_attribute_id(),
-				'project_type_id' => $this->get_project_type_id(),
 				'project_type_label' => $project_type_label
 			);
 		}
