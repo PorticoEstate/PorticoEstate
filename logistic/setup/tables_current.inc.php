@@ -81,13 +81,12 @@ $phpgw_baseline = array(
 				'pk' => array('id'),
 				'fk' => array(
 						'lg_requirement' => array('requirement_id' => 'id'),
-						'fm_bim_item' => array('resource_id' => 'id', 'type' => 'type'),
 						'phpgw_locations' => array('location_id' => 'location_id')
 				),
 				'ix' => array(),
 				'uc' => array()
 		),
-		'lg_bim_item_type_requirement' => array(
+		'lg_resource_type_requirement' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
@@ -99,8 +98,7 @@ $phpgw_baseline = array(
 				'pk' => array('id'),
 				'fk' => array(
 						'lg_project_type' => array('project_type_id' => 'id'),
-						'phpgw_locations' => array('location_id' => 'location_id'),
-						'phpgw_cust_attribute' => array('cust_attribute_id' => 'id'),
+						'phpgw_cust_attribute' => array('location_id' => 'location_id','cust_attribute_id' => 'id')
 				),
 				'ix' => array(),
 				'uc' => array()
@@ -117,7 +115,7 @@ $phpgw_baseline = array(
 				),
 				'pk' => array('id'),
 				'fk' => array(
-						'lg_bim_item_type_requirement' => array('type_requirement_id' => 'id'),
+						'lg_resource_type_requirement' => array('type_requirement_id' => 'id'),
 						'lg_requirement' => array('requirement_id' => 'id')
 				),
 				'ix' => array(),
@@ -133,7 +131,6 @@ $phpgw_baseline = array(
 				),
 				'pk' => array('id'),
 				'fk' => array(
-						'fm_bim_item' => array('item_id' => 'id'),
 						'phpgw_locations' => array('location_id' => 'location_id') 
 				),
 				'ix' => array(),
