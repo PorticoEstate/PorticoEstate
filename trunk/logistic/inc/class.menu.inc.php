@@ -98,7 +98,7 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiproject.project_types') )
 					),
 					'resource_type_requirement' => array(
-						'text' => lang('Bim type requirement'),
+						'text' => lang('resource_type_requirement'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.index') )
 					)
 /*					'control_cats'	=> array
