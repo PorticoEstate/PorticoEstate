@@ -13,8 +13,8 @@ t_new_project_type	logistic	no	Ny prosjekttype
 t_new_activity	logistic	no	Opprett ny aktivitet på dette prosjektet
 t_new_requirement	logistic	no	Registrer nytt behov på denne aktiviteten
 t_view_requirements	logistic	no	Vis registrerte behov på denne aktiviteten
-t_new_allocation	logistic	no	Registrer ny allocation på denne aktiviteten
-t_view_allocations	logistic	no	Vis registrerte allocationer på denne aktiviteten
+t_new_allocation	logistic	no	Registrer ny booking på denne aktiviteten
+t_view_allocations	logistic	no	Vis registrerte bookinger på denne aktiviteten
 t_new_type_requirement	logistic	no	Nytt type-krav
 Project_type	logistic	no	Prosjekttype
 settings	logistic	no	innstillinger
