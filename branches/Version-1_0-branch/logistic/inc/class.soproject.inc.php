@@ -35,6 +35,13 @@
 	class logistic_soproject extends logistic_socommon
 	{
 		protected static $so;
+		protected $db3;
+
+		public function __construct()
+		{
+			parent::__construct();
+			$this->db3 = clone $this->db;
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -146,7 +153,7 @@
 			{
 				$filter_clauses[] = "{$table_alias}.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
-			if(isset($filters['project_type']) && !$filters['project_type'] == '')
+			if(isset($filters['project_type']) && (!$filters['project_type'] == '' || !$filters['project_type'] == 0))
 			{
 				$filter_clauses[] = "{$table_alias}.project_type_id = {$this->marshal($filters['project_type'], 'int')}";
 			}
@@ -175,7 +182,7 @@
 			}
 			else
 			{
-				$cols .= "* ";
+				$cols .= "$table_alias.* ";
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -183,7 +190,7 @@
 
 			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 
-			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
 		protected function populate(int $project_id, &$project)
@@ -226,34 +233,55 @@
 		}
 
 
-		private function get_project_type_label($id)
+		public function get_project_type_label($id)
 		{
 			$sql = "SELECT name FROM lg_project_type where id=$id";
-			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db3->query($sql, __LINE__, __FILE__);
 
-			while ($this->db->next_record())
+			while ($this->db3->next_record())
 			{
-				return $this->db->f('name');
+				return $this->db3->f('name');
 			}
 		}
 
-		public function get_project_types()
+		public function get_project_types($selected_id = null)
 		{
 			$project_type_array = array();
-			$project_type_array[] = array(
-				'id' => '',
-				'name' => lang('all_types'),
-				'selected' => 1
-			);
+			if(!$selected_id)
+			{
+				$project_type_array[] = array(
+					'id' => '',
+					'name' => lang('all_types'),
+					'selected' => 1
+				);
+			}
+			else
+			{
+				$project_type_array[] = array(
+					'id' => '',
+					'name' => lang('all_types')
+				);
+			}
 			$sql = "SELECT * FROM lg_project_type";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
+				if(!$selected_id == null && $this->db->f('id') == $selected_id)
+				{
 				$project_type_array[] = array(
+						'id' => $this->db->f('id'),
+						'name' => $this->unmarshal($this->db->f('name'), 'string'),
+						'selected' => 1
+						);
+				}
+				else
+				{
+					$project_type_array[] = array(
 						'id' => $this->db->f('id'),
 						'name' => $this->unmarshal($this->db->f('name'), 'string')
 						);
+				}
 			}
 			return $project_type_array;
 		}

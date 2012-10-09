@@ -108,6 +108,7 @@
 			return $importfile;
 		}
 
+
 		function prepare_data($importfile = '', $list='',$uicols='')
 		{
 			$fields = array();
@@ -128,33 +129,25 @@
 
 			$this->uicols2 = $uicols2;
 
-			$data = CreateObject('phpgwapi.excelreader');
+			phpgw::import_class('phpgwapi.phpexcel');
 
-			$data->setOutputEncoding('CP1251');
-			$data->read($importfile);
+			$objPHPExcel = PHPExcel_IOFactory::load($importfile);
+			$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 
 			foreach($fields as &$entry)
 			{
-				$entry['id'] = array_search($entry['descr'], $data->sheets[0]['cells'][1]);
+				$entry['id'] = array_search($entry['descr'], $sheetData[1]);
 			}
 
 			$valueset = array();
 
-			$rows = $data->sheets[0]['numRows']+1;
+			$rows = count($sheetData) +1;
 
 			for ($i=2; $i<$rows; $i++ ) //First data entry on row 2
 			{
-				if ($data->sheets[0]['cells'][$i][2] != '')
+				foreach ($fields as $entry)
 				{
-
-					foreach ($fields as &$entry)
-					{
-						$valueset[$i-2][$entry['name']] = $this->bocommon->ascii2utf($data->sheets[0]['cells'][$i][$entry['id']]);
-					}
-				}
-				else
-				{
-					break;
+					$valueset[$i-2][$entry['name']] = $sheetData[$i][$entry['id']];
 				}
 			}
 			return $valueset;

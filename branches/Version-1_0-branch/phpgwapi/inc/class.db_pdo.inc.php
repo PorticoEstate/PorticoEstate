@@ -10,7 +10,7 @@
 	* @link http://www.sanisoft.com/phplib/manual/DB_sql.php
 	* @package phpgwapi
 	* @subpackage database
-	* @version $Id: class.db.inc.php 3450 2009-08-30 16:46:12Z sigurd $
+	* @version $Id$
 	*/
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )

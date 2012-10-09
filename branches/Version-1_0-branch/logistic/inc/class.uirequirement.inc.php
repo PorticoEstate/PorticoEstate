@@ -43,7 +43,8 @@
 			'index' => true,
 			'add' => true,
 			'edit' => true,
-			'view' => true
+			'view' => true,
+			'test' => true
 		);
 
 		public function __construct()
@@ -135,7 +136,7 @@
 			{
 				//Add action column to each row in result table
 				array_walk(
-								$result_data['results'], array($this, '_add_links'), "logistic.uiproject.view");
+								$result_data['results'], array($this, '_add_links'), "logistic.uirequirement.view");
 			}
 			return $this->yui_results($result_data);
 		}
@@ -172,15 +173,19 @@
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Project name'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
+						),		
+						array(
+							'key' => 'date_from',
+							'label' => lang('From date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'date_to',
+							'label' => lang('To date'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'link',
@@ -208,11 +213,142 @@
 						'text' 			=> lang('t_book_requirement'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uiactivity.edit'
+							'menuaction'	=> 'logistic.uiallocation.add'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 
 			self::render_template_xsl('datatable_common', $data);
+		}
+
+		public function view()
+		{
+			$requirement_id = phpgw::get_var('id');
+
+			if(isset($_POST['edit_requirement']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit', 'id' => $requirement_id));
+			}
+			else
+			{
+				if ($requirement_id && is_numeric($requirement_id))
+				{
+					$requirement = $this->so->get_single($requirement_id);
+				}
+
+				$requirement_array = $requirement->toArray();
+
+				if ($this->flash_msgs)
+				{
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+
+				$data = array
+					(
+					'value_id' => !empty($requirement) ? $requirement->get_id() : 0,
+					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
+					'project' => $requirement_array,
+					'view' => 'view_requirement'
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project') . '::' . lang('Requirement');
+				self::render_template_xsl(array('requirement_item'), $data);
+			}
+		}
+
+		public function add()
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
+		}
+
+		public function edit()
+		{
+			$activity_id = phpgw::get_var('activity_id');
+			$requirement_id = phpgw::get_var('id');			
+			
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so->get_single($activity_id);
+			}
+			
+			if (isset($_POST['save_requirement']))
+			{
+				$requirement->set_id( phpgw::get_var('id') );
+				$requirement->set_resource_type_id( phpgw::get_var('categories') );
+				$requirement->set_no_of_elements( phpgw::get_var('no_of_elements') );
+				
+				if(phpgw::get_var('start_date','string') != '')
+				{
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+					$requirement->set_start_date($start_date_ts);
+				}
+				else
+				{
+					$requirement->set_start_date(0);
+				}
+
+				if( phpgw::get_var('end_date','string') != '')
+				{
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+					$requirement->set_end_date($end_date_ts);
+				}
+				else
+				{
+					$requirement->set_end_date(0);
+				}
+
+				$requirement_id = $this->so->store($requirement);
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+			}
+			else if (isset($_POST['cancel_requirement']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+			}
+			else
+			{
+				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+
+				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+		
+				$data = array
+				(
+					'editable' => true,
+					'entity_list' => $entity_list
+				);
+				
+				if($activity_id > 0)
+				{
+					$data['activity'] = $activity;
+				}
+				
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+
+				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
+				self::render_template_xsl(array('requirement/requirement'), $data);
+			}
+		}
+
+		public function test()
+		{
+			$custom	= createObject('phpgwapi.custom_fields');
+			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+
+			_debug_array($entity_list);
+
+			foreach($entity_list as $entry)
+			{
+				$cat_list = execMethod('property.soadmin_entity.read_category',(array('allrows'=>true,'entity_id'=>$entry['id'])));
+				_debug_array($cat_list);
+
+				foreach($cat_list as $cat)
+				{
+					$attrib_data = $custom->find('property',".entity.{$cat['entity_id']}.{$cat[id]}", 0, '','','',true, true);
+				_debug_array($attrib_data);
+				}
+
+			}
 		}
 	}

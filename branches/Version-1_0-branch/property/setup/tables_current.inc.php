@@ -1451,6 +1451,7 @@
 				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'account_group' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'inherit_location' => array('type' => 'int','precision' => 2,'nullable' => True,'default' => 1),
+				'periodization_id' => array('type'		=> 'int','precision'	=> 4,'nullable'	=> true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
