@@ -121,13 +121,27 @@
 
 			$tables = "lg_resource_type_requirement type_requirement";
 
-			if($return_count) // We should only return a count
+			if($search_type && $search_type == 'resource_type_requirement_list')
 			{
-				$cols = 'COUNT(DISTINCT(type_requirement.id)) AS count';
+				if($return_count) // We should only return a count
+				{
+					$cols = 'COUNT(DISTINCT(type_requirement.location_id, type_requirement.project_type_id)) AS count';
+				}
+				else
+				{
+					$cols .= "DISTINCT(type_requirement.location_id, type_requirement.project_type_id) as id, (type_requirement.location_id * type_requirement.project_type_id) as id, type_requirement.location_id, type_requirement.project_type_id ";
+				}
 			}
 			else
 			{
-				$cols .= "type_requirement.* ";
+				if($return_count) // We should only return a count
+				{
+					$cols = 'COUNT(DISTINCT(type_requirement.id)) AS count';
+				}
+				else
+				{
+					$cols .= "type_requirement.* ";
+				}
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';

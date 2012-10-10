@@ -111,6 +111,12 @@
 			//var_dump($query_type);
 			switch ($query_type)
 			{
+				case 'resource_type_requirement_list':
+					$search_type = 'resource_type_requirement_list';
+					$sort_field = 'type_requirement.location_id';
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = $this->so->get_count($search_for, $search_type, $filters);
+					break;
 				default: // ... all composites, filters (active and vacant)
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
@@ -188,10 +194,17 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uiresource_type_requirement.index', 'phpgw_return_as' => 'json', 'type' => 'resource_type_requirement_list')),
 					'field' => array(
 						array(
 							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => false,
+							'hidden' => true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),
+						array(
+							'key' => 'location_id',
 							'label' => lang('ID'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
@@ -349,8 +362,19 @@
 		{
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$custom	= createObject('phpgwapi.custom_fields');
-			$location_id = phpgw::get_var('location_id');
-			$project_type_id = phpgw::get_var('project_type_id');
+			$id_fields = phpgw::get_var('id');
+			if($id_fields && $id_fields != '')
+			{
+				$id_array = explode('-', $id_fields);
+				$location_id = $id_array[0];
+				$project_type_id = $id_array[1];
+			}
+			else
+			{
+				$location_id = phpgw::get_var('location_id');
+				$project_type_id = phpgw::get_var('project_type_id');
+			}
+
 			if(isset($_POST['edit']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.edit', 'location_id' => $location_id, 'project_type_id' => $project_type_id));
