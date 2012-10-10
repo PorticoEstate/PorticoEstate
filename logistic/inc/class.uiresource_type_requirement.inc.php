@@ -246,10 +246,14 @@
 			$custom	= createObject('phpgwapi.custom_fields');
 			$location_id = phpgw::get_var('location_id');
 			$project_type_id = phpgw::get_var('project_type_id');
-			if($location_id && is_numeric($location_id))
+			if($location_id)
 			{
 				$req_types = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
-				$req_type = $req_types[0];
+				if (count($req_types) > 0)
+					{
+						$keys = array_keys($req_types);
+						$req_type = $req_types[$keys[0]];
+					}
 			}
 			else
 			{
@@ -264,10 +268,38 @@
 				$req_type->set_location_id($location_id);
 				$req_type->set_project_type_id(phpgw::get_var('project_type_id'));
 				$cust_attr_ids = phpgw::get_var('attributes');
-				foreach ($cust_attr_ids as $attr_id)
+				$selected_attributes[] = array();
+
+				$req_type_array = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
+				$req_types_for_delete = array();
+				$new_req_types = array();
+				if (count($req_type_array) > 0)
 				{
-					$req_type->set_cust_attribute_id($attr_id);
-					$req_type_id = $this->so->store($req_type);
+					foreach ($req_type_array as $rt)
+					{
+						if(!in_array($rt->get_cust_attribute_id(), $cust_attr_ids))
+						{
+							$req_types_for_delete[] = $rt;
+						}
+						$selected_attributes[] = $rt->get_cust_attribute_id();
+					}
+
+					foreach ($cust_attr_ids as $attr)
+					{
+						if(!in_array($attr, $selected_attributes))
+						{
+							$req_type_new = new logistic_resource_type_requirement();
+							$req_type_new->set_location_id($location_id);
+							$req_type_new->set_project_type_id(phpgw::get_var('project_type_id'));
+							$req_type_new->set_cust_attribute_id($attr);
+							$req_type_new_id = $this->so->store($req_type_new);
+						}
+					}
+
+					foreach ($req_types_for_delete as $del_req_type)
+					{
+						$this->so->delete($del_req_type);
+					}
 				}
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.view', 'location_id' => $location_id, 'project_type_id' => $req_type->get_project_type_id()));
@@ -281,9 +313,9 @@
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
 
-				if($req_type->get_location_id())
+				if($location_id)
 				{
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($req_type->get_location_id());
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
 					$entity_arr = explode('.',$loc_arr['location']);
 
 					$entity = $entity_so->read_single($entity_arr[2]);
@@ -295,17 +327,17 @@
 							$e['selected'] = 1;
 						}
 					}
-					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$req_type->get_entity_id()));
+					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$entity_arr[2]));
 					foreach ($category_list as &$c)
 					{
-						if($c['id'] == $category['cat_id'])
+						if($c['id'] == $category['id'])
 						{
 							$c['selected'] = 1;
 						}
 					}
 
-					$attributes = $custom->find('property',".entity.{$req_type->get_entity_id()}.{$req_type->get_category_id()}", 0, '','','',true, true);
-					$selected_attributes = explode(',', $req_type->get_cust_attribute_id());
+					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+					$selected_attributes = $this->so->get_selected_attributes($location_id, $project_type_id);
 					foreach ($attributes as &$a)
 					{
 						if(in_array($a['id'], $selected_attributes))
@@ -413,7 +445,9 @@
 
 				$data = array
 						(
-						'value_id' => !empty($req_type) ? $req_type->get_id() : 0,
+						'value_id' => !empty($req_types[0]) ? $req_types[0]->get_id() : 0,
+						'location_id' => $location_id,
+						'project_type_id' => $project_type_id,
 						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'req_type' => $req_types[0],
 						'entity' => $entity,
