@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 	 $("#entity_id").change(function () {
-		 var oArgs = {menuaction:'logistic.uibim_type_requirement.get_bim_level1', entity_id: $(this).val()};
+		 var oArgs = {menuaction:'logistic.uiresource_type_requirement.get_bim_level1', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		 var htmlString = "";
