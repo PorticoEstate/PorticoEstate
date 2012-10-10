@@ -66,7 +66,6 @@
 
 			if($result)
 			{
-
 				// Set the new control ID
 				$control->set_id($this->db->get_last_insert_id('controller_control', 'id'));
 
