@@ -44,8 +44,7 @@
 			'index' => true,
 			'add' => true,
 			'edit' => true,
-			'view' => true,
-			'test' => true
+			'view' => true
 		);
 
 		public function __construct()
@@ -311,27 +310,6 @@
 
 				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
 				self::render_template_xsl(array('requirement/requirement'), $data);
-			}
-		}
-
-		public function test()
-		{
-			$custom	= createObject('phpgwapi.custom_fields');
-			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
-
-			_debug_array($entity_list);
-
-			foreach($entity_list as $entry)
-			{
-				$cat_list = execMethod('property.soadmin_entity.read_category',(array('allrows'=>true,'entity_id'=>$entry['id'])));
-				_debug_array($cat_list);
-
-				foreach($cat_list as $cat)
-				{
-					$attrib_data = $custom->find('property',".entity.{$cat['entity_id']}.{$cat[id]}", 0, '','','',true, true);
-				_debug_array($attrib_data);
-				}
-
 			}
 		}
 	}
