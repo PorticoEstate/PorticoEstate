@@ -29,7 +29,7 @@
 	<div class="yui-content" style="padding: 20px;">
 		<div id="details">
 			<form action="#" method="post">
-				<input type="hidden" name="id" value = "{activity/id}" />
+				<input type="hidden" name="activity_id" value = "{activity/id}" />
 							
 				<dl class="proplist-col">
 					<dt>

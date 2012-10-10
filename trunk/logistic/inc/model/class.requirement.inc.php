@@ -27,6 +27,7 @@
 	 * @subpackage logistic
 	 * @version $Id $
 	 */
+	
 	include_class('logistic', 'model', '/inc/model/');
 
 	class logistic_requirement extends logistic_model
@@ -37,7 +38,7 @@
 		protected $activity_id;
 		protected $date_from;
 		protected $date_to;
-		protected $no_of_elements;
+		protected $no_of_items;
 		protected $location_id;
 		
 		/**
@@ -61,14 +62,14 @@
 			return $this->id;
 		}
 
-		public function set_no_of_elements($no_of_elements)
+		public function set_no_of_items($no_of_items)
 		{
-			$this->no_of_elements = $no_of_elements;
+			$this->no_of_items = $no_of_items;
 		}
 
-		public function get_no_of_elements()
+		public function get_no_of_items()
 		{
-			return $this->no_of_elements;
+			return $this->no_of_items;
 		}
 		
 		public function set_location_id($location_id)
