@@ -36,10 +36,11 @@
 		
 		protected $id;
 		protected $activity_id;
-		protected $date_from;
-		protected $date_to;
+		protected $start_date;
+		protected $end_date;
 		protected $no_of_items;
 		protected $location_id;
+		protected $create_user;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -92,25 +93,26 @@
 			return $this->activity_id;
 		}
 
-		public function set_date_from($date_from)
+		public function set_end_date($end_date)
 		{
-			$this->date_from = $date_from;
+			$this->end_date = $end_date;
 		}
-
-		public function get_date_from()
+		
+		public function get_end_date() { return $this->end_date; }
+		
+		public function set_start_date($start_date)
 		{
-			return $this->date_from;
+			$this->start_date = $start_date;
 		}
-
-		public function set_date_to($date_to)
+		
+		public function get_start_date() { return $this->start_date; }
+		
+		public function set_create_user($create_user)
 		{
-			$this->date_to = $date_to;
+			$this->create_user = $create_user;
 		}
-
-		public function get_date_to()
-		{
-			return $this->date_to;
-		}
+		
+		public function get_create_user() { return $this->create_user; }
 
 		/**
 		* Get a static reference to the storage object associated with this model object
@@ -125,14 +127,16 @@
 
 			return self::$so;
 		}
-
+		
 		public function serialize()
 		{
 			return array(
-				'requirement_id' => $this->get_requirement_id(),
+				'id' => $this->get_id(),
 				'activity_id' => $this->get_activity_id(),
-				'date_from' => $this->get_date_from(),
-				'date_to' => $this->get_date_to()
+				'start_date' => $this->get_start_date(),
+				'end_date' => $this->get_end_date(),
+				'no_of_items' => $this->get_no_of_items(),
+				'location_id' => $this->get_location_id(),
 			);
 		}
 	}
