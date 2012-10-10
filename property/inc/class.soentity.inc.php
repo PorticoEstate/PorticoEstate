@@ -1579,7 +1579,8 @@
 			
 			if(!$sql)
 			{
-				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
+//				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
+				$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1882,6 +1883,7 @@
 			$values_insert = array
 			(
   				'id'					=> $id,
+  				'location_id'			=> $location_id,
   				'type'					=> $type,
   				'guid'					=> $guid,
 				'xml_representation'	=> $this->db->db_addslashes($xml),
