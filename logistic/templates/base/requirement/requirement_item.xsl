@@ -29,6 +29,7 @@
 	<div class="yui-content" style="padding: 20px;">
 		<div id="details">
 			<form action="#" method="post">
+				<input type="hidden" name="id" value = "{requirement/id}" />
 				<input type="hidden" name="activity_id" value = "{activity/id}" />
 							
 				<dl class="proplist-col">
@@ -89,11 +90,7 @@
 							</dd>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="entity/name" />
-							<xsl:value-of select="category/name" />
-							<xsl:for-each select="attributes">
-								<xsl:value-of select="name" /><br/>
-							</xsl:for-each>
+							<xsl:value-of select="location/descr" />
 						</xsl:otherwise>
 					</xsl:choose>
 					<dt>
@@ -105,7 +102,7 @@
 								<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" />
 							</xsl:when>
 							<xsl:otherwise>
-							<span>{requirement/no_of_items}</span>
+							<span><xsl:value-of select="requirement/no_of_items"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -121,7 +118,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-							<input type="submit" name="edit_activity" value="{$lang_edit}" title = "{$lang_edit}" />
+							<input type="submit" name="edit_requirement" value="{$lang_edit}" title = "{$lang_edit}" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

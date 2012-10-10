@@ -39,9 +39,9 @@
 		{
 			$cols = array(
 				'activity_id',
-				'date_from',
-				'date_to',
-				'no_of_items',
+				'start_date',
+				'end_date',
+				'no_of_elements',
 				'location_id',
 				'create_user',
 				'create_date'
@@ -49,8 +49,8 @@
 
 			$values = array(
 				$this->marshal($requirement->get_activity_id(), 'int'),
-				$this->marshal($requirement->get_date_from(), 'int'),
-				$this->marshal($requirement->get_date_to(), 'int'),
+				$this->marshal($requirement->get_start_date(), 'int'),
+				$this->marshal($requirement->get_end_date(), 'int'),
 				$this->marshal($requirement->get_no_of_items(), 'int'),
 				$this->marshal($requirement->get_location_id(), 'int'),
 				$this->marshal($requirement->get_create_user(), 'int'),
@@ -76,9 +76,9 @@
 
 			$values = array(
 				'activity_id=' . $this->marshal($requirement->get_activity_id(), 'int'),
-				'date_from=' . $this->marshal($requirement->get_date_from(), 'int'),
-				'date_to=' . $this->marshal($requirement->get_date_to(), 'int'),
-				'no_of_items=' . $this->marshal($requirement->get_no_of_items(), 'int'),
+				'start_date=' . $this->marshal($requirement->get_start_date(), 'int'),
+				'end_date=' . $this->marshal($requirement->get_end_date(), 'int'),
+				'no_of_elements=' . $this->marshal($requirement->get_no_of_items(), 'int'),
 				'location_id=' . $this->marshal($requirement->get_location_id(), 'int')
 			);
 
@@ -166,8 +166,6 @@
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
-
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
@@ -178,8 +176,10 @@
 				$requirement = new logistic_requirement((int) $requirement_id);
 
 				$requirement->set_activity_id($this->unmarshal($this->db->f('activity_id'), 'int'));
-				$requirement->set_date_from($this->unmarshal($this->db->f('date_from'), 'int'));
-				$requirement->set_date_to($this->unmarshal($this->db->f('date_to'), 'int'));
+				$requirement->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$requirement->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$requirement->set_no_of_items($this->unmarshal($this->db->f('no_of_elements'), 'int'));
+				$requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 			}
 
 			return $requirement;
