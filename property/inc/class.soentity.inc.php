@@ -1762,7 +1762,11 @@
 
 						if($entry['history'] == 1)
 						{
-							$history_set[$entry['attrib_id']] = $entry['value'];
+							$history_set[$entry['attrib_id']] = array
+							(
+								'value' => $entry['value'],
+								'date'  => $this->bocommon->date_to_timestamp($entry['date'])
+							);
 						}
 					}
 				}
@@ -1822,9 +1826,9 @@
 			if (isset($history_set) AND is_array($history_set))
 			{
 				$historylog	= CreateObject('property.historylog',"{$this->type}_{$entity_id}_{$cat_id}");
-				foreach ($history_set as $attrib_id => $new_value)
+				foreach ($history_set as $attrib_id => $history)
 				{
-					$historylog->add('SO',$values['id'],$new_value,false, $attrib_id);
+					$historylog->add('SO',$values['id'],$history['value'],false, $attrib_id,$history['date']);
 				}
 			}
 
