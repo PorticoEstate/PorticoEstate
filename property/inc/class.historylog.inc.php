@@ -123,7 +123,7 @@
 		}
 
 
-		function add($status,$record_id,$new_value,$old_value ='',$attrib_id='', $date='',$detail_id='')
+		function add($status,$record_id,$new_value,$old_value ='',$attrib_id='', $date=0,$detail_id='')
 		{
 			$attrib_id_field = $this->attrib_id_field;
 			$attrib_id_value = (isset($attrib_id) && $attrib_id ? ",$attrib_id" : '');
@@ -139,9 +139,9 @@
 				$timestamp = date($this->db->datetime_format());
 			}
 
-			$this->db->query("insert into $this->table (history_record_id,"
+			$this->db->query("INSERT INTO {$this->table} (history_record_id,"
 				. "history_appname,history_owner,history_status,history_new_value, history_old_value, history_timestamp $attrib_id_field $detail_id_field) "
-				. "values ('$record_id','" . $this->appname . "','"
+				. "values ('{$record_id}','{$this->appname}','"
 				. $this->account . "','$status','"
 				. $this->db->db_addslashes($new_value) . "','"
 				. $this->db->db_addslashes($old_value) . "','" . $timestamp
