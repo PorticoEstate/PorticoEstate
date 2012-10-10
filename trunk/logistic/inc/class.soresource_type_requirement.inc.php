@@ -109,6 +109,14 @@
 			{
 				$filter_clauses[] = "type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
+			if(isset($filters['location_id']))
+			{
+				$filter_clauses[] = "type_requirement.location_id = {$this->marshal($filters['location_id'],'int')}";
+			}
+			if(isset($filters['project_type_id']))
+			{
+				$filter_clauses[] = "type_requirement.project_type_id = {$this->marshal($filters['project_type_id'],'int')}";
+			}
 
 			if(count($filter_clauses))
 			{
@@ -146,8 +154,6 @@
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
@@ -188,6 +194,21 @@
 			}
 		}
 
+		public function delete($object)
+		{
+			$sql = "DELETE FROM lg_resource_type_requirement where id={$object->get_id()}";
+			$result = $this->db->query($sql, __LINE__,__FILE__);
+
+			if( $result )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public static function get_instance()
 		{
 			if (self::$so == null)
@@ -195,5 +216,19 @@
 				self::$so = CreateObject('logistic.soresource_type_requirement');
 			}
 			return self::$so;
+		}
+
+		public function get_selected_attributes($location_id, $project_type_id)
+		{
+			$attributes = array();
+			$sql = "SELECT cust_attribute_id FROM lg_resource_type_requirement where location_id={$location_id} AND project_type_id={$project_type_id}";
+			$this->local_db->query($sql, __LINE__, __FILE__);
+
+			while ($this->local_db->next_record())
+			{
+				$attributes[] = $this->local_db->f('cust_attribute_id');
+			}
+
+			return $attributes;
 		}
 	}
