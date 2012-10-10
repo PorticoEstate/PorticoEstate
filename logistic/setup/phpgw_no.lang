@@ -49,5 +49,5 @@ Muliple radio	logistic	no	Flervalgs radioknapp
 Muliple checkbox	logistic	no	Flervalgs avkrysningsboks
 event	logistic	no	Hendelse
 Link	logistic	no	Lenke
-Add requirement to activity	logistic	no	Legg krav til aktiviteten
+Add requirement to activity	logistic	no	Registrer behov for aktiviteten
 Add requirement	logistic	no	Legg til krav

@@ -41,7 +41,7 @@
 				'activity_id',
 				'date_from',
 				'date_to',
-				'no_of_elements',
+				'no_of_items',
 				'location_id',
 				'create_user',
 				'create_date'
@@ -49,9 +49,9 @@
 
 			$values = array(
 				$this->marshal($requirement->get_activity_id(), 'int'),
-				$this->marshal($requirement->get_date_from(), 'string'),
-				$this->marshal($requirement->get_date_to(), 'string'),
-				$this->marshal($requirement->get_no_of_elements(), 'int'),
+				$this->marshal($requirement->get_date_from(), 'int'),
+				$this->marshal($requirement->get_date_to(), 'int'),
+				$this->marshal($requirement->get_no_of_items(), 'int'),
 				$this->marshal($requirement->get_location_id(), 'int'),
 				$this->marshal($requirement->get_create_user(), 'int'),
 				$this->marshal(strtotime('now'), 'int')
@@ -78,7 +78,7 @@
 				'activity_id=' . $this->marshal($requirement->get_activity_id(), 'int'),
 				'date_from=' . $this->marshal($requirement->get_date_from(), 'int'),
 				'date_to=' . $this->marshal($requirement->get_date_to(), 'int'),
-				'no_of_elements=' . $this->marshal($requirement->get_no_of_elements(), 'int'),
+				'no_of_items=' . $this->marshal($requirement->get_no_of_items(), 'int'),
 				'location_id=' . $this->marshal($requirement->get_location_id(), 'int')
 			);
 

@@ -33,6 +33,7 @@
 	phpgw::import_class('logistic.soactivity');
 
 	include_class('logistic', 'requirement');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class uirequirement extends phpgwapi_uicommon
 	{
@@ -243,6 +244,7 @@
 		{
 			$activity_id = phpgw::get_var('activity_id');
 			$requirement_id = phpgw::get_var('id');
+			
 		
 			if ($activity_id && is_numeric($activity_id))
 			{
@@ -253,14 +255,19 @@
 			{
 				$requirement = $this->so->get_single($requirement_id);
 			}
+			else
+			{
+				$requirement = new logistic_requirement();
+			}
 			
 			if (isset($_POST['save_requirement']))
 			{
 				$requirement->set_id( phpgw::get_var('id') );
+				$requirement->set_activity_id( phpgw::get_var('activity_id') );
 				$requirement->set_location_id( phpgw::get_var('location_id') );
-				$requirement->set_no_of_elements( phpgw::get_var('no_of_elements') );
-				
-				if(phpgw::get_var('start_date','string') != '')
+				$requirement->set_no_of_items( phpgw::get_var('no_of_items') );
+			
+				if(phpgw::get_var('date_from','string') != '')
 				{
 					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_from','string') );
 					$requirement->set_date_from($start_date_ts);
@@ -270,7 +277,7 @@
 					$requirement->set_date_from(0);
 				}
 
-				if( phpgw::get_var('end_date','string') != '')
+				if( phpgw::get_var('date_to','string') != '')
 				{
 					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_to','string') );
 					$requirement->set_date_to($end_date_ts);
@@ -281,7 +288,7 @@
 				}
 
 				print_r($requirement);
-				$requirement_id = $this->so->store($requirement);
+			//	$requirement_id = $this->so->store($requirement);
 
 				//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
