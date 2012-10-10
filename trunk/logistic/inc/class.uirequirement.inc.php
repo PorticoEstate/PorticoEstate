@@ -30,14 +30,15 @@
 
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.sorequirement');
+	phpgw::import_class('logistic.soactivity');
 
 	include_class('logistic', 'requirement');
-
 
 	class uirequirement extends phpgwapi_uicommon
 	{
 		private $so;
-
+		private $so_activity;
+	
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
@@ -52,6 +53,7 @@
 			parent::__construct();
 
 			$this->so = CreateObject('logistic.sorequirement');
+			$this->so_activity = CreateObject('logistic.soactivity');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
 		}
@@ -193,30 +195,7 @@
 						)
 					)
 				),
-			);
-
-			$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'requirement_id',
-							'source'	=> 'id'
-						),
-					)
-				);
-
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'book_requirement',
-						'text' 			=> lang('t_book_requirement'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uiallocation.add'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
+			);	
 
 			self::render_template_xsl('datatable_common', $data);
 		}
@@ -247,7 +226,6 @@
 				$data = array
 					(
 					'value_id' => !empty($requirement) ? $requirement->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $requirement_array,
 					'view' => 'view_requirement'
 				);
@@ -265,11 +243,16 @@
 		public function edit()
 		{
 			$activity_id = phpgw::get_var('activity_id');
-			$requirement_id = phpgw::get_var('id');			
-			
+			$requirement_id = phpgw::get_var('id');
+		
 			if ($activity_id && is_numeric($activity_id))
 			{
-				$activity = $this->so->get_single($activity_id);
+				$activity = $this->so_activity->get_single($activity_id);
+			}
+			
+			if ($requirement_id && is_numeric($requirement_id))
+			{
+				$requirement = $this->so->get_single($requirement_id);
 			}
 			
 			if (isset($_POST['save_requirement']))
@@ -326,7 +309,7 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
+				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
 				self::render_template_xsl(array('requirement/requirement'), $data);
 			}
 		}
