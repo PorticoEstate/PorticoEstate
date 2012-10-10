@@ -301,6 +301,14 @@
 						$this->so->delete($del_req_type);
 					}
 				}
+				else
+				{
+					foreach ($cust_attr_ids as $attr)
+					{
+						$req_type->set_cust_attribute_id($attr);
+						$req_type_id = $this->so->store($req_type);
+					}
+				}
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiresource_type_requirement.view', 'location_id' => $location_id, 'project_type_id' => $req_type->get_project_type_id()));
 			}
