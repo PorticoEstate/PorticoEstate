@@ -107,8 +107,8 @@
 		{
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$project_so = CreateObject('logistic.soproject');
-			$l_loc =  $GLOBALS['phpgw']->locations->get_id('property',".entity.{$this->get_entity_id()}.{$this->get_category_id()}");
-			$loc_arr = $GLOBALS['phpgw']->locations->get_name($l_loc);
+		//	$l_loc =  $GLOBALS['phpgw']->locations->get_id('property',".entity.{$this->get_entity_id()}.{$this->get_category_id()}");
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
 			$entity_arr = explode('.',$loc_arr['location']);
 
 			$entity = $entity_so->read_single($entity_arr[2]);
