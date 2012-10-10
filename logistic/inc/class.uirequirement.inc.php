@@ -257,32 +257,33 @@
 			if (isset($_POST['save_requirement']))
 			{
 				$requirement->set_id( phpgw::get_var('id') );
-				$requirement->set_resource_type_id( phpgw::get_var('categories') );
+				$requirement->set_location_id( phpgw::get_var('location_id') );
 				$requirement->set_no_of_elements( phpgw::get_var('no_of_elements') );
 				
 				if(phpgw::get_var('start_date','string') != '')
 				{
-					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
-					$requirement->set_start_date($start_date_ts);
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_from','string') );
+					$requirement->set_date_from($start_date_ts);
 				}
 				else
 				{
-					$requirement->set_start_date(0);
+					$requirement->set_date_from(0);
 				}
 
 				if( phpgw::get_var('end_date','string') != '')
 				{
-					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
-					$requirement->set_end_date($end_date_ts);
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_to','string') );
+					$requirement->set_date_to($end_date_ts);
 				}
 				else
 				{
-					$requirement->set_end_date(0);
+					$requirement->set_date_to(0);
 				}
 
+				print_r($requirement);
 				$requirement_id = $this->so->store($requirement);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+				//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
 			else if (isset($_POST['cancel_requirement']))
 			{
@@ -309,7 +310,7 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
 				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
-				self::render_template_xsl(array('requirement/requirement'), $data);
+				self::render_template_xsl(array('requirement/requirement_item'), $data);
 			}
 		}
 	}

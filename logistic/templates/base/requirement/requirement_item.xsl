@@ -72,7 +72,7 @@
 								<label>BIM</label>
 							</dt>
 							<dd>
-								<select name="location_id" id="location_id">
+								<select name="entity_id" id="entity_id">
 									<xsl:for-each select="entity_list">
 										<option value="{id}">
 											<xsl:value-of select="name"/>
@@ -84,7 +84,7 @@
 								<label>BIM2</label>
 							</dt>
 							<dd>
-								<select name="categories" id="categories">
+								<select name="category_id" id="category_id">
 								</select>
 							</dd>
 						</xsl:when>
@@ -116,8 +116,8 @@
 						<xsl:when test="editable">
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-							<input type="submit" name="save_activity" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="cancel_activity" value="{$lang_cancel}" title = "{$lang_cancel}" />
+							<input type="submit" name="save_requirement" value="{$lang_save}" title = "{$lang_save}" />
+							<input type="submit" name="cancel_requirement" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
