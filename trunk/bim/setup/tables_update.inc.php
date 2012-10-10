@@ -82,3 +82,46 @@
 			return $GLOBALS['setup_info']['bim']['currentver'];
 		}
 	}
+	/**
+	* Update bim version from 0.9.17.504 to 0.9.17.505
+	*/
+	$test[] = '0.9.17.504';
+	function bim_upgrade0_9_17_504()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_bim_item','location_id', array('type' => 'int', 'precision' => 4,'nullable' => true));
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_bim_type",__LINE__,__FILE__);
+
+		$values = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$types[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('id'),
+				'location_id'	=> (int)$GLOBALS['phpgw_setup']->oProc->f('location_id'),
+				'name' 			=> $GLOBALS['phpgw_setup']->oProc->f('name',true),
+				'description'	=> $GLOBALS['phpgw_setup']->oProc->f('description',true)
+			);
+		}
+
+		foreach ($types as $entry)
+		{
+			if(!$location_id = $entry['location_id'])
+			{
+				$location_id = $GLOBALS['phpgw']->locations->add($entry['name'], $entry['description'], 'bim');
+			}
+
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_bim_item SET location_id = {$location_id} WHERE type = {$entry['id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_bim_item','location_id', array('type' => 'int', 'precision' => 4,'nullable' => false));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['bim']['currentver'] = '0.9.17.505';
+			return $GLOBALS['setup_info']['bim']['currentver'];
+		}
+	}
