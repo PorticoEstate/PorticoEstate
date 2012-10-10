@@ -104,6 +104,7 @@
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
 			//var_dump($query_type);
+
 			switch ($query_type)
 			{
 				default: // ... all composites, filters (active and vacant)
@@ -180,13 +181,23 @@
 							'sortable' => true,
 						),		
 						array(
-							'key' => 'date_from',
-							'label' => lang('From date'),
+							'key' => 'start_date',
+							'label' => lang('Start date'),
 							'sortable' => false
 						),
 						array(
-							'key' => 'date_to',
-							'label' => lang('To date'),
+							'key' => 'end_date',
+							'label' => lang('End date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'no_of_items',
+							'label' => lang('No of items'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'location_id',
+							'label' => lang('Resource type'),
 							'sortable' => false
 						),
 						array(
@@ -215,23 +226,19 @@
 					$requirement = $this->so->get_single($requirement_id);
 				}
 
-				$requirement_array = $requirement->toArray();
-
-				if ($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-
+				$location_info = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
+				echo $requirement->get_location_id();
+				print_r($location_info);
 				$data = array
 					(
 					'value_id' => !empty($requirement) ? $requirement->get_id() : 0,
-					'project' => $requirement_array,
+					'requirement' => $requirement,
+					'location' => $location_info,
 					'view' => 'view_requirement'
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project') . '::' . lang('Requirement');
-				self::render_template_xsl(array('requirement_item'), $data);
+				self::render_template_xsl(array('requirement/requirement_item'), $data);
 			}
 		}
 
@@ -242,15 +249,9 @@
 
 		public function edit()
 		{
-			$activity_id = phpgw::get_var('activity_id');
 			$requirement_id = phpgw::get_var('id');
-			
-		
-			if ($activity_id && is_numeric($activity_id))
-			{
-				$activity = $this->so_activity->get_single($activity_id);
-			}
-			
+			$activity_id = phpgw::get_var('activity_id');
+
 			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so->get_single($requirement_id);
@@ -260,37 +261,49 @@
 				$requirement = new logistic_requirement();
 			}
 			
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so_activity->get_single($activity_id);
+			}
+			
 			if (isset($_POST['save_requirement']))
 			{
 				$requirement->set_id( phpgw::get_var('id') );
 				$requirement->set_activity_id( phpgw::get_var('activity_id') );
-				$requirement->set_location_id( phpgw::get_var('location_id') );
 				$requirement->set_no_of_items( phpgw::get_var('no_of_items') );
 			
-				if(phpgw::get_var('date_from','string') != '')
+				$entity_id = phpgw::get_var('entity_id');
+				$category_id = phpgw::get_var('category_id');
+				
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+				
+				$requirement->set_location_id($location_id);
+				
+				if(phpgw::get_var('start_date','string') != '')
 				{
-					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_from','string') );
-					$requirement->set_date_from($start_date_ts);
+					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+					$requirement->set_start_date($start_date_ts);
 				}
 				else
 				{
-					$requirement->set_date_from(0);
+					$requirement->set_start_date(0);
 				}
 
-				if( phpgw::get_var('date_to','string') != '')
+				if( phpgw::get_var('end_date','string') != '')
 				{
-					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('date_to','string') );
-					$requirement->set_date_to($end_date_ts);
+					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+					$requirement->set_end_date($end_date_ts);
 				}
 				else
 				{
-					$requirement->set_date_to(0);
+					$requirement->set_end_date(0);
 				}
-
-				print_r($requirement);
-			//	$requirement_id = $this->so->store($requirement);
-
-				//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+				
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$requirement->set_create_user($user_id);
+				
+				$requirement_id = $this->so->store($requirement);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
 			else if (isset($_POST['cancel_requirement']))
 			{
@@ -302,8 +315,17 @@
 
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 		
+				$location_id = $requirement->get_location_id();
+				
+					$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+					print_r($system_location);
+				$location_info = $GLOBALS['phpgw']->locations->read($location_id);
+				
+				print_r($location_info);
+				
 				$data = array
 				(
+					'requirement' => $requirement,
 					'editable' => true,
 					'entity_list' => $entity_list
 				);
