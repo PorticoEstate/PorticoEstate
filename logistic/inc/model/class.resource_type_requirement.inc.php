@@ -107,7 +107,6 @@
 		{
 			$entity_so	= CreateObject('property.soadmin_entity');
 			$project_so = CreateObject('logistic.soproject');
-		//	$l_loc =  $GLOBALS['phpgw']->locations->get_id('property',".entity.{$this->get_entity_id()}.{$this->get_category_id()}");
 			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
 			$entity_arr = explode('.',$loc_arr['location']);
 
@@ -118,7 +117,8 @@
 			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
 
 			return array(
-				'id' => $l_loc,
+				'id' => $this->get_location_id().'-'.$this->get_project_type_id(),
+				'location_id' => $this->get_location_id(),
 				'entity_label' => $entity_label,
 				'category_label' => $category_label,
 				'project_type_label' => $project_type_label
