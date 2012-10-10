@@ -58,14 +58,25 @@
         	if($this->getBimObjectType($name) != null) {
         		throw new Exception('Type already exists!');
         	}
-        	if(is_null($description)) {
-        		$sql = "INSERT INTO ".self::bimTypeTable." (name) VALUES ('$name')";
-        	} else {
-        		$sql = "INSERT INTO ".self::bimTypeTable." (name, description) VALUES ('$name', '$description')";
+
+			$location_id = $GLOBALS['phpgw']->locations->add($name, $description ? $description : $name , 'bim');
+
+        	if(is_null($description))
+        	{
+        		$sql = "INSERT INTO ".self::bimTypeTable." (location_id, name) VALUES ($location_id, '$name')";
+        	}
+        	else
+        	{
+        		$description = $this->db->db_addslashes($description);
+        		$sql = "INSERT INTO ".self::bimTypeTable." (location_id, name, description) VALUES ($location_id, '$name', '$description')";
         	} 
-			if(is_null($this->db->query($sql,__LINE__,__FILE__) )){
+
+			if(is_null($this->db->query($sql,__LINE__,__FILE__) ))
+			{
 				throw new Exception("Error adding object type!");
-			} else {
+			}
+			else
+			{
 				return true;
 			}
         }
