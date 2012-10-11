@@ -13,8 +13,8 @@
 					<span>
 						<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
 					</span>
-					<span>
-						{activity/name}
+					<span style="margin-left:5px;">
+						<xsl:value-of select="activity/name" />
 					</span>
 				</h1>
 			</xsl:when>
