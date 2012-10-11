@@ -54,8 +54,8 @@ $phpgw_baseline = array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'date_from' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'date_to' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'start_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'end_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'no_of_elements' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
