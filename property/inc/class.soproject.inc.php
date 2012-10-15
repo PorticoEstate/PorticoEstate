@@ -1194,8 +1194,12 @@
 				'account_group'		=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id'],
 				'inherit_location'	=> $project['inherit_location'],
-				'periodization_id'	=> $project['budget_periodization'],
 			);
+
+			if(isset($project['budget_periodization']) && $project['budget_periodization'])
+			{
+				$value_set['periodization_id']	= $project['budget_periodization'];
+			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $project['id']);
 
@@ -1239,7 +1243,7 @@
 
 			if($project['delete_b_period'])
 			{
-				$this->delete_period_from_budget($project['id'], $project['delete_b_year']);
+				$this->delete_period_from_budget($project['id'], $project['delete_b_period']);
 			}
 
 			if($project['budget'])
@@ -1610,12 +1614,13 @@
 		{
 			$project_id = (int) $project_id;
 			$closed_period = array();
+			$project_budget = array();
+			$project_order_amount = array();
 
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$project_budget = array();
 			while ($this->db->next_record())
 			{
 				$year = $this->db->f('year');
@@ -1624,6 +1629,7 @@
 				$period = $year . sprintf("%02s", $month);
 				
  				$project_budget[$period] = (int)$this->db->f('budget');
+ 				$project_order_amount[$period] = $this->db->f('order_amount');
  				$closed_period[$period] = !!$this->db->f('closed');
 			}
 			unset($year);			
@@ -1730,74 +1736,87 @@
 				$_use_periodization = false;			
 			}
 
-			$config = CreateObject('phpgwapi.config','property');
-			$config->read();
-			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-			$sql = "SELECT fm_workorder.id, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition, start_date"
-			. " FROM fm_workorder"
-			. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-			. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
-			. " GROUP BY fm_workorder.id, fm_workorder.start_date,fm_workorder.addition ORDER BY start_date ASC";
-			$this->db->query($sql,__LINE__,__FILE__);
-
-
-			while ($this->db->next_record())
+			if(!$_use_periodization)
 			{
-				$_found = false;
-				$_start_date = $this->db->f('start_date');
-				$_order_period = date('Ym', $_start_date);
-				
-				$year = date('Y');
-				
-				if($_use_periodization)
-				{
-					$periode = $_order_period;
-					if(isset($project_budget[$periode]))
-					{
-						$_found = true;
-					}
-				}
+				$config = CreateObject('phpgwapi.config','property');
+				$config->read();
+				$tax = 1+(($config->config_data['fm_tax'])/100);
 
-				if(!$_found) //move to current
+				$sql = "SELECT fm_workorder.id, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition, start_date"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+				. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
+				. " GROUP BY fm_workorder.id, fm_workorder.start_date,fm_workorder.addition ORDER BY start_date ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				while ($this->db->next_record())
 				{
-					$check_months = array(0, date('m'));
-					foreach ($check_months as $i)
+					$_found = false;
+					$_start_date = $this->db->f('start_date');
+					$_order_period = date('Ym', $_start_date);
+					
+					$year = date('Y');
+					
+					if($_use_periodization)
 					{
-						$periode = $year . sprintf("%02s", $i);
+						$periode = $_order_period;
 						if(isset($project_budget[$periode]))
 						{
 							$_found = true;
-							break;
 						}
 					}
-				}
+	
+					if(!$_found) //move to current
+					{
+						$check_months = array(0, date('m'));
+						foreach ($check_months as $i)
+						{
+							$periode = $year . sprintf("%02s", $i);
+							if(isset($project_budget[$periode]))
+							{
+								$_found = true;
+								break;
+							}
+						}
+					}
 					
-				if(!$_found)
-				{
-					$periode = date('Ym');
-				}
+					if(!$_found)
+					{
+						$periode = date('Ym');
+					}
+	
+					if(abs($this->db->f('contract_sum')) > 0)
+					{
+						$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
+					}
+					else if(abs($this->db->f('calculation')) > 0)
+					{
+						$_amount = $this->db->f('calculation') * $tax;
+					}
+					else if(abs($this->db->f('budget')) > 0)
+					{
+						$_amount = $this->db->f('budget');
+					}
+					else
+					{
+						$_amount = 0;
+					}
 
-				if(abs($this->db->f('contract_sum')) > 0)
-				{
-					$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
+					$orders[$periode][$this->db->f('id')]['amount'] = $_amount;
 				}
-				else if(abs($this->db->f('calculation')) > 0)
-				{
-					$_amount = $this->db->f('calculation') * $tax;
-				}
-				else if(abs($this->db->f('budget')) > 0)
-				{
-					$_amount = $this->db->f('budget');
-				}
-				else
-				{
-					$_amount = 0;
-				}
-
-				$orders[$periode][$this->db->f('id')]['amount'] = $_amount;
+				unset($periode);
 			}
-			unset($periode);
+			else
+			{
+
+				//FIXME
+				foreach ($project_order_amount as $periode => $_amount)
+				{
+					$orders[$periode][] = array('amount' => $_amount);
+				}
+
+			}
 
 			$sort_period = array();
 			$values = array();
@@ -1927,7 +1946,9 @@
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
 				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
-	//			$entry['deviation'] = $entry['budget'] - $entry['actual_cost'];
+				$deviation = $entry['budget'] - $entry['actual_cost'];
+				$entry['deviation'] = $deviation;
+				$entry['deviation_percent'] = $deviation/$entry['budget'] * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
 			}
 
@@ -1941,7 +1962,7 @@
 			foreach($data as $entry)
 			{
 				$when = explode('_', $entry);
-				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$sql = "DELETE FROM fm_project_budget WHERE project_id = {$project_id} AND year = " . (int) $when[0] . ' AND month = ' . (int) $when[1];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 		}
