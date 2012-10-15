@@ -106,12 +106,12 @@ $phpgw_baseline = array(
 		'lg_requirement_value' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'type_requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'operator' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 						'value' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'cust_attribute_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				),
 				'pk' => array('id'),
 				'fk' => array(
