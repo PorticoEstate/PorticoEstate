@@ -30,9 +30,9 @@
 
 	phpgw::import_class('logistic.socommon');
 
-	include_class('logistic', 'bim_item_type_requirement', 'inc/model/');
+	include_class('logistic', 'requirement_resource_allocation', 'inc/model/');
 
-	class logistic_sobim_type_requirement extends logistic_socommon
+	class logistic_sorequirement_resource_allocation extends logistic_socommon
 	{
 		protected static $so;
 		private $local_db;
@@ -45,44 +45,12 @@
 
 		protected function add(&$object)
 		{
-			$user_id = $GLOBALS['phpgw_info']['user']['id'];
-			$now = time();
-			$entity_id = $object->get_entity_id();
-			$category_id = $object->get_category_id();
-			$cust_attribute_id = $object->get_cust_attribute_id();
-			$type_id = $object->get_project_type_id();
 
-			$sql = "INSERT INTO lg_bim_item_type_requirement (entity_id, category_id, cust_attribute_id, project_type_id, create_user, create_date) VALUES ($entity_id,$category_id,'$cust_attribute_id',$type_id, $user_id, $now)";
-			$result = $this->db->query($sql, __LINE__,__FILE__);
-
-			if($result)
-			{
-				// Set the new bim_item_type_requirement ID
-				return $this->db->get_last_insert_id('lg_bim_item_type_requirement', 'id');
-			}
-			else
-			{
-				return 0;
-			}
 		}
 
 		protected function get_id_field_name()
 		{
-			if(!$extended_info)
-			{
-				$ret = 'id';
-			}
-			else
-			{
-				$ret = array
-				(
-					'table'			=> 'type_requirement', // alias
-					'field'			=> 'id',
-					'translated'	=> 'id'
-				);
-			}
 
-			return $ret;
 		}
 
 		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
@@ -108,7 +76,15 @@
 			$filter_clauses = array();
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "type_requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "allocation.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+			}
+			if(isset($filters['location_id']))
+			{
+				$filter_clauses[] = "allocation.location_id = {$this->marshal($filters['location_id'],'int')}";
+			}
+			if(isset($filters['requirement_id']))
+			{
+				$filter_clauses[] = "allocation.requirement_id = {$this->marshal($filters['requirement_id'],'int')}";
 			}
 
 			if(count($filter_clauses))
@@ -120,68 +96,47 @@
 
 			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
-			$tables = "lg_bim_item_type_requirement type_requirement";
+			$tables = "lg_requirement_resource_allocation allocation";
 
 			if($return_count) // We should only return a count
 			{
-				$cols = 'COUNT(DISTINCT(type_requirement.id)) AS count';
+				$cols = 'COUNT(DISTINCT(allocation.id)) AS count';
 			}
 			else
 			{
-				$cols .= "type_requirement.* ";
+				$cols .= "allocation.* ";
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
-
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $req_id, &$bim_item_type_requirement)
+		protected function populate(int $allocation_id, &$allocation)
 		{
-			if($bim_item_type_requirement == null)
+			if($allocation == null)
 			{
-				$bim_item_type_requirement = new logistic_bim_item_type_requirement((int) $req_id);
+				$allocation = new logistic_requirement_resource_allocation((int) $allocation_id);
 
-				$bim_item_type_requirement->set_entity_id($this->unmarshal($this->db->f('entity_id'), 'int'));
-				$bim_item_type_requirement->set_category_id($this->unmarshal($this->db->f('category_id'), 'int'));
-				$bim_item_type_requirement->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'string'));
-				$bim_item_type_requirement->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
+				$allocation->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$allocation->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'string'));
+				$allocation->set_resource_id($this->unmarshal($this->db->f('resource_id'), 'int'));
 			}
 
-			return $bim_item_type_requirement;
+			return $allocation;
 		}
 
 		protected function update($object)
 		{
-			$id = intval($object->get_id());
 
-			$values = array(
-				'entity_id = ' . $this->marshal($object->get_entity_id(), 'int'),
-				'category_id = ' . $this->marshal($object->get_category_id(), 'int'),
-				'cust_attribute_id = ' . $this->marshal($object->get_cust_attribute_id(), 'string'),
-				'project_type_id = ' . $this->marshal($object->get_project_type_id(), 'int')
-			);
-
-			$result = $this->db->query('UPDATE lg_bim_item_type_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-
-			if( $result )
-			{
-				return $id;
-			}
-			else
-			{
-				return 0;
-			}
 		}
 
 		public static function get_instance()
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('logistic.sobim_type_requirement');
+				self::$so = CreateObject('logistic.sorequirement_resource_allocation');
 			}
 			return self::$so;
 		}

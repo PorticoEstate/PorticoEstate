@@ -35,9 +35,63 @@
 	{
 		protected static $so;
 
-		protected function add(&$object)
+		protected function add(&$requirement)
 		{
+			$cols = array(
+				'activity_id',
+				'start_date',
+				'end_date',
+				'no_of_elements',
+				'location_id',
+				'create_user',
+				'create_date'
+			);
 
+			$values = array(
+				$this->marshal($requirement->get_activity_id(), 'int'),
+				$this->marshal($requirement->get_start_date(), 'int'),
+				$this->marshal($requirement->get_end_date(), 'int'),
+				$this->marshal($requirement->get_no_of_items(), 'int'),
+				$this->marshal($requirement->get_location_id(), 'int'),
+				$this->marshal($requirement->get_create_user(), 'int'),
+				$this->marshal(strtotime('now'), 'int')
+			);
+
+			$sql = 'INSERT INTO lg_requirement (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+			$result = $this->db->query($sql, __LINE__,__FILE__);
+
+			if($result)
+			{
+				return $this->db->get_last_insert_id('lg_requirement', 'id');
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		protected function update($requirement)
+		{
+			$id = intval($requirement->get_id());
+
+			$values = array(
+				'activity_id=' . $this->marshal($requirement->get_activity_id(), 'int'),
+				'start_date=' . $this->marshal($requirement->get_start_date(), 'int'),
+				'end_date=' . $this->marshal($requirement->get_end_date(), 'int'),
+				'no_of_elements=' . $this->marshal($requirement->get_no_of_items(), 'int'),
+				'location_id=' . $this->marshal($requirement->get_location_id(), 'int')
+			);
+
+			$result = $this->db->query('UPDATE lg_requirement SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+
+			if($result)
+			{
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		protected function get_id_field_name()
@@ -112,8 +166,6 @@
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
-
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
@@ -124,16 +176,13 @@
 				$requirement = new logistic_requirement((int) $requirement_id);
 
 				$requirement->set_activity_id($this->unmarshal($this->db->f('activity_id'), 'int'));
-				$requirement->set_date_from($this->unmarshal($this->db->f('date_from'), 'int'));
-				$requirement->set_date_to($this->unmarshal($this->db->f('date_to'), 'int'));
+				$requirement->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$requirement->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$requirement->set_no_of_items($this->unmarshal($this->db->f('no_of_elements'), 'int'));
+				$requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 			}
 
 			return $requirement;
-		}
-
-		protected function update($object)
-		{
-
 		}
 
 		public static function get_instance()

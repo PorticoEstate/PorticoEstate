@@ -27,17 +27,21 @@
 	 * @subpackage logistic
 	 * @version $Id $
 	 */
+	
 	include_class('logistic', 'model', '/inc/model/');
 
 	class logistic_requirement extends logistic_model
 	{
-
 		public static $so;
-		protected static $requirement_id;
-		protected static $activity_id;
-		protected static $date_from;
-		protected static $date_to;
-
+		
+		protected $id;
+		protected $activity_id;
+		protected $start_date;
+		protected $end_date;
+		protected $no_of_items;
+		protected $location_id;
+		protected $create_user;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -46,17 +50,37 @@
 		 */
 		public function __construct(int $id = null)
 		{
-			$this->requirement_id = (int) $id;
+			$this->id = (int) $id;
+		}
+		
+		public function set_id($id)
+		{
+			$this->id = $id;
 		}
 
-		public function set_requirement_id($id)
+		public function get_id()
 		{
-			$this->requirement_id = $id;
+			return $this->id;
 		}
 
-		public function get_requirement_id()
+		public function set_no_of_items($no_of_items)
 		{
-			return $this->requirement_id;
+			$this->no_of_items = $no_of_items;
+		}
+
+		public function get_no_of_items()
+		{
+			return $this->no_of_items;
+		}
+		
+		public function set_location_id($location_id)
+		{
+			$this->location_id = $location_id;
+		}
+
+		public function get_location_id()
+		{
+			return $this->location_id;
 		}
 
 		public function set_activity_id($activity_id)
@@ -69,25 +93,26 @@
 			return $this->activity_id;
 		}
 
-		public function set_date_from($date_from)
+		public function set_end_date($end_date)
 		{
-			$this->date_from = $date_from;
+			$this->end_date = $end_date;
 		}
-
-		public function get_date_from()
+		
+		public function get_end_date() { return $this->end_date; }
+		
+		public function set_start_date($start_date)
 		{
-			return $this->date_from;
+			$this->start_date = $start_date;
 		}
-
-		public function set_date_to($date_to)
+		
+		public function get_start_date() { return $this->start_date; }
+		
+		public function set_create_user($create_user)
 		{
-			$this->date_to = $date_to;
+			$this->create_user = $create_user;
 		}
-
-		public function get_date_to()
-		{
-			return $this->date_to;
-		}
+		
+		public function get_create_user() { return $this->create_user; }
 
 		/**
 		* Get a static reference to the storage object associated with this model object
@@ -102,14 +127,16 @@
 
 			return self::$so;
 		}
-
+		
 		public function serialize()
 		{
 			return array(
-				'requirement_id' => $this->get_requirement_id(),
+				'id' => $this->get_id(),
 				'activity_id' => $this->get_activity_id(),
-				'date_from' => $this->get_date_from(),
-				'date_to' => $this->get_date_to()
+				'start_date' => $this->get_start_date(),
+				'end_date' => $this->get_end_date(),
+				'no_of_items' => $this->get_no_of_items(),
+				'location_id' => $this->get_location_id(),
 			);
 		}
 	}

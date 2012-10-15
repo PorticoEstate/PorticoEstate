@@ -30,21 +30,22 @@
 
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.sorequirement');
+	phpgw::import_class('logistic.soactivity');
 
 	include_class('logistic', 'requirement');
-
+	phpgw::import_class('phpgwapi.datetime');
 
 	class uirequirement extends phpgwapi_uicommon
 	{
 		private $so;
-
+		private $so_activity;
+	
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
 			'add' => true,
 			'edit' => true,
-			'view' => true,
-			'test' => true
+			'view' => true
 		);
 
 		public function __construct()
@@ -52,6 +53,7 @@
 			parent::__construct();
 
 			$this->so = CreateObject('logistic.sorequirement');
+			$this->so_activity = CreateObject('logistic.soactivity');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
 		}
@@ -102,6 +104,7 @@
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
 			//var_dump($query_type);
+
 			switch ($query_type)
 			{
 				default: // ... all composites, filters (active and vacant)
@@ -178,13 +181,23 @@
 							'sortable' => true,
 						),		
 						array(
-							'key' => 'date_from',
-							'label' => lang('From date'),
+							'key' => 'start_date',
+							'label' => lang('Start date'),
 							'sortable' => false
 						),
 						array(
-							'key' => 'date_to',
-							'label' => lang('To date'),
+							'key' => 'end_date',
+							'label' => lang('End date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'no_of_items',
+							'label' => lang('No of items'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'location_id',
+							'label' => lang('Resource type'),
 							'sortable' => false
 						),
 						array(
@@ -193,30 +206,7 @@
 						)
 					)
 				),
-			);
-
-			$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'requirement_id',
-							'source'	=> 'id'
-						),
-					)
-				);
-
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'book_requirement',
-						'text' 			=> lang('t_book_requirement'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uiallocation.add'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
+			);	
 
 			self::render_template_xsl('datatable_common', $data);
 		}
@@ -236,24 +226,19 @@
 					$requirement = $this->so->get_single($requirement_id);
 				}
 
-				$requirement_array = $requirement->toArray();
-
-				if ($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-
+				$location_info = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
+				echo $requirement->get_location_id();
+				print_r($location_info);
 				$data = array
 					(
 					'value_id' => !empty($requirement) ? $requirement->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-					'project' => $requirement_array,
+					'requirement' => $requirement,
+					'location' => $location_info,
 					'view' => 'view_requirement'
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project') . '::' . lang('Requirement');
-				self::render_template_xsl(array('requirement_item'), $data);
+				self::render_template_xsl(array('requirement/requirement_item'), $data);
 			}
 		}
 
@@ -264,19 +249,35 @@
 
 		public function edit()
 		{
+			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
-			$requirement_id = phpgw::get_var('id');			
+
+			if ($requirement_id && is_numeric($requirement_id))
+			{
+				$requirement = $this->so->get_single($requirement_id);
+			}
+			else
+			{
+				$requirement = new logistic_requirement();
+			}
 			
 			if ($activity_id && is_numeric($activity_id))
 			{
-				$activity = $this->so->get_single($activity_id);
+				$activity = $this->so_activity->get_single($activity_id);
 			}
 			
 			if (isset($_POST['save_requirement']))
 			{
 				$requirement->set_id( phpgw::get_var('id') );
-				$requirement->set_resource_type_id( phpgw::get_var('categories') );
-				$requirement->set_no_of_elements( phpgw::get_var('no_of_elements') );
+				$requirement->set_activity_id( phpgw::get_var('activity_id') );
+				$requirement->set_no_of_items( phpgw::get_var('no_of_items') );
+			
+				$entity_id = phpgw::get_var('entity_id');
+				$category_id = phpgw::get_var('category_id');
+				
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+				
+				$requirement->set_location_id($location_id);
 				
 				if(phpgw::get_var('start_date','string') != '')
 				{
@@ -297,9 +298,11 @@
 				{
 					$requirement->set_end_date(0);
 				}
-
+				
+				$user_id = $GLOBALS['phpgw_info']['user']['id'];
+				$requirement->set_create_user($user_id);
+				
 				$requirement_id = $this->so->store($requirement);
-
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
 			else if (isset($_POST['cancel_requirement']))
@@ -312,8 +315,17 @@
 
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 		
+				$location_id = $requirement->get_location_id();
+				
+					$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+					print_r($system_location);
+				$location_info = $GLOBALS['phpgw']->locations->read($location_id);
+				
+				print_r($location_info);
+				
 				$data = array
 				(
+					'requirement' => $requirement,
 					'editable' => true,
 					'entity_list' => $entity_list
 				);
@@ -326,29 +338,8 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'bim_type_requirement.js');
-				self::render_template_xsl(array('requirement/requirement'), $data);
-			}
-		}
-
-		public function test()
-		{
-			$custom	= createObject('phpgwapi.custom_fields');
-			$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
-
-			_debug_array($entity_list);
-
-			foreach($entity_list as $entry)
-			{
-				$cat_list = execMethod('property.soadmin_entity.read_category',(array('allrows'=>true,'entity_id'=>$entry['id'])));
-				_debug_array($cat_list);
-
-				foreach($cat_list as $cat)
-				{
-					$attrib_data = $custom->find('property',".entity.{$cat['entity_id']}.{$cat[id]}", 0, '','','',true, true);
-				_debug_array($attrib_data);
-				}
-
+				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
+				self::render_template_xsl(array('requirement/requirement_item'), $data);
 			}
 		}
 	}

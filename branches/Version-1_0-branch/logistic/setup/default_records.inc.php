@@ -1,7 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+	//Create groups, users, add users to groups and set preferences
+	$GLOBALS['phpgw']->locations->add('.', 'Topp', 'logistic');
+	$GLOBALS['phpgw']->locations->add('.project', 'Prosjekt', 'logistic');
+	$GLOBALS['phpgw']->locations->add('.activity', 'Aktivitet', 'logistic');
+	
