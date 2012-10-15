@@ -35,9 +35,9 @@
 
 		protected static $id;
 		protected static $requirement_id;
-		protected static $article_id;
-		protected static $type;
-
+		protected static $resource_id;
+		protected static $location_id;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -69,24 +69,24 @@
 			return $this->requirement_id;
 		}
 
-		public function set_article_id($article_id)
+		public function set_resource_id($resource_id)
 		{
-			$this->article_id = $article_id;
+			$this->resource_id = $resource_id;
 		}
 
-		public function get_article_id()
+		public function get_resource_id()
 		{
-			return $this->article_id;
+			return $this->resource_id;
 		}
 
-		public function set_type($type)
+		public function set_location_id($location_id)
 		{
-			$this->type = $type;
+			$this->location_id = $location_id;
 		}
 
-		public function get_type()
+		public function get_location_id()
 		{
-			return $this->type;
+			return $this->location_id;
 		}
 
 		/**

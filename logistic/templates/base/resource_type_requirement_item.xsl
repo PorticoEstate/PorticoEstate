@@ -10,8 +10,9 @@
 	<div class="yui-content">
 		<div id="details">
 			<form action="#" method="post">
-				<input type="hidden" name="id" value = "{value_id}">
-				</input>
+				<input type="hidden" name="id" value = "{value_id}" />
+				<input type="hidden" name="location_id" value = "{location_id}" />
+				<input type="hidden" name="project_type_id" value = "{project_type_id}" />
 				<dl class="proplist-col">
 					<dt>
 						<label><xsl:value-of select="php:function('lang', 'Project_type')" /></label>
@@ -57,16 +58,14 @@
 							</dt>
 							<dd>
 								<select name="category_id" id="category_id">
-									<xsl:if test="req_type/category_id">
-										<xsl:for-each select="categories">
-											<option value="{id}">
-												<xsl:if test="selected">
-													<xsl:attribute name="selected" value="selected" />
-												</xsl:if>
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:for-each>
-									</xsl:if>
+									<xsl:for-each select="categories">
+										<option value="{id}">
+											<xsl:if test="selected">
+												<xsl:attribute name="selected" value="selected" />
+											</xsl:if>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
 								</select>
 							</dd>
 							<dt>

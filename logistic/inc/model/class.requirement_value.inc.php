@@ -33,12 +33,13 @@
 	{
 		public static $so;
 
-		protected static $id;
-		protected static $requirement_id;
+		protected $id;
+		protected $requirement_id;
 		protected $bim_type_requirement_id;
 		protected $location_id;
 		protected $cust_attribute_id;
-		protected static $value;
+		protected $value;
+		protected $operator;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -109,6 +110,16 @@
 		public function get_value()
 		{
 			return $this->value;
+		}
+		
+		public function set_operator($operator)
+		{
+			$this->operator = $operator;
+		}
+
+		public function get_operator()
+		{
+			return $this->operator;
 		}
 
 		/**
