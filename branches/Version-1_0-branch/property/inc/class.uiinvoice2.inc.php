@@ -444,8 +444,8 @@
 
 			self::add_javascript('property', 'portico', 'ajax_invoice.js');
 			self::add_javascript('property', 'yahoo', 'invoice2.index.js');
-			self::add_javascript('property', 'tinybox2', 'packed.js');
-			$GLOBALS['phpgw']->css->add_external_file('property/js/tinybox2/style.css');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice2'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));

@@ -6704,3 +6704,37 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.652 to 0.9.17.653
+	* Enable to close periode on budget
+	*/
+	$test[] = '0.9.17.652';
+	function property_upgrade0_9_17_652()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','order_amount',array(
+			'type'		=> 'decimal',
+			'precision'	=> 20,
+			'scale' 	=> 2,
+			'nullable'	=> true,
+			'default'	=> '0.00'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_periodization_outline','value',array(
+			'type'		=> 'decimal',
+			'precision'	=> '20',
+			'scale'		=> '6',
+			'nullable'	=> false,
+			'default'	=> '0.000000'
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.653';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

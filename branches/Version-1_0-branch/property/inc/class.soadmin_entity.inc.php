@@ -1136,6 +1136,7 @@
 							$values_insert = array
 							(
 				  				'id'					=> $data['id'],
+				  				'location_id'			=> $location_id,
 				  				'type'					=> $type,
 				  				'guid'					=> $guid,
 								'xml_representation'	=> $this->db->db_addslashes($xml),
