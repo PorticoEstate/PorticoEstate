@@ -445,7 +445,7 @@
 				}
 
 				$activity->set_project_id($project_id);
-
+				
 				$data = array
 					(
 						'activity' => $activity->toArray(),
@@ -453,6 +453,12 @@
 						'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 				);
 
+				if($activity->get_parent_id() > 0)
+				{
+					$parent_activity = $this->so->get_single($activity->get_parent_id());
+					$data['parent_activity'] = $parent_activity->toArray();
+				}
+				
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
 				self::render_template_xsl(array('activity_item'), $data);
 			}
