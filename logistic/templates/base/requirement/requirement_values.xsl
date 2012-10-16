@@ -24,7 +24,7 @@
 										<xsl:when test="column_info/type = 'T'">
 												<label><xsl:value-of select="input_text"/></label>
 												<input class="operator" type='hidden' name="operator" value='eq' />
-												<input class="info" type='text' name="{column_name}" value='' />
+												<input class="attrib_info" type='text' name="{column_name}" value='' />
 										</xsl:when>
 										<xsl:when test="column_info/type = 'V'">
 											<label><xsl:value-of select="input_text"/></label>
@@ -34,12 +34,12 @@
 												<option value="gt"><xsl:text>Større enn</xsl:text></option>
 												<option value="btw"><xsl:text>Mellom</xsl:text></option>
 											</select>
-											<input class="info" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
+											<input class="attrib_info" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
 										</xsl:when>
 										<xsl:when test="column_info/type = 'LB'">
 												<label><xsl:value-of select="input_text"/></label>
 												<input class="operator" type='hidden' name="operator" value='eq' />
-												<select class="info" name="{column_name}">
+												<select class="attrib_info" name="{column_name}">
 													<xsl:for-each select="choice">
 														<option value="{value}">
 															<xsl:value-of select="value"/>

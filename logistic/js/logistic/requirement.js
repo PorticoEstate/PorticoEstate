@@ -59,8 +59,8 @@ $(document).ready(function(){
 		 
 		 $('#attributes .attribute').each(function(index) {
 			 
-			 var column_name = $(this).find('.info').attr("name");
-			 var attrib_value = $(this).find('.info').val();
+			 var column_name = $(this).find('.attrib_info').attr("name");
+			 var attrib_value = $(this).find('.attrib_info').val();
 			 var operator = $(this).find('.operator').val();
 			 var cust_attribute_id = $(this).find('.cust_attribute_id').val();
 			 var location_id = $(this).find('.location_id').val();
