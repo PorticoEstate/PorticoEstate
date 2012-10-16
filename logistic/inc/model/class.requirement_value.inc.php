@@ -35,11 +35,10 @@
 
 		protected $id;
 		protected $requirement_id;
-		protected $bim_type_requirement_id;
-		protected $location_id;
-		protected $cust_attribute_id;
 		protected $value;
 		protected $operator;
+		protected $cust_attribute_id;
+		protected $create_user;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -72,26 +71,6 @@
 			return $this->requirement_id;
 		}
 
-		public function set_bim_type_requirement_id($bim_type_requirement_id)
-		{
-			$this->bim_type_requirement_id = $bim_type_requirement_id;
-		}
-
-		public function get_bim_type_requirement_id()
-		{
-			return $this->bim_type_requirement_id;
-		}
-
-		public function set_location_id($location_id)
-		{
-			$this->location_id = $location_id;
-		}
-
-		public function get_location_id()
-		{
-			return $this->location_id;
-		}
-
 		public function set_cust_attribute_id($cust_attribute_id)
 		{
 			$this->cust_attribute_id = $cust_attribute_id;
@@ -121,6 +100,13 @@
 		{
 			return $this->operator;
 		}
+		
+		public function set_create_user($create_user)
+		{
+			$this->create_user = $create_user;
+		}
+		
+		public function get_create_user() { return $this->create_user; }
 
 		/**
 		* Get a static reference to the storage object associated with this model object
