@@ -26,7 +26,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
         'download'                  => true,
         'send_mail'                 => true,
         'get_organization_groups'   => true,
-        'create_groups'             => true
+        'create_groups'             => true,
+				'remove_old_activities'			=> true
     );
 
     public function __construct()
@@ -800,4 +801,23 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
             }
         }
     }
+
+		public function remove_old_activities()
+		{
+			$activity_id = phpgw::get_var('act_id');
+			if($activity_id && $activity_id > 0)
+			{
+				$activity_del = $this->so_activity->get_single($activity_id);
+				$this->so_activity->remove_old_activities($activity_id);
+
+				echo "<h2>Aktiviteten '" . $activity_del->get_title() . "' ble slettet fra systemet.</h2>";
+				echo "<a href='#' onclick='history.go(-1);'>Tilbake til forrige side</a>";
+
+			}
+			else
+			{
+				echo "<h2>Du må fylle ut en aktivitets-id!</h2>";
+				echo "<a href='#' onclick='history.go(-1);'>Tilbake til forrige side</a>";
+			}
+		}
 }
