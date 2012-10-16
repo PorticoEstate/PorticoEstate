@@ -14,6 +14,7 @@
 					<xsl:value-of select="parent_activity/name" disable-output-escaping="yes"/>::<xsl:value-of select="php:function('lang', 'Add sub activity')" />
 				</h1>
 				
+				<xsl:if test="editable">
 				<div style="float: left; margin-left: 130px;" class="select-box">
 					<label>Velg en annen hovedaktivitet</label>
 					
@@ -35,7 +36,9 @@
 						  </xsl:for-each>
 						</select>					
 					</form>
-				</div>		
+				</div>
+				</xsl:if>
+						
 			</xsl:when>
 			<xsl:otherwise>
 				<h1 style="float:left;"> 
