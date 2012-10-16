@@ -397,7 +397,7 @@
 
 			return $attrib_data;
 		}
-
+		
 		public function view()
 		{
 			$entity_so	= CreateObject('property.soadmin_entity');
