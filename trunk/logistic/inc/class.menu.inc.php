@@ -61,7 +61,7 @@
 										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.index') ),
 										'image'	=> array('property', 'location_tenant')
 								),
-								'requirement' => array
+/*								'requirement' => array
 								(
 										'text'	=> lang('requirement'),
 										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uirequirement.index') ),
@@ -72,7 +72,7 @@
 										'text'	=> lang('allocation'),
 										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uiallocation.index') ),
 										'image'	=> array('property', 'location_tenant'),
-								),
+								),*/
 						)
 				)
 			);
