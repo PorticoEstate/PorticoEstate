@@ -140,6 +140,10 @@
 					$cols .= "DISTINCT(type_requirement.location_id, type_requirement.project_type_id) as id, (type_requirement.location_id * type_requirement.project_type_id) as id, type_requirement.location_id, type_requirement.project_type_id ";
 				}
 			}
+			else if($search_type && $search_type == 'distinct_location_id')
+			{
+				$cols .= "DISTINCT(type_requirement.location_id) as id ";
+			}
 			else
 			{
 				if($return_count) // We should only return a count
