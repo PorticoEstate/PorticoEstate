@@ -209,7 +209,7 @@
 
 				$activity->set_name($this->unmarshal($this->db->f('name'), 'string'));
 				$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
-				$activity->set_parent_id($this->unmarshal($this->db->f('parent_id'), 'int'));
+				$activity->set_parent_id($this->unmarshal($this->db->f('parent_activity_id'), 'int'));
 				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
 				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$activity->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
