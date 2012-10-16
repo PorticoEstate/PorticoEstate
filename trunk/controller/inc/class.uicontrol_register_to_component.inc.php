@@ -193,6 +193,7 @@
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
 			self::add_javascript('controller', 'yahoo', 'register_control_to_component2.js');
+			self::add_javascript('controller', 'yahoo', 'datatable_light.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
