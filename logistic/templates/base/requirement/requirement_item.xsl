@@ -1,10 +1,9 @@
 <!-- $Id: activity_item.xsl 10096 2012-10-03 07:10:49Z vator $ -->
 <!-- item  -->
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template name="requirement_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
-<xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
 	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
 		<xsl:choose>
@@ -30,7 +29,7 @@
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{requirement/id}" />
-				<input type="hidden" name="activity_id" value = "{activity/id}" />
+				<input type="hidden" id="activity_id" name="activity_id" value="{activity/id}" />
 							
 				<dl class="proplist-col">
 					<dt>
@@ -67,32 +66,8 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<dt>
-								<label>BIM</label>
-							</dt>
-							<dd>
-								<select name="entity_id" id="entity_id">
-									<xsl:for-each select="entity_list">
-										<option value="{id}">
-											<xsl:value-of select="name"/>
-										</option>
-									</xsl:for-each>
-								</select>
-							</dd>
-							<dt>
-								<label>BIM2</label>
-							</dt>
-							<dd>
-								<select name="category_id" id="category_id">
-								</select>
-							</dd>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="location/descr" />
-						</xsl:otherwise>
-					</xsl:choose>
+				
+				
 					<dt>
 						<label for="no_of_items">Antall</label>
 					</dt>
@@ -106,6 +81,28 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
+				
+					<xsl:choose>
+						<xsl:when test="editable">
+						<dt>
+							<label>Velg hvilken kategori behovet gjelder</label>
+						</dt>
+							<dd>
+								<select name="location_id" id="location_id">
+									<option value="">Velg kategori</option>
+									<xsl:for-each select="distict_locations">
+										<option value="{location_id}">
+											<xsl:value-of select="descr"/>
+										</option>
+									</xsl:for-each>
+								</select>
+								<div id="attributes"></div>
+							</dd>					
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="location/descr" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</dl>
 				
 				<div class="form-buttons">
