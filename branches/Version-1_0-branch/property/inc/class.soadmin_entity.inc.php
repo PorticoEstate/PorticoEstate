@@ -154,10 +154,10 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND name $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " AND name {$this->like} '%{$query}%' or descr {$this->like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id $querymethod";
+			$sql = "SELECT * FROM {$table} WHERE entity_id={$entity_id} {$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -199,6 +199,12 @@
 					$values[] = $category;
 				}
 			}
+
+			foreach ($values as &$entry)
+			{
+				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entity_id}.{$entry['id']}");
+			}
+
 			return $values;
 		}
 
@@ -429,25 +435,30 @@
 			if ($this->db->next_record())
 			{
 				$category = array
-					(
-						'id'						=> $this->db->f('id'),
-						'name'						=> $this->db->f('name',true),
-						'descr'						=> $this->db->f('descr',true),
-						'prefix'					=> $this->db->f('prefix',true),
-						'lookup_tenant'				=> $this->db->f('lookup_tenant'),
-						'tracking'					=> $this->db->f('tracking'),
-						'location_level'			=> $this->db->f('location_level'),
-						'location_link_level'		=> $this->db->f('location_link_level'),
-						'fileupload'				=> $this->db->f('fileupload'),
-						'loc_link'					=> $this->db->f('loc_link'),
-						'start_project'				=> $this->db->f('start_project'),
-						'start_ticket'				=> $this->db->f('start_ticket'),
-						'is_eav'					=> $this->db->f('is_eav'),
-						'jasperupload'				=> $this->db->f('jasperupload'),
-						'parent_id'					=> $this->db->f('parent_id'),
-						'level'						=> $this->db->f('level')
+				(
+					'id'						=> $this->db->f('id'),
+					'name'						=> $this->db->f('name',true),
+					'descr'						=> $this->db->f('descr',true),
+					'prefix'					=> $this->db->f('prefix',true),
+					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+					'tracking'					=> $this->db->f('tracking'),
+					'location_level'			=> $this->db->f('location_level'),
+					'location_link_level'		=> $this->db->f('location_link_level'),
+					'fileupload'				=> $this->db->f('fileupload'),
+					'loc_link'					=> $this->db->f('loc_link'),
+					'start_project'				=> $this->db->f('start_project'),
+					'start_ticket'				=> $this->db->f('start_ticket'),
+					'is_eav'					=> $this->db->f('is_eav'),
+					'jasperupload'				=> $this->db->f('jasperupload'),
+					'parent_id'					=> $this->db->f('parent_id'),
+					'level'						=> $this->db->f('level')
+
 					);
+
+				$category['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
+
+
 			return $category;
 		}
 

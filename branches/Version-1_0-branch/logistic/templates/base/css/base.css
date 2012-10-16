@@ -2234,3 +2234,21 @@ p.no_items_msg {
 #show-control-details-box .pre {
   margin-right: 3px;
 }
+
+/* =======================================  LOGISTIKK  =================================================*/
+
+
+#attributes {
+	margin: 10px 0;	
+}
+
+#attributes .attribute{
+	padding: 3px 0;	
+}
+
+#attributes label{
+	display: inline-block;
+	width: 100px;	
+}
+
+

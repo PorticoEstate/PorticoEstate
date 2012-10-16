@@ -66,7 +66,6 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'get_activities'  		=> true,
 			'get_organizations'  	=> true,
 			'get_groups'  			=> true,
-                        'remove_old_activities'         => true,
 		);
 
 	/**
@@ -1514,10 +1513,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
         }
 
 
-        function remove_old_activities()
+        function remove_old_activities($activity_id)
         {
             //$sql = "delete from activity_activity where id in (1293,1294,1297,1299)"; //1293,1294,1297,1299
-						$sql = "delete from activity_activity where id=1285";
+						$sql = "delete from activity_activity where id={$activity_id}";
             $result = $this->db->query($sql, __LINE__, __FILE__);
 
             return isset($result);
