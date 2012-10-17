@@ -53,3 +53,5 @@ Add requirement to activity	logistic	no	Registrer behov for aktiviteten
 Add requirement	logistic	no	Legg til krav
 Requirement details	logistic	no	Detaljer for behov
 Add constraints	logistic	no	Legg til kriterier på behovet
+No of items	logistic	no	Antall
+Resource type	logistic	no	Ressurstype
