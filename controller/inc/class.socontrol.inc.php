@@ -551,57 +551,6 @@
 			}
 		}
 		
-		public function register_control_to_location($control_id, $data)
-		{
-
-			$control_id = (int) $control_id;
-			$delete_location = array();
-			$add_location = array();
-			foreach($data['control_location_orig'] as $location_code)
-			{
-				if(!in_array($location_code, $data['control_location']))
-				{
-					$delete_location[] = $location_code;
-				}
-			}
-
-			foreach($data['control_location'] as $location_code)
-			{
-				if(!in_array($location_code, $data['control_location_orig']))
-				{
-					$add_location[] = $location_code;
-				}
-			}
-
-			$this->db->transaction_begin();
-			foreach ($delete_location as $location_code)
-			{
-				$sql  = "DELETE FROM controller_control_location_list ";
-				$sql .= "WHERE control_id = {$control_id} ";
-				$sql .= "AND location_code = '{$location_code}'";
-				
-				$this->db->query($sql);
-			}
-
-			foreach ($add_location as $location_code)
-			{
-				$sql  = "SELECT * ";
-				$sql .= "FROM controller_control_location_list ";
-				$sql .= "WHERE control_id = {$control_id} ";
-				$sql .= "AND location_code = '$location_code'";
-				
-				$this->db->query($sql, __LINE__, __FILE__);
-			
-				if(!$this->db->next_record())
-				{
-					$sql  = "INSERT INTO controller_control_location_list (control_id, location_code) ";
-					$sql .= "VALUES ( {$control_id}, '{$location_code}')";
-					$this->db->query($sql);
-				}
-			}
-
-			return $this->db->transaction_commit();
-		}
 
 		public function check_control_component($control_id, $location_id, $component_id)
 		{
@@ -617,6 +566,77 @@
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 			return $this->db->next_record();
+		}
+
+		/**
+		 * Register that a control should be carried out on a location
+		 *
+		 * @param $data['control_id'] control id
+		 * @param $data['component_id'] component id
+		 * @param $data['location_id'] component id
+		 * @return true or false if the execution was successful  
+		*/
+		function register_control_to_location($data)
+		{
+
+			$delete_component = array();
+			$add_component = array();
+			$this->db->transaction_begin();
+
+			if(isset($data['register_location']) && is_array($data['register_location']))
+			{
+				foreach($data['register_location'] as $location_info)
+				{
+					$location_arr = explode('_', $location_info);
+					if(count($location_arr)!=2)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $location_arr[0];
+					$location_code	= $location_arr[1];
+
+					if(!$control_id)
+					{
+						return false;
+					}
+
+					$sql  = "SELECT * ";
+					$sql .= "FROM controller_control_location_list ";
+					$sql .= "WHERE control_id = {$control_id} ";
+					$sql .= "AND location_code = '{$location_code}' ";
+					
+					$this->db->query($sql, __LINE__, __FILE__);
+			
+					if(!$this->db->next_record())
+					{
+						$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) ";
+						$sql .= "VALUES ( {$control_id}, '{$location_code}')";
+						
+						$this->db->query($sql);
+					}
+				}
+			}
+
+			if(isset($data['delete']) && is_array($data['delete']))
+			{
+				foreach($data['delete'] as $location_info)
+				{
+					$location_arr = explode('_', $location_info);
+					if(count($location_arr)!=2)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $location_arr[0];
+					$location_code	= $location_arr[1];
+				
+					$sql =  "DELETE FROM controller_control_location_list WHERE control_id = {$control_id} AND location_code = '{$location_code}'";
+					$this->db->query($sql);
+				}
+			}
+
+			return $this->db->transaction_commit();
 		}
 
 		/**
