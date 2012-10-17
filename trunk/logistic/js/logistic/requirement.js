@@ -35,7 +35,7 @@ $(document).ready(function(){
 					}
 					else if(input_type == "LB")
 					{
-						htmlStr += "<div class='attribute'><label for='choises_'" + input_name + ">" + label + "</label><select id='choises_'" + input_name + " name='" + input_name + "'>";
+						htmlStr += "<div class='attribute'><label for='choises_'" + input_name + ">" + label + "</label><select name='" + input_name + "'>";
 						var choices = jsonObjects[i].choice;
 						
 						$.each(choices, function(j) {
@@ -54,20 +54,43 @@ $(document).ready(function(){
 		});
 	 });
 	 
+	 $(".attribute select.operator").change(function () {
+		 var operator = $(this).val();
+		 
+		 var thisSelect = $(this).closest(".operator"); 
+		 
+		 if(operator == 'btw')
+		 {
+			 $(thisSelect).prev().css("display", "inline-block");
+		 }
+		 else
+		 {
+			 $(thisSelect).prev().css("display", "none");
+		 }
+	 });
 	 
 	 $("#frm-requirement-values").submit(function (event) {
+		 event.preventDefault();
 		 
 		 $('#attributes .attribute').each(function(index) {
-			 
-			 var column_name = $(this).find('.attrib_info').attr("name");
-			 var attrib_value = $(this).find('.attrib_info').val();
 			 var operator = $(this).find('.operator').val();
 			 var cust_attribute_id = $(this).find('.cust_attribute_id').val();
-			 var location_id = $(this).find('.location_id').val();
-			
-			 var str = cust_attribute_id + ":" + operator + ":" + attrib_value;
+			 
+			 if(operator == "btw")
+			 {
+				 var attrib_value_1 = $(this).find('.attrib_info .constraint_1').val();
+				 var attrib_value_2 = $(this).find('.attrib_info .constraint_2').val();
+				 var str = cust_attribute_id + ":lt:" + attrib_value_1 + ":gt:" + attrib_value_2;
+			 }
+			 else
+			 {
+				 var attrib_value = $(this).find('.attrib_info').val();
+				 alert(attrib_value);
+				 var str = cust_attribute_id + ":" + operator + ":" + attrib_value;
+			 }
 
 			 $(this).find('.cust_attributes').val(str);
+			 alert(str);
 		 });
 	 });		
 });
