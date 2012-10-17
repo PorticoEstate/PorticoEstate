@@ -328,11 +328,8 @@
 
 				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 				
-				//$filters = array('project_type_id' => $project->get_project_type_id());
 				$filters = array('project_type_id' => $project->get_project_type_id());
-				//$search_type = 'resource_type_requirement_list';
 				$search_type = 'distinct_location_id';
-				//$sort_field = 'type_requirement.location_id';
 				$distict_location_ids = $this->so_resource_type_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				
 				$distict_location_ids_array = array();
@@ -412,25 +409,23 @@
 			{
 				$attributes_array = array();
 				$attributes_array = phpgw::get_var('cust_attributes');
-				
+ 
 				foreach($attributes_array as $attribute)
 				{
 					$attribute_array = explode ( ":", $attribute );					
 					$cust_attribute_id = $attribute_array[0];
 					$operator = $attribute_array[1];
-					$value = $attribute_array[2];
+					$attrib_value = $attribute_array[2];
 
 					$requirement_value = new logistic_requirement_value();
-					$requirement_value->set_id( phpgw::get_var('id') );
-
 					$requirement_value->set_requirement_id( $requirement_id );
-					$requirement_value->set_value( $value );
+					$requirement_value->set_value( $attrib_value );
 					$requirement_value->set_operator( $operator );
 					$requirement_value->set_cust_attribute_id( $cust_attribute_id );	
 					$user_id = $GLOBALS['phpgw_info']['user']['id'];
 					$requirement_value->set_create_user($user_id);
 					
-					$requirement_id = $this->so_requirement_value->store($requirement_value);	
+					$this->so_requirement_value->store($requirement_value);	
 				}
 	
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id));
@@ -478,6 +473,11 @@
 			else
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
+			}
+			
+			if (isset($_POST['edit_requirement_values']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.add_requirement_values', 'requirement_id' => $requirement_id));
 			}
 			
 			$filters = array('requirement_id' => $requirement_id);

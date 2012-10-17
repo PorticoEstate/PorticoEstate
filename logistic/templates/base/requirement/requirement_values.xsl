@@ -28,14 +28,14 @@
 										</xsl:when>
 										<xsl:when test="column_info/type = 'V'">
 											<label><xsl:value-of select="input_text"/></label>
-											<input class="attrib_info constrain_1" style="display:none;margin-right: 10px;" type='text' name="{column_name}" value='' />
+											<input class="constraint_1" style="display:none;margin-right: 10px;" type='text' name="{column_name}" value='' />
 											<select class="operator" name="operator">
 												<option value="eq"><xsl:text>Lik</xsl:text></option>
 												<option value="lt"><xsl:text>Mindre enn</xsl:text></option>
 												<option value="gt"><xsl:text>Større enn</xsl:text></option>
 												<option value="btw"><xsl:text>Mellom</xsl:text></option>
 											</select>
-											<input class="attrib_info constrain_2" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
+											<input class="attrib_info" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
 										</xsl:when>
 										<xsl:when test="column_info/type = 'LB'">
 												<label><xsl:value-of select="input_text"/></label>
@@ -50,7 +50,6 @@
 										</xsl:when>
 									</xsl:choose>
 									<input type="hidden" class="cust_attribute_id" name="cust_attribute_id" value="{id}" />
-									<input type="hidden" class="location_id" name="location_id" value="{location_id}" />
 									<input type="hidden" class="cust_attributes" name="cust_attributes[]" value="" />
 									</div>
 								</xsl:for-each>
@@ -103,11 +102,11 @@
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_requirement_values" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="cancel_requirement" value="{$lang_cancel}" title = "{$lang_cancel}" />
+							<input type="submit" name="cancel_requirement_values" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-							<input type="submit" name="edit_requirement" value="{$lang_edit}" title = "{$lang_edit}" />
+							<input type="submit" name="edit_requirement_values" value="{$lang_edit}" title = "{$lang_edit}" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

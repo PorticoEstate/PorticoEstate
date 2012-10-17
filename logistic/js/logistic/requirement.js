@@ -62,35 +62,56 @@ $(document).ready(function(){
 		 if(operator == 'btw')
 		 {
 			 $(thisSelect).prev().css("display", "inline-block");
+			 $(thisSelect).next().removeClass("attrib_info");
+			 $(thisSelect).next().addClass("constraint_2");
 		 }
 		 else
 		 {
 			 $(thisSelect).prev().css("display", "none");
+			 if( $(thisSelect).next().hasClass("constraint_2") )
+			 {
+				 $(thisSelect).next().removeClass("constraint_2");
+				 $(thisSelect).next().addClass("attrib_info");
+			 }
+			 
+			 var attribute_row = $(thisSelect).closest(".attribute");
+			 var cust_attributes_arr = $(attribute_row).find(".cust_attributes");
+			 
+			 $.each(cust_attributes_arr, function() {
+				 if( $(this).hasClass("constraint_2") )
+				 {
+					$(this).remove();
+				 }
+			});
 		 }
 	 });
 	 
 	 $("#frm-requirement-values").submit(function (event) {
-		 event.preventDefault();
-		 
+		 	 
 		 $('#attributes .attribute').each(function(index) {
 			 var operator = $(this).find('.operator').val();
 			 var cust_attribute_id = $(this).find('.cust_attribute_id').val();
 			 
 			 if(operator == "btw")
 			 {
-				 var attrib_value_1 = $(this).find('.attrib_info .constraint_1').val();
-				 var attrib_value_2 = $(this).find('.attrib_info .constraint_2').val();
-				 var str = cust_attribute_id + ":lt:" + attrib_value_1 + ":gt:" + attrib_value_2;
+				 var constraint_1 = $(this).find('.constraint_1').val();
+				 var constraint_2 = $(this).find('.constraint_2').val();
+				 var constraint_1_str = cust_attribute_id + ":gt:" + constraint_1;
+				 var constraint_2_str = cust_attribute_id + ":lt:" + constraint_2;
+				 
+				 var new_cust_attrib_arr = $(this).find('.cust_attributes').clone();
+				 $(new_cust_attrib_arr).addClass("constraint_2");
+				 $(this).find('.cust_attributes').val(constraint_1_str);
+				 
+				 $(this).append(new_cust_attrib_arr);
+				 $(new_cust_attrib_arr).val(constraint_2_str);
 			 }
 			 else
 			 {
 				 var attrib_value = $(this).find('.attrib_info').val();
-				 alert(attrib_value);
 				 var str = cust_attribute_id + ":" + operator + ":" + attrib_value;
+				 $(this).find('.cust_attributes').val(str);
 			 }
-
-			 $(this).find('.cust_attributes').val(str);
-			 alert(str);
 		 });
 	 });		
 });
