@@ -26,7 +26,7 @@
 												<input class="operator" type='hidden' name="operator" value='eq' />
 												<input class="attrib_info" type='text' name="{column_name}" value='' />
 										</xsl:when>
-										<xsl:when test="column_info/type = 'V'">
+										<xsl:when test="column_info/type = 'V' or column_info/type = 'I'">
 											<label><xsl:value-of select="input_text"/></label>
 											<input class="constraint_1" style="display:none;margin-right: 10px;" type='text' name="{column_name}" value='' />
 											<select class="operator" name="operator">
@@ -70,7 +70,7 @@
 												
 												<span style="margin-left:10px;"><xsl:value-of select="value" /></span>
 											</xsl:when>
-											<xsl:when test="cust_attribute/column_info/type = 'V'">
+											<xsl:when test="cust_attribute/column_info/type = 'V' or cust_attribute/column_info/type = 'I'">
 													<xsl:choose>
 														<xsl:when test="operator = 'eq'">
 															<span style="margin-left:10px;">lik</span>
