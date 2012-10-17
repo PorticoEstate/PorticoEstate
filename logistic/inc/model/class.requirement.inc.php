@@ -27,13 +27,13 @@
 	 * @subpackage logistic
 	 * @version $Id $
 	 */
-	
+
 	include_class('logistic', 'model', '/inc/model/');
 
 	class logistic_requirement extends logistic_model
 	{
 		public static $so;
-		
+
 		protected $id;
 		protected $activity_id;
 		protected $start_date;
@@ -41,7 +41,7 @@
 		protected $no_of_items;
 		protected $location_id;
 		protected $create_user;
-		
+
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -52,7 +52,7 @@
 		{
 			$this->id = (int) $id;
 		}
-		
+
 		public function set_id($id)
 		{
 			$this->id = $id;
@@ -72,7 +72,7 @@
 		{
 			return $this->no_of_items;
 		}
-		
+
 		public function set_location_id($location_id)
 		{
 			$this->location_id = $location_id;
@@ -97,21 +97,21 @@
 		{
 			$this->end_date = $end_date;
 		}
-		
+
 		public function get_end_date() { return $this->end_date; }
-		
+
 		public function set_start_date($start_date)
 		{
 			$this->start_date = $start_date;
 		}
-		
+
 		public function get_start_date() { return $this->start_date; }
-		
+
 		public function set_create_user($create_user)
 		{
 			$this->create_user = $create_user;
 		}
-		
+
 		public function get_create_user() { return $this->create_user; }
 
 		/**
@@ -127,16 +127,27 @@
 
 			return self::$so;
 		}
-		
+
 		public function serialize()
 		{
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$entity_so	= CreateObject('property.soadmin_entity');
+			$project_so = CreateObject('logistic.soproject');
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
+			$entity_arr = explode('.',$loc_arr['location']);
+
+			$entity = $entity_so->read_single($entity_arr[2]);
+			$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+			$entity_label = $entity['name'];
+			$category_label = $category['name'];
+
 			return array(
 				'id' => $this->get_id(),
 				'activity_id' => $this->get_activity_id(),
-				'start_date' => $this->get_start_date(),
-				'end_date' => $this->get_end_date(),
+				'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
+				'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
 				'no_of_items' => $this->get_no_of_items(),
-				'location_id' => $this->get_location_id(),
+				'location_id' => $category_label,
 			);
 		}
 	}
