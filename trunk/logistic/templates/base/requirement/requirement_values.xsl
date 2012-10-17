@@ -14,7 +14,7 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 						<dt>
-							<label>Legg til behov</label>
+							<label>Legg til kriterier</label>
 						</dt>
 							<dd>
 							<div id="attributes">
@@ -28,13 +28,14 @@
 										</xsl:when>
 										<xsl:when test="column_info/type = 'V'">
 											<label><xsl:value-of select="input_text"/></label>
+											<input class="attrib_info constrain_1" style="display:none;margin-right: 10px;" type='text' name="{column_name}" value='' />
 											<select class="operator" name="operator">
 												<option value="eq"><xsl:text>Lik</xsl:text></option>
 												<option value="lt"><xsl:text>Mindre enn</xsl:text></option>
 												<option value="gt"><xsl:text>Større enn</xsl:text></option>
 												<option value="btw"><xsl:text>Mellom</xsl:text></option>
 											</select>
-											<input class="attrib_info" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
+											<input class="attrib_info constrain_2" style="margin-left: 10px;" type='text' name="{column_name}" value='' />
 										</xsl:when>
 										<xsl:when test="column_info/type = 'LB'">
 												<label><xsl:value-of select="input_text"/></label>
@@ -57,7 +58,41 @@
 							</dd>					
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="location/descr" />
+						<dt>
+							<label>Kriterier for behovet</label>
+						</dt>
+							<dd>
+							<div id="attributes">
+								<xsl:for-each select="requirement_attributes_array">
+									<div class="attribute">
+									<label style="margin-left:10px;"><xsl:value-of select="cust_attribute/input_text" /></label>
+										<xsl:choose>
+											<xsl:when test="cust_attribute/column_info/type = 'T'">
+												
+												<span style="margin-left:10px;"><xsl:value-of select="value" /></span>
+											</xsl:when>
+											<xsl:when test="cust_attribute/column_info/type = 'V'">
+													<xsl:choose>
+														<xsl:when test="operator = 'eq'">
+															<span style="margin-left:10px;">lik</span>
+														</xsl:when>
+														<xsl:when test="operator = 'gt'">
+															<span style="margin-left:10px;">større enn</span>
+														</xsl:when>
+														<xsl:when test="operator = 'lt'">
+															<span style="margin-left:10px;">mindre enn</span>
+														</xsl:when>
+													</xsl:choose>
+												<span style="margin-left:10px;"><xsl:value-of select="value" /></span>
+											</xsl:when>
+											<xsl:when test="cust_attribute/column_info/type = 'LB'">
+												<span style="margin-left:10px;"><xsl:value-of select="value" /></span>
+											</xsl:when>
+										</xsl:choose>
+									</div>
+								</xsl:for-each>
+							</div>
+							</dd>	
 						</xsl:otherwise>
 					</xsl:choose>
 				</dl>
