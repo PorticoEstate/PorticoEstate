@@ -85,6 +85,7 @@ $(document).ready(function()
 
 	$("#location_type_category").change(function () {
 		var level = $("#location_type").val();
+		update_location_table();
 		update_loc(level);
     });
 
@@ -429,6 +430,7 @@ function init_component_table()
 		return false;
 	}
 
+	var cat_id = $("#location_type_category").val() != null ? $("#location_type_category").val():'';
 
 	var control_registered = 0;
 	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
@@ -457,6 +459,7 @@ function init_component_table()
 		location_level:location_type,
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
+		cat_id:cat_id,
 		location_code:location_code,
 		control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
 		control_registered:control_registered
@@ -483,6 +486,9 @@ function update_location_table()
 		return false;
 	}
 
+
+	var cat_id = $("#location_type_category").val() != null ? $("#location_type_category").val():'';
+
 	if($("#control_id_hidden").val() != null)
 	{
 		var location_code = '';
@@ -507,6 +513,7 @@ function update_location_table()
 			part_of_town_id:$("#part_of_town_id").val(),
 			location_code:location_code,
 			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
+			cat_id:cat_id,
 			control_registered:control_registered
 		};
 

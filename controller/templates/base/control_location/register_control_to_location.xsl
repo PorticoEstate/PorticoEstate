@@ -82,6 +82,19 @@
 			<label><xsl:value-of select="php:function('lang', 'registered')" /></label>
 	  	<input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
 	  </div>
+
+	  <div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location type')" /></label>
+			  <select id="location_type" name="location_type">
+					<xsl:apply-templates select="location_type_list/options"/>
+			  </select>
+			</div>
+		  <div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location category')" /></label>
+			  <select id="location_type_category" name="location_type_category"></select>
+			</div>
+	  </div>
 	  
 		<div class="select-box">
 			<div class="filter">
@@ -97,7 +110,7 @@
 			  </select>
 			</div>
 	  </div>
-		
+<!--		
 		<div class="select-box">
 			<div class="filter">
 				<label><xsl:value-of select="php:function('lang', 'property')" /></label>
@@ -112,19 +125,7 @@
 			  </select>
 			</div>
 	  </div>
-	  
-	  <div class="select-box">
-			<div class="filter">
-				<label><xsl:value-of select="php:function('lang', 'location type')" /></label>
-			  <select id="location_type" name="location_type">
-					<xsl:apply-templates select="location_type_list/options"/>
-			  </select>
-			</div>
-		  <div class="filter">
-				<label><xsl:value-of select="php:function('lang', 'location category')" /></label>
-			  <select id="location_type_category" name="location_type_category"></select>
-			</div>
-	  </div>
+-->	  
 	  
 	  <div class="select-box">
 			<label>Søk etter eiendom/bygg/rom</label>
