@@ -102,7 +102,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'requirement', // alias
+					'table'			=> 'requirement_value', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
@@ -122,7 +122,7 @@
 				switch($search_type)
 				{
 					default:
-						$like_clauses[] = "requirement.name $this->like $like_pattern";
+						$like_clauses[] = "requirement_value.value $this->like $like_pattern";
 						break;
 				}
 				if(count($like_clauses))
@@ -134,13 +134,13 @@
 			$filter_clauses = array();
 			if(isset($filters[$this->get_id_field_name()]))
 			{
-				$filter_clauses[] = "requirement.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+				$filter_clauses[] = "requirement_value.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 			}
-			if(isset($filters['activity']) && !$filters['activity'] == '')
+			else if(isset($filters['requirement_id']))
 			{
-				$filter_clauses[] = "requirement.activity_id = {$this->marshal($filters['activity'], 'int')}";
+				$filter_clauses[] = "lg_requirement_value.requirement_id = {$this->marshal($filters['requirement_id'], 'int')}";
 			}
-
+			
 			if(count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
@@ -148,9 +148,7 @@
 
 			$condition =  join(' AND ', $clauses);
 
-			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
-
-			$tables = "lg_requirement requirement";
+			$tables = "lg_requirement_value";
 
 			if($return_count) // We should only return a count
 			{
@@ -163,31 +161,30 @@
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
+			echo "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
-		protected function populate(int $requirement_id, &$requirement)
+		protected function populate(int $id, &$requirement_value)
 		{
-			if($requirement == null)
+			if($requirement_value == null)
 			{
-				$requirement = new logistic_requirement((int) $requirement_id);
-
-				$requirement->set_activity_id($this->unmarshal($this->db->f('activity_id'), 'int'));
-				$requirement->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
-				$requirement->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
-				$requirement->set_no_of_items($this->unmarshal($this->db->f('no_of_elements'), 'int'));
-				$requirement->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+				$requirement_value = new logistic_requirement_value((int) $id);
+		
+				$requirement_value->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$requirement_value->set_value($this->unmarshal($this->db->f('value'), 'string'));
+				$requirement_value->set_operator($this->unmarshal($this->db->f('operator'), 'string'));
+				$requirement_value->set_cust_attribute_id($this->unmarshal($this->db->f('cust_attribute_id'), 'int'));
 			}
 
-			return $requirement;
+			return $requirement_value;
 		}
 
 		public static function get_instance()
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('logistic.sorequirement');
+				self::$so = CreateObject('logistic.sorequirement_value');
 			}
 			return self::$so;
 		}
