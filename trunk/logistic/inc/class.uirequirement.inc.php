@@ -410,6 +410,9 @@
 				$attributes_array = array();
 				$attributes_array = phpgw::get_var('cust_attributes');
  
+				$this->so_requirement_value->delete_values($requirement_id);
+				
+				
 				foreach($attributes_array as $attribute)
 				{
 					$attribute_array = explode ( ":", $attribute );					
