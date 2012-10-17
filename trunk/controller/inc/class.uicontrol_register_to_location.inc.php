@@ -38,7 +38,7 @@
 
 	phpgw::import_class('phpgwapi.uicommon');
 		
-	class controller_uicontrol_register_to_component extends phpgwapi_uicommon
+	class controller_uicontrol_register_to_location extends phpgwapi_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -57,10 +57,13 @@
 		(
 			'index'								=> true,
 			'query'								=> true,
-			'edit_component'					=> true,
+			'edit_location'						=> true,
 			'get_location_category'				=> true,
+			'get_district_part_of_town'			=> true,
 			'get_category_by_entity'			=> true,
 			'get_entity_table_def'				=> true,
+			'get_locations'						=> true,
+			'get_location_type_category'		=> true
 		);
 
 		function __construct()
@@ -93,7 +96,6 @@
 
 		function index()
 		{
-		    self::set_active_menu('controller::control::component_for_check_list');
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$receipt = array();
 
@@ -132,15 +134,12 @@
 			);	
 
 			$GLOBALS['phpgw']->translation->add_app('property');
-			$entity			= CreateObject('property.soadmin_entity');
-			$entity_list 	= $entity->read(array('allrows' => true));
 
 			$district_list  = $this->bocommon->select_district_list('filter',$this->district_id);
 
 			$part_of_town_list = execMethod('property.bogeneric.get_list', array('type'=>'part_of_town', 'selected' => $part_of_town_id ));
 			$location_type_list = execMethod('property.soadmin_location.select_location_type');
 
-			array_unshift($entity_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($district_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($part_of_town_list ,array ('id'=>'','name'=>lang('select')));
 			array_unshift($location_type_list ,array ('id'=>'','name'=>lang('select')));
@@ -177,22 +176,21 @@
 				'filter_form' 					=> array
 													(
 														'control_area_list'		=> array('options' => $control_area_list),
-														'entity_list' 			=> array('options' => $entity_list),
 														'district_list' 		=> array('options' => $district_list),
 														'part_of_town_list'		=> array('options' => $part_of_town_list),
 														'location_type_list'	=> array('options' => $location_type_list),
 													),
-				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_register_to_component.edit_component'))
+				'update_action'					=> self::link(array('menuaction' => 'controller.uicontrol_register_to_location.edit_location'))
 			);
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
+			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
 			self::add_javascript('controller', 'yahoo', 'register_control.js');
 			self::add_javascript('controller', 'yahoo', 'datatable_light.js');
 
-			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
+			self::render_template_xsl(array('control_location/register_control_to_location' ), $data);
 		}
 
 		
@@ -214,6 +212,19 @@
 			return json_encode( $category_types );
 		}
 		
+		/*
+		 * Return parts of town based on chosen district
+		 */
+		public function get_district_part_of_town()
+		{
+			$district_id = phpgw::get_var('district_id');
+			$part_of_town_list =  $this->bocommon->select_part_of_town('filter',null,$district_id);
+			$default_value = array ('id'=>'','name'=>lang('no part of town'));
+			array_unshift($part_of_town_list,$default_value);
+
+			return json_encode( $part_of_town_list );
+		}
+
 
 		/*
 
@@ -230,14 +241,44 @@
 		}
 
 
+		public function get_location_type_category()
+		{
+			$location_type			= phpgw::get_var('location_type', 'int');
+
+			$values  = $this->bocommon->select_category_list(array
+					(
+						'format'=>'filter',
+					//	'selected' => $this->cat_id,
+						'type' =>'location',
+						'type_id' =>$location_type,
+						'order'=>'descr'
+					)
+				);
+
+			return $values;
+		}
+
+
 		public function get_entity_table_def()
 		{
-			$entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$boentity	= CreateObject('property.boentity',false, 'entity');
-			$boentity->read(array('dry_run' => true));
-			$uicols = $boentity->uicols;
+
+			$location_level		= phpgw::get_var('location_level', 'int', 'REQUEST', 1);
+			$solocation	= CreateObject('property.solocation');
+			$solocation->read(array('dry_run' => true, 'type_id' =>$location_level));
+			$uicols = $solocation->uicols;
+
 			$columndef = array();
+
+			/*This one has to defined - chokes otherwise*/
+			$columndef[] = array
+			(
+				'key'		=> 'id',
+				'label'		=> '',
+				'sortable'	=> false,
+				'formatter'	=> false,
+				'hidden'	=> true,
+				'className' => false
+			);
 
 			$columndef[] = array
 			(
@@ -246,7 +287,6 @@
 				'sortable'	=> false,
 				'formatter'	=> false,
 				'hidden'	=> false,
-				'formatter' => '',
 				'className' => ''
 			);
 
@@ -257,9 +297,9 @@
 				'sortable'	=> false,
 				'formatter'	=> false,
 				'hidden'	=> false,
-				'formatter' => '',
 				'className' => ''
 			);
+
 
 			$count_fields = count($uicols['name']);
 
@@ -279,62 +319,79 @@
 				}
 			}
 
+
 //_debug_array($columndef);
 			return $columndef;
 		}
 
 
+		public function get_locations()
+		{
+			$location_code = phpgw::get_var('location_code');
+			$child_level = phpgw::get_var('child_level', 'int', 'REQUEST', 1);
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+
+			$criteria = array
+			(
+				'location_code'		=> $location_code,
+				'child_level'		=> $child_level,
+				'field_name'		=> "loc{$child_level}_name",
+				'part_of_town_id'	=> $part_of_town_id
+			);
+	
+			$locations = execMethod('property.solocation.get_children',$criteria);
+			return $locations;
+		}
+
 
 		public function query()
 		{
-			$entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$type_id = phpgw::get_var('location_level', 'int', 'REQUEST', 1);
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
 			$control_id			= phpgw::get_var('control_id', 'int');
 			$results 			= phpgw::get_var('results', 'int');
 			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
-			if(!$entity_id && !$cat_id)
-			{
-				$values = array();
-			}
-			else
-			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				$boentity	= CreateObject('property.boentity',false, 'entity');
-				$boentity->results = $results;
-				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
-			}		
+			$this->bo->results = $results;			
+
+			$values = $this->bo->read(array('control_registered' => $control_registered,
+					 'control_id' => $control_id,
+					 'type_id'=>$type_id,
+					 'allrows'=>$this->allrows,
+					 'results' => $results
+					)
+				);
+
 
 			if($control_id)
 			{
 				foreach($values as &$entry)
 				{
 					$checked = '';
-					if($this->so_control->check_control_component($control_id,$location_id,$entry['id']))
+					if( $this->so_control->get_control_location($control_id, $entry['location_code']) )
 					{
 						$checked =  'checked = "checked" disabled = "disabled"';
-						$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
+						$entry['delete'] = "<input class =\"mychecks_delete\" type =\"checkbox\" name=\"values[delete][]\" value=\"{$control_id}_{$entry['location_code']}\">";
 					}
-					$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_component][]\" value=\"{$control_id}_{$location_id}_{$entry['id']}\">";
+					$entry['select'] = "<input class =\"mychecks_add\" type =\"checkbox\" $checked name=\"values[register_location][]\" value=\"{$control_id}_{$entry['location_code']}\">";
 				}
 			}
 			
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$return_data['recordsReturned'] = count($values);
-			$return_data['totalRecords'] = $boentity->total_records;
-			$return_data['startIndex'] = $this->start;
+			$return_data['totalRecords'] = $this->bo->total_records;
+			$return_data['startIndex'] = $this->bo->start;
 			$return_data['sort'] = 'location_code';
 			$return_data['dir'] = "ASC";
 			$return_data['pageSize'] = $results;
-			$return_data['activePage'] = floor($this->start / $results) + 1;
+			$return_data['activePage'] = floor($this->bo->start / $results) + 1;
 			$return_data['records'] = $values;
 
 			return $return_data;
 		}
 
-		public function edit_component()
+		public function edit_location()
 		{
 			if($values = phpgw::get_var('values'))
 			{
@@ -346,7 +403,7 @@
 				if(!$receipt['error'])
 				{
 
-					if($this->so_control->register_control_to_component($values))
+					if($this->so_control->register_control_to_location($values))
 					{
 						$result =  array
 						(
@@ -378,7 +435,7 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_register_to_component.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_register_to_location.index'));
 			}
 		}
 	}

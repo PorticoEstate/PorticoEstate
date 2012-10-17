@@ -45,49 +45,10 @@ $(document).ready(function()
     });
 
 
-
-	$("#entity_id").change(function () {
-		 var oArgs = {menuaction:'controller.uicontrol_register_to_component.get_category_by_entity', entity_id: $(this).val()};
-		 var requestUrl = phpGWLink('index.php', oArgs, true);
-
-         var htmlString = "";
-
-         $.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function(data) {
-				if( data != null){
-					htmlString  = "<option value=''>Velg</option>"
-					var obj = data;
-
-					$.each(obj, function(i)
-					{
-
-						var selected = '';
-/*
-						if(obj[i].id == control_id_init)
-						{
-							selected = ' selected';
-						}
-*/
-							htmlString  += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-		  			});
-					 
-					$("#cat_id").html( htmlString );
-					}
-					else
-					{
-         				htmlString  += "<option>Ingen kontroller</option>"
-         				$("#cat_id").html( htmlString );
-         			}
-			}
-			});
-
-    });
-
-
 	$("#location_type").change(function () {
+
+		get_table_def();
+
 		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -159,7 +120,7 @@ $(document).ready(function()
 //			console.log(ui.item);
 //			$("#search-location-name").val( ui.item.label );
 			$("#search-location_code").val( ui.item.value );
-			update_component_table();
+			update_location_table();
 		}
 	});
 
@@ -201,7 +162,7 @@ $(document).ready(function()
          });
 
 		$("#search-location_code").val('');
-		update_component_table();
+		update_location_table();
     });
 
 
@@ -239,7 +200,7 @@ $(document).ready(function()
          });
 
 		$("#search-location_code").val('');
-		update_component_table();
+		update_location_table();
     });
 
 	$("#loc1").change(function ()
@@ -274,7 +235,7 @@ $(document).ready(function()
          });
 
 		$("#search-location_code").val('');
-		update_component_table();
+		update_location_table();
 
     });
 
@@ -294,20 +255,14 @@ $(document).ready(function()
 	$("#loc2").change(function ()
 	{
 		$("#search-location_code").val('');
-		update_component_table();
-    });
-
-
-	$("#cat_id").change(function ()
-	{
-		get_table_def();
+		update_location_table();
     });
 
 
 
 	$("#search").click(function(e)
 	{
-		update_component_table();
+		update_location_table();
     });
 
 
@@ -440,9 +395,8 @@ function update_loc(level)
 function get_table_def()
 {
 	var oArgs = {
-		menuaction:'controller.uicontrol_register_to_component.get_entity_table_def',
-		entity_id:$("#entity_id").val(),
-		cat_id:$("#cat_id").val()
+		menuaction:'controller.uicontrol_register_to_location.get_entity_table_def',
+		location_level:$("#location_type").val()
 	};
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -468,19 +422,20 @@ function get_table_def()
 
 function init_component_table()
 {
+	var location_type = $("#location_type").val() != null ? $("#location_type").val():'';
+
+	if(!location_type)
+	{
+		return false;
+	}
+
+
 	var control_registered = 0;
 	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
 	{
 		control_registered = 1;
 	}
 
-
-	var cat_id = $("#cat_id").val() != null ? $("#cat_id").val():'';
-
-	if(!cat_id)
-	{
-		return false;
-	}
 
 	var location_code = '';
 
@@ -498,9 +453,8 @@ function init_component_table()
 	}
 
 	var oArgs = {
-		menuaction:'controller.uicontrol_register_to_component.query',
-		entity_id:$("#entity_id").val(),
-		cat_id:cat_id,
+		menuaction:'controller.uicontrol_register_to_location.query',
+		location_level:location_type,
 		district_id:$("#district_id").val(),
 		part_of_town_id:$("#part_of_town_id").val(),
 		location_code:location_code,
@@ -513,7 +467,7 @@ function init_component_table()
 }
 
 
-function update_component_table()
+function update_location_table()
 {
 
 	var control_registered = 0;
@@ -522,7 +476,14 @@ function update_component_table()
 		control_registered = 1;
 	}
 
-	if($("#cat_id").val() != null)
+	var location_type = $("#location_type").val() != null ? $("#location_type").val():'';
+
+	if(!location_type)
+	{
+		return false;
+	}
+
+	if($("#control_id_hidden").val() != null)
 	{
 		var location_code = '';
 
@@ -540,9 +501,8 @@ function update_component_table()
 		}
 
 		var oArgs = {
-			menuaction:'controller.uicontrol_register_to_component.query',
-			entity_id:$("#entity_id").val(),
-			cat_id:$("#cat_id").val(),
+			menuaction:'controller.uicontrol_register_to_location.query',
+			location_level:location_type,
 			district_id:$("#district_id").val(),
 			part_of_town_id:$("#part_of_town_id").val(),
 			location_code:location_code,
