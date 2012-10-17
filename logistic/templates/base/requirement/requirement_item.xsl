@@ -5,27 +5,7 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
 <div class="yui-navset yui-navset-top">
-	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
-		<xsl:choose>
-			<xsl:when test="activity/id != '' or activity/id != 0">
-				<h1 style="float:left;"> 
-					<span>
-						<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
-					</span>
-					<span style="margin-left:5px;">
-						<xsl:value-of select="activity/name" />
-					</span>
-				</h1>
-			</xsl:when>
-			<xsl:otherwise>
-				<h1 style="float:left;"> 
-					<xsl:value-of select="php:function('lang', 'Add requirement')" />
-				</h1>
-			</xsl:otherwise>
-		</xsl:choose>
-	</div>
-
-	<div class="yui-content" style="padding: 20px;">
+		<div class="yui-content" style="padding: 20px;">
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{requirement/id}" />
