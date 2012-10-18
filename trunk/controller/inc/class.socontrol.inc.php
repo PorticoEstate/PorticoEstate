@@ -736,7 +736,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'control', // alias
+					'table'			=> 'controller_control', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
