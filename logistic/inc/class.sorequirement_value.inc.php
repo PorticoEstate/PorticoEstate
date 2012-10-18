@@ -161,7 +161,7 @@
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-			echo "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
