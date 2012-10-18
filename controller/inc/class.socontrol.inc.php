@@ -770,7 +770,7 @@
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
-			//var_dump($filters);
+
 			if(isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
@@ -788,7 +788,6 @@
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
-
 
 			$condition =  join(' AND ', $clauses);
 
@@ -815,9 +814,8 @@
 				$sort_field = 'controller_control.id';
 			}
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
+			
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
-
 		}
 
 		function populate(int $control_id, &$control)
@@ -931,38 +929,6 @@
 			return $ret_array;
 		}
 		
-/*
-		public function getAllBimItems($noOfObjects = null, $bim_type = null) {
-			$filters = array();
-			if($noOfObjects != null && is_numeric($noOfObjects))
-			{
-				$limit = "LIMIT {$noOfObjects}";
-			}
-			else
-			{
-				$limit = "LIMIT 10";
-			}
-			if($bim_type != null && is_numeric($bim_type))
-			{
-				$filter = " AND fm_bim_type.id = {$bim_type}";
-			}
-			$sql  = "SELECT fm_bim_item.id, fm_bim_type.name AS type, fm_bim_item.guid FROM public.fm_bim_item,  public.fm_bim_type WHERE fm_bim_item.type = fm_bim_type.id {$filter} {$limit}";
-			$bimItemArray = array();
-			$this->db->query($sql, __LINE__, __FILE__);
-			$i=1;
-			while($this->db->next_record())
-			{
-				$bimItemArray[$i]['id'] = $this->db->f('id');
-				$bimItemArray[$i]['guid'] = $this->db->f('guid');
-				$bimItemArray[$i]['type'] = $this->db->f('type');
-				//$bimItemArray[$i]['xml_representation'] = $this->db->f('xml_representation',true);
-				//$bimItemArray[] = $bimItem;
-				$i++;
-			}
-
-			return $bimItemArray;
-		}
-*/
 		public function get_control_component($noOfObjects = null, $bim_type = null)
 		{
 			$filters = array();
