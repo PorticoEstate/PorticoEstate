@@ -190,7 +190,6 @@
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
 			self::add_javascript('controller', 'yahoo', 'register_control.js');
-			self::add_javascript('controller', 'yahoo', 'datatable_light.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_component' ), $data);
 		}
@@ -303,6 +302,11 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$boentity	= CreateObject('property.boentity',false, 'entity');
+
+    	        $boentity->sort =  phpgw::get_var('dir');
+    	        $boentity->order =  phpgw::get_var('sort');
+	            $boentity->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
 				$boentity->results = $results;
 				$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
 			}		
@@ -322,6 +326,24 @@
 			}
 			
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $boentity->total_records,
+					'startIndex' => $this->start, 
+					'sortKey' => 'location_code', 
+					'sortDir' => "ASC", 
+					'Result' => $values,
+					//FIXME: Sigurd 18 oct 2012...
+					'pageSize' => $results,
+					'activePage' => floor($this->bo->start / $results) + 1
+				)
+			);
+
+			return $data;
+
+
+
 			$return_data['recordsReturned'] = count($values);
 			$return_data['totalRecords'] = $boentity->total_records;
 			$return_data['startIndex'] = $this->start;
