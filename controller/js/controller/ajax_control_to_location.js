@@ -250,7 +250,7 @@ $(document).ready(function()
 	{
 		$("#control_id_hidden").val( $(this).val() );
 
-		init_component_table();
+		update_location_table();
     });
 
 	$("#loc2").change(function ()
@@ -299,7 +299,7 @@ $(document).ready(function()
 	  			{
 		  			$(submitBnt).val("Lagret");
 
-						YAHOO.portico.update_datatable();
+					    YAHOO.portico.updateinlineTableHelper('datatable-container');
 				}
 				else
 				{
@@ -466,61 +466,12 @@ function init_component_table()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	YAHOO.portico.init_datatable(myColumnDefs,requestUrl);
+    YAHOO.portico.inlineTableHelper('datatable-container', requestUrl, myColumnDefs);
 }
 
 
 function update_location_table()
 {
-
-	var control_registered = 0;
-	if (typeof($($("#control_registered")).attr("checked")) != 'undefined' && $($("#control_registered")).attr("checked") == 'checked')
-	{
-		control_registered = 1;
-	}
-
-	var location_type = $("#location_type").val() != null ? $("#location_type").val():'';
-
-	if(!location_type)
-	{
-		return false;
-	}
-
-
-	var cat_id = $("#location_type_category").val() != null ? $("#location_type_category").val():'';
-
-	if($("#control_id_hidden").val() != null)
-	{
-		var location_code = '';
-
-		if( $("#search-location_code").val() != null && $("#search-location_code").val())
-		{
-			location_code = $("#search-location_code").val();
-		}
-		else if( $("#loc2").val() != null && $("#loc2").val())
-		{
-			location_code = $("#loc2").val();
-		}
-		else if ( $("#loc1").val() != null && $("#loc1").val())
-		{
-			location_code = $("#loc1").val();
-		}
-
-		var oArgs = {
-			menuaction:'controller.uicontrol_register_to_location.query',
-			location_level:location_type,
-			district_id:$("#district_id").val(),
-			part_of_town_id:$("#part_of_town_id").val(),
-			location_code:location_code,
-			control_id:$("#control_id_hidden").val() != null ? $("#control_id_hidden").val():'',
-			cat_id:cat_id,
-			control_registered:control_registered
-		};
-
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		YAHOO.portico.update_datatable(requestUrl);
-	}
-//	$("#receipt").html('');
+	init_component_table();
 }
 

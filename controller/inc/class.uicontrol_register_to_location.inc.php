@@ -188,7 +188,6 @@
 
 			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
 			self::add_javascript('controller', 'yahoo', 'register_control.js');
-			self::add_javascript('controller', 'yahoo', 'datatable_light.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_location' ), $data);
 		}
@@ -311,7 +310,7 @@
 					(
 						'key'		=> $uicols['name'][$i],
 						'label'		=> $uicols['descr'][$i],
-						'sortable'	=> $uicols['sortable'][$i],
+						'sortable'	=> !!$uicols['sortable'][$i],
 						'formatter'	=> $uicols['formatter'][$i],
 						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
 						'className'	=> $uicols['classname'][$i],
@@ -354,6 +353,9 @@
 			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
 			$this->bo->results = $results;			
+            $this->bo->sort =  phpgw::get_var('dir');
+            $this->bo->order =  phpgw::get_var('sort');
+            $this->bo->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 
 			$values = $this->bo->read(array('control_registered' => $control_registered,
 					 'control_id' => $control_id,
@@ -379,16 +381,21 @@
 			}
 			
 			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$return_data['recordsReturned'] = count($values);
-			$return_data['totalRecords'] = $this->bo->total_records;
-			$return_data['startIndex'] = $this->bo->start;
-			$return_data['sort'] = 'location_code';
-			$return_data['dir'] = "ASC";
-			$return_data['pageSize'] = $results;
-			$return_data['activePage'] = floor($this->bo->start / $results) + 1;
-			$return_data['records'] = $values;
 
-			return $return_data;
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $this->bo->total_records,
+					'startIndex' => $this->bo->start, 
+					'sortKey' => 'location_code', 
+					'sortDir' => "ASC", 
+					'Result' => $values,
+					//FIXME: Sigurd 18 oct 2012...
+					'pageSize' => $results,
+					'activePage' => floor($this->bo->start / $results) + 1
+				)
+			);
+
+			return $data;
 		}
 
 		public function edit_location()
