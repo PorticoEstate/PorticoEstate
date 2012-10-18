@@ -112,7 +112,6 @@
 				'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
 			);
 
-			//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 			$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 			if($result)
@@ -276,7 +275,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'controller', // alias
+					'table'			=> 'controller_control_item', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
