@@ -269,6 +269,8 @@
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
+			echo $requirement_id;
+			
 			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so->get_single($requirement_id);
@@ -412,7 +414,6 @@
  
 				$this->so_requirement_value->delete_values($requirement_id);
 				
-				
 				foreach($attributes_array as $attribute)
 				{
 					$attribute_array = explode ( ":", $attribute );					
@@ -440,17 +441,84 @@
 				
 				$custom_attributes_array = array();
 				$custom_attributes_array = $this->get_custom_attributes($location_id, $activity_id);
+						
+				$filters = array('requirement_id' => $requirement_id);
+				$requirement_values_array = $this->so_requirement_value->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+	
+				$custom	= createObject('phpgwapi.custom_fields');
+
+				if( count( $requirement_values_array ) > 0 )
+				{
+					foreach($requirement_values_array as $requirement_value)
+					{
+						$location_id = $requirement->get_location_id(); 
+
+						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+						$entity_arr = explode('.',$loc_arr['location']);
+		
+						$entity_id = $entity_arr[2];
+						$cat_id = $entity_arr[3];
+						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+											
+						$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+		
+						$temp_requirement_attributes_array[$cust_attribute_id][] = array(
+							"id" 							=> $requirement_value->get_id(),
+							"attrib_value"		=> $requirement_value->get_value(),
+							"operator" 				=> $requirement_value->get_operator(),
+							"cust_attribute" 	=> $attrib_data
+						);
+					}
+					
+					
+					foreach($temp_requirement_attributes_array as $req_attrib)
+					{
+						if( count( $req_attrib ) > 1 )
+						{
+							if( $req_attrib[0]['operator'] == 'gt' )
+							{
+								$constraint_1 = $req_attrib[0];
+								$constraint_2 = $req_attrib[1];
+							}
+							else
+							{
+								$constraint_1 = $req_attrib[1];
+								$constraint_2 = $req_attrib[0];
+							}
+						
+							$req_attrib[0]['operator'] = 'btw';
+							$req_attrib[0]['attrib_value'] = $constraint_1['attrib_value'] . ":" . $constraint_2['attrib_value'];
+							$requirement_attributes_array[] = $req_attrib[0];
+						}
+						else
+						{
+							$requirement_attributes_array[] = $req_attrib[0];	
+						}
+					}
+				}
+				else
+				{
+					foreach($custom_attributes_array as $cust_attrib)
+					{
+						$requirement_attributes_array[] = array(
+							"id" 							=> "",
+							"attrib_value" 		=> "",
+							"operator" 				=> "",
+							"cust_attribute" 	=> $cust_attrib
+						);
+					}
+				}
 				
 				$tabs = $this->make_tab_menu($requirement_id);
 				
 				$data = array
 				(
-					'tabs'										=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-					'view'										=> "requirement_values",
-					'requirement' 						=> $requirement,
-					'custom_attributes_array'	=> $custom_attributes_array,
-					'distict_locations' 			=> $distict_locations_array,
-					'editable' 								=> true,
+					'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+					'view'													=> "requirement_values",
+					'requirement' 									=> $requirement,
+					'requirement_attributes_array'	=> $requirement_attributes_array,
+					'distict_locations' 						=> $distict_locations_array,
+					'editable' 											=> true,
 				);
 				
 				if($activity_id > 0)
@@ -501,16 +569,38 @@
 									
 				$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
 
-
-				$requirement_attributes_array[] = array(
-																									"id" 							=> $requirement_value->get_id(),
-																									"value" 					=> $requirement_value->get_value(),
-																									"operator" 				=> $requirement_value->get_operator(), 
-																									"cust_attribute" 	=> $attrib_data
-																								);
+				$temp_requirement_attributes_array[$cust_attribute_id][] = array(
+					"id" 							=> $requirement_value->get_id(),
+					"attrib_value" 					=> $requirement_value->get_value(),
+					"operator" 				=> $requirement_value->get_operator(), 
+					"cust_attribute" 	=> $attrib_data
+				);
 			}
-
-			print_r($requirement_attributes_array);
+			
+			foreach($temp_requirement_attributes_array as $req_attrib)
+			{
+				if( count( $req_attrib ) > 1 )
+				{
+					if( $req_attrib[0]['operator'] == 'gt' )
+					{
+						$constraint_1 = $req_attrib[0];
+						$constraint_2 = $req_attrib[1];
+					}
+					else
+					{
+						$constraint_1 = $req_attrib[1];
+						$constraint_2 = $req_attrib[0];
+					}
+				
+					$req_attrib[0]['operator'] = 'btw';
+					$req_attrib[0]['attrib_value'] = $constraint_1['attrib_value'] . ":" . $constraint_2['attrib_value'];
+					$requirement_attributes_array[] = $req_attrib[0];
+				}
+				else
+				{
+					$requirement_attributes_array[] = $req_attrib[0];	
+				}
+			}
 			
 			$tabs = $this->make_tab_menu($requirement_id);
 			
@@ -566,25 +656,31 @@
 				return $attribute_requirement_array;		
 		}
 		
-		function make_tab_menu($control_id){
+		function make_tab_menu($requirement_id)
+		{
 			$tabs = array();
 			
 			if($requirement_id > 0){
 				
 				$requirement = $this->so->get_single($requirement_id);
 				
-				$tabs[] = array(
+				$tabs = array( 
+						   array(
 							'label' => "1: " . lang('Requirement details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uirequirement.edit', 
-																				   'id' => $requirement->get_id()))
-						);
+						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.edit', 
+																				   													 'id' => $requirement->get_id()))
+						), array(
+							'label' => "2: " . lang('Add constraints'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.add_requirement_values', 
+																				   													 'requirement_id' => $requirement->get_id()))
+						));
 			}else{
 				$tabs = array( 
 						   array(
 							'label' => "1: " . lang('Requirement details')
 						), array(
 							'label' => "2: " . lang('Add constraints')
-						));
+				));
 			}
 			
 			return $tabs;
