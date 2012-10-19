@@ -48,7 +48,7 @@
 		</xsl:choose>
 	</div>
 
-	<div class="yui-content" style="padding: 20px;">
+	<div class="content-wrp" style="padding: 20px;">
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
