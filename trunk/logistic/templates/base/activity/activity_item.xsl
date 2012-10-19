@@ -128,14 +128,18 @@
 					        		<xsl:value-of disable-output-escaping="yes" select="account_firstname"/><xsl:text> </xsl:text>
 					        		<xsl:value-of disable-output-escaping="yes" select="account_lastname"/>
 					        	</xsl:variable>
-					        	<option value="{account_id}">
-					        		<xsl:if test="activity/responsible_user_id = account_id">
-						        		<xsl:attribute name="selected">
-	        								selected
-        								</xsl:attribute>
-						        	</xsl:if>
-					          	<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
-					          </option>
+					        	<xsl:choose>
+					        		<xsl:when test="//activity/responsible_user_id = account_id">
+												<option selected="selected" value="{account_id}">
+					        				<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
+						        		</option>
+					        		</xsl:when>
+					        		<xsl:otherwise>
+					        			<option value="{account_id}">
+					        				<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
+						        		</option>
+					        		</xsl:otherwise>
+					        	</xsl:choose>
 					        </xsl:for-each>
 					      </select>
 					      </xsl:when>
