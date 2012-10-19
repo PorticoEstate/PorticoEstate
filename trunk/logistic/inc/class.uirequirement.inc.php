@@ -379,11 +379,7 @@
 					'view'							=> "requirement_details",
 					'requirement' 			=> $requirement,
 					'distict_locations' => $distict_locations_array,
-				//	'attribute_requirement_array' => $attribute_requirement_array,
 					'editable' => true,
-				//	'entity_list' => $entity_list,
-				//	'entity_id' => $entity_id,
-				//	'category_id' => $category_id
 				);
 				
 				if($activity_id > 0)
@@ -395,7 +391,6 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				//self::add_javascript('logistic', 'logistic', 'requirement.js');
 				self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_item'), $data);
 			}
 		}
