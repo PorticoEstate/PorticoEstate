@@ -379,13 +379,13 @@
 				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 				
 			  $activities = $this->so->get();
-				$activities_array = $this->convert_to_array( $activities );
+			
 				
 				$data = array
 				(
 					'responsible_users' => $accounts,
-					'activities' => $activities_array,
-					'activity' => $activity->toArray(),
+					'activities' => $activities,
+					'activity' => $activity,
 					'editable' => true,
 				);
 				
@@ -400,23 +400,10 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'ajax.js');
-				self::render_template_xsl(array('activity_item'), $data);
+				self::render_template_xsl(array('activity/activity_item'), $data);
 			}
 		}
 		
-		function convert_to_array($object_list)
-		{
-			$converted_array = array();
-			
-			foreach($object_list as $object)
-			{
-				$converted_array[] = $object->toArray();
-			}
-			
-			return $converted_array; 
-		}
-
 		public function view()
 		{
 			$activity_id = phpgw::get_var('id');
@@ -434,6 +421,8 @@
 				if ($activity_id && is_numeric($activity_id))
 				{
 					$activity = $this->so->get_single($activity_id);
+					$responsible_user = $this->so->get_responsible_user($activity->get_responsible_user_id());
+					$activity->set_responsible_user_name($responsible_user);
 				}
 
 				$activity_array = $activity->toArray();
@@ -460,7 +449,7 @@
 				}
 				
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('activity_item'), $data);
+				self::render_template_xsl(array('activity/activity_item'), $data);
 			}
 		}
 
