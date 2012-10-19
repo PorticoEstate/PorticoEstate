@@ -46,6 +46,8 @@
 				protected $update_user;
 				protected $update_date;
 				
+				protected $responsible_user_name;
+				
 				// Arrays
 				protected $sub_activities = array();
 
@@ -138,6 +140,16 @@
 				public function get_responsible_user_id()
 				{
 					return $this->responsible_user_id;
+				}
+				
+				public function set_responsible_user_name($responsible_user_name)
+				{
+					$this->responsible_user_name = $responsible_user_name;
+				}
+
+				public function get_responsible_user_name()
+				{
+					return $this->responsible_user_name;
 				}
 
 				public function set_update_user($update_user)
