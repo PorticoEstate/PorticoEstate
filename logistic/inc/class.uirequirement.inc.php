@@ -269,30 +269,36 @@
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
-			echo $requirement_id;
-			
 			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so->get_single($requirement_id);
+				
+				$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
+				$project = $this->so_project->get_single( $activity->get_project_id() );
 			}
 			else
 			{
 				$requirement = new logistic_requirement();
-			}
-			
-			if ($activity_id && is_numeric($activity_id))
-			{
-				$activity = $this->so_activity->get_single( $activity_id );
-				$project = $this->so_project->get_single( $activity->get_project_id() );
+				
+				if ($activity_id && is_numeric($activity_id))
+				{
+					$activity = $this->so_activity->get_single( $activity_id );
+					$project = $this->so_project->get_single( $activity->get_project_id() );
+				}
 			}
 			
 			if (isset($_POST['save_requirement']))
 			{
 				$requirement->set_id( phpgw::get_var('id') );
-				$requirement->set_activity_id( phpgw::get_var('activity_id') );
+				
 				$requirement->set_no_of_items( phpgw::get_var('no_of_items') );
 				$requirement->set_location_id( phpgw::get_var('location_id') );
-			
+				
+				if($requirement->get_activity_id() == "" | $requirement->get_activity_id() == 0)
+				{
+					$requirement->set_activity_id( phpgw::get_var('activity_id') );	
+				}
+				
 				if(phpgw::get_var('start_date','string') != '')
 				{
 					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
