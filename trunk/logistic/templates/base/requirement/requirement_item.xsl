@@ -53,7 +53,7 @@
 				<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" />
+							<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" value="{requirement/no_of_items}" />
 						</xsl:when>
 						<xsl:otherwise>
 						<span><xsl:value-of select="requirement/no_of_items"/></span>
@@ -70,9 +70,18 @@
 							<select name="location_id" id="location_id">
 								<option value="">Velg kategori</option>
 								<xsl:for-each select="distict_locations">
-									<option value="{location_id}">
-										<xsl:value-of select="descr"/>
-									</option>
+									<xsl:choose>
+										<xsl:when test="//requirement/location_id = location_id">
+											<option selected="selected" value="{location_id}">
+												<xsl:value-of select="descr"/>
+											</option>
+										</xsl:when>
+										<xsl:otherwise>
+											<option value="{location_id}">
+												<xsl:value-of select="descr"/>
+											</option>
+										</xsl:otherwise>
+										</xsl:choose>
 								</xsl:for-each>
 							</select>
 							<div id="attributes"></div>
