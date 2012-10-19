@@ -332,6 +332,11 @@
 				$parent_activity = $this->so->get_single( $parent_activity_id );
 				$activity->set_project_id( $parent_activity->get_project_id() );
 			}
+			
+			if($activity->get_parent_id() > 0)
+			{
+				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
+			}
 
 			if (isset($_POST['save_activity']))
 			{
@@ -389,9 +394,9 @@
 					'editable' => true,
 				);
 				
-				if($parent_activity_id > 0)
+				if($parent_activity)
 				{
-					$data['parent_activity'] = $parent_activity->toArray();
+					$data['parent_activity'] = $parent_activity;
 				}
 
 				$this->use_yui_editor('description');

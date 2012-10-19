@@ -450,13 +450,12 @@
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project_array,
 					'editable' => true
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_type_item'), $data);
+				self::render_template_xsl(array('project/project_type_item'), $data);
 			}
 		}
 
@@ -528,7 +527,6 @@
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project_array,
 					'options' => $project_types,
 					'editable' => true
@@ -536,7 +534,7 @@
 
 				$this->use_yui_editor('description');
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_item'), $data);
+				self::render_template_xsl(array('project/project_item'), $data);
 			}
 		}
 

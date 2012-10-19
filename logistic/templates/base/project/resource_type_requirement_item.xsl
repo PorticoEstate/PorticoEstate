@@ -2,13 +2,13 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
-	<div class="identifier-header">
+	<div>
 		<h1><img src="{img_go_home}" />
 				<xsl:value-of select="php:function('lang', 'Administrate requirements')" />
 		</h1>
 	</div>
-	<div class="yui-content">
-		<div id="details">
+	<div class="main_content">
+		<div id="details" class="content-wrp">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{value_id}" />
 				<input type="hidden" name="location_id" value = "{location_id}" />

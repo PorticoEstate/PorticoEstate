@@ -359,7 +359,6 @@
 				$data = array
 						(
 						'value_id' => !empty($req_type) ? $req_type->get_id() : 0,
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'entities' => $entity_list,
 						'categories' => $category_list,
 						'attributes' => $attributes,
@@ -373,7 +372,7 @@
 				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
-				self::render_template_xsl(array('resource_type_requirement_item'), $data);
+				self::render_template_xsl(array('project/resource_type_requirement_item'), $data);
 			}
 		}
 

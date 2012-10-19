@@ -2254,3 +2254,7 @@ p.no_items_msg {
 #requirement_tabview .yui-navset {
     margin: 0;
 }
+
+#details {
+	padding: 20px;	
+}
