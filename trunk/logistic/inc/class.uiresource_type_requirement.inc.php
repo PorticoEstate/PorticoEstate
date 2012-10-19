@@ -455,7 +455,6 @@
 						'value_id' => !empty($req_types[0]) ? $req_types[0]->get_id() : 0,
 						'location_id' => $location_id,
 						'project_type_id' => $project_type_id,
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'req_type' => $req_types[0],
 						'entity' => $entity,
 						'category' => $category,
@@ -464,7 +463,7 @@
 					);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('resource_type_requirement_item'), $data);
+				self::render_template_xsl(array('project/resource_type_requirement_item'), $data);
 			}
 		}
 	}

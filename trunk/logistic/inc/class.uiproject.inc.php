@@ -371,7 +371,7 @@
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('project_item'), $data);
+				self::render_template_xsl(array('project/project_item'), $data);
 			}
 		}
 
@@ -405,7 +405,7 @@
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_type_item'), $data);
+				self::render_template_xsl(array('project/project_type_item'), $data);
 			}
 		}
 
