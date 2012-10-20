@@ -293,13 +293,6 @@ JS;
 					}
 
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
-						'menuaction'			=> 'property.uilookup.custom',
-						'column'				=> $attributes['name'],
-						'get_list_function'		=> $attributes['get_list_function'],
-						'get_list_function_input'	=> urlencode(serialize($attributes['get_list_function_input']))
-					));
-
 
 					$_append_url = '';
 					if(isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))

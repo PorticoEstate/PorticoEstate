@@ -2049,7 +2049,9 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
+			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
+
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'common', 'phpgwapi' );
 

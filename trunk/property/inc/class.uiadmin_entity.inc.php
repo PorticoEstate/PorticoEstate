@@ -2375,12 +2375,14 @@
 				case 'LB':
 					$multiple_choice = true;
 					break;
-				case 'custom1';
+				case 'custom1':
 					$custom_get_list = true;
 					break;
-				case 'custom2';
+				case 'custom2':
+				case 'custom3':
 					$custom_get_list = true;
 					$custom_get_single = true;
+					break;
 				default:
 			}
 
