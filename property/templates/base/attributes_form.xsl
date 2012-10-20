@@ -329,20 +329,20 @@
 									<xsl:text>_container</xsl:text>
 								</xsl:variable>
 
-			                    <input id="{$custom_id}" name="{$custom_id}" type="hidden" value="{value}">
-			                    </input>
-			                    <input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
-									<xsl:choose>
-										<xsl:when test="disabled!=''">
-											<xsl:attribute name="disabled">
-												<xsl:text> disabled</xsl:text>
-											</xsl:attribute>
-										</xsl:when>
-									</xsl:choose>
-
-			                    </input>
-			                    <div id="{$custom_container}"/>
-
+								<div class="autocomplete">
+			                    	<input id="{$custom_id}" name="values_attribute[{counter}][value]" type="hidden" value="{value}">
+			                    	</input>
+			                    	<input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+									<div id="{$custom_container}"/>
+								</div>
 							</xsl:when>
 							<xsl:when test="datatype='user'">
 								<xsl:variable name="user_name">
