@@ -5,6 +5,11 @@
 	    protected static $bo;
 	    protected $connected = false;
 	    protected $status;
+
+		var $public_functions = array
+			(
+				'get_all_org_units_autocomplete'		=> true,
+			);
 		
     	/**
 		 * Get a static reference to the storage object associated with this model object
@@ -25,7 +30,6 @@
 			$config->read();
 
 			$db = createObject('phpgwapi.db', null, null, true);
-//			$db = createObject('property.db_oci8'); // this one was intended for premilay testing
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -145,6 +149,46 @@
 		}
 	
 		
+		public function get_all_org_units_autocomplete()
+		{
+			$query = phpgw::get_var('query');
+
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID as id, V_ORG_ENHET.ORG_NAVN as name, V_ORG_ENHET.RESULTATENHET as unit_id";
+			$tables = "V_ORG_ENHET";
+			$sql = "SELECT $columns FROM $tables WHERE ORG_NAVN LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
+			$db = $this->get_db();
+
+
+			$db           = & $GLOBALS['phpgw']->db;
+			
+			$sql = "SELECT account_id as id, account_lastname as name FROM phpgw_accounts WHERE account_lastname LIKE '%{$query}%'";
+
+			$db->query($sql,__LINE__,__FILE__);			
+	        
+			$result_units = array();
+			while($db->next_record())
+			{
+				$result[] = array
+				(
+						'id' => (int)$db->f('id'),
+						'name' => $db->f('name',true),
+						'unit_id' => $db->f('unit_id')
+				);
+			}
+						
+			return array('ResultSet'=> array('Result'=>$result));
+		}
+
+
+		public function get_org_unit_name($id = 0)
+		{
+			$sql = "SELECT V_ORG_ENHET.ORG_NAVN as name FROM V_ORG_ENHET WHERE ORG_ENHET_ID =" . (int)$id;
+			$db = $this->get_db();
+			$db->query($sql,__LINE__,__FILE__);			
+			$db->next_record();
+			return $db->f('name',true);		
+		}
+
 		public function get_result_units()
 		{
 			$this->log(__class__, __function__);			
