@@ -164,6 +164,7 @@ YAHOO.portico.formatGenericLink = function() {
 };
 */
 YAHOO.portico.autocompleteHelper = function(url, field, hidden, container, label_attr) {
+	url += '&';
 	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
