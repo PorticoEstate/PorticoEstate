@@ -313,6 +313,37 @@
 									</xsl:choose>
 								</input>
 							</xsl:when>
+							<xsl:when test="datatype='custom3'">
+								<xsl:variable name="custom_id">
+									<xsl:value-of select="name"/>
+									<xsl:text>_id</xsl:text>
+								</xsl:variable>
+
+								<xsl:variable name="custom_name">
+									<xsl:value-of select="name"/>
+									<xsl:text>_name</xsl:text>
+								</xsl:variable>
+
+								<xsl:variable name="custom_container">
+									<xsl:value-of select="name"/>
+									<xsl:text>_container</xsl:text>
+								</xsl:variable>
+
+			                    <input id="{$custom_id}" name="{$custom_id}" type="hidden" value="{value}">
+			                    </input>
+			                    <input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
+									<xsl:choose>
+										<xsl:when test="disabled!=''">
+											<xsl:attribute name="disabled">
+												<xsl:text> disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+									</xsl:choose>
+
+			                    </input>
+			                    <div id="{$custom_container}"/>
+
+							</xsl:when>
 							<xsl:when test="datatype='user'">
 								<xsl:variable name="user_name">
 									<xsl:value-of select="name"/>

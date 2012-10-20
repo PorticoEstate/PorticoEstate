@@ -2049,6 +2049,10 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
+			phpgwapi_yui::load_widget('autocomplete');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'common', 'phpgwapi' );
+
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 			phpgwapi_yui::load_widget('treeview');
 			$appname	= $entity['name'];

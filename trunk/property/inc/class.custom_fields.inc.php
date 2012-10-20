@@ -67,6 +67,8 @@
 		 */
 		public function prepare($values, $appname, $location, $view_only='')
 		{
+			$cache_custom_lookup = array();
+
 			$vendor			= CreateObject('property.sogeneric');
 			$vendor->get_location_info('vendor',false);
 
@@ -236,10 +238,21 @@ JS;
 				else if($attributes['datatype'] == 'custom1') // select
 				{
 					$attributes['choice'] = array();
+
 					if($attributes['get_list_function'])
 					{
-						$attributes['choice'] = execMethod($attributes['get_list_function'], $attributes['get_list_function_input']);
+						$_compare_key = $this->_get_compare_key($attributes['get_list_function'], $attributes['get_list_function_input']);
+						if(isset($cache_custom_lookup[$_compare_key]))
+						{
+							$attributes['choice'] = $cache_custom_lookup[$_compare_key];
+						}
+						else
+						{
+							$attributes['choice'] = execMethod($attributes['get_list_function'], $attributes['get_list_function_input']);
+							$cache_custom_lookup[$_compare_key] = $attributes['choice'];
+						}
 					}
+
 					foreach ($attributes['choice'] as &$_choice)
 					{
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
@@ -267,6 +280,48 @@ JS;
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
+				}
+				else if($attributes['datatype'] == 'custom3') //autocomplete
+				{
+					if($attributes['value'] && $attributes['get_single_function'])
+					{
+						if(!$attributes['get_single_function_input'])
+						{
+							$attributes['get_single_function_input'] = $attributes['value'];
+						}
+						$attributes['custom_name'] = execMethod($attributes['get_single_function'], $attributes['get_single_function_input']);
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
+						'menuaction'			=> 'property.uilookup.custom',
+						'column'				=> $attributes['name'],
+						'get_list_function'		=> $attributes['get_list_function'],
+						'get_list_function_input'	=> urlencode(serialize($attributes['get_list_function_input']))
+					));
+
+
+					$_append_url = '';
+					if(isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
+					{
+						$_append_url = '&' . http_build_query($attributes['get_list_function_input']);
+					}
+
+					$_autocomplete = <<<JS
+
+					YAHOO.util.Event.addListener(window, "load", function()
+					{
+						var oArgs = {menuaction:'{$attributes['get_list_function']}'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+						strURL += '{$_append_url}';
+
+					    YAHOO.portico.autocompleteHelper(strURL, 
+                               '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
+
+					});
+JS;
+					$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+
 				}
 				else if($attributes['datatype'] == 'user')
 				{
@@ -411,6 +466,30 @@ JS;
 
 			return $values;
 		}
+
+
+		protected function _get_compare_key($get_list_function, $get_list_function_input)
+		{
+			$_compare_key = '';
+			$_compare_key .= $get_list_function;
+			if($get_list_function_input)
+			{
+				if (is_array($get_list_function_input))
+				{
+					foreach($get_list_function_input as $_key => $_value)
+					{
+						$_compare_key .= $_key;
+						$_compare_key .= $_value;
+					}
+				}
+				else
+				{
+						$_compare_key .= $get_list_function_input;
+				}
+			}
+			return md5($_compare_key);
+		}
+
 
 		function prepare_for_db($table, $values_attribute, $id = 0)
 		{	
