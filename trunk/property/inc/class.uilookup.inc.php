@@ -3404,22 +3404,32 @@ JS;
 				'descr'			=>	array(lang('ID'),lang('name'))
 			);
 
-			$template_list = array();
+			$values = array();
 		//	$bo	= CreateObject('property.bogeneric',true);
 		//	$template_list = $bo->read();
 
 			$template_list = execMethod($get_list_function, unserialize(urldecode($_GET['get_list_function_input'])));
+			if(isset($template_list['ResultSet']['Result']) && is_array($template_list['ResultSet']['Result']))
+			{
+				$values = $template_list['ResultSet']['Result'];
+			}
+			else
+			{
+				$values = $template_list;
+			}
+			
+//_debug_array($values);die();
 //_debug_array(unserialize(urldecode($get_list_function_input)));
 //_debug_array(unserialize(urldecode($_GET['get_list_function_input'])));
 			$content = array();
 			$j=0;
-			if (isset($template_list) && is_array($template_list))
+			if (is_array($values))
 			{
-				foreach($template_list as $template_entry)
+				foreach($values as $entry)
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $template_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $entry[$uicols['name'][$i]];
 						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
@@ -3462,7 +3472,7 @@ JS;
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($template_list);
+			$datatable['pagination']['records_returned']= count($values);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
