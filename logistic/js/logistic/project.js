@@ -1,7 +1,5 @@
 $(document).ready(function(){
 
-	
-	// HELP TEXT ON SAVING CONTROL DETAILS 
 	$("#project_details input").focus(function(e){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeIn(200);
