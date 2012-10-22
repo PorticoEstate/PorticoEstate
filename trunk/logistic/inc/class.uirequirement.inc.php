@@ -422,6 +422,7 @@
 				$this->edit($requirement);
 			}
 		}
+		
 		public function add_requirement_values()
 		{
 			$requirement_id = phpgw::get_var('requirement_id');
