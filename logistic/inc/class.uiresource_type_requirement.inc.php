@@ -272,7 +272,6 @@
 
 				$req_type_array = $this->so->get(null,null,null,null,null,null,array('location_id' => $location_id, 'project_type_id' => $project_type_id));
 				$req_types_for_delete = array();
-				$new_req_types = array();
 				if (count($req_type_array) > 0)
 				{
 					foreach ($req_type_array as $rt)
