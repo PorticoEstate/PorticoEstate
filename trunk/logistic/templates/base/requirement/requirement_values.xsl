@@ -5,7 +5,6 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
 <div class="yui-content" style="padding: 20px;">
-	<div id="details">
 		<form id="frm-requirement-values" action="#" method="post">
 			<input type="hidden" name="requirement_id" value = "{requirement/id}" />
 										
@@ -13,7 +12,7 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 					<dt>
-						<label>Legg til kriterier</label>
+						<h2>Legg til kriterier</h2>
 					</dt>
 						<dd>
 						<div id="attributes">
@@ -183,7 +182,6 @@
 				</xsl:choose>
 			</div>
 		</form>
-	</div>
 </div>
 </xsl:template>
 
