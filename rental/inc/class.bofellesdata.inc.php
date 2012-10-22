@@ -151,17 +151,12 @@
 		
 		public function get_all_org_units_autocomplete()
 		{
-			$query = phpgw::get_var('query');
+			$query = strtoupper(phpgw::get_var('query'));
 
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID as id, V_ORG_ENHET.ORG_NAVN as name, V_ORG_ENHET.RESULTATENHET as unit_id";
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 			$tables = "V_ORG_ENHET";
-			$sql = "SELECT $columns FROM $tables WHERE ORG_NAVN LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
+			$sql = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 			$db = $this->get_db();
-
-
-			$db           = & $GLOBALS['phpgw']->db;
-			
-			$sql = "SELECT account_id as id, account_lastname as name FROM phpgw_accounts WHERE account_lastname LIKE '%{$query}%'";
 
 			$db->query($sql,__LINE__,__FILE__);			
 	        
@@ -170,9 +165,9 @@
 			{
 				$result[] = array
 				(
-						'id' => (int)$db->f('id'),
-						'name' => $db->f('name',true),
-						'unit_id' => $db->f('unit_id')
+						'id' => (int)$db->f('ORG_ENHET_ID'),
+						'name' => $db->f('ORG_NAVN',true),
+						'unit_id' => $db->f('RESULTATENHET')
 				);
 			}
 						
@@ -182,11 +177,11 @@
 
 		public function get_org_unit_name($id = 0)
 		{
-			$sql = "SELECT V_ORG_ENHET.ORG_NAVN as name FROM V_ORG_ENHET WHERE ORG_ENHET_ID =" . (int)$id;
+			$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE ORG_ENHET_ID =" . (int)$id;
 			$db = $this->get_db();
 			$db->query($sql,__LINE__,__FILE__);			
 			$db->next_record();
-			return $db->f('name',true);		
+			return $db->f('ORG_NAVN',true);		
 		}
 
 		public function get_result_units()
@@ -328,7 +323,9 @@
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
 						"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA > 1";
-			if($search_for){
+			if($search_for)
+			{
+				$search_for = strtoupper($search_for);
 				$selector = "";
 				switch($search_type){
 					case 'unit_leader':
@@ -336,9 +333,9 @@
 							$count = 0;
 							$selector = "(";
 							foreach($search_words as $search_word){
-								$selector = $selector." (FORNAVN LIKE '%$search_word%' OR ".
-										"ETTERNAVN LIKE '%$search_word%' OR ".
-										"BRUKERNAVN LIKE '%$search_word%')";
+								$selector = $selector." (upper(FORNAVN) LIKE '%$search_word%' OR ".
+										"upper(ETTERNAVN) LIKE '%$search_word%' OR ".
+										"upper(BRUKERNAVN) LIKE '%$search_word%')";
 								if($count < (count($search_words)-1)) $selector = $selector." OR ";
 								$count = ($count + 1);
 							}
@@ -346,7 +343,7 @@
 							
 						break;
 					default:
-							$selector = "ORG_NAVN LIKE '%".$search_for."%'";
+							$selector = "upper(ORG_NAVN) LIKE '%".$search_for."%'";
 						break; 
 				}
 				$sql = "$sql AND $selector";
@@ -401,17 +398,20 @@
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
 						"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4";
-			if($search_for){
+			if($search_for)
+			{
+				$search_for = strtoupper($search_for);
 				$selector = "";
 				switch($search_type){
 					case 'unit_leader':
 							$search_words = split(' ', $search_for);
 							$count = 0;
 							$selector = "(";
-							foreach($search_words as $search_word){
-								$selector = $selector." (FORNAVN LIKE '%$search_word%' OR ".
-										"ETTERNAVN LIKE '%$search_word%' OR ".
-										"BRUKERNAVN LIKE '%$search_word%')";
+							foreach($search_words as $search_word)
+							{
+								$selector = $selector." (upper(FORNAVN) LIKE '%$search_word%' OR ".
+										"upper(ETTERNAVN) LIKE '%$search_word%' OR ".
+										"upper(BRUKERNAVN) LIKE '%$search_word%')";
 								if($count < (count($search_words)-1)) $selector = $selector." OR ";
 								$count = ($count + 1);
 							}
@@ -419,7 +419,7 @@
 							
 						break;
 					default:
-							$selector = "ORG_NAVN LIKE '%".$search_for."%'";
+							$selector = "upper(ORG_NAVN) LIKE '%".$search_for."%'";
 						break; 
 				}
 				$sql = "$sql AND $selector";
