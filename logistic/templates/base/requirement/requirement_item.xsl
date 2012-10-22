@@ -4,7 +4,7 @@
 <xsl:template name="requirement_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
-<div class="yui-content" style="padding: 20px;">
+<div class="content-wrp">
 	<div id="details">
 		<form action="#" method="post">
 			<input type="hidden" name="id" value = "{requirement/id}" />
