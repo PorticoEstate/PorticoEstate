@@ -365,7 +365,6 @@
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project,
 					'view' => 'view_project'
 				);
