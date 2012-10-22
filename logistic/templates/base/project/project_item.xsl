@@ -10,7 +10,7 @@
 			<xsl:value-of select="php:function('lang', 'Project')" />
 	</h1>
 	
-	<div class="content-wrp">
+	<div id="project_details" class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.save')" />
@@ -29,8 +29,8 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/name" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<input type="text" name="name" id="name" value="{project/name}" size="100"/>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/name" />
@@ -47,10 +47,10 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/project_type_id" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<select id="project_type_id" name="project_type_id">
 								<xsl:apply-templates select="options"/>
 							</select>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/project_type_label" />
@@ -67,8 +67,8 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/description" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="project/description" disable-output-escaping="yes"/></textarea>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/description" disable-output-escaping="yes"/>

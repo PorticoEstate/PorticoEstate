@@ -29,6 +29,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soproject');
+	phpgw::import_class('phpgwapi.jquery');
 
 	include_class('logistic', 'project');
 
@@ -513,6 +514,9 @@
 
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+			
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('logistic', 'logistic', 'project.js');
 			self::render_template_xsl(array('project/project_item'), $data);
 		}
 		
