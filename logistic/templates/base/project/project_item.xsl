@@ -5,12 +5,12 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
-	<div class="identifier-header">
-		<h1><img src="{img_go_home}" />
-				<xsl:value-of select="php:function('lang', 'Project')" />
-		</h1>
-	</div>
-	<div class="yui-content">
+	
+	<h1>
+			<xsl:value-of select="php:function('lang', 'Project')" />
+	</h1>
+	
+	<div class="content-wrp">
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
