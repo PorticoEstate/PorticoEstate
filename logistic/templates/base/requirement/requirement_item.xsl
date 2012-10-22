@@ -6,7 +6,10 @@
 
 <div class="content-wrp">
 	<div id="details">
-		<form action="#" method="post">
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.save')" />
+		</xsl:variable>
+		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value = "{requirement/id}" />
 			<input type="hidden" id="activity_id" name="activity_id" value="{activity/id}" />
 						
@@ -17,11 +20,16 @@
 				<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="requirement/error_msg_array/start_date != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/start_date" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<input class="date" id="start_date" name="start_date" type="text">
-					    	<xsl:if test="requirement/start_date != ''">
-					      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></xsl:attribute>
-					    	</xsl:if>
-				    	</input>	
+						    <xsl:if test="requirement/start_date != ''">
+						     	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></xsl:attribute>
+						    </xsl:if>
+				    	</input>
+				    	<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
@@ -34,11 +42,16 @@
 				<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="requirement/error_msg_array/end_date != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/end_date" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<input class="date" id="end_date" name="end_date" type="text">
 					    	<xsl:if test="requirement/end_date != ''">
 					      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></xsl:attribute>
 					    	</xsl:if>
-				    	</input>	
+				    	</input>
+				    	<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></span>
@@ -46,14 +59,18 @@
 					</xsl:choose>
 				</dd>
 			
-			
 				<dt>
 					<label for="no_of_items">Antall</label>
 				</dt>
 				<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="requirement/error_msg_array/no_of_items != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/no_of_items" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" value="{requirement/no_of_items}" />
+							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 						<span><xsl:value-of select="requirement/no_of_items"/></span>
@@ -67,6 +84,10 @@
 						<label>Velg hvilken kategori behovet gjelder</label>
 					</dt>
 						<dd>
+							<xsl:if test="requirement/error_msg_array/location_id != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/location_id" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<select name="location_id" id="location_id">
 								<option value="">Velg kategori</option>
 								<xsl:for-each select="distict_locations">
@@ -84,7 +105,7 @@
 										</xsl:choose>
 								</xsl:for-each>
 							</select>
-							<div id="attributes"></div>
+							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</dd>					
 					</xsl:when>
 					<xsl:otherwise>
