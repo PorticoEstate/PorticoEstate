@@ -13,32 +13,6 @@
 				<h1 style="float:left;"> 
 					<xsl:value-of select="parent_activity/name" disable-output-escaping="yes"/>::<xsl:value-of select="php:function('lang', 'Add sub activity')" />
 				</h1>
-				
-				<xsl:if test="editable">
-				<div style="float: left; margin-left: 130px;" class="select-box">
-					<label>Velg en annen hovedaktivitet</label>
-					
-					<form action="#">
-						<input type="hidden" name="activity_id" value="{activity/id}" />
-						<input type="hidden" name="parent_id" value="{parent_activity/id}" />
-												
-						<select id="select_activity" name="parent_activity_id" class="selectLocation">
-							<option>Velg aktivitet</option>
-							<xsl:for-each select="activities">
-			        	<option value="{id}">
-			        		<xsl:if test="activity/parent_id = id">
-				        		<xsl:attribute name="selected">
-			    						selected
-			   						</xsl:attribute>
-				        	</xsl:if>
-			          	<xsl:value-of disable-output-escaping="yes" select="name"/>
-				        </option>
-						  </xsl:for-each>
-						</select>					
-					</form>
-				</div>
-				</xsl:if>
-						
 			</xsl:when>
 			<xsl:otherwise>
 				<h1 style="float:left;"> 
@@ -56,6 +30,34 @@
 				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
+				<xsl:if test="parent_activity/id &gt; 0">
+						<dt>		
+				<xsl:if test="editable">
+
+					
+						
+				<div style="margin-bottom: 1em;" class="select-box">
+					<label>Velg en annen hovedaktivitet</label>
+					
+					<select id="select_activity" name="parent_activity_id" class="selectLocation">
+						<option>Velg aktivitet</option>
+						<xsl:for-each select="activities">
+		        	<option value="{id}">
+		        		<xsl:if test="activity/parent_id = id">
+			        		<xsl:attribute name="selected">
+		    						selected
+		   						</xsl:attribute>
+			        	</xsl:if>
+		          	<xsl:value-of disable-output-escaping="yes" select="name"/>
+			        </option>
+					  </xsl:for-each>
+					</select>					
+				</div>
+				</xsl:if>
+				</dt>
+			</xsl:if>
+				
+					
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang','Activity name')" /></label>
 					</dt>
