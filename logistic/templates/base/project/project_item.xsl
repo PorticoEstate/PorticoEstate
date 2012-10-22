@@ -12,7 +12,10 @@
 	
 	<div class="content-wrp">
 		<div id="details">
-			<form action="#" method="post">
+			<xsl:variable name="action_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.save')" />
+			</xsl:variable>
+			<form action="{$action_url}" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
 				<dl class="proplist-col">
@@ -22,7 +25,12 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/name != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/name" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<input type="text" name="name" id="name" value="{project/name}" size="100"/>
+							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/name" />
@@ -35,9 +43,14 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/project_type_id != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/project_type_id" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<select id="project_type_id" name="project_type_id">
 								<xsl:apply-templates select="options"/>
 							</select>
+							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/project_type_label" />
@@ -50,7 +63,12 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/description != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/description" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="project/description" disable-output-escaping="yes"/></textarea>
+							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="project/description" disable-output-escaping="yes"/>
