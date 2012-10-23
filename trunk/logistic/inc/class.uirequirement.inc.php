@@ -310,7 +310,7 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
 		}
 
-		public function edit($requirement)
+		public function edit($requirement = null)
 		{
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
