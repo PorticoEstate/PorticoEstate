@@ -481,7 +481,7 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.edit'));
 		}
 
-		public function edit($project)
+		public function edit($project = null)
 		{
 			$project_id = phpgw::get_var('id');
 			if ($project_id && is_numeric($project_id))

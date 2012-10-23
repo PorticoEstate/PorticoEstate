@@ -307,13 +307,14 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit'));
 		}
 
-		public function edit($activity)
+		public function edit($activity = null)
 		{
+			
 			$activity_id = phpgw::get_var('id');
 			$parent_activity_id = phpgw::get_var('parent_id');
 			$project_id = phpgw::get_var('project_id');
 			
-			if ($activity_id && is_numeric($activity_id))
+			if( !$activity && $activity_id && is_numeric($activity_id) )
 			{
 				$activity = $this->so->get_single($activity_id);
 			}
@@ -348,7 +349,7 @@
 				'responsible_users' => $accounts,
 				'activities' => $activities,
 				'activity' => $activity,
-				'editable' => true,
+				'editable' => true
 			);
 			
 			if($parent_activity)
