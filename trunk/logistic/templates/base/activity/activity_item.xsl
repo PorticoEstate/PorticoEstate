@@ -34,7 +34,7 @@
 					<xsl:if test="parent_activity/id &gt; 0">
 					<dt>		
 						<xsl:if test="editable">
-							<div style="margin-bottom: 1em;" class="select-box">
+							<div style="margin-bottom: 1em;width: 88%;" class="select-box">
 								<label>Velg en annen hovedaktivitet</label>
 								<select id="select_activity" name="parent_activity_id" class="selectLocation">
 									<option>Velg aktivitet</option>
@@ -117,11 +117,16 @@
 					<dd>
 						<xsl:choose>
 							<xsl:when test="editable">
+								<xsl:if test="activity/error_msg_array/end_date != ''">
+									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/end_date" /></xsl:variable>
+									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+								</xsl:if>
 								<input class="date" id="end_date" name="end_date" type="text">
 						    	<xsl:if test="activity/end_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
 						    	</xsl:if>
-					    	</input>	
+					    	</input>
+					    	<span class="help_text line">Angi startdato for aktiviteten</span>
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
@@ -134,6 +139,10 @@
 					<dd>
 						<xsl:choose>
 							<xsl:when test="editable">
+								<xsl:if test="activity/error_msg_array/responsible_user_id != ''">
+									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/responsible_user_id" /></xsl:variable>
+									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+								</xsl:if>
 								<select name="responsible_user_id">
 					        <xsl:for-each select="responsible_users">
 					        	<xsl:variable name="full_name">
@@ -154,6 +163,7 @@
 					        	</xsl:choose>
 					        </xsl:for-each>
 					      </select>
+					      <span class="help_text line">Angi startdato for aktiviteten</span>
 					      </xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="activity/responsible_user_name"/></span>
