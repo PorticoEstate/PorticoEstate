@@ -38,12 +38,13 @@
 		private $so;
 		private $so_project;
 		public $public_functions = array(
-			'query' => true,
-			'add' 	=> true,
-			'edit' 	=> true,
-			'view' 	=> true,
-			'index' => true,
-			'save' 	=> true
+			'query'			=> true,
+			'add' 			=> true,
+			'edit' 			=> true,
+			'view' 			=> true,
+			'index' 		=> true,
+			'save' 			=> true,
+			'edit_favorite'	=> true
 		);
 
 		public function __construct()
@@ -210,6 +211,18 @@
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'add_favorite',
+						'text' 			=> lang('toggle as favorite'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'logistic.uiactivity.edit_favorite'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
@@ -439,6 +452,39 @@
 			{
 				$this->edit($activity);
 			}
+		}
+
+		public function edit_favorite()
+		{
+			if($activity_id = phpgw::get_var('activity_id'))
+			{
+				$activity = $this->so->get_single($activity_id);
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites']) && $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'])
+				{
+					$menu_favorites = $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'];
+				}
+				else
+				{
+					$menu_favorites = array();
+				}
+
+				if(isset($menu_favorites['activity'][$activity_id]))
+				{
+					unset($menu_favorites['activity'][$activity_id]);
+				}
+				else
+				{
+					$menu_favorites['activity'][$activity_id] = $activity->get_name();
+				}
+
+				$GLOBALS['phpgw']->preferences->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->add('logistic','menu_favorites',$menu_favorites,'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				execMethod('phpgwapi.menu.clear');
+			}
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.index'));	
 		}
 
 		private function get_user_array()
