@@ -5,19 +5,22 @@
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
 <div class="yui-content" style="padding: 20px;">
-		<form id="frm-requirement-values" action="#" method="post">
+		<h2><xsl:value-of select="php:function('lang', 'Criterias')" /></h2>
+		
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.save_requirement_values')" />
+		</xsl:variable>
+		<form id="frm-requirement-values" action="{$action_url}" method="post">
 			<input type="hidden" name="requirement_id" value = "{requirement/id}" />
 										
 			<dl class="proplist-col">
+			<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-					<dt>
-						<h2>Legg til kriterier</h2>
-					</dt>
-						<dd>
 						<div id="attributes">
 							<xsl:for-each select="requirement_attributes_array">
 								<div class="attribute">
+									<div style="display:none;" class='input_error_msg'><xsl:value-of select="php:function('lang', 'error_msg_1')" /></div>
 									<xsl:choose>
 										<xsl:when test="cust_attribute/column_info/type = 'T'">
 												<label><xsl:value-of select="cust_attribute/input_text"/></label>
@@ -109,62 +112,64 @@
 								</div>
 							</xsl:for-each>
 						</div>
-						</dd>					
 					</xsl:when>
 					<xsl:otherwise>
-					<dt>
-						<label>Kriterier for behovet</label>
-					</dt>
-						<dd>
-						<div id="attributes">
-							<xsl:for-each select="requirement_attributes_array">
-								<div class="attribute">
-									<label style="margin-left:10px;"><xsl:value-of select="cust_attribute/input_text" /></label>
-									<xsl:choose>
-										<xsl:when test="cust_attribute/column_info/type = 'T'">
-											<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
-										</xsl:when>
-										<xsl:when test="cust_attribute/column_info/type = 'V' or cust_attribute/column_info/type = 'I'">
-					 
-												<xsl:if test="operator = 'btw'">
-													<span style="margin-left:10px;"><xsl:value-of select="substring-before(attrib_value, ':')" /></span>
-												</xsl:if>
-										
-												<xsl:choose>
-													<xsl:when test="operator = 'eq'">
-														<span style="margin-left:10px;">Lik</span>
-													</xsl:when>
-													<xsl:when test="operator = 'gt'">
-														<span style="margin-left:10px;">Større enn</span>
-													</xsl:when>
-													<xsl:when test="operator = 'lt'">
-														<span style="margin-left:10px;">Mindre enn</span>
-													</xsl:when>
-													<xsl:when test="operator = 'btw'">
-														<span style="margin-left:10px;">Mellom</span>
-													</xsl:when>
-												</xsl:choose>
-												
+							<xsl:choose>
+								<xsl:when test="requirement_attributes_array/child::node()">
+									<div id="attributes">
+										<xsl:for-each select="requirement_attributes_array">
+										<div class="attribute">
+											<label style="margin-left:10px;"><xsl:value-of select="cust_attribute/input_text" /></label>
 											<xsl:choose>
-												<xsl:when test="operator = 'btw'">
-												<span style="margin-left:10px;"><xsl:value-of select="substring-after(attrib_value, ':')" /></span>
+												<xsl:when test="cust_attribute/column_info/type = 'T'">
+													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
 												</xsl:when>
-												<xsl:otherwise>
-														<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
-												</xsl:otherwise>
+												<xsl:when test="cust_attribute/column_info/type = 'V' or cust_attribute/column_info/type = 'I'">
+							 
+														<xsl:if test="operator = 'btw'">
+															<span style="margin-left:10px;"><xsl:value-of select="substring-before(attrib_value, ':')" /></span>
+														</xsl:if>
+												
+														<xsl:choose>
+															<xsl:when test="operator = 'eq'">
+																<span style="margin-left:10px;">Lik</span>
+															</xsl:when>
+															<xsl:when test="operator = 'gt'">
+																<span style="margin-left:10px;">Større enn</span>
+															</xsl:when>
+															<xsl:when test="operator = 'lt'">
+																<span style="margin-left:10px;">Mindre enn</span>
+															</xsl:when>
+															<xsl:when test="operator = 'btw'">
+																<span style="margin-left:10px;">Mellom</span>
+															</xsl:when>
+														</xsl:choose>
+														
+													<xsl:choose>
+														<xsl:when test="operator = 'btw'">
+														<span style="margin-left:10px;"><xsl:value-of select="substring-after(attrib_value, ':')" /></span>
+														</xsl:when>
+														<xsl:otherwise>
+																<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
+														</xsl:otherwise>
+													</xsl:choose>
+							
+												</xsl:when>
+												<xsl:when test="cust_attribute/column_info/type = 'LB'">
+													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
+												</xsl:when>
 											</xsl:choose>
-					
-										</xsl:when>
-										<xsl:when test="cust_attribute/column_info/type = 'LB'">
-											<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
-										</xsl:when>
-									</xsl:choose>
+										</div>
+									</xsl:for-each>
 								</div>
-							</xsl:for-each>
-						</div>
-						</dd>	
+								</xsl:when>
+								<xsl:otherwise>
+									<p>Ingen kriterier lagt til</p>
+								</xsl:otherwise>
+							</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
+				</dd>	
 			</dl>
 			
 			<div class="form-buttons">
@@ -176,8 +181,14 @@
 						<input type="submit" name="cancel_requirement_values" value="{$lang_cancel}" title = "{$lang_cancel}" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-						<input type="submit" name="edit_requirement_values" value="{$lang_edit}" title = "{$lang_edit}" />
+						<xsl:variable name="params">
+								<xsl:text>menuaction:logistic.uirequirement.add_requirement_values, requirement_id:</xsl:text>
+								<xsl:value-of select="requirement/id" />
+							</xsl:variable>
+							<xsl:variable name="edit_url">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
+							</xsl:variable>
+							<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'edit')" /></a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>

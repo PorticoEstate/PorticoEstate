@@ -109,7 +109,12 @@
 						</dd>					
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="location/descr" />
+						<dt>
+							<label>Kategori</label>
+						</dt>
+						<dd>
+							<xsl:value-of select="location/descr" />
+						</dd>		
 					</xsl:otherwise>
 				</xsl:choose>
 			</dl>

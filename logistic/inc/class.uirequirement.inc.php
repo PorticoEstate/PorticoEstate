@@ -57,6 +57,7 @@
 			'save' 										=> true,
 			'add_requirement_values' 	=> true,
 			'view_requirement_values' => true,
+			'save_requirement_values' => true,
 			'get_custom_attributes' 	=> true
 		);
 
@@ -436,130 +437,100 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.edit'));
 			}
 
-			if (isset($_POST['save_requirement_values']))
+			$location_id = $requirement->get_location_id();
+			$activity_id = $requirement->get_activity_id();
+
+			$custom_attributes_array = array();
+			$custom_attributes_array = $this->get_custom_attributes($location_id, $activity_id);
+
+			$filters = array('requirement_id' => $requirement_id);
+			$requirement_values_array = $this->so_requirement_value->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+
+			$custom	= createObject('phpgwapi.custom_fields');
+
+			if( count( $requirement_values_array ) > 0 )
 			{
-				$attributes_array = array();
-				$attributes_array = phpgw::get_var('cust_attributes');
-
-				$this->so_requirement_value->delete_values($requirement_id);
-
-				foreach($attributes_array as $attribute)
+				foreach($requirement_values_array as $requirement_value)
 				{
-					$attribute_array = explode ( ":", $attribute );
-					$cust_attribute_id = $attribute_array[0];
-					$operator = $attribute_array[1];
-					$attrib_value = $attribute_array[2];
+					$location_id = $requirement->get_location_id();
 
-					$requirement_value = new logistic_requirement_value();
-					$requirement_value->set_requirement_id( $requirement_id );
-					$requirement_value->set_value( $attrib_value );
-					$requirement_value->set_operator( $operator );
-					$requirement_value->set_cust_attribute_id( $cust_attribute_id );
-					$user_id = $GLOBALS['phpgw_info']['user']['id'];
-					$requirement_value->set_create_user($user_id);
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+					$entity_arr = explode('.',$loc_arr['location']);
 
-					$this->so_requirement_value->store($requirement_value);
+					$entity_id = $entity_arr[2];
+					$cat_id = $entity_arr[3];
+					$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+
+					$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+
+					$temp_requirement_attributes_array[$cust_attribute_id][] = array(
+						"id" 							=> $requirement_value->get_id(),
+						"attrib_value"		=> $requirement_value->get_value(),
+						"operator" 				=> $requirement_value->get_operator(),
+						"cust_attribute" 	=> $attrib_data
+					);
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id));
-			}
-			else
-			{
-				$location_id = $requirement->get_location_id();
-				$activity_id = $requirement->get_activity_id();
 
-				$custom_attributes_array = array();
-				$custom_attributes_array = $this->get_custom_attributes($location_id, $activity_id);
-
-				$filters = array('requirement_id' => $requirement_id);
-				$requirement_values_array = $this->so_requirement_value->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-
-				$custom	= createObject('phpgwapi.custom_fields');
-
-				if( count( $requirement_values_array ) > 0 )
+				foreach($temp_requirement_attributes_array as $req_attrib)
 				{
-					foreach($requirement_values_array as $requirement_value)
+					if( count( $req_attrib ) > 1 )
 					{
-						$location_id = $requirement->get_location_id();
-
-						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-						$entity_arr = explode('.',$loc_arr['location']);
-
-						$entity_id = $entity_arr[2];
-						$cat_id = $entity_arr[3];
-						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
-
-						$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
-
-						$temp_requirement_attributes_array[$cust_attribute_id][] = array(
-							"id" 							=> $requirement_value->get_id(),
-							"attrib_value"		=> $requirement_value->get_value(),
-							"operator" 				=> $requirement_value->get_operator(),
-							"cust_attribute" 	=> $attrib_data
-						);
-					}
-
-
-					foreach($temp_requirement_attributes_array as $req_attrib)
-					{
-						if( count( $req_attrib ) > 1 )
+						if( $req_attrib[0]['operator'] == 'gt' )
 						{
-							if( $req_attrib[0]['operator'] == 'gt' )
-							{
-								$constraint_1 = $req_attrib[0];
-								$constraint_2 = $req_attrib[1];
-							}
-							else
-							{
-								$constraint_1 = $req_attrib[1];
-								$constraint_2 = $req_attrib[0];
-							}
-
-							$req_attrib[0]['operator'] = 'btw';
-							$req_attrib[0]['attrib_value'] = $constraint_1['attrib_value'] . ":" . $constraint_2['attrib_value'];
-							$requirement_attributes_array[] = $req_attrib[0];
+							$constraint_1 = $req_attrib[0];
+							$constraint_2 = $req_attrib[1];
 						}
 						else
 						{
-							$requirement_attributes_array[] = $req_attrib[0];
+							$constraint_1 = $req_attrib[1];
+							$constraint_2 = $req_attrib[0];
 						}
+
+						$req_attrib[0]['operator'] = 'btw';
+						$req_attrib[0]['attrib_value'] = $constraint_1['attrib_value'] . ":" . $constraint_2['attrib_value'];
+						$requirement_attributes_array[] = $req_attrib[0];
 					}
-				}
-				else
-				{
-					foreach($custom_attributes_array as $cust_attrib)
+					else
 					{
-						$requirement_attributes_array[] = array(
-							"id" 							=> "",
-							"attrib_value" 		=> "",
-							"operator" 				=> "",
-							"cust_attribute" 	=> $cust_attrib
-						);
+						$requirement_attributes_array[] = $req_attrib[0];
 					}
 				}
-
-				$tabs = $this->make_tab_menu($requirement_id);
-
-				$data = array
-				(
-					'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-					'view'													=> "requirement_values",
-					'requirement' 									=> $requirement,
-					'requirement_attributes_array'	=> $requirement_attributes_array,
-					'distict_locations' 						=> $distict_locations_array,
-					'editable' 											=> true,
-				);
-
-				if($activity_id > 0)
-				{
-					$data['activity'] = $activity;
-				}
-
-				phpgwapi_jquery::load_widget('core');
-
-				self::add_javascript('logistic', 'logistic', 'requirement.js');
-				self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_values'), $data);
 			}
+			else
+			{
+				foreach($custom_attributes_array as $cust_attrib)
+				{
+					$requirement_attributes_array[] = array(
+						"id" 							=> "",
+						"attrib_value" 		=> "",
+						"operator" 				=> "",
+						"cust_attribute" 	=> $cust_attrib
+					);
+				}
+			}
+
+			$tabs = $this->make_tab_menu($requirement_id);
+
+			$data = array
+			(
+				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'													=> "requirement_values",
+				'requirement' 									=> $requirement,
+				'requirement_attributes_array'	=> $requirement_attributes_array,
+				'distict_locations' 						=> $distict_locations_array,
+				'editable' 											=> true,
+			);
+
+			if($activity_id > 0)
+			{
+				$data['activity'] = $activity;
+			}
+
+			phpgwapi_jquery::load_widget('core');
+
+			self::add_javascript('logistic', 'logistic', 'requirement.js');
+			self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_values'), $data);
 		}
 
 		public function view_requirement_values()
@@ -644,6 +615,35 @@
 			self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_values'), $data);
 		}
 
+		public function save_requirement_values()
+		{		
+				$requirement_id = phpgw::get_var('requirement_id');	
+				$attributes_array = array();
+				$attributes_array = phpgw::get_var('cust_attributes');
+
+				$this->so_requirement_value->delete_values($requirement_id);
+
+				foreach($attributes_array as $attribute)
+				{
+					$attribute_array = explode ( ":", $attribute );
+					$cust_attribute_id = $attribute_array[0];
+					$operator = $attribute_array[1];
+					$attrib_value = $attribute_array[2];
+
+					$requirement_value = new logistic_requirement_value();
+					$requirement_value->set_requirement_id( $requirement_id );
+					$requirement_value->set_value( $attrib_value );
+					$requirement_value->set_operator( $operator );
+					$requirement_value->set_cust_attribute_id( $cust_attribute_id );
+					$user_id = $GLOBALS['phpgw_info']['user']['id'];
+					$requirement_value->set_create_user($user_id);
+
+					$this->so_requirement_value->store($requirement_value);
+				}
+
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id));
+		}		
+		
 		public function get_custom_attributes($location_id, $activity_id){
 
 				if($location_id == "")
@@ -696,11 +696,11 @@
 				$tabs = array(
 						   array(
 							'label' => "1: " . lang('Requirement details'),
-						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.edit',
+						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
 																				   													 'id' => $requirement->get_id()))
 						), array(
 							'label' => "2: " . lang('Add constraints'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.add_requirement_values',
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
 																				   													 'requirement_id' => $requirement->get_id()))
 						));
 			}else{
