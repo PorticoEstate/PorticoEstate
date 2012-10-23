@@ -119,7 +119,7 @@
 									<div id="attributes">
 										<xsl:for-each select="requirement_attributes_array">
 										<div class="attribute">
-											<label style="margin-left:10px;"><xsl:value-of select="cust_attribute/input_text" /></label>
+											<label><xsl:value-of select="cust_attribute/input_text" /></label>
 											<xsl:choose>
 												<xsl:when test="cust_attribute/column_info/type = 'T'">
 													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
