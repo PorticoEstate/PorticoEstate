@@ -144,6 +144,7 @@
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
 								<select name="responsible_user_id">
+									<option value="">Velg ansvarlig bruker</option>
 					        <xsl:for-each select="responsible_users">
 					        	<xsl:variable name="full_name">
 					        		<xsl:value-of disable-output-escaping="yes" select="account_firstname"/><xsl:text> </xsl:text>
