@@ -424,25 +424,27 @@
 		 * @param HTTP::id	the control_id, and a comma seperated list of group ids
 		 * @return redirect to function view_control_items
 		 */
-		public function save_control_groups(){
+		public function save_control_groups()
+		{
 			$control_id = phpgw::get_var('control_id');
-			$control_group_ids = phpgw::get_var('control_group_ids');		
+			$control_group_ids = phpgw::get_var('control_group_ids');
 
 			// Fetches saved control groups 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 			
 			// Deletes groups from control that's not among the chosen groups
+
 			foreach($saved_control_groups as $group)
 			{
 				// If saved group id not among chosen control ids, delete the group for the control    
-				if( !in_array($group->get_id(), $saved_control_groups) ){
-						$this->so_control_group_list->delete($control_id, $group->get_id());
-						
-						// Deletes control items for group
-						$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
+				if( !in_array($group->get_id(), $control_group_ids) )
+				{
+					$this->so_control_group_list->delete($control_id, $group->get_id());
+					// Deletes control items for group
+					$this->so_control_item_list->delete_control_items_for_group_list($control_id, $group->get_id());
 				}
 			}
-			
+
 			$group_order_nr = 1;
 
 			// Saving control groups 

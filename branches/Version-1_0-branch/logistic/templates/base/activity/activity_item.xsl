@@ -182,8 +182,14 @@
 							<input type="submit" name="cancel_activity" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-							<input type="submit" name="edit_activity" value="{$lang_edit}" title = "{$lang_edit}" />
+							<xsl:variable name="params">
+								<xsl:text>menuaction:logistic.uiactivity.edit, id:</xsl:text>
+								<xsl:value-of select="activity/id" />
+							</xsl:variable>
+							<xsl:variable name="edit_url">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
+							</xsl:variable>
+							<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'edit')" /></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

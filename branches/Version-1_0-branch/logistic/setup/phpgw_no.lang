@@ -60,3 +60,5 @@ t_view_booking_allocations	logistic	no	Vis registrerte bookinger på dette behov
 error_msg_1	logistic	no	Vennligst fyll inn dette feltet
 error_msg_2	logistic	no	Vennligst velg en verdi i listen
 error_msg_3	logistic	no	Vennligst angi sluttdato etter startdato
+Criterias	logistic	no	Kriterier
+Add criterias	logistic	no	Legg til kriterier
