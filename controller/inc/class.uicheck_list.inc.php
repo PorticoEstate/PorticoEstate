@@ -295,7 +295,6 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			
-			
 			$cl_status_updater = new check_list_status_updater();
 			$cl_status_updater->update_check_list_status( $check_list_id );
 		
@@ -502,12 +501,8 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
@@ -583,7 +578,6 @@
 				'check_list' 				=> $check_list->toArray(),
 				'location_array'			=> $location_array,
 				'component_array'			=> $component_array,
-		//		'date_format' 				=> $date_format,
 				'type' 						=> $type,
 				'current_year' 				=> $year,
 				'current_month_nr' 			=> $month,
@@ -592,8 +586,6 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
@@ -722,7 +714,6 @@
 			
 			phpgwapi_jquery::load_widget('core');
 
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
