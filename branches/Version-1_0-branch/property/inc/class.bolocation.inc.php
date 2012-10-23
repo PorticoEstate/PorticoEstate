@@ -689,7 +689,8 @@ JS;
 				'district_id'=>$this->district_id,'allrows'=>$allrows,
 				'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
 				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
-				'results' => $data['results']));
+				'results' => $data['results'],'control_registered' => $data['control_registered'],
+					 'control_id' => $data['control_id']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;

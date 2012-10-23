@@ -373,6 +373,11 @@
 							'text'	=> lang('Configuration'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'property') )
 						),
+						'import'	=> array
+						(
+							'text'	=> lang('Generic import'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index') )
+						),
 						'entity'	=> array
 						(
 							'text'	=> lang('Admin entity'),

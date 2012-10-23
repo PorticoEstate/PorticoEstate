@@ -1,4 +1,5 @@
 <!-- $Id$ -->
+
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>
@@ -16,201 +17,178 @@
   	</func:result>
 </func:function>
 
-<xsl:template name="register_control_to_location" xmlns:php="http://php.net/xsl">
-	<!-- IMPORTANT!!! Loads YUI javascript -->
-	<xsl:call-template name="common"/>
+<!-- separate tabs and  inline tables-->
 
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="yui_phpgw_i18n"/>
+	
+<div class="yui-navset yui-navset-top" id="control_location_tabview">
+	<div class="identifier-header">
+		<h1><xsl:value-of select="php:function('lang', 'locations for control')"/></h1>
+	</div>
+	<xsl:value-of disable-output-escaping="yes" select="tabs" />
+	<xsl:call-template name="register_control_to_component" />
+</div>
+</xsl:template>
+
+<xsl:template name="register_control_to_component" xmlns:php="http://php.net/xsl">
 	<div class="content-wrp">
-		<div>
-			<xsl:call-template name="yui_phpgw_i18n"/>
-			<xsl:call-template name="control_filters" />
-			<xsl:apply-templates select="filter_form" />
-			<xsl:apply-templates select="paging"/>
-			<xsl:apply-templates select="datatable"/>
-			<xsl:apply-templates select="form/list_actions"/>
+		<div id="invoice-layout">
+				<div class="header">
+					<h2><xsl:value-of select="php:function('lang', 'invoice')"/></h2>
+				</div>
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<xsl:call-template name="msgbox"/>
+				</xsl:when>
+			</xsl:choose>
+				<div class="body">
+							
+				<style type="text/css">
+					
+					</style>
+					<div id="choose_control">
+						<h4>Velg kontroll</h4>
+						<select id="control_area_id" name="control_area_id">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>		 
+						<select id="control_id" name="control_id">
+							<xsl:apply-templates select="control/options"/>
+						</select>
+					</div>
+				
+					<div id="choose-location">
+							<xsl:apply-templates select="filter_form" />
+					
+					  	<form action="{update_action}" name="acl_form" id="acl_form" method="post">
+									<xsl:apply-templates select="datatable"/>
+						</form>
+					</div>
+				</div>
 		</div>
 	</div>
 </xsl:template>
 
-<xsl:template name="control_filters" xmlns:php="http://php.net/xsl">
-	
-	<div id="choose_control">
-		<!-- 
-			When control area is chosen, an ajax request is executed. 
-			The operation fetches controls from db and populates the control list.
-			The ajax opearation is handled in ajax.js 
-		-->
-		 <div class="error_msg">Du må velge kontroll før du kan legge til bygg</div>
-		 <h4>Velg kontroll</h4> 
-		 <select id="control_area_list" name="control_area_list">
-		   <option value="">Velg kontrollområde</option>
-			 <xsl:for-each select="control_areas_array">
-				  <option value="{id}">
-				    <xsl:if test="id = //current_control_area_id">
-				      <xsl:attribute name="selected">selected</xsl:attribute>
-				    </xsl:if>
-				    <xsl:value-of select="name"/>
-				  </option>
-			  </xsl:for-each>
-		  </select>
-		  
-		 <form id="loc_form" action="" method="GET">
-			<select id="control_id" name="control_id">
-				<xsl:choose>
-					<xsl:when test="controls_array/child::node()">
-						<xsl:for-each select="controls_array">
-							<xsl:variable name="control_id"><xsl:value-of select="id"/></xsl:variable>
-							<option value="{$control_id}">
-							  <xsl:if test="control_id = //current_control_id">
-				          <xsl:attribute name="selected">selected</xsl:attribute>
-				        </xsl:if>
-								<xsl:value-of select="title"/>
-							</option>				
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<option>
-							Ingen kontroller
-						</option>
-					</xsl:otherwise>
-				</xsl:choose>
-			</select>
-		</form>
-	</div>
-</xsl:template>
-
 <xsl:template match="filter_form" xmlns:php="http://php.net/xsl">
-
-	<form id="queryForm">
-		<xsl:attribute name="method">
-			<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
-		</xsl:attribute>
-
-		<xsl:attribute name="action">
-			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
-		</xsl:attribute>
 		<xsl:call-template name="filter_list"/>
-	</form>
-	
-	<form id="update_table_dummy" method='POST' action='' ></form>
-
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
-	<div id="choose-location">
-		<h4>Velg bygg/eiendom</h4>
-	  <ul id="filters">
-	  	<li>
-			<input type="hidden" id="hidden_control_id" name="control_id">
-				<xsl:attribute name="value">
-					<xsl:value-of select="//current_control_id"/>
-				</xsl:attribute>
-			</input>
+	<h4>Velg lokasjoner som du vil knytte til kontrollen</h4>
+	<fieldset id="comp-filters">
+		<input id= "control_id_hidden" type="hidden" name="control_id"/>
+		
+		<div class="select-box">
+			<label><xsl:value-of select="php:function('lang', 'registered')" /></label>
+	  	<input id= "control_registered" type="checkbox" name="control_registered" value="1"/>
+	  </div>
 
-			<input type="hidden" id="hidden_control_area_id" name="control_area_id">
-			</input>
-	  	
-		  <select id="type_id" name="type_id">
-			<xsl:for-each select="building_types">
-				<xsl:variable name="building_type_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$building_type_id}">
-					<xsl:value-of select="name"/>
-				</option>
-			</xsl:for-each>
-		  </select>
-		</li>
-		<li>
-		  <select id="cat_id" name="cat_id">
-			<xsl:for-each select="category_types">
-				<xsl:variable name="category_type_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$category_type_id}">
-					<xsl:value-of select="name"/>
-				</option>
-			</xsl:for-each>
-		  </select>
-		</li>
-		<li>
-		  <select id="district_id" name="district_id">
-			<xsl:for-each select="district_list">
-				<xsl:variable name="district_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$district_id}">
-					<xsl:value-of select="name"/>
-				</option>
-			</xsl:for-each>
-		  </select>
-		</li>
-		<li>
-		  <select id="part_of_town_id" name="part_of_town_id">
-			<xsl:for-each select="part_of_town_list">
-				<xsl:variable name="part_of_town_id"><xsl:value-of select="id"/></xsl:variable>
-				<option value="{$part_of_town_id}">
-					<xsl:value-of select="name"/>
-				</option>
-			</xsl:for-each>
-		  </select>
-		</li>		
-	  </ul>
-	  <ul id="search_list">
-		  <li>
-		  	<input type="text" name="query" />
-		  </li>
-		  <li>
-		  	<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
-		  	<input type="submit" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		  </li>	  		
-	  </ul>
-	</div>
+	  <div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location type')" /></label>
+			  <select id="location_type" name="location_type">
+					<xsl:apply-templates select="location_type_list/options"/>
+			  </select>
+			</div>
+		  <div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'location category')" /></label>
+			  <select id="location_type_category" name="location_type_category"></select>
+			</div>
+	  </div>
+	  
+		<div class="select-box">
+			<div class="filter">
+	  		<label><xsl:value-of select="php:function('lang', 'district')" /></label>
+				<select id="district_id" name="district_id">
+					<xsl:apply-templates select="district_list/options"/>
+			  </select>
+	  	</div>
+		  <div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'part of town')" /></label>
+				<select id="part_of_town_id" name="part_of_town_id">
+					<xsl:apply-templates select="part_of_town_list/options"/>
+			  </select>
+			</div>
+	  </div>
+<!--		
+		<div class="select-box">
+			<div class="filter">
+				<label><xsl:value-of select="php:function('lang', 'property')" /></label>
+				<select id="loc1" name="loc1">
+					<xsl:apply-templates select="loc1_list/options"/>
+			  </select>
+	  	</div>
+		  <div class="filter">
+		  	<label><xsl:value-of select="php:function('lang', 'building')" /></label>
+			  <select id="loc2" name="loc2">
+					<xsl:apply-templates select="loc2_list/options"/>
+			  </select>
+			</div>
+	  </div>
+-->	  
+	  
+	  <div class="select-box">
+			<label>Søk etter eiendom/bygg/rom</label>
+			<input type="text" value="" id="search-location-name" />
+			<input id= "search-location_code" type="hidden" name="search-location_code"/>
+		</div>
+		
+	</fieldset>
 </xsl:template>
+
 
 <xsl:template match="datatable" xmlns:php="http://php.net/xsl">
-	<div id="data_paginator"/>
-	<div class="error_msg">Du må velge bygg før du kan legge til en kontroll</div>
-	<div id="datatable-container"/>
-	
-  	<xsl:call-template name="datasource-definition" />
-  	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-  	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
-  	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
-  	<form action="#" name="location_form" id="location_form" method="post">
-  		<div class="location_submit"><input type="submit" name="save_location" id="save_location" value="{$label_submit}" onclick="return saveLocationToControl()"/></div>
-  	</form>
-</xsl:template>
+	<div id="paging"></div>
+	<div id="datatable-container"></div>
 
+  <xsl:call-template name="datasource-definition" />
+	<div id="receipt"></div>
+  <xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+	<input type="submit" name="update_acl" id="frm_update_acl" class="btn" value="{$label_submit}"/>
+
+  <xsl:variable name="label_select_add"><xsl:value-of select="php:function('lang', 'select add')" /></xsl:variable>
+  <input type="button" name="select_add" id="frm_update_add" class="btn" value="{$label_select_add}" onclick="checkAll('mychecks_add')"/>
+	
+  <xsl:variable name="label_select_delete"><xsl:value-of select="php:function('lang', 'select delete')" /></xsl:variable>
+	<input type="button" name="select_add" id="frm_update_delete" class="btn" value="{$label_select_delete}" onclick="checkAll('mychecks_delete')"/>
+</xsl:template>
 
 <xsl:template name="datasource-definition" xmlns:php="http://php.net/xsl">
-	<script>
-		YAHOO.namespace('controller');
-	 
- 		YAHOO.controller.columnDefs = [
-				<xsl:for-each select="//datatable/field">
-					{
-						key: "<xsl:value-of select="key"/>",
-						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
-						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
-						<xsl:if test="hidden">
-						hidden: true,
-						</xsl:if>
-						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
-						</xsl:if>
-						className: "<xsl:value-of select="className"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-			];
 
-		var main_source = '<xsl:value-of select="source"/>';
-		var main_columnDefs = YAHOO.controller.columnDefs;
-		var main_form = 'queryForm';
-		var main_filters = ['type_id', 'cat_id', 'district_id', 'part_of_town_id', 'responsibility_roles_list', 'control_area_list', 'control_id'];
-		var main_container = 'datatable-container';
-		var main_table_id = 'datatable';
-		var main_pag = 'data_paginator';
-		var related_table = new Array('locations_table');
-	
-		setDataSource(main_source, main_columnDefs, main_form, main_filters, main_container, main_pag, main_table_id, related_table ); 
-		
-	</script>
-	 
+		<!--  DATATABLE DEFINITIONS-->
+		<script type="text/javascript">
+			var datatable = new Array();
+			var myColumnDefs = new Array();
+			var myButtons = new Array();
+			var td_count = <xsl:value-of select="//td_count"/>;
+
+			<xsl:for-each select="//datatable">
+				datatable[<xsl:value-of select="name"/>] = [
+					{
+						values:<xsl:value-of select="values"/>,
+						total_records: <xsl:value-of select="total_records"/>,
+						is_paginator:  <xsl:value-of select="is_paginator"/>,
+						edit_action:  <xsl:value-of select="edit_action"/>,
+						footer:<xsl:value-of select="footer"/>
+					}
+				]
+			</xsl:for-each>
+			<xsl:for-each select="//myColumnDefs">
+				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+			<xsl:for-each select="//myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
+		</script>
 </xsl:template>
+
+<!-- options for use with select-->
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
+

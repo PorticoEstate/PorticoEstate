@@ -51,3 +51,12 @@ event	logistic	no	Hendelse
 Link	logistic	no	Lenke
 Add requirement to activity	logistic	no	Registrer behov for aktiviteten
 Add requirement	logistic	no	Legg til krav
+Requirement details	logistic	no	Detaljer for behov
+Add constraints	logistic	no	Legg til kriterier på behovet
+No of items	logistic	no	Antall
+Resource type	logistic	no	Ressurstype
+t_new_booking_allocation	logistic	no	Registrer ny booking på dette behovet
+t_view_booking_allocations	logistic	no	Vis registrerte bookinger på dette behovet
+error_msg_1	logistic	no	Vennligst fyll inn dette feltet
+error_msg_2	logistic	no	Vennligst velg en verdi i listen
+error_msg_3	logistic	no	Vennligst angi sluttdato etter startdato

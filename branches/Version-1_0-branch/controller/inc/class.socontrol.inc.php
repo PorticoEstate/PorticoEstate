@@ -551,57 +551,6 @@
 			}
 		}
 		
-		public function register_control_to_location($control_id, $data)
-		{
-
-			$control_id = (int) $control_id;
-			$delete_location = array();
-			$add_location = array();
-			foreach($data['control_location_orig'] as $location_code)
-			{
-				if(!in_array($location_code, $data['control_location']))
-				{
-					$delete_location[] = $location_code;
-				}
-			}
-
-			foreach($data['control_location'] as $location_code)
-			{
-				if(!in_array($location_code, $data['control_location_orig']))
-				{
-					$add_location[] = $location_code;
-				}
-			}
-
-			$this->db->transaction_begin();
-			foreach ($delete_location as $location_code)
-			{
-				$sql  = "DELETE FROM controller_control_location_list ";
-				$sql .= "WHERE control_id = {$control_id} ";
-				$sql .= "AND location_code = '{$location_code}'";
-				
-				$this->db->query($sql);
-			}
-
-			foreach ($add_location as $location_code)
-			{
-				$sql  = "SELECT * ";
-				$sql .= "FROM controller_control_location_list ";
-				$sql .= "WHERE control_id = {$control_id} ";
-				$sql .= "AND location_code = '$location_code'";
-				
-				$this->db->query($sql, __LINE__, __FILE__);
-			
-				if(!$this->db->next_record())
-				{
-					$sql  = "INSERT INTO controller_control_location_list (control_id, location_code) ";
-					$sql .= "VALUES ( {$control_id}, '{$location_code}')";
-					$this->db->query($sql);
-				}
-			}
-
-			return $this->db->transaction_commit();
-		}
 
 		public function check_control_component($control_id, $location_id, $component_id)
 		{
@@ -617,6 +566,77 @@
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 			return $this->db->next_record();
+		}
+
+		/**
+		 * Register that a control should be carried out on a location
+		 *
+		 * @param $data['control_id'] control id
+		 * @param $data['component_id'] component id
+		 * @param $data['location_id'] component id
+		 * @return true or false if the execution was successful  
+		*/
+		function register_control_to_location($data)
+		{
+
+			$delete_component = array();
+			$add_component = array();
+			$this->db->transaction_begin();
+
+			if(isset($data['register_location']) && is_array($data['register_location']))
+			{
+				foreach($data['register_location'] as $location_info)
+				{
+					$location_arr = explode('_', $location_info);
+					if(count($location_arr)!=2)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $location_arr[0];
+					$location_code	= $location_arr[1];
+
+					if(!$control_id)
+					{
+						return false;
+					}
+
+					$sql  = "SELECT * ";
+					$sql .= "FROM controller_control_location_list ";
+					$sql .= "WHERE control_id = {$control_id} ";
+					$sql .= "AND location_code = '{$location_code}' ";
+					
+					$this->db->query($sql, __LINE__, __FILE__);
+			
+					if(!$this->db->next_record())
+					{
+						$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) ";
+						$sql .= "VALUES ( {$control_id}, '{$location_code}')";
+						
+						$this->db->query($sql);
+					}
+				}
+			}
+
+			if(isset($data['delete']) && is_array($data['delete']))
+			{
+				foreach($data['delete'] as $location_info)
+				{
+					$location_arr = explode('_', $location_info);
+					if(count($location_arr)!=2)
+					{
+						continue;
+					}
+					
+					$control_id		= (int) $location_arr[0];
+					$location_code	= $location_arr[1];
+				
+					$sql =  "DELETE FROM controller_control_location_list WHERE control_id = {$control_id} AND location_code = '{$location_code}'";
+					$this->db->query($sql);
+				}
+			}
+
+			return $this->db->transaction_commit();
 		}
 
 		/**
@@ -716,7 +736,7 @@
 			{
 				$ret = array
 				(
-					'table'			=> 'control', // alias
+					'table'			=> 'controller_control', // alias
 					'field'			=> 'id',
 					'translated'	=> 'id'
 				);
@@ -750,7 +770,7 @@
 					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 				}
 			}
-			//var_dump($filters);
+
 			if(isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
@@ -768,7 +788,6 @@
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
 			}
-
 
 			$condition =  join(' AND ', $clauses);
 
@@ -795,9 +814,8 @@
 				$sort_field = 'controller_control.id';
 			}
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
+			
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
-
 		}
 
 		function populate(int $control_id, &$control)
@@ -911,38 +929,6 @@
 			return $ret_array;
 		}
 		
-/*
-		public function getAllBimItems($noOfObjects = null, $bim_type = null) {
-			$filters = array();
-			if($noOfObjects != null && is_numeric($noOfObjects))
-			{
-				$limit = "LIMIT {$noOfObjects}";
-			}
-			else
-			{
-				$limit = "LIMIT 10";
-			}
-			if($bim_type != null && is_numeric($bim_type))
-			{
-				$filter = " AND fm_bim_type.id = {$bim_type}";
-			}
-			$sql  = "SELECT fm_bim_item.id, fm_bim_type.name AS type, fm_bim_item.guid FROM public.fm_bim_item,  public.fm_bim_type WHERE fm_bim_item.type = fm_bim_type.id {$filter} {$limit}";
-			$bimItemArray = array();
-			$this->db->query($sql, __LINE__, __FILE__);
-			$i=1;
-			while($this->db->next_record())
-			{
-				$bimItemArray[$i]['id'] = $this->db->f('id');
-				$bimItemArray[$i]['guid'] = $this->db->f('guid');
-				$bimItemArray[$i]['type'] = $this->db->f('type');
-				//$bimItemArray[$i]['xml_representation'] = $this->db->f('xml_representation',true);
-				//$bimItemArray[] = $bimItem;
-				$i++;
-			}
-
-			return $bimItemArray;
-		}
-*/
 		public function get_control_component($noOfObjects = null, $bim_type = null)
 		{
 			$filters = array();

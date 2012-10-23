@@ -164,6 +164,7 @@ YAHOO.portico.formatGenericLink = function() {
 };
 */
 YAHOO.portico.autocompleteHelper = function(url, field, hidden, container, label_attr) {
+	url += '&';
 	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -198,24 +199,138 @@ YAHOO.portico.setupInlineTablePaginator = function(container) {
 	return pag;
 };
 
+
+YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
+{
+
+	var DatatableName = 'datatable_container' + container;
+	var PaginatorName = 'paginator_container' + container;
+
+	requestUrl = requestUrl ? requestUrl : YAHOO.portico.requestUrl.DatatableName;
+
+	var callback =
+	{
+		success: function(o)
+		{
+			values_ds = JSON.parse(o.responseText);
+
+			if(values_ds && values_ds['sessionExpired'] == true)
+			{
+				window.alert('sessionExpired - please log in');
+				return;
+			}
+
+			YAHOO.portico.Paginator.PaginatorName.setRowsPerPage(values_ds.ResultSet.Result.length,true);
+
+			//delete values of datatable
+			YAHOO.portico.DataTable.DatatableName.getRecordSet().reset();
+
+			//reset total records always to zero
+			YAHOO.portico.Paginator.PaginatorName.setTotalRecords(0,true);
+
+			//obtain records of the last DS and add to datatable
+			var record = values_ds.ResultSet.Result;
+			var newTotalRecords = values_ds.ResultSet.totalResultsAvailable;
+
+			if(record.length)
+			{
+				YAHOO.portico.DataTable.DatatableName.addRows(record);
+			}
+			else
+			{
+				YAHOO.portico.DataTable.DatatableName.render();
+			}
+
+			//update paginator with news values
+			YAHOO.portico.Paginator.PaginatorName.setTotalRecords(newTotalRecords,true);
+
+			if(typeof(values_ds.ResultSet.results) == 'undefined')
+			{
+				var results = 10;
+			}
+			else
+			{
+				var results = values_ds.ResultSet.results;
+			}
+				
+			var activePage = Math.floor(values_ds.ResultSet.startIndex / results) + 1;
+			YAHOO.portico.Paginator.PaginatorName.setPage(activePage,true); //true no fuerza un recarge solo cambia el paginator
+
+			//update "sortedBy" values
+
+			values_ds.ResultSet.sortDir == "asc"? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
+			YAHOO.portico.DataTable.DatatableName.set("sortedBy",{key:values_ds.ResultSet.sortKey,dir:dir_ds});
+		},
+		failure: function(o) {window.alert('Server or your connection is dead.')},
+		timeout: 10000,
+		cache: false
+	}
+
+	try
+	{
+		YAHOO.util.Connect.asyncRequest('POST',requestUrl,callback);
+	}
+	catch(e_async)
+	{
+	   alert(e_async.message);
+	}
+};
+
 YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, disablePagination) {
+
+	var DatatableName = 'datatable_container' + container;
+	var PaginatorName = 'paginator_container' + container;
 	var Dom = YAHOO.util.Dom;
-	
+
+	if(typeof(YAHOO.portico.Paginator) == 'undefined' || !YAHOO.portico.Paginator )
+	{
+		YAHOO.portico.Paginator = {};
+	}
+
+	if(typeof(YAHOO.portico.DataTable) == 'undefined' || !YAHOO.portico.DataTable )
+	{
+		YAHOO.portico.DataTable = {};
+	}
+
+	if(typeof(YAHOO.portico.requestUrl) == 'undefined' || !YAHOO.portico.requestUrl )
+	{
+		YAHOO.portico.requestUrl = {};
+	}
+
 	var container = Dom.get(container);
-	if(!disablePagination) {
+	if(!disablePagination)
+	{
+
+		if ( container.hasChildNodes() )
+		{
+			while ( container.childNodes.length >= 1 )
+		    {
+		        container.removeChild( container.firstChild );
+		    }
+		}
+
 		var paginatorContainer = container.appendChild(document.createElement('div'));
 		var dataTableContainer = container.appendChild(document.createElement('div'));
 	}
-	else {
+	else
+	{
 		dataTableContainer = container;
 	}
 	options = options || {};
 	options.dynamicData = true;
 	
-	if(!disablePagination) {
+	if(!disablePagination)
+	{
 		options.paginator = YAHOO.portico.setupInlineTablePaginator(paginatorContainer);
 		url += '&results=' + options.paginator.getRowsPerPage() + '&';
+
+
+		YAHOO.portico.Paginator.PaginatorName =options.paginator;
 	}
+
+
+//    options.sortedBy = {key:"id", dir:YAHOO.widget.DataTable.CLASS_ASC}; // Sets UI initial sort arrow
+
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
 	myDataSource.connXhrMode = "queueRequests";
@@ -245,6 +360,10 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 		
 		return data;
 	};
+
+	YAHOO.portico.DataTable.DatatableName = myDataTable;
+	YAHOO.portico.requestUrl.DatatableName = url;
+
 	return {dataTable: myDataTable, dataSource: myDataSource};
 };
 

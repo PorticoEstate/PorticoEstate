@@ -150,8 +150,6 @@
 
 			$condition =  join(' AND ', $clauses);
 
-			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
-
 			$tables = "lg_requirement requirement";
 
 			if($return_count) // We should only return a count
@@ -165,7 +163,7 @@
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
+			
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 

@@ -3,9 +3,9 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div class="yui-content">
-<h2>Prosjekttype</h2>
-		<div id="details">
+<div id="main_content" class="yui-content">
+	<h1>Prosjekttype</h1>
+		<div style="padding:20px;" class="content-wrp">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
