@@ -428,11 +428,16 @@
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $this->db->f('column_name');
-					$uicols['descr'][]			= $this->db->f('input_text');
-					$uicols['statustext'][]		= $this->db->f('statustext');
-					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['input_type'][]						= 'text';
+					$uicols['name'][]							= $this->db->f('column_name');
+					$uicols['descr'][]							= $this->db->f('input_text');
+					$uicols['statustext'][]						= $this->db->f('statustext');
+					$uicols['datatype'][$i]						= $this->db->f('datatype');
+					$uicols['get_list_function'][$i]			= $this->db->f('get_list_function',true);
+					$uicols['get_list_function_input'][$i]		= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+					$uicols['get_single_function'][$i]			= $this->db->f('get_single_function',true);
+					$uicols['get_single_function_input'][$i]	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+
 					$uicols['sortable'][$i]		= true;
 					$uicols['exchange'][$i]		= false;
 					$uicols['formatter'][$i]	= '';
@@ -822,11 +827,16 @@
 					}
 					$dataset[$j][$field] = array
 					(
-						'value'		=> $value,
-						'datatype'	=> $uicols['datatype'][$key],
-						'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+						'value'						=> $value,
+						'datatype'					=> $uicols['datatype'][$key],
+						'attrib_id'					=> $uicols['cols_return_extra'][$key]['attrib_id'],
+						'get_list_function' 		=> $uicols['get_list_function'][$key],
+						'get_list_function_input'	=> $uicols['get_list_function_input'][$key],
+						'get_single_function' 		=> $uicols['get_single_function'][$key],
+						'get_single_function_input'	=> $uicols['get_single_function_input'][$key]
 					);
 				}
+
 
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
@@ -834,7 +844,7 @@
 					(
 						'value'		=> $entity_id,
 						'datatype'	=> false,
-						'attrib_id'	=> false
+						'attrib_id'	=> false,
 					);
 				$dataset[$j]['cat_id'] = array
 					(
@@ -1095,15 +1105,19 @@
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $this->db->f('column_name');
-					$uicols['descr'][]			= $this->db->f('input_text');
-					$uicols['statustext'][]		= $this->db->f('statustext');
-					$uicols['datatype'][$i]		= $this->db->f('datatype');
-					$uicols['sortable'][$i]		= true;
-					$uicols['exchange'][$i]		= false;
-					$uicols['formatter'][$i]	= '';
-					$uicols['classname'][$i]	= '';
+					$uicols['input_type'][]						= 'text';
+					$uicols['name'][]							= $this->db->f('column_name');
+					$uicols['descr'][]							= $this->db->f('input_text');
+					$uicols['statustext'][]						= $this->db->f('statustext');
+					$uicols['datatype'][$i]						= $this->db->f('datatype');
+					$uicols['get_list_function'][$i]			= $this->db->f('get_list_function',true);
+					$uicols['get_list_function_input'][$i]		= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+					$uicols['get_single_function'][$i]			= $this->db->f('get_single_function',true);
+					$uicols['get_single_function_input'][$i]	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+					$uicols['sortable'][$i]						= true;
+					$uicols['exchange'][$i]						= false;
+					$uicols['formatter'][$i]					= '';
+					$uicols['classname'][$i]					= '';
 
 					$uicols['cols_return_extra'][$i] = array
 						(
@@ -1447,11 +1461,16 @@
 				foreach($cols_return as $key => $field)
 				{
 					$dataset[$j][$field] = array
-						(
-							'value'		=> $this->db->f($field),
-							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
-						);
+					(
+						'value'						=> $this->db->f($field),
+						'datatype'					=> $uicols['datatype'][$key],
+						'attrib_id'					=> $uicols['cols_return_extra'][$key]['attrib_id'],
+						'get_list_function' 		=> $uicols['get_list_function'][$key],
+						'get_list_function_input'	=> $uicols['get_list_function_input'][$key],
+						'get_single_function' 		=> $uicols['get_single_function'][$key],
+						'get_single_function_input'	=> $uicols['get_single_function_input'][$key]
+
+					);
 				}
 				$dataset[$j]['entity_id'] = array
 					(
