@@ -309,37 +309,39 @@
 
 		public function edit($activity = null)
 		{
-			
 			$activity_id = phpgw::get_var('id');
 			$parent_activity_id = phpgw::get_var('parent_id');
 			$project_id = phpgw::get_var('project_id');
 			
-			if( !$activity && $activity_id && is_numeric($activity_id) )
+			if($activity == null)
 			{
-				$activity = $this->so->get_single($activity_id);
-			}
-			else
-			{
-				if($activity == null)
+				if( $activity_id && is_numeric($activity_id) )
+				{
+					$activity = $this->so->get_single($activity_id);
+				}
+				else
 				{
 					$activity = new logistic_activity();	
 				}
+				
+				if($activity->get_project_id() == '')
+				{
+					$activity->set_project_id( $project_id );
+				}
+				
+				if($parent_activity_id > 0)
+				{
+					$activity->set_parent_id( $parent_activity_id );
+					$parent_activity = $this->so->get_single( $parent_activity_id );
+					$activity->set_project_id( $parent_activity->get_project_id() );
+				}
 			}
 
-			$activity->set_project_id( $project_id );
-			
-			if($parent_activity_id > 0)
-			{
-				$activity->set_parent_id( $parent_activity_id );
-				$parent_activity = $this->so->get_single( $parent_activity_id );
-				$activity->set_project_id( $parent_activity->get_project_id() );
-			}
-			
 			if($activity->get_parent_id() > 0)
 			{
 				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 			}
-	
+			
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 			
 		  $activities = $this->so->get();
