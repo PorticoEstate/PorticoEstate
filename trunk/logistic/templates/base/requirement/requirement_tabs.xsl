@@ -35,7 +35,7 @@
 				<xsl:when test="activity/id != '' or activity/id != 0">
 					<h1 style="float:left;"> 
 						<span>
-							<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
+							<xsl:value-of select="php:function('lang', 'Add criterias')" />
 						</span>
 						<span style="margin-left:5px;">
 							<xsl:value-of select="activity/name" />
@@ -44,7 +44,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h1 style="float:left;"> 
-						<xsl:value-of select="php:function('lang', 'Add requirement')" />
+						<xsl:value-of select="php:function('lang', 'Add criterias')" />
 					</h1>
 				</xsl:otherwise>
 			</xsl:choose>
