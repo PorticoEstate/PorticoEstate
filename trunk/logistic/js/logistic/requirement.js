@@ -87,31 +87,40 @@ $(document).ready(function(){
 	 });
 	 
 	 $("#frm-requirement-values").submit(function (event) {
-		 	 
+		 
+		 $('#attributes .attribute').find('.input_error_msg').hide();
+		 
 		 $('#attributes .attribute').each(function(index) {
-			 var operator = $(this).find('.operator').val();
-			 var cust_attribute_id = $(this).find('.cust_attribute_id').val();
+			var operator = $(this).find('.operator').val();
+			var cust_attribute_id = $(this).find('.cust_attribute_id').val();
+			var attrib_value = $(this).find('.attrib_info').val();
 			 
-			 if(operator == "btw")
-			 {
-				 var constraint_1 = $(this).find('.constraint_1').val();
-				 var constraint_2 = $(this).find('.constraint_2').val();
-				 var constraint_1_str = cust_attribute_id + ":gt:" + constraint_1;
-				 var constraint_2_str = cust_attribute_id + ":lt:" + constraint_2;
+			if(attrib_value == "")
+			{
+				$(this).find('.input_error_msg').show();
+				event.preventDefault();
+			}
+			 
+			if(operator == "btw")
+			{
+				var constraint_1 = $(this).find('.constraint_1').val();
+				var constraint_2 = $(this).find('.constraint_2').val();
+				var constraint_1_str = cust_attribute_id + ":gt:" + constraint_1;
+				var constraint_2_str = cust_attribute_id + ":lt:" + constraint_2;
 				 
-				 var new_cust_attrib_arr = $(this).find('.cust_attributes').clone();
-				 $(new_cust_attrib_arr).addClass("constraint_2");
-				 $(this).find('.cust_attributes').val(constraint_1_str);
-				 
-				 $(this).append(new_cust_attrib_arr);
-				 $(new_cust_attrib_arr).val(constraint_2_str);
-			 }
-			 else
-			 {
-				 var attrib_value = $(this).find('.attrib_info').val();
-				 var str = cust_attribute_id + ":" + operator + ":" + attrib_value;
-				 $(this).find('.cust_attributes').val(str);
-			 }
+				var new_cust_attrib_arr = $(this).find('.cust_attributes').clone();
+				$(new_cust_attrib_arr).addClass("constraint_2");
+				$(this).find('.cust_attributes').val(constraint_1_str);
+				
+				$(this).append(new_cust_attrib_arr);
+				$(new_cust_attrib_arr).val(constraint_2_str);
+			}
+			else
+			{
+				var attrib_value = $(this).find('.attrib_info').val();
+				var str = cust_attribute_id + ":" + operator + ":" + attrib_value;
+				$(this).find('.cust_attributes').val(str);
+			}
 		 });
 	 });		
 });
