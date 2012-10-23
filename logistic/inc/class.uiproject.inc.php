@@ -29,6 +29,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soproject');
+	phpgw::import_class('phpgwapi.jquery');
 
 	include_class('logistic', 'project');
 
@@ -45,7 +46,8 @@
 			'edit_project_type' => true,
 			'edit_project_type_name' => true,
 			'add' => true,
-			'edit' => true
+			'edit' => true,
+			'save' => true
 		);
 
 		public function __construct()
@@ -356,22 +358,15 @@
 
 				$project_array = $project->toArray();
 
-				if ($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project,
 					'view' => 'view_project'
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('project_item'), $data);
+				self::render_template_xsl(array('project/project_item'), $data);
 			}
 		}
 
@@ -400,12 +395,11 @@
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_type_item'), $data);
+				self::render_template_xsl(array('project/project_type_item'), $data);
 			}
 		}
 
@@ -450,13 +444,12 @@
 				$data = array
 					(
 					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 					'project' => $project_array,
 					'editable' => true
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_type_item'), $data);
+				self::render_template_xsl(array('project/project_type_item'), $data);
 			}
 		}
 
@@ -488,7 +481,7 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.edit'));
 		}
 
-		public function edit()
+		public function edit($project = null)
 		{
 			$project_id = phpgw::get_var('id');
 			if ($project_id && is_numeric($project_id))
@@ -497,48 +490,60 @@
 			}
 			else
 			{
-				$project = new logistic_project();
+				if($project == null)
+				{
+					$project = new logistic_project();	
+				}
 			}
 
-			if (isset($_POST['save_project']))
+			$project_types = $this->so->get_project_types();
+			foreach ($project_types as &$p_type)
 			{
-				$project->set_name(phpgw::get_var('name'));
-				$project->set_project_type_id(phpgw::get_var('project_type_id'));
-				$project->set_description(phpgw::get_var('description'));
-
-				$project_id = $this->so->store($project);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view', 'id' => $project_id));
+				if ($project->get_project_type_id() == $p_type['id'])
+				{
+					$p_type['selected'] = 1;
+				}
 			}
-			else if (isset($_POST['cancel_project']))
+			
+			$data = array
+			(
+				'project' => $project,
+				'options' => $project_types,
+				'editable' => true
+			);
+
+			$this->use_yui_editor('description');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+			
+			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('logistic', 'logistic', 'project.js');
+			self::render_template_xsl(array('project/project_item'), $data);
+		}
+		
+		public function save()
+		{
+			$project_id = phpgw::get_var('id');
+			
+			if ($project_id && is_numeric($project_id))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view', 'id' => $project_id));
+				$project = $this->so->get_single($project_id);
 			}
 			else
 			{
-				$project_types = $this->so->get_project_types();
-				foreach ($project_types as &$p_type)
-				{
-					if ($project->get_project_type_id() == $p_type['id'])
-					{
-						$p_type['selected'] = 1;
-					}
-				}
-				$project_array = $project->toArray();
-
-				$data = array
-					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-					'project' => $project_array,
-					'options' => $project_types,
-					'editable' => true
-				);
-
-				$this->use_yui_editor('description');
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
-				self::render_template_xsl(array('project_item'), $data);
+				$project = new logistic_project();
+			}
+			
+			$project->populate();
+			
+			if( $project->validate() )
+			{
+				$project_id = $this->so->store($project);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view', 'id' => $project_id));	
+			}
+			else
+			{
+				$this->edit( $project );
 			}
 		}
-
 	}
 

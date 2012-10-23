@@ -726,8 +726,9 @@ ul.expand_list .expand_item {
 }
 
 dl.proplist, dl.proplist-col {
-  margin: 0;
-  padding-left: 0;
+    margin: 0;
+    padding-left: 0;
+    width: 50%;
 }
 
 #details .proplist dd, #details .proplist-col dd{
@@ -913,6 +914,11 @@ input.id {
 input.date {
   text-align: right;
   width: 80px;
+}
+
+input.datetime {
+  text-align: right;
+  width: 100px;
 }
 
 /* =======================================  CHECK LIST  ========================================= */
@@ -2168,15 +2174,15 @@ p.no_items_msg {
 }
 
 .input_error_msg {
-  background: none repeat scroll 0 0 #FBE3E4;
-  border-bottom-right-radius: 4px;
-  color: #D12F19;
-  display: inline-block;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  padding: 5px;
-  text-align: center;
-  width: 90%;
+    background: none repeat scroll 0 0 #FBE3E4;
+    border-bottom-right-radius: 4px;
+    color: #D12F19;
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 5px;
+    text-align: center;
+    width: 90%;
 }
 
 .error_msg {
@@ -2251,4 +2257,14 @@ p.no_items_msg {
 	width: 100px;	
 }
 
+#requirement_tabview .yui-navset {
+    margin: 0;
+}
 
+#details {
+	padding: 20px;	
+}
+
+.yui-navset .content-wrp {
+	margin-top: 0;
+}

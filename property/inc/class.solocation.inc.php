@@ -292,6 +292,8 @@
 			$filter_role_on_contact = $data['filter_role_on_contact'] ? (int)$data['filter_role_on_contact'] : 0;
 			$role_id				= $data['role_id'] ? (int)$data['role_id'] : 0;
 			$results				= $data['results'] ? (int)$data['results'] : 0;
+			$control_registered		= isset($data['control_registered']) ? $data['control_registered'] : '';
+			$control_id				= isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 
 			if (!$type_id)
 			{
@@ -583,6 +585,16 @@
 				$sub_query_street	= $this->socommon->fm_cache('sub_query_street_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup);
 			}
 
+			$filtermethod = '';
+			$where= 'WHERE';
+			if($control_registered)
+			{
+				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
+				$filtermethod .= " $where  controller_control_location_list.control_id = $control_id";
+				$where = 'AND';
+			}
+
+
 			//---------------------start custom user cols
 
 			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_'.$type_id . !!$lookup] : '';
@@ -681,9 +693,7 @@
 				}
 			}
 
-			$where= 'WHERE';
 
-			$filtermethod = '';
 			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{

@@ -54,7 +54,7 @@ $(document).ready(function(){
 	// Update location category based on location type
 	$("#type_id").change(function () {
 		 var location_type_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_location_category'};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_location_category'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          
          var htmlString = "";
@@ -165,7 +165,7 @@ $(document).ready(function(){
 	//update part of town category based on district
 	$("#district_id").change(function () {
 		var district_id = $(this).val();
-		 var oArgs = {menuaction:'controller.uicontrol_location.get_district_part_of_town'};
+		 var oArgs = {menuaction:'controller.uicontrol_register_to_location.get_district_part_of_town'};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
          //var requestUrl = "index.php?menuaction=controller.uicontrol.get_controls_by_control_area&phpgw_return_as=json"
          

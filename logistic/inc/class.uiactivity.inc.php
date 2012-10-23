@@ -35,15 +35,15 @@
 
 	class logistic_uiactivity extends phpgwapi_uicommon
 	{
-
 		private $so;
 		private $so_project;
 		public $public_functions = array(
 			'query' => true,
 			'add' 	=> true,
-			'edit' => true,
-			'view' => true,
-			'index' => true
+			'edit' 	=> true,
+			'view' 	=> true,
+			'index' => true,
+			'save' 	=> true
 		);
 
 		public function __construct()
@@ -307,24 +307,26 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit'));
 		}
 
-		public function edit()
+		public function edit($activity = null)
 		{
+			
 			$activity_id = phpgw::get_var('id');
 			$parent_activity_id = phpgw::get_var('parent_id');
+			$project_id = phpgw::get_var('project_id');
 			
-			if ($activity_id && is_numeric($activity_id))
+			if( !$activity && $activity_id && is_numeric($activity_id) )
 			{
 				$activity = $this->so->get_single($activity_id);
 			}
 			else
 			{
-				$activity = new logistic_activity();
+				if($activity == null)
+				{
+					$activity = new logistic_activity();	
+				}
 			}
 
-			if(phpgw::get_var('project_id') && phpgw::get_var('project_id') > 0)
-			{
-				$activity->set_project_id(phpgw::get_var('project_id'));
-			}
+			$activity->set_project_id( $project_id );
 			
 			if($parent_activity_id > 0)
 			{
@@ -332,91 +334,38 @@
 				$parent_activity = $this->so->get_single( $parent_activity_id );
 				$activity->set_project_id( $parent_activity->get_project_id() );
 			}
-
-			if (isset($_POST['save_activity']))
+			
+			if($activity->get_parent_id() > 0)
 			{
-				$user_id = $GLOBALS['phpgw_info']['user']['id'];
-				$activity->set_id( phpgw::get_var('id') );
-				$activity->set_name( phpgw::get_var('name') );
-				$activity->set_update_user( $user_id );
-				$activity->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
-				$activity->set_description( phpgw::get_var('description') );
-				
-				if( $activity->get_id() == '' | $activity->get_id() == 0){
-					$activity->set_create_user( $user_id );	
-				}
-
-				if(phpgw::get_var('start_date','string') != '')
-				{
-					$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
-					$activity->set_start_date($start_date_ts);
-				}
-				else
-				{
-					$activity->set_start_date(0);
-				}
-
-				if( phpgw::get_var('end_date','string') != '')
-				{
-					$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
-					$activity->set_end_date($end_date_ts);
-				}
-				else
-				{
-					$activity->set_end_date(0);
-				}
-
-				$activity_id = $this->so->store($activity);
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
+				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 			}
-			else if (isset($_POST['cancel_activity']))
+	
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+			
+		  $activities = $this->so->get();
+			
+			$data = array
+			(
+				'responsible_users' => $accounts,
+				'activities' => $activities,
+				'activity' => $activity,
+				'editable' => true
+			);
+			
+			if($parent_activity)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id));
+				$data['parent_activity'] = $parent_activity;
 			}
-			else
-			{
-				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-				
-			  $activities = $this->so->get();
-				$activities_array = $this->convert_to_array( $activities );
-				
-				$data = array
-				(
-					'responsible_users' => $accounts,
-					'activities' => $activities_array,
-					'activity' => $activity->toArray(),
-					'editable' => true,
-				);
-				
-				if($parent_activity_id > 0)
-				{
-					$data['parent_activity'] = $parent_activity->toArray();
-				}
 
-				$this->use_yui_editor('description');
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
+			$this->use_yui_editor('description');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
-				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-				self::add_javascript('logistic', 'logistic', 'ajax.js');
-				self::render_template_xsl(array('activity_item'), $data);
-			}
+			self::render_template_xsl(array('activity/activity_item'), $data);
 		}
 		
-		function convert_to_array($object_list)
-		{
-			$converted_array = array();
-			
-			foreach($object_list as $object)
-			{
-				$converted_array[] = $object->toArray();
-			}
-			
-			return $converted_array; 
-		}
-
 		public function view()
 		{
 			$activity_id = phpgw::get_var('id');
@@ -434,6 +383,8 @@
 				if ($activity_id && is_numeric($activity_id))
 				{
 					$activity = $this->so->get_single($activity_id);
+					$responsible_user = $this->so->get_responsible_user($activity->get_responsible_user_id());
+					$activity->set_responsible_user_name($responsible_user);
 				}
 
 				$activity_array = $activity->toArray();
@@ -445,16 +396,46 @@
 				}
 
 				$activity->set_project_id($project_id);
-
+				
 				$data = array
-					(
-						'activity' => $activity->toArray(),
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
-						'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				(
+					'activity' => $activity->toArray()
 				);
 
+				if($activity->get_parent_id() > 0)
+				{
+					$parent_activity = $this->so->get_single($activity->get_parent_id());
+					$data['parent_activity'] = $parent_activity->toArray();
+				}
+				
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('activity_item'), $data);
+				self::render_template_xsl(array('activity/activity_item'), $data);
+			}
+		}
+		
+		public function save()
+		{
+			$activity_id = phpgw::get_var('id');
+			
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so->get_single($activity_id);
+			}
+			else
+			{
+				$activity = new logistic_activity();
+			}
+			
+			$activity->populate();
+			
+			if( $activity->validate() )
+			{
+				$activity_id = $this->so->store($activity);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));	
+			}
+			else
+			{
+				$this->edit($activity);
 			}
 		}
 

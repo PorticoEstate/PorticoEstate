@@ -115,7 +115,6 @@ $phpgw_baseline = array(
 				),
 				'pk' => array('id'),
 				'fk' => array(
-						'lg_resource_type_requirement' => array('type_requirement_id' => 'id'),
 						'lg_requirement' => array('requirement_id' => 'id')
 				),
 				'ix' => array(),
@@ -131,7 +130,7 @@ $phpgw_baseline = array(
 				),
 				'pk' => array('id'),
 				'fk' => array(
-						'phpgw_locations' => array('location_id' => 'location_id') 
+						'phpgw_locations' => array('location_id' => 'location_id')
 				),
 				'ix' => array(),
 				'uc' => array()

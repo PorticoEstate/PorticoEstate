@@ -9,17 +9,14 @@
 	<div style="clear: both;margin-bottom: 0;overflow: hidden;padding: 1em;" class="identifier-header">
 		<xsl:choose>
 			<xsl:when test="activity/id != '' or activity/id != 0">
-				<h1 style="float:left;"> 
+				<h1 style="float:left;">
 					<span>
-						<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
-					</span>
-					<span>
-						{activity/name}
+						<xsl:value-of select="php:function('lang', 'Add resources to activity')"/>: <xsl:value-of select="activity/name"/>
 					</span>
 				</h1>
 			</xsl:when>
 			<xsl:otherwise>
-				<h1 style="float:left;"> 
+				<h1 style="float:left;">
 					<xsl:value-of select="php:function('lang', 'Add requirement')" />
 				</h1>
 			</xsl:otherwise>
@@ -30,87 +27,36 @@
 		<div id="details">
 			<form action="#" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
-							
+
 				<dl class="proplist-col">
 					<dt>
 						<label for="start_date">Startdato</label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<input class="date" id="start_date" name="start_date" type="text">
-						    	<xsl:if test="requirement/start_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></xsl:attribute>
-						    	</xsl:if>
-					    	</input>	
-							</xsl:when>
-							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
 					</dd>
 					<dt>
 						<label for="end_date">Sluttdato</label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<input class="date" id="end_date" name="end_date" type="text">
-						    	<xsl:if test="requirement/end_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></xsl:attribute>
-						    	</xsl:if>
-					    	</input>	
-							</xsl:when>
-							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></span>
 					</dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<dt>
-								<label>BIM</label>
-							</dt>
-							<dd>
-								<select name="location_id" id="location_id">
-									<xsl:for-each select="entity_list">
-										<option value="{id}">
-											<xsl:value-of select="name"/>
-										</option>
-									</xsl:for-each>
-								</select>
-							</dd>
-							<dt>
-								<label>BIM2</label>
-							</dt>
-							<dd>
-								<select name="categories" id="categories">
-								</select>
-							</dd>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="entity/name" />
-							<xsl:value-of select="category/name" />
-							<xsl:for-each select="attributes">
-								<xsl:value-of select="name" /><br/>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
 					<dt>
 						<label for="no_of_items">Antall</label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<input style="width: 20px;" id="no_of_items" name="no_of_items" type="text" />
-							</xsl:when>
-							<xsl:otherwise>
-							<span>{requirement/no_of_items}</span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="requirement/no_of_items" /></span>
+					</dd>
+					<dt>
+						<label for="bim_item">ELEMENTER</label>
+					</dt>
+					<dd>
+						<xsl:for-each select="elements">
+							<input type="checkbox" value="{id}" /> <xsl:value-of select="location_code" /> - <xsl:value-of select="type" /><br/>
+						</xsl:for-each>
 					</dd>
 				</dl>
-				
+
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">

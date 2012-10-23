@@ -1,40 +1,40 @@
-YAHOO.namespace ("PORTICO");
+YAHOO.namespace ("portico");
 
-YAHOO.PORTICO.DEBUG = false;
-YAHOO.PORTICO.LOG_ELEMENT = null;
+YAHOO.portico.DEBUG = false;
+YAHOO.portico.LOG_ELEMENT = null;
 
-YAHOO.PORTICO.Log = function( html )
+YAHOO.portico.Log = function( html )
 {
-	if( !YAHOO.PORTICO.DEBUG )
+	if( !YAHOO.portico.DEBUG )
 	{
 		return;
 	}
 
-	if( YAHOO.PORTICO.LOG_ELEMENT == null )
+	if( YAHOO.portico.LOG_ELEMENT == null )
 	{
-		YAHOO.PORTICO.LOG_ELEMENT = document.getElementById('debug');
+		YAHOO.portico.LOG_ELEMENT = document.getElementById('debug');
 	}
 
-	if( YAHOO.PORTICO.LOG_ELEMENT )
+	if( YAHOO.portico.LOG_ELEMENT )
 	{
-		YAHOO.PORTICO.LOG_ELEMENT.innerHTML += html;
+		YAHOO.portico.LOG_ELEMENT.innerHTML += html;
 	}
 };
 
-YAHOO.PORTICO.Store = function(location, data)
+YAHOO.portico.Store = function(location, data)
 {
 	var	handleSuccess = function(o)
 	{
-			YAHOO.PORTICO.Log( "<strong>Success:</strong><br>" );
-			YAHOO.PORTICO.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-			YAHOO.PORTICO.Log( "<br><br>" );
+			YAHOO.portico.Log( "<strong>Success:</strong><br>" );
+			YAHOO.portico.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
+			YAHOO.portico.Log( "<br><br>" );
 	}
 
 	var	handleFailure = function(o)
 	{
-			YAHOO.PORTICO.Log( "<strong>Failure:</strong><br>" );
-			YAHOO.PORTICO.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-			YAHOO.PORTICO.Log( "<br><br>" );
+			YAHOO.portico.Log( "<strong>Failure:</strong><br>" );
+			YAHOO.portico.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
+			YAHOO.portico.Log( "<br><br>" );
 	}
 
 	var callback =
@@ -51,12 +51,12 @@ YAHOO.PORTICO.Store = function(location, data)
 	});
 
 	var postData = 'data=' + JSON.stringify( data );
-	YAHOO.PORTICO.Log( "<strong>Sending payload:</strong><pre>" + JSON.stringify( data ) + "</pre>" );
+	YAHOO.portico.Log( "<strong>Sending payload:</strong><pre>" + JSON.stringify( data ) + "</pre>" );
     var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback, postData);
 
 };
 
-YAHOO.PORTICO.NavBar = function()
+YAHOO.portico.NavBar = function()
 {
 	this.state = navbar_config.length == 0 ? {} : navbar_config;
 
@@ -128,7 +128,7 @@ YAHOO.PORTICO.NavBar = function()
 			  delete self.state[id];
 			}
 
-			YAHOO.PORTICO.Store('navbar_config', self.state);
+			YAHOO.portico.Store('navbar_config', self.state);
 		}
 	};
 
@@ -137,7 +137,7 @@ YAHOO.PORTICO.NavBar = function()
 };
 
 
-YAHOO.PORTICO.BorderLayout = function()
+YAHOO.portico.BorderLayout = function()
 {
 	if(border_layout_config)
 	{
@@ -225,7 +225,7 @@ YAHOO.PORTICO.BorderLayout = function()
 			self.config.unitRightWidth = unitRightWidth;
 //			self.config.collapsed = collapsed;
 
-			YAHOO.PORTICO.Store( 'border_layout_config',
+			YAHOO.portico.Store( 'border_layout_config',
 				self.config
 			);
 		}
@@ -253,8 +253,8 @@ YAHOO.PORTICO.BorderLayout = function()
 	self.buildWidget();
 };
 
-YAHOO.util.Event.onDOMReady( YAHOO.PORTICO.NavBar );
-YAHOO.util.Event.onDOMReady( YAHOO.PORTICO.BorderLayout );
+YAHOO.util.Event.onDOMReady( YAHOO.portico.NavBar );
+YAHOO.util.Event.onDOMReady( YAHOO.portico.BorderLayout );
 
 	this.lightboxlogin = function()
 	{

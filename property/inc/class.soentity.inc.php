@@ -167,7 +167,7 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
-			$_config	= CreateObject('phpgwapi.config','property');
+			$_config	= CreateObject('phpgwapi.config',$this->type_app[$this->type]);
 			$_config->read();
 			if(isset($_config->config_data['acl_at_location'])
 				&& $_config->config_data['acl_at_location']
@@ -428,11 +428,16 @@
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $this->db->f('column_name');
-					$uicols['descr'][]			= $this->db->f('input_text');
-					$uicols['statustext'][]		= $this->db->f('statustext');
-					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['input_type'][]						= 'text';
+					$uicols['name'][]							= $this->db->f('column_name');
+					$uicols['descr'][]							= $this->db->f('input_text');
+					$uicols['statustext'][]						= $this->db->f('statustext');
+					$uicols['datatype'][$i]						= $this->db->f('datatype');
+					$uicols['get_list_function'][$i]			= $this->db->f('get_list_function',true);
+					$uicols['get_list_function_input'][$i]		= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+					$uicols['get_single_function'][$i]			= $this->db->f('get_single_function',true);
+					$uicols['get_single_function_input'][$i]	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+
 					$uicols['sortable'][$i]		= true;
 					$uicols['exchange'][$i]		= false;
 					$uicols['formatter'][$i]	= '';
@@ -489,7 +494,7 @@
 			$filtermethod = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where= 'AND';
 
-			$_config	= CreateObject('phpgwapi.config','property');
+			$_config	= CreateObject('phpgwapi.config',$this->type_app[$this->type]);
 			$_config->read();
 			if(isset($_config->config_data['acl_at_location'])
 				&& $_config->config_data['acl_at_location']
@@ -732,7 +737,7 @@
 
 			$_sql = str_replace('__XML-ORDER__', '', $sql);
 
-//			$cache_info = phpgwapi_cache::session_get('property',"{$location_id}_listing_metadata");
+//			$cache_info = phpgwapi_cache::session_get($this->type_app[$this->type],"{$location_id}_listing_metadata");
 
 			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($_sql))
 			{
@@ -754,7 +759,7 @@
 					'total_records'		=> $this->db->f('cnt'),
 					'sql_hash'			=> md5($_sql)
 				);
-				phpgwapi_cache::session_set('property',"{$location_id}_listing_metadata",$cache_info);
+				phpgwapi_cache::session_set($this->type_app[$this->type],"{$location_id}_listing_metadata",$cache_info);
 			}
 
 			$this->total_records	= $cache_info['total_records'];
@@ -822,11 +827,16 @@
 					}
 					$dataset[$j][$field] = array
 					(
-						'value'		=> $value,
-						'datatype'	=> $uicols['datatype'][$key],
-						'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+						'value'						=> $value,
+						'datatype'					=> $uicols['datatype'][$key],
+						'attrib_id'					=> $uicols['cols_return_extra'][$key]['attrib_id'],
+						'get_list_function' 		=> $uicols['get_list_function'][$key],
+						'get_list_function_input'	=> $uicols['get_list_function_input'][$key],
+						'get_single_function' 		=> $uicols['get_single_function'][$key],
+						'get_single_function_input'	=> $uicols['get_single_function_input'][$key]
 					);
 				}
+
 
 				$dataset[$j]['num']['value'] = $dataset[$j]['id']['value'];
 
@@ -834,7 +844,7 @@
 					(
 						'value'		=> $entity_id,
 						'datatype'	=> false,
-						'attrib_id'	=> false
+						'attrib_id'	=> false,
 					);
 				$dataset[$j]['cat_id'] = array
 					(
@@ -1095,15 +1105,19 @@
 				$i	= count($uicols['name']);
 				while ($this->db->next_record())
 				{
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $this->db->f('column_name');
-					$uicols['descr'][]			= $this->db->f('input_text');
-					$uicols['statustext'][]		= $this->db->f('statustext');
-					$uicols['datatype'][$i]		= $this->db->f('datatype');
-					$uicols['sortable'][$i]		= true;
-					$uicols['exchange'][$i]		= false;
-					$uicols['formatter'][$i]	= '';
-					$uicols['classname'][$i]	= '';
+					$uicols['input_type'][]						= 'text';
+					$uicols['name'][]							= $this->db->f('column_name');
+					$uicols['descr'][]							= $this->db->f('input_text');
+					$uicols['statustext'][]						= $this->db->f('statustext');
+					$uicols['datatype'][$i]						= $this->db->f('datatype');
+					$uicols['get_list_function'][$i]			= $this->db->f('get_list_function',true);
+					$uicols['get_list_function_input'][$i]		= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+					$uicols['get_single_function'][$i]			= $this->db->f('get_single_function',true);
+					$uicols['get_single_function_input'][$i]	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+					$uicols['sortable'][$i]						= true;
+					$uicols['exchange'][$i]						= false;
+					$uicols['formatter'][$i]					= '';
+					$uicols['classname'][$i]					= '';
 
 					$uicols['cols_return_extra'][$i] = array
 						(
@@ -1175,7 +1189,7 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
-			$_config	= CreateObject('phpgwapi.config','property');
+			$_config	= CreateObject('phpgwapi.config',$this->type_app[$this->type]);
 			$_config->read();
 			if(isset($_config->config_data['acl_at_location'])
 				&& $_config->config_data['acl_at_location']
@@ -1397,7 +1411,7 @@
 
 //_debug_array($sql);
 
-			$cache_info = phpgwapi_cache::session_get('property',"{$entity_table}_listing_metadata");
+			$cache_info = phpgwapi_cache::session_get($this->type_app[$this->type],"{$entity_table}_listing_metadata");
 
 			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
 			{
@@ -1419,7 +1433,7 @@
 					'total_records'		=> $this->db->f('cnt'),
 					'sql_hash'			=> md5($sql)
 				);
-				phpgwapi_cache::session_set('property',"{$entity_table}_listing_metadata",$cache_info);
+				phpgwapi_cache::session_set($this->type_app[$this->type],"{$entity_table}_listing_metadata",$cache_info);
 			}
 
 			$this->total_records	= $cache_info['total_records'];
@@ -1447,11 +1461,16 @@
 				foreach($cols_return as $key => $field)
 				{
 					$dataset[$j][$field] = array
-						(
-							'value'		=> $this->db->f($field),
-							'datatype'	=> $uicols['datatype'][$key],
-							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
-						);
+					(
+						'value'						=> $this->db->f($field),
+						'datatype'					=> $uicols['datatype'][$key],
+						'attrib_id'					=> $uicols['cols_return_extra'][$key]['attrib_id'],
+						'get_list_function' 		=> $uicols['get_list_function'][$key],
+						'get_list_function_input'	=> $uicols['get_list_function_input'][$key],
+						'get_single_function' 		=> $uicols['get_single_function'][$key],
+						'get_single_function_input'	=> $uicols['get_single_function_input'][$key]
+
+					);
 				}
 				$dataset[$j]['entity_id'] = array
 					(
@@ -1785,10 +1804,10 @@
 				{
 					$p_category = $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
 					$values_insert['p_id']			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
-					$values_insert['p_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+					$values_insert['p_location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
 				}
 
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 				$values['id'] = $this->_save_eav($values_insert, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 			else
@@ -1814,7 +1833,7 @@
 						(
 							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
 							'location1_item_id' => $values['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}"),
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}"),
 							'location2_item_id' => $values['id'],
 							'account_id'		=> $this->account
 						);
@@ -1858,7 +1877,7 @@
 			$doc->loadXML( $xmldata );
 			$domElement = $doc->getElementsByTagName($location_name)->item(0);
 			$domAttribute = $doc->createAttribute('appname');
-			$domAttribute->value = 'property';
+			$domAttribute->value = $this->type_app[$this->type];
 
 			// Don't forget to append it to the element
 			$domElement->appendChild($domAttribute);
@@ -1922,7 +1941,7 @@
 			$doc->loadXML( $xmldata );
 			$domElement = $doc->getElementsByTagName($location_name)->item(0);
 			$domAttribute = $doc->createAttribute('appname');
-			$domAttribute->value = 'property';
+			$domAttribute->value = $this->type_app[$this->type];
 
 			// Don't forget to append it to the element
 			$domElement->appendChild($domAttribute);
@@ -2005,6 +2024,11 @@
 				}
 			}
 
+			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+			$category = $admin_entity->read_single_category($entity_id, $cat_id);
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
@@ -2038,9 +2062,24 @@
 
 					if($entry['history'] == 1)
 					{
-						$this->db->query("SELECT {$entry['name']} FROM {$table} WHERE id = '{$values['id']}'",__LINE__,__FILE__);
-						$this->db->next_record();
-						$old_value = $this->db->f($entry['name'],true);
+						if(!$category['is_eav'])
+						{
+							$this->db->query("SELECT {$entry['name']} FROM {$table} WHERE id = '{$values['id']}'",__LINE__,__FILE__);
+							$this->db->next_record();
+							$old_value = $this->db->f($entry['name'],true);
+						}
+						else
+						{
+							$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$values['id']} AND location_id = $location_id";			
+
+							$this->db->query($sql,__LINE__,__FILE__);
+
+							$this->db->next_record();
+							$xmldata = $this->db->f('xml_representation');
+							$xml = new DOMDocument('1.0', 'utf-8');
+							$xml->loadXML($xmldata);
+							$old_value 	= $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
+						}
 
 						if($entry['datatype'] == 'D')
 						{
@@ -2059,10 +2098,6 @@
 				}
 			}
 
-			$admin_entity	= CreateObject('property.soadmin_entity');
-			$admin_entity->type = $this->type;
-			$category = $admin_entity->read_single_category($entity_id, $cat_id);
-
 			$this->db->transaction_begin();
 
 			if($category['is_eav'])
@@ -2071,10 +2106,9 @@
 				{
 					$p_category = $admin_entity->read_single_category($value_set['p_entity_id'], $value_set['p_cat_id']);
 					$value_set['p_id']			= (int) ltrim($value_set['p_num'], $p_category['prefix']);
-					$value_set['p_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$value_set['p_entity_id']}.{$value_set['p_cat_id']}");
+					$value_set['p_location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$value_set['p_entity_id']}.{$value_set['p_cat_id']}");
 				}
 
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
 				$this->_edit_eav($value_set, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}", $values['id']);
 			}
 			else
@@ -2083,7 +2117,7 @@
 				$this->db->query("UPDATE $table set $value_set WHERE id=" . $values['id'],__LINE__,__FILE__);
 			}
 
-			if (isset($history_set) AND is_array($history_set))
+			if (isset($history_set) && is_array($history_set))
 			{
 				$historylog	= CreateObject('property.historylog',"{$this->type}_{$entity_id}_{$cat_id}");
 				foreach ($history_set as $attrib_id => $history)

@@ -37,7 +37,7 @@
 		protected static $requirement_id;
 		protected static $resource_id;
 		protected static $location_id;
-		
+
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -101,5 +101,27 @@
 			}
 
 			return self::$so;
+		}
+
+		public function serialize()
+		{
+			$entity_so	= CreateObject('property.soadmin_entity');
+			$project_so = CreateObject('logistic.soproject');
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
+			$entity_arr = explode('.',$loc_arr['location']);
+
+			$entity = $entity_so->read_single($entity_arr[2]);
+			$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+			$entity_label = $entity['name'];
+			$category_label = $category['name'];
+			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
+
+			return array(
+				'id' => $this->get_id(),
+				'location_id' => $this->get_location_id(),
+				'entity_label' => $entity_label,
+				'category_label' => $category_label,
+				'project_type_label' => $project_type_label
+			);
 		}
 	}

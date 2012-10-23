@@ -5,14 +5,17 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
-	<div class="identifier-header">
-		<h1><img src="{img_go_home}" />
-				<xsl:value-of select="php:function('lang', 'Project')" />
-		</h1>
-	</div>
-	<div class="yui-content">
+	
+	<h1>
+			<xsl:value-of select="php:function('lang', 'Project')" />
+	</h1>
+	
+	<div id="project_details" class="content-wrp">
 		<div id="details">
-			<form action="#" method="post">
+			<xsl:variable name="action_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.save')" />
+			</xsl:variable>
+			<form action="{$action_url}" method="post">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
 				<dl class="proplist-col">
@@ -22,6 +25,11 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/name != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/name" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<input type="text" name="name" id="name" value="{project/name}" size="100"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -35,6 +43,11 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/project_type_id != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/project_type_id" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<select id="project_type_id" name="project_type_id">
 								<xsl:apply-templates select="options"/>
 							</select>
@@ -50,6 +63,11 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
+							<xsl:if test="project/error_msg_array/description != ''">
+								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/description" /></xsl:variable>
+								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+							</xsl:if>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="project/description" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>

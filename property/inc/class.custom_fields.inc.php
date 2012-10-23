@@ -67,6 +67,8 @@
 		 */
 		public function prepare($values, $appname, $location, $view_only='')
 		{
+			$cache_custom_lookup = array();
+
 			$vendor			= CreateObject('property.sogeneric');
 			$vendor->get_location_info('vendor',false);
 
@@ -236,10 +238,21 @@ JS;
 				else if($attributes['datatype'] == 'custom1') // select
 				{
 					$attributes['choice'] = array();
+
 					if($attributes['get_list_function'])
 					{
-						$attributes['choice'] = execMethod($attributes['get_list_function'], $attributes['get_list_function_input']);
+						$_compare_key = $this->_get_compare_key($attributes['get_list_function'], $attributes['get_list_function_input']);
+						if(isset($cache_custom_lookup[$_compare_key]))
+						{
+							$attributes['choice'] = $cache_custom_lookup[$_compare_key];
+						}
+						else
+						{
+							$attributes['choice'] = execMethod($attributes['get_list_function'], $attributes['get_list_function_input']);
+							$cache_custom_lookup[$_compare_key] = $attributes['choice'];
+						}
 					}
+
 					foreach ($attributes['choice'] as &$_choice)
 					{
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
@@ -267,6 +280,41 @@ JS;
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
+				}
+				else if($attributes['datatype'] == 'custom3') //autocomplete
+				{
+					if($attributes['value'] && $attributes['get_single_function'])
+					{
+						if(!$attributes['get_single_function_input'])
+						{
+							$attributes['get_single_function_input'] = $attributes['value'];
+						}
+						$attributes['custom_name'] = execMethod($attributes['get_single_function'], $attributes['get_single_function_input']);
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+
+					$_append_url = '';
+					if(isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
+					{
+						$_append_url = '&' . http_build_query($attributes['get_list_function_input']);
+					}
+
+					$_autocomplete = <<<JS
+
+					YAHOO.util.Event.addListener(window, "load", function()
+					{
+						var oArgs = {menuaction:'{$attributes['get_list_function']}'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+						strURL += '{$_append_url}';
+
+					    YAHOO.portico.autocompleteHelper(strURL, 
+                               '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
+
+					});
+JS;
+					$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+
 				}
 				else if($attributes['datatype'] == 'user')
 				{
@@ -412,6 +460,30 @@ JS;
 			return $values;
 		}
 
+
+		protected function _get_compare_key($get_list_function, $get_list_function_input)
+		{
+			$_compare_key = '';
+			$_compare_key .= $get_list_function;
+			if($get_list_function_input)
+			{
+				if (is_array($get_list_function_input))
+				{
+					foreach($get_list_function_input as $_key => $_value)
+					{
+						$_compare_key .= $_key;
+						$_compare_key .= $_value;
+					}
+				}
+				else
+				{
+						$_compare_key .= $get_list_function_input;
+				}
+			}
+			return md5($_compare_key);
+		}
+
+
 		function prepare_for_db($table, $values_attribute, $id = 0)
 		{	
 			$id = (int)$id;
@@ -475,6 +547,13 @@ JS;
 
 		public function get_translated_value($data, $location_id)
 		{
+			static $cache_lb = array();
+			static $cache_contact = array();
+			static $cache_vendor = array();
+			static $cache_ch = array();
+			static $cache_account = array();
+			static $cache_custom_lookup = array();
+
 			if(!$data['value'])
 			{
 				return $data['value'];
@@ -492,41 +571,65 @@ JS;
 				case 'LB':
 					if($data['attrib_id'])
 					{
-						$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .(int)$data['attrib_id']. "  AND id=" . (int)$data['value'];
-						$this->_db2->query($sql);
-						$this->_db2->next_record();
-						$ret =  $this->_db2->f('value');
+						if(!isset($cache_lb[$location_id][$data['attrib_id']][$data['value']]) || $ret !=$cache_lb[$location_id][$data['attrib_id']][$data['value']])
+						{
+							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" .(int)$data['attrib_id']. "  AND id=" . (int)$data['value'];
+							$this->_db2->query($sql);
+							$this->_db2->next_record();
+							$ret =  $this->_db2->f('value');
+							$cache_lb[$location_id][$data['attrib_id']][$data['value']] = $ret;
+						}
 					}
 					break;
 				case 'AB':
-					$contact_data	= $this->contacts->read_single_entry($data['value'],array('fn'));
-					$ret =  $contact_data[0]['fn'];
+					if(!isset($cache_contact[$data['value']]) || $ret!= $cache_contact[$data['value']])
+					{
+						$contact_data	= $this->contacts->read_single_entry($data['value'],array('fn'));
+						$ret =  $contact_data[0]['fn'];
+						$cache_contact[$data['value']] = $ret;
+					}
 					break;
 				case 'ABO':
-					$contact_data	= $this->contacts->get_principal_organizations_data($data['value']);
-					$ret = $contact_data[0]['org_name'];
+					if(!isset($cache_contact[$data['value']]) || $ret!= $cache_contact[$data['value']])
+					{
+						$contact_data	= $this->contacts->get_principal_organizations_data($data['value']);
+						$ret = $contact_data[0]['org_name'];
+						$cache_contact[$data['value']] = $ret;
+					}
 					break;
 				case 'VENDOR':
-					$sql="SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
-					$this->_db2->query($sql);
-					$this->_db2->next_record();
-					$ret =  $this->_db2->f('org_name',true);
+					if(!isset($cache_vendor[$data['value']]) || $ret!= $cache_vendor[$data['value']])
+					{
+						$sql="SELECT org_name FROM fm_vendor where id=" . (int)$data['value'];
+						$this->_db2->query($sql);
+						$this->_db2->next_record();
+						$ret =  $this->_db2->f('org_name',true);
+						$cache_vendor[$data['value']] = $ret;
+					}
 					break;
 				case 'CH':
-					$ch = explode(',', trim($data['value'], ','));
-					if (isset($ch) AND is_array($ch))
+					if($data['attrib_id'])
 					{
-						for ($k=0;$k<count($ch);$k++)
+						$ret = '';
+						if(!isset($cache_ch[$location_id][$data['attrib_id']][$data['value']]) || $ret !=$cache_ch[$location_id][$data['attrib_id']][$data['value']])
 						{
-							$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
-							$this->_db2->query($sql);
-							while ($this->_db2->next_record())
+							$ch = explode(',', trim($data['value'], ','));
+							if (isset($ch) AND is_array($ch))
 							{
-								$ch_value[]=$this->_db2->f('value');
+								for ($k=0;$k<count($ch);$k++)
+								{
+									$sql="SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id= " . (int)$data['attrib_id'] . ' AND id = ' . (int)$ch[$k];
+									$this->_db2->query($sql);
+									while ($this->_db2->next_record())
+									{
+									$ch_value[]=$this->_db2->f('value');
+									}
+								}
+								$ret =  @implode(",", $ch_value);
+								unset($ch_value);
 							}
+							$cache_ch[$location_id][$data['attrib_id']][$data['value']] = $ret;
 						}
-						$ret =  @implode(",", $ch_value);
-						unset($ch_value);
 					}
 					break;
 				case 'D':
@@ -543,10 +646,70 @@ JS;
 					$ret =  phpgw::safe_redirect($data['value']);
 					break;
 				case 'user':
-					$ret =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
+					if(!isset($cache_vendor[$data['value']]) || $ret!= $cache_vendor[$data['value']])
+					{
+						$ret =   $GLOBALS['phpgw']->accounts->get($data['value'])->__toString();
+						$cache_vendor[$data['value']] = $ret;
+					}
 					break;
 				case 'pwd':
 					$ret =   lang('yes');
+					break;
+				case 'custom1':
+					
+					$ret = '';
+					if($data['value'] && $data['get_single_function'])
+					{
+						if(!$data['get_single_function_input'])
+						{
+							$data['get_single_function_input'] = $data['value'];
+						}
+						$_compare_key = $this->_get_compare_key($data['get_single_function'], $data['get_single_function_input']);
+						if(!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
+						{
+							$ret = execMethod($data['get_single_function'], $data['get_single_function_input']);
+							$cache_custom_lookup[$_compare_key] = $ret;
+						}
+					}
+					else if($data['value'] && $data['get_list_function'])
+					{
+						$_compare_key = $this->_get_compare_key($data['get_list_function'], $data['get_list_function_input']);
+						if(!isset($cache_custom_lookup[$_compare_key]) || $_list != $cache_custom_lookup[$_compare_key])
+						{
+							$_list = execMethod($data['get_list_function'], $data['get_list_function_input']);
+							$cache_custom_lookup[$_compare_key] = $_list;
+						}
+
+						if(isset($_list) && is_array($_list))
+						{
+							foreach ($_list as $_key => $_entry)
+							{
+								if ($_entry['id'] == $data['value'])
+								{
+									$ret = $_entry['name'];
+									break;
+								}
+							}
+						}
+					}
+
+					break;
+				case 'custom2':
+				case 'custom3':
+					if($data['value'] && $data['get_single_function'])
+					{
+						if(!$data['get_single_function_input'])
+						{
+							$data['get_single_function_input'] = $data['value'];
+						}
+						$_compare_key = $this->_get_compare_key($data['get_single_function'], $data['get_single_function_input']);
+						if(!isset($cache_custom_lookup[$_compare_key]) || $ret != $cache_custom_lookup[$_compare_key])
+						{
+							$ret = execMethod($data['get_single_function'], $data['get_single_function_input']);
+							$cache_custom_lookup[$_compare_key] = $ret;
+						}
+					}
+
 					break;
 				default:
 					if(is_array($data['value']))

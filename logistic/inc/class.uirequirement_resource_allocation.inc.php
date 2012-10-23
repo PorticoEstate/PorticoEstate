@@ -50,6 +50,7 @@
 		private $bocommon;
 		private $so_activity;
 		private $so_requirement;
+		private $so_requirement_value;
 		private $so;
 
 		public $public_functions = array(
@@ -70,6 +71,7 @@
 
 			$this->so_activity = createObject('logistic.soactivity');
 			$this->so_requirement = createObject('logistic.sorequirement');
+			$this->so_requirement_value = CreateObject('logistic.sorequirement_value');
 
 			$this->type_id				= $this->bo->type_id;
 
@@ -294,18 +296,7 @@
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
 			}
-			else
-			{
-				$requirement = new logistic_requirement(1);
-				$requirement->set_activity_id($activity_id);
-				$requirement->set_location_id(2295);
-				$requirement->set_no_of_items(1);
-				$requirement_value = new logistic_requirement_value();
-				$requirement_value->set_bim_type_requirement_id(3);
-				$requirement_value->set_cust_attribute_id(1);
-				$requirement_value->set_requirement_id(1);
-				$requirement_value->set_value(1);
-			}
+
 			if ($allocation_id && is_numeric($allocation_id))
 			{
 				$allocation = $this->so->get_single($allocation_id);
@@ -338,38 +329,101 @@
 				{
 					$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
 					$entity_arr = explode('.',$loc_arr['location']);
-
-					$entity = $entity_admin_so->read_single($entity_arr[2]);
-					$category = $entity_admin_so->read_single_category($entity_arr[2],$entity_arr[3]);
+					//_debug_array($entity_arr);
+					//$entity = $entity_admin_so->read_single($entity_arr[2]);
+					//$category = $entity_admin_so->read_single_category($entity_arr[2],$entity_arr[3]);
 					$all_attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
 					$attributes = array();
 
-					foreach ($all_attributes as $attr)
+					$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
+					//_debug_array($requirement_values);
+					foreach($requirement_values as $requirement_value)
 					{
-						if($attr['id'] == $requirement_value->get_cust_attribute_id())
+						foreach ($all_attributes as &$attr)
 						{
-							$attributes[] = $attr;
+							if($attr['id'] == $requirement_value->get_cust_attribute_id())
+							{
+								$attr['req_value'] = $requirement_value->get_value();
+								$attr['op'] = $requirement_value->get_operator();
+								$attributes[] = $attr;
+							}
 						}
 					}
 
-					$column_name = $attributes[0]['column_name'];
-					$col_val = $attributes[0]['choice'][0]['value'];
-					var_dump($col_val);
 					//_debug_array($attributes);
 					$items = $entity_so->read(array('allrows' => true, 'entity_id' => $entity_arr[2], 'cat_id' => $entity_arr[3]));
 					//_debug_array($items);
 					$list_items = array();
-					foreach ($items as $it)
+					for($index=0; $index<count($attributes); $index++)
 					{
-							if($it[$column_name] == $col_val)
+						$curr_attr = $attributes[$index];
+						$column_name = $curr_attr['column_name'];
+						if($curr_attr['choice'] && count($curr_attr['choice'])>0)
+						{
+							$curr_choice = $curr_attr['choice'];
+							$curr_attr_req_value = $curr_attr['req_value'];
+							foreach ($curr_choice as $ch)
 							{
-								$list_items[] = $it;
+								$col_val = $ch['value'];
+								if($col_val == $curr_attr_req_value)
+								{
+									foreach ($items as $it)
+									{
+										if($it[$column_name] == $col_val)
+										{
+											$list_items[] = $it;
+										}
+									}
+								}
 							}
-					}
-					//echo $column_value;
-					_debug_array($list_items);
+						}
+						else
+						{
+							foreach ($items as $it)
+							{
+								//var_dump($it[$column_name]);
+								//var_dump($curr_attr['op']);
+								//var_dump($it[$column_name]);
+								$operator = $curr_attr['op'];
+								if($operator)
+								{
+									var_dump($operator);
+									var_dump($it[$column_name]);
+									var_dump($col_val);
+									if($operator == "eq")
+									{
+										if($it[$column_name] == $col_val)
+										{
+											$list_items[] = $it;
+										}
+									}
+									else if($operator == 'gt')
+									{
+										if(is_numeric($it[$column_name]) && $it[$column_name] > $col_val)
+										{
+											$list_items[] = $it;
+										}
+									}
+									else if($operator == 'lt')
+									{
+										if(is_numeric($it[$column_name]) && $it[$column_name] < $col_val)
+										{
+											$list_items[] = $it;
+										}
+									}
+								}
+/*								if($it[$column_name] == $col_val)
+								{
+									$list_items[] = $it;
+								} */
+							}
 
+							//var_dump($curr_attr[$column_name]);
+						}
+					}
 				}
+
+				//_debug_array($list_items);
 
 				$data = array
 				(
