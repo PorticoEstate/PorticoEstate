@@ -513,7 +513,6 @@
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
-					'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 					'values'				=> $table_values,
 					'table_header'			=> $table_header,
 				);

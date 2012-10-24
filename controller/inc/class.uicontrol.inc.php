@@ -294,7 +294,6 @@
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array,
 				'repeat_type_array'			=> $repeat_type_array,
-				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 				'action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.save_control_details'))
 			);
 			
@@ -627,7 +626,6 @@
 			$data = array
 			(
 				'control'						=> $control->toArray(),
-				'dateformat' 					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 			);
 		  
 			self::render_template_xsl('control/control_details', $data);
