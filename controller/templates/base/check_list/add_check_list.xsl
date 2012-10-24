@@ -27,12 +27,9 @@
 		</div>
 		<div class="box-2 select-box">
 		
-			<xsl:variable name="calendar_for_year_url">
-				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
-			</xsl:variable>
 			<a>
 				<xsl:attribute name="href">
-					<xsl:value-of select="{$calendar_for_year_url}"/>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;location_code=</xsl:text>
@@ -48,12 +45,9 @@
 				Kontrollplan for bygg/eiendom (år)
 			</a>
 				
-			<xsl:variable name="calendar_for_year_url">
-				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
-			</xsl:variable>
 			<a class="last">
 				<xsl:attribute name="href">
-					<xsl:value-of select="{$calendar_for_month_url}"/>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;month=</xsl:text>
