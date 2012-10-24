@@ -80,6 +80,11 @@
 	<!-- ==================  CHECKLIST DETAILS  ===================== -->
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
+		
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.save_check_list')" />
+		</xsl:variable>
+		
 		<form id="frm_add_check_list" action="{action_url}" method="post">
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			<input type="hidden" name="control_id" value="{$control_id}" />
