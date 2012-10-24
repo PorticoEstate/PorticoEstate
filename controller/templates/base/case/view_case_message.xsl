@@ -72,9 +72,15 @@
 	<h3 class="box_header ext">Melding registrert</h3>
 	<div id="caseMessage" class="box ext">
 		
-			<a id="showMessage" target="_blank" href="{url_ticket_view}">
-		      	Vis melding
-	   		</a>
+				<xsl:variable name="show_ticket_params">
+					<xsl:text>menuaction:property.uitts.view, id:</xsl:text>
+					<xsl:value-of select="message_ticket_id" />
+				</xsl:variable>
+				<xsl:variable name="show_ticket_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $show_ticket_params )" />
+				</xsl:variable>
+				<a id="showMessage" target="_blank" href="{$show_ticket_url}"><xsl:value-of select="php:function('lang', 'Show message')" /></a>
+		
 		    <!-- === TITLE === -->
 		    <div class="row">				
 				<label>Tittel på melding:</label><span><xsl:value-of select="message_ticket/subject"/></span>
@@ -109,9 +115,15 @@
 			 	</xsl:choose>
 			</xsl:for-each>
 		</ul>
-		<a class="btn" href="{url_ticket_new}">
-	      Registrer ny melding
-	   	</a>
+		
+		<xsl:variable name="new_ticket_params">
+			<xsl:text>menuaction:controller.uicase.create_case_message, check_list_id:</xsl:text>
+			<xsl:value-of select="check_list/id" />
+		</xsl:variable>
+		<xsl:variable name="new_ticket_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $new_ticket_params)" />
+		</xsl:variable>
+		<a class="btn" href="{$new_ticket_url}"><xsl:value-of select="php:function('lang', 'Register new message')" /></a>
 	</div>
 </div>
 </xsl:template>
