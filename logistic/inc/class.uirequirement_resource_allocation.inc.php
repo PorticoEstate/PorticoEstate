@@ -358,7 +358,8 @@
 					{
 						$curr_attr = $attributes[$index];
 						$column_name = $curr_attr['column_name'];
-						if($curr_attr['choice'] && count($curr_attr['choice'])>0)
+						//var_dump($curr_attr['choice']);
+						if($curr_attr['choice'] != null)
 						{
 							$curr_choice = $curr_attr['choice'];
 							$curr_attr_req_value = $curr_attr['req_value'];
@@ -379,51 +380,39 @@
 						}
 						else
 						{
+							$operator = $curr_attr['op'];
+							$curr_attr_req_value = $curr_attr['req_value'];
 							foreach ($items as $it)
 							{
-								//var_dump($it[$column_name]);
-								//var_dump($curr_attr['op']);
-								//var_dump($it[$column_name]);
-								$operator = $curr_attr['op'];
 								if($operator)
 								{
-									var_dump($operator);
-									var_dump($it[$column_name]);
-									var_dump($col_val);
 									if($operator == "eq")
 									{
-										if($it[$column_name] == $col_val)
+										if($it[$column_name] == $curr_attr_req_value)
 										{
+											var_dump("eq1");
 											$list_items[] = $it;
 										}
 									}
 									else if($operator == 'gt')
 									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] > $col_val)
+										if(is_numeric($it[$column_name]) && $it[$column_name] > $curr_attr_req_value)
 										{
 											$list_items[] = $it;
 										}
 									}
 									else if($operator == 'lt')
 									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] < $col_val)
+										if(is_numeric($it[$column_name]) && $it[$column_name] < $curr_attr_req_value)
 										{
 											$list_items[] = $it;
 										}
 									}
 								}
-/*								if($it[$column_name] == $col_val)
-								{
-									$list_items[] = $it;
-								} */
 							}
-
-							//var_dump($curr_attr[$column_name]);
 						}
 					}
 				}
-
-				//_debug_array($list_items);
 
 				$data = array
 				(
