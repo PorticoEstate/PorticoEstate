@@ -945,11 +945,32 @@
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			return $this->find2($location_id, $start, $query, $sort, $order, $allrows, $inc_choices, $filter);
+		}
+
+		/**
+		 * Get a list of attributes
+		 *
+		 * @param integer $location_id   the system location
+		 * @param integer $start
+		 * @param string query
+		 * @param string $sort
+		 * @param string $order
+		 * @param bool   $allrows
+		 * @param bool   $inc_choices
+		 * @param array $filtermethod
+		 *
+		 * @return array attributes at location
+		 */
+
+		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
+		{
+			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
 			$order			= $this->_db->db_addslashes($order);
 			$allrows		= !!$allrows;
-
 			
 			$filtermethod	= '';
 			if ($filter && is_array($filter))
