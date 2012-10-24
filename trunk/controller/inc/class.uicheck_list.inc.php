@@ -261,7 +261,6 @@
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'control'									=> $control->toArray(),
-				'date_format' 						=> $date_format,
 				'check_list' 							=> $check_list->toArray(),
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
@@ -295,8 +294,6 @@
 			$cl_status_updater->update_check_list_status( $check_list_id );
 		
 			$control = $this->so_control->get_single($check_list->get_control_id());
-			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			$component_id = $check_list->get_component_id();
 
@@ -333,7 +330,6 @@
 				'check_list' 							=> $check_list->toArray(),
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
 				'type' 										=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,
@@ -448,8 +444,6 @@
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 				
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				
 			$component_id = $check_list->get_component_id();
 
 			if($component_id > 0)
@@ -486,7 +480,6 @@
 				'check_list' 							=> $check_list->toArray(),
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
 				'type' 										=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,

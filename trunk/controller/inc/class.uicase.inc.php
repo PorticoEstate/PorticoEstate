@@ -181,8 +181,6 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 			
@@ -262,8 +260,6 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
 			$message_details = "Kontroll: " .  $control->get_title() . "\n";
 			
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');

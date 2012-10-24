@@ -1,6 +1,5 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format"><xsl:value-of select="dateformat"/></xsl:variable>
 
 <div id="main_content" class="medium">
 	

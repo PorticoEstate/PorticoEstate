@@ -6,7 +6,7 @@
 <xsl:variable name="control_procedure_id"><xsl:value-of select="control/procedure_id"/></xsl:variable>
 <xsl:variable name="control_repeat_type"><xsl:value-of select="control/repeat_type"/></xsl:variable>
 <xsl:variable name="control_role"><xsl:value-of select="control/responsibility_id"/></xsl:variable>
-<xsl:variable name="date_format"><xsl:value-of select="dateformat"/></xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div class="yui-content">
 	<div id="control_details">
