@@ -93,12 +93,12 @@
 													<xsl:for-each select="cust_attribute/choice">
 														<xsl:choose>
 															<xsl:when test="value = //attrib_value">
-																<option selected='true' value="{value}">
+																<option selected='true' value="{id}">
 																	<xsl:value-of select="value"/>
 																</option>
 															</xsl:when>
 															<xsl:otherwise>
-																<option value="{value}">
+																<option value="{id}">
 																	<xsl:value-of select="value"/>
 																</option>
 															</xsl:otherwise>	
