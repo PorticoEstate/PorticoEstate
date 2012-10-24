@@ -258,7 +258,6 @@
 			
 			$data = array
 			(
-				'action_url'				=> self::link(array('menuaction' => 'controller.uicheck_list.save_check_list')),
 				'calendar_for_year_url'		=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
 				'calendar_for_month_url'	=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_month')),
 				'location_array'			=> $location_array,
