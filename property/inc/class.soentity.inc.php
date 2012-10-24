@@ -216,6 +216,91 @@
 			return $values;
 		}
 
+
+		/**
+		 * Method for retreiving sublevels of a hierarchy.
+		 * 
+		 * @param $data array array holding input parametres
+		 * @return array of entities
+		 */
+
+		public function get_eav_list($data = array())
+		{
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
+			$location_id  	= isset($data['location_id']) && $data['location_id'] ? $data['location_id'] : 0;
+			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();			
+			$query			= isset($data['query']) ? $data['query'] : '';
+
+			if(!$location_id)
+			{
+				return array();
+			}
+
+
+			$_querymethod = array();
+
+			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
+
+			$attribute_table = 'phpgw_cust_attribute';
+			
+			foreach ($conditions as $condition)
+			{
+				$this->db->query("SELECT column_name, datatype FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attibute_id']);
+				$this->db->next_record();
+				$attribute_name = $this->db->f('column_name');
+				{
+					switch ($this->db->f('datatype'))
+					{
+						case 'V':
+						case 'email':
+						case 'T':
+							$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,''{$condition['value']}'')]' PASSING BY REF xml_representation)";
+							$__querymethod = array(); // remove block
+							break;
+						case 'CH':
+							$__querymethod = array(); // remove block
+							$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
+							break;
+						case 'R':
+						case 'LB':
+							$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+							$__querymethod = array(); // remove block
+							break;
+						case 'I':
+							switch($condition['operator'])
+							{
+								case '=':
+									$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+									break;
+								case '>':
+								case '<':
+									$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$condition['operator']} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								break;
+								default:
+									throw new Exception('ERROR: Not a valid operator on conditions');
+							}
+							$__querymethod = array(); // remove block
+							break;
+						default:
+							$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+							$__querymethod = array(); // remove block
+					}
+				}
+			}
+			$querymethod = '';
+
+			$where = 'AND';
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode(' AND ',$_querymethod) . ')';
+				unset($_querymethod);
+			}
+			$sql = "SELECT id FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+		}
+
+
 		protected function read_eav($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
