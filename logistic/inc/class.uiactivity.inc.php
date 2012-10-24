@@ -98,7 +98,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json', 'filter' => phpgw::get_var('filter', 'int'))),
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -276,7 +276,7 @@
 			{
 				default: // ... all activities, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'activity_query', $search_for);
-					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'));
+					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'), 'activity' => phpgw::get_var('filter', 'int'));
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
