@@ -232,8 +232,6 @@
 		//		'current_month_nr' 			=> $month,
 				'type' 						=> $type,
 				'location_level' 			=> $level,
-				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
-				'action'					=>	$GLOBALS['phpgw']->link('/index.php', array('menuaction'	=> 'controller.uicase.send_case_message')),
 				'url_calendar_for_year'		=>	$GLOBALS['phpgw']->link('/index.php', array
 																				(
 																					'menuaction'	=> 'controller.uicalendar.view_calendar_for_year', 
@@ -262,12 +260,8 @@
 						
 			phpgwapi_jquery::load_widget('core');
 
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/create_case_message'), $data);
 		}
@@ -465,12 +459,8 @@
 			
 			phpgwapi_jquery::load_widget('core');
 
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/view_case_message'), $data);
 		}

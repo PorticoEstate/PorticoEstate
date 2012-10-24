@@ -1,6 +1,6 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
-<xsl:variable name="date_format"><xsl:value-of select="dateformat"/></xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div id="main_content" class="medium">
 	
@@ -42,7 +42,11 @@
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
 				
-				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{action}" method="post">
+				<xsl:variable name="action_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.send_case_message')" />
+				</xsl:variable>
+		
+				<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post">
 					<input>
 						<xsl:attribute name="name">check_list_id</xsl:attribute>
 					    <xsl:attribute name="type">hidden</xsl:attribute>
