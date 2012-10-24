@@ -396,7 +396,7 @@
 			$data = array
 			(
 				'control'									=> $control->toArray(),
-				//'message_ticket_id'			=> $message_ticket_id,
+				'message_ticket_id'				=> $message_ticket_id,
 				'message_ticket'					=> $message_ticket,
 				'category'								=> $category[0]['name'],
 				'location_array'					=> $location_array,
@@ -408,20 +408,7 @@
 				'current_month_nr' 				=> $month,
 				'type'				 						=> $type,
 				'building_location_code' 	=> $building_location_code,
-				'location_level'			 		=> $level,
-				'url_ticket_view'					=>	$GLOBALS['phpgw']->link('/index.php', array
-																				(
-																					'menuaction'	=> 'property.uitts.view', 
-																					'id'			=> $message_ticket_id
-																				)
-																			),
-
-				'url_ticket_new'					=>	$GLOBALS['phpgw']->link('/index.php', array
-																				(
-																					'menuaction'	=> 'controller.uicase.create_case_message', 
-																					'check_list_id'	=> $check_list->get_id()
-																				)
-																			),
+				'location_level'			 		=> $level
 			);
 			
 			phpgwapi_jquery::load_widget('core');

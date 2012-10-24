@@ -361,3 +361,5 @@ error_msg_7	controller	no	Vennligst endre status for kontroll eller angi planlag
 error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
 error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden
 role at location	controller	no	Tildeling av rolle
+Register new message	controller	no	Registrer ny melding
+Show message	controller	no	Vis melding
