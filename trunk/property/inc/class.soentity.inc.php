@@ -231,63 +231,60 @@
 			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();			
 			$query			= isset($data['query']) ? $data['query'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 
 			if(!$location_id)
 			{
 				return array();
 			}
 
-
 			$_querymethod = array();
+			$__querymethod = array();
 
-			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
+//			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
 
 			$attribute_table = 'phpgw_cust_attribute';
 			
 			foreach ($conditions as $condition)
 			{
-				$this->db->query("SELECT column_name, datatype FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attibute_id']);
+				$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attibute_id']);
 				$this->db->next_record();
 				$attribute_name = $this->db->f('column_name');
+
+				$attributes[$condition['attibute_id']]['name']						= $attribute_name;
+				$attributes[$condition['attibute_id']]['datatype']					= $this->db->f('datatype');
+				$attributes[$condition['attibute_id']]['get_list_function']			= $this->db->f('get_list_function',true);
+				$attributes[$condition['attibute_id']]['get_list_function_input']	= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+				$attributes[$condition['attibute_id']]['get_single_function']		= $this->db->f('get_single_function',true);
+				$attributes[$condition['attibute_id']]['get_single_function_input']	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+
+				switch ($this->db->f('datatype'))
 				{
-					switch ($this->db->f('datatype'))
-					{
-						case 'V':
-						case 'email':
-						case 'T':
-							$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,''{$condition['value']}'')]' PASSING BY REF xml_representation)";
-							$__querymethod = array(); // remove block
-							break;
-						case 'CH':
-							$__querymethod = array(); // remove block
-							$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
-							break;
-						case 'R':
-						case 'LB':
-							$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
-							$__querymethod = array(); // remove block
-							break;
-						case 'I':
-							switch($condition['operator'])
-							{
-								case '=':
-									$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
-									break;
-								case '>':
-								case '<':
-									$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$condition['operator']} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+					case 'I':
+						switch($condition['operator'])
+						{
+							case '=':
+								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 								break;
-								default:
-									throw new Exception('ERROR: Not a valid operator on conditions');
-							}
-							$__querymethod = array(); // remove block
+							case '>':
+							case '<':
+								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$condition['operator']} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 							break;
-						default:
-							$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
-							$__querymethod = array(); // remove block
-					}
+							default:
+								throw new Exception('ERROR: Not a valid operator on conditions');
+						}
+						$__querymethod = array(); // remove block
+						break;
+					case 'CH':
+						$__querymethod = array(); // remove block
+						$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
+						break;
+					default:
+						$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+						$__querymethod = array(); // remove block
 				}
 			}
+
 			$querymethod = '';
 
 			$where = 'AND';
@@ -297,7 +294,103 @@
 				$querymethod = " $where (" . implode(' AND ',$_querymethod) . ')';
 				unset($_querymethod);
 			}
-			$sql = "SELECT id FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+			$sql = "SELECT id, location_code, p_location_id, p_id, xml_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+
+			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+
+			$this->db->query($sql_cnt,__LINE__,__FILE__);
+			$this->db->next_record();
+			unset($sql_cnt);
+
+			$this->total_records = $this->db->f('cnt');
+
+			$ordermethod = '';
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__,$results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$items = array();
+			$j=0;
+			while ($this->db->next_record())
+			{
+				$xmldata = $this->db->f('xml_representation');
+
+
+				$xml = new DOMDocument('1.0', 'utf-8');
+				$xml->loadXML($xmldata);
+
+				foreach($attributes as $attrib_id => $field)
+				{
+					if(!$value = $xml->getElementsByTagName($field['name'])->item(0)->nodeValue)
+					{
+						$value = $this->db->f($field['name'],true);
+					}
+					$dataset[$j][$field['name']] = array
+					(
+						'value'						=> $value,
+						'datatype'					=> $field['datatype'],
+						'attrib_id'					=> $attrib_id,
+						'get_list_function' 		=> $field['get_list_function'],
+						'get_list_function_input'	=> $field['get_list_function_input'],
+						'get_single_function' 		=> $field['get_single_function'],
+						'get_single_function_input'	=> $field['get_single_function_input']
+					);
+				}
+
+				$dataset[$j]['id'] = array
+					(
+						'value'		=> $this->db->f('id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+
+				$dataset[$j]['p_id'] = array
+					(
+						'value'		=> $this->db->f('p_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+				$dataset[$j]['p_location_id'] = array
+					(
+						'value'		=> $this->db->f('p_location_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+
+				$dataset[$j]['location_code'] = array
+					(
+						'value'		=> $this->db->f('location_code'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+
+				$j++;
+			}
+
+			foreach ($dataset as &$entry)
+			{
+				$entry['short_description'] = array
+				(
+					'value'		=> $this->get_short_description(array('location_id' => $location_id, 'id' => $entry['id']['value'] ) ),
+					'datatype'	=> false,
+					'attrib_id'	=> false,
+				);
+					
+			}
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+			return $values;
 		}
 
 
@@ -1717,18 +1810,26 @@
 
 		public function get_short_description($data = array() )
 		{
+			static $system_location = array();
+			static $cache_attributes = array();
 			$location_id	= (int)$data['location_id'];
 			$id				= (int)$data['id'];
-			
+
 			if(!$location_id && !$id)
 			{
 				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");	
 			}
 
-			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			if(!isset($system_location[$location_id]))
+			{
+				$system_location[$location_id] = $GLOBALS['phpgw']->locations->get_name($location_id);
+			}
 
-			$filters = array("short_description" => "IS NOT NULL");
-			$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'short_description', true, true,$filters);
+			if(!isset($cache_attributes[$location_id]))
+			{
+				$filters = array("short_description" => "IS NOT NULL");
+				$cache_attributes[$location_id]['attributes'] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true,$filters);
+			}
 
 			$params = array
 			(
@@ -1736,9 +1837,9 @@
 				'id'			=> $id
 			);
 
-			if( substr($system_location['location'], 1, 6) == 'entity' )
+			if( substr($system_location[$location_id]['location'], 1, 6) == 'entity' )
 			{
-				$type					= explode('.',$system_location['location']);
+				$type					= explode('.',$system_location[$location_id]['location']);
 				$params['entity_id']	= $type[2];
 				$params['cat_id']		= $type[3];
 			}
@@ -1747,7 +1848,7 @@
 				throw new Exception("property_soentity::get_short_description() - entity not found");	
 			}
 
-			$prop_array = $this->read_single($params, $attributes);
+			$prop_array = $this->read_single($params, $cache_attributes[$location_id]);
 
 			$_short_description = array();
 			foreach ($prop_array['attributes'] as $attribute)
