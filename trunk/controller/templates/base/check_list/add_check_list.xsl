@@ -87,7 +87,7 @@
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.save_check_list')" />
 		</xsl:variable>
 		
-		<form id="frm_add_check_list" action="{action_url}" method="post">
+		<form id="frm_add_check_list" action="{$action_url}" method="post">
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<xsl:variable name="type"><xsl:value-of select="type"/></xsl:variable>
