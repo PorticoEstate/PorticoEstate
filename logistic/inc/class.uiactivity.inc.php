@@ -190,29 +190,7 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'new_allocation',
-						'text' 			=> lang('t_new_allocation'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uiallocation.edit'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
-
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'view_allocations',
-						'text' 			=> lang('t_view_allocations'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uiallocation.index'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
-
-			$data['datatable']['actions'][] = array
+				$data['datatable']['actions'][] = array
 					(
 						'my_name'		=> 'add_favorite',
 						'text' 			=> lang('toggle as favorite'),
