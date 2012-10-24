@@ -226,9 +226,9 @@
 
 		public function get_eav_list($data = array())
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
-			$location_id  	= isset($data['location_id']) && $data['location_id'] ? $data['location_id'] : 0;
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();			
 			$query			= isset($data['query']) ? $data['query'] : '';
 
