@@ -313,12 +313,6 @@
 				$allocation->set_article_id(phpgw::get_var('article_id'));
 				$allocation->set_type(phpgw::get_var('type'));
 
-	//			$allocation_id = $this->so->store($allocation);
-
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
-			}
-			else if (isset($_POST['cancel_allocation']))
-			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
 			}
 			else
@@ -329,91 +323,91 @@
 				{
 					$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
 					$entity_arr = explode('.',$loc_arr['location']);
-					//_debug_array($entity_arr);
-					//$entity = $entity_admin_so->read_single($entity_arr[2]);
-					//$category = $entity_admin_so->read_single_category($entity_arr[2],$entity_arr[3]);
-					$all_attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
-					$attributes = array();
 
 					$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
-					//_debug_array($requirement_values);
+
+					$criterias_array = array();
+					
+					$location_id = $requirement->get_location_id();
+					echo "Skriver ut: ";
+					
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+					$entity_arr = explode('.',$loc_arr['location']);
+
+					$entity_id = $entity_arr[2];
+					$cat_id = $entity_arr[3];
+					
 					foreach($requirement_values as $requirement_value)
 					{
-						foreach ($all_attributes as &$attr)
+						$attrib_value = $requirement_value->get_value();
+						$operator = $requirement_value->get_operator();
+						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+						
+						$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+						
+						$column_name = $attrib_data['column_name'];
+						
+						
+						if($operator == "eq")
 						{
-							if($attr['id'] == $requirement_value->get_cust_attribute_id())
-							{
-								$attr['req_value'] = $requirement_value->get_value();
-								$attr['op'] = $requirement_value->get_operator();
-								$attributes[] = $attr;
-							}
+							$operator_str = "=";
 						}
-					}
-
-					//_debug_array($attributes);
-					$items = $entity_so->read(array('allrows' => true, 'entity_id' => $entity_arr[2], 'cat_id' => $entity_arr[3]));
-					//_debug_array($items);
-					$list_items = array();
-					for($index=0; $index<count($attributes); $index++)
-					{
-						$curr_attr = $attributes[$index];
-						$column_name = $curr_attr['column_name'];
-						//var_dump($curr_attr['choice']);
-						if($curr_attr['choice'] != null)
+						else if($operator == "lt")
 						{
-							$curr_choice = $curr_attr['choice'];
-							$curr_attr_req_value = $curr_attr['req_value'];
-							foreach ($curr_choice as $ch)
-							{
-								$col_val = $ch['value'];
-								if($col_val == $curr_attr_req_value)
-								{
-									foreach ($items as $it)
-									{
-										if($it[$column_name] == $col_val)
-										{
-											$list_items[] = $it;
-										}
-									}
-								}
-							}
+							$operator_str = "<";
 						}
-						else
+						else if($operator == "gt")
 						{
-							$operator = $curr_attr['op'];
-							$curr_attr_req_value = $curr_attr['req_value'];
-							foreach ($items as $it)
-							{
-								if($operator)
-								{
-									if($operator == "eq")
-									{
-										if($it[$column_name] == $curr_attr_req_value)
-										{
-											var_dump("eq1");
-											$list_items[] = $it;
-										}
-									}
-									else if($operator == 'gt')
-									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] > $curr_attr_req_value)
-										{
-											$list_items[] = $it;
-										}
-									}
-									else if($operator == 'lt')
-									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] < $curr_attr_req_value)
-										{
-											$list_items[] = $it;
-										}
-									}
-								}
-							}
+							$operator_str = ">";
 						}
+						
+						$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
+						
+						$criterias_array[] = array( $criteria_str );
 					}
 				}
+				
+			$attrib_filter[] = "xmlexists('//type_lokale[contains(.,'',1,'')]' PASSING BY REF xml_representation)";
+			    
+			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
+			
+			$entity = $so_entity->read(
+				array(
+				//'start' => $this->start,
+				//'query' => $this->query,
+				//'sort' => $this->sort,
+				//'order' => $this->order,
+				//'filter' => $this->filter,
+				//'cat_id' => $this->cat_id,
+				//'district_id' => $this->district_id, 
+				//'part_of_town_id' => $this->part_of_town_id,
+				//'lookup'=>isset($data['lookup'])?$data['lookup']:'',
+				'allrows' => true, 
+				//'results' => $this->results,
+				'entity_id' => $entity_id,
+				'cat_id' => $cat_id,
+				//'status'=>$this->status,
+				//'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
+				//'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
+				//'dry_run' => true, 
+				//'type'=>$data['type'], 
+				//'location_code' => $this->location_code,
+				//'criteria_id' => $this->criteria_id, 
+				'attrib_filter' => $attrib_filter, 
+				//'p_num' => $this->p_num
+				)
+			);
 
+		print_r($entity);
+			
+			//$this->total_records = $this->so->total_records;
+			//$this->uicols	= $this->so->uicols;
+
+			//$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]:array();
+			//$custom_cols = $this->get_column_list();
+				
+
+				
 				$data = array
 				(
 					'editable' => true,
@@ -423,15 +417,14 @@
 				{
 					$data['activity'] = $activity;
 				}
-				//if($requirement_id > 0)
-				//{
-					$data['requirement'] = $requirement;
-				//}
+			
+				$data['requirement'] = $requirement;
+			
 				$data['requirement_value'] = $requirement_value;
 				$data['attributes'] = $attributes;
 				$data['elements'] = $list_items;
 
-				self::render_template_xsl(array('allocation/allocation_item'), $data);
+				//self::render_template_xsl(array('allocation/allocation_item'), $data);
 			}
 		}
 
