@@ -364,7 +364,6 @@
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 					
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$deadline_date_ts = phpgwapi_datetime::date_to_timestamp( $deadline_date );
 			
 			if($planned_date != '')
