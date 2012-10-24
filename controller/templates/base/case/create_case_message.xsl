@@ -24,8 +24,7 @@
 			</xsl:choose>
 		</div>
 		<div class="box-2 select-box">
-		
-		<a>
+			<a>
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 					<xsl:text>&amp;year=</xsl:text>
@@ -42,7 +41,7 @@
 				</xsl:attribute>
 				Kontrollplan for bygg/eiendom (år)
 			</a>
-			
+				
 			<a class="last">
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
