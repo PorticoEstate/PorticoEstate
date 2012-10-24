@@ -260,19 +260,18 @@
 			(
 				'calendar_for_year_url'		=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
 				'calendar_for_month_url'	=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_month')),
-				'location_array'			=> $location_array,
-				'component_array'			=> $component_array,
-				'control'					=> $control->toArray(),
-				'date_format' 				=> $date_format,
-				'check_list' 				=> $check_list->toArray(),
-				'type'			 			=> $type,
-				'current_year' 				=> $year,
-				'current_month_nr' 			=> $month_nr,
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'control'									=> $control->toArray(),
+				'date_format' 						=> $date_format,
+				'check_list' 							=> $check_list->toArray(),
+				'type'			 							=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month_nr,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 			=> $level
+				'location_level' 					=> $level
 			);
 			
-	//		phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
 
@@ -573,15 +572,15 @@
 			
 			$data = array
 			(
-				'control' 					=> $control->toArray(),
-				'check_list' 				=> $check_list->toArray(),
-				'location_array'			=> $location_array,
-				'component_array'			=> $component_array,
-				'type' 						=> $type,
-				'current_year' 				=> $year,
-				'current_month_nr' 			=> $month,
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 			=> $level
+				'location_level' 					=> $level
 			);
 
 			phpgwapi_jquery::load_widget('core');
