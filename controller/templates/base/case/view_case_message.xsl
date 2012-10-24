@@ -69,7 +69,7 @@
 	</div>
 	
 	<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
-	<h3 class="box_header ext">Melding registrert</h3>
+	<h3 class="box_header ext">Registrert melding</h3>
 	<div id="caseMessage" class="box ext">
 		
 				<xsl:variable name="show_ticket_params">
