@@ -293,8 +293,7 @@
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array,
-				'repeat_type_array'			=> $repeat_type_array,
-				'action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.save_control_details'))
+				'repeat_type_array'			=> $repeat_type_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -532,7 +531,6 @@
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
@@ -611,7 +609,6 @@
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');

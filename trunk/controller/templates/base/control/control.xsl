@@ -10,7 +10,11 @@
 
 <div class="yui-content">
 	<div id="control_details">
-		<form id="frm_save_control_details" action="{action}" method="post">
+		
+		<xsl:variable name="action_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_details')" />
+			</xsl:variable>
+		<form id="frm_save_control_details" action="{$action_url}" method="post">
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<input type="hidden" name="saved_control_area_id" value="{$control_area_id}" />	
 	
