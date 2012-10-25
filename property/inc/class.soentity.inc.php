@@ -264,11 +264,18 @@
 						switch($condition['operator'])
 						{
 							case '=':
+							case 'equal':
 								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 								break;
+							case 'gt':
 							case '>':
+								$operator = '>';
+								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+							break;
+							case 'lt':
 							case '<':
-								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$condition['operator']} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$operator = '<';
+								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 							break;
 							default:
 								throw new Exception('ERROR: Not a valid operator on conditions');
@@ -791,8 +798,6 @@
 								if(!$criteria_id)
 								{
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''$query'')]' PASSING BY REF xml_representation)";
-									//SELECT * FROM fm_bim_item WHERE xmlexists('//location_code[contains(.,''500'')]' PASSING BY REF xml_representation);
-							//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -835,7 +840,6 @@
 							case 'I':
 								if(ctype_digit($query) && !$criteria_id)
 								{
-							//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$query . "'']' PASSING BY REF xml_representation)";
 									$__querymethod = array(); // remove block
 								}
@@ -843,28 +847,44 @@
 							case 'VENDOR':
 								if($criteria_id == 'vendor')
 								{
-									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$this->db2->query("SELECT id FROM fm_vendor WHERE fm_vendor.org_name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}	
+
 									$__querymethod = array(); // remove block
 								}
 								break;
 							case 'AB':
 								if($criteria_id == 'ab')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$this->db2->query("SELECT person_id as id FROM phpgw_contact_person WHERE phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}	
+
 									$__querymethod = array(); // remove block
 								}
 								break;
 							case 'ABO':
 								if($criteria_id == 'abo')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$this->db2->query("SELECT org_id as id FROM phpgw_contact_org WHERE name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}
 									$__querymethod = array(); // remove block
 								}
 								break;
 							default:
 								if(!$criteria_id)
 								{
-									//$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
 									$__querymethod = array(); // remove block
 								}
