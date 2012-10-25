@@ -266,6 +266,42 @@
 			return $ret;
 		}
 
+		/**
+		 * used for retrive the path for a particular node from a hierarchy
+		 *
+		 * @param integer $node is the id of the node we want the path of
+		 * @return array $path Path
+		 */
+
+		public function get_path($node)
+		{
+			$node = (int) $node;
+			$table = "lg_activity";
+			$sql = "SELECT id, name, parent_activity_id FROM {$table} WHERE id = {$node}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$parent_id = $this->db->f('parent_activity_id');
+			$name = $this->db->f('name', true);
+			$path = array($name);
+			if ($parent_id)
+			{
+				$path = array_merge($this->get_path($parent_id), $path);
+			}
+			return $path;
+		}
+
+
+		/**
+		 * Method for retreiving hierarchy.
+		 * 
+		 * @param $sql string database query.
+		 * @param $filters array with key => value of filters.
+		 * @return array of objects. May return an empty
+		 * array, never null. The array keys are the respective index numbers.
+		 */
+
 		public function read_tree($sql, $filters)
 		{
 			if($filters['activity'])
@@ -317,12 +353,16 @@
 			return $result;
 		}
 
-		function get_children($parent, $level, $reset = false)
+		/**
+		 * Method for retreiving sublevels of a hierarchy.
+		 * 
+		 * @param $parent int any children belong to this parent
+		 * @param $level int which level to search.
+		 * @return array of children
+		 */
+
+		protected function get_children($parent, $level)
 		{
-			if($reset)
-			{
-				$this->activity_tree = array();
-			}
 			$db = clone($this->db);
 			$table = "lg_activity";
 			$sql = "SELECT id, name FROM {$table} WHERE parent_activity_id = {$parent} ORDER BY name ASC";
