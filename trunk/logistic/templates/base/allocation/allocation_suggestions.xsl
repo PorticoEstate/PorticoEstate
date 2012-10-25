@@ -30,14 +30,12 @@
 				</li>
 				</ul>
 			</div>
-			 
-			<hr style="border-color: #9FB9D7;margin: 0 15px;" />
 			
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement_resource_allocation.save')" />
 			</xsl:variable>
 			<form action="{$action_url}" method="post">
-				<input type="hidden" name="id" value = "{requirement/id}" />
+				<input type="hidden" name="requirement_id" value="{requirement/id}" />
 
 				<div id="resource-list">
 					<div class="resource heading">
@@ -66,6 +64,8 @@
 						</div>
 					</xsl:for-each>
 				</div>			
+				
+				<input type="submit" value="Lagre" />
 			</form>
 	</div>
 </div>
