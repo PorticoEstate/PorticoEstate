@@ -247,7 +247,7 @@
 			
 			foreach ($conditions as $condition)
 			{
-				$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attibute_id']);
+				$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attribute_id']);
 				$this->db->next_record();
 				$attribute_name = $this->db->f('column_name');
 
