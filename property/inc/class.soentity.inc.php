@@ -157,7 +157,7 @@
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+						$ordermethod = " ORDER BY $entity_table.$order $sort";
 				}
 			}
 			else
@@ -230,7 +230,7 @@
 			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
-			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();			
+			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 
@@ -245,7 +245,7 @@
 //			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
 
 			$attribute_table = 'phpgw_cust_attribute';
-			
+
 			foreach ($conditions as $condition)
 			{
 				$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attribute_id']);
@@ -394,7 +394,7 @@
 					'datatype'	=> false,
 					'attrib_id'	=> false,
 				);
-					
+
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -530,19 +530,19 @@
 			if ($location_code)
 			{
 				$filtermethod .= " $where $entity_table.location_code $this->like '$location_code%'";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($custom_condition)
 			{
 				$filtermethod .= " {$where} {$custom_condition}";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($p_num)
@@ -576,7 +576,7 @@
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-					//_debug_array($__querymethod);					
+					//_debug_array($__querymethod);
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
@@ -625,7 +625,7 @@
 									while ($this->db2->next_record())
 									{
 										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
-									}	
+									}
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -644,7 +644,7 @@
 									while ($this->db2->next_record())
 									{
 										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
-									}	
+									}
 
 									$__querymethod = array(); // remove block
 								}
@@ -657,7 +657,7 @@
 									while ($this->db2->next_record())
 									{
 										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
-									}	
+									}
 
 									$__querymethod = array(); // remove block
 								}
@@ -722,7 +722,7 @@
 			}
 
 //			$filtermethod .= "AND xmlexists('//location_code[text() = ''5002-02'']' PASSING BY REF xml_representation)";
-			
+
 			$sql .= " $filtermethod $querymethod";
 
 			$_sql = str_replace('__XML-ORDER__', '', $sql);
@@ -733,7 +733,7 @@
 			{
 				$cache_info = array();
 			}
-//_debug_array($_sql);die();			
+//_debug_array($_sql);die();
 //			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT fm_bim_item.id {$sql_cnt_control_fields}" . substr($_sql,strripos($_sql,'FROM'));
@@ -799,7 +799,7 @@
 			}
 
 			$j=0;
-			
+
 			$uicols = $this->uicols;
 			$cols_return = $uicols['name'];
 			$dataset = array();
@@ -872,7 +872,7 @@
 							'attrib_id'	=> false
 						);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -1037,7 +1037,7 @@
 				//-------------------
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:array();
-				
+
 				$_user_columns = array();
 				foreach ($user_columns as $user_column_id)
 				{
@@ -1075,7 +1075,7 @@
 						(
 							'name'	=> $this->db->f('column_name'),
 							'datatype'	=> $this->db->f('datatype'),
-							'attrib_id'	=> $this->db->f('id')					
+							'attrib_id'	=> $this->db->f('id')
 						);
 
 					$i++;
@@ -1097,7 +1097,7 @@
 						'datatype'	=> 'timestamp',
 					);
 			}
-	
+
 		}
 
 
@@ -1181,7 +1181,7 @@
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+						$ordermethod = " ORDER BY $entity_table.$order $sort";
 				}
 			}
 			else
@@ -1258,13 +1258,13 @@
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($custom_condition)
 			{
 				$filtermethod .= " {$where} {$custom_condition}";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($p_num)
@@ -1297,7 +1297,7 @@
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-					//_debug_array($__querymethod);					
+					//_debug_array($__querymethod);
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
@@ -1352,7 +1352,7 @@
 									{
 										$_querymethod[]= "$entity_table." . $this->db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
 									}
-	
+
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -1420,7 +1420,7 @@
 			{
 				$cache_info = array();
 			}
-			
+
 			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT {$entity_table}.id " . substr($sql,strripos($sql,'FROM'));
@@ -1516,7 +1516,7 @@
 							'attrib_id'	=> false
 						);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -1551,7 +1551,7 @@
 			{
 				$filtermethod = "WHERE id = {$id}";
 			}
-			
+
 			$this->db->query("SELECT * FROM {$table} {$filtermethod}");
 
 			if($this->db->next_record())
@@ -1599,11 +1599,11 @@
 				$id			= (int)$data['id'];
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}");
 			}
-			
+
 			if(!$sql)
 			{
-//				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
-				$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
+//				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";
+				$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1643,7 +1643,7 @@
 
 			if(!$location_id && !$id)
 			{
-				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");	
+				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");
 			}
 
 			if(!isset($system_location[$location_id]))
@@ -1671,7 +1671,7 @@
 			}
 			else
 			{
-				throw new Exception("property_soentity::get_short_description() - entity not found");	
+				throw new Exception("property_soentity::get_short_description() - entity not found");
 			}
 
 			$prop_array = $this->read_single($params, $cache_attributes[$location_id]);
@@ -1681,7 +1681,7 @@
 			{
 				$short_description[] = "{$attribute['input_text']}: {$attribute['value']}";
 			}
-			
+
 			$short_description = implode(', ', $short_description);
 
 			return $short_description;
@@ -1875,7 +1875,7 @@
 		protected function _save_eav($data = array(),$location_id, $location_name)
 		{
 			$location_id = (int) $location_id;
-			$location_name = str_replace('.', '_', $location_name);			
+			$location_name = str_replace('.', '_', $location_name);
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1897,7 +1897,7 @@
 			// Append it to the document itself
 			$doc->appendChild($domElement);
 			$doc->formatOutput = true;
-			
+
 			$xml = $doc->saveXML();
 
 		//	_debug_array($xml);
@@ -1943,7 +1943,7 @@
 			$this->db->next_record();
 			$type = (int)$this->db->f('type');
 
-			$location_name = str_replace('.', '_', $location_name);			
+			$location_name = str_replace('.', '_', $location_name);
 
 			phpgw::import_class('phpgwapi.xmlhelper');
 
@@ -2082,7 +2082,7 @@
 						}
 						else
 						{
-							$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$values['id']} AND location_id = $location_id";			
+							$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$values['id']} AND location_id = $location_id";
 
 							$this->db->query($sql,__LINE__,__FILE__);
 
@@ -2151,7 +2151,7 @@
 			$cat_id		= (int) $cat_id;
 			$id			= (int) $id;
 
-			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");	
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
@@ -2248,7 +2248,7 @@
 					}
 					else
 					{
-						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";					
+						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
 					}
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
