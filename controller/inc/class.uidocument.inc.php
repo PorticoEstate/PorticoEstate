@@ -40,11 +40,11 @@
 
         public $public_functions = array
         (
-				'query'		=> true,
-				'add'		=> true,
-				'view'		=> true,
-				'delete'	=> true,
-				'show'		=> true,
+				'query'						=> true,
+				'add'							=> true,
+				'view'						=> true,
+				'delete'					=> true,
+				'show'						=> true,
 				'document_types'	=> true
         );
 
