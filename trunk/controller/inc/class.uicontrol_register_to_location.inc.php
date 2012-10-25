@@ -55,15 +55,15 @@
 	
 		var $public_functions = array
 		(
-			'index'								=> true,
-			'query'								=> true,
-			'edit_location'						=> true,
+			'index'												=> true,
+			'query'												=> true,
+			'edit_location'								=> true,
 			'get_location_category'				=> true,
-			'get_district_part_of_town'			=> true,
+			'get_district_part_of_town'		=> true,
 			'get_category_by_entity'			=> true,
 			'get_entity_table_def'				=> true,
-			'get_locations'						=> true,
-			'get_location_type_category'		=> true
+			'get_locations'								=> true,
+			'get_location_type_category'	=> true
 		);
 
 		function __construct()
@@ -76,17 +76,17 @@
 			
 			$this->type_id				= $this->bo->type_id;
 			
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
+			$this->start						= $this->bo->start;
+			$this->query						= $this->bo->query;
+			$this->sort							= $this->bo->sort;
+			$this->order						= $this->bo->order;
+			$this->filter						= $this->bo->filter;
+			$this->cat_id						= $this->bo->cat_id;
+			$this->part_of_town_id	= $this->bo->part_of_town_id;
 			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
-			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
+			$this->status						= $this->bo->status;
+			$this->allrows					= $this->bo->allrows;
+			$this->lookup						= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
 			
 			self::set_active_menu('controller::control::location_for_check_list');
