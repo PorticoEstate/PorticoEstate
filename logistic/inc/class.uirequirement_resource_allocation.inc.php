@@ -152,51 +152,7 @@
 
 		public function query()
 		{
-/*			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
 
-		  $entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
-			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-
-
- 			if(!$entity_id && !$cat_id)
-			{
-				$values = array();
-			}
-			else
-			{
-
-			$entity_id = 3;
-			$cat_id = 1;
-				$location_id = 2295;//$GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				//$boentity	= CreateObject('property.boentity',false, 'entity');
-				$boentity	= CreateObject('property.boentity',false, 'entity', $entity_id, $cat_id);
-				$boentity->results = $results;
-				//$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
-				$values = $boentity->read();
-			//}
-
-			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
-			$result_data = array('results' => $values);
-
-			$result_data['total_records'] = $boentity->total_records;
-			$result_data['start'] = $params['start'];
-			$result_data['sort'] = $params['sort'];
-			$result_data['dir'] = $params['dir'];
-
-			return $this->yui_results($result_data);
- *
- */
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
@@ -281,9 +237,6 @@
 
 		public function edit()
 		{
-			$entity_admin_so	= CreateObject('property.soadmin_entity');
-			$entity_so	= CreateObject('property.soentity');
-			$custom	= createObject('phpgwapi.custom_fields');
 			$activity_id = phpgw::get_var('activity_id');
 			$requirement_id = phpgw::get_var('requirement_id');
 			$allocation_id = phpgw::get_var('id');
@@ -306,128 +259,83 @@
 				$allocation = new logistic_requirement_resource_allocation();
 			}
 
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-			if (isset($_POST['save_allocation']))
+			if($requirement)
 			{
-				$allocation->set_requirement_id(phpgw::get_var('requirement_id'));
-				$allocation->set_article_id(phpgw::get_var('article_id'));
-				$allocation->set_type(phpgw::get_var('type'));
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
+				$entity_arr = explode('.',$loc_arr['location']);
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
-			}
-			else
-			{
-				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
 
-				if($requirement)
+				$criterias_array = array();
+				
+				$location_id = $requirement->get_location_id();
+				
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$entity_arr = explode('.',$loc_arr['location']);
+
+				$entity_id = $entity_arr[2];
+				$cat_id = $entity_arr[3];
+				
+				$criterias_array['location_id'] = $location_id;
+				$criterias_array['allrows'] = true;
+				
+				foreach($requirement_values as $requirement_value)
 				{
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
-					$entity_arr = explode('.',$loc_arr['location']);
-
-					$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
-
-					$criterias_array = array();
+					$attrib_value = $requirement_value->get_value();
+					$operator = $requirement_value->get_operator();
+					$cust_attribute_id = $requirement_value->get_cust_attribute_id();
 					
-					$location_id = $requirement->get_location_id();
-					echo "Skriver ut: ";
-					
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-					$entity_arr = explode('.',$loc_arr['location']);
-
-					$entity_id = $entity_arr[2];
-					$cat_id = $entity_arr[3];
-					
-					foreach($requirement_values as $requirement_value)
+					if($operator == "eq")
 					{
-						$attrib_value = $requirement_value->get_value();
-						$operator = $requirement_value->get_operator();
-						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
-						
-						$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
-						
-						$column_name = $attrib_data['column_name'];
-						
-						
-						if($operator == "eq")
-						{
-							$operator_str = "=";
-						}
-						else if($operator == "lt")
-						{
-							$operator_str = "<";
-						}
-						else if($operator == "gt")
-						{
-							$operator_str = ">";
-						}
-						
-						$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
-						
-						$criterias_array[] = array( $criteria_str );
+						$operator_str = "=";
 					}
+					else if($operator == "lt")
+					{
+						$operator_str = "<";
+					}
+					else if($operator == "gt")
+					{
+						$operator_str = ">";
+					}
+					
+					$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
+
+					$condition = array(
+						'operator' 		=> $operator_str,
+						'value' 			=> $attrib_value,
+						'attribute_id' => $cust_attribute_id
+					);
+					
+					$criterias_array['conditions'][] = $condition;
 				}
-				
-			$attrib_filter[] = "xmlexists('//type_lokale[contains(.,'',1,'')]' PASSING BY REF xml_representation)";
-			    
-			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
-			
-			$entity = $so_entity->read(
-				array(
-				//'start' => $this->start,
-				//'query' => $this->query,
-				//'sort' => $this->sort,
-				//'order' => $this->order,
-				//'filter' => $this->filter,
-				//'cat_id' => $this->cat_id,
-				//'district_id' => $this->district_id, 
-				//'part_of_town_id' => $this->part_of_town_id,
-				//'lookup'=>isset($data['lookup'])?$data['lookup']:'',
-				'allrows' => true, 
-				//'results' => $this->results,
-				'entity_id' => $entity_id,
-				'cat_id' => $cat_id,
-				//'status'=>$this->status,
-				//'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
-				//'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-				//'dry_run' => true, 
-				//'type'=>$data['type'], 
-				//'location_code' => $this->location_code,
-				//'criteria_id' => $this->criteria_id, 
-				'attrib_filter' => $attrib_filter, 
-				//'p_num' => $this->p_num
-				)
-			);
-
-		print_r($entity);
-			
-			//$this->total_records = $this->so->total_records;
-			//$this->uicols	= $this->so->uicols;
-
-			//$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]:array();
-			//$custom_cols = $this->get_column_list();
-				
-
-				
-				$data = array
-				(
-					'editable' => true,
-				);
-
-				if($activity_id > 0)
-				{
-					$data['activity'] = $activity;
-				}
-			
-				$data['requirement'] = $requirement;
-			
-				$data['requirement_value'] = $requirement_value;
-				$data['attributes'] = $attributes;
-				$data['elements'] = $list_items;
-
-				//self::render_template_xsl(array('allocation/allocation_item'), $data);
 			}
+		    
+			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
+			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
+
+			$data = array
+			(
+				'requirement' 						=> $requirement,
+				'activity' 								=> $activity,
+				'allocation_suggestions' 	=> $allocation_suggestions,
+				'editable' 								=> true
+			);
+		
+			self::render_template_xsl(array('allocation/allocation_suggestions'), $data);
 		}
 
+		public function save()
+		{
+			
+			$allocation->set_requirement_id(phpgw::get_var('requirement_id'));
+			$allocation->set_article_id(phpgw::get_var('article_id'));
+			$allocation->set_type(phpgw::get_var('type'));
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
+		}
+		
 		function convert_to_array($object_list)
 		{
 			$converted_array = array();
