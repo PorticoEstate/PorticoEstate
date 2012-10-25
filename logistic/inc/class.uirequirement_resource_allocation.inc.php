@@ -32,6 +32,7 @@
 	include_class('logistic', 'activity', '/inc/model/');
 	include_class('logistic', 'requirement', '/inc/model/');
 	include_class('logistic', 'requirement_value', '/inc/model/');
+	include_class('logistic', 'requirement_resource_allocation', '/inc/model/');
 
 
 	class logistic_uirequirement_resource_allocation extends phpgwapi_uicommon
@@ -58,37 +59,36 @@
 			'add' 	=> true,
 			'edit' => true,
 			'view' => true,
-			'index' => true
+			'index' => true,
+			'save' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$this->so = createObject('logistic.sorequirement_resource_allocation');
-		  $this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= & $this->bo->bocommon;
-
-			$this->so_activity = createObject('logistic.soactivity');
-			$this->so_requirement = createObject('logistic.sorequirement');
+			$this->so 									= createObject('logistic.sorequirement_resource_allocation');
+			$this->so_activity 					= createObject('logistic.soactivity');
+			$this->so_requirement 			= createObject('logistic.sorequirement');
 			$this->so_requirement_value = CreateObject('logistic.sorequirement_value');
+			
+		  $this->bo										= CreateObject('property.bolocation',true);
+			$this->bocommon							= & $this->bo->bocommon;
 
-			$this->type_id				= $this->bo->type_id;
+			$this->type_id							= $this->bo->type_id;
 
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
-			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
-			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
-			$this->location_code		= $this->bo->location_code;
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
+			$this->start								= $this->bo->start;
+			$this->query								= $this->bo->query;
+			$this->sort									= $this->bo->sort;
+			$this->order								= $this->bo->order;
+			$this->filter								= $this->bo->filter;
+			$this->cat_id								= $this->bo->cat_id;
+			$this->part_of_town_id			= $this->bo->part_of_town_id;
+			$this->district_id					= $this->bo->district_id;
+			$this->status								= $this->bo->status;
+			$this->allrows							= $this->bo->allrows;
+			$this->lookup								= $this->bo->lookup;
+			$this->location_code				= $this->bo->location_code;
 		}
 
 		public function index()
@@ -245,6 +245,7 @@
 			{
 				$activity = $this->so_activity->get_single($activity_id);
 			}
+			
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
@@ -315,6 +316,8 @@
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
 
+			print_r($allocation_suggestions);
+			
 			$data = array
 			(
 				'requirement' 						=> $requirement,
@@ -328,10 +331,28 @@
 
 		public function save()
 		{
+			$requirement_id = phpgw::get_var('requirement_id');
 			
-			$allocation->set_requirement_id(phpgw::get_var('requirement_id'));
-			$allocation->set_article_id(phpgw::get_var('article_id'));
-			$allocation->set_type(phpgw::get_var('type'));
+			if($requirement_id && is_numeric($requirement_id))
+			{
+				$requirement = $this->so_requirement->get_single($requirement_id);
+			}
+			
+			$chosen_resources = phpgw::get_var('chosen_resources');
+			
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			
+			foreach($chosen_resources as $resource_id)
+			{
+				$resource_alloc = new logistic_requirement_resource_allocation();
+				$resource_alloc->set_requirement_id( $requirement->get_id() );
+				$resource_alloc->set_resource_id( $resource_id );
+				$resource_alloc->set_location_id( $requirement->get_location_id() );
+				$resource_alloc->set_create_user( $user_id );
+				
+				$resource_alloc_id = $this->so->store( $resource_alloc );
+			}
+			
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
 		}

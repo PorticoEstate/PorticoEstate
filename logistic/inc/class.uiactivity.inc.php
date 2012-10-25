@@ -237,7 +237,6 @@
 			$result_count = 0;
 
 			//Retrieve a contract identifier and load corresponding contract
-			//$activity_id = phpgw::get_var('activity_id');
 
 			$exp_param = phpgw::get_var('export');
 			$export = false;
