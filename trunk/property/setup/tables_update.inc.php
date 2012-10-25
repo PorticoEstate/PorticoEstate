@@ -6738,3 +6738,83 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.653 to 0.9.17.654
+	* Add location_id to entities
+	*/
+	$test[] = '0.9.17.653';
+	function property_upgrade0_9_17_653()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$sql = 'SELECT id, entity_id FROM fm_entity_category';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$categories[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('entity_id'),
+				'cat_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+
+		$sql = 'SELECT id FROM fm_entity';
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$entities = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$entities[] = array
+			(
+				'entity_id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+			);
+		}
+
+		foreach ($categories as $category)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$category['entity_id']}.{$category['cat_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_entity_category SET location_id = {$location_id} WHERE entity_id = {$category['entity_id']} AND id = {$category['cat_id']}",__LINE__,__FILE__);
+		}
+
+		foreach ($entities as $entity)
+		{
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity['entity_id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_entity SET location_id = {$location_id} WHERE id = {$entity['entity_id']}",__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_entity_category','location_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.654';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
