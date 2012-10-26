@@ -172,10 +172,11 @@
 			(
 				'location_id'	=> $location_id,
 				'id'			=> 0,
-				'name'	=> $this->_db->db_addslashes(strtolower($group['group_name'])),
-				'descr'	=> $this->_db->db_addslashes($group['descr']),
-				'remark'	=> $this->_db->db_addslashes($group['remark']),
+				'name'			=> $this->_db->db_addslashes(strtolower($group['group_name'])),
+				'descr'			=> $this->_db->db_addslashes($group['descr']),
+				'remark'		=> $this->_db->db_addslashes($group['remark']),
 				'group_sort'	=> 0,
+				'parent_id'		=> $group['parent_id']
 			);
 
 
@@ -625,7 +626,8 @@
 			(
 				'name'		=> $this->_db->db_addslashes($group['group_name']),
 				'descr'		=> $this->_db->db_addslashes($group['descr']),
-				'remark'	=> $this->_db->db_addslashes($group['remark'])
+				'remark'	=> $this->_db->db_addslashes($group['remark']),
+				'parent_id'	=> $group['parent_id']
 			);
 
 			$value_set	= $this->_db->validate_update($value_set);
@@ -1172,7 +1174,8 @@
 					'group_sort'		=> (int) $this->_db->f('group_sort'),
 					'name'				=> $this->_db->f('name', true),
 					'descr'				=> $this->_db->f('descr', true),
-					'remark'			=> $this->_db->f('remark', true)
+					'remark'			=> $this->_db->f('remark', true),
+					'parent_id'			=> $this->_db->f('parent_id'),
 				);
 			}
 
@@ -1208,7 +1211,8 @@
 				'group_name'	=> $this->_db->f('name', true),
 				'descr'			=> $this->_db->f('descr', true),
 				'remark'		=> $this->_db->f('remark', true),
-				'group_sort'	=> $this->_db->f('group_sort')
+				'group_sort'	=> $this->_db->f('group_sort'),
+				'parent_id'		=> $this->_db->f('parent_id'),
 			);
 
 			return $group;
