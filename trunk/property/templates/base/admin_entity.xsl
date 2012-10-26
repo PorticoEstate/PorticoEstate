@@ -1869,7 +1869,7 @@
 	</xsl:template>
 
 	<!-- add custom_function / edit custom_function -->
-	<xsl:template match="edit_custom_function">
+	<xsl:template match="edit_custom_function" xmlns:php="http://php.net/xsl">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1969,6 +1969,23 @@
 									</input>
 								</xsl:otherwise>
 							</xsl:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'client-side')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[client_side]" value="1">
+								<xsl:attribute name="title">
+									<xsl:text>otherwise: server-side</xsl:text>
+								</xsl:attribute>
+								<xsl:if test="value_client_side = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+								</xsl:if>
+							</input>
 						</td>
 					</tr>
 					<tr height="50">

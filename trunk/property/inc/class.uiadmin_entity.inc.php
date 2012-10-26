@@ -2547,16 +2547,18 @@
 			$uicols['descr'][1]	= lang('id');
 			$uicols['name'][2]	= 'descr';
 			$uicols['descr'][2]	= lang('Descr');
-			$uicols['name'][3]	= 'active';
-			$uicols['descr'][3]	= lang('Active');
-			$uicols['name'][4]	= 'sorting';
-			$uicols['descr'][4]	= lang('sorting');
-			$uicols['name'][5]	= 'up';
-			$uicols['descr'][5]	= lang('up');
-			$uicols['name'][6]	= 'down';
-			$uicols['descr'][6]	= lang('down');
-			$uicols['name'][7]	= 'file_name';
-			$uicols['descr'][7]	= lang('Name');
+			$uicols['name'][3]	= 'client_side';
+			$uicols['descr'][3]	= lang('client-side');
+			$uicols['name'][4]	= 'active';
+			$uicols['descr'][4]	= lang('Active');
+			$uicols['name'][5]	= 'sorting';
+			$uicols['descr'][5]	= lang('sorting');
+			$uicols['name'][6]	= 'up';
+			$uicols['descr'][6]	= lang('up');
+			$uicols['name'][7]	= 'down';
+			$uicols['descr'][7]	= lang('down');
+			$uicols['name'][8]	= 'file_name';
+			$uicols['descr'][8]	= lang('Name');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -2882,7 +2884,6 @@
 					'type'		=> $this->type
 				);
 
-
 			//_debug_array($values);
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -2920,6 +2921,7 @@
 					'custom_function_list'				=> $this->bo->select_custom_function($values['custom_function_file']),
 
 					'value_active'						=> $values['active'],
+					'value_client_side'					=> $values['client_side'],
 					'lang_active'						=> lang('Active'),
 					'lang_active_statustext'			=> lang('check to activate custom function'),
 				);

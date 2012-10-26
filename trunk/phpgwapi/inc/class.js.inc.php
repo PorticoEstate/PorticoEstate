@@ -63,6 +63,15 @@
 		*/
 		protected $files = array();
 
+
+		/**
+		 *
+		 * @var array list of "external files to be included in the head section of a page
+		 * Some times while using libs and such its not fesable to move js files to /app/js/package/
+		 * because the js files are using relative paths
+		 */
+		protected $external_files;
+
 		/**
 		* Constructor
 		*/
@@ -171,6 +180,20 @@
 				unset($jsfiles);
 			}
 
+
+			if ( !empty($this->external_files) && is_array($this->external_files) )
+			{
+				foreach($this->external_files as $file)
+				{					
+					$links .= <<<HTML
+					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
+
+HTML;
+				}
+			}
+
+
+
 			return $links;
 		}
 
@@ -276,5 +299,18 @@
 				. $code ."\n"
 				. '//]]' ."\n"
 				. "</script>\n";
+		}
+
+		/**
+		 * Adds js file to external files.
+		 *
+		 * @param string $file Full path to js file relative to root of phpgw install 
+		 */
+		function add_external_file($file)
+		{
+			if ( is_file(PHPGW_SERVER_ROOT . "/$file") )
+			{
+				$this->external_files[] = $file;
+			}
 		}
 	}
