@@ -598,14 +598,14 @@
 			return $this->so->get_path( $entity_id, $node );
 		}
 
-		function read_category_tree2( $entity_id )
+		function read_category_tree2( $entity_id, $table )
 		{
-			return $this->so->read_category_tree2( $entity_id );
+			return $this->so->read_category_tree2( $entity_id, $table );
 		}
 
-		function get_children2( $entity_id, $parent, $level, $reset = false )
+		function get_children2( $entity_id, $parent, $level, $reset = false, $table )
 		{
-			return $this->so->get_children2( $entity_id, $parent, $level, $reset );
+			return $this->so->get_children2( $entity_id, $parent, $level, $reset, $table );
 		}
 
 		function convert_to_eav()

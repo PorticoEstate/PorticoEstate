@@ -1225,7 +1225,7 @@
 	</xsl:template>
 
 	<!-- add attribute group / edit attribute group -->
-	<xsl:template match="edit_attrib_group">
+	<xsl:template match="edit_attrib_group" xmlns:php="http://php.net/xsl">
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -1269,6 +1269,24 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="parent_list != ''">
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'parent')"/>
+								</td>
+								<td valign="top">
+									<select id="parent_id" name="values[parent_id]">
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select parent')"/>
+										</option>
+										<xsl:apply-templates select="parent_list"/>
+									</select>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="lang_group_name"/>

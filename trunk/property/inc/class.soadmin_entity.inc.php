@@ -209,15 +209,25 @@
 		}
 
 
-		function get_children2($entity_id, $parent, $level, $reset = false)
+		function get_children2($entity_id, $parent, $level, $reset = false, $table)
 		{
 			if($reset)
 			{
 				$this->category_tree = array();
 			}
+
+			if(!$table)
+			{
+				$table = "fm_{$this->type}_category";
+				$filtermethod = 'WHERE entity_id =' . (int)$id;
+			}
+			else
+			{
+				$filtermethod = 'WHERE location_id =' . (int)$id;			
+			}
+
 			$db = clone($this->db);
-			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
+			$sql = "SELECT * FROM {$table} $filtermethod AND parent_id = {$parent} ORDER BY name ASC";
 			$db->query($sql,__LINE__,__FILE__);
 
 			while ($db->next_record())
@@ -234,11 +244,19 @@
 			return $this->category_tree;
 		} 
 
-		public function read_category_tree2($entity_id)
+		public function read_category_tree2($id, $table = '')
 		{
-			$table = "fm_{$this->type}_category";
+			if(!$table)
+			{
+				$table = "fm_{$this->type}_category";
+				$filtermethod = 'WHERE entity_id =' . (int)$id;
+			}
+			else
+			{
+				$filtermethod = 'WHERE location_id =' . (int)$id;			
+			}
 
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL) ORDER BY name ASC";
+			$sql = "SELECT * FROM $table $filtermethod AND (parent_id = 0 OR parent_id IS NULL) ORDER BY name ASC";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -261,7 +279,7 @@
 						'id'	=> $category['id'],
 						'name'	=> $category['name']
 					);
-				$this->get_children2($entity_id, $category['id'], 1);
+				$this->get_children2($id, $category['id'], 1, false, $table);
 			}
 			return $this->category_tree;
 		}
