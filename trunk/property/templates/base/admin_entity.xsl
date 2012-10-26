@@ -1274,7 +1274,7 @@
 							<xsl:value-of select="lang_group_name"/>
 						</td>
 						<td>
-							<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="20" onMouseout="window.status='';return true;">
+							<input type="text" name="values[group_name]" value="{value_group_name}" maxlength="100" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_group_name_statustext"/>
@@ -1288,7 +1288,7 @@
 							<xsl:value-of select="lang_descr"/>
 						</td>
 						<td>
-							<input type="text" name="values[descr]" value="{value_descr}" size="60" maxlength="50" onMouseout="window.status='';return true;">
+							<input type="text" name="values[descr]" value="{value_descr}" size="60" maxlength="150" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_descr_statustext"/>
@@ -1412,7 +1412,7 @@
 							<xsl:value-of select="php:function('lang', 'input text')"/>
 						</td>
 						<td>
-							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="50">
+							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="255">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the input text for records')"/>
 								</xsl:attribute>
@@ -1424,7 +1424,7 @@
 							<xsl:value-of select="php:function('lang', 'statustext')"/>
 						</td>
 						<td>
-							<textarea cols="60" rows="10" name="values[statustext]">
+							<textarea cols="60" rows="10" name="values[statustext]" maxlength="255">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter a statustext for the inputfield in forms')"/>
 								</xsl:attribute>
