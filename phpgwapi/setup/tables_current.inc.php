@@ -545,6 +545,7 @@
 			(
 				'location_id'	=> array('type' => 'int','precision' => 4,'nullable' => false),
 				'id'			=> array('type' => 'int','precision' => 4,'nullable' => false),
+				'parent_id'			=> array('type' => 'int','precision' => 4,'nullable' => true),
 				'name'			=> array('type' => 'varchar','precision' => 100,'nullable' => false),
 				'group_sort'	=> array('type' => 'int','precision' => 2,'nullable' => false),
 				'descr'			=> array('type' => 'varchar','precision' => 150,'nullable' => true),
@@ -616,6 +617,7 @@
 				'descr' => array('type' => 'text','nullable' => true),
 				'file_name' => array('type' => 'varchar','precision' => 255,'nullable' => false),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'client_side' => array('type' => 'int','precision' => 2,'nullable' => true),//otherwise: server-side
 				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
 			'pk' => array('location_id', 'id'),

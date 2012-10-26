@@ -538,6 +538,7 @@
 
 		function save_custom_function( $custom_function, $action = '' )
 		{
+			$receipt = array();
 			$custom_function['appname'] = $this->type_app[$this->type];
 			if ( !$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'] )
 			{
@@ -549,12 +550,27 @@
 				if ( $custom_function['id'] != '' )
 				{
 
-					$receipt = $GLOBALS['phpgw']->custom_functions->edit( $custom_function );
+					$receipt['id'] = $custom_function['id'];
+					if( $GLOBALS['phpgw']->custom_functions->edit( $custom_function ) )
+					{
+						$receipt['message'][] = array('msg'=>'OK');
+					}
+					else
+					{
+						$receipt['error'][] = array('msg'=>'Error');
+					}
 				}
 			}
 			else
 			{
-				$receipt = $GLOBALS['phpgw']->custom_functions->add( $custom_function );
+				if($receipt['id'] = $GLOBALS['phpgw']->custom_functions->add( $custom_function ) )
+				{
+					$receipt['message'][] = array('msg'=>'OK');
+				}
+				else
+				{
+					$receipt['error'][] = array('msg'=>'Error');
+				}
 			}
 			return $receipt;
 		}
