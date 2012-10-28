@@ -96,7 +96,6 @@
 					'query'		=> $this->query,
 					'sort'		=> $this->sort,
 					'order'		=> $this->order,
-					'allrows'	=> $this->allrows,
 					'entity_id'	=> $this->entity_id,
 					'cat_id'	=> $this->cat_id
 				);
@@ -1444,7 +1443,7 @@
 				//				$dry_run = true;
 			}
 
-			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id);
+			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id, phpgw::get_var( 'allrows', 'bool' ));
 			$uicols['name'][0]	= 'id';
 			$uicols['descr'][0]	= lang('id');
 			$uicols['name'][1]	= 'parent_id';
@@ -1453,7 +1452,7 @@
 			$uicols['descr'][2]	= lang('Name');
 			$uicols['name'][3]	= 'descr';
 			$uicols['descr'][3]	= lang('Descr');
-			$uicols['name'][4]	= 'group_sort';
+			$uicols['name'][4]	= 'group_sort_text';
 			$uicols['descr'][4]	= lang('sorting');
 			$uicols['name'][5]	= 'up';
 			$uicols['descr'][5]	= lang('up');
@@ -2196,12 +2195,16 @@
 
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category_tree2($location_id, 'phpgw_cust_attribute_group'));
+
+			$parent_list = $GLOBALS['phpgw']->custom_fields->find_group( $this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '',	'', '', true );
+			
+			$parent_list = $this->bocommon->select_list($values['parent_id'],$parent_list);
+//_debug_array($parent_list);die();
 
 			if($id)
 			{
 				$exclude = array($id);
-				$children = $this->bo->get_children2($location_id, $id, 0,true, 'phpgw_cust_attribute_group');
+				$children =  $GLOBALS['phpgw']->custom_fields->get_attribute_group_children($location_id, $id,0, 0, true);
 
 				foreach($children as $child)
 				{
