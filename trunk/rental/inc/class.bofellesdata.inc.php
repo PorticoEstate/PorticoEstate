@@ -60,7 +60,11 @@
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
 				$joins = "LEFT JOIN V_ANSVAR ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
-				$db = $this->get_db();
+				if(!$db = $this->get_db())
+				{
+					return;
+				}
+
 				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id' AND V_ORG_ENHET.ORG_NIVAA = 4";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
@@ -84,7 +88,11 @@
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
-				$db = $this->get_db();
+				if(!$db = $this->get_db())
+				{
+					return;
+				}
+
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
 				if($level) $sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				$db->query($sql,__LINE__,__FILE__);
@@ -107,7 +115,11 @@
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
-				$db = $this->get_db();
+				if(!$db = $this->get_db())
+				{
+					return;
+				}
+
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
 				if($level) $sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				$db->query($sql,__LINE__,__FILE__);
@@ -131,7 +143,11 @@
 			$tables = "V_ORG_ENHET";
 			$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID = {$org_unit_id}";
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql,__LINE__,__FILE__);			
 	        
 			if($db->next_record())
@@ -156,7 +172,11 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID , V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT $columns FROM $tables WHERE upper(ORG_NAVN) LIKE '%{$query}%' ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 
 			$db->query($sql,__LINE__,__FILE__);			
 	        
@@ -178,7 +198,11 @@
 		public function get_org_unit_name($id = 0)
 		{
 			$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE ORG_ENHET_ID =" . (int)$id;
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql,__LINE__,__FILE__);			
 			$db->next_record();
 			return $db->f('ORG_NAVN',true);		
@@ -191,7 +215,11 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT $columns FROM $tables WHERE V_ORG_ENHET.ORG_NIVAA = 4 ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql,__LINE__,__FILE__);			
 	        
 			$result_units = array();
@@ -242,7 +270,10 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT {$columns} FROM {$tables} WHERE V_ORG_ENHET.ORG_NIVAA = {$level} ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
 			$db->query($sql,__LINE__,__FILE__);			
 	        
 			$values = array();
@@ -269,7 +300,11 @@
 						"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
 			
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql,__LINE__,__FILE__);
 	        
 			if($db->next_record())
@@ -300,7 +335,11 @@
 			
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
 					
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql,__LINE__,__FILE__);
 						
 			if($db->next_record())
@@ -368,7 +407,11 @@
 			$sql = "$sql $order_by";
 			
 			
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->limit_query($sql,$start_index,__LINE__,__FILE__,$num_of_objects);
 			
 			$result_units = array();
@@ -425,7 +468,11 @@
 				$sql = "$sql AND $selector";
 			}
 			
-			$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
 			$db->query($sql);
 			
 			if($db->next_record())
@@ -461,4 +508,3 @@
 			return $this->status;
 		}
     }
-		
