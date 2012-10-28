@@ -120,7 +120,7 @@
 			$this->type			 = isset( $type ) && $type && isset( $this->type_app[$type] ) ? $type : 'entity';
 			$this->cat_id		 = isset( $cat_id ) && $cat_id ? $cat_id : '';
 			$this->entity_id	 = isset( $entity_id ) && $entity_id ? $entity_id : '';
-			$this->allrows		 = isset( $allrows ) && $allrows ? $allrows : '';
+			$this->allrows		 = phpgw::get_var( 'allrows', 'bool' );
 			$this->so			 = CreateObject( 'property.soadmin_entity', '', '',
 								$this->bocommon );
 			$this->so->type		 = $this->type;
