@@ -5,6 +5,7 @@
 	    protected static $bo;
 	    protected $connected = false;
 	    protected $status;
+	    protected $db = null;
 
 		var $public_functions = array
 			(
@@ -24,11 +25,31 @@
 			return self::$bo;
 		}
 		
+
+		/* our simple php ping function */
+		function ping($host)
+		{
+	        exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
+	        return $rval === 0;
+		}
+
 		public function get_db()
 		{
+			if($this->db && is_object($this->db))
+			{
+				return $this->db;
+			}
+			
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
-
+			
+			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			{
+				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
+				phpgwapi_cache::message_set($message, 'error');
+				return false;
+			}
+			
 			$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->debug = !!$config->config_data['external_db_debug'];
@@ -48,6 +69,8 @@
 			{
 				$status = lang('unable_to_connect_to_database');
 			}
+
+			$this->db = $db;
 			return $db;
 		}
 		
