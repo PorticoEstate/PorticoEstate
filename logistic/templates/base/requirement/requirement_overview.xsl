@@ -40,11 +40,14 @@
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
 			];
+			
+			
 	
 	
-		YAHOO.portico.inlineTableHelper('requirement-container', url, colDefs, null, null);
+		YAHOO.portico.inlineTableHelper('requirement-container', url, YAHOO.portico.columnDefs, null, null);
 
-		YAHOO.portico.inlineTableHelper('allocation-container', url, colDefs, null, null);
+
+		YAHOO.portico.inlineTableHelper('allocation-container', url, YAHOO.portico.columnDefs, null, null);
 	
 	
 
