@@ -868,8 +868,49 @@
 				}
 
 				$attrib['column_info']['type']  = $this->_translate_datatype_insert($attrib['column_info']['type']);
+				
+				$incompatible_char_types = array
+				(
+					'int'		=> true,
+					'decimal'	=> true,
+					'timestamp'	=> true
+				);
+
 				if($attrib_table)
 				{
+					$incompatible_type = false;
+					$OldDataType = $this->_translate_datatype_insert($OldDataType);
+					
+					if ($OldDataType == 'varchar' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+					else if ($OldDataType == 'char' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+					else if ($OldDataType == 'text' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+
+					if($incompatible_type)
+					{
+						$metadata = $this->_db->metadata($attrib_table);
+
+						$found_column = true;
+						$i = 0;
+						do
+						{
+							$backup_column_name = "{$attrib['column_name']}_backup_{$i}";
+							$i++;
+						}
+						while (isset($metadata[$backup_column_name]));
+						
+						$this->_oProc->RenameColumn($attrib_table,$attrib['column_name'], $backup_column_name);
+						$this->_oProc->AddColumn($attrib_table, $attrib['column_name'], $attrib['column_info']);
+					}
+					
 					$this->_oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);
 				}
 			}
