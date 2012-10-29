@@ -41,13 +41,13 @@
 				</xsl:for-each>
 			];
 			
-			
+			YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
 	
 	
-		YAHOO.portico.inlineTableHelper('requirement-container', url, YAHOO.portico.columnDefs, null, null);
+		YAHOO.portico.inlineTableHelper('requirement-container', YAHOO.portico.dataSourceUrl, YAHOO.portico.columnDefs, null, null);
 
 
-		YAHOO.portico.inlineTableHelper('allocation-container', url, YAHOO.portico.columnDefs, null, null);
+		YAHOO.portico.inlineTableHelper('allocation-container', YAHOO.portico.dataSourceUrl, YAHOO.portico.columnDefs, null, null);
 	
 	
 
