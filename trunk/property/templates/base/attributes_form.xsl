@@ -21,6 +21,17 @@
 		<xsl:variable name="statustext">
 			<xsl:value-of select="statustext"/>
 		</xsl:variable>
+
+		<xsl:choose>
+			<xsl:when test="datatype='section'">
+				<tr>
+					<td colspan='2'>
+						<xsl:value-of select="descr" disable-output-escaping="yes"/>				
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
+
 		<tr>
 			<td align="left" width="19%" valign="top" title="{$statustext}">
 				<xsl:choose>
@@ -388,11 +399,11 @@
 								</input>
 							</xsl:when>
 							<xsl:when test="datatype='DT'">
-											<xsl:variable name="clear_function">
-												<xsl:text>clear_</xsl:text>
-												<xsl:value-of select="name"/>
-												<xsl:text>();</xsl:text>
-											</xsl:variable>
+								<xsl:variable name="clear_function">
+									<xsl:text>clear_</xsl:text>
+									<xsl:value-of select="name"/>
+									<xsl:text>();</xsl:text>
+								</xsl:variable>
 
 								<table>
 									<tr>

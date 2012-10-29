@@ -1682,16 +1682,31 @@
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
 				$attributes_general = array();
+				$i = -1;
 				$attributes = array();
-				foreach ($attributes_groups as $group)
+				foreach ($attributes_groups as $_key => $group)
 				{
 					if(isset($group['attributes']) && (isset($group['group_sort']) || !$location_data))
 					{
-						$_tab_name = str_replace(' ', '_', $group['name']);
-						$active_tab = $active_tab ? $active_tab : $_tab_name;
-						$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
-						$group['link'] = $_tab_name;
-						$attributes[] = $group;
+						if($group['level'] == 0)
+						{
+							$_tab_name = str_replace(' ', '_', $group['name']);
+							$active_tab = $active_tab ? $active_tab : $_tab_name;
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
+							$group['link'] = $_tab_name;
+							$attributes[] = $group;
+							$i ++;
+						}
+						else
+						{
+							$attributes[$i]['attributes'][] = array
+							(
+								'datatype' => 'section',
+								'descr' => "<H{$group['level']}> {$group['descr']} </H{$group['level']}>",
+								'level' => $group['level'],
+							);
+							$attributes[$i]['attributes'] = array_merge($attributes[$i]['attributes'], $group['attributes']);
+						}
 						unset($_tab_name);
 					}
 					else if(isset($group['attributes']) && !isset($group['group_sort']) && $location_data)
@@ -1699,6 +1714,7 @@
 						$attributes_general = array_merge($attributes_general,$group['attributes']);
 					}
 				}
+
 				unset($attributes_groups);
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
@@ -1963,7 +1979,7 @@
 				}
 			}
 
-
+//_debug_array($attributes);die();
 			$data = array
 				(
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
