@@ -182,7 +182,6 @@
 
 			$condition =  join(' AND ', $clauses);
 
-			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 			$tables = "lg_activity activity";
 
 			if($return_count) // We should only return a count
@@ -196,8 +195,6 @@
 
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
-			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 
 			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
@@ -260,7 +257,6 @@
 			}
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-
 			$ret = $this->read_tree($sql, $filters);
 
 			return $ret;
@@ -307,6 +303,10 @@
 			if($filters['activity'])
 			{
 				$filter_clause = "activity.id = {$this->marshal($filters['activity'], 'int')}";
+			}
+			else if($filters['id'])
+			{
+				$filter_clause = "activity.id = {$this->marshal($filters['id'], 'int')}";
 			}
 			else
 			{
