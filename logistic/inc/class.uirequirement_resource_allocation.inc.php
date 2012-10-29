@@ -134,15 +134,20 @@
 							'sortable' => true,
 						),
 						array(
-							'key' => 'location_code',
-							'label' => lang('Location code'),
+							'key' => 'requirement_id',
+							'label' => lang('Requirememnt id'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'address',
-							'label' => lang('Address'),
-							'sortable' => false
-						)
+							'key' => 'location_id',
+							'label' => lang('Location id'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'resource_id',
+							'label' => lang('Resource id'),
+							'sortable' => true
+						),
 					)
 				),
 			);
@@ -170,14 +175,17 @@
 			{
 				$user_rows_per_page = 10;
 			}
+			
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('startIndex', 'int');
 			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field = phpgw::get_var('sort');
 			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+			
 			// Form variables
 			$search_for = phpgw::get_var('query');
 			$search_type = phpgw::get_var('search_option');
+
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -192,7 +200,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
-			//var_dump($query_type);
+
 			switch ($query_type)
 			{
 				default: // ... all composites, filters (active and vacant)
@@ -200,8 +208,7 @@
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
-			//var_dump($result_objects);
-			//Create an empty row set
+
 			$rows = array();
 			foreach ($result_objects as $result)
 			{
