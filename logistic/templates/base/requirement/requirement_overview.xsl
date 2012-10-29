@@ -17,45 +17,8 @@
 
 <xsl:template match="datasource-definition">
 	<script>
-		/*YAHOO.portico.inlineTableHelper('requirement-container', url, colDefs, null, null);
-
-		YAHOO.portico.updateinlineTableHelper('allocation-container');
-	*/
 	
-		YAHOO.portico.setupDatasource = function() {
-			<xsl:if test="source">
-				YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
-					YAHOO.portico.initialSortedBy = false;
-					YAHOO.portico.initialFilters = false;
-					<xsl:if test="sorted_by">
-						YAHOO.portico.initialSortedBy = {key: '<xsl:value-of select="sorted_by/key"/>', dir: '<xsl:value-of select="sorted_by/dir"/>'};
-					</xsl:if>
-			</xsl:if>
-
-			<xsl:choose>
-				<xsl:when test="//datatable/actions">
-					YAHOO.portico.actions = [
-						<xsl:for-each select="//datatable/actions">
-							{
-								my_name: "<xsl:value-of select="my_name"/>",
-								text: "<xsl:value-of select="text"/>",
-								<xsl:if test="parameters">
-									parameters: <xsl:value-of select="parameters"/>,
-							    </xsl:if>
-								action: "<xsl:value-of select="action"/>"
-							}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-						</xsl:for-each>
-					];
-				</xsl:when>
-				<xsl:otherwise>
-					YAHOO.portico.actions = [];
-				</xsl:otherwise>
-			</xsl:choose>
-
-			YAHOO.portico.editor_action = "<xsl:value-of select="//datatable/editor_action"/>";
-			YAHOO.portico.disable_left_click = "<xsl:value-of select="//datatable/disable_left_click"/>";
-
-			YAHOO.portico.columnDefs = [
+	YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{
 						resizeable: true,
@@ -77,15 +40,13 @@
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
 			];
-		}
-		
-		var actions = new Array();
+	
+	
+		YAHOO.portico.inlineTableHelper('requirement-container', url, colDefs, null, null);
 
-		<xsl:choose>
-			<xsl:when test="//js_lang != ''">
-				var lang = <xsl:value-of select="//js_lang"/>;
-			</xsl:when>
-		</xsl:choose>
+		YAHOO.portico.inlineTableHelper('allocation-container', url, colDefs, null, null);
+	
+	
 
 	</script>
 </xsl:template>
