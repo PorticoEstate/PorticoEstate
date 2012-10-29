@@ -116,5 +116,11 @@
 
 		public function serialize()
 		{
+			return array(
+				'id' => $this->get_id(),
+				'requirement_id' => $this->get_requirement_id(),
+				'resource_id' => $this->get_resource_id(),
+				'location_id' => $this->get_location_id()
+			);
 		}
 	}
