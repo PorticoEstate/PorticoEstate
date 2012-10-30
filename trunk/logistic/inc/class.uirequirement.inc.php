@@ -144,6 +144,20 @@
 				}
 			}
 
+
+			$line_id = 0; // optional preselect
+			foreach($rows as &$entry)
+			{
+				$_checked = '';
+
+				if($entry['id'] == $line_id)
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$entry['select'] = "<input id=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
+			}
+
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -197,6 +211,11 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
 					'field' => array(
+						array(
+							'key' => 'select',
+							'label' => lang('select'),
+							'sortable' => false,
+						),
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
