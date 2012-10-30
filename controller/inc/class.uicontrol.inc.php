@@ -286,16 +286,14 @@
 			
 			$data = array
 			(
-				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'						=> "control_details",
-				'editable' 					=> true,
-				'control'					=> ($control != null) ? $control->toArray() : null,
+				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'									=> "control_details",
+				'editable' 							=> true,
+				'control'								=> ($control != null) ? $control->toArray() : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
-				'role_array'				=> $role_array,
-				'repeat_type_array'			=> $repeat_type_array,
-				'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
-				'action'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.save_control_details'))
+				'role_array'						=> $role_array,
+				'repeat_type_array'			=> $repeat_type_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -413,7 +411,6 @@
 			
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_group/control_groups'), $data);
 		}
@@ -533,7 +530,6 @@
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control/control_tabs', 'control_item/choose_control_items'), $data); 
@@ -603,16 +599,15 @@
 			
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
-				'view'							=> "sort_check_list",
-				'control'						=> $control->toArray(),
+				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
+				'view'													=> "sort_check_list",
+				'control'												=> $control->toArray(),
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -626,8 +621,7 @@
 
 			$data = array
 			(
-				'control'						=> $control->toArray(),
-				'dateformat' 					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
+				'control'	=> $control->toArray(),
 			);
 		  
 			self::render_template_xsl('control/control_details', $data);

@@ -207,7 +207,6 @@
 				'heading_array'		  	  		=> $heading_array,
 				'controls_calendar_array' 	=> $controls_calendar_array,
 				'components_calendar_array'	=> $components_calendar_array,
-				'date_format' 			  			=> $date_format,
 				'location_level'		  			=> $level,
 				'roles_array'		  					=> $roles_array,
 				'repeat_type_array'		  		=> $repeat_type_array,
@@ -392,7 +391,6 @@
 				'heading_array'		  	  		=> $heading_array,
 				'controls_calendar_array' 	=> $controls_calendar_array,
 				'components_calendar_array'	=> $components_calendar_array,
-				'date_format' 			  			=> $date_format,
 				'location_level'		  			=> $level,
 				'roles_array'		  					=> $roles_array,
 				'repeat_type_array'		  		=> $repeat_type_array,
@@ -528,7 +526,6 @@
 				'heading_array'		  	  					=> $heading_array,
 				'locations_with_calendar_array' 	=> $locations_with_calendar_array,
 			  'components_with_calendar_array'	=> $components_with_calendar_array,
-				'date_format' 			  						=> $date_format,
 				'current_year'	  	  	  				=> $year,
 			);
 			
@@ -613,7 +610,6 @@
 				'heading_array'		  	  					=> $heading_array,
 				'locations_with_calendar_array' 	=> $locations_with_calendar_array,
 				'components_with_calendar_array'	=> $components_with_calendar_array,
-				'date_format' 			  						=> $date_format,
 				'current_year' 			  						=> $year,
 				'current_month_nr' 		  					=> $month,
 			);

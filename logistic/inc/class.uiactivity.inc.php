@@ -38,12 +38,13 @@
 		private $so;
 		private $so_project;
 		public $public_functions = array(
-			'query' => true,
-			'add' 	=> true,
-			'edit' 	=> true,
-			'view' 	=> true,
-			'index' => true,
-			'save' 	=> true
+			'query'			=> true,
+			'add' 			=> true,
+			'edit' 			=> true,
+			'view' 			=> true,
+			'index' 		=> true,
+			'save' 			=> true,
+			'edit_favorite'	=> true
 		);
 
 		public function __construct()
@@ -97,7 +98,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json', 'filter' => phpgw::get_var('filter', 'int'))),
 					'field' => array(
 						array(
 							'key' => 'name',
@@ -189,27 +190,17 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
-			$data['datatable']['actions'][] = array
+				$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'new_allocation',
-						'text' 			=> lang('t_new_allocation'),
+						'my_name'		=> 'add_favorite',
+						'text' 			=> lang('toggle as favorite'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uiallocation.edit'
+							'menuaction'	=> 'logistic.uiactivity.edit_favorite'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
 
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'view_allocations',
-						'text' 			=> lang('t_view_allocations'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uiallocation.index'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
 
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
@@ -246,7 +237,6 @@
 			$result_count = 0;
 
 			//Retrieve a contract identifier and load corresponding contract
-			//$activity_id = phpgw::get_var('activity_id');
 
 			$exp_param = phpgw::get_var('export');
 			$export = false;
@@ -263,7 +253,7 @@
 			{
 				default: // ... all activities, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'activity_query', $search_for);
-					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'));
+					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'), 'activity' => phpgw::get_var('filter', 'int'));
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
@@ -439,6 +429,39 @@
 			{
 				$this->edit($activity);
 			}
+		}
+
+		public function edit_favorite()
+		{
+			if($activity_id = phpgw::get_var('activity_id'))
+			{
+				$activity = $this->so->get_single($activity_id);
+
+				if(isset($GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites']) && $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'])
+				{
+					$menu_favorites = $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'];
+				}
+				else
+				{
+					$menu_favorites = array();
+				}
+
+				if(isset($menu_favorites['activity'][$activity_id]))
+				{
+					unset($menu_favorites['activity'][$activity_id]);
+				}
+				else
+				{
+					$menu_favorites['activity'][$activity_id] = $activity->get_name();
+				}
+
+				$GLOBALS['phpgw']->preferences->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->add('logistic','menu_favorites',$menu_favorites,'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				execMethod('phpgwapi.menu.clear');
+			}
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.index'));	
 		}
 
 		private function get_user_array()

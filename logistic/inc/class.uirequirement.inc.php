@@ -271,7 +271,7 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
-			self::render_template_xsl('datatable_common', $data);
+			self::render_template_xsl( 'requirement/requirement_overview', $data);
 		}
 
 		public function view()

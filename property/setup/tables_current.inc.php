@@ -1701,6 +1701,7 @@
 		),
 		'fm_entity' => array(
 			'fd' => array(
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '20','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
@@ -1715,6 +1716,7 @@
 		),
 		'fm_entity_category' => array(
 			'fd' => array(
+				'location_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'entity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '100','nullable' => True),

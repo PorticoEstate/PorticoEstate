@@ -477,8 +477,10 @@
 			$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 			$entity['id'] = $this->bocommon->next_id("fm_{$this->type}");
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$values= array(
+				$location_id,
 				$entity['id'],
 				$entity['name'],
 				$entity['descr'],
@@ -488,10 +490,9 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_{$this->type} (id,name, descr,location_form,documentation) "
+			$this->db->query("INSERT INTO fm_{$this->type} (location_id,id,name, descr,location_form,documentation) "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
-			$GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$receipt['id']= $entity['id'];
 
@@ -539,6 +540,7 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$values['id'] = $this->bocommon->next_id($table, array('entity_id'=>$values['entity_id']));
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true);
 
 			if($values['parent_id'])
 			{
@@ -554,6 +556,7 @@
 
 			$values_insert= array
 				(
+					$location_id,
 					$values['entity_id'],
 					$values['id'],
 					$values['name'],
@@ -575,7 +578,7 @@
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,jasperupload,parent_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 
@@ -583,7 +586,6 @@
 
 			if($values['is_eav']) // if modelles as eav - we are good
 			{
-				$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true);
 				$values_insert = array
 				(
 					'location_id'	=> $location_id,
@@ -603,7 +605,6 @@
 			
 			
 			// if not eav - we need a table to hold the attributes
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
 			$this->init_process();
 
 			$fd = $this->get_default_column_def();

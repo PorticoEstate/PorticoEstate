@@ -258,22 +258,17 @@
 			
 			$data = array
 			(
-				'action_url'				=> self::link(array('menuaction' => 'controller.uicheck_list.save_check_list')),
-				'calendar_for_year_url'		=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
-				'calendar_for_month_url'	=> self::link(array('menuaction' => 'controller.uicalendar.view_calendar_for_month')),
-				'location_array'			=> $location_array,
-				'component_array'			=> $component_array,
-				'control'					=> $control->toArray(),
-				'date_format' 				=> $date_format,
-				'check_list' 				=> $check_list->toArray(),
-				'type'			 			=> $type,
-				'current_year' 				=> $year,
-				'current_month_nr' 			=> $month_nr,
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'control'									=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'type'			 							=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month_nr,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 			=> $level
+				'location_level' 					=> $level
 			);
 			
-	//		phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
 
@@ -295,13 +290,10 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			
-			
 			$cl_status_updater = new check_list_status_updater();
 			$cl_status_updater->update_check_list_status( $check_list_id );
 		
 			$control = $this->so_control->get_single($check_list->get_control_id());
-			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			$component_id = $check_list->get_component_id();
 
@@ -338,7 +330,6 @@
 				'check_list' 							=> $check_list->toArray(),
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
 				'type' 										=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,
@@ -373,7 +364,6 @@
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 					
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$deadline_date_ts = phpgwapi_datetime::date_to_timestamp( $deadline_date );
 			
 			if($planned_date != '')
@@ -453,8 +443,6 @@
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 				
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				
 			$component_id = $check_list->get_component_id();
 
 			if($component_id > 0)
@@ -491,7 +479,6 @@
 				'check_list' 							=> $check_list->toArray(),
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'date_format' 						=> $date_format,
 				'type' 										=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month,
@@ -502,12 +489,8 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
 		}
@@ -579,21 +562,18 @@
 			
 			$data = array
 			(
-				'control' 					=> $control->toArray(),
-				'check_list' 				=> $check_list->toArray(),
-				'location_array'			=> $location_array,
-				'component_array'			=> $component_array,
-		//		'date_format' 				=> $date_format,
-				'type' 						=> $type,
-				'current_year' 				=> $year,
-				'current_month_nr' 			=> $month,
+				'control' 								=> $control->toArray(),
+				'check_list' 							=> $check_list->toArray(),
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
 				'building_location_code' 	=> $building_location_code,
-				'location_level' 			=> $level
+				'location_level' 					=> $level
 			);
 
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 			
 			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
 		}
@@ -722,7 +702,6 @@
 			
 			phpgwapi_jquery::load_widget('core');
 
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			

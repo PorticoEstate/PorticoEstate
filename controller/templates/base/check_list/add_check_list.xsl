@@ -26,9 +26,10 @@
 			</xsl:choose>
 		</div>
 		<div class="box-2 select-box">
+		
 			<a>
 				<xsl:attribute name="href">
-					<xsl:value-of select="calendar_for_year_url"/>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;location_code=</xsl:text>
@@ -43,9 +44,10 @@
 				</xsl:attribute>
 				Kontrollplan for bygg/eiendom (år)
 			</a>
+				
 			<a class="last">
 				<xsl:attribute name="href">
-					<xsl:value-of select="calendar_for_month_url"/>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 					<xsl:text>&amp;year=</xsl:text>
 					<xsl:value-of select="current_year"/>
 					<xsl:text>&amp;month=</xsl:text>
@@ -80,7 +82,12 @@
 	<!-- ==================  CHECKLIST DETAILS  ===================== -->
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
-		<form id="frm_add_check_list" action="{action_url}" method="post">
+		
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.save_check_list')" />
+		</xsl:variable>
+		
+		<form id="frm_add_check_list" action="{$action_url}" method="post">
 			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 			<input type="hidden" name="control_id" value="{$control_id}" />
 			<xsl:variable name="type"><xsl:value-of select="type"/></xsl:variable>

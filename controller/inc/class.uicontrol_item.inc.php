@@ -52,14 +52,14 @@
 
 		public $public_functions = array
 		(
-			'index'	=>	true,
-			'query'	=>	true,
-			'edit'	=>	true,
-			'view'	=>	true,
-			'add'		=>	true,
-			'save'	=>	true,
+			'index'									=>	true,
+			'query'									=>	true,
+			'edit'									=>	true,
+			'view'									=>	true,
+			'add'										=>	true,
+			'save'									=>	true,
 			'display_control_items'	=> true,
-			'delete_item_list'	=> true
+			'delete_item_list'			=> true
 		);
 
 		public function __construct()
@@ -242,9 +242,7 @@
 			$this->use_yui_editor(array('what_to_do','how_to_do'));
 			
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 
 			self::render_template_xsl('control_item/control_item', $data);
 		}

@@ -21,6 +21,17 @@
 		<xsl:variable name="statustext">
 			<xsl:value-of select="statustext"/>
 		</xsl:variable>
+
+		<xsl:choose>
+			<xsl:when test="datatype='section'">
+				<tr>
+					<td colspan='2'>
+						<xsl:value-of select="descr" disable-output-escaping="yes"/>				
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
+
 		<tr>
 			<td align="left" width="19%" valign="top" title="{$statustext}">
 				<xsl:choose>
@@ -71,7 +82,7 @@
 								<xsl:call-template name="choice"/>
 							</xsl:when>
 							<xsl:when test="datatype='LB'">
-								<select name="values_attribute[{counter}][value]" class="forms">
+								<select id="id_{name}" name="values_attribute[{counter}][value]" class="forms">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -388,11 +399,11 @@
 								</input>
 							</xsl:when>
 							<xsl:when test="datatype='DT'">
-											<xsl:variable name="clear_function">
-												<xsl:text>clear_</xsl:text>
-												<xsl:value-of select="name"/>
-												<xsl:text>();</xsl:text>
-											</xsl:variable>
+								<xsl:variable name="clear_function">
+									<xsl:text>clear_</xsl:text>
+									<xsl:value-of select="name"/>
+									<xsl:text>();</xsl:text>
+								</xsl:variable>
 
 								<table>
 									<tr>
@@ -450,7 +461,7 @@
 								</table>
 							</xsl:when>
 							<xsl:when test="datatype='T'">
-								<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]">
+								<textarea id="id_{name}" cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -492,7 +503,7 @@
 								</table>
 							</xsl:when>
 							<xsl:when test="datatype='bolean'">
-								<input type="checkbox" name="values_attribute[{counter}][value]" value="1">
+								<input id="id_{name}" type="checkbox" name="values_attribute[{counter}][value]" value="1">
 									<xsl:choose>
 										<xsl:when test="value!=''">
 											<xsl:attribute name="checked">
@@ -574,7 +585,7 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+								<input id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
@@ -614,6 +625,9 @@
 		<xsl:variable name="counter">
 			<xsl:value-of select="counter"/>
 		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:value-of select="name"/>
+		</xsl:variable>
 		<table cellpadding="2" cellspacing="2" align="left">
 			<xsl:for-each select="choice">
 				<tr>
@@ -633,10 +647,10 @@
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="checked='checked'">
-								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}" checked="checked"/>
+								<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}" checked="checked"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}"/>
+								<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$counter}][value][]" value="{id}"/>
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:text> </xsl:text>

@@ -33,10 +33,11 @@
 	{
 		public static $so;
 
-		protected static $id;
-		protected static $requirement_id;
-		protected static $resource_id;
-		protected static $location_id;
+		protected $id;
+		protected $requirement_id;
+		protected $resource_id;
+		protected $location_id;
+		protected $create_user;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -88,6 +89,16 @@
 		{
 			return $this->location_id;
 		}
+		
+		public function set_create_user($create_user)
+		{
+			$this->create_user = $create_user;
+		}
+
+		public function get_create_user()
+		{
+			return $this->create_user;
+		}
 
 		/**
 		* Get a static reference to the storage object associated with this model object
@@ -105,23 +116,11 @@
 
 		public function serialize()
 		{
-			$entity_so	= CreateObject('property.soadmin_entity');
-			$project_so = CreateObject('logistic.soproject');
-			$loc_arr = $GLOBALS['phpgw']->locations->get_name($this->get_location_id());
-			$entity_arr = explode('.',$loc_arr['location']);
-
-			$entity = $entity_so->read_single($entity_arr[2]);
-			$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
-			$entity_label = $entity['name'];
-			$category_label = $category['name'];
-			$project_type_label  = $project_so->get_project_type_label($this->get_project_type_id());
-
 			return array(
 				'id' => $this->get_id(),
-				'location_id' => $this->get_location_id(),
-				'entity_label' => $entity_label,
-				'category_label' => $category_label,
-				'project_type_label' => $project_type_label
+				'requirement_id' => $this->get_requirement_id(),
+				'resource_id' => $this->get_resource_id(),
+				'location_id' => $this->get_location_id()
 			);
 		}
 	}

@@ -3094,4 +3094,65 @@
 		}
 	}
 
+	$test[] = '0.9.17.540';
+	/**
+	* Add custom attibute type that allows attribute used as part of short description
+	* Add support for clien-side custom functions
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_540()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute','input_text',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => false,
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_attribute','statustext',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => false,
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.541';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.541';
+	/**
+	* Allow groups within groups
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_541()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute_group','parent_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+
+		//otherwise: server-side
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_function','client_side', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.542';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
 

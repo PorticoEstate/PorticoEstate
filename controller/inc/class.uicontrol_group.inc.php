@@ -368,7 +368,6 @@
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_items'),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
-					'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 					=> true,
 					'procedure'					=> array('options' => $procedure_options),
 					'control_area'				=> array('options' => $control_area_array),
@@ -507,7 +506,6 @@
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
-					'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 					=> true,
 					'procedure'					=> array('options' => $procedure_options),
 					'control_area'				=> array('options' => $control_area_array),
@@ -736,7 +734,6 @@
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_group'),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
-					'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'control_group'				=> $control_group_array,
 					'selected_control_items'	=> $control_items,
 				);

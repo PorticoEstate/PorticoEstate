@@ -43,35 +43,81 @@
 			$this->local_db = clone $this->db;
 		}
 
-		protected function add(&$object)
+		protected function add(&$resource_alloc)
 		{
+			$cols = array(
+				'requirement_id',
+				'resource_id',
+				'location_id',
+				'create_user',
+				'create_date'
+			);
 
+			$values = array(
+				$this->marshal($resource_alloc->get_requirement_id(), 'int'),
+				$this->marshal($resource_alloc->get_resource_id(), 'int'),
+				$this->marshal($resource_alloc->get_location_id(), 'int'),
+				$this->marshal($resource_alloc->get_create_user(), 'int'),
+				$this->marshal(strtotime('now'), 'int')
+			);
+
+			$sql = 'INSERT INTO lg_requirement_resource_allocation (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+			$result = $this->db->query($sql, __LINE__,__FILE__);
+
+			if($result)
+			{
+				return $this->db->get_last_insert_id('lg_requirement_resource_allocation', 'id');
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		protected function update($resource_alloc)
+		{
+			$id = intval($resource_alloc->get_id());
+		
+			$values = array(
+				'requirement_id=' . $this->marshal($resource_alloc->get_requirement_id(), 'string'),
+				'resource_id=' . $this->marshal($resource_alloc->get_resource_id(), 'string'),
+				'location_id=' . $this->marshal($resource_alloc->get_location_id(), 'int')
+			);
+
+			$result = $this->db->query('UPDATE lg_requirement_resource_allocation SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+
+			if($result)
+			{
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		protected function get_id_field_name()
 		{
+			if(!$extended_info)
+			{
+				$ret = 'id';
+			}
+			else
+			{
+				$ret = array
+				(
+					'table'			=> 'lg_requirement_resource_allocation', // alias
+					'field'			=> 'id',
+					'translated'	=> 'id'
+				);
+			}
 
+			return $ret;
 		}
 
 		protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 		{
 			$clauses = array('1=1');
-
-			/*if($search_for)
-			{
-				$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
-				$like_clauses = array();
-				switch($search_type)
-				{
-					default:
-						$like_clauses[] = "{$table_alias}.name $this->like $like_pattern";
-						break;
-				}
-				if(count($like_clauses))
-				{
-					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
-				}
-			}*/
 
 			$filter_clauses = array();
 			if(isset($filters[$this->get_id_field_name()]))
@@ -94,11 +140,10 @@
 
 			$condition =  join(' AND ', $clauses);
 
-			//$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
 			$tables = "lg_requirement_resource_allocation allocation";
 
-			if($return_count) // We should only return a count
+			if($return_count)
 			{
 				$cols = 'COUNT(DISTINCT(allocation.id)) AS count';
 			}
@@ -125,11 +170,6 @@
 			}
 
 			return $allocation;
-		}
-
-		protected function update($object)
-		{
-
 		}
 
 		public static function get_instance()

@@ -3,8 +3,6 @@
 
 <xsl:template name="view_procedure_documents" xmlns:php="http://php.net/xsl">
 
-<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
-
 <div class="yui-content">
 		<div id="details">
 			<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uidocument.add')" /></xsl:variable>
