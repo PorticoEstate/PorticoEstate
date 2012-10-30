@@ -95,7 +95,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_bim_type",__LINE__,__FILE__);
 
-		$values = array();
+		$types = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$types[] = array
