@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage admin
- 	* @version $Id: class.bocondition survey.inc.php 9684 2012-06-27 14:19:11Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**
