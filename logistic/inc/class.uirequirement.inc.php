@@ -174,8 +174,11 @@
 			phpgwapi_yui::load_widget('paginator');
 			$activity_id = phpgw::get_var('activity_id');
 
+			$activity = $this->so_activity->get_single($activity_id);
+			
 			$data = array(
 				'datatable_name'	=> lang('requirement'),
+				'activity'	=> $activity,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -224,52 +227,17 @@
 							'hidden' => true
 						),
 						array(
-							'key' => 'activity_id',
+							'key' => 'id',
+							'className' => 'requirement_id',
 							'hidden' => true
 						)
 					)
 				),
 			);
 
-			$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'requirement_id',
-							'source'	=> 'id'
-						),
-						array
-						(
-							'name'		=> 'activity_id',
-							'source'	=> 'activity_id'
-						),
-					)
-				);
+			phpgwapi_jquery::load_widget('core');
 
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'allocate_booking',
-						'text' 			=> lang('t_new_booking_allocation'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uirequirement_resource_allocation.edit'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
-
-			$data['datatable']['actions'][] = array
-					(
-						'my_name'		=> 'view_booking_allocations',
-						'text' 			=> lang('t_view_booking_allocations'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-						(
-							'menuaction'	=> 'logistic.uirequirement_resource_allocation.index'
-						)),
-						'parameters'	=> json_encode($parameters)
-					);
-
+			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
 			self::render_template_xsl( 'requirement/requirement_overview', $data);
 		}
 

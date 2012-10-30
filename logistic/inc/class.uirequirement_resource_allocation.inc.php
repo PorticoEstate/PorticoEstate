@@ -203,6 +203,12 @@
 
 			switch ($query_type)
 			{
+				case 'requirement_id':
+					$requirement_id = phpgw::get_var('requirement_id');
+					$filters = array('requirement_id' => $requirement_id);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = $this->so->get_count($search_for, $search_type, $filters);
+					break;
 				default: // ... all composites, filters (active and vacant)
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
