@@ -759,13 +759,6 @@ dl.proplist, dl.proplist-col {
   margin: 20px 0 0 20px;
 }
 
-#toolbar {
-  display: inline-block;
-  padding: 10px;
-  background-color: #DEEAF8;
-  border: 1px solid #CEE3F9;
-}
-
 #toolbar input[type="text"] {
   font-size: 100%;
   padding: 3px;

@@ -224,20 +224,22 @@
 			{
 				$user_rows_per_page = 10;
 			}
+			
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('startIndex', 'int');
 			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field = phpgw::get_var('sort');
 			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+			
 			// Form variables
 			$search_for = phpgw::get_var('query');
 			$search_type = phpgw::get_var('search_option');
+			
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
 
 			//Retrieve a contract identifier and load corresponding contract
-
 			$exp_param = phpgw::get_var('export');
 			$export = false;
 			if (isset($exp_param))
@@ -248,7 +250,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
-			//var_dump($query_type);
+
 			switch ($query_type)
 			{
 				default: // ... all activities, filters (active and vacant)
@@ -361,6 +363,33 @@
 		public function view()
 		{
 			$activity_id = phpgw::get_var('id');
+
+			if ($activity_id && is_numeric($activity_id))
+			{
+				$activity = $this->so->get_single( $activity_id );
+				
+				$responsible_user = $this->so->get_responsible_user( $activity->get_responsible_user_id() );
+
+				$activity->set_responsible_user_name( $responsible_user );
+			}
+
+			$data = array
+			(
+				'activity' => $activity
+			);
+
+			if($activity->get_parent_id() > 0)
+			{
+				$parent_activity = $this->so->get_single($activity->get_parent_id());
+				$data['parent_activity'] = $parent_activity;
+			}
+			
+			self::render_template_xsl(array('activity/activity_item'), $data);
+		}
+		
+		public function view_2()
+		{
+			$activity_id = phpgw::get_var('id');
 			$project_id = phpgw::get_var('project_id');
 			if (isset($_POST['edit_activity']))
 			{
@@ -400,8 +429,12 @@
 					$data['parent_activity'] = $parent_activity->toArray();
 				}
 				
+				echo $activity->get_id();
+				
+				$activity_children = $this->so->get($activity->get_id());
+				
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('activity/activity_item'), $data);
+				self::render_template_xsl(array('activity/activity_item_2'), $data);
 			}
 		}
 		
