@@ -50,18 +50,21 @@
 						resizeable: true,
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
+							label: "<xsl:value-of select="label"/>",
 						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+							sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
-						hidden: true,
+							hidden: true,
 						</xsl:if>
 						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
+							formatter: <xsl:value-of select="formatter"/>,
 						</xsl:if>
 						<xsl:if test="editor">
-						editor: <xsl:value-of select="editor"/>,
-					    </xsl:if>
+							editor: <xsl:value-of select="editor"/>,
+					  </xsl:if>
+					  <xsl:if test="type = 'button'">
+							formatter:"button",
+					  </xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
@@ -74,8 +77,8 @@
   	
   	$(document).ready(function(){
 
-			var requirement_id = $("#requirement-container table").find("tr:first").find("td.requirement_id").find("div").text();
-				alert(requirement_id);
+			var requirement_id = $("#requirement-container table").children("tr").eq(1).find("td.requirement_id").find("div").text();
+			
 			updateAllocationTable( requirement_id );
 		});
 		

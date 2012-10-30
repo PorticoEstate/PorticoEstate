@@ -2275,9 +2275,8 @@ p.no_items_msg {
   padding: 20px;
 }
 
-#requirement-wrp label{
-  font-size: 16px;
-    
+#requirement-wrp label {
+    font-size: 14px;
 }
 
 #requirement-wrp h2 {
