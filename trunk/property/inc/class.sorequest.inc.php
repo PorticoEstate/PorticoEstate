@@ -538,7 +538,7 @@
 				else
 				{
 					$query = $this->db->db_addslashes($query);
-					$querymethod = " $where (fm_request.title {$this->like} '%$query%' OR fm_request.address {$this->like} '%$query%' OR fm_request.location_code {$this->like} '%$query%'";
+					$querymethod = " $where (fm_request.title {$this->like} '%$query%' OR fm_request.address {$this->like} '%$query%' OR fm_request.location_code {$this->like} '%$query%' OR fm_request.id =" . (int)$query;
 					for ($i=1;$i<=($_location_level);$i++)
 					{
 						$querymethod .= " OR fm_location{$i}.loc{$i}_name {$this->like} '%$query%'";
