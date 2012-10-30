@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage custom
- 	* @version $Id: organize_energy_pdf_bbb.php 6869 2011-01-27 10:28:55Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**
