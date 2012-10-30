@@ -42,7 +42,7 @@
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
-									<span><xsl:value-of select="attrib_value"/></span>
+									<span><xsl:value-of select="value"/></span>
 								</xsl:otherwise>
 							</xsl:choose>
 						</li>

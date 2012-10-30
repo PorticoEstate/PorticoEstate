@@ -62,9 +62,6 @@
 						<xsl:if test="editor">
 							editor: <xsl:value-of select="editor"/>,
 					  </xsl:if>
-					  <xsl:if test="type = 'button'">
-							formatter:"button",
-					  </xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
@@ -76,12 +73,9 @@
   	});
   	
   	$(document).ready(function(){
-
 			var requirement_id = $("#requirement-container table").children("tr").eq(1).find("td.requirement_id").find("div").text();
-			
 			updateAllocationTable( requirement_id );
 		});
-		
 		
 		function updateAllocationTable(requirement_id){
 		
@@ -103,6 +97,5 @@
 			
 				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
 		}
-  	
   </script>
 </xsl:template>

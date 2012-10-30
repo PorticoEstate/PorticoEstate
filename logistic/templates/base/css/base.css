@@ -2292,8 +2292,12 @@ p.no_items_msg {
 	border: 1px solid #B0D9FF;
 }
 
-#resource-list .resource{
-	padding: 5px 0;
+#resource-list .resource {
+  padding: 10px;
+}
+
+#resource-list .resource input[type="checkbox"]{
+  margin: 0 10px;
 }
 
 #resource-list .resource.odd{
@@ -2318,5 +2322,5 @@ p.no_items_msg {
     background: none repeat scroll 0 0 #B0D9FF;
     color: #092845;
     font-weight: bold;
-    padding: 5px 8px;
+    padding: 5px 20px;
 }
