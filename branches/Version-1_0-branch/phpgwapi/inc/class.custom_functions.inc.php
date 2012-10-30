@@ -130,6 +130,7 @@
 				'file_name'		=> $this->_db->db_addslashes($custom_function['custom_function_file']),
 				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
 				'active'		=> !!$custom_function['active'],
+				'client_side'	=> !!$custom_function['client_side'],
 				'custom_sort'	=> $custom_sort
 			);
 
@@ -214,9 +215,10 @@
 
 			$values = array
 			(
-				'descr'		=> $this->_db->db_addslashes($custom_function['descr']),
-				'file_name'	=> $custom_function['custom_function_file'],
-				'active'	=> $custom_function['active']
+				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
+				'file_name'		=> $custom_function['custom_function_file'],
+				'active'		=> $custom_function['active'],
+				'client_side'	=> $custom_function['client_side'],
 			);
 			unset($custom_function);
 
@@ -313,11 +315,12 @@
 				$id = $this->_db->f('id');
 				$custom_functions[] = array
 				(
-					'id'		=> $id,
-					'file_name'	=> $this->_db->f('file_name'),
-					'sorting'	=> $this->_db->f('custom_sort'),
-					'descr'		=> $this->_db->f('descr'),
-					'active'	=> !!$this->_db->f('active')
+					'id'			=> $id,
+					'file_name'		=> $this->_db->f('file_name'),
+					'sorting'		=> $this->_db->f('custom_sort'),
+					'descr'			=> $this->_db->f('descr'),
+					'active'		=> !!$this->_db->f('active'),
+					'client_side'	=> !!$this->_db->f('client_side')
 				);
 			}
 
@@ -358,7 +361,8 @@
 				'id'					=> (int)$this->_db->f('id'),
 				'descr'					=> $this->_db->f('descr', true),
 				'custom_function_file'	=> $this->_db->f('file_name'),
-				'active'				=> !!$this->_db->f('active')
+				'active'				=> !!$this->_db->f('active'),
+				'client_side'			=> !!$this->_db->f('client_side')
 			);
 		}
 

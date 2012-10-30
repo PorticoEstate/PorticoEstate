@@ -345,8 +345,8 @@
 
 
 
-			$cols.= ",sum(amount) as consume";
-			$cols_return[] 				= 'consume';
+//			$cols.= ",sum(amount) as consume";
+//			$cols_return[] 				= 'consume';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'consume';
 			$uicols['descr'][]			= lang('consume');
@@ -547,7 +547,11 @@
 				}
 			}
 
-			$sql .= " $filtermethod $querymethod $groupmethod";
+			$sql .= " $filtermethod $querymethod";
+			$sql_arr = explode('FROM', $sql);
+
+			$sql .= " $groupmethod";
+
 //_debug_array($sql);
 			$this->uicols['input_type']	= array_merge($this->bocommon->uicols['input_type'], $uicols['input_type']);
 			$this->uicols['name']		= array_merge($this->bocommon->uicols['name'], $uicols['name']);
@@ -572,20 +576,23 @@
 			array_unshift($this->uicols['sortable'],true);
 
 			$cols_return		= $this->bocommon->cols_return;
-			$type_id			= $this->bocommon->type_id;
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
 			$this->db->fetchmode = 'ASSOC';
 
-		//	$sql2 = 'SELECT count(*) as cnt, sum(budget) as sum_budget ' . substr($sql,strripos($sql,'FROM'));
+			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget  FROM ({$sql}) as t";
 
-			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(consume) as sum_consume FROM ({$sql}) as t";
-//_debug_array($sql2);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 			$this->sum_budget	= $this->db->f('sum_budget');
+
+			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
+			$this->db->query($sql3,__LINE__,__FILE__);
+			$this->db->next_record();
 			$this->sum_consume	= $this->db->f('sum_consume');
+			
+//			_debug_array($sql_arr);
 
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)
@@ -622,6 +629,21 @@
 						);
 				}
 				$j++;
+			}
+
+			foreach ($dataset as &$entry)
+			{
+				$sql = "SELECT sum(amount) as consume FROM fm_request_consume WHERE request_id={$entry['request_id']['value']}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+
+				$entry['consume'] = array
+				(
+					'value'		=> $this->db->f('consume'),
+					'datatype'	=> false,
+					'attrib_id'	=> false,
+				);
+					
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);

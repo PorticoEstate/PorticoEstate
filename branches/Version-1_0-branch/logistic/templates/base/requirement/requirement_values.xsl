@@ -93,12 +93,12 @@
 													<xsl:for-each select="cust_attribute/choice">
 														<xsl:choose>
 															<xsl:when test="value = //attrib_value">
-																<option selected='true' value="{value}">
+																<option selected='true' value="{id}">
 																	<xsl:value-of select="value"/>
 																</option>
 															</xsl:when>
 															<xsl:otherwise>
-																<option value="{value}">
+																<option value="{id}">
 																	<xsl:value-of select="value"/>
 																</option>
 															</xsl:otherwise>	
@@ -119,7 +119,7 @@
 									<div id="attributes">
 										<xsl:for-each select="requirement_attributes_array">
 										<div class="attribute">
-											<label style="margin-left:10px;"><xsl:value-of select="cust_attribute/input_text" /></label>
+											<label><xsl:value-of select="cust_attribute/input_text" /></label>
 											<xsl:choose>
 												<xsl:when test="cust_attribute/column_info/type = 'T'">
 													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>

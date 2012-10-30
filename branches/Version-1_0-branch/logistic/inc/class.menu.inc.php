@@ -41,11 +41,30 @@
 				(
 					'text'	=> lang('logistic'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uiproject.index') ),
-          'image'	=> array('property', 'location'),
+					'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
 				)
 			);
+
+
+			$favorites_children = array();
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites']) && $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'])
+			{
+				$menu_favorites = $GLOBALS['phpgw_info']['user']['preferences']['logistic']['menu_favorites'];
+				foreach ($menu_favorites as $type => $targets)
+				{
+					foreach ($targets as $target => $target_name)
+					{
+						$favorites_children["{$type}{$target}"] = array
+						(
+							'text'	=> $target_name,
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "logistic.ui{$type}.index", 'filter' =>$target ) ),
+							'image'	=> array('property', 'location_tenant')
+						);
+					}
+				}
+			}
 
 			$menus['navigation'] =  array
 			(
@@ -53,7 +72,7 @@
 				(
 					'text'	=> lang('project'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uiproject.index') ),
-          'image'	=> array('property', 'location_tenant'),
+					'image'	=> array('property', 'location_tenant'),
 					'children'	=> array(
 							'activity' => array
 								(
@@ -74,6 +93,13 @@
 										'image'	=> array('property', 'location_tenant'),
 								),*/
 						)
+				),
+				'favorites' => array
+				(
+					'text'		=> lang('favorites'),
+					'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'logistic.uiactivity.index') ),
+					'image'		=> array('property', 'location_tenant'),
+					'children'	=> $favorites_children
 				)
 			);
 

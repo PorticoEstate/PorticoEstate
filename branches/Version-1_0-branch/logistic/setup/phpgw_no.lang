@@ -62,3 +62,5 @@ error_msg_2	logistic	no	Vennligst velg en verdi i listen
 error_msg_3	logistic	no	Vennligst angi sluttdato etter startdato
 Criterias	logistic	no	Kriterier
 Add criterias	logistic	no	Legg til kriterier
+favorites	logistic	no	Favoritter
+toggle as favorite	logistic	no	Legg til / fjern som favoritt

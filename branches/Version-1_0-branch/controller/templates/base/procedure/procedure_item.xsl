@@ -4,7 +4,7 @@
 <xsl:template name="view_procedure" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_phpgw_i18n"/>
-<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
 <div class="yui-content">
 		<div id="details">
@@ -56,7 +56,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
-							<xsl:value-of select="php:function('date', $dateformat, $startdate)" />
+							<xsl:value-of select="php:function('date', $date_format, $startdate)" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -71,7 +71,7 @@
 						<xsl:otherwise>
 							<xsl:if test="procedure/revision_date != 0">
 								<xsl:variable name="revisiondate"><xsl:value-of select="procedure/revision_date" /></xsl:variable>
-								<xsl:value-of select="php:function('date', $dateformat, $revisiondate)" />
+								<xsl:value-of select="php:function('date', $date_format, $revisiondate)" />
 							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -87,7 +87,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="enddate"><xsl:value-of select="procedure/end_date" /></xsl:variable>
-							<xsl:value-of select="php:function('date', $dateformat, $enddate)" />
+							<xsl:value-of select="php:function('date', $date_format, $enddate)" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>

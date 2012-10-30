@@ -41,6 +41,7 @@
 		var $cols_extra;
 		var $cols_return_lookup;
 		var $type = 'entity';
+		protected $sql;
 
 
 		protected $type_app = array
@@ -156,7 +157,7 @@
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+						$ordermethod = " ORDER BY $entity_table.$order $sort";
 				}
 			}
 			else
@@ -216,6 +217,191 @@
 			return $values;
 		}
 
+
+		/**
+		 * Method for retreiving sublevels of a hierarchy.
+		 * 
+		 * @param $data array array holding input parametres
+		 * @return array of entities
+		 */
+
+		public function get_eav_list($data = array())
+		{
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+
+			if(!$location_id)
+			{
+				return array();
+			}
+
+			$_querymethod = array();
+			$__querymethod = array();
+
+//			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
+
+			$attribute_table = 'phpgw_cust_attribute';
+
+			foreach ($conditions as $condition)
+			{
+				$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND id= " . (int) $condition['attribute_id']);
+				$this->db->next_record();
+				$attribute_name = $this->db->f('column_name');
+
+				$attributes[$condition['attibute_id']]['name']						= $attribute_name;
+				$attributes[$condition['attibute_id']]['datatype']					= $this->db->f('datatype');
+				$attributes[$condition['attibute_id']]['get_list_function']			= $this->db->f('get_list_function',true);
+				$attributes[$condition['attibute_id']]['get_list_function_input']	= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
+				$attributes[$condition['attibute_id']]['get_single_function']		= $this->db->f('get_single_function',true);
+				$attributes[$condition['attibute_id']]['get_single_function_input']	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
+
+				switch ($this->db->f('datatype'))
+				{
+					case 'I':
+						switch($condition['operator'])
+						{
+							case '=':
+							case 'equal':
+								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								break;
+							case 'gt':
+							case '>':
+								$operator = '>';
+								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+							break;
+							case 'lt':
+							case '<':
+								$operator = '<';
+								$_querymethod[]= "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+							break;
+							default:
+								throw new Exception('ERROR: Not a valid operator on conditions');
+						}
+						$__querymethod = array(); // remove block
+						break;
+					case 'CH':
+						$__querymethod = array(); // remove block
+						$_querymethod[]= "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
+						break;
+					default:
+						$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+						$__querymethod = array(); // remove block
+				}
+			}
+
+			$querymethod = '';
+
+			$where = 'AND';
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode(' AND ',$_querymethod) . ')';
+				unset($_querymethod);
+			}
+			$sql = "SELECT id, location_code, p_location_id, p_id, xml_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+
+			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+
+			$this->db->query($sql_cnt,__LINE__,__FILE__);
+			$this->db->next_record();
+			unset($sql_cnt);
+
+			$this->total_records = $this->db->f('cnt');
+
+			$ordermethod = '';
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__,$results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+
+			$items = array();
+			$j=0;
+			while ($this->db->next_record())
+			{
+				$xmldata = $this->db->f('xml_representation');
+
+
+				$xml = new DOMDocument('1.0', 'utf-8');
+				$xml->loadXML($xmldata);
+
+				foreach($attributes as $attrib_id => $field)
+				{
+					if(!$value = $xml->getElementsByTagName($field['name'])->item(0)->nodeValue)
+					{
+						$value = $this->db->f($field['name'],true);
+					}
+					$dataset[$j][$field['name']] = array
+					(
+						'value'						=> $value,
+						'datatype'					=> $field['datatype'],
+						'attrib_id'					=> $attrib_id,
+						'get_list_function' 		=> $field['get_list_function'],
+						'get_list_function_input'	=> $field['get_list_function_input'],
+						'get_single_function' 		=> $field['get_single_function'],
+						'get_single_function_input'	=> $field['get_single_function_input']
+					);
+				}
+
+				$dataset[$j]['id'] = array
+					(
+						'value'		=> $this->db->f('id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+				$dataset[$j]['location_id'] = array
+					(
+						'value'		=> $location_id,
+						'datatype'	=> false,
+						'attrib_id'	=> false
+					);
+
+				$dataset[$j]['p_id'] = array
+					(
+						'value'		=> $this->db->f('p_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+				$dataset[$j]['p_location_id'] = array
+					(
+						'value'		=> $this->db->f('p_location_id'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+
+				$dataset[$j]['location_code'] = array
+					(
+						'value'		=> $this->db->f('location_code'),
+						'datatype'	=> false,
+						'attrib_id'	=> false,
+					);
+
+				$j++;
+			}
+
+			foreach ($dataset as &$entry)
+			{
+				$entry['short_description'] = array
+				(
+					'value'		=> $this->get_short_description(array('location_id' => $location_id, 'id' => $entry['id']['value'] ) ),
+					'datatype'	=> false,
+					'attrib_id'	=> false,
+				);
+
+			}
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+			return $values;
+		}
+
+
 		protected function read_eav($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -270,224 +456,15 @@
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " location_id = {$location_id}";
 
-			$sql = '';//$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-
-			if(!$sql)
-			{
-				$cols_return_extra	= array();
-				$cols_return		= array();
-				$uicols				= array();
-				$cols				= "{$entity_table}.*";
-
-				$cols_return[]				= 'location_code';
-				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]			= 'location_code';
-				$uicols['descr'][]			= 'dummy';
-				$uicols['statustext'][]		= 'dummy';
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= true;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-
-				$cols_return[] 				= 'num';
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'num';
-				$uicols['descr'][]			= lang('ID');
-				$uicols['statustext'][]		= lang('ID');
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= true;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= $lookup ? '' : 'linktToEntity';
-				$uicols['classname'][]		= '';
-
-				$cols_return[] 				= 'id';
-				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]			= 'id';
-				$uicols['descr'][]			= false;
-				$uicols['statustext'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= false;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-
-				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]			= 'entity_id';
-				$uicols['descr'][]			= false;
-				$uicols['statustext'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= false;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-
-				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]			= 'cat_id';
-				$uicols['descr'][]			= false;
-				$uicols['statustext'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= false;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-
-				$uicols['input_type'][]		= 'hidden';
-				$uicols['name'][]			= '_type';
-				$uicols['descr'][]			= false;
-				$uicols['statustext'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['sortable'][]		= false;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-
-				if($lookup)
-				{
-					$cols .= ',num as entity_num_' . $entity_id;
-					$cols_return[] = 'entity_num_' . $entity_id;
-					$uicols['input_type'][]		= 'hidden';
-					$uicols['name'][]			= 'entity_num_' . $entity_id;
-					$uicols['descr'][]			= 'dummy';
-					$uicols['statustext'][]		= 'dummy';
-					$uicols['align'][] 			= '';
-					$uicols['datatype'][]		= '';
-					$uicols['sortable'][]		= false;
-					$uicols['exchange'][]		= false;
-					$uicols['formatter'][]		= '';
-					$uicols['classname'][]		= '';
-				}
-
-		//		$cols .= ", {$entity_table}.user_id";
-				$cols_return[] 				= 'user_id';
-
-				$cols_return_extra[]= array
-				(
-					'name'		=> 'user_id',
-					'datatype'	=> 'user'
-				);
-
-				// Don't work with LDAP - where phpgw_accounts is empty
-				//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
-				//			$paranthesis ='(';
-
-				$this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
-					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
 
 
-		//		$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
-				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
-				$this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return);
-				$this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return_lookup);
-				$this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_extra);
-				$this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $cols_return_extra);
-
-				$uicols						= $this->bocommon->uicols;
-				$cols_return				= $this->bocommon->cols_return;
-				$this->cols_return_lookup	= $this->bocommon->cols_return_lookup;
-				$this->cols_extra			= $this->bocommon->cols_extra;
-			}
-			else
-			{
-				$uicols 					= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$cols_return				= $this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$this->cols_return_lookup 	= $this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$this->cols_extra			= $this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$cols_return_extra			= $this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-			}
-
-			if ($cat_id > 0)
-			{
-				//-------------------
-
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:array();
-				
-				$_user_columns = array();
-				foreach ($user_columns as $user_column_id)
-				{
-					if(ctype_digit($user_column_id))
-					{
-						$_user_columns[] = $user_column_id;
-					}
-				}
-				$user_column_filter = '';
-
-				if ($_user_columns)
-				{
-					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
-				}
-
-				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
-
-				$i	= count($uicols['name']);
-				while ($this->db->next_record())
-				{
-					$uicols['input_type'][]						= 'text';
-					$uicols['name'][]							= $this->db->f('column_name');
-					$uicols['descr'][]							= $this->db->f('input_text');
-					$uicols['statustext'][]						= $this->db->f('statustext');
-					$uicols['datatype'][$i]						= $this->db->f('datatype');
-					$uicols['get_list_function'][$i]			= $this->db->f('get_list_function',true);
-					$uicols['get_list_function_input'][$i]		= $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '';
-					$uicols['get_single_function'][$i]			= $this->db->f('get_single_function',true);
-					$uicols['get_single_function_input'][$i]	= $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '';
-
-					$uicols['sortable'][$i]		= true;
-					$uicols['exchange'][$i]		= false;
-					$uicols['formatter'][$i]	= '';
-					$uicols['classname'][$i]	= '';
-
-					$uicols['cols_return_extra'][$i] = array
-						(
-							'name'	=> $this->db->f('column_name'),
-							'datatype'	=> $this->db->f('datatype'),
-							'attrib_id'	=> $this->db->f('id')					
-						);
+			$this->get_cols($category,$entity_id,$cat_id,$lookup,$location_id);
 
 
-					$cols_return_extra[]= array(
-						'name'	=> $this->db->f('column_name'),
-						'datatype'	=> $this->db->f('datatype'),
-						'attrib_id'	=> $this->db->f('id')
-					);
-
-					$i++;
-				}
-
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'entry_date';
-				$uicols['descr'][]			= lang('entry date');
-				$uicols['statustext'][]		= lang('entry date' );
-				$uicols['datatype'][]		= 'timestamp';
-				$uicols['sortable'][]		= true;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]	= '';
-				$uicols['classname'][]	= '';
-
-				$uicols['cols_return_extra'][$i] = array
-					(
-						'name'		=> 'entry_date',
-						'datatype'	=> 'timestamp',
-					);
-
-
-				$cols_return_extra[]= array(
-					'name'	=> 'entry_date',
-					'datatype'	=> 'timestamp',
-				);
-			}
-			else
+			if (!$cat_id > 0)
 			{
 				return;
 			}
-
-			$this->uicols	= $uicols;
 
 			//_debug_array($cols_return_extra);
 
@@ -553,19 +530,19 @@
 			if ($location_code)
 			{
 				$filtermethod .= " $where $entity_table.location_code $this->like '$location_code%'";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($custom_condition)
 			{
 				$filtermethod .= " {$where} {$custom_condition}";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($p_num)
@@ -599,7 +576,7 @@
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-					//_debug_array($__querymethod);					
+					//_debug_array($__querymethod);
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
@@ -613,8 +590,6 @@
 								if(!$criteria_id)
 								{
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''$query'')]' PASSING BY REF xml_representation)";
-									//SELECT * FROM fm_bim_item WHERE xmlexists('//location_code[contains(.,''500'')]' PASSING BY REF xml_representation);
-							//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -650,14 +625,13 @@
 									while ($this->db2->next_record())
 									{
 										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
-									}	
+									}
 									$__querymethod = array(); // remove block
 								}
 								break;
 							case 'I':
 								if(ctype_digit($query) && !$criteria_id)
 								{
-							//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$query . "'']' PASSING BY REF xml_representation)";
 									$__querymethod = array(); // remove block
 								}
@@ -665,28 +639,44 @@
 							case 'VENDOR':
 								if($criteria_id == 'vendor')
 								{
-									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$this->db2->query("SELECT id FROM fm_vendor WHERE fm_vendor.org_name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}
+
 									$__querymethod = array(); // remove block
 								}
 								break;
 							case 'AB':
 								if($criteria_id == 'ab')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$this->db2->query("SELECT person_id as id FROM phpgw_contact_person WHERE phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}
+
 									$__querymethod = array(); // remove block
 								}
 								break;
 							case 'ABO':
 								if($criteria_id == 'abo')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$this->db2->query("SELECT org_id as id FROM phpgw_contact_org WHERE name {$this->like} '%{$query}%'",__LINE__,__FILE__);
+									$__filter_choise = array();
+									while ($this->db2->next_record())
+									{
+										$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+									}
 									$__querymethod = array(); // remove block
 								}
 								break;
 							default:
 								if(!$criteria_id)
 								{
-									//$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
 									$__querymethod = array(); // remove block
 								}
@@ -732,7 +722,7 @@
 			}
 
 //			$filtermethod .= "AND xmlexists('//location_code[text() = ''5002-02'']' PASSING BY REF xml_representation)";
-			
+
 			$sql .= " $filtermethod $querymethod";
 
 			$_sql = str_replace('__XML-ORDER__', '', $sql);
@@ -743,7 +733,7 @@
 			{
 				$cache_info = array();
 			}
-//_debug_array($_sql);die();			
+//_debug_array($_sql);die();
 //			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT fm_bim_item.id {$sql_cnt_control_fields}" . substr($_sql,strripos($_sql,'FROM'));
@@ -798,7 +788,6 @@
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
 //_debug_array($sql);
-			//SELECT id, cast (order_field[1] as text) as order_field_text FROM (SELECT id, xpath('address/text()', xml_representation) as order_field FROM fm_bim_item) as t ORDER BY order_field_text asc
 
 			if(!$allrows)
 			{
@@ -810,6 +799,8 @@
 			}
 
 			$j=0;
+
+			$uicols = $this->uicols;
 			$cols_return = $uicols['name'];
 			$dataset = array();
 
@@ -881,7 +872,7 @@
 							'attrib_id'	=> false
 						);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -890,67 +881,27 @@
 		}
 
 
-		function read($data)
+		function get_cols($category,$entity_id,$cat_id,$lookup,$location_id)
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
-			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
-			$query			= isset($data['query']) ? $data['query'] : '';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order']) ? $data['order'] : '';
-			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
-			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
-			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
-			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
-			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-			$status			= isset($data['status']) ? $data['status'] : '';
-			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
-			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
-			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
-			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
-			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
-			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
-
-			if(!$entity_id || !$cat_id)
-			{
-				return array();
-			}
-
-			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
-
-			if(!$grants)
-			{
-				$this->acl 	= & $GLOBALS['phpgw']->acl;
-				$this->acl->set_account_id($this->account);
-				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
-			}
-
-			$admin_entity	= CreateObject('property.soadmin_entity');
-			$admin_entity->type = $this->type;
-
-			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			if($category['is_eav'])
 			{
-				return $this->read_eav($data);
+				$entity_table = "fm_bim_item";
+			}
+			else
+			{
+				$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 			}
 
-			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
+			$this->uicols 	= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+
 			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$attribute_filter = " location_id = {$location_id}";
 
-			$sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-
-			if(!$sql)
+			if(!$this->uicols)
 			{
+
 				$cols_return_extra	= array();
 				$cols_return		= array();
 				$uicols				= array();
@@ -1045,47 +996,48 @@
 		//		$cols .= ", {$entity_table}.user_id";
 				$cols_return[] 				= 'user_id';
 
-				$cols_return_extra[]= array
-				(
-					'name'		=> 'user_id',
-					'datatype'	=> 'user'
-				);
-
 				// Don't work with LDAP - where phpgw_accounts is empty
 				//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
 				//			$paranthesis ='(';
 
-				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
+				$this->sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
-				//$sql = 	str_replace('SELECT', 'SELECT DISTINCT',$sql);
 
-				$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
+
+				if(!$category['is_eav'])
+				{
+					$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->sql);
+				}
+
 				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
 				$this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return);
 				$this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_return_lookup);
 				$this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->cols_extra);
-				$this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $cols_return_extra);
 
-				$uicols						= $this->bocommon->uicols;
-				$cols_return				= $this->bocommon->cols_return;
+				$this->uicols				= $this->bocommon->uicols;
 				$this->cols_return_lookup	= $this->bocommon->cols_return_lookup;
 				$this->cols_extra			= $this->bocommon->cols_extra;
 			}
 			else
 			{
-				$uicols 					= $this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$cols_return				= $this->bocommon->fm_cache("cols_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+
+				if(!$category['is_eav'])
+				{
+					$this->sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
+				}
+
 				$this->cols_return_lookup 	= $this->bocommon->fm_cache("cols_return_lookup_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 				$this->cols_extra			= $this->bocommon->fm_cache("cols_extra_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
-				$cols_return_extra			= $this->bocommon->fm_cache("cols_extra_return_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");
 			}
+
+			$uicols = &$this->uicols;
 
 			if ($cat_id > 0)
 			{
 				//-------------------
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:array();
-				
+
 				$_user_columns = array();
 				foreach ($user_columns as $user_column_id)
 				{
@@ -1123,15 +1075,8 @@
 						(
 							'name'	=> $this->db->f('column_name'),
 							'datatype'	=> $this->db->f('datatype'),
-							'attrib_id'	=> $this->db->f('id')					
+							'attrib_id'	=> $this->db->f('id')
 						);
-
-
-					$cols_return_extra[]= array(
-						'name'	=> $this->db->f('column_name'),
-						'datatype'	=> $this->db->f('datatype'),
-						'attrib_id'	=> $this->db->f('id')
-					);
 
 					$i++;
 				}
@@ -1151,19 +1096,77 @@
 						'name'		=> 'entry_date',
 						'datatype'	=> 'timestamp',
 					);
-
-
-				$cols_return_extra[]= array(
-					'name'	=> 'entry_date',
-					'datatype'	=> 'timestamp',
-				);
 			}
-			else
+
+		}
+
+
+		function read($data)
+		{
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? $data['results'] : 0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? $data['part_of_town_id'] : 0;
+			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$status			= isset($data['status']) ? $data['status'] : '';
+			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
+			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+
+			if(!$entity_id || !$cat_id)
+			{
+				return array();
+			}
+
+			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
+
+			if(!$grants)
+			{
+				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$this->acl->set_account_id($this->account);
+				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
+				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
+			}
+
+			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+
+			$category = $admin_entity->read_single_category($entity_id,$cat_id);
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+
+			$this->get_cols($category,$entity_id,$cat_id,$lookup,$location_id);
+
+			if($category['is_eav'])
+			{
+				return $this->read_eav($data);
+			}
+
+			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " location_id = {$location_id}";
+
+			$sql = $this->sql;
+
+			if (!$cat_id > 0)
 			{
 				return;
 			}
-
-			$this->uicols	= $uicols;
 
 			//_debug_array($cols_return_extra);
 
@@ -1178,7 +1181,7 @@
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+						$ordermethod = " ORDER BY $entity_table.$order $sort";
 				}
 			}
 			else
@@ -1255,13 +1258,13 @@
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($custom_condition)
 			{
 				$filtermethod .= " {$where} {$custom_condition}";
-				$where= 'AND';			
+				$where= 'AND';
 			}
 
 			if ($p_num)
@@ -1294,7 +1297,7 @@
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-					//_debug_array($__querymethod);					
+					//_debug_array($__querymethod);
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
@@ -1349,7 +1352,7 @@
 									{
 										$_querymethod[]= "$entity_table." . $this->db->f('column_name') . ' IN (' . implode(',', $__filter_choise) . ')';
 									}
-	
+
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -1409,7 +1412,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//_debug_array($sql);
+
 
 			$cache_info = phpgwapi_cache::session_get($this->type_app[$this->type],"{$entity_table}_listing_metadata");
 
@@ -1417,7 +1420,7 @@
 			{
 				$cache_info = array();
 			}
-			
+
 			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT {$entity_table}.id " . substr($sql,strripos($sql,'FROM'));
@@ -1454,6 +1457,7 @@
 			}
 
 			$j=0;
+			$uicols = $this->uicols;
 			$cols_return = $uicols['name'];
 			$dataset = array();
 			while ($this->db->next_record())
@@ -1512,7 +1516,7 @@
 							'attrib_id'	=> false
 						);
 				}
-				$j++;				
+				$j++;
 			}
 
 			$values = $this->custom->translate_value($dataset, $location_id);
@@ -1547,7 +1551,7 @@
 			{
 				$filtermethod = "WHERE id = {$id}";
 			}
-			
+
 			$this->db->query("SELECT * FROM {$table} {$filtermethod}");
 
 			if($this->db->next_record())
@@ -1595,11 +1599,11 @@
 				$id			= (int)$data['id'];
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}");
 			}
-			
+
 			if(!$sql)
 			{
-//				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
-				$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id";			
+//				$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON fm_bim_type.id = fm_bim_item.type WHERE fm_bim_item.id = {$id} AND location_id = $location_id";
+				$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1632,18 +1636,26 @@
 
 		public function get_short_description($data = array() )
 		{
+			static $system_location = array();
+			static $cache_attributes = array();
 			$location_id	= (int)$data['location_id'];
 			$id				= (int)$data['id'];
-			
+
 			if(!$location_id && !$id)
 			{
-				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");	
+				throw new Exception("property_soentity::get_short_description() - Missing entity information info in input");
 			}
 
-			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			if(!isset($system_location[$location_id]))
+			{
+				$system_location[$location_id] = $GLOBALS['phpgw']->locations->get_name($location_id);
+			}
 
-			$filters = array("short_description" => "IS NOT NULL");
-			$attributes['attributes'] = $GLOBALS['phpgw']->custom_fields->find($system_location['appname'],$system_location['location'], 0, '', 'ASC', 'short_description', true, true,$filters);
+			if(!isset($cache_attributes[$location_id]))
+			{
+				$filters = array("short_description" => "IS NOT NULL");
+				$cache_attributes[$location_id]['attributes'] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', 'short_description', true, true,$filters);
+			}
 
 			$params = array
 			(
@@ -1651,25 +1663,25 @@
 				'id'			=> $id
 			);
 
-			if( substr($system_location['location'], 1, 6) == 'entity' )
+			if( substr($system_location[$location_id]['location'], 1, 6) == 'entity' )
 			{
-				$type					= explode('.',$system_location['location']);
+				$type					= explode('.',$system_location[$location_id]['location']);
 				$params['entity_id']	= $type[2];
 				$params['cat_id']		= $type[3];
 			}
 			else
 			{
-				throw new Exception("property_soentity::get_short_description() - entity not found");	
+				throw new Exception("property_soentity::get_short_description() - entity not found");
 			}
 
-			$prop_array = $this->read_single($params, $attributes);
+			$prop_array = $this->read_single($params, $cache_attributes[$location_id]);
 
 			$_short_description = array();
 			foreach ($prop_array['attributes'] as $attribute)
 			{
 				$short_description[] = "{$attribute['input_text']}: {$attribute['value']}";
 			}
-			
+
 			$short_description = implode(', ', $short_description);
 
 			return $short_description;
@@ -1863,7 +1875,7 @@
 		protected function _save_eav($data = array(),$location_id, $location_name)
 		{
 			$location_id = (int) $location_id;
-			$location_name = str_replace('.', '_', $location_name);			
+			$location_name = str_replace('.', '_', $location_name);
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1885,7 +1897,7 @@
 			// Append it to the document itself
 			$doc->appendChild($domElement);
 			$doc->formatOutput = true;
-			
+
 			$xml = $doc->saveXML();
 
 		//	_debug_array($xml);
@@ -1931,7 +1943,7 @@
 			$this->db->next_record();
 			$type = (int)$this->db->f('type');
 
-			$location_name = str_replace('.', '_', $location_name);			
+			$location_name = str_replace('.', '_', $location_name);
 
 			phpgw::import_class('phpgwapi.xmlhelper');
 
@@ -2070,7 +2082,7 @@
 						}
 						else
 						{
-							$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$values['id']} AND location_id = $location_id";			
+							$sql = "SELECT * FROM fm_bim_item WHERE fm_bim_item.id = {$values['id']} AND location_id = $location_id";
 
 							$this->db->query($sql,__LINE__,__FILE__);
 
@@ -2139,7 +2151,7 @@
 			$cat_id		= (int) $cat_id;
 			$id			= (int) $id;
 
-			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");	
+			$location2_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$admin_entity	= CreateObject('property.soadmin_entity');
 			$admin_entity->type = $this->type;
@@ -2236,7 +2248,7 @@
 					}
 					else
 					{
-						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";					
+						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
 					}
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();

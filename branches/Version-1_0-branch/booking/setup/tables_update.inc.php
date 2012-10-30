@@ -2657,4 +2657,56 @@
 		}
 	}
 
+	$test[] = '0.2.10';
+	/**
+	* Update booking version from 0.2.10 to 0.2.11
+	* add description to bb_office
+	* 
+	*/
+	function booking_upgrade0_2_10()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_application','building_name',array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation','building_name',array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking','building_name',array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event','building_name',array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_system_message','building_name',array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => False,
+			'default' => 'changeme'
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.11';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

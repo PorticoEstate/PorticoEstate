@@ -32,6 +32,7 @@
 	include_class('logistic', 'activity', '/inc/model/');
 	include_class('logistic', 'requirement', '/inc/model/');
 	include_class('logistic', 'requirement_value', '/inc/model/');
+	include_class('logistic', 'requirement_resource_allocation', '/inc/model/');
 
 
 	class logistic_uirequirement_resource_allocation extends phpgwapi_uicommon
@@ -58,37 +59,36 @@
 			'add' 	=> true,
 			'edit' => true,
 			'view' => true,
-			'index' => true
+			'index' => true,
+			'save' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$this->so = createObject('logistic.sorequirement_resource_allocation');
-		  $this->bo					= CreateObject('property.bolocation',true);
-			$this->bocommon				= & $this->bo->bocommon;
-
-			$this->so_activity = createObject('logistic.soactivity');
-			$this->so_requirement = createObject('logistic.sorequirement');
+			$this->so 									= createObject('logistic.sorequirement_resource_allocation');
+			$this->so_activity 					= createObject('logistic.soactivity');
+			$this->so_requirement 			= createObject('logistic.sorequirement');
 			$this->so_requirement_value = CreateObject('logistic.sorequirement_value');
+			
+		  $this->bo										= CreateObject('property.bolocation',true);
+			$this->bocommon							= & $this->bo->bocommon;
 
-			$this->type_id				= $this->bo->type_id;
+			$this->type_id							= $this->bo->type_id;
 
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
-			$this->sort					= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->filter				= $this->bo->filter;
-			$this->cat_id				= $this->bo->cat_id;
-			$this->part_of_town_id		= $this->bo->part_of_town_id;
-			$this->district_id			= $this->bo->district_id;
-			$this->status				= $this->bo->status;
-			$this->allrows				= $this->bo->allrows;
-			$this->lookup				= $this->bo->lookup;
-			$this->location_code		= $this->bo->location_code;
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
+			$this->start								= $this->bo->start;
+			$this->query								= $this->bo->query;
+			$this->sort									= $this->bo->sort;
+			$this->order								= $this->bo->order;
+			$this->filter								= $this->bo->filter;
+			$this->cat_id								= $this->bo->cat_id;
+			$this->part_of_town_id			= $this->bo->part_of_town_id;
+			$this->district_id					= $this->bo->district_id;
+			$this->status								= $this->bo->status;
+			$this->allrows							= $this->bo->allrows;
+			$this->lookup								= $this->bo->lookup;
+			$this->location_code				= $this->bo->location_code;
 		}
 
 		public function index()
@@ -134,15 +134,20 @@
 							'sortable' => true,
 						),
 						array(
-							'key' => 'location_code',
-							'label' => lang('Location code'),
+							'key' => 'requirement_id',
+							'label' => lang('Requirememnt id'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'address',
-							'label' => lang('Address'),
-							'sortable' => false
-						)
+							'key' => 'location_id',
+							'label' => lang('Location id'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'resource_id',
+							'label' => lang('Resource id'),
+							'sortable' => true
+						),
 					)
 				),
 			);
@@ -152,51 +157,7 @@
 
 		public function query()
 		{
-/*			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'query' => phpgw::get_var('query'),
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
-			);
 
-		  $entity_id			= phpgw::get_var('entity_id', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
-			$district_id		= phpgw::get_var('district_id', 'int');
-			$part_of_town_id	= phpgw::get_var('part_of_town_id', 'int');
-			$control_id			= phpgw::get_var('control_id', 'int');
-			$results 			= phpgw::get_var('results', 'int');
-
-
- 			if(!$entity_id && !$cat_id)
-			{
-				$values = array();
-			}
-			else
-			{
-
-			$entity_id = 3;
-			$cat_id = 1;
-				$location_id = 2295;//$GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				//$boentity	= CreateObject('property.boentity',false, 'entity');
-				$boentity	= CreateObject('property.boentity',false, 'entity', $entity_id, $cat_id);
-				$boentity->results = $results;
-				//$values = $boentity->read(array('control_registered' => $control_registered, 'control_id' => $control_id));
-				$values = $boentity->read();
-			//}
-
-			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
-			$result_data = array('results' => $values);
-
-			$result_data['total_records'] = $boentity->total_records;
-			$result_data['start'] = $params['start'];
-			$result_data['sort'] = $params['sort'];
-			$result_data['dir'] = $params['dir'];
-
-			return $this->yui_results($result_data);
- *
- */
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
@@ -214,14 +175,17 @@
 			{
 				$user_rows_per_page = 10;
 			}
+			
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('startIndex', 'int');
 			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field = phpgw::get_var('sort');
 			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
+			
 			// Form variables
 			$search_for = phpgw::get_var('query');
 			$search_type = phpgw::get_var('search_option');
+
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -236,7 +200,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
-			//var_dump($query_type);
+
 			switch ($query_type)
 			{
 				default: // ... all composites, filters (active and vacant)
@@ -244,8 +208,7 @@
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
-			//var_dump($result_objects);
-			//Create an empty row set
+
 			$rows = array();
 			foreach ($result_objects as $result)
 			{
@@ -281,9 +244,6 @@
 
 		public function edit()
 		{
-			$entity_admin_so	= CreateObject('property.soadmin_entity');
-			$entity_so	= CreateObject('property.soentity');
-			$custom	= createObject('phpgwapi.custom_fields');
 			$activity_id = phpgw::get_var('activity_id');
 			$requirement_id = phpgw::get_var('requirement_id');
 			$allocation_id = phpgw::get_var('id');
@@ -292,6 +252,7 @@
 			{
 				$activity = $this->so_activity->get_single($activity_id);
 			}
+			
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
@@ -306,146 +267,103 @@
 				$allocation = new logistic_requirement_resource_allocation();
 			}
 
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-			if (isset($_POST['save_allocation']))
+			if($requirement)
 			{
-				$allocation->set_requirement_id(phpgw::get_var('requirement_id'));
-				$allocation->set_article_id(phpgw::get_var('article_id'));
-				$allocation->set_type(phpgw::get_var('type'));
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
+				$entity_arr = explode('.',$loc_arr['location']);
 
-	//			$allocation_id = $this->so->store($allocation);
+				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
-			}
-			else if (isset($_POST['cancel_allocation']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
-			}
-			else
-			{
-				$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+				$criterias_array = array();
+				
+				$location_id = $requirement->get_location_id();
+				
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$entity_arr = explode('.',$loc_arr['location']);
 
-				if($requirement)
+				$entity_id = $entity_arr[2];
+				$cat_id = $entity_arr[3];
+				
+				$criterias_array['location_id'] = $location_id;
+				$criterias_array['allrows'] = true;
+				
+				foreach($requirement_values as $requirement_value)
 				{
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
-					$entity_arr = explode('.',$loc_arr['location']);
-					//_debug_array($entity_arr);
-					//$entity = $entity_admin_so->read_single($entity_arr[2]);
-					//$category = $entity_admin_so->read_single_category($entity_arr[2],$entity_arr[3]);
-					$all_attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
-					$attributes = array();
-
-					$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
-					//_debug_array($requirement_values);
-					foreach($requirement_values as $requirement_value)
+					$attrib_value = $requirement_value->get_value();
+					$operator = $requirement_value->get_operator();
+					$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+					
+					if($operator == "eq")
 					{
-						foreach ($all_attributes as &$attr)
-						{
-							if($attr['id'] == $requirement_value->get_cust_attribute_id())
-							{
-								$attr['req_value'] = $requirement_value->get_value();
-								$attr['op'] = $requirement_value->get_operator();
-								$attributes[] = $attr;
-							}
-						}
+						$operator_str = "=";
 					}
-
-					//_debug_array($attributes);
-					$items = $entity_so->read(array('allrows' => true, 'entity_id' => $entity_arr[2], 'cat_id' => $entity_arr[3]));
-					//_debug_array($items);
-					$list_items = array();
-					for($index=0; $index<count($attributes); $index++)
+					else if($operator == "lt")
 					{
-						$curr_attr = $attributes[$index];
-						$column_name = $curr_attr['column_name'];
-						if($curr_attr['choice'] && count($curr_attr['choice'])>0)
-						{
-							$curr_choice = $curr_attr['choice'];
-							$curr_attr_req_value = $curr_attr['req_value'];
-							foreach ($curr_choice as $ch)
-							{
-								$col_val = $ch['value'];
-								if($col_val == $curr_attr_req_value)
-								{
-									foreach ($items as $it)
-									{
-										if($it[$column_name] == $col_val)
-										{
-											$list_items[] = $it;
-										}
-									}
-								}
-							}
-						}
-						else
-						{
-							foreach ($items as $it)
-							{
-								//var_dump($it[$column_name]);
-								//var_dump($curr_attr['op']);
-								//var_dump($it[$column_name]);
-								$operator = $curr_attr['op'];
-								if($operator)
-								{
-									var_dump($operator);
-									var_dump($it[$column_name]);
-									var_dump($col_val);
-									if($operator == "eq")
-									{
-										if($it[$column_name] == $col_val)
-										{
-											$list_items[] = $it;
-										}
-									}
-									else if($operator == 'gt')
-									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] > $col_val)
-										{
-											$list_items[] = $it;
-										}
-									}
-									else if($operator == 'lt')
-									{
-										if(is_numeric($it[$column_name]) && $it[$column_name] < $col_val)
-										{
-											$list_items[] = $it;
-										}
-									}
-								}
-/*								if($it[$column_name] == $col_val)
-								{
-									$list_items[] = $it;
-								} */
-							}
-
-							//var_dump($curr_attr[$column_name]);
-						}
+						$operator_str = "<";
 					}
+					else if($operator == "gt")
+					{
+						$operator_str = ">";
+					}
+					
+					$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
+
+					$condition = array(
+						'operator' 		=> $operator_str,
+						'value' 			=> $attrib_value,
+						'attribute_id' => $cust_attribute_id
+					);
+					
+					$criterias_array['conditions'][] = $condition;
 				}
-
-				//_debug_array($list_items);
-
-				$data = array
-				(
-					'editable' => true,
-				);
-
-				if($activity_id > 0)
-				{
-					$data['activity'] = $activity;
-				}
-				//if($requirement_id > 0)
-				//{
-					$data['requirement'] = $requirement;
-				//}
-				$data['requirement_value'] = $requirement_value;
-				$data['attributes'] = $attributes;
-				$data['elements'] = $list_items;
-
-				self::render_template_xsl(array('allocation/allocation_item'), $data);
 			}
+		    
+			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
+			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
+
+			print_r($allocation_suggestions);
+			
+			$data = array
+			(
+				'requirement' 						=> $requirement,
+				'activity' 								=> $activity,
+				'allocation_suggestions' 	=> $allocation_suggestions,
+				'editable' 								=> true
+			);
+		
+			self::render_template_xsl(array('allocation/allocation_suggestions'), $data);
 		}
 
+		public function save()
+		{
+			$requirement_id = phpgw::get_var('requirement_id');
+			
+			if($requirement_id && is_numeric($requirement_id))
+			{
+				$requirement = $this->so_requirement->get_single($requirement_id);
+			}
+			
+			$chosen_resources = phpgw::get_var('chosen_resources');
+			
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+			
+			foreach($chosen_resources as $resource_id)
+			{
+				$resource_alloc = new logistic_requirement_resource_allocation();
+				$resource_alloc->set_requirement_id( $requirement->get_id() );
+				$resource_alloc->set_resource_id( $resource_id );
+				$resource_alloc->set_location_id( $requirement->get_location_id() );
+				$resource_alloc->set_create_user( $user_id );
+				
+				$resource_alloc_id = $this->so->store( $resource_alloc );
+			}
+			
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
+		}
+		
 		function convert_to_array($object_list)
 		{
 			$converted_array = array();

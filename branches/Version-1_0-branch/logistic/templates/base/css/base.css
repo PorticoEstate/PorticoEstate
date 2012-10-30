@@ -761,9 +761,7 @@ dl.proplist, dl.proplist-col {
 
 #toolbar {
   display: inline-block;
-  padding: 10px;
-  background-color: #DEEAF8;
-  border: 1px solid #CEE3F9;
+  padding: 10px 0;
 }
 
 #toolbar input[type="text"] {
@@ -2267,4 +2265,59 @@ p.no_items_msg {
 
 .yui-navset .content-wrp {
 	margin-top: 0;
+}
+
+
+/* REQUIOREMENT RESOUCRCE ALLOCATION */
+
+#requirement-wrp {
+  font-size: 15px;
+  padding: 20px;
+}
+
+#requirement-wrp label{
+  font-size: 16px;
+    
+}
+
+#requirement-wrp h2 {
+    margin: 0 0 15px;
+}
+
+#requirement-wrp ul li{
+	margin:0 0 10px;
+}
+
+#resource-allocation form{
+	margin: 20px;
+	border: 1px solid #B0D9FF;
+}
+
+#resource-list .resource{
+	padding: 5px 0;
+}
+
+#resource-list .resource.odd{
+	background: #fff;
+}
+
+#resource-list .resource span, #resource-list .resource input {
+	vertical-align: middle;
+}
+
+#resource-list .resource span {
+	display: inline-block;
+	width: 200px;
+}
+
+#resource-list .resource span.desc {
+	font-weight:bold;
+	width: 300px;
+}
+
+#resource-list .resource.heading {
+    background: none repeat scroll 0 0 #B0D9FF;
+    color: #092845;
+    font-weight: bold;
+    padding: 5px 8px;
 }

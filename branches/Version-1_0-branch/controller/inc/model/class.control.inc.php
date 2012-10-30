@@ -250,8 +250,6 @@
 		
 		public function populate()
 		{
-				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
 				$this->set_title(phpgw::get_var('title','string'));
 				$this->set_description(phpgw::get_var('description','html'));
 				

@@ -77,6 +77,8 @@
 		protected $_total_records = 0;
 
 		protected $global_lock = false;
+		
+		protected $attribute_group_tree = array();
 
 		/**
 		 * Constructor
@@ -172,17 +174,24 @@
 			(
 				'location_id'	=> $location_id,
 				'id'			=> 0,
-				'name'	=> $this->_db->db_addslashes(strtolower($group['group_name'])),
-				'descr'	=> $this->_db->db_addslashes($group['descr']),
-				'remark'	=> $this->_db->db_addslashes($group['remark']),
+				'name'			=> $this->_db->db_addslashes(strtolower($group['group_name'])),
+				'descr'			=> $this->_db->db_addslashes($group['descr']),
+				'remark'		=> $this->_db->db_addslashes($group['remark']),
 				'group_sort'	=> 0,
+				'parent_id'		=> $group['parent_id']
 			);
 
+			$filter_parent = '';
+			if($group['parent_id'])
+			{
+				$filter_parent = ' AND parent_id = ' . (int) $group['parent_id'];
+			}
 
 			unset($group);
 
 			$this->_db->transaction_begin();
 
+/*
 			$sql = "SELECT id FROM phpgw_cust_attribute_group"
 				. " WHERE location_id = {$values['location_id']}"
 					. " AND name = '{$values['name']}'";
@@ -191,14 +200,22 @@
 			{
 				return -1;
 			}
-
-			$sql = 'SELECT MAX(group_sort) AS max_sort, MAX(id) AS current_id'
+*/
+			
+			$sql = 'SELECT MAX(id) AS current_id'
 				. ' FROM phpgw_cust_attribute_group '
 				. " WHERE location_id ='{$values['location_id']}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['group_sort']	= $this->_db->f('max_sort') + 1;
 			$values['id']	= $this->_db->f('current_id') + 1;		
+
+			$sql = 'SELECT MAX(group_sort) AS max_sort'
+				. ' FROM phpgw_cust_attribute_group '
+				. " WHERE location_id ='{$values['location_id']}'{$filter_parent}";
+
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$values['group_sort']	= $this->_db->f('max_sort') + 1;
 			
 			$cols = implode(', ', array_keys($values));
 			$vals = $this->_db->validate_insert($values);
@@ -625,7 +642,8 @@
 			(
 				'name'		=> $this->_db->db_addslashes($group['group_name']),
 				'descr'		=> $this->_db->db_addslashes($group['descr']),
-				'remark'	=> $this->_db->db_addslashes($group['remark'])
+				'remark'	=> $this->_db->db_addslashes($group['remark']),
+				'parent_id'	=> $group['parent_id']
 			);
 
 			$value_set	= $this->_db->validate_update($value_set);
@@ -850,8 +868,49 @@
 				}
 
 				$attrib['column_info']['type']  = $this->_translate_datatype_insert($attrib['column_info']['type']);
+				
+				$incompatible_char_types = array
+				(
+					'int'		=> true,
+					'decimal'	=> true,
+					'timestamp'	=> true
+				);
+
 				if($attrib_table)
 				{
+					$incompatible_type = false;
+					$OldDataType = $this->_translate_datatype_insert($OldDataType);
+					
+					if ($OldDataType == 'varchar' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+					else if ($OldDataType == 'char' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+					else if ($OldDataType == 'text' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
+					{
+						$incompatible_type = true;
+					}
+
+					if($incompatible_type)
+					{
+						$metadata = $this->_db->metadata($attrib_table);
+
+						$found_column = true;
+						$i = 0;
+						do
+						{
+							$backup_column_name = "{$attrib['column_name']}_backup_{$i}";
+							$i++;
+						}
+						while (isset($metadata[$backup_column_name]));
+						
+						$this->_oProc->RenameColumn($attrib_table,$attrib['column_name'], $backup_column_name);
+						$this->_oProc->AddColumn($attrib_table, $attrib['column_name'], $attrib['column_info']);
+					}
+					
 					$this->_oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);
 				}
 			}
@@ -945,11 +1004,32 @@
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			return $this->find2($location_id, $start, $query, $sort, $order, $allrows, $inc_choices, $filter);
+		}
+
+		/**
+		 * Get a list of attributes
+		 *
+		 * @param integer $location_id   the system location
+		 * @param integer $start
+		 * @param string query
+		 * @param string $sort
+		 * @param string $order
+		 * @param bool   $allrows
+		 * @param bool   $inc_choices
+		 * @param array $filtermethod
+		 *
+		 * @return array attributes at location
+		 */
+
+		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
+		{
+			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
 			$order			= $this->_db->db_addslashes($order);
 			$allrows		= !!$allrows;
-
 			
 			$filtermethod	= '';
 			if ($filter && is_array($filter))
@@ -1080,6 +1160,8 @@
 
 			return $attribs;
 		}
+
+
 		/**
 		 * Get a list of groups availlable for attributes within a location
 		 *
@@ -1093,6 +1175,7 @@
 		 *
 		 * @return ???? something
 		 */
+
 		public function find_group($appname, $location, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'group_sort', $allrows = false)
 		{
@@ -1119,44 +1202,106 @@
 				$querymethod = "AND (phpgw_cust_attribute_group.name {$this->_like} '%{$query}%'";
 			}
 
-			$sql = "FROM phpgw_cust_attribute_group "
-				. " WHERE location_id = {$location_id} {$querymethod}";
+			$sql = "SELECT * FROM phpgw_cust_attribute_group "
+				. " WHERE location_id = {$location_id} AND (parent_id = 0 OR parent_id IS NULL) {$querymethod} {$ordermethod}";
 
-			$this->_total_records = 0;
-			$this->_db->query("SELECT COUNT(*) AS cnt_rec {$sql}",__LINE__,__FILE__);
-			if ( !$this->_db->next_record() )
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$this->attribute_group_tree = array();
+			while ($this->_db->next_record())
 			{
-				return array();
-			}
-
-			$this->_total_records = $this->_db->f('cnt_rec');
-
-			$sql = "SELECT * {$sql} {$ordermethod}";
-
-			if ( $allrows )
-			{
-				$this->_db->query($sql, __LINE__, __FILE__);
-			}
-			else
-			{
-				$this->_db->limit_query($sql, $start, __LINE__, __FILE__);
-			}
-
-			$attrib_groups = array();
-			while ( $this->_db->next_record() )
-			{
-				$attrib_groups[] = array
+				$id			= $this->_db->f('id');
+				$group_sort = (int) $this->_db->f('group_sort');
+				$groups[$id] = array
 				(
-					'id'				=> $this->_db->f('id'),
-					'group_sort'		=> (int) $this->_db->f('group_sort'),
-					'name'				=> $this->_db->f('name', true),
+					'id'				=> $id,
+					'name'				=> $this->_db->f('name',true),
+					'parent_id'			=> 0,
+					'group_sort'		=> $group_sort,
+					'group_sort_text'	=> $group_sort,
 					'descr'				=> $this->_db->f('descr', true),
-					'remark'			=> $this->_db->f('remark', true)
+					'remark'			=> $this->_db->f('remark', true),
 				);
 			}
 
-			return $attrib_groups;
+			foreach($groups as $group)
+			{
+				$this->attribute_group_tree[] = array
+				(
+					'id'				=> $group['id'],
+					'name'				=> $group['name'],
+					'parent_id'			=> 0,
+					'level'				=> 0,
+					'group_sort'		=> $group['group_sort'],
+					'group_sort_text'	=> $group['group_sort'],
+					'descr'				=> $group['descr'],
+					'remark'			=> $group['remark'],
+				);
+				$this->get_attribute_group_children($location_id, $group['id'],$group['group_sort'], 1, false);
+			}
+
+			$this->_total_records = count($this->attribute_group_tree);
+			$result = $this->attribute_group_tree;
+
+			if($this->total_records == 0)
+			{
+				return $result;
+			}
+
+			if(!$allrows)
+			{
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']:15;
+
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+
+				$out = array_chunk($result, $num_rows);
+
+				return $out[$page];
+			}
+			else
+			{
+				return $result;
+			}
+
+			return $this->attribute_group_tree;
 		}
+
+
+		function get_attribute_group_children($location_id, $parent, $parent_sort, $level, $reset = false)
+		{
+			if($reset)
+			{
+				$this->attribute_group_tree = array();
+			}
+
+			$filtermethod = 'WHERE location_id =' . (int)$location_id;			
+
+			$db = clone($this->_db);
+			$sql = "SELECT * FROM phpgw_cust_attribute_group $filtermethod AND parent_id = {$parent} ORDER BY group_sort ASC";
+
+			$db->query($sql,__LINE__,__FILE__);
+
+			while ($db->next_record())
+			{
+				$id					= $db->f('id');
+				$group_sort			= $db->f('group_sort');
+				$group_sort_text	= $parent_sort ? "{$parent_sort}::{$group_sort}" : $group_sort;
+				$this->attribute_group_tree[] = array
+				(
+					'id'				=> $id,
+					'name'				=> str_repeat('..',$level).$db->f('name'),
+					'parent_id'			=> $db->f('parent_id'),
+					'level'				=> $level,
+					'group_sort'		=> $group_sort,
+					'group_sort_text'	=> $group_sort_text,
+					'descr'				=> $db->f('descr'),
+					'remark'			=> $db->f('remark'),
+				);
+				$this->get_attribute_group_children($location_id, $id, $group_sort_text, $level+1);
+			}
+			return $this->attribute_group_tree;
+		} 
 
 		/**
 		* Read a single attribute group record
@@ -1187,7 +1332,8 @@
 				'group_name'	=> $this->_db->f('name', true),
 				'descr'			=> $this->_db->f('descr', true),
 				'remark'		=> $this->_db->f('remark', true),
-				'group_sort'	=> $this->_db->f('group_sort')
+				'group_sort'	=> $this->_db->f('group_sort'),
+				'parent_id'		=> $this->_db->f('parent_id'),
 			);
 
 			return $group;
@@ -1427,14 +1573,24 @@
 
 			$this->_db->transaction_begin();
 
-			$sql = "SELECT group_sort FROM phpgw_cust_attribute_group "
+			$sql = "SELECT group_sort,parent_id FROM phpgw_cust_attribute_group "
 				. " WHERE location_id = {$location_id} AND id = {$id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
 			$attrib_sort	= $this->_db->f('group_sort');
+			$parent_id		= (int)$this->_db->f('parent_id');
+			if($parent_id)
+			{
+				$filter_parent = "AND parent_id = {$parent_id}";
+			}
+			else
+			{
+				$filter_parent = "AND (parent_id = 0 OR parent_id IS NULL)";
+			}
 
 			$sql = "SELECT MAX(group_sort) AS max_sort FROM phpgw_cust_attribute_group "
-				. " WHERE location_id = {$location_id}";
+				. " WHERE location_id = {$location_id} {$filter_parent}";
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_db->next_record();
 			$max_sort	= $this->_db->f('max_sort');
@@ -1467,7 +1623,7 @@
 			}
 
 			$sql = "UPDATE phpgw_cust_attribute_group SET group_sort = {$attrib_sort}"
-				. " WHERE location_id = {$location_id} AND group_sort = {$new_sort}";
+				. " WHERE location_id = {$location_id} AND group_sort = {$new_sort} {$filter_parent}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$sql = "UPDATE phpgw_cust_attribute_group SET group_sort = {$new_sort}"
