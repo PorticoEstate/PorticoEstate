@@ -170,7 +170,6 @@
 				return $this->query();
 			}
 
-			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			$activity_id = phpgw::get_var('activity_id');
