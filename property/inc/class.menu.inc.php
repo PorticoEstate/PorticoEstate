@@ -790,6 +790,12 @@
 								'text'	=> lang('Workorder'),
 								'image'		=> array('property', 'project_workorder')
 							),
+							'condition_survey'	=> array
+							(
+								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.index')),
+								'text'	=> lang('condition survey'),
+								'image'		=> array('property', 'project_request')
+							),
 							'request'	=> array
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
