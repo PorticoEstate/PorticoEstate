@@ -230,7 +230,15 @@
 							'key' => 'id',
 							'className' => 'requirement_id',
 							'hidden' => true
-						)
+						),
+						array(
+							'id' => 'btn_criteria_id',
+							'name' => 'criteria_id',
+							'value'	=> lang('search criteria'),
+							'type' => 'button',
+							'style' => 'filter',
+							'tab_index' => 4
+						),
 					)
 				),
 			);

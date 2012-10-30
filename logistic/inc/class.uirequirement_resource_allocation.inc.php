@@ -295,6 +295,9 @@
 				$criterias_array['location_id'] = $location_id;
 				$criterias_array['allrows'] = true;
 				
+				$view_criterias_array = array();
+				$custom	= createObject('phpgwapi.custom_fields');
+				
 				foreach($requirement_values as $requirement_value)
 				{
 					$attrib_value = $requirement_value->get_value();
@@ -313,8 +316,14 @@
 					{
 						$operator_str = ">";
 					}
-					
-					$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
+
+					$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+
+					$view_criterias_array[] =  array(
+							'operator' 						=> 	$operator_str,
+							'value' 							=> 	$attrib_value,
+							"cust_attribute_data" => $attrib_data
+						);
 
 					$condition = array(
 						'operator' 		=> $operator_str,
@@ -328,12 +337,14 @@
 		    
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
-
-			print_r($allocation_suggestions);
+			
+			
+			print_r( $view_criterias_array );
 			
 			$data = array
 			(
 				'requirement' 						=> $requirement,
+				'view_criterias_array' 		=> $view_criterias_array,
 				'activity' 								=> $activity,
 				'allocation_suggestions' 	=> $allocation_suggestions,
 				'editable' 								=> true
@@ -365,7 +376,6 @@
 				
 				$resource_alloc_id = $this->so->store( $resource_alloc );
 			}
-			
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
 		}
