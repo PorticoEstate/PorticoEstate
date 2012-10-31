@@ -73,6 +73,7 @@ $GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_
 
 $GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
 $GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+$GLOBALS['phpgw']->locations->add('.project.condition_survey', 'Condition Survey', 'property', true, 'fm_condition_survey', true);
 
 $locations = array
 (

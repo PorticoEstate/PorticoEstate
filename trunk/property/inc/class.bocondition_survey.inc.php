@@ -43,7 +43,7 @@
 		var $location_info = array();
 		var $appname;
 		var $allrows;
-		public $acl_location = '.project.bocondition_survey';
+		public $acl_location = '.project.condition_survey';
 
 		function __construct($session=false)
 		{
@@ -125,25 +125,10 @@
 			return $column_list;
 		}
 
-		public function read($filter = array())
+		public function read($data = array())
 		{
-			if (! $filter )
-			{
-				foreach ( $this->location_info['fields'] as $field )
-				{
-					if (isset($field['filter']) && $field['filter'])
-					{
-						$filter[$field['name']] = phpgw::get_var($field['name']);
-					}
-				}
-			}
-
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows),$filter);
-
+			$values = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
-			$this->uicols = $this->so->uicols;
-
 			return $values;
 		}
 

@@ -773,9 +773,72 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+
+		'fm_condition_survey_status' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+				'in_progress' => array('type' => 'int','precision' => '2','nullable' => True),
+				'delivered' => array('type' => 'int','precision' => '2','nullable' => True),
+				'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_condition_survey' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'title' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),
+				'p_entity_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'p_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => True),
+				'loc2' => array('type' => 'varchar','precision' => '4','nullable' => True),
+				'loc3' => array('type' => 'varchar','precision' => '4','nullable' => True),
+				'loc4' => array('type' => 'varchar','precision' => '4','nullable' => True),
+				'descr' => array('type' => 'text','nullable' => True),
+				'status' => array('type' => 'int','precision' => '4','nullable' => false),
+				'category' => array('type' => 'int','precision' => '4','nullable' => True),
+				'coordinator' => array('type' => 'int','precision' => '4','nullable' => True),
+				'vendor_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'report_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'fm_condition_survey_history' => array(
+			'fd' => array(
+				'history_id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'history_record_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'history_appname' => array('type' => 'varchar','precision' => '64','nullable' => False),
+				'history_owner' => array('type' => 'int','precision' => '4','nullable' => False),
+				'history_status' => array('type' => 'char','precision' => '2','nullable' => False),
+				'history_new_value' => array('type' => 'text','nullable' => False),
+				'history_old_value' => array('type' => 'text','nullable' => true),
+				'history_timestamp' => array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp')
+			),
+			'pk' => array('history_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+
 		'fm_request' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'condition_survey_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'title' => array('type' => 'varchar','precision' => '100','nullable' => True),
 				'project_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'p_num' => array('type' => 'varchar','precision' => '15','nullable' => True),

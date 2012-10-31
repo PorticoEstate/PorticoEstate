@@ -42,19 +42,17 @@
 			$this->like		= & $this->db->like;
 		}
 
-		function read($data)
+		function read($data = array())
 		{
-			if(is_array($data))
-			{
-				$start	= (isset($data['start'])?$data['start']:0);
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
-			}
+			$start		= isset($data['start'])  ? (int) $data['start'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '' ;
+			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 
+			$table = 'fm_condition_survey';
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -65,19 +63,19 @@
 			}
 
 			$where = 'WHERE';
-			if ($cat_id > 0)
+			if ($cat_id)
 			{
-				$filtermethod .= " $where category='$cat_id' ";
+				$filtermethod .= " {$where} category = {$cat_id}";
 				$where = 'AND';
 			}
 
 			if($query)
 			{
 				$query			= $this->db->db_addslashes($query);
-				$querymethod	= " $where name $this->like '%$query%'";
+				$querymethod	= " {$where} name {$this->like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM fm_custom $filtermethod $querymethod";
+			$sql = "SELECT * FROM {$table} $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
