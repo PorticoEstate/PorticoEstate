@@ -142,20 +142,23 @@
 
 
 			$tables = "lg_requirement_resource_allocation allocation";
-
+			$joins = "	{$this->left_join} phpgw_locations ON (phpgw_locations.location_id = allocation.location_id)";
+			
 			if($return_count)
 			{
 				$cols = 'COUNT(DISTINCT(allocation.id)) AS count';
 			}
 			else
 			{
-				$cols .= "allocation.* ";
+				$cols .= "allocation.*, ";
+				$cols .= "phpgw_locations.descr AS resource_type_descr";
+			
 			}
-
+			
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-
-			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+			
+			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
 		protected function populate(int $allocation_id, &$allocation)
@@ -167,6 +170,7 @@
 				$allocation->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$allocation->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'string'));
 				$allocation->set_resource_id($this->unmarshal($this->db->f('resource_id'), 'int'));
+				$allocation->set_resource_type_descr($this->unmarshal($this->db->f('resource_type_descr'), 'string'));
 			}
 
 			return $allocation;

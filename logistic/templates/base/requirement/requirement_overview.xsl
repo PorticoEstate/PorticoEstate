@@ -40,7 +40,7 @@
 				</form>
 				</div>
 				
-			<h2 style="clear:both;">Allokering av krav</h2>
+			<h2 style="clear:both;">Allokerte ressurser</h2>
 			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-definition" />
@@ -96,10 +96,11 @@
 				var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 				var myColumnDefs = [ 
-			        {key:"id", sortable:true}, 
+			        {key:"id", sortable:true},
+			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
 			        {key:"requirement_id", sortable:true}, 
 			        {key:"location_id", sortable:true}, 
-			        {key:"resource_id", sortable:true} 
+			        {key:"resource_id", sortable:true}
 			    ]; 
 			
 				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
