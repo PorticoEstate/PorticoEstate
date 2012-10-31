@@ -381,8 +381,6 @@
 			
 			$activity_children = $this->so->get($activity->get_id());
 
-			print_r( $activity_children );
-			
 			self::render_template_xsl('activity/view_activity_item', $data);
 		}
 		
