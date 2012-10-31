@@ -7,7 +7,6 @@ $(document).ready(function(){
 		
 		updateAllocationTable( requirement_id );
     });
-	
 });
 
 

@@ -339,8 +339,6 @@
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
 			
 			
-			print_r( $view_criterias_array );
-			
 			$data = array
 			(
 				'requirement' 						=> $requirement,
@@ -377,7 +375,7 @@
 				$resource_alloc_id = $this->so->store( $resource_alloc );
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'id' => $allocation_id));
 		}
 		
 		function convert_to_array($object_list)

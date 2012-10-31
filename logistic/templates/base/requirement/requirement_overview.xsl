@@ -18,23 +18,30 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_phpgw_i18n"/>
 	
-	<div style="margin: 20px; padding: 20px;" class="content-wrp">
-		  <form action="" name="acl_form" id="acl_form" method="post">
-				<div id="paging"></div>
-	
-				<div style="margin-bottom: 40px;" id="requirement-container"></div>
-				
-				<xsl:variable name="params">
-					<xsl:text>menuaction:logistic.uirequirement.edit, activity_id:</xsl:text>
-					<xsl:value-of select="activity/id" />
+	<div id="resource_alloc_wrp" class="content-wrp">
+
+			<div id="paging"></div>
+
+			<h2>Krav</h2>
+			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
+
+			<div id="btn_menu">
+				<xsl:variable name="add_requirement_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.edit' )" />
 				</xsl:variable>
-				<xsl:variable name="edit_url">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
-				</xsl:variable>
-				<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
 				
-				<div style="margin-top: 40px;" id="allocation-container"></div>
-			</form>
+				<form action="{$add_requirement_url}" name="acl_form" id="acl_form" method="post">
+					<input type="hidden" name="activity_id" value="{activity/id}" />
+					<input class="btn" type="submit">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'Add requirement')" />
+						</xsl:attribute>
+					</input>
+				</form>
+				</div>
+				
+			<h2 style="clear:both;">Allokering av krav</h2>
+			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-definition" />
 </xsl:template>
