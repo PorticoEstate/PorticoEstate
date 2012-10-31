@@ -172,7 +172,7 @@
 					</dd>
 				</dl>
 				
-				<h3 style="margin-top: 20px;clear:both;">Underaktiviteter</h3>
+				<h3 style="clear: both; margin: 0; padding: 20px 0 5px;">Underaktiviteter</h3>
 				<div id="sub-activities-container"></div>		
 				<xsl:call-template name="datasource-definition" />
 				
