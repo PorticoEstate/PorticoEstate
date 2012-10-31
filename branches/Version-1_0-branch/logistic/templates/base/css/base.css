@@ -2275,9 +2275,8 @@ p.no_items_msg {
   padding: 20px;
 }
 
-#requirement-wrp label{
-  font-size: 16px;
-    
+#requirement-wrp label {
+    font-size: 14px;
 }
 
 #requirement-wrp h2 {
@@ -2293,8 +2292,12 @@ p.no_items_msg {
 	border: 1px solid #B0D9FF;
 }
 
-#resource-list .resource{
-	padding: 5px 0;
+#resource-list .resource {
+  padding: 10px;
+}
+
+#resource-list .resource input[type="checkbox"]{
+  margin: 0 10px;
 }
 
 #resource-list .resource.odd{
@@ -2319,5 +2322,26 @@ p.no_items_msg {
     background: none repeat scroll 0 0 #B0D9FF;
     color: #092845;
     font-weight: bold;
-    padding: 5px 8px;
+    padding: 5px 20px;
+}
+
+#resource_alloc_wrp {
+	margin: 20px;
+	padding: 20px;	
+}
+
+#resource_alloc_wrp #btn_menu {
+	float:left;
+	margin-left: 20px;
+}
+
+#resource_alloc_wrp input[type="submit"] {
+    font-size: 13px;
+    margin-bottom: 1px;
+    padding: 2px 0;
+    width: 160px;
+}
+
+#resource_alloc_wrp h2{
+	margin-top: 0;	
 }

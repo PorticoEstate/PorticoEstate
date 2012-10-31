@@ -18,14 +18,30 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_phpgw_i18n"/>
 	
-	<div style="margin: 20px; padding: 20px;" class="content-wrp">
-		  <form action="" name="acl_form" id="acl_form" method="post">
-				<div id="paging"></div>
-	
-				<div id="requirement-container"></div>
+	<div id="resource_alloc_wrp" class="content-wrp">
 
-				<div id="allocation-container"></div>
-			</form>
+			<div id="paging"></div>
+
+			<h2>Krav</h2>
+			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
+
+			<div id="btn_menu">
+				<xsl:variable name="add_requirement_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.edit' )" />
+				</xsl:variable>
+				
+				<form action="{$add_requirement_url}" name="acl_form" id="acl_form" method="post">
+					<input type="hidden" name="activity_id" value="{activity/id}" />
+					<input class="btn" type="submit">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'Add requirement')" />
+						</xsl:attribute>
+					</input>
+				</form>
+				</div>
+				
+			<h2 style="clear:both;">Allokerte ressurser</h2>
+			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-definition" />
 </xsl:template>
@@ -35,69 +51,58 @@
 	<script>
 	YAHOO.util.Event.onDOMReady(function(){
 	 
-	 	<xsl:choose>
-			<xsl:when test="//datatable/actions">
-				YAHOO.portico.actions = [
-					<xsl:for-each select="//datatable/actions">
-						{
-							my_name: "<xsl:value-of select="my_name"/>",
-							text: "<xsl:value-of select="text"/>",
-							<xsl:if test="parameters">
-								parameters: <xsl:value-of select="parameters"/>,
-						    </xsl:if>
-							action: "<xsl:value-of select="action"/>"
-						}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-					</xsl:for-each>
-				];
-			</xsl:when>
-			<xsl:otherwise>
-				YAHOO.portico.actions = [];
-			</xsl:otherwise>
-		</xsl:choose>
-	 
    	YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
 					{
 						resizeable: true,
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
-						label: "<xsl:value-of select="label"/>",
+							label: "<xsl:value-of select="label"/>",
 						</xsl:if>
-						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+							sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
-						hidden: true,
+							hidden: true,
 						</xsl:if>
 						<xsl:if test="formatter">
-						formatter: <xsl:value-of select="formatter"/>,
+							formatter: <xsl:value-of select="formatter"/>,
 						</xsl:if>
 						<xsl:if test="editor">
-						editor: <xsl:value-of select="editor"/>,
-					    </xsl:if>
+							editor: <xsl:value-of select="editor"/>,
+					  </xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
 			];
 			
 			var reqUrl = '<xsl:value-of select="//datatable/source"/>';
-	
+			
 			YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
-			
+  	});
+  	
+  	$(document).ready(function(){
+			var requirement_id = $("#requirement-container table").children("tr").eq(1).find("td.requirement_id").find("div").text();
+			updateAllocationTable( requirement_id );
+		});
+		
+		function updateAllocationTable(requirement_id){
+		
 			var oArgs = {
-				menuaction:'logistic.uirequirement_resource_allocation.index',
-				requirement_id: '2',
-				phpgw_return_as: 'json'
-			};
+					menuaction:'logistic.uirequirement_resource_allocation.index',
+					requirement_id: requirement_id,
+					type: "requirement_id",
+					phpgw_return_as: 'json'
+				};
+				
+				var requestUrl = phpGWLink('index.php', oArgs, true);
 			
-			var requestUrl = phpGWLink('index.php', oArgs, true);
-
-			var myColumnDefs = [ 
-	            {key:"id", sortable:true}, 
-	            {key:"requirement_id", sortable:true}, 
-	            {key:"location_id", sortable:true}, 
-	            {key:"resource_id", sortable:true} 
-	        ]; 
-
-			YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
-  	}); 
+				var myColumnDefs = [ 
+			        {key:"id", sortable:true},
+			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
+			        {key:"requirement_id", sortable:true}, 
+			        {key:"resource_id", sortable:true}
+			    ]; 
+			
+				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
+		}
   </script>
 </xsl:template>

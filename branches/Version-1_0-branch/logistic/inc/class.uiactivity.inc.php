@@ -146,11 +146,6 @@
 					(
 						array
 						(
-							'name'		=> 'parent_id',
-							'source'	=> 'id'
-						),
-						array
-						(
 							'name'		=> 'activity_id',
 							'source'	=> 'id'
 						),
@@ -385,57 +380,6 @@
 			}
 			
 			self::render_template_xsl(array('activity/activity_item'), $data);
-		}
-		
-		public function view_2()
-		{
-			$activity_id = phpgw::get_var('id');
-			$project_id = phpgw::get_var('project_id');
-			if (isset($_POST['edit_activity']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'id' => $activity_id, 'project_id' => $project_id));
-			}
-			else if (isset($_POST['new_activity']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project_id));
-			}
-			else
-			{
-				if ($activity_id && is_numeric($activity_id))
-				{
-					$activity = $this->so->get_single($activity_id);
-					$responsible_user = $this->so->get_responsible_user($activity->get_responsible_user_id());
-					$activity->set_responsible_user_name($responsible_user);
-				}
-
-				$activity_array = $activity->toArray();
-
-				if ($this->flash_msgs)
-				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-				}
-
-				$activity->set_project_id($project_id);
-				
-				$data = array
-				(
-					'activity' => $activity->toArray()
-				);
-
-				if($activity->get_parent_id() > 0)
-				{
-					$parent_activity = $this->so->get_single($activity->get_parent_id());
-					$data['parent_activity'] = $parent_activity->toArray();
-				}
-				
-				echo $activity->get_id();
-				
-				$activity_children = $this->so->get($activity->get_id());
-				
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('activity/activity_item_2'), $data);
-			}
 		}
 		
 		public function save()

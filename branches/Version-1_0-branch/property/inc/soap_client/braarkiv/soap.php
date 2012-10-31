@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package soap
 	* @subpackage communication
- 	* @version $Id: soap.php 6682 2010-12-20 09:57:35Z sigurdne $
+ 	* @version $Id$
 	*/
 
 
