@@ -161,7 +161,16 @@
 				$filters = array('requirement_id' => $entry['id']);
 				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
 				
-				$entry['status'] = $num_allocated;
+				if($num_allocated == $num_required)
+				{
+					$entry['status'] = "OK";	
+				}
+				else
+				{
+					$entry['status'] = "MANGLER";
+				}
+				
+				$entry['allocated'] = $num_allocated;
 				
 				$href = self::link(array('menuaction' => 'logistic.uirequirement.delete', 'id' => $entry['id']));
 				$entry['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Slett krav</a>";
@@ -246,7 +255,12 @@
 						),
 						array(
 							'key' => 'no_of_items',
-							'label' => lang('No of items'),
+							'label' => lang('Num required'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'allocated',
+							'label' => lang('Num allocated'),
 							'sortable' => false
 						),
 						array(
