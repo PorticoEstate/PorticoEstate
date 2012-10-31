@@ -99,7 +99,6 @@
 			        {key:"id", sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
 			        {key:"requirement_id", sortable:true}, 
-			        {key:"location_id", sortable:true}, 
 			        {key:"resource_id", sortable:true}
 			    ]; 
 			
