@@ -38,6 +38,8 @@
 		protected $resource_id;
 		protected $location_id;
 		protected $create_user;
+		
+		protected $resource_type_descr;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -99,6 +101,16 @@
 		{
 			return $this->create_user;
 		}
+		
+		public function set_resource_type_descr($resource_type_descr)
+		{
+			$this->resource_type_descr = $resource_type_descr;
+		}
+
+		public function get_resource_type_descr()
+		{
+			return $this->resource_type_descr;
+		}
 
 		/**
 		* Get a static reference to the storage object associated with this model object
@@ -118,6 +130,7 @@
 		{
 			return array(
 				'id' => $this->get_id(),
+				'resource_type_descr' => $this->get_resource_type_descr(),
 				'requirement_id' => $this->get_requirement_id(),
 				'resource_id' => $this->get_resource_id(),
 				'location_id' => $this->get_location_id()

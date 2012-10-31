@@ -134,6 +134,11 @@
 							'sortable' => true,
 						),
 						array(
+							'key' => 'resource_type',
+							'label' => lang('Resource type'),
+							'sortable' => true
+						),
+						array(
 							'key' => 'requirement_id',
 							'label' => lang('Requirememnt id'),
 							'sortable' => true
@@ -157,7 +162,6 @@
 
 		public function query()
 		{
-
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
