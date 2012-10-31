@@ -352,7 +352,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
-			self::render_template_xsl(array('activity/activity_item'), $data);
+			self::render_template_xsl(array('activity/add_activity_item'), $data);
 		}
 		
 		public function view()
@@ -379,7 +379,11 @@
 				$data['parent_activity'] = $parent_activity;
 			}
 			
-			self::render_template_xsl(array('activity/activity_item'), $data);
+			$activity_children = $this->so->get($activity->get_id());
+
+			print_r( $activity_children );
+			
+			self::render_template_xsl('activity/view_activity_item', $data);
 		}
 		
 		public function save()

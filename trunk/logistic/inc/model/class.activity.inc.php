@@ -239,7 +239,8 @@
 				'project_name' => $project_name,
 				'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
 				'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
-				'responsible_user_id' => $responsible_user
+				'responsible_user_id' => $this->get_responsible_user_id(),
+				'responsible_user_name' => $responsible_user
 			);
 		}
 		
