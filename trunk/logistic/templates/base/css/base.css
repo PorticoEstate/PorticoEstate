@@ -2324,3 +2324,24 @@ p.no_items_msg {
     font-weight: bold;
     padding: 5px 20px;
 }
+
+#resource_alloc_wrp {
+	margin: 20px;
+	padding: 20px;	
+}
+
+#resource_alloc_wrp #btn_menu {
+	float:left;
+	margin-left: 20px;
+}
+
+#resource_alloc_wrp input[type="submit"] {
+    font-size: 13px;
+    margin-bottom: 1px;
+    padding: 2px 0;
+    width: 160px;
+}
+
+#resource_alloc_wrp h2{
+	margin-top: 0;	
+}

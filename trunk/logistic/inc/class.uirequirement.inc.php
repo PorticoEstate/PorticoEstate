@@ -144,7 +144,6 @@
 				}
 			}
 
-
 			$line_id = 0; // optional preselect
 			foreach($rows as &$entry)
 			{
@@ -155,7 +154,12 @@
 					$_checked = 'checked="checked"';
 				}
 
-				$entry['select'] = "<input id=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
+				$href = self::link(array('menuaction' => 'logistic.uirequirement.delete', 'id' => $entry['id']));
+				$entry['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Slett</a>";
+				
+				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
+				$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
+				$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Alloker</a>";
 			}
 
 			// ... add result data
@@ -251,12 +255,14 @@
 							'hidden' => true
 						),
 						array(
-							'id' => 'btn_criteria_id',
-							'name' => 'criteria_id',
-							'value'	=> lang('search criteria'),
-							'type' => 'button',
-							'style' => 'filter',
-							'tab_index' => 4
+							'key' => 'delete_link',
+							'label' => lang('Delete requirement'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'alloc_link',
+							'label' => lang('Allocate resources'),
+							'sortable' => false,
 						),
 					)
 				),
