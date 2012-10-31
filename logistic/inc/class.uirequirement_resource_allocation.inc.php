@@ -134,6 +134,11 @@
 							'sortable' => true,
 						),
 						array(
+							'key' => 'resource_type',
+							'label' => lang('Resource type'),
+							'sortable' => true
+						),
+						array(
 							'key' => 'requirement_id',
 							'label' => lang('Requirememnt id'),
 							'sortable' => true
@@ -157,7 +162,6 @@
 
 		public function query()
 		{
-
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
@@ -203,6 +207,12 @@
 
 			switch ($query_type)
 			{
+				case 'requirement_id':
+					$requirement_id = phpgw::get_var('requirement_id');
+					$filters = array('requirement_id' => $requirement_id);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = $this->so->get_count($search_for, $search_type, $filters);
+					break;
 				default: // ... all composites, filters (active and vacant)
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
@@ -289,6 +299,9 @@
 				$criterias_array['location_id'] = $location_id;
 				$criterias_array['allrows'] = true;
 				
+				$view_criterias_array = array();
+				$custom	= createObject('phpgwapi.custom_fields');
+				
 				foreach($requirement_values as $requirement_value)
 				{
 					$attrib_value = $requirement_value->get_value();
@@ -307,8 +320,14 @@
 					{
 						$operator_str = ">";
 					}
-					
-					$criteria_str = $column_name . " " . $operator_str . " " . $attrib_value;
+
+					$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+
+					$view_criterias_array[] =  array(
+							'operator' 						=> 	$operator_str,
+							'value' 							=> 	$attrib_value,
+							"cust_attribute_data" => $attrib_data
+						);
 
 					$condition = array(
 						'operator' 		=> $operator_str,
@@ -322,12 +341,12 @@
 		    
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
-
-			print_r($allocation_suggestions);
+			
 			
 			$data = array
 			(
 				'requirement' 						=> $requirement,
+				'view_criterias_array' 		=> $view_criterias_array,
 				'activity' 								=> $activity,
 				'allocation_suggestions' 	=> $allocation_suggestions,
 				'editable' 								=> true
@@ -359,9 +378,8 @@
 				
 				$resource_alloc_id = $this->so->store( $resource_alloc );
 			}
-			
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view', 'id' => $allocation_id));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'id' => $allocation_id));
 		}
 		
 		function convert_to_array($object_list)

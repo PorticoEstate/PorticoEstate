@@ -64,3 +64,6 @@ Criterias	logistic	no	Kriterier
 Add criterias	logistic	no	Legg til kriterier
 favorites	logistic	no	Favoritter
 toggle as favorite	logistic	no	Legg til / fjern som favoritt
+Add allocation to requirement	logistic	no	Alloker ressurser til krav
+Delete requirement	logistic	no Slett krav
+Allocate resources	logistic	no	Alloker ressurser
