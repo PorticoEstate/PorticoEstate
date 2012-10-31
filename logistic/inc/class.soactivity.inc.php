@@ -32,6 +32,7 @@
 
 	class logistic_soactivity extends logistic_socommon
 	{
+		public $total_records = 0;
 		protected static $so;
 		protected $activity_tree = array();
 
@@ -340,8 +341,35 @@
 				$this->get_children($activity['id'], 1);
 			}
 
+
 			$result = array();
-			foreach($this->activity_tree as $_activity)
+
+//------ Start pagination
+			$this->total_records = count($this->activity_tree);
+
+			if($this->total_records == 0)
+			{
+				return $result;
+			}
+
+			if(!$allrows)
+			{
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']:15;
+
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+
+				$activity_tree = array_chunk($this->activity_tree, $num_rows);
+
+				$out = $activity_tree[$page];
+			}
+			else
+			{
+				$out = $this->activity_tree;
+			}
+
+//------ End pagination
+
+			foreach($out as $_activity)
 			{
 				$this->db->query("SELECT * FROM lg_activity WHERE id ={$_activity['id']}",__LINE__,__FILE__);
 				$this->db->next_record();
@@ -349,7 +377,6 @@
 				$activity_obj->set_name($_activity['name']);
 				$result[] = $activity_obj;
 			}
-
 			return $result;
 		}
 
