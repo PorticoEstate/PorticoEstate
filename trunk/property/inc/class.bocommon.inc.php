@@ -1598,7 +1598,8 @@
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xlsx';
 
 			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename,'application/vnd.ms-excel');
+//			$browser->content_header($filename,'application/vnd.ms-excel');
+			$browser->content_header($filename,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
 			$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
 			$cacheSettings = array( 'memoryCacheSize' => '32MB');
