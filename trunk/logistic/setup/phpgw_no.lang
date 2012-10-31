@@ -54,6 +54,7 @@ Add requirement	logistic	no	Legg til krav
 Requirement details	logistic	no	Detaljer for behov
 Add constraints	logistic	no	Legg til kriterier på behovet
 No of items	logistic	no	Antall
+Num required	logistic	no	Trenger antall 
 Resource type	logistic	no	Ressurstype
 t_new_booking_allocation	logistic	no	Registrer ny booking på dette behovet
 t_view_booking_allocations	logistic	no	Vis registrerte bookinger på dette behovet
@@ -67,3 +68,5 @@ toggle as favorite	logistic	no	Legg til / fjern som favoritt
 Add allocation to requirement	logistic	no	Alloker ressurser til krav
 Delete requirement	logistic	no Slett krav
 Allocate resources	logistic	no	Alloker ressurser
+Num allocated	logistic	no	Antall allokert
+Status	logistic	no	Status
