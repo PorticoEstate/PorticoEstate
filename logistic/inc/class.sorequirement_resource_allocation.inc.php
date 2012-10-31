@@ -142,8 +142,9 @@
 
 
 			$tables = "lg_requirement_resource_allocation allocation";
-			$joins = "	{$this->left_join} phpgw_locations ON (phpgw_locations.location_id = allocation.location_id)";
-			
+			$joins .= "	{$this->left_join} phpgw_locations ON (phpgw_locations.location_id = allocation.location_id)";
+			$joins .= "	{$this->left_join} fm_bim_item ON (fm_bim_item.location_id = allocation.location_id and fm_bim_item.id = allocation.resource_id )";
+			 
 			if($return_count)
 			{
 				$cols = 'COUNT(DISTINCT(allocation.id)) AS count';
@@ -151,10 +152,10 @@
 			else
 			{
 				$cols .= "allocation.*, ";
-				$cols .= "phpgw_locations.descr AS resource_type_descr";
-			
+				$cols .= "phpgw_locations.descr AS resource_type_descr, ";
+				$cols .= "fm_bim_item.location_code AS location_code, xpath('//address/text()', fm_bim_item.xml_representation) AS fm_bim_item_address, xpath('//navn/text()', fm_bim_item.xml_representation) AS fm_bim_item_name ";
 			}
-			
+						
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 			
@@ -171,6 +172,9 @@
 				$allocation->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'string'));
 				$allocation->set_resource_id($this->unmarshal($this->db->f('resource_id'), 'int'));
 				$allocation->set_resource_type_descr($this->unmarshal($this->db->f('resource_type_descr'), 'string'));
+				$allocation->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$allocation->set_fm_bim_item_address($this->unmarshal($this->db->f('fm_bim_item_address'), 'string'));
+				$allocation->set_fm_bim_item_name($this->unmarshal($this->db->f('fm_bim_item_name'), 'string'));
 			}
 
 			return $allocation;

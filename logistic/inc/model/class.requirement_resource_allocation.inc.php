@@ -40,7 +40,10 @@
 		protected $create_user;
 		
 		protected $resource_type_descr;
-
+		protected $location_code;
+		protected $fm_bim_item_address;
+		protected $fm_bim_item_name;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -112,6 +115,36 @@
 			return $this->resource_type_descr;
 		}
 
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
+		}
+
+		public function get_location_code()
+		{
+			return $this->location_code;
+		}
+		
+		public function set_fm_bim_item_address($fm_bim_item_address)
+		{
+			$this->fm_bim_item_address = $fm_bim_item_address;
+		}
+
+		public function get_fm_bim_item_address()
+		{
+			return $this->fm_bim_item_address;
+		}
+		
+		public function set_fm_bim_item_name($fm_bim_item_name)
+		{
+			$this->fm_bim_item_name = $fm_bim_item_name;
+		}
+
+		public function get_fm_bim_item_name()
+		{
+			return $this->fm_bim_item_name;
+		}
+
 		/**
 		* Get a static reference to the storage object associated with this model object
 		*
@@ -129,11 +162,14 @@
 		public function serialize()
 		{
 			return array(
-				'id' => $this->get_id(),
+				'id' 									=> $this->get_id(),
 				'resource_type_descr' => $this->get_resource_type_descr(),
-				'requirement_id' => $this->get_requirement_id(),
-				'resource_id' => $this->get_resource_id(),
-				'location_id' => $this->get_location_id()
+				'requirement_id' 			=> $this->get_requirement_id(),
+				'resource_id' 				=> $this->get_resource_id(),
+				'location_id'	 				=> $this->get_location_id(),
+				'location_code' 			=> $this->get_location_code(),
+				'fm_bim_item_address'	=> $this->get_fm_bim_item_address(),
+				'fm_bim_item_name'		=> $this->get_fm_bim_item_name()
 			);
 		}
 	}

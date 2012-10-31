@@ -2345,3 +2345,17 @@ p.no_items_msg {
 #resource_alloc_wrp h2{
 	margin-top: 0;	
 }
+
+#requirement-container .btn-sm {
+    border-color: #4378B1 #2663A3 #366CA4;
+    font-size: 12px;
+    padding: 1px 8px;
+}
+
+#details table {
+    margin: 0;
+    padding: 0;
+}
+.yui-skin-sam .yui-dt table {
+    border: none;
+}
