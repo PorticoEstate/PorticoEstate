@@ -31,7 +31,7 @@
 	phpgw::import_class('logistic.soactivity');
 	include_class('logistic', 'activity');
 	
-	
+	/*
 	class logistic_uiallocation extends phpgwapi_uicommon
 	{
 		
@@ -164,14 +164,7 @@
 			$control_id			= phpgw::get_var('control_id', 'int');
 			$results 			= phpgw::get_var('results', 'int');
 			
-/*
- 			if(!$entity_id && !$cat_id)
-			{
-				$values = array();
-			}
-			else
-			{
-			*/
+
 			$entity_id = 3;
 			$cat_id = 1;
 				$location_id = 2295;//$GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
@@ -288,7 +281,6 @@
 				$data = array
 					(
 						'activity' => $activity->toArray(),
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'dateformat' 				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 				);
 
@@ -313,3 +305,4 @@
 			return $user_array;
 		}
 	}
+*/

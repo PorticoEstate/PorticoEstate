@@ -34,6 +34,7 @@
 	phpgw::import_class('logistic.soproject');
 	phpgw::import_class('property.soadmin_entity');
 	phpgw::import_class('logistic.soresource_type_requirement');
+	phpgw::import_class('logistic.sorequirement_resource_allocation');
 
 	include_class('logistic', 'requirement');
 	phpgw::import_class('phpgwapi.datetime');
@@ -47,6 +48,7 @@
 		private $so_activity;
 		private $so_project;
 		private $so_resource_type_requirement;
+		private $so_resource_allocation;
 
 		public $public_functions = array(
 			'query' 									=> true,
@@ -71,7 +73,7 @@
 			$this->so_activity = CreateObject('logistic.soactivity');
 			$this->so_project = CreateObject('logistic.soproject');
 			$this->so_resource_type_requirement = CreateObject('logistic.soresource_type_requirement');
-
+			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
 		}
@@ -153,7 +155,14 @@
 				{
 					$_checked = 'checked="checked"';
 				}
-
+				
+			  $num_required = $entry['no_of_items'];
+	  
+				$filters = array('requirement_id' => $entry['id']);
+				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
+				
+				$entry['status'] = $num_allocated;
+				
 				$href = self::link(array('menuaction' => 'logistic.uirequirement.delete', 'id' => $entry['id']));
 				$entry['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Slett krav</a>";
 				
@@ -262,6 +271,11 @@
 						array(
 							'key' => 'alloc_link',
 							'label' => lang('Allocate resources'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'status',
+							'label' => lang('Status'),
 							'sortable' => false,
 						),
 					)
