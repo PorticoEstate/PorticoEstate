@@ -2359,3 +2359,7 @@ p.no_items_msg {
 .yui-skin-sam .yui-dt table {
     border: none;
 }
+
+#requirement-container table td{
+	padding: 5px 0;	
+}
