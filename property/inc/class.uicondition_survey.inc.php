@@ -58,7 +58,9 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
+
 
 		public function index()
 		{
@@ -71,29 +73,8 @@
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
-			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
-			$cats->supress_info	= true;
-
-			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => $this->_category_acl));
-			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-			array_unshift ($categories['cat_list'],$default_value);
+			$categories = $this->_get_categories();
 			
-			foreach ($categories['cat_list'] as & $_category)
-			{
-				$_category['id'] = $_category['cat_id'];
-			}
-
-			$survey_type_array = array();
-			$survey_type_array[] = array
-			(
-				'id'	=> 0,
-				'name'	=> 'Select'
-			);
-			$survey_type_array[] = array
-			(
-				'id'	=> 1,
-				'name'	=> 'type 1'
-			);
 
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
@@ -103,7 +84,7 @@
 							array('type' => 'filter',
 								'name' => 'cat_id',
 								'text' => lang('category') . ':',
-								'list' => $categories['cat_list'],
+								'list' => $categories,
 							),
 							array('type' => 'text',
 								'text' => lang('search'),
@@ -174,7 +155,7 @@
 					(
 						array
 						(
-							'name'		=> 'survey_id',
+							'name'		=> 'id',
 							'source'	=> 'id'
 						),
 					)
@@ -190,8 +171,6 @@
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
-
-			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 
 			self::render_template_xsl('datatable_common', $data);
 		}
@@ -285,52 +264,37 @@
 				}
 			}
 
+			$survey = array();
 
-
-			$project_id = phpgw::get_var('id');
-			if ($project_id && is_numeric($project_id))
+			if ($id)
 			{
-				$project = $this->so->get_single($project_id);
-			}
-			else
-			{
-				if($project == null)
-				{
-					$project = new logistic_project();	
-				}
+				$survey = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
 			}
 
-			$project_types = $this->so->get_project_types();
-			foreach ($project_types as &$p_type)
-			{
-				if ($project->get_project_type_id() == $p_type['id'])
-				{
-					$p_type['selected'] = 1;
-				}
-			}
-			
+			$categories = $this->_get_categories($survey['category']);
+
 			$data = array
 			(
-				'project' => $project,
-				'options' => $project_types,
-				'editable' => true
+				'project'		=> $survey,
+				'categories'	=> array('options' => $categories),
+				'editable' 		=> $mode == 'edit'
 			);
 
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 			
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('project', 'yahoo', 'condition_survey.edit.js');
+			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
 			self::render_template_xsl(array('condition_survey'), $data);
 		}
 		
 		public function save()
 		{
-			$project_id = phpgw::get_var('id');
+			$id = phpgw::get_var('id');
 			
-			if ($project_id && is_numeric($project_id))
+			if ($id )
 			{
-				$project = $this->so->get_single($project_id);
+				$project = $this->so->get_single($id);
 			}
 			else
 			{
@@ -341,13 +305,28 @@
 			
 			if( $project->validate() )
 			{
-				$project_id = $this->so->store($project);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $project_id));	
+				$id = $this->so->store($project);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));	
 			}
 			else
 			{
 				$this->edit( $project );
 			}
 		}
-	}
 
+		private function _get_categories($selected = 0)
+		{
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$cats->supress_info	= true;
+			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $selected,'globals' => true,'use_acl' => $this->_category_acl));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($categories['cat_list'],$default_value);
+
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+			
+			return $categories['cat_list'];
+		}
+	}
