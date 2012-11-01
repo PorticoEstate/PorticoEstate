@@ -262,6 +262,12 @@
 
 			switch ($query_type)
 			{
+				case 'activity_id':
+					$activity_id = phpgw::get_var('activity_id');
+					$filters = array('id' => $activity_id);
+					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = $this->so->get_count($search_for, $search_type, $filters);
+					break;
 				default: // ... all activities, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'activity_query', $search_for);
 					$filters = array('project' => phpgw::get_var('project'), 'user' => phpgw::get_var('user'), 'activity' => phpgw::get_var('filter', 'int'));
@@ -567,8 +573,8 @@
 							'hidden' => true
 						),
 						array(
-							'key' => 'delete_link',
-							'label' => lang('Delete requirement'),
+							'key' => 'status',
+							'label' => lang('Status'),
 							'sortable' => false,
 						),
 						array(
@@ -577,8 +583,8 @@
 							'sortable' => false,
 						),
 						array(
-							'key' => 'status',
-							'label' => lang('Status'),
+							'key' => 'delete_link',
+							'label' => lang('Delete requirement'),
 							'sortable' => false,
 						),
 					)
