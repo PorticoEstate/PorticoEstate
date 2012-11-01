@@ -28,6 +28,8 @@
 	 * @version $Id$
 	 */
 
+	phpgw::import_class('logistic.sorequirement');
+	phpgw::import_class('logistic.sorequirement_resource_allocation');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
 
@@ -37,6 +39,9 @@
 	{
 		private $so;
 		private $so_project;
+		private $so_requirement;
+		private $so_resource_allocation;
+		
 		public $public_functions = array(
 			'query'			=> true,
 			'add' 			=> true,
@@ -53,6 +58,9 @@
 
 			$this->so = createObject('logistic.soactivity');
 			$this->so_project = createObject('logistic.soproject');
+			$this->so_requirement = CreateObject('logistic.sorequirement');
+			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
+			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
 		}
 		
@@ -129,6 +137,11 @@
 						array(
 							'key' => 'responsible_user_id',
 							'label' => lang('Responsible user'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'status',
+							'label' => lang('Status'),
 							'sortable' => false
 						),
 						array(
@@ -258,13 +271,51 @@
 
 			//Create an empty row set
 			$rows = array();
-			foreach ($result_objects as $result)
+			foreach ($result_objects as $activity)
 			{
-				if (isset($result))
+				if (isset($activity))
 				{
-					$rows[] = $result->serialize();
+					$filters = array('activity' => $activity->get_id());
+					$requirements_for_activity = $this->so_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					
+					if( count( $requirements_for_activity ) > 0 )
+					{
+						$total_num_alloc = 0;
+						$total_num_required = 0;
+						
+						foreach($requirements_for_activity as $requirement)
+						{
+							$filters = array('requirement_id' => $requirement->get_id());
+							$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);	
+							 
+							$num_required = $requirement->get_no_of_items();
+							
+							$total_num_alloc += $num_allocated;
+							$total_num_required += $num_required;
+						}
+						
+						if($total_num_alloc == $total_num_required)
+						{
+							$status = "Krav dekket";
+						}
+						else
+						{
+							$status = "Mangler i krav (" . ($total_num_required - $total_num_alloc) . ")" ;
+						}
+					}
+					else
+					{
+						$status = "Ingen registerte krav";
+					}
+					
+					$activity_arr = $activity->serialize(); 
+					
+					$activity_arr['status'] = $status;
+					
+					$rows[] = $activity_arr;
 				}
 			}
+			
 			
 			// ... add result data
 			$result_data = array('results' => $rows);
