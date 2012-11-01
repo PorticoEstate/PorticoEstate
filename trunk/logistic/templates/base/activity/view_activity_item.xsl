@@ -157,8 +157,17 @@
 					</dd>
 				</dl>
 				
-				<h3 style="clear: both; margin: 0; padding: 20px 0 5px;">Underaktiviteter</h3>
-				<div id="sub-activities-container"></div>		
+				<xsl:variable name="add_req_params">
+					<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
+					<xsl:value-of select="activity/id" />
+				</xsl:variable>
+				<xsl:variable name="add_req_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_req_params )" />
+				</xsl:variable>
+				
+				<h2 style="clear:left; float:left;margin: 0; padding: 20px 0 5px;">Underaktiviteter</h2>
+				<a id="add-sub-activity-btn" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add sub activity')" /></a>
+				<div style="clear:both;" id="sub-activities-container"></div>		
 				<xsl:call-template name="datasource-definition" />
 				
 				<div class="form-buttons">
