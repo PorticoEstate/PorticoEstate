@@ -70,3 +70,4 @@ Delete requirement	logistic	no Slett krav
 Allocate resources	logistic	no	Alloker ressurser
 Num allocated	logistic	no	Antall allokert
 Status	logistic	no	Status
+Requirement allocation	logistic	no	Allokering av ressurser

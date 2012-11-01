@@ -1,11 +1,10 @@
 <!-- $Id: activity_item.xsl 10305 2012-10-23 09:08:34Z vator $ -->
 <!-- item  -->
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template name="activity_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
-<xsl:call-template name="yui_phpgw_i18n"/>
-<div class="yui-navset yui-navset-top">
+<div class="content-wrp">
 	<xsl:choose>
 		<xsl:when test="parent_activity/id &gt; 0">
 			<h1> 

@@ -152,7 +152,6 @@
 				),
 			);
 
-
 			$parameters = array
 				(
 					'parameter' => array
@@ -419,8 +418,12 @@
 				$activity->set_responsible_user_name( $responsible_user );
 			}
 
+			$tabs = $this->make_tab_menu($activity_id);
+			
 			$data = array
 			(
+				'tabs'		 => $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view' 		 => 'activity_details',
 				'activity' => $activity
 			);
 
@@ -430,9 +433,7 @@
 				$data['parent_activity'] = $parent_activity;
 			}
 			
-			$activity_children = $this->so->get($activity->get_id());
-
-			self::render_template_xsl('activity/view_activity_item', $data);
+			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs'), $data);
 		}
 		
 		public function save()
@@ -508,5 +509,35 @@
 			);
 
 			return $user_array;
+		}
+		
+		function make_tab_menu($activity_id)
+		{
+			$tabs = array();
+
+			if($activity_id > 0){
+
+				$activity = $this->so->get_single($activity_id);
+
+				$tabs = array(
+						   array(
+							'label' => "1: " . lang('Activity details'),
+						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
+																				   													 'id' => $activity->get_id()))
+						), array(
+							'label' => "2: " . lang('Requirement allocation'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view',
+																				   													 'activity_id' => $activity->get_id()))
+						));
+			}else{
+				$tabs = array(
+						   array(
+							'label' => "1: " . lang('Activity details')
+						), array(
+							'label' => "2: " . lang('Requirement allocation')
+				));
+			}
+
+			return $tabs;
 		}
 	}
