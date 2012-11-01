@@ -222,6 +222,7 @@
 	        {key:"start_date", label:'Startdato', sortable:true}, 
 	        {key:"end_date", label:'Sluttdato', sortable:true},
 	     		{key:"responsible_user_name", label:'Ansvarlig', sortable:true},
+	     		{key:"status", label:'Status', sortable:true},
 	    ]; 
 			
 		YAHOO.portico.inlineTableHelper('sub-activities-container', requestUrl, myColumnDefs);
