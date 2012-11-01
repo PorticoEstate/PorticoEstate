@@ -135,7 +135,7 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'responsible_user_id',
+							'key' => 'responsible_user_name',
 							'label' => lang('Responsible user'),
 							'sortable' => false
 						),
@@ -296,16 +296,16 @@
 						
 						if($total_num_alloc == $total_num_required)
 						{
-							$status = "Krav dekket";
+							$status = "Behov dekket";
 						}
 						else
 						{
-							$status = "Mangler i krav (" . ($total_num_required - $total_num_alloc) . ")" ;
+							$status = "Udekket behov (" . ($total_num_required - $total_num_alloc) . ")" ;
 						}
 					}
 					else
 					{
-						$status = "Ingen registerte krav";
+						$status = "Ingen registerte behov";
 					}
 					
 					$activity_arr = $activity->serialize(); 
