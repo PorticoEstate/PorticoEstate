@@ -26,9 +26,8 @@
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_req_params )" />
 			</xsl:variable>
 			
-						
 			<h2 style="float:left;">Krav</h2>
-			<a style="float: left;margin-left: 724px;text-align: center;width: 120px;" id="" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
+			<a id="add_requirement_btn" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				

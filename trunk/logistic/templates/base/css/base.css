@@ -2361,3 +2361,18 @@ p.no_items_msg {
 #activity_tabview .yui-navset {
 	margin-left: 0;	
 }
+
+.yui-dt19-col-delete_link .yui-dt-liner, .yui-dt19-col-alloc_link .yui-dt-liner {
+	text-align: right;	
+}
+
+.yui-dt19-col-no_of_items .yui-dt-liner, .yui-dt19-col-allocated .yui-dt-liner {
+	text-align: center;
+}
+
+#add_requirement_btn {
+    float: left;
+    margin-left: 658px;
+    text-align: center;
+    width: 120px;
+}

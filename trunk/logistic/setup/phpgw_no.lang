@@ -65,10 +65,10 @@ Criterias	logistic	no	Kriterier
 Add criterias	logistic	no	Legg til kriterier
 favorites	logistic	no	Favoritter
 toggle as favorite	logistic	no	Legg til / fjern som favoritt
-Add allocation to requirement	logistic	no	Bestill ressurser til krav
-Delete requirement	logistic	no Slett krav
+Add allocation to requirement	logistic	no	Bestill ressurser til behov
+Delete requirement	logistic	no	Slett behov
 Allocate resources	logistic	no	Bestill ressurser
 Num allocated	logistic	no	Antall bestilte
 Status	logistic	no	Status
-Requirement allocation	logistic	no	Allokering av ressurser
+Requirement allocation	logistic	no	Bestilling av ressurser
 Activity details	logistic	no	Detaljer for aktivitet
