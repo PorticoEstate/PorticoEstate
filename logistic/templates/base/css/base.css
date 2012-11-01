@@ -2330,8 +2330,7 @@ p.no_items_msg {
 }
 
 #resource_alloc_wrp #btn_menu {
-	float:left;
-	margin-left: 20px;
+    margin-left: 747px;
 }
 
 #resource_alloc_wrp input[type="submit"] {
@@ -2361,4 +2360,8 @@ p.no_items_msg {
 
 #requirement-container table td{
 	padding: 5px 0;	
+}
+
+#activity_tabview .yui-navset {
+	margin-left: 0;	
 }

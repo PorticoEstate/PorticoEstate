@@ -18,10 +18,7 @@
 <xsl:template name="requirement_overview" xmlns:php="http://php.net/xsl">
 	<div id="resource_alloc_wrp" class="content-wrp">
 
-			<div id="paging"></div>
-
-			<h2>Krav</h2>
-			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
+			
 
 			<div id="btn_menu">
 				<xsl:variable name="add_requirement_url">
@@ -30,13 +27,17 @@
 				
 				<form action="{$add_requirement_url}" name="acl_form" id="acl_form" method="post">
 					<input type="hidden" name="activity_id" value="{activity/id}" />
-					<input class="btn" type="submit">
+					<input class="btn focus" type="submit">
 						<xsl:attribute name="value">
 							<xsl:value-of select="php:function('lang', 'Add requirement')" />
 						</xsl:attribute>
 					</input>
 				</form>
-				</div>
+			</div>
+
+			<h2>Krav</h2>
+			<div id="paging"></div>
+			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
 				
 			<h2 style="clear:both;">Allokerte ressurser</h2>
 			<div id="allocation-container"></div>
