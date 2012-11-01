@@ -63,7 +63,7 @@ contact	activitycalendar	no	Kontakt
 contact 1	activitycalendar	no	Kontakt 1
 contact 2	activitycalendar	no	Kontakt 2
 contact person	activitycalendar	no	Kontaktperson
-contact information	activitycalendar	no	Kontaktinformasjon 
+contact information	activitycalendar	no	Kontaktinformasjon
 cost	activitycalendar	no	Pris
 create	activitycalendar	no	Lagre
 created	activitycalendar	no	Opprettet
@@ -104,7 +104,7 @@ homepage	activitycalendar	no	Hjemmeside
 id	activitycalendar	no	ID
 inactivate	activitycalendar	no	Inaktivert
 inactive	activitycalendar	no	Inaktiv
-invoice information	activitycalendar	no	Fakturainformasjon 
+invoice information	activitycalendar	no	Fakturainformasjon
 responsible applicant	activitycalendar	no	Ansvarlig søker
 jan	activitycalendar	no	januar
 jul	activitycalendar	no	juli
@@ -415,7 +415,7 @@ state_helptext	activitycalendar	no	Status for aktiviteten. For at den skal vises
 organization_helptext	activitycalendar	no	Velg organisasjon eller registrer inn ny.<br/>Stå i feltet og skriv inn første bokstav for å få opp oversikt.
 group_helptext	activitycalendar	no	Velg gruppe/lag, eller ingen.<br/>Feltet vis i portal må være satt til JA om lag/gruppe skal komme opp i listen.
 criteria_label	activitycalendar	no	Valgkriterier/søkeord i portalen
-criteria_helptext	activitycalendar	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
+criteria_helptext	activitycalendar	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking.
 what	activitycalendar	no	HVA
 where_when	activitycalendar	no	HVOR/NÅR
 who	activitycalendar	no	HVEM
@@ -441,3 +441,4 @@ contact_person_1_mail	activitycalendar	no	Kontaktperson 1 epost
 contact_person_2_name	activitycalendar	no	Kontaktperson 2
 contact_person_2_phone	activitycalendar	no	Kontaktperson 2 tlf
 contact_person_2_mail	activitycalendar	no	Kontaktperson 2 epost
+reject	activitycalendar	no	Avvis organisasjon
