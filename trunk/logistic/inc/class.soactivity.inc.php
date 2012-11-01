@@ -215,7 +215,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
+		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $allrows)
 		{
 			$results = array();			// Array to store result objects
 			$map = array();				// Array to hold number of records per target object
@@ -258,7 +258,7 @@
 			}
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-			$ret = $this->read_tree($sql, $filters);
+			$ret = $this->read_tree($sql, $filters, $num_of_objects, $allrows);
 
 			return $ret;
 		}
@@ -299,7 +299,7 @@
 		 * array, never null. The array keys are the respective index numbers.
 		 */
 
-		public function read_tree($sql, $filters)
+		public function read_tree($sql, $filters, $num_of_objects = 0, $allrows = false)
 		{
 			if($filters['activity'])
 			{
@@ -352,19 +352,24 @@
 				return $result;
 			}
 
-			if(!$allrows)
+			if($num_of_objects)
 			{
-				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']:15;
-
-				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
-
-				$activity_tree = array_chunk($this->activity_tree, $num_rows);
-
-				$out = $activity_tree[$page];
+				$num_rows = $num_of_objects;
 			}
 			else
 			{
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			}
+
+			if($allrows)
+			{
 				$out = $this->activity_tree;
+			}
+			else
+			{
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+				$activity_tree = array_chunk($this->activity_tree, $num_rows);
+				$out = $activity_tree[$page];
 			}
 
 //------ End pagination
@@ -422,6 +427,7 @@
 				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
 				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$activity->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+//				$activity->set_responsible_user_name($GLOBALS['phpgw']->accounts->get($this->db->f('responsible_user_id'))->__toString());
 				$activity->set_responsible_user_id($this->unmarshal($this->db->f('responsible_user_id'), 'int'));
 				$activity->set_create_date($this->unmarshal($this->db->f('create_date'), 'int'));
 				$activity->set_create_user($this->unmarshal($this->db->f('create_user'), 'int'));
