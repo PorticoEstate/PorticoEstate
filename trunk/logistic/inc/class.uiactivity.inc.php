@@ -32,6 +32,7 @@
 	phpgw::import_class('logistic.sorequirement_resource_allocation');
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
+	phpgw::import_class('phpgwapi.jquery');
 
 	include_class('logistic', 'actvity');
 
@@ -49,7 +50,8 @@
 			'view' 			=> true,
 			'index' 		=> true,
 			'save' 			=> true,
-			'edit_favorite'	=> true
+			'edit_favorite'	=> true,
+			'view_resource_allocation'	=> true
 		);
 
 		public function __construct()
@@ -494,6 +496,110 @@
 			}
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.index'));	
 		}
+		
+		public function view_resource_allocation()
+		{
+			$activity_id = phpgw::get_var('activity_id');
+
+			$activity = $this->so->get_single($activity_id);
+			
+			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'text',
+								'text' => lang('search'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'select',
+							'label' => lang('select'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+						),
+						array(
+							'key' => 'start_date',
+							'label' => lang('Start date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'end_date',
+							'label' => lang('End date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'no_of_items',
+							'label' => lang('Num required'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'allocated',
+							'label' => lang('Num allocated'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'location_id',
+							'label' => lang('Resource type'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						),
+						array(
+							'key' => 'id',
+							'className' => 'requirement_id',
+							'hidden' => true
+						),
+						array(
+							'key' => 'delete_link',
+							'label' => lang('Delete requirement'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'alloc_link',
+							'label' => lang('Allocate resources'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'status',
+							'label' => lang('Status'),
+							'sortable' => false,
+						),
+					)
+				),
+			);
+			
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_jquery::load_widget('core');
+
+			$tabs = $this->make_tab_menu($activity_id);
+			
+			$data['tabs']		 	= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
+			$data['view'] 	 	= 'requirement_overview';
+			$data['activity'] = $activity;
+			
+			self::add_javascript('logistic', 'logistic', 'activity.js');
+			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
+			self::add_javascript('logistic', 'logistic', 'requirement.js');
+			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs'), $data);
+		}
 
 		private function get_user_array()
 		{
@@ -526,7 +632,7 @@
 																				   													 'id' => $activity->get_id()))
 						), array(
 							'label' => "2: " . lang('Requirement allocation'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.view',
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
 																				   													 'activity_id' => $activity->get_id()))
 						));
 			}else{

@@ -29,7 +29,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="activity_details" />
 		</xsl:when>
-		<xsl:when test="view = 'resource_allocation'">
+		<xsl:when test="view = 'requirement_overview'">
 			<xsl:choose>
 				<xsl:when test="activity/id != '' or activity/id != 0">
 					<h1 style="float:left;"> 
@@ -49,7 +49,7 @@
 			</xsl:choose>
 		
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="requirement_values" />
+			<xsl:call-template name="requirement_overview" />
 		</xsl:when>
 	</xsl:choose>
 </div>
