@@ -17,27 +17,20 @@
 
 <xsl:template name="requirement_overview" xmlns:php="http://php.net/xsl">
 	<div id="resource_alloc_wrp" class="content-wrp">
-
+	
+			<xsl:variable name="add_req_params">
+				<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
+				<xsl:value-of select="activity/id" />
+			</xsl:variable>
+			<xsl:variable name="add_req_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_req_params )" />
+			</xsl:variable>
 			
-
-			<div id="btn_menu">
-				<xsl:variable name="add_requirement_url">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.edit' )" />
-				</xsl:variable>
-				
-				<form action="{$add_requirement_url}" name="acl_form" id="acl_form" method="post">
-					<input type="hidden" name="activity_id" value="{activity/id}" />
-					<input class="btn focus" type="submit">
-						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'Add requirement')" />
-						</xsl:attribute>
-					</input>
-				</form>
-			</div>
-
-			<h2>Krav</h2>
-			<div id="paging"></div>
-			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
+						
+			<h2 style="float:left;">Krav</h2>
+			<a style="float: left;margin-left: 724px;text-align: center;width: 120px;" id="" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
+			<div style="clear:both;" id="paging"></div>
+			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
 			<h2 style="clear:both;">Allokerte ressurser</h2>
 			<div id="allocation-container"></div>

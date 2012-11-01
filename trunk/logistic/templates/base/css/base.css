@@ -2329,10 +2329,6 @@ p.no_items_msg {
 	padding: 20px;	
 }
 
-#resource_alloc_wrp #btn_menu {
-    margin-left: 747px;
-}
-
 #resource_alloc_wrp input[type="submit"] {
     font-size: 13px;
     margin-bottom: 1px;
