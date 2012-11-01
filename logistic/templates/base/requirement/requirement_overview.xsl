@@ -15,9 +15,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:call-template name="yui_phpgw_i18n"/>
-	
+<xsl:template name="requirement_overview" xmlns:php="http://php.net/xsl">
 	<div id="resource_alloc_wrp" class="content-wrp">
 
 			<div id="paging"></div>
@@ -43,10 +41,10 @@
 			<h2 style="clear:both;">Allokerte ressurser</h2>
 			<div id="allocation-container"></div>
 	</div>
-	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="datasource-def" />
 </xsl:template>
 
-<xsl:template name="datasource-definition">
+<xsl:template name="datasource-def">
 
 	<script>
 	YAHOO.util.Event.onDOMReady(function(){

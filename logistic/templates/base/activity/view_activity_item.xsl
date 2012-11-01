@@ -4,20 +4,6 @@
 <xsl:template name="activity_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
-<div class="content-wrp">
-	<xsl:choose>
-		<xsl:when test="parent_activity/id &gt; 0">
-			<h1> 
-				<xsl:value-of select="parent_activity/name" disable-output-escaping="yes"/>::<xsl:value-of select="php:function('lang', 'Add sub activity')" />
-			</h1>
-		</xsl:when>
-		<xsl:otherwise>
-			<h1> 
-				<xsl:value-of select="php:function('lang', 'Add activity')" />
-			</h1>
-		</xsl:otherwise>
-	</xsl:choose>
-	
 	<div class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">
@@ -198,7 +184,6 @@
 			</form>
 		</div>
 	</div>
-</div>
 </xsl:template>
 
 <xsl:template name="datasource-definition">
