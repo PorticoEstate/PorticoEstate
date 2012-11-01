@@ -633,6 +633,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$city = $org_info['postaddress'];
 		$activity_id = 1;
 		$show_in_portal = 1;
+		$customer_internal = 0;
 
 		$columns[] = 'name';
 		$columns[] = 'homepage';
@@ -645,6 +646,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$columns[] = 'district';
 		$columns[] = 'organization_number';
 		$columns[] = 'activity_id';
+		$columns[] = 'customer_internal';
 		$columns[] = 'show_in_portal';
 		$cols = implode(',',$columns);
 
@@ -659,6 +661,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "'{$district}'";
 		$values[] = "'{$orgnr}'";
 		$values[] = $this->marshal($activity_id, 'int');
+		$values[] = $customer_internal;
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
 
@@ -895,6 +898,25 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 
 		return $result;
+	}
+
+	//$org->set_change_type("rejected");
+	function reject_organization($org_id)
+	{
+		if(isset($org_id))
+		{
+			$query = "UPDATE activity_organization set change_type='rejected' where id={$org_id}";
+			$result = $this->db->query($query, __LINE__, __FILE__);
+			if(isset($result))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
 	}
 }
 ?>
