@@ -148,7 +148,7 @@
 			}
 			if($custom_fields)
 			{
-				$values = $this->custom->prepare($values, 'property',$this->acl_location, $data['view']);
+				$values = $this->custom->prepare($values, 'property', $this->acl_location, $data['view']);
 			}
 			return $values;
 		}
