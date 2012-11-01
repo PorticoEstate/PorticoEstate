@@ -2350,9 +2350,6 @@ p.no_items_msg {
     margin: 0;
     padding: 0;
 }
-.yui-skin-sam .yui-dt table {
-    border: none;
-}
 
 #requirement-container table td{
 	padding: 5px 0;	
@@ -2383,4 +2380,17 @@ p.no_items_msg {
     margin-top: 14px;
     text-align: center;
     width: 120px;
+}
+
+#sub-activities-container th.yui-dt-sortable div {
+    background: #6292C5;
+}
+
+#sub-activities-container .yui-dt table {
+    border: 1px solid #98BFE8;
+}
+
+#sub-activities-container .yui-dt th a {
+    color: #F9FCFE;
+    font-weight: bold;
 }

@@ -210,7 +210,7 @@
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 		var myColumnDefs = [ 
-	        {key:"id", sortable:true},
+	        {key:"id", label:'Id', sortable:true},
 	        {key:"name", label:'Aktivitetsnavn', sortable:true},
 	        {key:"start_date", label:'Startdato', sortable:true}, 
 	        {key:"end_date", label:'Sluttdato', sortable:true},
