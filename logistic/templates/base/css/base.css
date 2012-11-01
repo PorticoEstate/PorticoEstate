@@ -2358,7 +2358,7 @@ p.no_items_msg {
 	padding: 5px 0;	
 }
 
-#activity_tabview .yui-navset {
+#activity-tabview .yui-navset {
 	margin-left: 0;	
 }
 
@@ -2370,9 +2370,17 @@ p.no_items_msg {
 	text-align: center;
 }
 
-#add_requirement_btn {
+#add-requirement-btn {
     float: left;
     margin-left: 658px;
+    text-align: center;
+    width: 120px;
+}
+
+#add-sub-activity-btn {
+    float: left;
+    margin-left: 474px;
+    margin-top: 14px;
     text-align: center;
     width: 120px;
 }

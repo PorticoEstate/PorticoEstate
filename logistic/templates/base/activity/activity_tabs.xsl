@@ -2,7 +2,7 @@
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-<div class="yui-navset yui-navset-top" id="activity_tabview">
+<div class="yui-navset yui-navset-top" id="activity-tabview">
 
 	<xsl:choose>
 		<xsl:when test="view = 'activity_details'">
