@@ -2376,29 +2376,37 @@ p.no_items_msg {
 
 #add-requirement-btn {
     float: left;
-    margin-left: 669px;
+    margin-left: 715px;
     text-align: center;
     width: 120px;
 }
 
 #add-sub-activity-btn {
     float: left;
-    margin-left: 510px;
+    margin-left: 494px;
     margin-top: 14px;
     text-align: center;
-    width: 120px;
+    width: 136px;
 }
 
-#sub-activities-container th.yui-dt-sortable div {
+#sub-activities-container th div, #requirement-container th div {
     background: #6292C5;
 }
 
-#sub-activities-container .yui-dt table {
+#sub-activities-container .yui-dt table, #requirement-container .yui-dt table {
     border: 1px solid #98BFE8;
+}
+
+#sub-activities-container .yui-dt table {
     width: 800px;
 }
 
-#sub-activities-container .yui-dt th a {
+#requirement-container .yui-dt table {
+    width: 900px;
+}
+	
+#sub-activities-container th a, #requirement-container th a,
+#sub-activities-container th span, #requirement-container th span {
     color: #F9FCFE;
     font-weight: bold;
 }

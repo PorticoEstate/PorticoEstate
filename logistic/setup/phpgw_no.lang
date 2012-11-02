@@ -30,7 +30,7 @@ Responsible user	logistic	no	Ansvarlig
 my_activities	logistic	no	Mine aktiviteter
 Project type name updated		logistic	no	Prosjekttypenavn oppdatert
 Add activity	logistic	no	Legg til aktivitet
-Add sub activity	logistic	no	Legg til subaktivitet
+Add sub activity	logistic	no	Legg til underaktivitet
 Entity	logistic	no	Entitet
 Category	logistic	no	Kategori
 Attributes	logistic	no	Attributter
@@ -73,3 +73,4 @@ Status	logistic	no	Status
 Requirement allocation	logistic	no	Bestilling av ressurser
 Activity details	logistic	no	Detaljer for aktivitet
 Status requirement	logistic	no	Status behov
+select	logistic	no	Velg 
