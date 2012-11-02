@@ -178,7 +178,7 @@
 			$project_type_array = $this->so->get_project_types();
 
 			$data = array(
-				'datatable_name'	=> lang('project'),
+				'datatable_name'	=> lang('Overview projects'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

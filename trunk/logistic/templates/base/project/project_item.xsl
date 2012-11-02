@@ -10,7 +10,7 @@
 	<h1>
 			<xsl:value-of select="php:function('lang', 'Project')" />
 	</h1>
-	
+		
 	<div id="project_details" class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">
@@ -126,22 +126,21 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="cancel_project" value="{$lang_cancel}" title = "{$lang_cancel}" />
+							
+							<xsl:variable name="view_projects_url">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.index' )" />
+							</xsl:variable>
+							<a class="btn" href="{$view_projects_url}"><xsl:value-of select="php:function('lang', 'Cancel')" /></a>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
 							<input type="submit" name="edit_project" value="{$lang_edit}" title = "{$lang_edit}" />
 							
-							<xsl:variable name="add_new_project_params">
-								<xsl:text>menuaction:logistic.uiproject.edit, project_id:</xsl:text>
-								<xsl:value-of select="project/id" />
+							<xsl:variable name="view_projects_url_2">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.index' )" />
 							</xsl:variable>
-							<xsl:variable name="add_new_project_url">
-								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_new_project_params )" />
-							</xsl:variable>
-							<a class="btn non-focus" href="{$add_new_project_url}"><xsl:value-of select="php:function('lang', 'Add project')" /></a>
+							<a class="btn" href="{$view_projects_url_2}">Vis prosjektoversikt</a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
