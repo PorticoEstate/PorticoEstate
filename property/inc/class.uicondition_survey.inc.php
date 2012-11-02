@@ -285,6 +285,9 @@
 			
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator.js/gallery-formvalidator-min.js');
+
 			self::render_template_xsl(array('condition_survey'), $data);
 		}
 		
