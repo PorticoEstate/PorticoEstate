@@ -23,7 +23,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img height="17" src="logistic/images/arrow_left.png" />
+						<img src="logistic/images/arrow_right.png" />
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 						
@@ -37,7 +37,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img height="17" src="logistic/images/arrow_left.png" />
+						<img src="logistic/images/arrow_right.png" />
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 				</xsl:otherwise>
