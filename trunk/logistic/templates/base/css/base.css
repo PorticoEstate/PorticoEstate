@@ -865,6 +865,12 @@ ul.row li{
   color: #333333;
 }
 
+.btn.non-focus {
+    background: none repeat scroll 0 0 #A0C8F2;
+    border: 1px solid #74B0EF;
+    color: #0A3E74;
+}
+
 .btn.focus, .btn_m.focus {
   background: none repeat scroll 0 0 #F57056;
   border-color: #EE836F -moz-use-text-color #CB563F;
@@ -2356,7 +2362,8 @@ p.no_items_msg {
 }
 
 #activity-tabview .yui-navset {
-	margin-left: 0;	
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .yui-dt19-col-delete_link .yui-dt-liner, .yui-dt19-col-alloc_link .yui-dt-liner {
@@ -2369,14 +2376,14 @@ p.no_items_msg {
 
 #add-requirement-btn {
     float: left;
-    margin-left: 658px;
+    margin-left: 669px;
     text-align: center;
     width: 120px;
 }
 
 #add-sub-activity-btn {
     float: left;
-    margin-left: 474px;
+    margin-left: 510px;
     margin-top: 14px;
     text-align: center;
     width: 120px;
@@ -2388,6 +2395,7 @@ p.no_items_msg {
 
 #sub-activities-container .yui-dt table {
     border: 1px solid #98BFE8;
+    width: 800px;
 }
 
 #sub-activities-container .yui-dt th a {
