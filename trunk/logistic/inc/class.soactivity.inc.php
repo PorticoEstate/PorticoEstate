@@ -281,7 +281,13 @@
 
 			$parent_id = $this->db->f('parent_activity_id');
 			$name = $this->db->f('name', true);
-			$path = array($name);
+			$path = array();
+			$path[] = array
+			(
+				'id'	=> $node,
+				'name'	=> $name
+			);
+
 			if ($parent_id)
 			{
 				$path = array_merge($this->get_path($parent_id), $path);

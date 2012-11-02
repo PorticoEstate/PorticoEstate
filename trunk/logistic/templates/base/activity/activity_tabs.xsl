@@ -4,10 +4,12 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <div class="yui-navset yui-navset-top" id="activity-tabview">
 
+	<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />	
+
 	<xsl:choose>
 		<xsl:when test="view = 'activity_details'">
 			<xsl:call-template name="yui_phpgw_i18n"/>
-		
+
 			<xsl:choose>
 				<xsl:when test="activity/id != '' or activity/id != 0">
 					<h1 style="float:left;"> 
