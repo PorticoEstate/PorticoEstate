@@ -342,6 +342,7 @@
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
 			
+			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
 			
 			$data = array
 			(
@@ -351,8 +352,8 @@
 				'allocation_suggestions' 	=> $allocation_suggestions,
 				'editable' 								=> true
 			);
-		
-			self::render_template_xsl(array('allocation/allocation_suggestions'), $data);
+			
+			self::render_template_xsl(array('allocation/book_resources'), $data);
 		}
 
 		public function save()

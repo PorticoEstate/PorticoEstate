@@ -4,12 +4,13 @@
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div id="resource-allocation" class="yui-navset yui-navset-top">
 	<h1>
-		<xsl:value-of select="php:function('lang', 'Allocation of requirement for')"/> <xsl:value-of select="activity/name"/>
+		<xsl:value-of select="php:function('lang', 'Booking of resources')"/> for <xsl:value-of select="activity/name"/>
 	</h1>
 	
 	<div class="content-wrp">
 		
 		<div id="requirement-wrp">
+			<h3>Detaljer for behov</h3>
 			<ul>
 				<li>
 					<label for="start_date">Startdato</label><span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
@@ -24,27 +25,34 @@
 				</li>
 			</ul>
 			
-			<h3>Kriterier</h3>
-				<xsl:for-each select="view_criterias_array">
-					<ul>
-						<li>
-							<label><xsl:value-of select="cust_attribute_data/input_text"/></label>
-							<span style="margin-right:5px;"><xsl:value-of select="operator"/></span>
-							<xsl:choose>
-								<xsl:when test="cust_attribute_data/column_info/type = 'LB'">
-									<xsl:for-each select="cust_attribute_data/choice">
-										<xsl:if test="//value = id">
+			<h3 style="margin-bottom: 10px;">Kriterier</h3>
+				<xsl:choose>
+					<xsl:when test="view_criterias_array/child::node()">
+						<xsl:for-each select="view_criterias_array">
+							<ul>
+								<li>
+									<label><xsl:value-of select="cust_attribute_data/input_text"/></label>
+									<span style="margin-right:5px;"><xsl:value-of select="operator"/></span>
+									<xsl:choose>
+										<xsl:when test="cust_attribute_data/column_info/type = 'LB'">
+											<xsl:for-each select="cust_attribute_data/choice">
+												<xsl:if test="//value = id">
+													<span><xsl:value-of select="value"/></span>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:when>
+										<xsl:otherwise>
 											<span><xsl:value-of select="value"/></span>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<span><xsl:value-of select="value"/></span>
-								</xsl:otherwise>
-							</xsl:choose>
-						</li>
-					</ul>
-				</xsl:for-each>
+										</xsl:otherwise>
+									</xsl:choose>
+								</li>
+							</ul>
+						</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<p style="margin-top:0;">Ingen kriterier lagt til</p>
+						</xsl:otherwise>
+				</xsl:choose>
 		</div>
 			
 			<xsl:variable name="action_url">

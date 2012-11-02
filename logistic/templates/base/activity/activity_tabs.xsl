@@ -49,6 +49,8 @@
 		<xsl:when test="view = 'requirement_overview'">
 			<xsl:choose>
 				<xsl:when test="activity/id != '' or activity/id != 0">
+					
+					<!-- =========== HEADING ============== -->
 					<h1 style="float:left;"> 
 						<span>
 							<xsl:value-of select="php:function('lang', 'Add criterias')" />
@@ -57,11 +59,25 @@
 							<xsl:value-of select="activity/name" />
 						</span>
 					</h1>
+					
+					<!-- =========== BREADCRUMB ============== -->
+					<div id="breadcrumb">
+						<img src="logistic/images/arrow_right.png" />
+						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
+					</div>
 				</xsl:when>
 				<xsl:otherwise>
+					
+					<!-- =========== HEADING ============== -->
 					<h1 style="float:left;"> 
 						<xsl:value-of select="php:function('lang', 'Add criterias')" />
 					</h1>
+					
+					<!-- =========== BREADCRUMB ============== -->
+					<div id="breadcrumb">
+						<img src="logistic/images/arrow_right.png" />
+						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
+					</div>
 				</xsl:otherwise>
 			</xsl:choose>
 		
