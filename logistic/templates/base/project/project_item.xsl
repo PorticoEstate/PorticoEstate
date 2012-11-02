@@ -29,7 +29,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/name" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi navn for prosjektet</div>
 							<input type="text" name="name" id="name" value="{project/name}" size="100"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -47,7 +47,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/project_type_id" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi prosjekttype</div>
 							<select id="project_type_id" name="project_type_id">
 								<xsl:apply-templates select="options"/>
 							</select>
@@ -67,7 +67,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/description" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi startdato for aktiviteten</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Gi en beskrivelse av prosjektet</div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="project/description" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>
@@ -87,9 +87,16 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-							<xsl:variable name="lang_new_activity"><xsl:value-of select="php:function('lang', 't_new_activity')" /></xsl:variable>
 							<input type="submit" name="edit_project" value="{$lang_edit}" title = "{$lang_edit}" />
-							<input type="submit" name="new_activity" value="{$lang_new_activity}" title = "{$lang_new_activity}" />
+							
+							<xsl:variable name="add_new_activity_params">
+								<xsl:text>menuaction:logistic.uiactivity.edit, project_id:</xsl:text>
+								<xsl:value-of select="project/id" />
+							</xsl:variable>
+							<xsl:variable name="add_new_activity_url">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_new_activity_params )" />
+							</xsl:variable>
+							<a class="btn non-focus" href="{$add_new_activity_url}"><xsl:value-of select="php:function('lang', 'Add activity')" /></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
