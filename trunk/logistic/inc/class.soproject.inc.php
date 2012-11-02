@@ -58,14 +58,32 @@
 		}
 
 		protected function add(&$project)
-		{
+		{		
+			$cols = array(
+				'name',
+				'project_type_id',
+				'description',
+				'create_user',
+				'create_date',
+				'start_date',
+				'end_date'
+			);
+
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$now = time();
-			$name = $project->get_name();
-			$description = $project->get_description();
-			$type_id = $project->get_project_type_id();
+			
+			$values = array(
+				$this->marshal($project->get_name(), 'string'),
+				$this->marshal($project->get_project_type_id(), 'int'),
+				$this->marshal($project->get_description(), 'string'),
+				$user_id,
+				$now,
+				$this->marshal($project->get_start_date(), 'int'),
+				$this->marshal($project->get_end_date(), 'int')
+			);
 
-			$sql = "INSERT INTO lg_project (name, description, project_type_id, create_user, create_date) VALUES ('$name','$description',$type_id, $user_id, $now)";
+			$sql = 'INSERT INTO lg_project (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
@@ -87,7 +105,9 @@
 			$values = array(
 				'name = ' . $this->marshal($project->get_name(), 'string'),
 				'description = ' . $this->marshal($project->get_description(), 'string'),
-				'project_type_id = ' . $this->marshal($project->get_project_type_id(), 'int')
+				'project_type_id = ' . $this->marshal($project->get_project_type_id(), 'int'),
+				'start_date = ' . $this->marshal($project->get_start_date(), 'int'),
+				'end_date = ' . $this->marshal($project->get_end_date(), 'int'),
 			);
 
 			$result = $this->db->query('UPDATE lg_project SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -206,6 +226,8 @@
 				{
 					$project->set_project_type_label($this->get_project_type_label($this->unmarshal($this->db->f('project_type_id'), 'int')));
 				}
+				$project->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$project->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 			}
 
 			return $project;

@@ -106,7 +106,7 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => lang('t_new_activity'),
+								'value' => lang('Add activity'),
 								'href' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
 								'class' => 'new_item'
 							),
@@ -117,15 +117,15 @@
 					'source' => self::link(array('menuaction' => 'logistic.uiactivity.index', 'phpgw_return_as' => 'json', 'filter' => phpgw::get_var('filter', 'int'))),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Activity name'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
+						),		
+						array(
+							'key' => 'name',
+							'label' => lang('Activity name'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'project_name',
