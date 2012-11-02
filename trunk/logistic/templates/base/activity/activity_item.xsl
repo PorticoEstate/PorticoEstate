@@ -20,7 +20,7 @@
 		</xsl:otherwise>
 	</xsl:choose>
 	
-	<div class="content-wrp">
+	<div id="activity_details" class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiactivity.save')" />
