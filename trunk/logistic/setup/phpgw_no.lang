@@ -75,3 +75,4 @@ Activity details	logistic	no	Detaljer for aktivitet
 Status requirement	logistic	no	Status behov
 select	logistic	no	Velg
 Add project	logistic	no	Nytt prosjekt
+Booking of resources	logistic	no	Bestilling av ressurser

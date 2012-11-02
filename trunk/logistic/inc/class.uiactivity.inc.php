@@ -200,7 +200,7 @@
 						'text' 			=> lang('t_view_requirements'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uirequirement.index'
+							'menuaction'	=> 'logistic.uiactivity.view_resource_allocation'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
