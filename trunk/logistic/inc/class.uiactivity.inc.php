@@ -409,8 +409,9 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
-
-			self::render_template_xsl(array('activity/add_activity_item'), $data);
+			
+			self::add_javascript('logistic', 'logistic', 'activity.js');
+			self::render_template_xsl('activity/add_activity_item', $data);
 		}
 		
 		public function view()
@@ -574,7 +575,7 @@
 						),
 						array(
 							'key' => 'status',
-							'label' => lang('Status'),
+							'label' => lang('Status requirement'),
 							'sortable' => false,
 						),
 						array(

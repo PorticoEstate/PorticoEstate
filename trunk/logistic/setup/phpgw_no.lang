@@ -72,3 +72,4 @@ Num allocated	logistic	no	Antall bestilte
 Status	logistic	no	Status
 Requirement allocation	logistic	no	Bestilling av ressurser
 Activity details	logistic	no	Detaljer for aktivitet
+Status requirement	logistic	no	Status behov
