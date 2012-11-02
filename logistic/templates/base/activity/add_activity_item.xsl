@@ -4,7 +4,9 @@
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
 
-	<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />			
+	<div id="breadcrumb">
+		<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
+	</div>			
 
 	<xsl:choose>
 		<xsl:when test="parent_activity/id &gt; 0">
