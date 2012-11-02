@@ -209,15 +209,15 @@
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Project name'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
+						),		
+						array(
+							'key' => 'name',
+							'label' => lang('Project name'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'description',

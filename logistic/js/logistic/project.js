@@ -29,5 +29,4 @@ $(document).ready(function(){
 		var wrpElem = $(this).parents("dd");
 		$(wrpElem).find(".help_text").fadeOut();
 	});
-	
 });
