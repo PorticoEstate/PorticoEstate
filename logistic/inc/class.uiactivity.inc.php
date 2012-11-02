@@ -402,7 +402,8 @@
 				'responsible_users' => $accounts,
 				'activities' => $activities,
 				'activity' => $activity,
-				'editable' => true
+				'editable' => true,
+				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
 			);
 			
 			if($parent_activity)
@@ -422,7 +423,7 @@
 		
 		public function view()
 		{
-			$activity_id = phpgw::get_var('id');
+			$activity_id = phpgw::get_var('id', 'int');
 
 			if ($activity_id && is_numeric($activity_id))
 			{
@@ -431,15 +432,17 @@
 				$responsible_user = $this->so->get_responsible_user( $activity->get_responsible_user_id() );
 
 				$activity->set_responsible_user_name( $responsible_user );
+				$breadcrumb = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view', 'id');
 			}
 
 			$tabs = $this->make_tab_menu($activity_id);
 			
 			$data = array
 			(
-				'tabs'		 => $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view' 		 => 'activity_details',
-				'activity' => $activity
+				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view' 			=> 'activity_details',
+				'activity'		=> $activity,
+				'breadcrumb'	=> $breadcrumb
 			);
 
 			if($activity->get_parent_id() > 0)
@@ -513,7 +516,6 @@
 		public function view_resource_allocation()
 		{
 			$activity_id = phpgw::get_var('activity_id');
-
 			$activity = $this->so->get_single($activity_id);
 			
 			$data = array(
@@ -607,6 +609,7 @@
 			$data['tabs']		 	= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
 			$data['view'] 	 	= 'requirement_overview';
 			$data['activity'] = $activity;
+			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
 			
 			self::add_javascript('logistic', 'logistic', 'activity.js');
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
@@ -658,5 +661,24 @@
 			}
 
 			return $tabs;
+		}
+
+		private function _get_breadcrumb($activity_id, $menuaction, $id_name = 'id')
+		{
+			if(!$activity_id)
+			{
+				return;
+			}
+			$path = $this->so->get_path($activity_id);
+			$level = count($path) - 1;
+			$breadcrumb_array = array();
+
+			for ($i=0;$i<$level;$i++)
+			{
+				$_link = self::link(array('menuaction' => $menuaction, $id_name => $path[$i]['id']));
+				$breadcrumb_array[] = "<a href=\"{$_link}\">{$path[$i]['name']}</a>";
+			}
+			$breadcrumb_array[] = $path[$level]['name'];
+			return implode(' > ', $breadcrumb_array);
 		}
 	}
