@@ -2293,9 +2293,16 @@ p.no_items_msg {
 	margin:0 0 10px;
 }
 
-#resource-allocation form{
-	margin: 20px;
+#resource-list {
 	border: 1px solid #B0D9FF;
+}
+
+#resource-allocation form {
+	padding: 20px;	
+}
+
+#resource-allocation form input[type=submit]{
+	margin-top: 10px;	
 }
 
 #resource-list .resource {
@@ -2325,8 +2332,8 @@ p.no_items_msg {
 }
 
 #resource-list .resource.heading {
-    background: none repeat scroll 0 0 #B0D9FF;
-    color: #092845;
+    background: none repeat scroll 0 0 #6292C5;
+    color: #FFFFFF;
     font-weight: bold;
     padding: 5px 20px;
 }
