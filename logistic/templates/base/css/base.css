@@ -2413,7 +2413,7 @@ p.no_items_msg {
     width: 800px;
 }
 
-#requirement-container .yui-dt table {
+#requirement-container .yui-dt table, #allocation-container .yui-dt table {
     width: 900px;
 }
 	
