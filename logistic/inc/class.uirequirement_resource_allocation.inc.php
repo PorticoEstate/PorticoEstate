@@ -153,10 +153,15 @@
 							'label' => lang('Resource id'),
 							'sortable' => true
 						),
+						array(
+							'key' => 'delete_link',
+							'label' => lang('Delete'),
+							'sortable' => true
+						),
 					)
 				),
-			);
-
+			);			
+			
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
@@ -224,10 +229,14 @@
 			{
 				if (isset($result))
 				{
-					$rows[] = $result->serialize();
+					$requirement = $result->serialize();
+					
+					$delete_href = self::link(array('menuaction' => 'logistic.uirequirementresource_allocation.delete', 'id' => $requirement['id']));
+					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">Slett</a>";
+					$rows[] = $requirement;
 				}
 			}
-
+			
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -379,8 +388,10 @@
 				
 				$resource_alloc_id = $this->so->store( $resource_alloc );
 			}
+			
+			$activity_id = $this->so_activity->get_single($requirement->get_activity_id()); 
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'id' => $allocation_id));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $activity_id));
 		}
 		
 		function convert_to_array($object_list)

@@ -2374,13 +2374,18 @@ p.no_items_msg {
 }
 
 .yui-dt19-col-delete_link .yui-dt-liner, .yui-dt19-col-alloc_link .yui-dt-liner {
-	text-align: right;	
+	text-align: center;	
 }
 
 .yui-dt19-col-no_of_items .yui-dt-liner, .yui-dt19-col-allocated .yui-dt-liner {
 	text-align: center;
 }
 
+
+#allocation-container .yui-dt-col-delete_link .yui-dt-liner {
+	text-align: center;
+}
+	
 #add-requirement-btn {
     float: left;
     margin-left: 715px;

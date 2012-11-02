@@ -317,6 +317,8 @@
 					$requirement = $this->so->get_single($requirement_id);
 				}
 
+				$activity = $this->so_activity->get_single($requirement->get_activity_id());
+				
 				$location_info = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
 				
 				$tabs = $this->make_tab_menu($requirement_id);
@@ -326,6 +328,7 @@
 					'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 					'view'				=> "requirement_details",
 					'requirement' => $requirement,
+					'activity' 	=> $activity,
 					'location' 		=> $location_info,
 				);
 
