@@ -10,7 +10,7 @@
 	<div class="content-wrp">
 		
 		<div id="requirement-wrp">
-			<h3>Detaljer for behov</h3>
+			<h3 style="margin: 0 0 10px 0;">Detaljer for behov</h3>
 			<ul>
 				<li>
 					<label for="start_date">Startdato</label><span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
@@ -89,7 +89,7 @@
 					</xsl:for-each>
 				</div>			
 				
-				<input type="submit" value="Lagre" />
+				<input type="submit" value="Lagre bestilling" />
 			</form>
 	</div>
 </div>

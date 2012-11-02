@@ -76,3 +76,4 @@ Status requirement	logistic	no	Status behov
 select	logistic	no	Velg
 Add project	logistic	no	Nytt prosjekt
 Booking of resources	logistic	no	Bestilling av ressurser
+Requirement to activity	logistic	no	Krav for aktiviteten

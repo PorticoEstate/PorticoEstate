@@ -91,7 +91,8 @@
 			        {key:"fm_bim_item_name", label:'Navn på ressurs', sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
 			        {key:"location_code", label:'Lokasjonskode', sortable:true},
-			        {key:"fm_bim_item_address", label:'Adresse', sortable:true}
+			        {key:"fm_bim_item_address", label:'Adresse', sortable:true},
+			        {key:"delete_link", label:'Slett bestilling', sortable:true}
 			    ]; 
 			
 				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);
