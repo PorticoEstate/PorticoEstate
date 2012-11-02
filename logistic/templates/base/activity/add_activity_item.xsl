@@ -20,7 +20,7 @@
 		</xsl:otherwise>
 	</xsl:choose>
 	
-	<div class="content-wrp">
+	<div id="activity_details" class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiactivity.save')" />
@@ -63,8 +63,8 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/name" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
+							<div class="help_text">Angi navn for aktiviteten</div>
 							<input type="text" name="name" id="name" value="{activity/name}" size="100"/>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="activity/name" />
@@ -81,8 +81,8 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/description" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
+							<div class="help_text">Gi en beskrivelse av aktiviteten</div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="activity/description" disable-output-escaping="yes"/></textarea>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="activity/description" disable-output-escaping="yes"/>
@@ -99,12 +99,12 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/start_date" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
+								<div class="help_text">Angi startdato for aktiviteten</div>
 								<input class="date" id="start_date" name="start_date" type="text">
 						    	<xsl:if test="activity/start_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
-					    	<span class="help_text line">Angi startdato for aktiviteten</span>
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
@@ -121,12 +121,12 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/end_date" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
+								<div class="help_text">Angi sluttdato for aktiviteten</div>
 								<input class="date" id="end_date" name="end_date" type="text">
 						    	<xsl:if test="activity/end_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
-					    	<span class="help_text line">Angi startdato for aktiviteten</span>
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
@@ -143,6 +143,7 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/responsible_user_id" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
+								<div class="help_text">Angi hvilken person som skal være ansvarlig for aktiviteten</div>
 								<select name="responsible_user_id">
 									<option value="">Velg ansvarlig bruker</option>
 					        <xsl:for-each select="responsible_users">
@@ -164,7 +165,6 @@
 					        	</xsl:choose>
 					        </xsl:for-each>
 					      </select>
-					      <span class="help_text line">Angi startdato for aktiviteten</span>
 					      </xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="activity/responsible_user_name"/></span>
