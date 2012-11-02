@@ -176,14 +176,12 @@
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">
-							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_activity" value="{$lang_save}" title = "{$lang_save}" />
 							<input type="submit" name="cancel_activity" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="params">
-								<xsl:text>menuaction:logistic.uiactivity.edit, id:</xsl:text>
+								<xsl:text>menuaction:logistic.uiactivity.edit, parent_id:</xsl:text>
 								<xsl:value-of select="activity/id" />
 							</xsl:variable>
 							<xsl:variable name="edit_url">
