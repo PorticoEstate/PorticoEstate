@@ -7,6 +7,31 @@ $(document).ready(function(){
 		
 		updateAllocationTable( requirement_id );
     });
+	
+	$("#allocation-container table .btn-sm.delete").live("click", function(e){
+		var thisRow = $(this).parents("tr");
+		
+		var requestUrl = $(this).attr("href");
+		
+		$.ajax({
+			  type: 'POST',
+			  url: requestUrl,
+			  success: function(data) {
+				  var obj = jQuery.parseJSON(data);
+	    		  
+	    		  if(obj.status == "deleted"){
+	    			  $(thisRow).remove();
+				  }
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown) {
+	      	    if (XMLHttpRequest.status === 401) {
+	      	      location.href = '/';
+	      	    }
+			  }
+		});
+		
+		return false;
+    });
 });
 
 

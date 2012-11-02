@@ -179,6 +179,21 @@
 
 			return $allocation;
 		}
+		
+		function delete($resource_allocation_id)
+		{
+			$resource_allocation_id = (int) $resource_allocation_id;
+			$status = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE id = $resource_allocation_id");
+					
+			if( $status )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public static function get_instance()
 		{
