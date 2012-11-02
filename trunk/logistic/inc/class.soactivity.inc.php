@@ -433,7 +433,6 @@
 				$activity->set_project_id($this->unmarshal($this->db->f('project_id'), 'int'));
 				$activity->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 				$activity->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
-//				$activity->set_responsible_user_name($GLOBALS['phpgw']->accounts->get($this->db->f('responsible_user_id'))->__toString());
 				$activity->set_responsible_user_id($this->unmarshal($this->db->f('responsible_user_id'), 'int'));
 				$activity->set_create_date($this->unmarshal($this->db->f('create_date'), 'int'));
 				$activity->set_create_user($this->unmarshal($this->db->f('create_user'), 'int'));
