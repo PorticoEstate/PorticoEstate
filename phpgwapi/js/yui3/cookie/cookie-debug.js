@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('cookie', function(Y) {
+YUI.add('cookie', function (Y, NAME) {
 
 /**
  * Utilities for cookie management
@@ -503,5 +502,4 @@ YUI.add('cookie', function(Y) {
     };
 
 
-
-}, '3.3.0' ,{requires:['yui-base']});
+}, '3.7.3', {"requires": ["yui-base"]});

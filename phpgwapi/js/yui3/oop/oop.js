@@ -1,33 +1,27 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('oop', function(Y) {
+YUI.add('oop', function (Y, NAME) {
 
 /**
- * Supplies object inheritance and manipulation utilities.  This adds
- * additional functionaity to what is provided in yui-base, and the
- * methods are applied directly to the YUI instance.  This module
- * is required for most YUI components.
- * @module oop
- */
+Adds object inheritance and manipulation utilities to the YUI instance. This
+module is required by most YUI components.
 
-/**
- * The following methods are added to the YUI instance
- * @class YUI~oop
- */
+@module oop
+**/
 
-    var L = Y.Lang,
+var L            = Y.Lang,
         A = Y.Array,
         OP = Object.prototype,
         CLONE_MARKER = '_~yuim~_',
-        EACH = 'each',
-        SOME = 'some',
 
-        dispatch = function(o, f, c, proto, action) {
+    hasOwn   = OP.hasOwnProperty,
+    toString = OP.toString;
+
+function dispatch(o, f, c, proto, action) {
             if (o && o[action] && o !== Y) {
                 return o[action].call(o, f, c);
             } else {
@@ -40,112 +34,134 @@ YUI.add('oop', function(Y) {
                         return Y.Object[action](o, f, c, proto);
                 }
             }
-        };
+}
 
+/**
+Augments the _receiver_ with prototype properties from the _supplier_. The
+receiver may be a constructor function or an object. The supplier must be a
+constructor function.
 
-    /**
-     * Applies prototype properties from the supplier to the receiver.
-     * The receiver can be a constructor or an instance.
-     * @method augment
-     * @param {function} r  the object to receive the augmentation.
-     * @param {function} s  the object that supplies the properties to augment.
-     * @param {boolean} ov if true, properties already on the receiver
-     * will be overwritten if found on the supplier.
-     * @param {string[]} wl  a whitelist.  If supplied, only properties in
-     * this list will be applied to the receiver.
-     * @param {Array | Any} args arg or arguments to apply to the supplier
-     * constructor when initializing.
-     * @return {object} the augmented object.
-     *
-     * @todo constructor optional?
-     * @todo understanding what an instance is augmented with
-     * @todo best practices for overriding sequestered methods.
-     */
-    Y.augment = function(r, s, ov, wl, args) {
-        var sProto = s.prototype,
-            newProto = null,
-            construct = s,
-            a = (args) ? Y.Array(args) : [],
-            rProto = r.prototype,
-            target = rProto || r,
-            applyConstructor = false,
-            sequestered, replacements;
+If the _receiver_ is an object, then the _supplier_ constructor will be called
+immediately after _receiver_ is augmented, with _receiver_ as the `this` object.
 
-        // working on a class, so apply constructor infrastructure
-        if (rProto && construct) {
-            sequestered = {};
+If the _receiver_ is a constructor function, then all prototype methods of
+_supplier_ that are copied to _receiver_ will be sequestered, and the
+_supplier_ constructor will not be called immediately. The first time any
+sequestered method is called on the _receiver_'s prototype, all sequestered
+methods will be immediately copied to the _receiver_'s prototype, the
+_supplier_'s constructor will be executed, and finally the newly unsequestered
+method that was called will be executed.
+
+This sequestering logic sounds like a bunch of complicated voodoo, but it makes
+it cheap to perform frequent augmentation by ensuring that suppliers'
+constructors are only called if a supplied method is actually used. If none of
+the supplied methods is ever used, then there's no need to take the performance
+hit of calling the _supplier_'s constructor.
+
+@method augment
+@param {Function|Object} receiver Object or function to be augmented.
+@param {Function} supplier Function that supplies the prototype properties with
+  which to augment the _receiver_.
+@param {Boolean} [overwrite=false] If `true`, properties already on the receiver
+  will be overwritten if found on the supplier's prototype.
+@param {String[]} [whitelist] An array of property names. If specified,
+  only the whitelisted prototype properties will be applied to the receiver, and
+  all others will be ignored.
+@param {Array|any} [args] Argument or array of arguments to pass to the
+  supplier's constructor when initializing.
+@return {Function} Augmented object.
+@for YUI
+**/
+Y.augment = function (receiver, supplier, overwrite, whitelist, args) {
+    var rProto    = receiver.prototype,
+        sequester = rProto && supplier,
+        sProto    = supplier.prototype,
+        to        = rProto || receiver,
+
+        copy,
+        newPrototype,
+        replacements,
+        sequestered,
+        unsequester;
+
+    args = args ? Y.Array(args) : [];
+
+    if (sequester) {
+        newPrototype = {};
             replacements = {};
-            newProto = {};
+        sequestered  = {};
 
-            // sequester all of the functions in the supplier and replace with
-            // one that will restore all of them.
-            Y.Object.each(sProto, function(v, k) {
-                replacements[k] = function() {
+        copy = function (value, key) {
+            if (overwrite || !(key in rProto)) {
+                if (toString.call(value) === '[object Function]') {
+                    sequestered[key] = value;
 
-            // overwrite the prototype with all of the sequestered functions,
-            // but only if it hasn't been overridden
-                        for (var i in sequestered) {
-                        if (sequestered.hasOwnProperty(i) &&
-                                (this[i] === replacements[i])) {
-                            this[i] = sequestered[i];
+                    newPrototype[key] = replacements[key] = function () {
+                        return unsequester(this, value, arguments);
+                    };
+                } else {
+                    newPrototype[key] = value;
                         }
                     }
-
-                    // apply the constructor
-                    construct.apply(this, a);
-
-                    // apply the original sequestered function
-                    return sequestered[k].apply(this, arguments);
                 };
 
-                if ((!wl || (k in wl)) && (ov || !(k in this))) {
-                    if (L.isFunction(v)) {
-                        // sequester the function
-                        sequestered[k] = v;
+        unsequester = function (instance, fn, fnArgs) {
+            // Unsequester all sequestered functions.
+            for (var key in sequestered) {
+                if (hasOwn.call(sequestered, key)
+                        && instance[key] === replacements[key]) {
 
-// replace the sequestered function with a function that will
-// restore all sequestered functions and exectue the constructor.
-                        this[k] = replacements[k];
-                    } else {
-                        this[k] = v;
+                    instance[key] = sequestered[key];
                     }
                 }
 
-            }, newProto, true);
+            // Execute the supplier constructor.
+            supplier.apply(instance, args);
 
-        // augmenting an instance, so apply the constructor immediately
+            // Finally, execute the original sequestered function.
+            return fn.apply(instance, fnArgs);
+        };
+
+        if (whitelist) {
+            Y.Array.each(whitelist, function (name) {
+                if (name in sProto) {
+                    copy(sProto[name], name);
+                }
+            });
         } else {
-            applyConstructor = true;
+            Y.Object.each(sProto, copy, null, true);
+        }
         }
 
-        Y.mix(target, newProto || sProto, ov, wl);
+    Y.mix(to, newPrototype || sProto, overwrite, whitelist);
 
-        if (applyConstructor) {
-            s.apply(target, a);
+    if (!sequester) {
+        supplier.apply(to, args);
         }
 
-        return r;
-    };
+    return receiver;
+};
 
-    /**
-     * Applies object properties from the supplier to the receiver.  If
-     * the target has the property, and the property is an object, the target
-     * object will be augmented with the supplier's value.  If the property
-     * is an array, the suppliers value will be appended to the target.
+/**
+ * Copies object properties from the supplier to the receiver. If the target has
+ * the property, and the property is an object, the target object will be
+ * augmented with the supplier's value.
+ *
      * @method aggregate
-     * @param {function} r  the object to receive the augmentation.
-     * @param {function} s  the object that supplies the properties to augment.
-     * @param {boolean} ov if true, properties already on the receiver
+ * @param {Object} receiver Object to receive the augmentation.
+ * @param {Object} supplier Object that supplies the properties with which to
+ *     augment the receiver.
+ * @param {Boolean} [overwrite=false] If `true`, properties already on the receiver
      * will be overwritten if found on the supplier.
-     * @param {string[]} wl a whitelist.  If supplied, only properties in
-     * this list will be applied to the receiver.
-     * @return {object} the extended object.
+ * @param {String[]} [whitelist] Whitelist. If supplied, only properties in this
+ *     list will be applied to the receiver.
+ * @return {Object} Augmented object.
      */
-    Y.aggregate = function(r, s, ov, wl) {
+Y.aggregate = function(r, s, ov, wl) {
         return Y.mix(r, s, ov, wl, 0, true);
-    };
+};
 
-    /**
+/**
      * Utility to set up the prototype, constructor and superclass properties to
      * support an inheritance strategy that can chain constructors and methods.
      * Static members will not be inherited.
@@ -157,7 +173,7 @@ YUI.add('oop', function(Y) {
      * @param {object} sx static properties to add/override.
      * @return {object} the extended object.
      */
-    Y.extend = function(r, s, px, sx) {
+Y.extend = function(r, s, px, sx) {
         if (!s || !r) {
             Y.error('extend failed, verify dependencies');
         }
@@ -184,12 +200,12 @@ YUI.add('oop', function(Y) {
         }
 
         return r;
-    };
+};
 
-    /**
+/**
      * Executes the supplied function for each item in
      * a collection.  Supports arrays, objects, and
-     * Y.NodeLists
+ * NodeLists
      * @method each
      * @param {object} o the object to iterate.
      * @param {function} f the function to execute.  This function
@@ -199,15 +215,15 @@ YUI.add('oop', function(Y) {
      * iterated on objects.
      * @return {YUI} the YUI instance.
      */
-    Y.each = function(o, f, c, proto) {
-        return dispatch(o, f, c, proto, EACH);
-    };
+Y.each = function(o, f, c, proto) {
+    return dispatch(o, f, c, proto, 'each');
+};
 
-    /**
+/**
      * Executes the supplied function for each item in
      * a collection.  The operation stops if the function
      * returns true. Supports arrays, objects, and
-     * Y.NodeLists.
+ * NodeLists.
      * @method some
      * @param {object} o the object to iterate.
      * @param {function} f the function to execute.  This function
@@ -218,18 +234,29 @@ YUI.add('oop', function(Y) {
      * @return {boolean} true if the function ever returns true,
      * false otherwise.
      */
-    Y.some = function(o, f, c, proto) {
-        return dispatch(o, f, c, proto, SOME);
-    };
+Y.some = function(o, f, c, proto) {
+    return dispatch(o, f, c, proto, 'some');
+};
 
-    /**
-     * Deep obj/array copy.  Function clones are actually
+/**
+ * Deep object/array copy.  Function clones are actually
      * wrappers around the original function.
      * Array-like objects are treated as arrays.
      * Primitives are returned untouched.  Optionally, a
      * function can be provided to handle other data types,
      * filter keys, validate values, etc.
      *
+ * NOTE: Cloning a non-trivial object is a reasonably heavy operation, due to
+ * the need to recurrsively iterate down non-primitive properties. Clone
+ * should be used only when a deep clone down to leaf level properties
+ * is explicitly required.
+ *
+ * In many cases (for example, when trying to isolate objects used as 
+ * hashes for configuration properties), a shallow copy, using Y.merge is 
+ * normally sufficient. If more than one level of isolation is required, 
+ * Y.merge can be used selectively at each level which needs to be 
+ * isolated from the original without going all the way to leaf properties.
+ *
      * @method clone
      * @param {object} o what to clone.
      * @param {boolean} safe if true, objects will not have prototype
@@ -249,7 +276,7 @@ YUI.add('oop', function(Y) {
      * multiple clones.
      * @return {Array|Object} the cloned object.
      */
-    Y.clone = function(o, safe, f, c, owner, cloned) {
+Y.clone = function(o, safe, f, c, owner, cloned) {
 
         if (!L.isObject(o)) {
             return o;
@@ -324,10 +351,10 @@ if ((k || k === 0) && (!f || (f.call(c || this, v, k, this, o) !== false))) {
         }
 
         return o2;
-    };
+};
 
 
-    /**
+/**
      * Returns a function that will execute the supplied function in the
      * supplied object's context, optionally adding any additional
      * supplied parameters to the beginning of the arguments collection the
@@ -341,7 +368,7 @@ if ((k || k === 0) && (!f || (f.call(c || this, v, k, this, o) !== false))) {
      * function is executed with.
      * @return {function} the wrapped function.
      */
-    Y.bind = function(f, c) {
+Y.bind = function(f, c) {
         var xargs = arguments.length > 2 ?
                 Y.Array(arguments, 2, true) : null;
         return function() {
@@ -350,9 +377,9 @@ if ((k || k === 0) && (!f || (f.call(c || this, v, k, this, o) !== false))) {
                     xargs.concat(Y.Array(arguments, 0, true)) : arguments;
             return fn.apply(c || fn, args);
         };
-    };
+};
 
-    /**
+/**
      * Returns a function that will execute the supplied function in the
      * supplied object's context, optionally adding any additional
      * supplied parameters to the end of the arguments the function
@@ -366,7 +393,7 @@ if ((k || k === 0) && (!f || (f.call(c || this, v, k, this, o) !== false))) {
      * arguments collection supplied to the function.
      * @return {function} the wrapped function.
      */
-    Y.rbind = function(f, c) {
+Y.rbind = function(f, c) {
         var xargs = arguments.length > 2 ? Y.Array(arguments, 2, true) : null;
         return function() {
             var fn = L.isString(f) ? c[f] : f,
@@ -374,8 +401,7 @@ if ((k || k === 0) && (!f || (f.call(c || this, v, k, this, o) !== false))) {
                     Y.Array(arguments, 0, true).concat(xargs) : arguments;
             return fn.apply(c || fn, args);
         };
-    };
+};
 
 
-
-}, '3.3.0' );
+}, '3.7.3', {"requires": ["yui-base"]});
