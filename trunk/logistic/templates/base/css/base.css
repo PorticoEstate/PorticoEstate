@@ -2416,3 +2416,7 @@ p.no_items_msg {
   font-size: 16px;
   margin-bottom: 1em;
 }
+
+#breadcrumb img{
+	height: 14px;
+}

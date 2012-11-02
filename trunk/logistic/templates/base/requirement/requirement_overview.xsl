@@ -19,7 +19,7 @@
 	<div id="resource_alloc_wrp" class="content-wrp">
 	
 			<xsl:variable name="add_req_params">
-				<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
+				<xsl:text>menuaction:logistic.uirequirement.edit, activity_id:</xsl:text>
 				<xsl:value-of select="activity/id" />
 			</xsl:variable>
 			<xsl:variable name="add_req_url">
