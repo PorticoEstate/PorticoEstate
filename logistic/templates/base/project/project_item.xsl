@@ -2,6 +2,7 @@
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
@@ -75,6 +76,50 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
+					<dt>
+						<label for="start_date">Startdato</label>
+					</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="editable">
+								<xsl:if test="project/error_msg_array/start_date != ''">
+									<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/start_date" /></xsl:variable>
+									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+								</xsl:if>
+								<input class="date" id="start_date" name="start_date" type="text">
+						    	<xsl:if test="project/start_date != ''">
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(project/start_date))"/></xsl:attribute>
+						    	</xsl:if>
+					    	</input>
+					    	<span class="help_text line">Angi startdato for prosjektet</span>
+							</xsl:when>
+							<xsl:otherwise>
+							<span><xsl:value-of select="php:function('date', $date_format, number(project/start_date))"/></span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
+					<dt>
+						<label for="end_date">Sluttdato</label>
+					</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="editable">
+								<xsl:if test="project/error_msg_array/end_date != ''">
+									<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/end_date" /></xsl:variable>
+									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
+								</xsl:if>
+								<input class="date" id="end_date" name="end_date" type="text">
+						    	<xsl:if test="project/end_date != ''">
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(project/end_date))"/></xsl:attribute>
+						    	</xsl:if>
+					    	</input>
+					    	<span class="help_text line">Angi sluttdato for prosjektet</span>
+							</xsl:when>
+							<xsl:otherwise>
+							<span><xsl:value-of select="php:function('date', $date_format, number(project/end_date))"/></span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
 				</dl>
 
 				<div class="form-buttons">
@@ -89,14 +134,14 @@
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
 							<input type="submit" name="edit_project" value="{$lang_edit}" title = "{$lang_edit}" />
 							
-							<xsl:variable name="add_new_activity_params">
-								<xsl:text>menuaction:logistic.uiactivity.edit, project_id:</xsl:text>
+							<xsl:variable name="add_new_project_params">
+								<xsl:text>menuaction:logistic.uiproject.edit, project_id:</xsl:text>
 								<xsl:value-of select="project/id" />
 							</xsl:variable>
-							<xsl:variable name="add_new_activity_url">
-								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_new_activity_params )" />
+							<xsl:variable name="add_new_project_url">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_new_project_params )" />
 							</xsl:variable>
-							<a class="btn non-focus" href="{$add_new_activity_url}"><xsl:value-of select="php:function('lang', 'Add activity')" /></a>
+							<a class="btn non-focus" href="{$add_new_project_url}"><xsl:value-of select="php:function('lang', 'Add project')" /></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

@@ -38,16 +38,16 @@
 
 		private $so;
 		public $public_functions = array(
-			'query' => true,
-			'index' => true,
-			'project_types' => true,
-			'view' => true,
-			'view_project_type' => true,
-			'edit_project_type' => true,
-			'edit_project_type_name' => true,
-			'add' => true,
-			'edit' => true,
-			'save' => true
+			'query' 									=> true,
+			'index' 									=> true,
+			'project_types' 					=> true,
+			'view' 										=> true,
+			'view_project_type' 			=> true,
+			'edit_project_type' 		 	=> true,
+			'edit_project_type_name' 	=> true,
+			'add' 										=> true,
+			'edit' 										=> true,
+			'save' 										=> true
 		);
 
 		public function __construct()
@@ -228,6 +228,16 @@
 						array(
 							'key' => 'project_type_label',
 							'label' => lang('Project type'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'start_date',
+							'label' => lang('Start date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'end_date',
+							'label' => lang('End date'),
 							'sortable' => false
 						),
 						array(
@@ -514,8 +524,11 @@
 
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 			
 			phpgwapi_jquery::load_widget('core');
+			
 			self::add_javascript('logistic', 'logistic', 'project.js');
 			self::render_template_xsl(array('project/project_item'), $data);
 		}
@@ -534,7 +547,7 @@
 			}
 			
 			$project->populate();
-			
+
 			if( $project->validate() )
 			{
 				$project_id = $this->so->store($project);
