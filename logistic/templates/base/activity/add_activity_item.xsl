@@ -33,8 +33,8 @@
 					<xsl:if test="parent_activity/id &gt; 0">
 					<dt>		
 						<xsl:if test="editable">
-							<div style="margin-bottom: 1em;width: 88%;" class="select-box">
-								<label>Velg en annen hovedaktivitet</label>
+							<div style="margin-bottom: 1em;">
+								<label style="display:block;">Velg en annen hovedaktivitet</label>
 								<select id="select_activity" name="parent_activity_id" class="selectLocation">
 									<option>Velg aktivitet</option>
 									<xsl:for-each select="activities">
