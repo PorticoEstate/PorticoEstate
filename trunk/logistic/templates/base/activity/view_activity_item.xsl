@@ -3,6 +3,8 @@
 
 	<div class="content-wrp">
 		<div id="details">
+		
+			<h3 style="margin: 0 0 5px 0;">Detaljer</h3>
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiactivity.save')" />
 			</xsl:variable>
@@ -154,6 +156,8 @@
 					</dd>
 				</dl>
 				
+				<!-- =========  SUBACTIVITIES  =========  -->
+				
 				<xsl:variable name="add_sub_activity_params">
 					<xsl:text>menuaction:logistic.uiactivity.edit, parent_id:</xsl:text>
 					<xsl:value-of select="activity/id" />
@@ -162,7 +166,7 @@
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_sub_activity_params )" />
 				</xsl:variable>
 				
-				<h2 style="clear:left; float:left;margin: 0; padding: 20px 0 5px;">Underaktiviteter</h2>
+				<h3 style="clear:left; float:left;margin: 0; padding: 10px 0 5px;">Underaktiviteter</h3>
 				<a id="add-sub-activity-btn" class="btn focus" href="{$add_sub_activity_url}"><xsl:value-of select="php:function('lang', 'Add sub activity')" /></a>
 				<div style="clear:both;" id="sub-activities-container"></div>		
 				<xsl:call-template name="datasource-definition" />
