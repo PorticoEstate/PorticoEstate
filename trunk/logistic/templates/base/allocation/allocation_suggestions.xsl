@@ -1,6 +1,3 @@
-<!-- $Id: activity_item.xsl 10096 2012-10-03 07:10:49Z vator $ -->
-<!-- item  -->
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
