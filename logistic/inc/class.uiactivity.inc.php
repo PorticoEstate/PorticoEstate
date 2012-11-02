@@ -104,6 +104,12 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							),
+							array(
+								'type' => 'link',
+								'value' => lang('t_new_activity'),
+								'href' => self::link(array('menuaction' => 'logistic.uiactivity.add')),
+								'class' => 'new_item'
+							),
 						),
 					),
 				),
