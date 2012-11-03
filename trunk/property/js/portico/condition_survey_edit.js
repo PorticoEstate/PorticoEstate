@@ -1,26 +1,22 @@
-            YUI().use(
-            'gallery-formvalidator',
-            function(Y){
 
-var loader = new Y.Loader({
+var arURLParts = strBaseURL.split('?');
+var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
+
+YUI({
     //Don't combine the files
     combine: true,
     //Ignore things that are already loaded (in this process)
-    ignoreRegistered: true,
+    ignoreRegistered: false,
     //Set the base path
-    base: 'http://localhost/~sn5607/savannah_trunk/phpgwapi/js/yui3/',
+	comboBase: comboBase,//'http://localhost/~sn5607/savannah_trunk/phpgwapi/inc/yui-combo-master/combo.php?',
+    base: '',
     //And the root
-    root: '.',
+    root: '',
     //Require your deps
-    require: [ 'node', 'yql' ]
-});
-
-var out = loader.resolve(true);
-
-//This will be an object of js and css files needed to complete this request.
-//console.log(out);
-
-
+    require: [ 'node', 'yql', 'dom']
+}).use(
+	'gallery-formvalidator', 
+		function(Y) {	
                 Y.on("domready", function () {
 
                     var form = new Y.Validator(
@@ -48,8 +44,8 @@ var out = loader.resolve(true);
                     Y.Event.attach('click',function(){form.clear();},'#clearButton');
                     Y.Event.attach('click',function(){form2.clear();},'#clearButton2');
                 });
-            });
-
+ 
+});
 
 $(document).ready(function(){
 

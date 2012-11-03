@@ -1,6 +1,6 @@
 <!-- $Id:$ -->
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 
 <!--<xsl:call-template name="yui_phpgw_i18n"/>-->
 <div class="yui-navset yui-navset-top">
