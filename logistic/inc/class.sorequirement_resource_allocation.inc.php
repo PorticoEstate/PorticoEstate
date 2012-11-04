@@ -153,7 +153,7 @@
 			{
 				$cols .= "allocation.*, ";
 				$cols .= "phpgw_locations.descr AS resource_type_descr, ";
-				$cols .= "fm_bim_item.location_code AS location_code, xpath('//address/text()', fm_bim_item.xml_representation) AS fm_bim_item_address, xpath('//navn/text()', fm_bim_item.xml_representation) AS fm_bim_item_name ";
+				$cols .= "fm_bim_item.location_code AS location_code, (xpath('//address/node()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_address, (xpath('//navn[1]/text()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_name ";
 			}
 						
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -174,7 +174,10 @@
 				$allocation->set_resource_type_descr($this->unmarshal($this->db->f('resource_type_descr'), 'string'));
 				$allocation->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$allocation->set_fm_bim_item_address($this->unmarshal($this->db->f('fm_bim_item_address'), 'string'));
-				$allocation->set_fm_bim_item_name($this->unmarshal($this->db->f('fm_bim_item_name'), 'string'));
+				
+				$fm_bim_name = $this->unmarshal( $this->db->f('fm_bim_item_name'), 'string');
+				
+				$allocation->set_fm_bim_item_name($fm_bim_name);
 			}
 
 			return $allocation;
