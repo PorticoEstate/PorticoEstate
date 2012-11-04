@@ -378,14 +378,22 @@
 					'label' => lang('View_documents_for_procedure')
 				));
 
+				$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+				$GLOBALS['phpgw']->jqcal->add_listener('revision_date');
+
+				$end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date() ? $procedure->get_end_date():'');
+				$revision_date =  date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date() ? $procedure->get_revision_date():'');
+
+
 				$data = array
 				(
 					'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 					'view'					=> "view_procedure",
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
-					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
-					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
-					'revision_date'			=> $GLOBALS['phpgw']->yuical->add_listener('revision_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_revision_date())?$procedure->get_revision_date():'')),
+					'start_date'			=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date() ? $procedure->get_start_date():time()),
+					'end_date'				=> $end_date ? $end_date : '',
+					'revision_date'			=> $revision_date ? $revision_date : '',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
 					//'control_area'				=> array('options' => $control_area_options),
