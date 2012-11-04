@@ -172,12 +172,9 @@
 				
 				$entry['allocated'] = $num_allocated;
 				
-				$href = self::link(array('menuaction' => 'logistic.uirequirement.delete', 'id' => $entry['id']));
-				$entry['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Slett</a>";
-				
 				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
 				$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
-				$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Bestill</a>";
+				$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 			}
 
 			// ... add result data
@@ -276,11 +273,6 @@
 							'key' => 'id',
 							'className' => 'requirement_id',
 							'hidden' => true
-						),
-						array(
-							'key' => 'delete_link',
-							'label' => lang('Delete requirement'),
-							'sortable' => false,
 						),
 						array(
 							'key' => 'alloc_link',
