@@ -3,7 +3,7 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div id="resource-allocation" class="yui-navset yui-navset-top">
-	<h1>
+	<h1 style="margin-bottom:10px;">
 		<xsl:value-of select="php:function('lang', 'Booking of resources')"/> for <xsl:value-of select="activity/name"/>
 	</h1>
 	
@@ -14,7 +14,7 @@
 		<xsl:variable name="view_resources_url">
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
 	</xsl:variable>
-	<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+	<a style="margin-left:0;margin-bottom:5px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
 		<xsl:value-of select="php:function('lang', 'View resources overview')" />
 	</a>
 	
