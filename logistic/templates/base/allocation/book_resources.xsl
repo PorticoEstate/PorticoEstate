@@ -7,6 +7,17 @@
 		<xsl:value-of select="php:function('lang', 'Booking of resources')"/> for <xsl:value-of select="activity/name"/>
 	</h1>
 	
+	<xsl:variable name="view_resources_params">
+		<xsl:text>menuaction:logistic.uiactivity.view_resource_allocation, activity_id:</xsl:text>
+			<xsl:value-of select="activity/id" />
+		</xsl:variable>
+		<xsl:variable name="view_resources_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
+	</xsl:variable>
+	<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+		<xsl:value-of select="php:function('lang', 'View resources overview')" />
+	</a>
+	
 	<div class="content-wrp">
 		
 		<div id="requirement-wrp">
