@@ -6,11 +6,19 @@
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
+	<xsl:choose>
+		<xsl:when test="project/id != '' or project/id != 0">
+			<h1>
+				<xsl:value-of select="php:function('lang', 'Edit project')" />
+			</h1>
+		</xsl:when>
+		<xsl:otherwise>
+			<h1>
+				<xsl:value-of select="php:function('lang', 'Add project')" />
+			</h1>
+		</xsl:otherwise>
+	</xsl:choose>
 	
-	<h1>
-			<xsl:value-of select="php:function('lang', 'Project')" />
-	</h1>
-		
 	<div id="project_details" class="content-wrp">
 		<div id="details">
 			<xsl:variable name="action_url">

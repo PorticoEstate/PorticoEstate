@@ -81,7 +81,7 @@
 			$user_array = $this->get_user_array();
 
 			$data = array(
-				'datatable_name'	=> lang('activity'),
+				'datatable_name'	=> lang('Overview activities'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
