@@ -333,6 +333,12 @@
 					
 					$activity_arr['status'] = $status;
 					
+					
+					$href = self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_arr['id']));
+					$activity_arr['id'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
+					$activity_arr['name'] = "<a href=\"{$href}\">" . $activity_arr['name'] . "</a>";
+					
+					
 					$rows[] = $activity_arr;
 				}
 			}
@@ -567,11 +573,11 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'logistic.uirequirement.index', 'activity_id' => $activity_id, 'phpgw_return_as' => 'json')),
 					'field' => array(
-						array(
+						/*array(
 							'key' => 'select',
 							'label' => lang('select'),
 							'sortable' => false,
-						),
+						),*/
 						array(
 							'key' => 'id',
 							'label' => lang('ID'),
