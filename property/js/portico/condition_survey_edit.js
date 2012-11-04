@@ -19,6 +19,7 @@ YUI({
 		function(Y) {	
                 Y.on("domready", function () {
 
+  /*
                     var form = new Y.Validator(
                         {
                             form:'basicExample1',
@@ -41,6 +42,17 @@ YUI({
                             incorrectIndicatorText:'<span class="validator">&nbsp;</span>'
                         }
                     );
+*/
+                   var form3 = new Y.Validator(
+                        {
+                            form:'form',
+                            defaultIncorrectIndicatorCss:'validator',
+                            defaultCorrectIndicatorCss:'indicator',
+                            createCorrectIndicator:true,
+                            createIncorrectIndicator:true
+                        }
+                    );
+
                     Y.Event.attach('click',function(){form.clear();},'#clearButton');
                     Y.Event.attach('click',function(){form2.clear();},'#clearButton2');
                 });
