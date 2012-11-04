@@ -53,7 +53,7 @@
 					<!-- =========== HEADING ============== -->
 					<h1 style="float:left;"> 
 						<span>
-							<xsl:value-of select="php:function('lang', 'Add criterias')" />
+							<xsl:value-of select="php:function('lang', 'Overview for activity')" />
 						</span>
 						<span style="margin-left:5px;">
 							<xsl:value-of select="activity/name" />
