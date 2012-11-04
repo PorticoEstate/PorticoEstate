@@ -391,6 +391,10 @@
 					$parent_activity = $this->so->get_single( $parent_activity_id );
 					$activity->set_project_id( $parent_activity->get_project_id() );
 				}
+				else
+				{
+					$projects = $this->so_project->get();
+				}
 			}
 
 			if($activity->get_parent_id() > 0)
@@ -414,6 +418,11 @@
 			if($project)
 			{
 				$data['project'] = $project;
+			}
+			
+			if($projects)
+			{
+				$data['projects'] = $projects;
 			}
 			
 			if($parent_activity)

@@ -1,15 +1,20 @@
 $(document).ready(function(){
-	$("#select_activity").change(function () {
+	$("#select_parent_activity").change(function () {
 		 var parent_id = $(this).val();
 		 var thisForm = $(this).closest("form");
-		 var activity_id = $(thisForm).find("input[name=activity_id]").val();
-		 var activity_id = $(thisForm).find("input[name=activity_id]").val();
+		 $(thisForm).find("input[name=parent_activity_id]").val(parent_id);
+
+		 alert(activity_id);
 		 
-		 var oArgs = {menuaction:'logistic.uiactivity.edit'};
-		 var baseUrl = phpGWLink('index.php', oArgs, false);
-		 var requestUrl = baseUrl + "&parent_id=" + parent_id + "&activity_id=" + activity_id;
-			 
-		 window.location.href = requestUrl;
+	});
+	
+	$("#select_project").change(function () {
+		 var project_id = $(this).val();
+		 var thisForm = $(this).closest("form");
+		 $(thisForm).find("input[name=project_id]").val(project_id);
+
+		 alert(project_id);
+		 
 	});
 	
 	$("#activity_details input").focus(function(e){

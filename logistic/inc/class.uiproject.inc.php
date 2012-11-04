@@ -247,7 +247,7 @@
 						),
 						array(
 							'key' => 'add_activity_link',
-							'label' => lang('Delete'),
+							'label' => lang('Add activity'),
 							'sortable' => false
 						),
 						array(

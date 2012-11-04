@@ -11,7 +11,7 @@
 				<span style="margin-left:5px;"><xsl:value-of select="project/name" /></span>
 			</h1>
 		</xsl:when>
-		<xsl:when test="activity/id != '' or activity/id != 0">
+		<xsl:when test="activity/id != '' and activity/id != 0">
 			<h1>
 				<xsl:value-of select="php:function('lang', 'Edit activity')" />
 			</h1>
@@ -34,13 +34,12 @@
 				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
-					<xsl:choose>
-						<xsl:when test="parent_activity/id &gt; 0">
+				  <xsl:choose>
+						<xsl:when test="(editable) and (parent_activity/id &gt; 0)">
 							<dt>		
-								<xsl:if test="editable">
-									<div style="display:none;margin-bottom: 1em;">
+									<div style="margin-bottom: 1em;">
 										<label style="display:block;">Velg en annen hovedaktivitet</label>
-										<select id="select_activity" name="parent_activity_id" class="selectLocation">
+										<select id="select_parent_activity" name="parent_activity_id">
 											<option>Velg aktivitet</option>
 											<xsl:for-each select="activities">
 							        	<option value="{id}">
@@ -54,19 +53,17 @@
 										  </xsl:for-each>
 										</select>					
 									</div>
-									</xsl:if>
 								</dt>
-						</xsl:when>
-						<xsl:otherwise>
+						  </xsl:when>
+						  <xsl:otherwise>
 							<dt>		
-								<xsl:if test="editable">
 									<div style="margin-bottom: 1em;">
-										<label style="display:block;">Er aktiviteten en underaktivitet?</label>
-										<select id="select_activity" name="parent_activity_id" class="selectLocation">
-											<option>Velg hovedaktivitet</option>
-											<xsl:for-each select="activities">
+										<label style="display:block;">Velg et annet prosjekt for aktiviteten </label>
+										<select id="select_project" name="select_project">
+											<option>Velg prosjekt</option>
+											<xsl:for-each select="projects">
 							        	<option value="{id}">
-							        		<xsl:if test="activity/parent_id = id">
+							        		<xsl:if test="project/id = project_id">
 								        		<xsl:attribute name="selected">
 							    						selected
 							   						</xsl:attribute>
@@ -76,10 +73,9 @@
 										  </xsl:for-each>
 										</select>					
 									</div>
-									</xsl:if>
 								</dt>
-						</xsl:otherwise>	
-					</xsl:choose>
+						  </xsl:otherwise>
+					  </xsl:choose>
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang','Activity name')" /></label>
 					</dt>

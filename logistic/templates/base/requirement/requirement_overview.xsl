@@ -26,12 +26,12 @@
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_req_params )" />
 			</xsl:variable>
 			
-			<h2 style="float:left;">Krav</h2>
+			<h2 style="float:left;"><xsl:value-of select="php:function('lang', 'Requirement')" /></h2>
 			<a id="add-requirement-btn" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
-			<h2 style="clear:both;">Tildelte ressurser</h2>
+			<h2 style="clear:both;"><xsl:value-of select="php:function('lang', 'Allocated resouces')" /><span style="margin-left:350px;font-size:14px;">(<xsl:value-of select="php:function('lang', 'Click on table above to get allocations')" />)</span></h2>
 			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-def" />
