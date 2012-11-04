@@ -626,6 +626,11 @@
 							'key' => 'alloc_link',
 							'label' => lang('Allocate resources'),
 							'sortable' => false,
+						),
+						array(
+							'key' => 'edit_requirement_link',
+							'label' => lang('Edit requirement'),
+							'sortable' => false,
 						)
 					)
 				),
