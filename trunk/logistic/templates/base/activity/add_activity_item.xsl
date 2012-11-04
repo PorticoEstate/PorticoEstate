@@ -5,6 +5,12 @@
 <div class="yui-navset yui-navset-top">
 
 	<xsl:choose>
+		<xsl:when test="project/id != '' or project/id != 0">
+			<h1>
+				<xsl:value-of select="php:function('lang', 'Add activity to project')" />
+				<span style="margin-left:5px;"><xsl:value-of select="project/name" /></span>
+			</h1>
+		</xsl:when>
 		<xsl:when test="activity/id != '' or activity/id != 0">
 			<h1>
 				<xsl:value-of select="php:function('lang', 'Edit activity')" />
