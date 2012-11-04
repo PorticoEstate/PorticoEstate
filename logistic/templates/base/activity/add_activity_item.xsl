@@ -38,9 +38,9 @@
 						<xsl:when test="(editable) and (parent_activity/id &gt; 0)">
 							<dt>		
 									<div style="margin-bottom: 1em;">
-										<label style="display:block;">Velg en annen hovedaktivitet</label>
+										<label style="display:block;">Velg en annen hovedaktivitet for denne underaktiviteten</label>
 										<select id="select_parent_activity" name="parent_activity_id">
-											<option>Velg aktivitet</option>
+											<option>Velg annen hovedaktivitet</option>
 											<xsl:for-each select="activities">
 							        	<option value="{id}">
 							        		<xsl:if test="activity/parent_id = id">
@@ -60,7 +60,7 @@
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;">Velg et annet prosjekt for aktiviteten </label>
 										<select id="select_project" name="select_project">
-											<option>Velg prosjekt</option>
+											<option>Velg annet prosjekt</option>
 											<xsl:for-each select="projects">
 							        	<option value="{id}">
 							        		<xsl:if test="project/id = project_id">

@@ -390,6 +390,9 @@
 					$activity->set_parent_id( $parent_activity_id );
 					$parent_activity = $this->so->get_single( $parent_activity_id );
 					$activity->set_project_id( $parent_activity->get_project_id() );
+					
+					$activity->set_start_date($parent_activity->get_start_date());
+					$activity->set_end_date($parent_activity->get_end_date());
 				}
 				else
 				{
