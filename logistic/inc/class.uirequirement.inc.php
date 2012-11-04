@@ -161,20 +161,25 @@
 				$filters = array('requirement_id' => $entry['id']);
 				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
 				
+				$entry['allocated'] = $num_allocated;
+				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
+					
 				if($num_allocated == $num_required)
 				{
-					$entry['status'] = "OK";	
+					$entry['status'] = "OK";
+					
+					$entry['alloc_link'] = "<span class='btn-sm cancel'>Tildel ressurser</span>";
 				}
 				else
 				{
-					$entry['status'] = "MANGLER";
+					$num_remaining = $num_required - $num_allocated;
+					$entry['status'] = "MANGLER (" . $num_remaining . ")";
+					
+					$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
+					$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 				}
 				
-				$entry['allocated'] = $num_allocated;
 				
-				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
-				$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
-				$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 			}
 
 			// ... add result data

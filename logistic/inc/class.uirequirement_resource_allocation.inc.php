@@ -373,7 +373,7 @@
 		public function save()
 		{
 			$requirement_id = phpgw::get_var('requirement_id');
-			
+		
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
@@ -383,13 +383,12 @@
 			$chosen_resources = phpgw::get_var('chosen_resources');
 			
 			$filters = array('requirement_id' => $requirement->get_id());
-			$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);	
-							 
+			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);	
+							 	
 			$num_required = $requirement->get_no_of_items();
 							
-			$num_allowed_bookings = $num_required - $num_required;
-			
-			
+			$num_allowed_bookings = $num_required - $num_allocated;
+					
 			if( count($chosen_resources) <=  $num_allowed_bookings)
 			{
 				foreach($chosen_resources as $resource_id)
@@ -403,8 +402,8 @@
 					$resource_alloc_id = $this->so->store( $resource_alloc );
 				}
 				
-				$activity_id = $this->so_activity->get_single($requirement->get_activity_id()); 
-	
+				$activity = $this->so_activity->get_single($requirement->get_activity_id()); 
+
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $activity_id));
 			}
 			else
@@ -478,7 +477,6 @@
 						'activity' => $activity,
 						'allocation' => $allocation,
 						'requirement' => $requirement,
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'dateformat' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 				);
 
