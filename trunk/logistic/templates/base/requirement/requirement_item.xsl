@@ -117,16 +117,34 @@
 			</dl>
 			
 			<div class="form-buttons">
+			
+				<xsl:variable name="view_resources_params">
+					<xsl:text>menuaction:logistic.uiactivity.view_resource_allocation, activity_id:</xsl:text>
+						<xsl:value-of select="activity/id" />
+					</xsl:variable>
+					<xsl:variable name="view_resources_url">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
+				</xsl:variable>
+				
 				<xsl:choose>
 					<xsl:when test="editable">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 						<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 						<input type="submit" name="save_requirement" value="{$lang_save}" title = "{$lang_save}" />
-						<input type="submit" name="cancel_requirement" value="{$lang_cancel}" title = "{$lang_cancel}" />
+						<input type="submit" name="cancel_requirement" value="{$lang_cancel}" title = "{$lang_cancel}" />				
+								
+						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
+						</a>
+						
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
 						<input type="submit" name="edit_requirement" value="{$lang_edit}" title = "{$lang_edit}" />
+
+						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
+						</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>

@@ -860,7 +860,7 @@ ul.row li{
     text-align: center;
 }
 
-.btn.cancel, .btn_m.cancel {
+.btn.cancel, .btn_m.cancel, .btn-sm.cancel {
   background: none repeat scroll 0 0 #EEEEEE;
   border: 1px solid #CCCCCC;
   color: #333333;
@@ -2432,4 +2432,8 @@ p.no_items_msg {
 
 #breadcrumb img{
 	height: 14px;
+}
+
+#requirement-container .btn-sm.cancel {
+  border: 1px solid #CCCCCC;
 }
