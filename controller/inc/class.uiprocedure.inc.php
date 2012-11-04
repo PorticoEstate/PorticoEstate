@@ -397,7 +397,7 @@
 
 				$this->use_yui_editor(array('responsibility','description', 'reference'));
 
-				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'procedure/procedure_item'), $data);
 			}
 		}
 
@@ -521,7 +521,7 @@
 				}
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
-				self::render_template_xsl(array('procedure/procedure_tabs', 'common', 'procedure/procedure_item'), $data);
+				self::render_template_xsl(array('procedure/procedure_tabs', 'procedure/procedure_item'), $data);
 			}
 		}
 
