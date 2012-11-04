@@ -36,7 +36,7 @@
 						<xsl:when test="parent_activity/id &gt; 0">
 							<dt>		
 								<xsl:if test="editable">
-									<div style="margin-bottom: 1em;">
+									<div style="display:none;margin-bottom: 1em;">
 										<label style="display:block;">Velg en annen hovedaktivitet</label>
 										<select id="select_activity" name="parent_activity_id" class="selectLocation">
 											<option>Velg aktivitet</option>

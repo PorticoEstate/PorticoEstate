@@ -133,7 +133,12 @@
 			{
 				if (isset($result))
 				{
-					$rows[] = $result->serialize();
+					$project = $result->serialize();
+
+					$href = self::link(array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project['id']));
+					$project['add_activity_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Legg til aktivitet</a>";
+					
+					$rows[] = $project; 
 				}
 			}
 
@@ -238,6 +243,11 @@
 						array(
 							'key' => 'end_date',
 							'label' => lang('End date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'add_activity_link',
+							'label' => lang('Delete'),
 							'sortable' => false
 						),
 						array(

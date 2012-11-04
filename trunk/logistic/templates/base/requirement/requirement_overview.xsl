@@ -31,7 +31,7 @@
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
-			<h2 style="clear:both;">Allokerte ressurser</h2>
+			<h2 style="clear:both;">Tildelte ressurser</h2>
 			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-def" />
