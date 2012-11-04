@@ -179,7 +179,8 @@
 					$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 				}
 				
-				
+				$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
+				$entry['edit_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Endre behov</a>";
 			}
 
 			// ... add result data
@@ -286,6 +287,11 @@
 						),
 						array(
 							'key' => 'status',
+							'label' => lang('Status'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'edit_requirement_link',
 							'label' => lang('Status'),
 							'sortable' => false,
 						),
