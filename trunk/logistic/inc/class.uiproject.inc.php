@@ -376,11 +376,8 @@
 					$project = $this->so->get_single($project_id);
 				}
 
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'project' => $project,
 					'view' => 'view_project'
 				);
@@ -409,12 +406,8 @@
 						$project = $objects[$keys[0]];
 					}
 				}
-
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'project' => $project
 				);
 
@@ -459,12 +452,9 @@
 			}
 			else
 			{
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'project' => $project_array,
+					'project' => $project,
 					'editable' => true
 				);
 

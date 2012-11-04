@@ -25,7 +25,7 @@
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.save')" />
 			</xsl:variable>
 			<form action="{$action_url}" method="post">
-				<input type="hidden" name="id" value = "{value_id}">
+				<input type="hidden" name="id" value="{project/id}">
 				</input>
 				<dl class="proplist-col">
 					<dt>
