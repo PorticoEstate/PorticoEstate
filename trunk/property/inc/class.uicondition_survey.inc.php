@@ -275,12 +275,13 @@
 
 			$data = array
 			(
-				'project'		=> $survey,
+				'survey'		=> $survey,
 				'categories'	=> array('options' => $categories),
 				'editable' 		=> $mode == 'edit'
 			);
 
-			$this->use_yui_editor('description');
+//			$this->use_yui_editor(array('description'));
+			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 			
 			phpgwapi_jquery::load_widget('core');
