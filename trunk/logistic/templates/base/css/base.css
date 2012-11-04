@@ -855,8 +855,9 @@ ul.row li{
 }
 
 .btn-sm {
-  font-size: 12px;
-  padding: 1px 4px;
+    font-size: 12px;
+    padding: 1px 4px;
+    text-align: center;
 }
 
 .btn.cancel, .btn_m.cancel {
