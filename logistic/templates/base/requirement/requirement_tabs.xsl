@@ -12,7 +12,7 @@
 				<xsl:when test="requirement/id != '' or requirement/id != 0">
 					<h1 style="float:left;"> 
 						<span>
-							<xsl:value-of select="php:function('lang', 'Requirement to activity')" />
+							<xsl:value-of select="php:function('lang', 'Add requirement to activity')" />
 						</span>
 						<span style="margin-left:5px;">
 							<xsl:value-of select="activity/name" />
