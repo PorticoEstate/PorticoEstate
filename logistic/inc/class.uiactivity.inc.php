@@ -590,12 +590,7 @@
 							'key' => 'alloc_link',
 							'label' => lang('Allocate resources'),
 							'sortable' => false,
-						),
-						array(
-							'key' => 'delete_link',
-							'label' => lang('Delete requirement'),
-							'sortable' => false,
-						),
+						)
 					)
 				),
 			);
