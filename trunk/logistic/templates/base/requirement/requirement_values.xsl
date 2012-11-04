@@ -153,7 +153,13 @@
 							
 												</xsl:when>
 												<xsl:when test="cust_attribute/column_info/type = 'LB'">
-													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
+													<xsl:for-each select="cust_attribute/choice">
+															<xsl:if test="id = //attrib_value">
+																<span>
+																	<xsl:value-of select="value"/>
+																</span>
+															</xsl:if>
+													</xsl:for-each>
 												</xsl:when>
 											</xsl:choose>
 										</div>

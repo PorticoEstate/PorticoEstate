@@ -602,7 +602,7 @@
 
 				$temp_requirement_attributes_array[$cust_attribute_id][] = array(
 					"id" 							=> $requirement_value->get_id(),
-					"attrib_value" 					=> $requirement_value->get_value(),
+					"attrib_value" 		=> $requirement_value->get_value(),
 					"operator" 				=> $requirement_value->get_operator(),
 					"cust_attribute" 	=> $attrib_data
 				);
