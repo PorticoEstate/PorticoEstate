@@ -366,6 +366,11 @@
 			
 			if($activity == null)
 			{
+				if( $project_id && is_numeric($project_id) )
+				{
+					$project = $this->so_project->get_single($project_id);
+				}
+				
 				if( $activity_id && is_numeric($activity_id) )
 				{
 					$activity = $this->so->get_single($activity_id);
@@ -405,6 +410,11 @@
 				'editable' => true,
 				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
 			);
+			
+			if($project)
+			{
+				$data['project'] = $project;
+			}
 			
 			if($parent_activity)
 			{
