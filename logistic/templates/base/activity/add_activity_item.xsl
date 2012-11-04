@@ -4,18 +4,14 @@
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
 
-	<div id="breadcrumb">
-		<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
-	</div>			
-
 	<xsl:choose>
-		<xsl:when test="parent_activity/id &gt; 0">
-			<h1> 
-				<xsl:value-of select="parent_activity/name" disable-output-escaping="yes"/>::<xsl:value-of select="php:function('lang', 'Add sub activity')" />
+		<xsl:when test="activity/id != '' or activity/id != 0">
+			<h1>
+				<xsl:value-of select="php:function('lang', 'Edit activity')" />
 			</h1>
 		</xsl:when>
 		<xsl:otherwise>
-			<h1> 
+			<h1>
 				<xsl:value-of select="php:function('lang', 'Add activity')" />
 			</h1>
 		</xsl:otherwise>

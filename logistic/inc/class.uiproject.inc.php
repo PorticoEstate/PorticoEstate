@@ -308,7 +308,7 @@
 			{
 				//list project types
 				$data = array(
-					'datatable_name'	=> lang('project types'),
+					'datatable_name'	=> lang('Overview project types'),
 					'form' => array(
 						'toolbar' => array(
 							'item' => array(
