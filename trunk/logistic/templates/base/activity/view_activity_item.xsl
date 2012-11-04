@@ -204,7 +204,7 @@
    var oArgs = {
 					menuaction:'logistic.uiactivity.index',
 					activity_id: '<xsl:value-of select='activity/id'/>',
-					type: 'activity_id',
+					type: 'children',
 					phpgw_return_as: 'json'
 				};
 				

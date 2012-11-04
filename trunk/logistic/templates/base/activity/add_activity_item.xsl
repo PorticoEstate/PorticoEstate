@@ -55,6 +55,26 @@
 									</div>
 								</dt>
 						  </xsl:when>
+						  <xsl:when test="(editable) and not(parent_activity) and not(project)">
+							<dt>		
+									<div style="margin-bottom: 1em;">
+										<label style="display:block;">Velg prosjektet som aktiviteten er en del av</label>
+										<select id="select_project" name="select_project">
+											<option>Velg 	prosjekt</option>
+											<xsl:for-each select="projects">
+							        	<option value="{id}">
+							        		<xsl:if test="project/id = project_id">
+								        		<xsl:attribute name="selected">
+							    						selected
+							   						</xsl:attribute>
+								        	</xsl:if>
+							          	<xsl:value-of disable-output-escaping="yes" select="name"/>
+								        </option>
+										  </xsl:for-each>
+										</select>					
+									</div>
+								</dt>
+						  </xsl:when>
 						  <xsl:otherwise>
 							<dt>		
 									<div style="margin-bottom: 1em;">
