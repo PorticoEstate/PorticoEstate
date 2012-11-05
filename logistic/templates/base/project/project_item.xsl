@@ -38,7 +38,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/name" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi navn for prosjektet</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line"><xsl:value-of select="php:function('lang','Give project name')" /></div>
 							<input type="text" name="name" id="name" value="{project/name}" size="100"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -56,7 +56,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/project_type_id" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Angi prosjekttype</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line"><xsl:value-of select="php:function('lang','Give project type')" /></div>
 							<select id="project_type_id" name="project_type_id">
 								<xsl:apply-templates select="options"/>
 							</select>
@@ -76,7 +76,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="project/error_msg_array/description" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line">Gi en beskrivelse av prosjektet</div>
+							<div style="margin-left:0; margin-bottom: 3px;" class="help_text line"><xsl:value-of select="php:function('lang','Give description to the project')" /></div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="project/description" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>
@@ -85,7 +85,7 @@
 					</xsl:choose>
 					</dd>
 					<dt>
-						<label for="start_date">Startdato</label>
+						<label for="start_date"><xsl:value-of select="php:function('lang','Start date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -99,7 +99,7 @@
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(project/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
-					    	<span class="help_text line">Angi startdato for prosjektet</span>
+					    	<span class="help_text line"><xsl:value-of select="php:function('lang','Give start date to project')" /></span>
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(project/start_date))"/></span>
@@ -107,7 +107,7 @@
 						</xsl:choose>
 					</dd>
 					<dt>
-						<label for="end_date">Sluttdato</label>
+						<label for="end_date"><xsl:value-of select="php:function('lang','End date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -121,7 +121,7 @@
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(project/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
-					    	<span class="help_text line">Angi sluttdato for prosjektet</span>
+					    	<span class="help_text line"><xsl:value-of select="php:function('lang','Give end date to project')" /></span>
 							</xsl:when>
 							<xsl:otherwise>
 							<span><xsl:value-of select="php:function('date', $date_format, number(project/end_date))"/></span>
@@ -148,7 +148,7 @@
 							<xsl:variable name="view_projects_url_2">
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiproject.index' )" />
 							</xsl:variable>
-							<a class="btn" href="{$view_projects_url_2}">Vis prosjektoversikt</a>
+							<a class="btn" href="{$view_projects_url_2}"><xsl:value-of select="php:function('lang','Show project overview')" /></a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>

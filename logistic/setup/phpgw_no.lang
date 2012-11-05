@@ -94,3 +94,22 @@ Click on table above to get allocations	logistic	no	Klikk på en rad i tabellen 
 Add activity to project	logistic	no	Legg aktivitet til prosjektet
 View resources overview	logistic	no	Vis ressursoversikt
 Edit requirement	logistic	no	Endre behov
+Choose another project for the activity	logistic	no	Velg et annet prosjekt for aktiviteten
+Choose another project	logistic	no	Velg et annet prosjekt
+Choose the project in which the activity is part of	logistic	no	Velg prosjektet som aktiviteten er en del av
+Choose project	logistic	no	Velg prosjekt
+Choose another main activity for this sub activity	logistic	no	Velg en annen hovedaktivitet for denne underaktiviteten
+Give name to this activity	logistic	no	Gi name til denne aktiviteten
+Give start date to activity	logistic	no	Angi startdato for aktiviteten
+Give end date to activity	logistic	no	Angi sluttdato for aktiviteten
+Give description to activity	logistic	no	Gi beskrivelse for aktiviteten
+Give start date to project	logistic	no	Angi startdato for prosjektet
+Give end date to project	logistic	no	Angi sluttdato for prosjektet
+Give description to the project	logistic	no	Gi en beskrivelse av prosjektet
+Give project type	logistic	no	Angi prosjekttype
+Give project name	logistic	no	Angi prosjektnavn
+Show project overview	logistic	no	Vis prosjektoversikt
+Start date	logistic	no	Startdato
+End date	logistic	no	Sluttdato
+Responsible person	logistic	no	Ansvarlig bruker
+Responsible person for activity	logistic	no	Angi hvilken person som skal være ansvarlig for aktiviteten

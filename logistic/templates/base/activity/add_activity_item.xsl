@@ -38,7 +38,7 @@
 						<xsl:when test="(editable) and (parent_activity/id &gt; 0)">
 							<dt>		
 									<div style="margin-bottom: 1em;">
-										<label style="display:block;">Velg en annen hovedaktivitet for denne underaktiviteten</label>
+										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another main activity for this sub activity')" /></label>
 										<select id="select_parent_activity" name="parent_activity_id">
 											<option>Velg annen hovedaktivitet</option>
 											<xsl:for-each select="activities">
@@ -58,9 +58,9 @@
 						  <xsl:when test="(editable) and not(parent_activity) and not(project)">
 							<dt>		
 									<div style="margin-bottom: 1em;">
-										<label style="display:block;">Velg prosjektet som aktiviteten er en del av</label>
+										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose the project in which the activity is part of')" /></label>
 										<select id="select_project" name="select_project">
-											<option>Velg 	prosjekt</option>
+											<option><xsl:value-of select="php:function('lang', 'Choose project')" /></option>
 											<xsl:for-each select="projects">
 							        	<option value="{id}">
 							        		<xsl:if test="project/id = project_id">
@@ -78,9 +78,9 @@
 						  <xsl:otherwise>
 							<dt>		
 									<div style="margin-bottom: 1em;">
-										<label style="display:block;">Velg et annet prosjekt for aktiviteten </label>
+										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another project for the activity')" /></label>
 										<select id="select_project" name="select_project">
-											<option>Velg annet prosjekt</option>
+											<option><xsl:value-of select="php:function('lang', 'Choose another project')" /></option>
 											<xsl:for-each select="projects">
 							        	<option value="{id}">
 							        		<xsl:if test="project/id = project_id">
@@ -106,7 +106,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/name" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div class="help_text">Angi navn for aktiviteten</div>
+							<div class="help_text"><xsl:value-of select="php:function('lang','Give name to this activity')" /></div>
 							<input type="text" name="name" id="name" value="{activity/name}" size="100"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -124,7 +124,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/description" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<div class="help_text">Gi en beskrivelse av aktiviteten</div>
+							<div class="help_text"><xsl:value-of select="php:function('lang','Give description to activity')" /></div>
 							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="activity/description" disable-output-escaping="yes"/></textarea>
 						</xsl:when>
 						<xsl:otherwise>
@@ -133,7 +133,7 @@
 					</xsl:choose>
 					</dd>
 					<dt>
-						<label for="start_date">Startdato</label>
+						<label for="start_date"><xsl:value-of select="php:function('lang','Start date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -142,7 +142,7 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/start_date" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
-								<div class="help_text">Angi startdato for aktiviteten</div>
+								<div class="help_text"><xsl:value-of select="php:function('lang','Give start date to activity')" /></div>
 								<input class="date" id="start_date" name="start_date" type="text">
 						    	<xsl:if test="activity/start_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
@@ -155,7 +155,7 @@
 						</xsl:choose>
 					</dd>
 					<dt>
-						<label for="end_date">Sluttdato</label>
+						<label for="end_date"><xsl:value-of select="php:function('lang','End date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -164,7 +164,7 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/end_date" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
-								<div class="help_text">Angi sluttdato for aktiviteten</div>
+								<div class="help_text"><xsl:value-of select="php:function('lang','Give end date to activity')" /></div>
 								<input class="date" id="end_date" name="end_date" type="text">
 						    	<xsl:if test="activity/end_date != ''">
 						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
@@ -177,7 +177,7 @@
 						</xsl:choose>
 					</dd>
 					<dt>
-						<label for="end_date">Ansvarlig</label>
+						<label for="end_date"><xsl:value-of select="php:function('lang', 'Responsible person')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -186,7 +186,7 @@
 									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/responsible_user_id" /></xsl:variable>
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
-								<div class="help_text">Angi hvilken person som skal være ansvarlig for aktiviteten</div>
+								<div class="help_text"><xsl:value-of select="php:function('lang', 'Responsible person for activity')" /></div>
 								<select name="responsible_user_id">
 									<option value="">Velg ansvarlig bruker</option>
 					        <xsl:for-each select="responsible_users">
