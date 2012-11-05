@@ -4,6 +4,7 @@ project	logistic	no	Prosjekt
 activity	logistic	no	Aktivitet
 allocation	logistic	no	Beholdning
 requirement	logistic	no	Behov
+Resource requirement	logistic	no	Ressursbehov
 Project name	logistic	no	Navn
 Project type	logistic	no	Type
 Project description	logistic	no	Beskrivelse
