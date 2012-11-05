@@ -2420,7 +2420,8 @@ p.no_items_msg {
 	
 #sub-activities-container th a, #sub-activities-container th span, 
 #requirement-container th a, #requirement-container th span,
-#allocation-container th a, #allocation-container th span
+#allocation-container th a, #allocation-container th span,
+#datatable-container th a, #datatable-container th span
 {
     /*color: #F9FCFE;*/
     font-weight: bold;
