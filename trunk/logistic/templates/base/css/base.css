@@ -383,13 +383,18 @@ a {
   text-decoration: none;
 }
 
-#innertoolbar-button, input[type="submit"] {
+#innertoolbar-button, input[type="submit"], input[type="button"]{
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #4685C8;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     cursor: pointer;
     padding: 3px 15px;
+}
+
+input[type="submit"][disabled]
+{
+    background: none repeat scroll 0 0 #A3D1FF;
 }
 
 #innertoolbar-button {
