@@ -264,19 +264,20 @@
 				}
 			}
 
-			$survey = array();
+			$values = array();
 
 			if ($id)
 			{
-				$survey = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				$values = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
 			}
 
 			$categories = $this->_get_categories($survey['category']);
 
 			$data = array
 			(
-				'survey'		=> $survey,
+				'survey'		=> $values,
 				'categories'	=> array('options' => $categories),
+				'status_list'	=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 		=> $mode == 'edit'
 			);
 

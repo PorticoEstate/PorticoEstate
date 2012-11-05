@@ -82,6 +82,28 @@
 							<div class="clearDiv"></div>
 					</div>
 
+
+					 <div class="row">
+						<div class="label">
+							<label for="status"><xsl:value-of select="php:function('lang', 'status')" /></label>
+						</div>
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+ 								<select id="status_id" name="values[status_id]"
+									formvalidator:FormField="yes"
+	   								formvalidator:Type="SelectField">
+									<xsl:apply-templates select="status_list/options"/>
+								</select>
+							</xsl:when>
+							<xsl:otherwise>
+ 								<select id="status_id" disabled="disabled">
+									<xsl:apply-templates select="status_list/options"/>
+								</select>
+							</xsl:otherwise>
+						</xsl:choose>
+						<div class="clearDiv"></div>
+					</div>
+
 <!--
 
 					<div class="row">
