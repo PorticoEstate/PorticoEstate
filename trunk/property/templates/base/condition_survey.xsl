@@ -14,18 +14,6 @@
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.save')" />
 			</xsl:variable>
 
-			<xsl:variable name="disabled">
-				<xsl:choose>
-					<xsl:when test="editable = 1">
-						<xsl:text>disabled</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text></xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-
-
 			<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
 				<div class="formBody">
 					 <div class="row">
@@ -94,7 +82,7 @@
 							<div class="clearDiv"></div>
 					</div>
 
-
+<!--
 
 					<div class="row">
 						 <div class="label">
@@ -119,13 +107,15 @@
 								formvalidator:maxInclusive="true"/>
 						<div class="clearDiv"></div>
 					</div>
+					
+					-->
 					<div class="form-buttons">
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 								<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 								<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 								<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
-								<input type="submit" name="cancel_project" value="{$lang_cancel}" title = "{$lang_cancel}" />
+								<input class="submit" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
@@ -137,8 +127,14 @@
 					</div>
 				</div>
 			</form>
-		</div>
 
+			<xsl:variable name="cancel_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.index')" />
+			</xsl:variable>
+
+			<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
+			</form>
+		</div>
 
 </div>
 
