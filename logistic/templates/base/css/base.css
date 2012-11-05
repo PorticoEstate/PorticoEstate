@@ -873,12 +873,12 @@ ul.row li{
 }
 
 .btn.focus, .btn_m.focus {
-  background: none repeat scroll 0 0 #F57056;
-  border-color: #EE836F -moz-use-text-color #CB563F;
-  border-style: solid none;
-  border-width: 1px 0;
-  color: #FFFFFF;
-  margin-top: 1px;
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EE836F #CB563F #CB563F;
+    border-style: solid none;
+    border-width: 1px 0;
+    color: #FFFFFF;
+    margin-top: 1px;
 }
 
 /* =======================================  MAIN CONTENT  ========================================= */
@@ -2403,11 +2403,11 @@ p.no_items_msg {
 }
 
 #sub-activities-container th div, #requirement-container th div {
-    background: #6292C5;
+    /*background: #6292C5;*/
 }
 
 #sub-activities-container .yui-dt table, #requirement-container .yui-dt table {
-    border: 1px solid #98BFE8;
+    /*border: 1px solid #98BFE8;*/
 }
 
 #sub-activities-container .yui-dt table {
@@ -2418,9 +2418,11 @@ p.no_items_msg {
     width: 1000px;
 }
 	
-#sub-activities-container th a, #requirement-container th a,
-#sub-activities-container th span, #requirement-container th span {
-    color: #F9FCFE;
+#sub-activities-container th a, #sub-activities-container th span, 
+#requirement-container th a, #requirement-container th span,
+#allocation-container th a, #allocation-container th span
+{
+    /*color: #F9FCFE;*/
     font-weight: bold;
 }
 

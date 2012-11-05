@@ -189,6 +189,7 @@
 				
 				<h3 style="clear:left; float:left;margin: 0; padding: 10px 0 5px;">Underaktiviteter</h3>
 				<a id="add-sub-activity-btn" class="btn focus" href="{$add_sub_activity_url}"><xsl:value-of select="php:function('lang', 'Add sub activity')" /></a>
+				
 				<div style="clear:both;" id="sub-activities-container"></div>		
 				<xsl:call-template name="datasource-definition" />
 			</div>
@@ -207,7 +208,7 @@
 					type: 'children',
 					phpgw_return_as: 'json'
 				};
-				
+			
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 		var myColumnDefs = [ 
@@ -219,7 +220,8 @@
 	     		{key:"status", label:'Status', sortable:true},
 	    ]; 
 			
-		YAHOO.portico.inlineTableHelper('sub-activities-container', requestUrl, myColumnDefs);
+		YAHOO.portico.inlineTableHelper("sub-activities-container", requestUrl, myColumnDefs);
+		
   	});
   </script>
 </xsl:template>

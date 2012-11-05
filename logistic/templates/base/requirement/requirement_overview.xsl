@@ -87,7 +87,7 @@
 				var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 				var myColumnDefs = [ 
-			        {key:"id", sortable:true},
+			        {key:"id", label:'Id', sortable:true},
 			        {key:"fm_bim_item_name", label:'Navn på ressurs', sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
 			        {key:"location_code", label:'Lokasjonskode', sortable:true},

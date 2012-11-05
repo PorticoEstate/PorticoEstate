@@ -243,7 +243,7 @@
 						),
 						array(
 							'key' => 'id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => true,
 						),
 						array(

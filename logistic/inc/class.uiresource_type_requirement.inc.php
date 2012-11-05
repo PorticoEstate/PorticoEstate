@@ -198,14 +198,14 @@
 					'field' => array(
 						array(
 							'key' => 'id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => false,
 							'hidden' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
 							'key' => 'location_id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),

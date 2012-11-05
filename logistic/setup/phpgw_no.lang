@@ -8,7 +8,7 @@ Resource requirement	logistic	no	Ressursbehov
 Project name	logistic	no	Navn
 Project type	logistic	no	Type
 Project description	logistic	no	Beskrivelse
-ID	logistic	no	ID
+ID	logistic	no	Id
 t_new_project	logistic	no	Nytt prosjekt
 t_new_project_type	logistic	no	Ny prosjekttype
 t_new_activity	logistic	no	Opprett ny aktivitet på dette prosjektet
