@@ -1,14 +1,14 @@
 <?php
 class YUIHeaderUtil {
-	public function setAge($age = 0) {
+	public static function setAge($age = 0) {
 		header("Age: $age");
 	}
 
-	public function setCacheControl($cacheControl = "max-age=315360000") {
+	public static function setCacheControl($cacheControl = "max-age=315360000") {
 		header("Cache-Control: $cacheControl");
 	}
 
-	public function setContentLength($bytes) {
+	public static function setContentLength($bytes) {
 		header("Content-Length: $bytes");
 	}
 
@@ -16,7 +16,7 @@ class YUIHeaderUtil {
 		header("Content-Type: ".$mimetype);
 	}
 
-	public function setExpires() {
+	public static function setExpires() {
 		header("Expires: " . @date("r", @mktime() + (60 * 60 * 24 * 365 * 10)));
 	}
 
@@ -24,7 +24,7 @@ class YUIHeaderUtil {
 		header("HTTP/1.1 403 Forbidden");
 	}
 
-	public function setGzip() {
+	public static function setGzip() {
 		header("Content-Encoding: gzip");
 	}
 }
