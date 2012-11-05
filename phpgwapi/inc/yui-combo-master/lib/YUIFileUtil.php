@@ -32,7 +32,7 @@ class YUIFileUtil {
 	    return false;
 	}
 
-	function writeCache($id, $content) {
+	public static function writeCache($id, $content) {
 		if (!is_dir(TEMP_DIR)) {
 			mkdir(TEMP_DIR, 0777);
 		}
@@ -40,7 +40,7 @@ class YUIFileUtil {
 		file_put_contents(TEMP_DIR.DS.$id, $content);
 	}
 
-	function getCache($id) {
+	public static function getCache($id) {
 		$file = TEMP_DIR.DS.$id;
 
 		if (is_file($file)) {

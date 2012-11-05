@@ -52,7 +52,7 @@ class YUICombo {
 		$config = $this->getConfig();
 		$cache = $config["cache"];
 		$cacheCombo = $config["cacheCombo"];
-		$gzip = $config["gzip"];
+		$gzip = function_exists('gzencode') ? $config["gzip"] : false;
 
 		$filemtimes = EMPTY_STRING;
 		$query = $_SERVER["QUERY_STRING"].("gzip=".$gzip);
@@ -98,7 +98,7 @@ class YUICombo {
 		$config = $this->getConfig();
 		$cache = $config["cache"];
 		$cacheCombo = $config["cacheCombo"];
-		$gzip = $config["gzip"];
+		$gzip = function_exists('gzencode') ? $config["gzip"] : false;
 
 		$this->REQUEST_CACHE_ID = $this->getRequestId();
 
