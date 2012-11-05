@@ -14,166 +14,46 @@
 				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
-					<xsl:if test="parent_activity/id &gt; 0">
-					<dt>		
-						<xsl:if test="editable">
-							<div style="margin-bottom: 1em;width: 88%;" class="select-box">
-								<label>Velg en annen hovedaktivitet</label>
-								<select id="select_activity" name="parent_activity_id" class="selectLocation">
-									<option>Velg aktivitet</option>
-									<xsl:for-each select="activities">
-					        	<option value="{id}">
-					        		<xsl:if test="activity/parent_id = id">
-						        		<xsl:attribute name="selected">
-					    						selected
-					   						</xsl:attribute>
-						        	</xsl:if>
-					          	<xsl:value-of disable-output-escaping="yes" select="name"/>
-						        </option>
-								  </xsl:for-each>
-								</select>					
-							</div>
-							</xsl:if>
-						</dt>
-					</xsl:if>	
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang','Activity name')" /></label>
 					</dt>
 					<dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<xsl:if test="activity/error_msg_array/name != ''">
-								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/name" /></xsl:variable>
-								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
-							</xsl:if>
-							<input type="text" name="name" id="name" value="{activity/name}" size="100"/>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="activity/name" />
-						</xsl:otherwise>
-					</xsl:choose>
+						<xsl:value-of select="activity/name" />
 					</dd>
 					<dt>
 						<label for="description"><xsl:value-of select="php:function('lang', 'Description')" /></label>
 					</dt>
 					<dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<xsl:if test="activity/error_msg_array/description != ''">
-								<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/description" /></xsl:variable>
-								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
-							</xsl:if>
-							<textarea id="description" name="description" rows="5" cols="60"><xsl:value-of select="activity/description" disable-output-escaping="yes"/></textarea>
-							<span class="help_text line">Angi startdato for aktiviteten</span>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="activity/description" disable-output-escaping="yes"/>
-						</xsl:otherwise>
-					</xsl:choose>
+						<xsl:value-of select="activity/description" disable-output-escaping="yes"/>
 					</dd>
 					<dt>
-						<label for="start_date">Startdato</label>
+						<label for="start_date"><xsl:value-of select="php:function('lang','Start date')" /></label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<xsl:if test="activity/error_msg_array/start_date != ''">
-									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/start_date" /></xsl:variable>
-									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
-								</xsl:if>
-								<input class="date" id="start_date" name="start_date" type="text">
-						    	<xsl:if test="activity/start_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
-						    	</xsl:if>
-					    	</input>
-					    	<span class="help_text line">Angi startdato for aktiviteten</span>
-							</xsl:when>
-							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
 					</dd>
 					<dt>
-						<label for="end_date">Sluttdato</label>
+						<label for="end_date"><xsl:value-of select="php:function('lang','End date')" /></label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<xsl:if test="activity/error_msg_array/end_date != ''">
-									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/end_date" /></xsl:variable>
-									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
-								</xsl:if>
-								<input class="date" id="end_date" name="end_date" type="text">
-						    	<xsl:if test="activity/end_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
-						    	</xsl:if>
-					    	</input>
-					    	<span class="help_text line">Angi startdato for aktiviteten</span>
-							</xsl:when>
-							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
 					</dd>
 					<dt>
 						<label for="end_date">Ansvarlig</label>
 					</dt>
 					<dd>
-						<xsl:choose>
-							<xsl:when test="editable">
-								<xsl:if test="activity/error_msg_array/responsible_user_id != ''">
-									<xsl:variable name="error_msg"><xsl:value-of select="activity/error_msg_array/responsible_user_id" /></xsl:variable>
-									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
-								</xsl:if>
-								<select name="responsible_user_id">
-									<option value="">Velg ansvarlig bruker</option>
-					        <xsl:for-each select="responsible_users">
-					        	<xsl:variable name="full_name">
-					        		<xsl:value-of disable-output-escaping="yes" select="account_firstname"/><xsl:text> </xsl:text>
-					        		<xsl:value-of disable-output-escaping="yes" select="account_lastname"/>
-					        	</xsl:variable>
-					        	<xsl:choose>
-					        		<xsl:when test="//activity/responsible_user_id = account_id">
-												<option selected="selected" value="{account_id}">
-					        				<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
-						        		</option>
-					        		</xsl:when>
-					        		<xsl:otherwise>
-					        			<option value="{account_id}">
-					        				<xsl:value-of disable-output-escaping="yes" select="$full_name"/>
-						        		</option>
-					        		</xsl:otherwise>
-					        	</xsl:choose>
-					        </xsl:for-each>
-					      </select>
-					      <span class="help_text line">Angi startdato for aktiviteten</span>
-					      </xsl:when>
-							<xsl:otherwise>
-							<span><xsl:value-of select="activity/responsible_user_name"/></span>
-							</xsl:otherwise>
-						</xsl:choose>
+						<span><xsl:value-of select="activity/responsible_user_name"/></span>
 					</dd>
 				</dl>
 					<div class="form-buttons">
-					<xsl:choose>
-						<xsl:when test="editable">
-							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-							<input type="submit" name="save_activity" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="cancel_activity" value="{$lang_cancel}" title = "{$lang_cancel}" />
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:variable name="params">
-								<xsl:text>menuaction:logistic.uiactivity.edit, id:</xsl:text>
-								<xsl:value-of select="activity/id" />
-							</xsl:variable>
-							<xsl:variable name="edit_url">
-								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
-							</xsl:variable>
-							<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'edit')" /></a>
-						</xsl:otherwise>
-					</xsl:choose>
+						<xsl:variable name="params">
+							<xsl:text>menuaction:logistic.uiactivity.edit, id:</xsl:text>
+							<xsl:value-of select="activity/id" />
+						</xsl:variable>
+						<xsl:variable name="edit_url">
+							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
+						</xsl:variable>
+						<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'edit')" /></a>
 				</div>
 			</form>
 			
