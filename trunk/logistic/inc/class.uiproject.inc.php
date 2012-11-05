@@ -215,7 +215,7 @@
 					'field' => array(
 						array(
 							'key' => 'id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),		
@@ -336,7 +336,7 @@
 						'field' => array(
 							array(
 								'key' => 'id',
-								'label' => lang('ID'),
+								'label' => lang('Id'),
 								'sortable' => true,
 								'formatter' => 'YAHOO.portico.formatLink'
 							),
