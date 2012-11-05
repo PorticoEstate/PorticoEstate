@@ -2389,7 +2389,7 @@ p.no_items_msg {
 	
 #add-requirement-btn {
     float: left;
-    margin-left: 715px;
+    margin-left: 725px;
     text-align: center;
     width: 120px;
 }
@@ -2415,7 +2415,7 @@ p.no_items_msg {
 }
 
 #requirement-container .yui-dt table, #allocation-container .yui-dt table {
-    width: 900px;
+    width: 1000px;
 }
 	
 #sub-activities-container th a, #requirement-container th a,
