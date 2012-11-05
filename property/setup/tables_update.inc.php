@@ -6850,7 +6850,7 @@
 					'loc3' => array('type' => 'varchar','precision' => '4','nullable' => True),
 					'loc4' => array('type' => 'varchar','precision' => '4','nullable' => True),
 					'descr' => array('type' => 'text','nullable' => True),
-					'status' => array('type' => 'int','precision' => '4','nullable' => false),
+					'status_id' => array('type' => 'int','precision' => '4','nullable' => false),
 					'category' => array('type' => 'int','precision' => '4','nullable' => True),
 					'coordinator' => array('type' => 'int','precision' => '4','nullable' => True),
 					'vendor_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
