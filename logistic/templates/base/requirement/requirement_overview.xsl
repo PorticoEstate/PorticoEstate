@@ -31,7 +31,7 @@
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
-			<h2 style="clear:both;"><xsl:value-of select="php:function('lang', 'Allocated resouces')" /><span style="margin-left:350px;font-size:14px;">(<xsl:value-of select="php:function('lang', 'Click on table above to get allocations')" />)</span></h2>
+			<h2 style="clear:both;"><xsl:value-of select="php:function('lang', 'Allocated resouces')" /><span style="margin-left:470px;font-size:14px;">(<xsl:value-of select="php:function('lang', 'Click on table above to get allocations')" />)</span></h2>
 			<div id="allocation-container"></div>
 	</div>
 	<xsl:call-template name="datasource-def" />
