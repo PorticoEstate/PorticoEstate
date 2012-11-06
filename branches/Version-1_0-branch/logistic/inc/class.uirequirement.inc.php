@@ -440,10 +440,12 @@
 		public function save()
 		{
 			$requirement_id = phpgw::get_var('id');
+			$new_location_id = phpgw::get_var('location_id');
 			
 			if ($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so->get_single($requirement_id);
+				$old_location_id = $requirement->get_location_id();
 			}
 			else
 			{
@@ -454,32 +456,24 @@
 			
 			if( $requirement->validate() )
 			{
-				$GLOBALS['phpgw']->db->transaction_begin();
-//				$db_requirement = $this->so->get_db();
-//				$db_requirement->transaction_begin();
+				$db_requirement = $this->so->get_db();
+				$db_requirement->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
 				
-//				$db_requirement_values = $this->so_requirement_value->get_db();
-//				$db_requirement_values->transaction_begin();
-				$status_delete_values = $this->so_requirement_value->delete_resources($requirement_id);
+				if( ($old_location_id > 0) && (is_numeric($old_location_id) ) && ($old_location_id != $new_location_id) )
+				{
+					$status_delete_values = $this->so_requirement_value->delete_values( $requirement_id );
+				}
 				
-//				$db_resource_allocation = $this->so_resource_allocation->get_db();
-//				$db_resource_allocation->transaction_begin();
-				$status_delete_resources = $this->so->delete_resource_allocations($requirement_id);
+				$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
-					$GLOBALS['phpgw']->db->transaction_commit();
-//					$db_requirement->transaction_commit();
-//					$db_requirement_values->transaction_commit();
-//					$db_resource_allocation->transaction_commit();
+					$db_requirement->transaction_commit();
 				}
 				else
 				{
-					$GLOBALS['phpgw']->db->transaction_abort();
-//					$db_requirement->transaction_abort();
-//					$db_requirement_values->transaction_abort();
-//					$db_resource_allocation->transaction_abort();
+					$db_requirement->transaction_abort();
 				}			
 				
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
