@@ -459,24 +459,24 @@
 				$requirement_id = $this->so->store($requirement);
 				
 				$db_requirement_values = $this->so_requirement_value->get_db();
-				$db_requirement_values->transaction_begin();
+//				$db_requirement_values->transaction_begin();
 				$status_delete_values = $this->so_requirement_value->delete_resources($requirement_id);
 				
 				$db_resource_allocation = $this->so_resource_allocation->get_db();
-				$db_resource_allocation->transaction_begin();
+//				$db_resource_allocation->transaction_begin();
 				$status_delete_resources = $this->so->delete_resource_allocations($requirement_id);
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
 					$db_requirement->transaction_commit();
-					$db_requirement_values->transaction_commit();
-					$db_resource_allocation->transaction_commit();
+//					$db_requirement_values->transaction_commit();
+//					$db_resource_allocation->transaction_commit();
 				}
 				else
 				{
 					$db_requirement->transaction_abort();
-					$db_requirement_values->transaction_abort();
-					$db_resource_allocation->transaction_abort();
+//					$db_requirement_values->transaction_abort();
+//					$db_resource_allocation->transaction_abort();
 				}			
 				
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
