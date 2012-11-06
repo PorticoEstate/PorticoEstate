@@ -67,7 +67,7 @@
 <!-- =========== BREADCRUMB TEMPLATE  ============== -->
 <xsl:template name="breadcrumb">
   <div id="breadcrumb">
-		<span>Du er her:</span>
+		<span class="intro">Du er her:</span>
 		<xsl:for-each select="breadcrumb">
 			<xsl:choose>
 				<xsl:when test="current = 1">
