@@ -140,8 +140,17 @@
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-						<input type="submit" name="edit_requirement" value="{$lang_edit}" title = "{$lang_edit}" />
+						<xsl:variable name="edit_params">
+						<xsl:text>menuaction:logistic.uirequirement.edit, id:</xsl:text>
+							<xsl:value-of select="requirement/id" />
+						</xsl:variable>
+						<xsl:variable name="edit_url">
+							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
+						</xsl:variable>
+						
+						<a class="btn" href="{$edit_url}">
+						  <xsl:value-of select="php:function('lang', 'edit')" />
+						</a>
 
 						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
 						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
