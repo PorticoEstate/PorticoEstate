@@ -705,16 +705,23 @@
 			{
 				return;
 			}
+			
 			$path = $this->so->get_path($activity_id);
-			$level = count($path) - 1;
-			$breadcrumb_array = array();
-
-			for ($i=0;$i<$level;$i++)
+						
+			foreach($path as $menu_item)
 			{
-				$_link = self::link(array('menuaction' => $menuaction, $id_name => $path[$i]['id']));
-				$breadcrumb_array[] = "<a href=\"{$_link}\">{$path[$i]['name']}</a>";
+				if($menu_item['id'] == $activity_id)
+				{
+					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => "", "current" => 1);
+				}
+				else
+				{
+					$_link = self::link(array('menuaction' => $menuaction, $id_name => $menu_item['id'] ));
+					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => $_link, "current" => 0);
+				}
+				
 			}
-			$breadcrumb_array[] = $path[$level]['name'];
-			return implode(' > ', $breadcrumb_array);
+				
+			return $breadcrumb_array;
 		}
 	}
