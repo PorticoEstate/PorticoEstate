@@ -17,10 +17,10 @@
 				<dd><?php echo $organization->get_name();?></dd>
 				<dt><label for="orgno">Organisasjonsnummer</label></dt>
 				<dd>
-					<?php 
+					<?php
 					if($editable){?>
 						<input type="text" name="orgno" value="<?php echo $organization->get_organization_number();?>"/><br/>
-					<?php 
+					<?php
 					}else{?>
 						<?php echo $organization->get_organization_number();?>
 					<?php }?>
@@ -31,12 +31,12 @@
 				<?php $curr_district = $organization->get_district();
 					if(!is_numeric($curr_district))
 					{
-						$curr_district = activitycalendar_soactivity::get_instance()->get_district_from_name($organization->get_district()); 
+						$curr_district = activitycalendar_soactivity::get_instance()->get_district_from_name($organization->get_district());
 					}
 				?>
 					<select name="org_district">
 						<option value="0">Ingen bydel valgt</option>
-					<?php 
+					<?php
 						foreach($districts as $d){?>
 							<option value="<?php echo $d['part_of_town_id']?>" <?php echo ($curr_district == $d['part_of_town_id'])? 'selected' : '' ?>><?php echo $d['name']?></option>
 						<?php }?>
@@ -46,7 +46,7 @@
                                                     if($organization->get_district()){?>
 							<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
 					<?php       }
-                                        
+
                                                 }else{
 							if($organization->get_district() && is_numeric($organization->get_district())){?>
 								<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
@@ -167,10 +167,12 @@
 						if($organization->get_original_org_id() && $organization->get_original_org_id() > 0)
 						{
 							echo '<input type="submit" name="update_organization" value="' . lang('update_org') . '"/>';
+							echo '<input type="submit" name="reject_organization_update" value="' . lang('reject') . '"/>';
 						}
 						else
 						{
 							echo '<input type="submit" name="store_organization" value="' . lang('store') . '"/>';
+							echo '<input type="submit" name="reject_organization" value="' . lang('reject') . '"/>';
 						}
 						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
 					}
@@ -187,4 +189,3 @@
 		</form>
 	</div>
 </div>
-				

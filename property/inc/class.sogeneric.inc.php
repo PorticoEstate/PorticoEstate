@@ -1139,6 +1139,54 @@
 						'menu_selection' 	=> 'admin::property::accounting::dimb_role'
 					);
 				break;
+			case 'condition_survey_status':
+				$info = array
+					(
+						'table' 			=> 'fm_condition_survey_status',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit status'),
+						'add_msg'			=> lang('add status'),
+						'name'				=> lang('request status'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::condition_survey_status'
+					);
+				break;
+
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array

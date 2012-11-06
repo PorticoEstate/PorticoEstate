@@ -1244,7 +1244,7 @@
 			$this->_total_records = count($this->attribute_group_tree);
 			$result = $this->attribute_group_tree;
 
-			if($this->total_records == 0)
+			if($this->_total_records == 0)
 			{
 				return $result;
 			}
@@ -1253,7 +1253,7 @@
 			{
 				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']:15;
 
-				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+				$page = ceil( ( $start / $this->_total_records ) * ($this->_total_records/ $num_rows) );
 
 				$out = array_chunk($result, $num_rows);
 

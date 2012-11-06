@@ -1,18 +1,17 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('swfdetect', function(Y) {
+YUI.add('swfdetect', function (Y, NAME) {
 
 /**
  * Utility for Flash version detection
  * @module swfdetect
  */
 
-// shortcuts
+// Shortcuts and helper methods
 var version = 0,
 	uA = Y.UA,
 	lG = Y.Lang,
@@ -69,6 +68,14 @@ else if(uA.ie) {
     }
 }
 
+/** Create a calendar view to represent a single or multiple
+  * month range of dates, rendered as a grid with date and
+  * weekday labels.
+  * 
+  * @class SWFDetect
+  * @constructor
+  */
+
 		
 Y.SWFDetect = {
 
@@ -112,4 +119,4 @@ Y.SWFDetect = {
 };
 
 
-}, '3.3.0' );
+}, '3.7.3', {"requires": ["yui-base"]});

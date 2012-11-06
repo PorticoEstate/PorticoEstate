@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('queue-promote', function(Y) {
+YUI.add('queue-promote', function (Y, NAME) {
 
 /**
  * Adds methods promote, remove, and indexOf to Queue instances.
@@ -36,7 +35,7 @@ Y.mix(Y.Queue.prototype, {
         var index = this.indexOf(callback);
 
         if (index > -1) {
-            this._q.unshift(this._q.splice(index,1));
+            this._q.unshift(this._q.splice(index,1)[0]);
         }
     },
 
@@ -57,4 +56,4 @@ Y.mix(Y.Queue.prototype, {
 });
 
 
-}, '3.3.0' ,{requires:['yui-base']});
+}, '3.7.3', {"requires": ["yui-base"]});

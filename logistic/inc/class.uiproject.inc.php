@@ -38,16 +38,16 @@
 
 		private $so;
 		public $public_functions = array(
-			'query' => true,
-			'index' => true,
-			'project_types' => true,
-			'view' => true,
-			'view_project_type' => true,
-			'edit_project_type' => true,
-			'edit_project_type_name' => true,
-			'add' => true,
-			'edit' => true,
-			'save' => true
+			'query' 									=> true,
+			'index' 									=> true,
+			'project_types' 					=> true,
+			'view' 										=> true,
+			'view_project_type' 			=> true,
+			'edit_project_type' 		 	=> true,
+			'edit_project_type_name' 	=> true,
+			'add' 										=> true,
+			'edit' 										=> true,
+			'save' 										=> true
 		);
 
 		public function __construct()
@@ -133,7 +133,12 @@
 			{
 				if (isset($result))
 				{
-					$rows[] = $result->serialize();
+					$project = $result->serialize();
+
+					$href = self::link(array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project['id']));
+					$project['add_activity_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Legg til aktivitet</a>";
+					
+					$rows[] = $project; 
 				}
 			}
 
@@ -178,7 +183,7 @@
 			$project_type_array = $this->so->get_project_types();
 
 			$data = array(
-				'datatable_name'	=> lang('project'),
+				'datatable_name'	=> lang('Overview projects'),
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -209,15 +214,15 @@
 					'source' => self::link(array('menuaction' => 'logistic.uiproject.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('Id'),
+							'sortable' => true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),		
+						array(
 							'key' => 'name',
 							'label' => lang('Project name'),
 							'sortable' => true
-						),
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable' => true,
-							'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
 							'key' => 'description',
@@ -228,6 +233,21 @@
 						array(
 							'key' => 'project_type_label',
 							'label' => lang('Project type'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'start_date',
+							'label' => lang('Start date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'end_date',
+							'label' => lang('End date'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'add_activity_link',
+							'label' => lang('Add activity'),
 							'sortable' => false
 						),
 						array(
@@ -288,7 +308,7 @@
 			{
 				//list project types
 				$data = array(
-					'datatable_name'	=> lang('project types'),
+					'datatable_name'	=> lang('Overview project types'),
 					'form' => array(
 						'toolbar' => array(
 							'item' => array(
@@ -316,7 +336,7 @@
 						'field' => array(
 							array(
 								'key' => 'id',
-								'label' => lang('ID'),
+								'label' => lang('Id'),
 								'sortable' => true,
 								'formatter' => 'YAHOO.portico.formatLink'
 							),
@@ -356,11 +376,8 @@
 					$project = $this->so->get_single($project_id);
 				}
 
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'project' => $project,
 					'view' => 'view_project'
 				);
@@ -389,12 +406,8 @@
 						$project = $objects[$keys[0]];
 					}
 				}
-
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
 					'project' => $project
 				);
 
@@ -439,12 +452,9 @@
 			}
 			else
 			{
-				$project_array = $project->toArray();
-
 				$data = array
 					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'project' => $project_array,
+					'project' => $project,
 					'editable' => true
 				);
 
@@ -514,8 +524,11 @@
 
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 			
 			phpgwapi_jquery::load_widget('core');
+			
 			self::add_javascript('logistic', 'logistic', 'project.js');
 			self::render_template_xsl(array('project/project_item'), $data);
 		}
@@ -534,7 +547,7 @@
 			}
 			
 			$project->populate();
-			
+
 			if( $project->validate() )
 			{
 				$project_id = $this->so->store($project);

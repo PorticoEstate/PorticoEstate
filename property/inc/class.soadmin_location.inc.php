@@ -476,7 +476,16 @@
 
 		function get_tables_to_alter()
 		{
-			$tables = array('fm_project','fm_tts_tickets','fm_request','fm_document','fm_investment');
+			$tables = array
+			(
+				'fm_project',
+				'fm_tts_tickets',
+				'fm_request',
+				'fm_document',
+				'fm_investment',
+				'fm_condition_survey'
+			);
+
 			$entity			= CreateObject('property.soadmin_entity');
 			$entity_list 	= $entity->read(array('allrows' => true));
 			foreach($entity_list as $entry)

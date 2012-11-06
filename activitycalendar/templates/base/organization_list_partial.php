@@ -9,7 +9,52 @@
      	window.location = 'index.php?menuaction=activitycalendar.uiorganization.index';
  		}
  	);
-
+<?php
+	if($list_id == 'new_organizations')
+	{
+		?>
+	// Defining columns for datatable
+	var columnDefs = [{
+		key: "organization_number",
+		label: "<?php echo lang('organization_number') ?>",
+	    sortable: false
+	},
+	{
+		key: "name",
+		label: "<?php echo lang('name') ?>",
+	    sortable: false
+	},
+	{
+		key: "district",
+		label: "<?php echo lang('district') ?>",
+	    sortable: false
+	},
+	{
+		key: "office",
+		label: "<?php echo lang('office') ?>",
+	    sortable: false
+	},
+	{
+		key: "description",
+		label: "<?php echo lang('description') ?>",
+	    sortable: false
+	},
+	{
+		key: "actions",
+		hidden: true
+	},
+	{
+		key: "labels",
+		hidden: true
+	},
+	{
+		key: "ajax",
+		hidden: true
+	}
+	];
+<?php }
+	else
+	{?>
 	// Defining columns for datatable
 	var columnDefs = [{
 		key: "organization_number",
@@ -49,6 +94,8 @@
 		hidden: true
 	}
 	];
+<?php	}
+	?>
 
 	<?php
 		if(isset($extra_cols)){

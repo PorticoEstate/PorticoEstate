@@ -383,13 +383,18 @@ a {
   text-decoration: none;
 }
 
-#innertoolbar-button, input[type="submit"] {
+#innertoolbar-button, input[type="submit"], input[type="button"]{
     background: none repeat scroll 0 0 #4F9AEA;
     border: 1px solid #4685C8;
     border-radius: 4px 4px 4px 4px;
     color: #FFFFFF;
     cursor: pointer;
     padding: 3px 15px;
+}
+
+input[type="submit"][disabled]
+{
+    background: none repeat scroll 0 0 #A3D1FF;
 }
 
 #innertoolbar-button {
@@ -855,23 +860,30 @@ ul.row li{
 }
 
 .btn-sm {
-  font-size: 12px;
-  padding: 1px 4px;
+    font-size: 12px;
+    padding: 1px 4px;
+    text-align: center;
 }
 
-.btn.cancel, .btn_m.cancel {
+.btn.cancel, .btn_m.cancel, .btn-sm.cancel {
   background: none repeat scroll 0 0 #EEEEEE;
   border: 1px solid #CCCCCC;
   color: #333333;
 }
 
+.btn.non-focus {
+    background: none repeat scroll 0 0 #A0C8F2;
+    border: 1px solid #74B0EF;
+    color: #0A3E74;
+}
+
 .btn.focus, .btn_m.focus {
-  background: none repeat scroll 0 0 #F57056;
-  border-color: #EE836F -moz-use-text-color #CB563F;
-  border-style: solid none;
-  border-width: 1px 0;
-  color: #FFFFFF;
-  margin-top: 1px;
+    background: none repeat scroll 0 0 #F57056;
+    border-color: #EE836F #CB563F #CB563F;
+    border-style: solid none;
+    border-width: 1px 0;
+    color: #FFFFFF;
+    margin-top: 1px;
 }
 
 /* =======================================  MAIN CONTENT  ========================================= */
@@ -916,7 +928,7 @@ input.date {
 
 input.datetime {
   text-align: right;
-  width: 100px;
+  width: 110px;
 }
 
 /* =======================================  CHECK LIST  ========================================= */
@@ -2287,9 +2299,16 @@ p.no_items_msg {
 	margin:0 0 10px;
 }
 
-#resource-allocation form{
-	margin: 20px;
+#resource-list {
 	border: 1px solid #B0D9FF;
+}
+
+#resource-allocation form {
+	padding: 20px;	
+}
+
+#resource-allocation form input[type=submit]{
+	margin-top: 10px;	
 }
 
 #resource-list .resource {
@@ -2319,20 +2338,14 @@ p.no_items_msg {
 }
 
 #resource-list .resource.heading {
-    background: none repeat scroll 0 0 #B0D9FF;
-    color: #092845;
+    background: none repeat scroll 0 0 #6292C5;
+    color: #FFFFFF;
     font-weight: bold;
     padding: 5px 20px;
 }
 
 #resource_alloc_wrp {
-	margin: 20px;
 	padding: 20px;	
-}
-
-#resource_alloc_wrp #btn_menu {
-	float:left;
-	margin-left: 20px;
 }
 
 #resource_alloc_wrp input[type="submit"] {
@@ -2344,4 +2357,91 @@ p.no_items_msg {
 
 #resource_alloc_wrp h2{
 	margin-top: 0;	
+}
+
+#requirement-container .btn-sm {
+    border-color: #4378B1 #2663A3 #366CA4;
+    font-size: 12px;
+    padding: 1px 8px;
+}
+
+#details table {
+    margin: 0;
+    padding: 0;
+}
+
+#requirement-container table td{
+	padding: 5px 0;	
+}
+
+#activity-tabview .yui-navset {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.yui-dt19-col-delete_link .yui-dt-liner, .yui-dt19-col-alloc_link .yui-dt-liner {
+	text-align: center;	
+}
+
+.yui-dt19-col-no_of_items .yui-dt-liner, .yui-dt19-col-allocated .yui-dt-liner {
+	text-align: center;
+}
+
+
+#allocation-container .yui-dt-col-delete_link .yui-dt-liner {
+	text-align: center;
+}
+	
+#add-requirement-btn {
+    float: left;
+    margin-left: 725px;
+    text-align: center;
+    width: 120px;
+}
+
+#add-sub-activity-btn {
+    float: left;
+    margin-left: 525px;
+    margin-top: 0;
+    text-align: center;
+    width: 136px;
+}
+
+#sub-activities-container th div, #requirement-container th div {
+    /*background: #6292C5;*/
+}
+
+#sub-activities-container .yui-dt table, #requirement-container .yui-dt table {
+    /*border: 1px solid #98BFE8;*/
+}
+
+#sub-activities-container .yui-dt table {
+    width: 800px;
+}
+
+#requirement-container .yui-dt table, #allocation-container .yui-dt table {
+    width: 1000px;
+}
+	
+#sub-activities-container th a, #sub-activities-container th span, 
+#requirement-container th a, #requirement-container th span,
+#allocation-container th a, #allocation-container th span,
+#datatable-container th a, #datatable-container th span
+{
+    /*color: #F9FCFE;*/
+    font-weight: bold;
+}
+
+#breadcrumb {
+	clear: both;
+  font-size: 16px;
+  margin-bottom: 1em;
+}
+
+#breadcrumb img{
+	height: 14px;
+}
+
+#requirement-container .btn-sm.cancel {
+  border: 1px solid #CCCCCC;
 }
