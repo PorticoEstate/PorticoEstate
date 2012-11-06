@@ -197,6 +197,21 @@
 				return false;
 			}
 		}
+		
+		public function delete_resources($requirement_id)
+		{
+			$requirement_id = (int) $requirement_id;
+			$status = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id");
+					
+			if( $status )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public static function get_instance()
 		{
