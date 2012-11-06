@@ -379,44 +379,30 @@
 			$project_id = phpgw::get_var('project_id');
 			
 			if($activity == null)
-			{
-				if( $project_id && is_numeric($project_id) )
-				{
-					$project = $this->so_project->get_single($project_id);
-				}
-				
+			{			
 				if( $activity_id && is_numeric($activity_id) )
 				{
 					$activity = $this->so->get_single($activity_id);
 				}
 				else
 				{
-					$activity = new logistic_activity();	
-				}
-				
-				if($activity->get_project_id() == '')
-				{
-					$activity->set_project_id( $project_id );
-				}
-				
-				if($parent_activity_id > 0)
-				{
-					$activity->set_parent_id( $parent_activity_id );
-					$parent_activity = $this->so->get_single( $parent_activity_id );
-					$activity->set_project_id( $parent_activity->get_project_id() );
+					$activity = new logistic_activity();
 					
-					$activity->set_start_date($parent_activity->get_start_date());
-					$activity->set_end_date($parent_activity->get_end_date());
+					if( $project_id && is_numeric($project_id) )
+					{
+						$project = $this->so_project->get_single($project_id);
+						$activity->set_project_id( $project_id );
+					}
+					else if($parent_activity_id > 0)
+					{
+						$activity->set_parent_id( $parent_activity_id );
+						$parent_activity = $this->so->get_single( $parent_activity_id );
+						$activity->set_project_id( $parent_activity->get_project_id() );
+						
+						$activity->set_start_date($parent_activity->get_start_date());
+						$activity->set_end_date($parent_activity->get_end_date());
+					}
 				}
-				else
-				{
-					$projects = $this->so_project->get();
-				}
-			}
-
-			if($activity->get_parent_id() > 0)
-			{
-				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 			}
 			
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
@@ -431,22 +417,23 @@
 				'editable' => true,
 				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
 			);
-			
+						
 			if($project)
 			{
 				$data['project'] = $project;
 			}
 			
-			if($projects)
+			if($activity->get_parent_id() > 0)
 			{
+				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
+				$data['parent_activity'] = $parent_activity;
+			}
+			else
+			{
+				$projects = $this->so_project->get();
 				$data['projects'] = $projects;
 			}
 			
-			if($parent_activity)
-			{
-				$data['parent_activity'] = $parent_activity;
-			}
-
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
