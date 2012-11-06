@@ -1,5 +1,6 @@
 <xsl:template name="requirement_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
+<xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
 
 <div class="content-wrp">
 	<div id="details">
@@ -21,15 +22,15 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/start_date" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<input class="date" id="start_date" name="start_date" type="text">
+							<input class="datetime" id="start_date" name="start_date" type="text">
 						    <xsl:if test="requirement/start_date != ''">
-						     	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></xsl:attribute>
+						     	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(requirement/start_date))"/></xsl:attribute>
 						    </xsl:if>
 				    	</input>
 				    	<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
-						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/start_date))"/></span>
+						<span><xsl:value-of select="php:function('date', $datetime_format, number(requirement/start_date))"/></span>
 						</xsl:otherwise>
 					</xsl:choose>
 				</dd>
@@ -43,15 +44,15 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="requirement/error_msg_array/end_date" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<input class="date" id="end_date" name="end_date" type="text">
+							<input class="datetime" id="end_date" name="end_date" type="text">
 					    	<xsl:if test="requirement/end_date != ''">
-					      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></xsl:attribute>
+					      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(requirement/end_date))"/></xsl:attribute>
 					    	</xsl:if>
 				    	</input>
 				    	<span class="help_text line">Angi startdato for aktiviteten</span>
 						</xsl:when>
 						<xsl:otherwise>
-						<span><xsl:value-of select="php:function('date', $date_format, number(requirement/end_date))"/></span>
+						<span><xsl:value-of select="php:function('date', $datetime_format, number(requirement/end_date))"/></span>
 						</xsl:otherwise>
 					</xsl:choose>
 				</dd>
