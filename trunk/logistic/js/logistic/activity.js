@@ -3,18 +3,12 @@ $(document).ready(function(){
 		 var parent_id = $(this).val();
 		 var thisForm = $(this).closest("form");
 		 $(thisForm).find("input[name=parent_activity_id]").val(parent_id);
-
-		 alert(activity_id);
-		 
 	});
 	
 	$("#select_project").change(function () {
 		 var project_id = $(this).val();
 		 var thisForm = $(this).closest("form");
 		 $(thisForm).find("input[name=project_id]").val(project_id);
-
-		 alert(project_id);
-		 
 	});
 	
 	$("#activity_details input").focus(function(e){
