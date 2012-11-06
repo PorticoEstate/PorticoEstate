@@ -450,8 +450,8 @@
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			
 			self::add_javascript('logistic', 'logistic', 'activity.js');
 			self::render_template_xsl('activity/add_activity_item', $data);

@@ -1,5 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
+<xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
@@ -143,14 +144,14 @@
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
 								<div class="help_text"><xsl:value-of select="php:function('lang','Give start date to activity')" /></div>
-								<input class="date" id="start_date" name="start_date" type="text">
+								<input class="datetime" id="start_date" name="start_date" type="text">
 						    	<xsl:if test="activity/start_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -165,14 +166,14 @@
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
 								<div class="help_text"><xsl:value-of select="php:function('lang','Give end date to activity')" /></div>
-								<input class="date" id="end_date" name="end_date" type="text">
+								<input class="datetime" id="end_date" name="end_date" type="text">
 						    	<xsl:if test="activity/end_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
