@@ -2100,6 +2100,7 @@
 
 		function no_access()
 		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'), $this->xsl_rootdir);
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));

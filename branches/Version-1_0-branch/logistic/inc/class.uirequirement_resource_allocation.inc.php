@@ -60,7 +60,8 @@
 			'edit' => true,
 			'view' => true,
 			'index' => true,
-			'save' => true
+			'save' => true,
+			'delete' => true
 		);
 
 		public function __construct()
@@ -130,7 +131,7 @@
 					'field' => array(
 					array(
 							'key' => 'id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => true,
 						),
 						array(
@@ -153,10 +154,15 @@
 							'label' => lang('Resource id'),
 							'sortable' => true
 						),
+						array(
+							'key' => 'delete_link',
+							'label' => lang('Delete'),
+							'sortable' => true
+						),
 					)
 				),
-			);
-
+			);			
+			
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
@@ -224,10 +230,18 @@
 			{
 				if (isset($result))
 				{
-					$rows[] = $result->serialize();
+					$requirement = $result->serialize();			
+					
+					$delete_href = self::link(
+																array('menuaction' => 'logistic.uirequirement_resource_allocation.delete', 
+																			'id' => $requirement['id'], 
+																			'phpgw_return_as' => 'json')
+																);
+					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">Slett</a>";
+					$rows[] = $requirement;
 				}
 			}
-
+			
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -342,6 +356,7 @@
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
 			
+			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
 			
 			$data = array
 			(
@@ -351,36 +366,65 @@
 				'allocation_suggestions' 	=> $allocation_suggestions,
 				'editable' 								=> true
 			);
-		
-			self::render_template_xsl(array('allocation/allocation_suggestions'), $data);
+			
+			self::render_template_xsl(array('allocation/book_resources'), $data);
 		}
 
 		public function save()
 		{
 			$requirement_id = phpgw::get_var('requirement_id');
-			
+		
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
 			}
 			
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$chosen_resources = phpgw::get_var('chosen_resources');
 			
-			$user_id = $GLOBALS['phpgw_info']['user']['id'];
-			
-			foreach($chosen_resources as $resource_id)
+			$filters = array('requirement_id' => $requirement->get_id());
+			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);	
+							 	
+			$num_required = $requirement->get_no_of_items();
+							
+			$num_allowed_bookings = $num_required - $num_allocated;
+					
+			if( count($chosen_resources) <=  $num_allowed_bookings)
 			{
-				$resource_alloc = new logistic_requirement_resource_allocation();
-				$resource_alloc->set_requirement_id( $requirement->get_id() );
-				$resource_alloc->set_resource_id( $resource_id );
-				$resource_alloc->set_location_id( $requirement->get_location_id() );
-				$resource_alloc->set_create_user( $user_id );
+				foreach($chosen_resources as $resource_id)
+				{
+					$resource_alloc = new logistic_requirement_resource_allocation();
+					$resource_alloc->set_requirement_id( $requirement->get_id() );
+					$resource_alloc->set_resource_id( $resource_id );
+					$resource_alloc->set_location_id( $requirement->get_location_id() );
+					$resource_alloc->set_create_user( $user_id );
+					
+					$resource_alloc_id = $this->so->store( $resource_alloc );
+				}
 				
-				$resource_alloc_id = $this->so->store( $resource_alloc );
-			}
+				$activity = $this->so_activity->get_single($requirement->get_activity_id()); 
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement_resource_allocation.index', 'id' => $allocation_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
+			}
 		}
+		
+		public function delete()
+		{
+			$resource_allocation_id = phpgw::get_var('id');
+				
+			$status = $this->so->delete($resource_allocation_id);
+		
+			if($status){
+				return json_encode( array( "status" => "deleted" ) );
+			}
+			else{
+				return json_encode( array( "status" => "not_deleted" ) );
+			}
+		} 
 		
 		function convert_to_array($object_list)
 		{
@@ -433,7 +477,6 @@
 						'activity' => $activity,
 						'allocation' => $allocation,
 						'requirement' => $requirement,
-						'img_go_home' => 'rental/templates/base/images/32x32/actions/go-home.png',
 						'dateformat' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 				);
 

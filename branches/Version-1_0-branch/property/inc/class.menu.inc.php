@@ -482,6 +482,16 @@
 							'text'	=> lang('Request condition_type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'r_condition_type') )
 						),
+						'condition_survey_cats'	=> array
+						(
+							'text'	=> lang('condition survey Categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project.condition_survey', 'global_cats' => 'true', 'menu_selection' => 'admin::property::condition_survey_cats') )
+						),
+						'condition_survey_status'	=> array
+						(
+							'text'	=> lang('condition survey status'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'condition_survey_status') )
+						),
 						'authorities_demands'	=> array
 						(
 							'text'	=> lang('authorities demands'),
@@ -794,7 +804,7 @@
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uicondition_survey.index')),
 								'text'	=> lang('condition survey'),
-								'image'		=> array('property', 'project_request')
+								'image'		=> array('property', 'condition_survey')
 							),
 							'request'	=> array
 							(

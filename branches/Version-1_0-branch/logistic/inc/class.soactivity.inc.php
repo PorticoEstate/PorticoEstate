@@ -32,6 +32,7 @@
 
 	class logistic_soactivity extends logistic_socommon
 	{
+		public $total_records = 0;
 		protected static $so;
 		protected $activity_tree = array();
 
@@ -214,7 +215,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
+		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $allrows)
 		{
 			$results = array();			// Array to store result objects
 			$map = array();				// Array to hold number of records per target object
@@ -257,7 +258,7 @@
 			}
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-			$ret = $this->read_tree($sql, $filters);
+			$ret = $this->read_tree($sql, $filters, $num_of_objects, $allrows);
 
 			return $ret;
 		}
@@ -280,7 +281,13 @@
 
 			$parent_id = $this->db->f('parent_activity_id');
 			$name = $this->db->f('name', true);
-			$path = array($name);
+			$path = array();
+			$path[] = array
+			(
+				'id'	=> $node,
+				'name'	=> $name
+			);
+
 			if ($parent_id)
 			{
 				$path = array_merge($this->get_path($parent_id), $path);
@@ -298,7 +305,7 @@
 		 * array, never null. The array keys are the respective index numbers.
 		 */
 
-		public function read_tree($sql, $filters)
+		public function read_tree($sql, $filters, $num_of_objects = 0, $allrows = false)
 		{
 			if($filters['activity'])
 			{
@@ -340,8 +347,40 @@
 				$this->get_children($activity['id'], 1);
 			}
 
+
 			$result = array();
-			foreach($this->activity_tree as $_activity)
+
+//------ Start pagination
+			$this->total_records = count($this->activity_tree);
+
+			if($this->total_records == 0)
+			{
+				return $result;
+			}
+
+			if($num_of_objects)
+			{
+				$num_rows = $num_of_objects;
+			}
+			else
+			{
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			}
+
+			if($allrows)
+			{
+				$out = $this->activity_tree;
+			}
+			else
+			{
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+				$activity_tree = array_chunk($this->activity_tree, $num_rows);
+				$out = $activity_tree[$page];
+			}
+
+//------ End pagination
+
+			foreach($out as $_activity)
 			{
 				$this->db->query("SELECT * FROM lg_activity WHERE id ={$_activity['id']}",__LINE__,__FILE__);
 				$this->db->next_record();
@@ -349,7 +388,6 @@
 				$activity_obj->set_name($_activity['name']);
 				$result[] = $activity_obj;
 			}
-
 			return $result;
 		}
 

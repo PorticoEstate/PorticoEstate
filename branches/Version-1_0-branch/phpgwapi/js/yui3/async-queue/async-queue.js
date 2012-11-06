@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('async-queue', function(Y) {
+YUI.add('async-queue', function (Y, NAME) {
 
 /**
  * <p>AsyncQueue allows you create a chain of function callbacks executed
@@ -70,7 +69,7 @@ var Queue   = Y.AsyncQueue,
  *  <li><code>until</code>: (function to run until iterations &lt;= 0)</li>
  * </ul>
  *
- * @property AsyncQueue.defaults
+ * @property defaults
  * @type {Object}
  * @static
  */
@@ -103,7 +102,7 @@ Y.extend(Queue, Y.EventTarget, {
      * @protected
      */
     _init : function () {
-        Y.EventTarget.call(this, { emitFacade: true });
+        Y.EventTarget.call(this, { prefix: 'queue', emitFacade: true });
 
         this._q = [];
 
@@ -526,4 +525,4 @@ Y.extend(Queue, Y.EventTarget, {
 
 
 
-}, '3.3.0' ,{requires:['event-custom']});
+}, '3.7.3', {"requires": ["event-custom"]});

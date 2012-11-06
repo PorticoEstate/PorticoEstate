@@ -1,8 +1,7 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add("swfdetect",function(C){var J=0,H=C.UA,E=C.Lang,M="ShockwaveFlash",B,G,D,N,A;function L(O){return parseInt(O,10);}function F(O){if(E.isNumber(L(O[0]))){H.flashMajor=O[0];}if(E.isNumber(L(O[1]))){H.flashMinor=O[1];}if(E.isNumber(L(O[2]))){H.flashRev=O[2];}}if(H.gecko||H.webkit||H.opera){if((B=navigator.mimeTypes["application/x-shockwave-flash"])){if((G=B.enabledPlugin)){D=G.description.replace(/\s[rd]/g,".").replace(/[A-Za-z\s]+/g,"").split(".");F(D);}}}else{if(H.ie){try{N=new ActiveXObject(M+"."+M+".6");N.AllowScriptAccess="always";}catch(I){if(N!==null){J=6;}}if(J===0){try{A=new ActiveXObject(M+"."+M);D=A.GetVariable("$version").replace(/[A-Za-z\s]+/g,"").split(",");F(D);}catch(K){}}}}C.SWFDetect={getFlashVersion:function(){return(String(H.flashMajor)+"."+String(H.flashMinor)+"."+String(H.flashRev));},isFlashVersionAtLeast:function(R,T,S){var P=L(H.flashMajor),Q=L(H.flashMinor),O=L(H.flashRev);R=L(R||0);T=L(T||0);S=L(S||0);if(R===P){if(T===Q){return S<=O;}return T<Q;}return R<P;}};},"3.3.0");
+YUI.add("swfdetect",function(e,t){function c(e){return parseInt(e,10)}function h(e){i.isNumber(c(e[0]))&&(r.flashMajor=e[0]),i.isNumber(c(e[1]))&&(r.flashMinor=e[1]),i.isNumber(c(e[2]))&&(r.flashRev=e[2])}var n=0,r=e.UA,i=e.Lang,s="ShockwaveFlash",o,u,a,f,l;if(r.gecko||r.webkit||r.opera){if(o=navigator.mimeTypes["application/x-shockwave-flash"])if(u=o.enabledPlugin)a=u.description.replace(/\s[rd]/g,".").replace(/[A-Za-z\s]+/g,"").split("."),h(a)}else if(r.ie){try{f=new ActiveXObject(s+"."+s+".6"),f.AllowScriptAccess="always"}catch(p){f!==null&&(n=6)}if(n===0)try{l=new ActiveXObject(s+"."+s),a=l.GetVariable("$version").replace(/[A-Za-z\s]+/g,"").split(","),h(a)}catch(d){}}e.SWFDetect={getFlashVersion:function(){return String(r.flashMajor)+"."+String(r.flashMinor)+"."+String(r.flashRev)},isFlashVersionAtLeast:function(e,t,n){var i=c(r.flashMajor),s=c(r.flashMinor),o=c(r.flashRev);return e=c(e||0),t=c(t||0),n=c(n||0),e===i?t===s?n<=o:t<s:e<i}}},"3.7.3",{requires:["yui-base"]});

@@ -15,38 +15,29 @@
   	</func:result>
 </func:function>
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:call-template name="yui_phpgw_i18n"/>
-	
+<xsl:template name="requirement_overview" xmlns:php="http://php.net/xsl">
 	<div id="resource_alloc_wrp" class="content-wrp">
-
-			<div id="paging"></div>
-
-			<h2>Krav</h2>
-			<div style="float:left;margin-bottom: 40px;" id="requirement-container"></div>
-
-			<div id="btn_menu">
-				<xsl:variable name="add_requirement_url">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.edit' )" />
-				</xsl:variable>
+	
+			<xsl:variable name="add_req_params">
+				<xsl:text>menuaction:logistic.uirequirement.edit, activity_id:</xsl:text>
+				<xsl:value-of select="activity/id" />
+			</xsl:variable>
+			<xsl:variable name="add_req_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $add_req_params )" />
+			</xsl:variable>
+			
+			<h2 style="float:left;"><xsl:value-of select="php:function('lang', 'Resource requirement')" /></h2>
+			<a id="add-requirement-btn" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
+			<div style="clear:both;" id="paging"></div>
+			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
-				<form action="{$add_requirement_url}" name="acl_form" id="acl_form" method="post">
-					<input type="hidden" name="activity_id" value="{activity/id}" />
-					<input class="btn" type="submit">
-						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'Add requirement')" />
-						</xsl:attribute>
-					</input>
-				</form>
-				</div>
-				
-			<h2 style="clear:both;">Allokerte ressurser</h2>
+			<h2 style="clear:both;"><xsl:value-of select="php:function('lang', 'Allocated resouces')" /><span style="margin-left:470px;font-size:14px;">(<xsl:value-of select="php:function('lang', 'Click on table above to get allocations')" />)</span></h2>
 			<div id="allocation-container"></div>
 	</div>
-	<xsl:call-template name="datasource-definition" />
+	<xsl:call-template name="datasource-def" />
 </xsl:template>
 
-<xsl:template name="datasource-definition">
+<xsl:template name="datasource-def">
 
 	<script>
 	YAHOO.util.Event.onDOMReady(function(){
@@ -96,10 +87,12 @@
 				var requestUrl = phpGWLink('index.php', oArgs, true);
 			
 				var myColumnDefs = [ 
-			        {key:"id", sortable:true},
+			        {key:"id", label:'Id', sortable:true},
+			        {key:"fm_bim_item_name", label:'Navn på ressurs', sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
-			        {key:"requirement_id", sortable:true}, 
-			        {key:"resource_id", sortable:true}
+			        {key:"location_code", label:'Lokasjonskode', sortable:true},
+			        {key:"fm_bim_item_address", label:'Adresse', sortable:true},
+			        {key:"delete_link", label:'Slett bestilling', sortable:true}
 			    ]; 
 			
 				YAHOO.portico.inlineTableHelper('allocation-container', requestUrl, myColumnDefs);

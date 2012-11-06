@@ -1,6 +1,3 @@
-<!-- $Id: activity_item.xsl 10096 2012-10-03 07:10:49Z vator $ -->
-<!-- item  -->
-
 <xsl:template name="requirement_values" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 
@@ -156,7 +153,13 @@
 							
 												</xsl:when>
 												<xsl:when test="cust_attribute/column_info/type = 'LB'">
-													<span style="margin-left:10px;"><xsl:value-of select="attrib_value" /></span>
+													<xsl:for-each select="cust_attribute/choice">
+															<xsl:if test="id = //attrib_value">
+																<span>
+																	<xsl:value-of select="value"/>
+																</span>
+															</xsl:if>
+													</xsl:for-each>
 												</xsl:when>
 											</xsl:choose>
 										</div>
@@ -173,12 +176,24 @@
 			</dl>
 			
 			<div class="form-buttons">
+			
+				<xsl:variable name="view_resources_params">
+					<xsl:text>menuaction:logistic.uiactivity.view_resource_allocation, activity_id:</xsl:text>
+				  <xsl:value-of select="activity/id" />
+				</xsl:variable>
+				<xsl:variable name="view_resources_url">
+				  <xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
+				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="editable">
 						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 						<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 						<input type="submit" name="save_requirement_values" value="{$lang_save}" title = "{$lang_save}" />
 						<input type="submit" name="cancel_requirement_values" value="{$lang_cancel}" title = "{$lang_cancel}" />
+						
+						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
+						</a>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="params">
@@ -189,6 +204,10 @@
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $params )" />
 							</xsl:variable>
 							<a class="btn" href="{$edit_url}"><xsl:value-of select="php:function('lang', 'edit')" /></a>
+							
+						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
+						</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>

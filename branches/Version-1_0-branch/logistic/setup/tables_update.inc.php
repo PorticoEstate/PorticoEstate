@@ -35,3 +35,27 @@
 		}
 	}
 	
+	$test[] = '0.0.3';
+	function logistic_upgrade0_0_3()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+	
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_project','start_date',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_project','end_date',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.4';
+			return $GLOBALS['setup_info']['logistic']['currentver'];
+		}
+	}
+	

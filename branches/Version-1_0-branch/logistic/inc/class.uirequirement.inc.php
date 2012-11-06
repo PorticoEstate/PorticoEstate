@@ -34,6 +34,7 @@
 	phpgw::import_class('logistic.soproject');
 	phpgw::import_class('property.soadmin_entity');
 	phpgw::import_class('logistic.soresource_type_requirement');
+	phpgw::import_class('logistic.sorequirement_resource_allocation');
 
 	include_class('logistic', 'requirement');
 	phpgw::import_class('phpgwapi.datetime');
@@ -47,6 +48,7 @@
 		private $so_activity;
 		private $so_project;
 		private $so_resource_type_requirement;
+		private $so_resource_allocation;
 
 		public $public_functions = array(
 			'query' 									=> true,
@@ -71,7 +73,7 @@
 			$this->so_activity = CreateObject('logistic.soactivity');
 			$this->so_project = CreateObject('logistic.soproject');
 			$this->so_resource_type_requirement = CreateObject('logistic.soresource_type_requirement');
-
+			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
 		}
@@ -153,13 +155,32 @@
 				{
 					$_checked = 'checked="checked"';
 				}
-
-				$href = self::link(array('menuaction' => 'logistic.uirequirement.delete', 'id' => $entry['id']));
-				$entry['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$href}\">Slett</a>";
 				
+			  $num_required = $entry['no_of_items'];
+	  
+				$filters = array('requirement_id' => $entry['id']);
+				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
+				
+				$entry['allocated'] = $num_allocated;
 				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
-				$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
-				$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Alloker</a>";
+					
+				if($num_allocated == $num_required)
+				{
+					$entry['status'] = "OK";
+					
+					$entry['alloc_link'] = "<span class='btn-sm cancel'>Tildel ressurser</span>";
+				}
+				else
+				{
+					$num_remaining = $num_required - $num_allocated;
+					$entry['status'] = "MANGLER (" . $num_remaining . ")";
+					
+					$href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.edit', 'requirement_id' => $entry['id']));
+					$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
+				}
+				
+				$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
+				$entry['edit_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Endre behov</a>";
 			}
 
 			// ... add result data
@@ -222,7 +243,7 @@
 						),
 						array(
 							'key' => 'id',
-							'label' => lang('ID'),
+							'label' => lang('Id'),
 							'sortable' => true,
 						),
 						array(
@@ -237,7 +258,12 @@
 						),
 						array(
 							'key' => 'no_of_items',
-							'label' => lang('No of items'),
+							'label' => lang('Num required'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'allocated',
+							'label' => lang('Num allocated'),
 							'sortable' => false
 						),
 						array(
@@ -255,13 +281,18 @@
 							'hidden' => true
 						),
 						array(
-							'key' => 'delete_link',
-							'label' => lang('Delete requirement'),
+							'key' => 'alloc_link',
+							'label' => lang('Allocate resources'),
 							'sortable' => false,
 						),
 						array(
-							'key' => 'alloc_link',
-							'label' => lang('Allocate resources'),
+							'key' => 'status',
+							'label' => lang('Status'),
+							'sortable' => false,
+						),
+						array(
+							'key' => 'edit_requirement_link',
+							'label' => lang('Status'),
 							'sortable' => false,
 						),
 					)
@@ -289,6 +320,8 @@
 					$requirement = $this->so->get_single($requirement_id);
 				}
 
+				$activity = $this->so_activity->get_single($requirement->get_activity_id());
+				
 				$location_info = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
 				
 				$tabs = $this->make_tab_menu($requirement_id);
@@ -298,6 +331,7 @@
 					'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 					'view'				=> "requirement_details",
 					'requirement' => $requirement,
+					'activity' 	=> $activity,
 					'location' 		=> $location_info,
 				);
 
@@ -316,7 +350,7 @@
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
-			if ($requirement_id && is_numeric($requirement_id))
+			if ( ($requirement == null) && ($requirement_id) && (is_numeric($requirement_id)) )
 			{
 				$requirement = $this->so->get_single($requirement_id);
 
@@ -391,6 +425,11 @@
 			{
 				$data['activity'] = $activity;
 			}
+			else
+			{
+				$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
+				$data['activity'] = $activity;
+			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
@@ -415,8 +454,35 @@
 			
 			if( $requirement->validate() )
 			{
+				$GLOBALS['phpgw']->db->transaction_begin();
+//				$db_requirement = $this->so->get_db();
+//				$db_requirement->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));	
+				
+//				$db_requirement_values = $this->so_requirement_value->get_db();
+//				$db_requirement_values->transaction_begin();
+				$status_delete_values = $this->so_requirement_value->delete_resources($requirement_id);
+				
+//				$db_resource_allocation = $this->so_resource_allocation->get_db();
+//				$db_resource_allocation->transaction_begin();
+				$status_delete_resources = $this->so->delete_resource_allocations($requirement_id);
+				
+				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
+				{
+					$GLOBALS['phpgw']->db->transaction_commit();
+//					$db_requirement->transaction_commit();
+//					$db_requirement_values->transaction_commit();
+//					$db_resource_allocation->transaction_commit();
+				}
+				else
+				{
+					$GLOBALS['phpgw']->db->transaction_abort();
+//					$db_requirement->transaction_abort();
+//					$db_requirement_values->transaction_abort();
+//					$db_resource_allocation->transaction_abort();
+				}			
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
 			else
 			{
@@ -571,7 +637,7 @@
 
 				$temp_requirement_attributes_array[$cust_attribute_id][] = array(
 					"id" 							=> $requirement_value->get_id(),
-					"attrib_value" 					=> $requirement_value->get_value(),
+					"attrib_value" 		=> $requirement_value->get_value(),
 					"operator" 				=> $requirement_value->get_operator(),
 					"cust_attribute" 	=> $attrib_data
 				);

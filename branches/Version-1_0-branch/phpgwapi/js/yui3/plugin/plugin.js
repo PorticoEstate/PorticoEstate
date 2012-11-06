@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('plugin', function(Y) {
+YUI.add('plugin', function (Y, NAME) {
 
     /**
      * Provides the base Plugin class, which plugin developers should extend, when creating custom plugins
@@ -31,7 +30,7 @@ YUI.add('plugin', function(Y) {
     /**
      * Object defining the set of attributes supported by the Plugin.Base class
      * 
-     * @property Plugin.Base.ATTRS
+     * @property ATTRS
      * @type Object
      * @static
      */
@@ -53,7 +52,7 @@ YUI.add('plugin', function(Y) {
      * The string identifying the Plugin.Base class. Plugins extending
      * Plugin.Base should set their own NAME value.
      *
-     * @property Plugin.Base.NAME
+     * @property NAME
      * @type String
      * @static
      */
@@ -64,7 +63,7 @@ YUI.add('plugin', function(Y) {
      * when plugged into a Plugin Host. Plugins extending Plugin.Base,
      * should set their own NS value.
      *
-     * @property Plugin.NS
+     * @property NS
      * @type String
      * @static
      */
@@ -231,4 +230,4 @@ YUI.add('plugin', function(Y) {
     Y.namespace("Plugin").Base = Plugin;
 
 
-}, '3.3.0' ,{requires:['base-base']});
+}, '3.7.3', {"requires": ["base-base"]});

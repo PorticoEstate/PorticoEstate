@@ -395,6 +395,11 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
 			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
 			*/
+			if(!is_array($targets))
+			{
+				$targets = array($targets);
+			}
+
 			$lang_font_style = lang('Font Style');
 			$lang_lists = lang('Lists');
 			$lang_insert_item = lang('Insert Item');

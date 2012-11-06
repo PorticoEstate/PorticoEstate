@@ -21,6 +21,8 @@ $phpgw_baseline = array(
 						'description' => array('type' => 'text', 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'start_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'end_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				),
 				'pk' => array('id'),
 				'fk' => array('lg_project_type' => array('project_type_id' => 'id')),

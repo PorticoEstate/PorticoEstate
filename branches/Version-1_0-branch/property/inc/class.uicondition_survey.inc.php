@@ -58,7 +58,9 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
+			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
+
 
 		public function index()
 		{
@@ -71,7 +73,8 @@
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 
-			$survey_type_array = array();
+			$categories = $this->_get_categories();
+			
 
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
@@ -79,9 +82,9 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter',
-								'name' => 'project_type',
-								'text' => lang('Project_type') . ':',
-								'list' => $survey_type_array,
+								'name' => 'cat_id',
+								'text' => lang('category') . ':',
+								'list' => $categories,
 							),
 							array('type' => 'text',
 								'text' => lang('search'),
@@ -94,10 +97,22 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => lang('t_new_project'),
+								'value' => lang('new survey'),
 								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 								'class' => 'new_item'
 							),
+							array(
+								'type' => 'link',
+								'value' => lang('download'),
+								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'export' => true, 'allrows' => true)),
+								'class' => 'new_item'
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['allrows'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'allrows' => true))
+							),
+
 						),
 					),
 				),
@@ -105,25 +120,25 @@
 					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'name',
-							'label' => lang('Project name'),
-							'sortable' => true
-						),
-						array(
 							'key' => 'id',
 							'label' => lang('ID'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
+							'key' => 'name',
+							'label' => lang('name'),
+							'sortable' => true
+						),
+						array(
 							'key' => 'description',
-							'label' => lang('Project description'),
+							'label' => lang('description'),
 							'sortable' => false,
 							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
 						),
 						array(
-							'key' => 'project_type_label',
-							'label' => lang('Project type'),
+							'key' => 'survey_type_label',
+							'label' => lang('type'),
 							'sortable' => false
 						),
 						array(
@@ -140,7 +155,7 @@
 					(
 						array
 						(
-							'name'		=> 'project_id',
+							'name'		=> 'id',
 							'source'	=> 'id'
 						),
 					)
@@ -148,8 +163,8 @@
 
 			$data['datatable']['actions'][] = array
 					(
-						'my_name'		=> 'new_activity',
-						'text' 			=> lang('t_new_activity'),
+						'my_name'		=> 'edit_survey',
+						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
@@ -165,11 +180,12 @@
 		{
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
 				'query' => phpgw::get_var('query'),
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
-				'filters' => $filters
+				'cat_id' => phpgw::get_var('dir', 'int', 'REQUEST', 0),
+				'allrows' => phpgw::get_var('allrows', 'bool')
 			);
 
 			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
@@ -180,62 +196,18 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			// YUI variables for paging and sorting
-			$start_index = phpgw::get_var('startIndex', 'int');
-			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
-			$sort_field = phpgw::get_var('sort');
-			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
-			// Form variables
-			$search_for = phpgw::get_var('query');
-			$search_type = phpgw::get_var('search_option');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
 
-			//Retrieve a project identifier and load corresponding project
-			$project_id = phpgw::get_var('project_id');
+			$export = phpgw::get_var('export');
 
-			$exp_param = phpgw::get_var('export');
-			$export = false;
-			if (isset($exp_param))
-			{
-				$export = true;
-				$num_of_objects = null;
-			}
-
-			//Retrieve the type of query and perform type specific logic
-			$query_type = phpgw::get_var('type');
-			//var_dump($query_type);
-			switch ($query_type)
-			{
-				case 'project_type':
-					phpgwapi_cache::session_set('logistic', 'project_type_query', $search_for);
-					$search_type = 'project_type';
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count = $this->so->get_count($search_for, $search_type, $filters);
-					break;
-				default: // ... all composites, filters (active and vacant)
-					phpgwapi_cache::session_set('logistic', 'project_query', $search_for);
-					$filters = array('project_type' => phpgw::get_var('project_type'));
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count = $this->so->get_count($search_for, $search_type, $filters);
-					break;
-			}
-			//var_dump($result_objects);
-			//Create an empty row set
-			$rows = array();
-			foreach ($result_objects as $result)
-			{
-				if (isset($result))
-				{
-					$rows[] = $result->serialize();
-				}
-			}
+			$values = $this->bo->read($params);
 
 			// ... add result data
-			$result_data = array('results' => $rows);
+			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $object_count;
+			$result_data['total_records'] = $this->bo->total_records;
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
@@ -245,16 +217,7 @@
 			if (!$export)
 			{
 				//Add action column to each row in result table
-				if ($search_type && $search_type == 'project_type')
-				{
-					array_walk(
-									$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view_project_type");
-				}
-				else
-				{
-					array_walk(
-									$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view");
-				}
+				array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
 			}
 			return $this->yui_results($result_data);
 		}
@@ -262,34 +225,12 @@
 
 		public function view()
 		{
-			$project_id = phpgw::get_var('id');
-			if (isset($_POST['edit_project']))
+			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.edit', 'id' => $project_id));
+				$this->bocommon->no_access();
+				return;
 			}
-			else if (isset($_POST['new_activity']))
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.edit', 'project_id' => $project_id));
-			}
-			else
-			{
-				if ($project_id && is_numeric($project_id))
-				{
-					$project = $this->so->get_single($project_id);
-				}
-
-				$project_array = $project->toArray();
-
-				$data = array
-					(
-					'value_id' => !empty($project) ? $project->get_id() : 0,
-					'project' => $project,
-					'view' => 'view_project'
-				);
-
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project');
-				self::render_template_xsl(array('project/project_item'), $data);
-			}
+			$this->edit($mode = 'view');
 		}
 
 		public function add()
@@ -323,52 +264,42 @@
 				}
 			}
 
+			$values = array();
 
-
-			$project_id = phpgw::get_var('id');
-			if ($project_id && is_numeric($project_id))
+			if ($id)
 			{
-				$project = $this->so->get_single($project_id);
-			}
-			else
-			{
-				if($project == null)
-				{
-					$project = new logistic_project();	
-				}
+				$values = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
 			}
 
-			$project_types = $this->so->get_project_types();
-			foreach ($project_types as &$p_type)
-			{
-				if ($project->get_project_type_id() == $p_type['id'])
-				{
-					$p_type['selected'] = 1;
-				}
-			}
-			
+			$categories = $this->_get_categories($survey['category']);
+
 			$data = array
 			(
-				'project' => $project,
-				'options' => $project_types,
-				'editable' => true
+				'survey'		=> $values,
+				'categories'	=> array('options' => $categories),
+				'status_list'	=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
+				'editable' 		=> $mode == 'edit'
 			);
 
-			$this->use_yui_editor('description');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Project type');
+//			$this->use_yui_editor(array('description'));
+			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 			
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('logistic', 'logistic', 'project.js');
-			self::render_template_xsl(array('project/project_item'), $data);
+			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+			self::render_template_xsl(array('condition_survey'), $data);
 		}
 		
 		public function save()
 		{
-			$project_id = phpgw::get_var('id');
+			$id = phpgw::get_var('id');
 			
-			if ($project_id && is_numeric($project_id))
+			if ($id )
 			{
-				$project = $this->so->get_single($project_id);
+				$project = $this->so->get_single($id);
 			}
 			else
 			{
@@ -379,13 +310,28 @@
 			
 			if( $project->validate() )
 			{
-				$project_id = $this->so->store($project);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $project_id));	
+				$id = $this->so->store($project);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));	
 			}
 			else
 			{
 				$this->edit( $project );
 			}
 		}
-	}
 
+		private function _get_categories($selected = 0)
+		{
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$cats->supress_info	= true;
+			$categories = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $selected,'globals' => true,'use_acl' => $this->_category_acl));
+			$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+			array_unshift ($categories['cat_list'],$default_value);
+
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+			
+			return $categories['cat_list'];
+		}
+	}

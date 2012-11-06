@@ -218,6 +218,11 @@
 				$values = $this->so->get_list($data);
 			}
 
+			if(isset($data['add_empty']) && $data['add_empty'])
+			{
+				array_unshift($values,array('id'=> '', 'name'=> lang('select')));
+			}
+			
 			if(isset($data['selected']) && is_array($data['selected']))
 			{
 				foreach ($values as &$entry)

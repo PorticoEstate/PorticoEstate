@@ -1,11 +1,10 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
+YUI 3.7.3 (build 5687)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
 */
-YUI.add('scrollview', function(Y) {
+YUI.add('scrollview', function (Y, NAME) {
 
 /**
  * <p>
@@ -15,8 +14,8 @@ YUI.add('scrollview', function(Y) {
  * </p>
  *
  * <ul>
- *     <li><a href="ScrollView.html">ScrollView API documentation</a></li>
- *     <li><a href="module_scrollview-base.html">scrollview-base Module documentation</a></li>
+ *     <li><a href="../classes/ScrollView.html">ScrollView API documentation</a></li>
+ *     <li><a href="scrollview-base.html">scrollview-base Module documentation</a></li>
  * </ul>
  *
  * @module scrollview
@@ -25,4 +24,4 @@ YUI.add('scrollview', function(Y) {
 Y.Base.plug(Y.ScrollView, Y.Plugin.ScrollViewScrollbars);
 
 
-}, '3.3.0' ,{requires:['scrollview-base', 'scrollview-scrollbars']});
+}, '3.7.3', {"requires": ["scrollview-base", "scrollview-scrollbars"]});

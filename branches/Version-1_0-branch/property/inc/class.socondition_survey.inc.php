@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
-	* @subpackage custom
+	* @subpackage project
  	* @version $Id$
 	*/
 
@@ -34,27 +34,75 @@
 
 	class property_socondition_survey
 	{
-		function __construct()
+		/**
+		* @var int $_total_records total number of records found
+		*/
+		protected $_total_records = 0;
+
+
+		/**
+		* @var int $_receipt feedback on actions
+		*/
+		protected $_receipt = array();
+
+
+		/**
+		 * @var object $_db reference to the global database object
+		 */
+		protected $_db;
+
+		/**
+		 * @var string $_join SQL JOIN statement
+		 */
+		protected $_join;
+
+		/**
+		 * @var string $_like SQL LIKE statement
+		 */
+		protected $_like;
+
+
+		public function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db		= & $GLOBALS['phpgw']->db;
-			$this->join		= & $this->db->join;
-			$this->like		= & $this->db->like;
+			$this->_db		= & $GLOBALS['phpgw']->db;
+			$this->_join	= & $this->_db->join;
+			$this->_like	= & $this->_db->like;
 		}
 
-		function read($data)
+		/**
+		 * Magic get method
+		 *
+		 * @param string $varname the variable to fetch
+		 *
+		 * @return mixed the value of the variable sought - null if not found
+		 */
+		public function __get($varname)
 		{
-			if(is_array($data))
+			switch ($varname)
 			{
-				$start	= (isset($data['start'])?$data['start']:0);
-				$filter	= (isset($data['filter'])?$data['filter']:'none');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
+				case 'total_records':
+					return $this->_total_records;
+					break;
+				case 'receipt':
+					return $this->_receipt;
+					break;
+				default:
+					return null;
 			}
+		}
 
+		function read($data = array())
+		{
+			$start		= isset($data['start'])  ? (int) $data['start'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '' ;
+			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+
+			$table = 'fm_condition_survey';
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -65,273 +113,124 @@
 			}
 
 			$where = 'WHERE';
-			if ($cat_id > 0)
+			if ($cat_id)
 			{
-				$filtermethod .= " $where category='$cat_id' ";
+				$filtermethod .= " {$where} category = {$cat_id}";
 				$where = 'AND';
 			}
 
 			if($query)
 			{
-				$query			= $this->db->db_addslashes($query);
-				$querymethod	= " $where name $this->like '%$query%'";
+				$query			= $this->_db->db_addslashes($query);
+				$querymethod	= " {$where} name {$this->_like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM fm_custom $filtermethod $querymethod";
+			$sql = "SELECT * FROM {$table} $filtermethod $querymethod";
 
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_total_records = $this->_db->num_rows();
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				$customs[] = array
 					(
-						'custom_id'		=> $this->db->f('id'),
-						'name'			=> stripslashes($this->db->f('name')),
-						'entry_date'	=> $this->db->f('entry_date'),
-						'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+						'custom_id'		=> $this->_db->f('id'),
+						'name'			=> stripslashes($this->_db->f('name')),
+						'entry_date'	=> $this->_db->f('entry_date'),
+						'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->_db->f('user_id'))
 					);
 			}
 			return $customs;
 		}
 
-		function read_single($custom_id)
+		function read_single($id)
 		{
-			$custom_id = (int) $custom_id;
-			$this->db->query("SELECT * from fm_custom where id={$custom_id}",__LINE__,__FILE__);
+			$table = 'fm_condition_survey';
 
-			$custom = array();
-			if ($this->db->next_record())
+			$id = (int) $id;
+			$this->_db->query("SELECT * FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+
+			$values = array();
+			if ($this->_db->next_record())
 			{
-				$custom = array
-					(
-						'id'			=> (int)$this->db->f('id'),
-						'name'			=> $this->db->f('name', true),
-						'sql_text'		=> $this->db->f('sql_text', true),
-						'entry_date'	=> $this->db->f('entry_date'),
-						'cols'			=> $this->read_cols($custom_id)
-					);
+				$values = array
+				(
+					'id'			=> (int)$this->_db->f('id'),
+					'name'			=> $this->_db->f('name', true),
+					'sql_text'		=> $this->_db->f('sql_text', true),
+					'entry_date'	=> $this->_db->f('entry_date'),
+
+				);
 			}
 
-			return $custom;
+			return $values;
 		}
 
-		function read_cols($custom_id)
-		{
-			$custom_id = (int) $custom_id;
-			$sql = "SELECT * FROM fm_custom_cols WHERE custom_id={$custom_id} ORDER by sorting";
-			$this->db->query($sql);
 
-			$cols = array();
-			while ($this->db->next_record())
+		function add($data)
+		{
+			$table = 'fm_condition_survey';
+			$custom['sql_text'] = $this->_db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
+
+			$this->_db->transaction_begin();
+
+			$id = $this->_db->next_id($table);
+
+			$value_set = array
+			(
+				'id'				=> $id,
+				'title'				=> $this->_db->db_addslashes($data['title']),
+				'month'				=> $entry['month'],
+				'budget'			=> $entry['budget'],
+				'user_id'			=> $entry['user_id'],
+				'entry_date'		=> $entry['entry_date'],
+				'modified_date'		=> $entry['modified_date']
+			);
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->_db->validate_insert(array_values($value_set));
+			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+
+			$receipt['id']= $id;
+
+			if($this->_db->transaction_commit())
 			{
-				$cols[] = array
-					(
-						'id'	=> $this->db->f('id'),
-						'name'	=> $this->db->f('name'),
-						'descr'	=> $this->db->f('descr', true),
-						'sorting'=> $this->db->f('sorting')
-					);
-
+				$this->_receipt['message'][] = array('msg'=>lang('survey %1 has been saved',$id));
+				return $id;
 			}
-			return $cols;
+			return 0;
 		}
 
-		function read_custom_name($custom_id)
+		function edit($data)
 		{
-			$custom_id = (int) $custom_id;
-			$this->db->query("SELECT name FROM fm_custom where id={$custom_id}",__LINE__,__FILE__);
-			$this->db->next_record();
-			return $this->db->f('name', true);
-		}
+			$table = 'fm_condition_survey';
+			$id = (int)$data['id'];
 
-		function add($custom)
-		{
-			$custom['name'] = $this->db->db_addslashes($custom['name']);
-			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
-			$id = $this->db->next_id('fm_custom');
+			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}",__LINE__,__FILE__);
 
-			$this->db->query("INSERT INTO fm_custom (id,entry_date,sql_text,name,user_id) "
-				. "VALUES ($id,'" . time() . "','" . $custom['sql_text'] . "','" . $custom['name'] . "'," . $this->account . ")",__LINE__,__FILE__);
-
-			$receipt['custom_id']= $id;
-
-
-			$this->db->transaction_commit();
-
-			$receipt['message'][] = array('msg'=>lang('custom %1 has been saved',$receipt['custom_id']));
-			return $receipt;
+			if($this->_db->transaction_commit())
+			{
+				$this->_receipt['message'][] = array('msg'=>lang('survey %1 has been saved',$id));
+			}
+			return $id;
 		}
 
-		function edit($custom)
+		function delete($id)
 		{
-			$custom['name'] = $this->db->db_addslashes($custom['name']);
-			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
-
-			$this->db->query("UPDATE fm_custom set sql_text='{$custom['sql_text']}', entry_date='" . time() . "', name='{$custom['name']}' WHERE id=" . (int) $custom['custom_id'],__LINE__,__FILE__);
-
-			if($custom['new_name'])
-			{
-				$column_id = $this->db->next_id('fm_custom_cols', array('custom_id'=>$custom['custom_id']));
-
-				$sql = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id=" . $custom['custom_id'];
-				$this->db->query($sql);
-				$this->db->next_record();
-				$sorting	= $this->db->f('max_sort')+1;
-
-				$values= array(
-					$custom['custom_id'],
-					$column_id,
-					$custom['new_name'],
-					$this->db->db_addslashes($custom['new_descr']),
-					$sorting
-				);
-
-				$values	= $this->db->validate_insert($values);
-
-				$this->db->query("INSERT INTO fm_custom_cols (custom_id,id,name,descr,sorting) "
-					. "VALUES ($values)");
-			}
-
-
-			if($custom['delete_cols'])
-			{
-				for ($i=0;$i<count($custom['delete_cols']);$i++)
-				{
-
-					$sql = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete_cols'][$i];
-					$this->db->query($sql);
-					$this->db->next_record();
-					$sorting	= $this->db->f('sorting');
-					$sql2 = "SELECT max(sorting) as max_sort FROM fm_custom_cols";
-					$this->db->query($sql2);
-					$this->db->next_record();
-					$max_sort	= $this->db->f('max_sort');
-
-					if($max_sort>$sorting)
-					{
-						$sql = "UPDATE fm_custom_cols set sorting=sorting-1 WHERE sorting > $sorting AND custom_id=" . $custom['custom_id'];
-						$this->db->query($sql);
-					}
-
-
-					$this->db->query("DELETE FROM fm_custom_cols WHERE  custom_id=" . $custom['custom_id']  ." AND id=" . $custom['delete_cols'][$i]);
-				}
-			}
-
-			$receipt['custom_id']= $custom['custom_id'];
-			$receipt['message'][] = array('msg'=>lang('custom %1 has been edited',$custom['custom_id']));
-			return $receipt;
-		}
-
-		function resort($data)
-		{
-			//html_print_r($data);
-			if(is_array($data))
-			{
-				$resort = (isset($data['resort'])?$data['resort']:'up');
-				$custom_id = (isset($data['id'])?$data['custom_id']:'');
-				$id = (isset($data['id'])?$data['id']:'');
-			}
-
-			$sql = "SELECT sorting FROM fm_custom_cols WHERE custom_id = $custom_id AND id=$id";
-			$this->db->query($sql);
-			$this->db->next_record();
-			$sorting	= $this->db->f('sorting');
-			$sql = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id = $custom_id";
-			$this->db->query($sql);
-			$this->db->next_record();
-			$max_sort	= $this->db->f('max_sort');
-			switch($resort)
-			{
-				case 'up':
-					if($sorting>1)
-					{
-						$sql = "UPDATE fm_custom_cols set sorting=$sorting WHERE custom_id = $custom_id AND sorting =" . ($sorting-1);
-						$this->db->query($sql);
-						$sql = "UPDATE fm_custom_cols set sorting=" . ($sorting-1) ." WHERE custom_id = $custom_id AND id=$id";
-						$this->db->query($sql);
-					}
-					break;
-				case 'down':
-					if($max_sort > $sorting)
-					{
-						$sql = "UPDATE fm_custom_cols set sorting=$sorting WHERE custom_id = $custom_id AND sorting =" . ($sorting+1);
-						$this->db->query($sql);
-						$sql = "UPDATE fm_custom_cols set sorting=" . ($sorting+1) ." WHERE custom_id = $custom_id AND id=$id";
-						$this->db->query($sql);
-					}
-					break;
-				default:
-					return;
-					break;
-			}
-		}
-
-		function read_custom($data)
-		{
-			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$filter		= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-			$query		= isset($data['query']) ? $data['query'] : '';
-			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order		= isset($data['order']) ? $data['order'] : '';
-			$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
-			$custom_id 	= isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
-
-			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}",__LINE__,__FILE__);
-			$this->db->next_record();
-			$sql = $this->db->f('sql_text', true);
-
-			$uicols = $this->read_cols($custom_id);
-			$this->uicols = $uicols;
-
-			//FIXME:
-			$ordermethod = '';
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
-
-			if(!$allrows)
-			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
-			}
-
-			$n=count($uicols);
-			$j=0;
-			while ($this->db->next_record())
-			{
-				for ($i=0;$i<$n;$i++)
-				{
-					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name']);
-					$custom[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
-				}
-				$j++;
-			}
-
-			//_debug_array($custom);
-			return $custom;
-		}
-
-		function delete($custom_id)
-		{
-			$custom_id = (int) $custom_id;
-			$this->db->query("DELETE FROM fm_custom WHERE id={$custom_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_custom_cols WHERE custom_id={$custom_id}",__LINE__,__FILE__);
+			$id = (int) $id;
+			$table = 'fm_condition_survey';
+			$this->_db->query("DELETE FROM $table WHERE id={$id}",__LINE__,__FILE__);
 		}
 	}

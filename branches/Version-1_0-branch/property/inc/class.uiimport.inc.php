@@ -88,11 +88,15 @@
 					if ( is_file($file) )
 					{
 						require_once $file;
-						$this->import_conversion = new import_conversion;
-						$this->import_conversion->debug	= phpgw::get_var('debug', 'bool');
 					}
 				}
+				else
+				{
+					require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_generic.php";
+				}
 
+				$this->import_conversion = new import_conversion;
+				$this->import_conversion->debug	= phpgw::get_var('debug', 'bool');
 
 				// Get the path for user input or use a default path
 
