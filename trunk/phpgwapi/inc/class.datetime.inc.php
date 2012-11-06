@@ -851,13 +851,28 @@
 				return 0;
 			}
 
+			$hour	= 13;
+			$minute	= 0;
+			$second	= 0;
+
 			if( strpos($datestr, ':') )
+			{
+				$date_part = explode(' ', $datestr);
+				$time_part = explode(':', $date_part[1]);
+
+				$hour	= (int) $time_part[0];
+				$minute	= (int) $time_part[1];
+				$second	= isset($time_part[2]) && $time_part[2] ? (int)$time_part[2] : 0;
+			}
+
+
+			if( version_compare(PHP_VERSION, '5.3.0') >= 0  && strpos($datestr, ':'))
 			{
 				return self::datetime_to_timestamp($datestr);
 			}
 
 			$date_array	= self::date_array($datestr);
-			return mktime (13, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+			return mktime ($hour, $minute, $second, $date_array['month'], $date_array['day'], $date_array['year']);
 		}
 
 
