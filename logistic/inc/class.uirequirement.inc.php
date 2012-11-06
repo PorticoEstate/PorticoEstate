@@ -350,7 +350,7 @@
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
-			if ($requirement_id && is_numeric($requirement_id))
+			if ( ($requirement == null) && ($requirement_id) && (is_numeric($requirement_id)) )
 			{
 				$requirement = $this->so->get_single($requirement_id);
 
@@ -425,6 +425,11 @@
 			{
 				$data['activity'] = $activity;
 			}
+			else
+			{
+				$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
+				$data['activity'] = $activity;
+			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
@@ -449,11 +454,32 @@
 			
 			if( $requirement->validate() )
 			{
+				$db_requirement = $this->so->get_db();
+				$db_requirement->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
 				
+				$db_requirement_values = $this->so_requirement_value->get_db();
+				$db_requirement_values->transaction_begin();
+				$status_delete_values = $this->so_requirement_value->delete_resources($requirement_id);
 				
+				$db_resource_allocation = $this->so_resource_allocation->get_db();
+				$db_resource_allocation->transaction_begin();
+				$status_delete_resources = $this->so->delete_resource_allocations($requirement_id);
 				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));	
+				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
+				{
+					$db_requirement->transaction_commit();
+					$db_requirement_values->transaction_commit();
+					$db_resource_allocation->transaction_commit();
+				}
+				else
+				{
+					$db_requirement->transaction_abort();
+					$db_requirement_values->transaction_abort();
+					$db_resource_allocation->transaction_abort();
+				}			
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
 			}
 			else
 			{
