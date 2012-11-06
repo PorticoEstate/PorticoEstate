@@ -450,6 +450,9 @@
 			if( $requirement->validate() )
 			{
 				$requirement_id = $this->so->store($requirement);
+				
+				
+				
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));	
 			}
 			else

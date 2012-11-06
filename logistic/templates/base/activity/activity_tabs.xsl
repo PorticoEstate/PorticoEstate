@@ -23,7 +23,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img src="logistic/images/arrow_right.png" />
+						<span>Du er her:</span>
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 						
@@ -37,7 +37,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img src="logistic/images/arrow_right.png" />
+						<span>Du er her:</span>
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 				</xsl:otherwise>
@@ -62,7 +62,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img src="logistic/images/arrow_right.png" />
+						<span>Du er her:</span>
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 				</xsl:when>
@@ -75,7 +75,7 @@
 					
 					<!-- =========== BREADCRUMB ============== -->
 					<div id="breadcrumb">
-						<img src="logistic/images/arrow_right.png" />
+						<span>Du er her:</span>
 						<xsl:value-of disable-output-escaping="yes" select="breadcrumb" />
 					</div>
 				</xsl:otherwise>
