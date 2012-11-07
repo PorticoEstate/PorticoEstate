@@ -246,12 +246,20 @@
 		
 		public function populate()
 		{
-			$this->set_id( phpgw::get_var('id') );
+			$this->set_id( phpgw::get_var('id', 'int') );
 			$this->set_name( phpgw::get_var('name') );
-			$this->set_responsible_user_id( phpgw::get_var('responsible_user_id') );
+			$this->set_responsible_user_id( phpgw::get_var('responsible_user_id', 'int') );
 			$this->set_description( phpgw::get_var('description') );
-			$this->set_parent_id( phpgw::get_var('parent_id') );
-			$this->set_project_id( phpgw::get_var('project_id') );
+			
+			if( $parent_id = phpgw::get_var('parent_activity_id', 'int') )
+			{
+				$this->set_parent_id( $parent_id );
+			}
+			else
+			{
+				$this->set_parent_id( phpgw::get_var('parent_id', 'int') );			
+			}
+			$this->set_project_id( phpgw::get_var('project_id', 'int') );
 			
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$this->set_update_user( $user_id );
