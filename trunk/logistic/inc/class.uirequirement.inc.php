@@ -464,9 +464,8 @@
 				if( ($old_location_id > 0) && (is_numeric($old_location_id) ) && ($old_location_id != $new_location_id) )
 				{
 					$status_delete_values = $this->so_requirement_value->delete_values( $requirement_id );
+					$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );	
 				}
-				
-				$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
