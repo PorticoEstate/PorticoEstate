@@ -118,6 +118,10 @@
 					'field' => array(
 						array(
 							'key' => 'id',
+							'hidden' => true
+						),
+						array(
+							'key' => 'id_link',
 							'label' => lang('Id'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
@@ -166,11 +170,24 @@
 					(
 						array
 						(
-							'name'		=> 'activity_id',
+							'name'		=> 'id',
 							'source'	=> 'id'
 						),
 					)
 				);
+
+			$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'parent_id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
 
 			$data['datatable']['actions'][] = array
 					(
@@ -180,7 +197,7 @@
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
 						)),
-						'parameters'	=> json_encode($parameters)
+						'parameters'	=> json_encode($parameters2)
 					);
 
 			$data['datatable']['actions'][] = array
@@ -335,7 +352,7 @@
 					
 					
 					$href = self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_arr['id']));
-					$activity_arr['id'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
+					$activity_arr['id_link'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
 					$activity_arr['name'] = "<a href=\"{$href}\">" . $activity_arr['name'] . "</a>";
 					
 					
@@ -356,12 +373,15 @@
 
 			if (!$export)
 			{
+
 				//Add action column to each row in result table
+/*
 				array_walk(
 								$result_data['results'],
 								array($this, '_add_links'),
 								"logistic.uiactivity.view"
 				);
+*/
 			}
 
 			return $this->yui_results($result_data);
@@ -407,12 +427,32 @@
 			
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 			
-		  $activities = $this->so->get();
-			
+			$activities = $this->so->get();
+
+			if($activity_id)
+			{
+				$exclude = array($activity_id);
+				$children = $this->so->get_children($activity_id, 0,true);
+
+				foreach($children as $child)
+				{
+					$exclude[] = $child['id']; 
+				}
+
+				$k = count($activities);
+				for ($i=0; $i<$k; $i++)
+				{
+					if (in_array($activities[$i]->get_id(),$exclude))
+					{
+						unset($activities[$i]);
+					}
+				}
+			}
+
 			$data = array
 			(
 				'responsible_users' => $accounts,
-				'activities' => $activities,
+				'activities' => $activity_id ? $activities : array(),
 				'activity' => $activity,
 				'editable' => true,
 				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
@@ -423,7 +463,8 @@
 				$data['project'] = $project;
 			}
 			
-			if($activity->get_parent_id() > 0)
+//			if($activity->get_parent_id() > 0)
+			if(	$activity_id )
 			{
 				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 				$data['parent_activity'] = $parent_activity;
@@ -441,6 +482,10 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			
 			self::add_javascript('logistic', 'logistic', 'activity.js');
+			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}
 		
@@ -489,9 +534,9 @@
 			{
 				$activity = new logistic_activity();
 			}
-			
+
 			$activity->populate();
-			
+
 			if( $activity->validate() )
 			{
 				$activity_id = $this->so->store($activity);
@@ -505,7 +550,7 @@
 
 		public function edit_favorite()
 		{
-			if($activity_id = phpgw::get_var('activity_id'))
+			if($activity_id = phpgw::get_var('id'))
 			{
 				$activity = $this->so->get_single($activity_id);
 
