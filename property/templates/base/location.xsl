@@ -401,20 +401,6 @@ onMouseOut="nd()">
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
-								<xsl:when test="entities_link != ''">
-									<tr>
-										<td valign="top">
-											<xsl:value-of select="lang_related_info"/>
-										</td>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="entities_link"/>
-											</table>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
 								<xsl:when test="edit_street = 1">
 									<tr>
 										<td>
@@ -469,6 +455,20 @@ onMouseOut="nd()">
 								</xsl:when>
 							</xsl:choose>
 							<xsl:apply-templates select="attributes_general/attributes"/>
+							<xsl:choose>
+								<xsl:when test="entities_link != ''">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_related_info"/>
+										</td>
+										<td>
+											<table width="100%" cellpadding="2" cellspacing="2" align="center">
+												<xsl:apply-templates select="entities_link"/>
+											</table>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 						</table>
 					</div>
 					<xsl:call-template name="attributes_values"/>
