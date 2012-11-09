@@ -475,6 +475,7 @@
 			$receipt = array();
 			$attrib['appname']	 = $this->type_app[$this->type];
 			$attrib['location']	 = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
+			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'], $attrib['location']);
 			if ( $action == 'edit' && $attrib['id'] )
 			{
 				if ( $this->custom->edit( $attrib ) )
@@ -488,7 +489,7 @@
 			}
 			else
 			{
-				$id = $this->custom->add( $attrib );
+				$id = $this->custom->add( $attrib, $attrib_table);
 				if ( $id <= 0 )
 				{
 					$receipt['error'][] = array('msg' => lang( 'Unable to add field' ));

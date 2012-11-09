@@ -582,7 +582,10 @@
 
 			$column_name = $this->_db->f('column_name');
 
-			$this->_oProc->DropColumn($table, false, $column_name);
+			if($table)
+			{
+				$this->_oProc->DropColumn($table, false, $column_name);
+			}
 
 			if(!$doubled) // else: wait for it - another one is coming
 			{
