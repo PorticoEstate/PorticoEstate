@@ -188,6 +188,18 @@
 					)
 				);
 
+			$parameters3 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'activity_id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
 
 			$data['datatable']['actions'][] = array
 					(
@@ -208,7 +220,7 @@
 						(
 							'menuaction'	=> 'logistic.uirequirement.edit'
 						)),
-						'parameters'	=> json_encode($parameters)
+						'parameters'	=> json_encode($parameters3)
 					);
 
 			$data['datatable']['actions'][] = array
