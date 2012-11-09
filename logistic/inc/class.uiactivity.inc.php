@@ -118,6 +118,10 @@
 					'field' => array(
 						array(
 							'key' => 'id',
+							'hidden' => true
+						),
+						array(
+							'key' => 'id_link',
 							'label' => lang('Id'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
@@ -166,11 +170,24 @@
 					(
 						array
 						(
-							'name'		=> 'activity_id',
+							'name'		=> 'id',
 							'source'	=> 'id'
 						),
 					)
 				);
+
+			$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'parent_id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
 
 			$data['datatable']['actions'][] = array
 					(
@@ -180,7 +197,7 @@
 						(
 							'menuaction'	=> 'logistic.uiactivity.edit'
 						)),
-						'parameters'	=> json_encode($parameters)
+						'parameters'	=> json_encode($parameters2)
 					);
 
 			$data['datatable']['actions'][] = array
@@ -335,7 +352,7 @@
 					
 					
 					$href = self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_arr['id']));
-					$activity_arr['id'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
+					$activity_arr['id_link'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
 					$activity_arr['name'] = "<a href=\"{$href}\">" . $activity_arr['name'] . "</a>";
 					
 					
@@ -356,12 +373,15 @@
 
 			if (!$export)
 			{
+
 				//Add action column to each row in result table
+/*
 				array_walk(
 								$result_data['results'],
 								array($this, '_add_links'),
 								"logistic.uiactivity.view"
 				);
+*/
 			}
 
 			return $this->yui_results($result_data);
@@ -379,81 +399,93 @@
 			$project_id = phpgw::get_var('project_id');
 			
 			if($activity == null)
-			{
-				if( $project_id && is_numeric($project_id) )
-				{
-					$project = $this->so_project->get_single($project_id);
-				}
-				
+			{			
 				if( $activity_id && is_numeric($activity_id) )
 				{
 					$activity = $this->so->get_single($activity_id);
 				}
 				else
 				{
-					$activity = new logistic_activity();	
-				}
-				
-				if($activity->get_project_id() == '')
-				{
-					$activity->set_project_id( $project_id );
-				}
-				
-				if($parent_activity_id > 0)
-				{
-					$activity->set_parent_id( $parent_activity_id );
-					$parent_activity = $this->so->get_single( $parent_activity_id );
-					$activity->set_project_id( $parent_activity->get_project_id() );
+					$activity = new logistic_activity();
 					
-					$activity->set_start_date($parent_activity->get_start_date());
-					$activity->set_end_date($parent_activity->get_end_date());
+					if( $project_id && is_numeric($project_id) )
+					{
+						$project = $this->so_project->get_single($project_id);
+						$activity->set_project_id( $project_id );
+					}
+					else if($parent_activity_id > 0)
+					{
+						$activity->set_parent_id( $parent_activity_id );
+						$parent_activity = $this->so->get_single( $parent_activity_id );
+						$activity->set_project_id( $parent_activity->get_project_id() );
+						
+						$activity->set_start_date($parent_activity->get_start_date());
+						$activity->set_end_date($parent_activity->get_end_date());
+					}
 				}
-				else
-				{
-					$projects = $this->so_project->get();
-				}
-			}
-
-			if($activity->get_parent_id() > 0)
-			{
-				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 			}
 			
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 			
-		  $activities = $this->so->get();
-			
+			$activities = $this->so->get();
+
+			if($activity_id)
+			{
+				$exclude = array($activity_id);
+				$children = $this->so->get_children($activity_id, 0,true);
+
+				foreach($children as $child)
+				{
+					$exclude[] = $child['id']; 
+				}
+
+				$k = count($activities);
+				for ($i=0; $i<$k; $i++)
+				{
+					if (in_array($activities[$i]->get_id(),$exclude))
+					{
+						unset($activities[$i]);
+					}
+				}
+			}
+
 			$data = array
 			(
 				'responsible_users' => $accounts,
-				'activities' => $activities,
+				'activities' => $activity_id ? $activities : array(),
 				'activity' => $activity,
 				'editable' => true,
 				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
 			);
-			
+						
 			if($project)
 			{
 				$data['project'] = $project;
 			}
 			
-			if($projects)
+//			if($activity->get_parent_id() > 0)
+			if(	$activity_id )
 			{
+				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
+				$data['parent_activity'] = $parent_activity;
+			}
+			else
+			{
+				$projects = $this->so_project->get();
 				$data['projects'] = $projects;
 			}
 			
-			if($parent_activity)
-			{
-				$data['parent_activity'] = $parent_activity;
-			}
-
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			
 			self::add_javascript('logistic', 'logistic', 'activity.js');
+			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}
 		
@@ -502,9 +534,9 @@
 			{
 				$activity = new logistic_activity();
 			}
-			
+
 			$activity->populate();
-			
+
 			if( $activity->validate() )
 			{
 				$activity_id = $this->so->store($activity);
@@ -518,7 +550,7 @@
 
 		public function edit_favorite()
 		{
-			if($activity_id = phpgw::get_var('activity_id'))
+			if($activity_id = phpgw::get_var('id'))
 			{
 				$activity = $this->so->get_single($activity_id);
 
@@ -705,16 +737,23 @@
 			{
 				return;
 			}
+			
 			$path = $this->so->get_path($activity_id);
-			$level = count($path) - 1;
-			$breadcrumb_array = array();
-
-			for ($i=0;$i<$level;$i++)
+						
+			foreach($path as $menu_item)
 			{
-				$_link = self::link(array('menuaction' => $menuaction, $id_name => $path[$i]['id']));
-				$breadcrumb_array[] = "<a href=\"{$_link}\">{$path[$i]['name']}</a>";
+				if($menu_item['id'] == $activity_id)
+				{
+					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => "", "current" => 1);
+				}
+				else
+				{
+					$_link = self::link(array('menuaction' => $menuaction, $id_name => $menu_item['id'] ));
+					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => $_link, "current" => 0);
+				}
+				
 			}
-			$breadcrumb_array[] = $path[$level]['name'];
-			return implode(' > ', $breadcrumb_array);
+				
+			return $breadcrumb_array;
 		}
 	}

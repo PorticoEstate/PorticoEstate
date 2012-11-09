@@ -2438,8 +2438,21 @@ p.no_items_msg {
   margin-bottom: 1em;
 }
 
+#breadcrumb span{
+	font-weight: bold;
+}
+
+#breadcrumb span.intro{
+	margin-right: 5px;
+}
+
 #breadcrumb img{
-	height: 14px;
+	height: 12px;
+	margin: 0 5px 0 8px;
+}
+
+#breadcrumb span.current{
+	text-decoration: underline;
 }
 
 #requirement-container .btn-sm.cancel {

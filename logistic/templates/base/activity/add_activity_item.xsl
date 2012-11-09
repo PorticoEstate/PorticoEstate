@@ -1,5 +1,6 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl" xmlns:formvalidator="http://www.w3.org/TR/html4/">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
+<xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
 
 <xsl:call-template name="yui_phpgw_i18n"/>
 <div class="yui-navset yui-navset-top">
@@ -28,25 +29,27 @@
 			<xsl:variable name="action_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiactivity.save')" />
 			</xsl:variable>
-			<form action="{$action_url}" method="post">
+			<xsl:variable name="parent_id"><xsl:value-of select="parent_activity/id"/></xsl:variable>
+			<form id='activity_form' action="{$action_url}" method="post">
 				<input type="hidden" name="id" value = "{activity/id}" />
 				<input type="hidden" name="project_id" value="{activity/project_id}" />
 				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
+				<xsl:value-of select="parent_activity/id"/>
 				  <xsl:choose>
-						<xsl:when test="(editable) and (parent_activity/id &gt; 0)">
+						<xsl:when test="(editable) and (activities !='')">
 							<dt>		
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another main activity for this sub activity')" /></label>
 										<select id="select_parent_activity" name="parent_activity_id">
-											<option>Velg annen hovedaktivitet</option>
+											<option value="">Velg annen hovedaktivitet</option>
 											<xsl:for-each select="activities">
 							        	<option value="{id}">
-							        		<xsl:if test="activity/parent_id = id">
+							        		<xsl:if test="id = $parent_id">
 								        		<xsl:attribute name="selected">
-							    						selected
-							   						</xsl:attribute>
+									        		<xsl:text>selected</xsl:text>
+						   						</xsl:attribute>
 								        	</xsl:if>
 							          	<xsl:value-of disable-output-escaping="yes" select="name"/>
 								        </option>
@@ -55,7 +58,7 @@
 									</div>
 								</dt>
 						  </xsl:when>
-						  <xsl:when test="(editable) and not(parent_activity) and not(project)">
+						 <!-- <xsl:when test="(editable) and not(parent_activity) and not(project)">
 							<dt>		
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose the project in which the activity is part of')" /></label>
@@ -74,13 +77,15 @@
 										</select>					
 									</div>
 								</dt>
-						  </xsl:when>
+						  </xsl:when>-->
 						  <xsl:otherwise>
 							<dt>		
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another project for the activity')" /></label>
-										<select id="select_project" name="select_project">
-											<option><xsl:value-of select="php:function('lang', 'Choose another project')" /></option>
+										<select id="select_project" name="select_project"
+												formvalidator:FormField="yes"
+	   											formvalidator:Type="SelectField">
+											<option value=''><xsl:value-of select="php:function('lang', 'Choose another project')" /></option>
 											<xsl:for-each select="projects">
 							        	<option value="{id}">
 							        		<xsl:if test="project/id = project_id">
@@ -143,14 +148,14 @@
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
 								<div class="help_text"><xsl:value-of select="php:function('lang','Give start date to activity')" /></div>
-								<input class="date" id="start_date" name="start_date" type="text">
+								<input class="datetime" id="start_date" name="start_date" type="text">
 						    	<xsl:if test="activity/start_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></xsl:attribute>
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -165,14 +170,14 @@
 									<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 								</xsl:if>
 								<div class="help_text"><xsl:value-of select="php:function('lang','Give end date to activity')" /></div>
-								<input class="date" id="end_date" name="end_date" type="text">
+								<input class="datetime" id="end_date" name="end_date" type="text">
 						    	<xsl:if test="activity/end_date != ''">
-						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></xsl:attribute>
+						      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/></xsl:attribute>
 						    	</xsl:if>
 					    	</input>
 							</xsl:when>
 							<xsl:otherwise>
-							<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
+							<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/></span>
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
@@ -222,7 +227,7 @@
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_activity" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="cancel_activity" value="{$lang_cancel}" title = "{$lang_cancel}" />
+							<input class="submit" type="button" name="cancel_activity" id ='cancel_activity' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="params">
@@ -240,6 +245,15 @@
 		</div>
 	</div>
 </div>
+
+<xsl:variable name="cancel_url">
+<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uiactivity.index')" />
+</xsl:variable>
+
+<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
+</form>
+
+
 </xsl:template>
 
 <xsl:template match="options">

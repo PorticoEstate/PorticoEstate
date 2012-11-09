@@ -399,8 +399,13 @@
 		 * @return array of children
 		 */
 
-		protected function get_children($parent, $level)
+		public function get_children($parent, $level, $reset = false)
 		{
+			if($reset)
+			{
+				$this->activity_tree = array();
+			}
+
 			$db = clone($this->db);
 			$table = "lg_activity";
 			$sql = "SELECT id, name FROM {$table} WHERE parent_activity_id = {$parent} ORDER BY name ASC";
