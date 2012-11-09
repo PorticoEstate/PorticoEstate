@@ -367,6 +367,8 @@
 				if ($activity_id && is_numeric($activity_id))
 				{
 					$activity = $this->so_activity->get_single( $activity_id );
+					$requirement->set_start_date($activity->get_start_date());
+					$requirement->set_end_date($activity->get_end_date());
 					$project = $this->so_project->get_single( $activity->get_project_id() );
 				}
 			}
@@ -439,10 +441,10 @@
 		
 		public function save()
 		{
-			$requirement_id = phpgw::get_var('id');
+			$requirement_id = phpgw::get_var('id', 'int');
 			$new_location_id = phpgw::get_var('location_id');
 			
-			if ($requirement_id && is_numeric($requirement_id))
+			if ($requirement_id)
 			{
 				$requirement = $this->so->get_single($requirement_id);
 				$old_location_id = $requirement->get_location_id();
@@ -456,8 +458,9 @@
 			
 			if( $requirement->validate() )
 			{
-				$db_requirement = $this->so->get_db();
-				$db_requirement->transaction_begin();
+//				$db_requirement = $this->so->get_db();
+//				$db_requirement->transaction_begin();
+				$GLOBALS['phpgw']->db->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
 				
 				$status_delete_values = true;
@@ -469,11 +472,13 @@
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
-					$db_requirement->transaction_commit();
+//					$db_requirement->transaction_commit();
+					$GLOBALS['phpgw']->db->transaction_commit();
 				}
 				else
 				{
-					$db_requirement->transaction_abort();
+					$GLOBALS['phpgw']->db->transaction_commit();
+//					$db_requirement->transaction_abort();
 				}			
 				
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
