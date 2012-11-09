@@ -2389,7 +2389,7 @@
 						)
 				)
 				{
-					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt,'', false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
 				}
 
 				//--------- files
