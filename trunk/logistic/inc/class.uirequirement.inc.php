@@ -307,6 +307,13 @@
 
 		public function view()
 		{
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('id');
 
 			if(isset($_POST['edit_requirement']))
@@ -347,6 +354,13 @@
 
 		public function edit($requirement = null)
 		{
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
@@ -416,11 +430,12 @@
 
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'							=> "requirement_details",
-				'requirement' 			=> $requirement,
+				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'				=> "requirement_details",
+				'requirement' 		=> $requirement,
 				'distict_locations' => $distict_locations_array,
-				'editable' => true,
+				'editable'			=> true,
+				'nonavbar'			=> $nonavbar
 			);
 
 			if($activity_id > 0)
@@ -444,6 +459,14 @@
 			$requirement_id = phpgw::get_var('id', 'int');
 			$new_location_id = phpgw::get_var('location_id');
 			
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
+
 			if ($requirement_id)
 			{
 				$requirement = $this->so->get_single($requirement_id);
@@ -481,7 +504,7 @@
 //					$db_requirement->transaction_abort();
 				}			
 				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $nonavbar));
 			}
 			else
 			{

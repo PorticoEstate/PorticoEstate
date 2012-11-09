@@ -1,12 +1,19 @@
 <xsl:template name="requirement_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
 <xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
+<xsl:variable name="nonavbar"><xsl:value-of select="nonavbar"/></xsl:variable>
+
+<xsl:variable name="action_params">
+	<xsl:text>menuaction:logistic.uirequirement.save, nonavbar:</xsl:text>
+		<xsl:value-of select="nonavbar" />
+</xsl:variable>
+<xsl:variable name="action_url">
+	<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $action_params )" />
+</xsl:variable>
+
 
 <div class="content-wrp">
 	<div id="details">
-		<xsl:variable name="action_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:logistic.uirequirement.save')" />
-		</xsl:variable>
 		<form action="{$action_url}" method="post">
 			<input type="hidden" name="id" value = "{requirement/id}" />
 			<input type="hidden" id="activity_id" name="activity_id" value="{activity/id}" />
@@ -14,6 +21,7 @@
 			<dl class="proplist-col">
 				<dt>
 					<label for="start_date">Startdato</label>
+					<xsl:value-of select="$nonavbar"/>
 				</dt>
 				<dd>
 					<xsl:choose>
@@ -122,9 +130,9 @@
 				<xsl:variable name="view_resources_params">
 					<xsl:text>menuaction:logistic.uiactivity.view_resource_allocation, activity_id:</xsl:text>
 						<xsl:value-of select="activity/id" />
-					</xsl:variable>
-					<xsl:variable name="view_resources_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
+				</xsl:variable>
+				<xsl:variable name="view_resources_url">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $view_resources_params )" />
 				</xsl:variable>
 				
 				<xsl:choose>
