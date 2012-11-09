@@ -1,5 +1,6 @@
 <xsl:template name="activity_details" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/></xsl:variable>
+<xsl:variable name="datetime_format"><xsl:value-of select="$date_format"/><xsl:text> H:i</xsl:text></xsl:variable>
 
 	<div class="content-wrp">
 		<div id="details">
@@ -30,13 +31,13 @@
 						<label for="start_date"><xsl:value-of select="php:function('lang','Start date')" /></label>
 					</dt>
 					<dd>
-						<span><xsl:value-of select="php:function('date', $date_format, number(activity/start_date))"/></span>
+						<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/start_date))"/></span>
 					</dd>
 					<dt>
 						<label for="end_date"><xsl:value-of select="php:function('lang','End date')" /></label>
 					</dt>
 					<dd>
-						<span><xsl:value-of select="php:function('date', $date_format, number(activity/end_date))"/></span>
+						<span><xsl:value-of select="php:function('date', $datetime_format, number(activity/end_date))"/></span>
 					</dd>
 					<dt>
 						<label for="end_date">Ansvarlig</label>

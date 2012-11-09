@@ -460,12 +460,12 @@
 				$db_requirement->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
 				
+				$status_delete_values = true;
 				if( ($old_location_id > 0) && (is_numeric($old_location_id) ) && ($old_location_id != $new_location_id) )
 				{
 					$status_delete_values = $this->so_requirement_value->delete_values( $requirement_id );
+					$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );	
 				}
-				
-				$status_delete_resources = $this->so_resource_allocation->delete_resources( $requirement_id );
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
@@ -664,11 +664,14 @@
 
 			$tabs = $this->make_tab_menu($requirement_id);
 
+			$activity = $this->so_activity->get_single( $requirement->get_activity_id() ); 
+			
 			$data = array
 			(
 				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 				'view'													=> "requirement_values",
 				'requirement' 									=> $requirement,
+				'activity' 											=> $activity,
 				'requirement_attributes_array'	=> $requirement_attributes_array
 			);
 
