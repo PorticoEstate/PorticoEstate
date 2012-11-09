@@ -48,6 +48,17 @@
 
 		}
 
+
+		/**
+		* set_fetch_single:fetch single record from pdo-object
+		*
+		* @param bool    $value true/false
+		*/
+		public function set_fetch_single($value = false)
+		{
+			$this->fetch_single = $value;
+		}
+
 		/**
 		* Destructor
 		*/
@@ -337,11 +348,11 @@
 		* @param bool $fetch_single true for using fetch, false for fetchAll
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
+		public function query($sql, $line = '', $file = '', $exec = false, $_fetch_single = false)
 		{
 //_Debug_Array($sql);
 			$this->_get_fetchmode();
-			$this->fetch_single = $fetch_single;
+			$fetch_single = $_fetch_single ? $_fetch_single : $this->fetch_single;
 
 			if ( !$this->db )
 			{
@@ -374,15 +385,15 @@
 						$this->fetch_single = $fetch_single;
 					}
 */
-					if(!$fetch_single)
-					{
-						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
-					}
-					else
+					if($fetch_single)
 					{
 						$this->resultSet = $statement_object->fetch($this->pdo_fetchmode);
 						$this->statement_object = $statement_object;
 						unset($statement_object);
+					}
+					else
+					{
+						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 					}
 				}
 			}
