@@ -691,7 +691,6 @@
 			$data['activity'] = $activity;
 			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
 			
-		//	self::add_javascript('logistic', 'logistic', 'activity.js');
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
 			self::add_javascript('logistic', 'logistic', 'requirement.js');
 			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs'), $data);
