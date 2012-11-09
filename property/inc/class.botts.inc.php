@@ -950,7 +950,7 @@
 				)
 			)
 			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
+				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code'], false, isset($ticket['send_mail']) && $ticket['send_mail'] ? true : false);
 			}
 
 			$criteria = array
@@ -1024,8 +1024,9 @@
 			return $address_element;
 		}
 
-		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
+		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false, $force_send = false)
 		{
+			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
 			$ticket	= $this->so->read_single($id);
@@ -1135,6 +1136,7 @@
 
 			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
 			{
+				$log_recipients[] = $group_name;
 				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 				foreach($members_gross as $user)
 				{
@@ -1151,6 +1153,7 @@
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
@@ -1158,10 +1161,12 @@
 					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+				|| ($force_send && $ticket['assignedto'])
 			)
 			{
 				// add assigned to recipients
 				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 			}
 
 			$error = array();
@@ -1231,9 +1236,12 @@
 				{
 					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
 				}
+
+				$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 			}
 			unset($entry);
 
+			$rc = false;
 			if($toarray)
 			{
 				$to = implode(';',$toarray);
@@ -1256,6 +1264,10 @@
 				}
 			}
 
+			if($rc && $log_recipients)
+			{
+				$this->historylog->add('M',$id,implode(';',array_unique($log_recipients)));				
+			}
 /*
 			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
 			{
