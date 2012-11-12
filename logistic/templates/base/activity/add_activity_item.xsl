@@ -36,7 +36,7 @@
 				<input type="hidden" name="parent_id" value="{parent_activity/id}" />
 				
 				<dl class="proplist-col">
-				<xsl:value-of select="parent_activity/id"/>
+
 				  <xsl:choose>
 						<xsl:when test="(editable) and (activities !='')">
 							<dt>		
