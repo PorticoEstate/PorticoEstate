@@ -540,7 +540,10 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$values['id'] = $this->bocommon->next_id($table, array('entity_id'=>$values['entity_id']));
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true);
+			
+			$custom_tbl = !$values['is_eav'] ? "fm_{$this->type}_{$values['entity_id']}_{$values['id']}" : null;
+			
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, $custom_tbl, $c_function = true);
 
 			if($values['parent_id'])
 			{

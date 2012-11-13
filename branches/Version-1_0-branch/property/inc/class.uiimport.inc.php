@@ -304,6 +304,11 @@ HTML;
 			if($this->table && $this->fields)
 			{
 				$metadata = $this->db->metadata($this->table);
+
+				if(phpgw::get_var('debug', 'bool'))
+				{
+					_debug_array($metadata);
+				}
 				
 				foreach($this->fields as $field)
 				{

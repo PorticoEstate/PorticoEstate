@@ -68,11 +68,11 @@
 		{
 			parent::__construct();
 
-			$this->so 									= createObject('logistic.sorequirement_resource_allocation');
-			$this->so_activity 					= createObject('logistic.soactivity');
-			$this->so_requirement 			= createObject('logistic.sorequirement');
+			$this->so 					= createObject('logistic.sorequirement_resource_allocation');
+			$this->so_activity 			= createObject('logistic.soactivity');
+			$this->so_requirement 		= createObject('logistic.sorequirement');
 			$this->so_requirement_value = CreateObject('logistic.sorequirement_value');
-			
+
 		  $this->bo										= CreateObject('property.bolocation',true);
 			$this->bocommon							= & $this->bo->bocommon;
 
@@ -161,8 +161,8 @@
 						),
 					)
 				),
-			);			
-			
+			);
+
 			self::render_template_xsl(array('datatable_common'), $data);
 		}
 
@@ -185,13 +185,13 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			
+
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('startIndex', 'int');
 			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field = phpgw::get_var('sort');
 			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
-			
+
 			// Form variables
 			$search_for = phpgw::get_var('query');
 			$search_type = phpgw::get_var('search_option');
@@ -230,8 +230,14 @@
 			{
 				if (isset($result))
 				{
-					$requirement = $result->serialize();			
-					
+					$requirement = $result->serialize();
+
+					if($short_desc = execMethod('property.soentity.get_short_description', 
+							array('location_id' => $requirement['location_id'], 'id' => $requirement['resource_id'])))
+					{
+						$requirement['fm_bim_item_name'] = $short_desc;
+					}
+
 					$delete_href = self::link(
 																array('menuaction' => 'logistic.uirequirement_resource_allocation.delete', 
 																			'id' => $requirement['id'], 
@@ -241,7 +247,7 @@
 					$rows[] = $requirement;
 				}
 			}
-			
+
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -276,7 +282,7 @@
 			{
 				$activity = $this->so_activity->get_single($activity_id);
 			}
-			
+
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
@@ -301,27 +307,27 @@
 				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
 
 				$criterias_array = array();
-				
+
 				$location_id = $requirement->get_location_id();
-				
+
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$entity_arr = explode('.',$loc_arr['location']);
 
 				$entity_id = $entity_arr[2];
 				$cat_id = $entity_arr[3];
-				
+
 				$criterias_array['location_id'] = $location_id;
 				$criterias_array['allrows'] = true;
-				
+
 				$view_criterias_array = array();
 				$custom	= createObject('phpgwapi.custom_fields');
-				
+
 				foreach($requirement_values as $requirement_value)
 				{
 					$attrib_value = $requirement_value->get_value();
 					$operator = $requirement_value->get_operator();
 					$cust_attribute_id = $requirement_value->get_cust_attribute_id();
-					
+
 					if($operator == "eq")
 					{
 						$operator_str = "=";
@@ -348,47 +354,47 @@
 						'value' 			=> $attrib_value,
 						'attribute_id' => $cust_attribute_id
 					);
-					
+
 					$criterias_array['conditions'][] = $condition;
 				}
 			}
 		    
 			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
 			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
-			
+
 			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
-			
+
 			$data = array
 			(
-				'requirement' 						=> $requirement,
+				'requirement' 				=> $requirement,
 				'view_criterias_array' 		=> $view_criterias_array,
-				'activity' 								=> $activity,
+				'activity' 					=> $activity,
 				'allocation_suggestions' 	=> $allocation_suggestions,
-				'editable' 								=> true
+				'editable' 					=> true
 			);
-			
+
 			self::render_template_xsl(array('allocation/book_resources'), $data);
 		}
 
 		public function save()
 		{
 			$requirement_id = phpgw::get_var('requirement_id');
-		
+
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
 			}
-			
+
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$chosen_resources = phpgw::get_var('chosen_resources');
-			
+
 			$filters = array('requirement_id' => $requirement->get_id());
-			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);	
-							 	
+			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);
+							 
 			$num_required = $requirement->get_no_of_items();
-							
+
 			$num_allowed_bookings = $num_required - $num_allocated;
-					
+
 			if( count($chosen_resources) <=  $num_allowed_bookings)
 			{
 				foreach($chosen_resources as $resource_id)
@@ -398,10 +404,10 @@
 					$resource_alloc->set_resource_id( $resource_id );
 					$resource_alloc->set_location_id( $requirement->get_location_id() );
 					$resource_alloc->set_create_user( $user_id );
-					
+
 					$resource_alloc_id = $this->so->store( $resource_alloc );
 				}
-				
+
 				$activity = $this->so_activity->get_single($requirement->get_activity_id()); 
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
@@ -411,13 +417,13 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
 			}
 		}
-		
+
 		public function delete()
 		{
 			$resource_allocation_id = phpgw::get_var('id');
-				
+
 			$status = $this->so->delete($resource_allocation_id);
-		
+
 			if($status){
 				return json_encode( array( "status" => "deleted" ) );
 			}
@@ -425,7 +431,7 @@
 				return json_encode( array( "status" => "not_deleted" ) );
 			}
 		} 
-		
+
 		function convert_to_array($object_list)
 		{
 			$converted_array = array();
