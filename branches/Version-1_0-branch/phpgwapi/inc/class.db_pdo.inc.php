@@ -352,7 +352,10 @@
 		{
 //_Debug_Array($sql);
 			$this->_get_fetchmode();
-			$fetch_single = $_fetch_single ? $_fetch_single : $this->fetch_single;
+
+			//FIXME
+			$fetch_single = $_fetch_single;
+			$this->fetch_single = $_fetch_single;
 
 			if ( !$this->db )
 			{
