@@ -4,6 +4,8 @@
 	 * phpGroupWare - logistic: a part of a Facilities Management System.
 	 *
 	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
+	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
+	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
@@ -42,7 +44,7 @@
 		private $so_project;
 		private $so_requirement;
 		private $so_resource_allocation;
-		
+
 		public $public_functions = array(
 			'query'			=> true,
 			'add' 			=> true,
@@ -62,17 +64,17 @@
 			$this->so_project = createObject('logistic.soproject');
 			$this->so_requirement = CreateObject('logistic.sorequirement');
 			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
-			
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::activity";
 		}
-		
+
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
 			}
-			
+
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -125,7 +127,7 @@
 							'label' => lang('Id'),
 							'sortable' => true,
 							'formatter' => 'YAHOO.portico.formatLink'
-						),		
+						),
 						array(
 							'key' => 'name',
 							'label' => lang('Activity name'),
@@ -188,6 +190,18 @@
 					)
 				);
 
+			$parameters3 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'activity_id',
+							'source'	=> 'id'
+						),
+					)
+				);
+
 
 			$data['datatable']['actions'][] = array
 					(
@@ -208,7 +222,7 @@
 						(
 							'menuaction'	=> 'logistic.uirequirement.edit'
 						)),
-						'parameters'	=> json_encode($parameters)
+						'parameters'	=> json_encode($parameters3)
 					);
 
 			$data['datatable']['actions'][] = array
@@ -256,17 +270,17 @@
 			{
 				$user_rows_per_page = 10;
 			}
-			
+
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('startIndex', 'int');
 			$num_of_objects = phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field = phpgw::get_var('sort');
 			$sort_ascending = phpgw::get_var('dir') == 'desc' ? false : true;
-			
+
 			// Form variables
 			$search_for = phpgw::get_var('query');
 			$search_type = phpgw::get_var('search_option');
-			
+
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -290,7 +304,7 @@
 					$filters = array('id' => $activity_id);
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
-					
+
 					array_shift($result_objects);
 					break;
 				case 'activity_id':
@@ -315,23 +329,23 @@
 				{
 					$filters = array('activity' => $activity->get_id());
 					$requirements_for_activity = $this->so_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					
+
 					if( count( $requirements_for_activity ) > 0 )
 					{
 						$total_num_alloc = 0;
 						$total_num_required = 0;
-						
+
 						foreach($requirements_for_activity as $requirement)
 						{
 							$filters = array('requirement_id' => $requirement->get_id());
-							$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);	
+							$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
 							 
 							$num_required = $requirement->get_no_of_items();
-							
+
 							$total_num_alloc += $num_allocated;
 							$total_num_required += $num_required;
 						}
-						
+
 						if($total_num_alloc == $total_num_required)
 						{
 							$status = "Behov dekket";
@@ -345,22 +359,22 @@
 					{
 						$status = "Ingen registerte behov";
 					}
-					
+
 					$activity_arr = $activity->serialize(); 
-					
+
 					$activity_arr['status'] = $status;
-					
-					
+
+
 					$href = self::link(array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_arr['id']));
 					$activity_arr['id_link'] = "<a href=\"{$href}\">" . $activity_arr['id'] . "</a>";
 					$activity_arr['name'] = "<a href=\"{$href}\">" . $activity_arr['name'] . "</a>";
-					
-					
+
+
 					$rows[] = $activity_arr;
 				}
 			}
-			
-			
+
+
 			// ... add result data
 			$result_data = array('results' => $rows);
 
@@ -395,11 +409,11 @@
 		public function edit($activity = null)
 		{
 			$activity_id = phpgw::get_var('id');
-			$parent_activity_id = phpgw::get_var('parent_id');
+			$parent_activity_id = phpgw::get_var('parent_id', 'int');
 			$project_id = phpgw::get_var('project_id');
-			
+
 			if($activity == null)
-			{			
+			{
 				if( $activity_id && is_numeric($activity_id) )
 				{
 					$activity = $this->so->get_single($activity_id);
@@ -407,26 +421,27 @@
 				else
 				{
 					$activity = new logistic_activity();
-					
+
 					if( $project_id && is_numeric($project_id) )
 					{
 						$project = $this->so_project->get_single($project_id);
 						$activity->set_project_id( $project_id );
 					}
-					else if($parent_activity_id > 0)
+					else if($parent_activity_id)
 					{
 						$activity->set_parent_id( $parent_activity_id );
 						$parent_activity = $this->so->get_single( $parent_activity_id );
-						$activity->set_project_id( $parent_activity->get_project_id() );
-						
+						$project_id = $parent_activity->get_project_id();
+						$activity->set_project_id( $project_id );
+
 						$activity->set_start_date($parent_activity->get_start_date());
 						$activity->set_end_date($parent_activity->get_end_date());
 					}
 				}
 			}
-			
+
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
-			
+
 			$activities = $this->so->get();
 
 			if($activity_id)
@@ -452,19 +467,20 @@
 			$data = array
 			(
 				'responsible_users' => $accounts,
-				'activities' => $activity_id ? $activities : array(),
+				'activities' => $project_id ? $activities : array(),
 				'activity' => $activity,
 				'editable' => true,
 				'breadcrumb' => $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.edit', 'id')
 			);
-						
+
 			if($project)
 			{
 				$data['project'] = $project;
 			}
-			
-//			if($activity->get_parent_id() > 0)
-			if(	$activity_id )
+
+//			if($activity->get_parent_id() || $activity_id)
+//			if(	$activity_id )
+			if($project_id)
 			{
 				$parent_activity = $this->so->get_single( $activity->get_parent_id() );
 				$data['parent_activity'] = $parent_activity;
@@ -474,21 +490,21 @@
 				$projects = $this->so_project->get();
 				$data['projects'] = $projects;
 			}
-			
+
 			$this->use_yui_editor('description');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('logistic') . '::' . lang('Add activity');
 
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-			
+
 			self::add_javascript('logistic', 'logistic', 'activity.js');
 			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-
+//_debug_array($data);die();
 			self::render_template_xsl('activity/add_activity_item', $data);
 		}
-		
+
 		public function view()
 		{
 			$activity_id = phpgw::get_var('id', 'int');
@@ -496,7 +512,7 @@
 			if ($activity_id && is_numeric($activity_id))
 			{
 				$activity = $this->so->get_single( $activity_id );
-				
+
 				$responsible_user = $this->so->get_responsible_user( $activity->get_responsible_user_id() );
 
 				$activity->set_responsible_user_name( $responsible_user );
@@ -504,7 +520,7 @@
 			}
 
 			$tabs = $this->make_tab_menu($activity_id);
-			
+
 			$data = array
 			(
 				'tabs'			=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
@@ -518,14 +534,14 @@
 				$parent_activity = $this->so->get_single($activity->get_parent_id());
 				$data['parent_activity'] = $parent_activity;
 			}
-			
+
 			self::render_template_xsl(array('activity/view_activity_item', 'activity/activity_tabs'), $data);
 		}
-		
+
 		public function save()
 		{
 			$activity_id = phpgw::get_var('id');
-			
+
 			if ($activity_id && is_numeric($activity_id))
 			{
 				$activity = $this->so->get_single($activity_id);
@@ -540,7 +556,7 @@
 			if( $activity->validate() )
 			{
 				$activity_id = $this->so->store($activity);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));	
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view', 'id' => $activity_id, 'project_id' => $activity->get_project_id()));
 			}
 			else
 			{
@@ -578,14 +594,14 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 				execMethod('phpgwapi.menu.clear');
 			}
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.index'));	
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.index'));
 		}
-		
+
 		public function view_resource_allocation()
 		{
 			$activity_id = phpgw::get_var('activity_id');
 			$activity = $this->so->get_single($activity_id);
-			
+
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -667,21 +683,23 @@
 					)
 				),
 			);
-			
+
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_jquery::load_widget('core');
 
 			$tabs = $this->make_tab_menu($activity_id);
-			
+
 			$data['tabs']		 	= $GLOBALS['phpgw']->common->create_tabs($tabs, 1);
 			$data['view'] 	 	= 'requirement_overview';
 			$data['activity'] = $activity;
 			$data['breadcrumb'] = $this->_get_breadcrumb( $activity_id, 'logistic.uiactivity.view_resource_allocation', 'activity_id');
-			
-			self::add_javascript('logistic', 'logistic', 'activity.js');
+
 			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
 			self::add_javascript('logistic', 'logistic', 'requirement.js');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
 			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview', 'activity/activity_tabs'), $data);
 		}
 
@@ -700,7 +718,7 @@
 
 			return $user_array;
 		}
-		
+
 		function make_tab_menu($activity_id)
 		{
 			$tabs = array();
@@ -737,9 +755,9 @@
 			{
 				return;
 			}
-			
+
 			$path = $this->so->get_path($activity_id);
-						
+
 			foreach($path as $menu_item)
 			{
 				if($menu_item['id'] == $activity_id)
@@ -751,9 +769,9 @@
 					$_link = self::link(array('menuaction' => $menuaction, $id_name => $menu_item['id'] ));
 					$breadcrumb_array[] = array("name" => $menu_item['name'], "link" => $_link, "current" => 0);
 				}
-				
+
 			}
-				
+
 			return $breadcrumb_array;
 		}
 	}

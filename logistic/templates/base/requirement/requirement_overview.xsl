@@ -18,6 +18,9 @@
 <xsl:template name="requirement_overview" xmlns:php="http://php.net/xsl">
 	<div id="resource_alloc_wrp" class="content-wrp">
 	
+			<xsl:variable name="activity_id">
+				<xsl:value-of select="activity/id" />
+			</xsl:variable>
 			<xsl:variable name="add_req_params">
 				<xsl:text>menuaction:logistic.uirequirement.edit, activity_id:</xsl:text>
 				<xsl:value-of select="activity/id" />
@@ -27,7 +30,7 @@
 			</xsl:variable>
 			
 			<h2 style="float:left;"><xsl:value-of select="php:function('lang', 'Resource requirement')" /></h2>
-			<a id="add-requirement-btn" class="btn focus" href="{$add_req_url}"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
+			<a id="add-requirement-btn" class="btn focus" onClick="load_requirement_edit({$activity_id});"><xsl:value-of select="php:function('lang', 'Add requirement')" /></a>
 			<div style="clear:both;" id="paging"></div>
 			<div style="margin-bottom: 40px;" id="requirement-container"></div>
 				
@@ -40,6 +43,20 @@
 <xsl:template name="datasource-def">
 
 	<script>
+
+	function load_requirement_edit( activity_id ){
+		var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id:activity_id, nonavbar: true, lean: true};
+		var requestUrl = phpGWLink('index.php', oArgs);
+
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+	}
+
+	function closeJS_local()
+	{
+		var reqUrl = '<xsl:value-of select="//datatable/source"/>';
+		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+	}
+
 	YAHOO.util.Event.onDOMReady(function(){
 	 
    	YAHOO.portico.columnDefs = [

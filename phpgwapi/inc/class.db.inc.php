@@ -198,6 +198,7 @@
 			return true;
 		}
 	
+
 		/**
 		* Open a connection to a database
 		*
@@ -208,6 +209,14 @@
 		* @param int    $Port Port for database host (optional)
 		*/
 		abstract public function connect($Database = null, $Host = null, $User = null, $Password = null, $Port = null);
+
+		/**
+		* set_fetch_single:fetch single record from pdo-object, no inpact on adodb
+		*
+		* @param bool    $value true/false
+		*/
+		abstract public function set_fetch_single($value = false);
+
 
 
 		/**

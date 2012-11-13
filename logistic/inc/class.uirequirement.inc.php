@@ -307,6 +307,13 @@
 
 		public function view()
 		{
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('id');
 
 			if(isset($_POST['edit_requirement']))
@@ -347,6 +354,13 @@
 
 		public function edit($requirement = null)
 		{
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('id');
 			$activity_id = phpgw::get_var('activity_id');
 
@@ -367,6 +381,8 @@
 				if ($activity_id && is_numeric($activity_id))
 				{
 					$activity = $this->so_activity->get_single( $activity_id );
+					$requirement->set_start_date($activity->get_start_date());
+					$requirement->set_end_date($activity->get_end_date());
 					$project = $this->so_project->get_single( $activity->get_project_id() );
 				}
 			}
@@ -414,11 +430,12 @@
 
 			$data = array
 			(
-				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'							=> "requirement_details",
-				'requirement' 			=> $requirement,
+				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'				=> "requirement_details",
+				'requirement' 		=> $requirement,
 				'distict_locations' => $distict_locations_array,
-				'editable' => true,
+				'editable'			=> true,
+				'nonavbar'			=> $nonavbar
 			);
 
 			if($activity_id > 0)
@@ -439,10 +456,18 @@
 		
 		public function save()
 		{
-			$requirement_id = phpgw::get_var('id');
+			$requirement_id = phpgw::get_var('id', 'int');
 			$new_location_id = phpgw::get_var('location_id');
 			
-			if ($requirement_id && is_numeric($requirement_id))
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
+
+			if ($requirement_id)
 			{
 				$requirement = $this->so->get_single($requirement_id);
 				$old_location_id = $requirement->get_location_id();
@@ -456,8 +481,9 @@
 			
 			if( $requirement->validate() )
 			{
-				$db_requirement = $this->so->get_db();
-				$db_requirement->transaction_begin();
+//				$db_requirement = $this->so->get_db();
+//				$db_requirement->transaction_begin();
+				$GLOBALS['phpgw']->db->transaction_begin();
 				$requirement_id = $this->so->store($requirement);
 				
 				$status_delete_values = true;
@@ -469,14 +495,16 @@
 				
 				if( ($requirement_id > 0) && ($status_delete_values) && ($status_delete_resources) )
 				{
-					$db_requirement->transaction_commit();
+//					$db_requirement->transaction_commit();
+					$GLOBALS['phpgw']->db->transaction_commit();
 				}
 				else
 				{
-					$db_requirement->transaction_abort();
+					$GLOBALS['phpgw']->db->transaction_commit();
+//					$db_requirement->transaction_abort();
 				}			
 				
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view', 'id' => $requirement_id, 'nonavbar' => $nonavbar));
 			}
 			else
 			{

@@ -41,6 +41,17 @@
 			parent::__construct($query, $db_type, $delay_connect);
 		}
 
+
+		/**
+		* set_fetch_single:fetch single record from pdo-object, no inpact on adodb
+		*
+		* @param bool    $value true/false
+		*/
+		public function set_fetch_single($value = false)
+		{
+			$this->fetch_single = $value;
+		}
+
 		/**
 		* Called when object is cloned
 		*/
