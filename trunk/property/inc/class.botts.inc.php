@@ -1156,17 +1156,20 @@
 				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 			}
 
-			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
-				)
-				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
-				|| ($force_send && $ticket['assignedto'])
-			)
+			if($ticket['assignedto'])
 			{
-				// add assigned to recipients
-				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
-				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+				if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+						&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+					)
+					|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+					|| ($force_send && $ticket['assignedto'])
+				)
+				{
+					// add assigned to recipients
+					$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+					$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+				}
 			}
 
 			$error = array();
