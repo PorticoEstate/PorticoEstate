@@ -721,6 +721,8 @@
 				$workorder_list[] = array('workorder_id' => $this->db->f('id'));
 			}
 
+			$this->db->set_fetch_single(false);
+
 			foreach($workorder_list as &$workorder)
 			{
 				$this->db->query("{$sql} WHERE fm_workorder.id = '{$workorder['workorder_id']}'");

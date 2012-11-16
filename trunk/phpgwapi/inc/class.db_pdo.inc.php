@@ -350,12 +350,10 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false, $_fetch_single = false)
 		{
-//_Debug_Array($sql);
-			$this->_get_fetchmode();
+			self::_get_fetchmode();
+			self::set_fetch_single($_fetch_single);
 
-			//FIXME
-			$fetch_single = $_fetch_single;
-			$this->fetch_single = $_fetch_single;
+			$fetch_single = $this->fetch_single;
 
 			if ( !$this->db )
 			{

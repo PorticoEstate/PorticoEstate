@@ -557,6 +557,8 @@
 				}
 			}
 
+			$this->db->set_fetch_single(false);
+
 			return $tickets;
 		}
 
