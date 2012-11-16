@@ -246,6 +246,9 @@ abstract class rental_socommon
 				}
 			}
 		}
+
+		$this->db->set_fetch_single(false);
+
 		return $results;
 	}
 	
