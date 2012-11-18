@@ -41,7 +41,7 @@
 		protected $table;
 		var $appname = 'property';
 
-		function __construct()
+		function __construct($type = '', $type_id = 0)
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->custom 	= createObject('property.custom_fields');
@@ -49,6 +49,12 @@
 			$this->_db2		= clone($this->_db);
 			$this->_like	= & $this->_db->like;
 			$this->_join	= & $this->_db->join;
+
+			if($type)
+			{
+				$this->get_location_info($type,$type_id);
+			}
+			
 		}
 
 		function read($data, $filter = array())
