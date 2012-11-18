@@ -104,6 +104,30 @@
 						<div class="clearDiv"></div>
 					</div>
 
+
+					 <div class="row">
+						<div class="label">
+							<label for="vendor"><xsl:value-of select="php:function('lang', 'vendor')" /></label>
+						</div>
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+							    <div class="autocomplete">
+							        <input type="hidden" id="vendor_id" name="values[vendor_id]"  value="{survey/vendor_id}"
+										formvalidator:FormField="yes"
+										formvalidator:type="TextBaseField"/>
+							        <input type="text" id="vendor_name" name="vendor_name" value="{survey/vendor_name}">
+									</input>
+							        <div id="vendor_container"/>
+							    </div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="survey/vendor_name" />
+							</xsl:otherwise>
+						</xsl:choose>
+						<div class="clearDiv"></div>
+					</div>
+
+
 <!--
 
 					<div class="row">
