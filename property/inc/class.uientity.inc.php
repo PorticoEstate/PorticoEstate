@@ -1669,6 +1669,14 @@
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
+					
+					/*
+					* Hide dummy attributes that act as placeholders
+					*/
+					if($attribute['datatype'] == 'R' && isset($attribute['choice']) && !$attribute['choice'])
+					{
+						$attribute['hide_row'] = true;
+					}
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
@@ -2085,6 +2093,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
+
+
 
 			$criteria = array
 				(
