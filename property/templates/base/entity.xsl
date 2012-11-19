@@ -289,7 +289,7 @@
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<tr>
 								<td valign='top'>
-									<xsl:value-of select="php:function('lang', 'startet from')"/>
+									<xsl:value-of select="php:function('lang', 'started from')"/>
 								</td>
 								<td>
 									<div id="datatable-container_1"/>

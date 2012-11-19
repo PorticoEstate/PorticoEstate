@@ -1650,6 +1650,7 @@ start project	property	no	Start prosjekt
 start this entity	property	no	Start denne entiteten
 start this entity from	property	no	Start denne entiteten fra prosjekt
 start ticket	property	no	Start melding
+started from	property	no	Startet fra
 status	property	no	Status
 status changed	property	no	Status er endret
 status code	property	no	Statuskode
@@ -1794,6 +1795,7 @@ upload file	property	no	Last opp fil
 upload multiple files	property	no	Last opp flere filer
 upload files	property	no	Last opp filer
 url	property	no	URL
+used in	property	no	Brukt i
 user	property	no	Bruker
 user contact info	property	no	Bruker kontaktinfo
 user gratification	property	no	Bruker tilfredsstillelse
