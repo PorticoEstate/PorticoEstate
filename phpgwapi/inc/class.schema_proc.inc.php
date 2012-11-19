@@ -490,7 +490,7 @@
 			$sBufDefault = '';
 			if($sFieldSQL = $this->m_oTranslator->TranslateType($sType, $iPrecision, $iScale))
 			{
-				if($bNullable == False)
+				if($bNullable == False || $bNullable == 'False')
 				{
 					$sBufNullable = ' NOT NULL';
 					//$sFieldSQL .= ' NOT NULL';
