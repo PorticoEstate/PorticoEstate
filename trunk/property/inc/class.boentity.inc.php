@@ -44,6 +44,7 @@
 		var $part_of_town_id;
 		var $location_code;
 		var $results;
+		var $acl_location;
 		protected $xsl_rootdir;
 
 		/**
@@ -101,6 +102,9 @@
 			$this->type_app					= $this->so->get_type_app();
 
 			$this->type						= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
+
+			$this->acl_location				= ".{$type}.{$entity_id}.{$cat_id}";
+
 			$this->location_code			= isset($location_code)  && $location_code ? $location_code : '';
 
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
@@ -564,7 +568,7 @@
 
 				$file = PHPGW_SERVER_ROOT . "/{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
-				if ( $entry['active'] && is_file($file) )
+				if ( $entry['active'] && !$entry['client_side'] && is_file($file) )
 				{
 					require_once $file;
 				}

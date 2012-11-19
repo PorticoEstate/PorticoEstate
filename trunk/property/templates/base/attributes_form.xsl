@@ -33,38 +33,43 @@
 		</xsl:choose>
 
 		<tr>
-			<td align="left" width="19%" valign="top" title="{$statustext}">
-				<xsl:choose>
-					<xsl:when test="helpmsg=1">
-						<xsl:variable name="help_url">
-							<xsl:value-of select="help_url"/>
-						</xsl:variable>
-						<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
-							<xsl:text>[</xsl:text>
-							<xsl:value-of select="input_text"/>
-							<xsl:text>]</xsl:text>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="input_text"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="datatype='pwd'">
-						<br/>
-						<xsl:text>[ </xsl:text>
+			<xsl:choose>
+				<xsl:when test="not(hide_row)">
+					<td align="left" width="19%" valign="top" title="{$statustext}">
 						<xsl:choose>
-							<xsl:when test="value!=''">
-								<xsl:value-of select="php:function('lang', 'edit')"/>
+							<xsl:when test="helpmsg=1">
+								<xsl:variable name="help_url">
+									<xsl:value-of select="help_url"/>
+								</xsl:variable>
+								<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
+									<xsl:text>[</xsl:text>
+									<xsl:value-of select="input_text"/>
+									<xsl:text>]</xsl:text>
+								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="php:function('lang', 'add')"/>
+								<xsl:value-of select="input_text"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:text> ]</xsl:text>
-					</xsl:when>
-				</xsl:choose>
-			</td>
+						<xsl:choose>
+							<xsl:when test="datatype='pwd'">
+								<br/>
+								<xsl:text>[ </xsl:text>
+								<xsl:choose>
+									<xsl:when test="value!=''">
+										<xsl:value-of select="php:function('lang', 'edit')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="php:function('lang', 'add')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+								<xsl:text> ]</xsl:text>
+							</xsl:when>
+						</xsl:choose>
+					</td>
+				</xsl:when>
+			</xsl:choose>
+
 			<td align="left">
 				<xsl:choose>
 					<xsl:when test="name!=''">
