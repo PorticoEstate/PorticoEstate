@@ -46,7 +46,7 @@
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
-			<form ENCTYPE="multipart/form-data" method="post" name="form" action="{$form_action}">
+			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data">
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">
