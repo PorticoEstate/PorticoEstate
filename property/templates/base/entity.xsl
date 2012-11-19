@@ -77,7 +77,6 @@
 					</xsl:choose>
 				</table>
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<xsl:call-template name="target"/>
 					<xsl:for-each select="origin_list">
 						<tr>
 							<td class="th_text">
@@ -286,6 +285,28 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+					<div id="related">
+						<table cellpadding="2" cellspacing="2" width="80%" align="center">
+							<tr>
+								<td valign='top'>
+									<xsl:value-of select="php:function('lang', 'startet from')"/>
+								</td>
+								<td>
+									<div id="datatable-container_1"/>
+								</td>
+							</tr>
+							<tr>
+								<td valign='top'>
+									<xsl:value-of select="php:function('lang', 'used in')"/>
+								</td>
+								<td>
+									<div id="datatable-container_2"/>
+								</td>
+							</tr>
+						</table>
+					</div>
+
+					<!--
 					<xsl:choose>
 						<xsl:when test="related_link != ''">
 							<div id="related">
@@ -301,6 +322,7 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+					-->
 				</div>
 				<xsl:choose>
 					<xsl:when test="mode = 'edit'">
