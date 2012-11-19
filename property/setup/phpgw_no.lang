@@ -1886,6 +1886,7 @@ what is the current status of this equipment ?	property	no	hva er status for det
 what is the current status of this project ?	property	no	hva er status for dette prosjektet ?
 what is the current status of this request ?	property	no	hva er status for denne anmodningen ?
 what is the current status of this workorder ?	property	no	hva er status for denne bestillingen ?
+where	property	no	Hvor
 where to deliver the key	property	no	Nøkler leveres
 where to fetch the key	property	no	Nøkler hentes
 where to pick up the key	property	no	Nøkler hentes
