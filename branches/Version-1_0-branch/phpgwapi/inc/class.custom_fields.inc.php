@@ -732,7 +732,8 @@
 			$OldColumnName		= $this->_db->f('column_name');
 			$OldDataType		= $this->_db->f('datatype');
 			$OldPrecision		= $this->_db->f('precision_');
-			$OldGroup			= (int) $this->_db->f('group_id');			
+			$OldGroup			= (int) $this->_db->f('group_id');
+			$OldNullable		= $this->_db->f('nullable');		
 
 			$this->_db->transaction_begin();
 
@@ -818,7 +819,9 @@
 			}
 
 			if (($OldDataType != $attrib['column_info']['type'])
-				|| ($OldPrecision != $attrib['column_info']['precision']) )
+				|| ($OldPrecision != $attrib['column_info']['precision'])
+				|| ($OldNullable != $attrib['column_info']['nullable'])
+				 )
 			{
 				if( !$doubled )
 				{
@@ -911,6 +914,7 @@
 						while (isset($metadata[$backup_column_name]));
 						
 						$this->_oProc->RenameColumn($attrib_table,$attrib['column_name'], $backup_column_name);
+						$this->_oProc->AlterColumn($attrib_table,$backup_column_name,array('type' => $OldDataType, 'nullable' => true));
 						$this->_oProc->AddColumn($attrib_table, $attrib['column_name'], $attrib['column_info']);
 					}
 					

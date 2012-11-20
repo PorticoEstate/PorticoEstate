@@ -638,6 +638,8 @@
 					$project_list[] = array('project_id' => $this->db->f('id'));
 				}
 
+				$this->db->set_fetch_single(false);
+
 				foreach($project_list as &$project)
 				{
 					$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");

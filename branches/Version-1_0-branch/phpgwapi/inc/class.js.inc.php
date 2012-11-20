@@ -187,7 +187,7 @@
 				{					
 					$links .= <<<HTML
 					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
-
+					</script>
 HTML;
 				}
 			}

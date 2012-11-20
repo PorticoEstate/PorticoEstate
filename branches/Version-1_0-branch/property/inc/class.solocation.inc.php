@@ -974,6 +974,8 @@
 				$j++;				
 			}
 
+			$this->db->set_fetch_single(false);
+
 			$values = $this->custom->translate_value($dataset, $location_id, $location_count);
 			return $values;
 		}

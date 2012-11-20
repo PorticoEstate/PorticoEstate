@@ -217,38 +217,9 @@
 		 */
 		public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $allrows)
 		{
-			$results = array();			// Array to store result objects
-			$map = array();				// Array to hold number of records per target object
-			$check_map = array();		// Array to hold the actual number of record read per target object
-			$object_ids = array(); 		// All of the object ids encountered
-			$added_object_ids = array();// All of the added objects ids
-
-			// Retrieve information about the table name and the name and alias of id column
-			// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
-			// 						for all the result objects are traversed
-			$id_field_name_info = $this->get_id_field_name(true);
-			if(is_array($id_field_name_info))
-			{
-				$break_on_limit = true;
-				$id_field_name = $id_field_name_info['translated'];
-			}
-			else
-			{
-				$break_on_limit = false;
-				$id_field_name = $id_field_name_info;
-			}
-
-			// Special case: Sort on id field. Always changed to the id field name.
-			// $break_when_num_of_objects_reached - flag indicating to break the loop when the number of 
-			//		results are reached and we are sure that the records are ordered by the id
 			if($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{
-				$sort_field = $id_field_name;
-				$break_when_num_of_objects_reached = true;
-			}
-			else
-			{
-				$break_when_num_of_objects_reached = false;
+				$sort_field = 'id';
 			}
 
 			// Only allow positive start index
@@ -258,7 +229,7 @@
 			}
 
 			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-			$ret = $this->read_tree($sql, $filters, $num_of_objects, $allrows);
+			$ret = $this->read_tree($sql, $filters, $num_of_objects, $start_index, $allrows);
 
 			return $ret;
 		}
@@ -305,7 +276,7 @@
 		 * array, never null. The array keys are the respective index numbers.
 		 */
 
-		public function read_tree($sql, $filters, $num_of_objects = 0, $allrows = false)
+		public function read_tree($sql, $filters, $num_of_objects = 0, $start = 0, $allrows = false)
 		{
 			if($filters['activity'])
 			{

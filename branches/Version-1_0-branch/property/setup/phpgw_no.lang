@@ -1650,6 +1650,7 @@ start project	property	no	Start prosjekt
 start this entity	property	no	Start denne entiteten
 start this entity from	property	no	Start denne entiteten fra prosjekt
 start ticket	property	no	Start melding
+started from	property	no	Startet fra
 status	property	no	Status
 status changed	property	no	Status er endret
 status code	property	no	Statuskode
@@ -1794,6 +1795,7 @@ upload file	property	no	Last opp fil
 upload multiple files	property	no	Last opp flere filer
 upload files	property	no	Last opp filer
 url	property	no	URL
+used in	property	no	Brukt i
 user	property	no	Bruker
 user contact info	property	no	Bruker kontaktinfo
 user gratification	property	no	Bruker tilfredsstillelse
@@ -1884,6 +1886,7 @@ what is the current status of this equipment ?	property	no	hva er status for det
 what is the current status of this project ?	property	no	hva er status for dette prosjektet ?
 what is the current status of this request ?	property	no	hva er status for denne anmodningen ?
 what is the current status of this workorder ?	property	no	hva er status for denne bestillingen ?
+where	property	no	Hvor
 where to deliver the key	property	no	Nøkler leveres
 where to fetch the key	property	no	Nøkler hentes
 where to pick up the key	property	no	Nøkler hentes
