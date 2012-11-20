@@ -35,3 +35,12 @@ YUI({
                 });
 
 });
+
+	YAHOO.util.Event.addListener(window, "load", function()
+	{
+		var oArgs = {menuaction:'property.uicondition_survey.get_vendors'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+	    YAHOO.portico.autocompleteHelper(strURL, 
+		'vendor_name', 'vendor_id', 'vendor_container');
+	});
+

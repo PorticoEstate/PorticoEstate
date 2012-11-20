@@ -40,7 +40,8 @@
 			'view' => true,
 			'add' => true,
 			'edit' => true,
-			'save' => true
+			'save' => true,
+			'get_vendors'	=> true
 		);
 
 		public function __construct()
@@ -317,6 +318,19 @@
 			{
 				$this->edit( $project );
 			}
+		}
+
+		public function get_vendors()
+		{
+			$query = phpgw::get_var('query');
+
+			$sogeneric = CreateObject('property.sogeneric', 'vendor');
+			$values = $sogeneric->read(array('query' => $query));
+			foreach ($values as &$entry)
+			{
+				$entry['name'] = $entry['org_name'];
+			}
+			return array('ResultSet'=> array('Result'=>$values));
 		}
 
 		private function _get_categories($selected = 0)

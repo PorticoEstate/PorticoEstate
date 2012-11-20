@@ -1669,6 +1669,14 @@
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
+					
+					/*
+					* Hide dummy attributes that act as placeholders
+					*/
+					if($attribute['datatype'] == 'R' && isset($attribute['choice']) && !$attribute['choice'])
+					{
+						$attribute['hide_row'] = true;
+					}
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
@@ -1899,12 +1907,16 @@
 				);
 
 			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
-				);
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+			);
 
+
+
+//_Debug_Array($datavalues);
+//die();
 /*
 			$link_file_data['jasper']		= true;
 			$content_jasperfiles = array();
@@ -1957,35 +1969,94 @@
 					}
 				}
 
-				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
-				$related_link = array();
+				$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
+				$_target = array();
+				if(isset($values['target']) && $values['target'])
+				{
+					foreach($values['target'] as $_target_section)
+					{
+						foreach ($_target_section['data'] as $_target_entry)
+						{
+							$_target[] = array
+							(
+								'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+								'type'		=> $_target_section['descr'],
+								'title'		=> $_target_entry['title'],
+								'status'	=> $_target_entry['statustext'],
+								'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+								'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							);
+						}
+					}
+				}
 
+				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
+
+				$_related = array();
 				if(isset($related['related']))
 				{
-					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
-
 					foreach($related as $related_key => $related_data)
 					{
 						foreach($related_data as $entry)
 						{
-							$related_link[] = array
-								(
-									'entity_link'				=> $entry['entity_link'],
-									'lang_entity_statustext'	=> $entry['descr'],
-									'text_entity'				=> $entry['name'],
-								);
+							$_related[] = array
+							(
+								'url'		=> "<a href=\"{$entry['entity_link']}\" > {$entry['name']}</a>",
+							);
 						}
 					}
 				}
+				
+				$datavalues[1] = array
+				(
+					'name'					=> "1",
+					'values' 				=> json_encode($_target),
+					'total_records'			=> count($_target),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[1] = array
+				(
+					'name'		=> "1",
+					'values'	=>	json_encode(array(	
+						array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
+
+				$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($_related),
+					'total_records'			=> count($_related),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+	
+				$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	
+						array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+						)
+					)
+				);
 			}
 
-//_debug_array($attributes);die();
 			$data = array
 				(
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
-					'related_link'					=> $related_link,			
+//					'related_link'					=> $related_link,			
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
@@ -2011,8 +2082,8 @@
 					'value_origin_type'				=> isset($origin)?$origin:'',
 					'value_origin_id'				=> isset($origin_id)?$origin_id:'',
 
-					'value_target'					=> isset($values['target'])?$values['target']:'',
-					'lang_target'					=> lang('target'),
+			//		'value_target'					=> isset($values['target'])?$values['target']:'',
+			//		'lang_target'					=> lang('target'),
 					'lang_no_cat'					=> lang('no category'),
 					'lang_cat_statustext'			=> lang('Select the category. To do not use a category select NO CATEGORY'),
 					'select_name'					=> 'cat_id',
@@ -2085,6 +2156,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
+
+
 
 			$criteria = array
 				(
