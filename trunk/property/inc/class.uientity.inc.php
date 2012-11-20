@@ -1981,6 +1981,7 @@
 							(
 								'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
 								'type'		=> $_target_section['descr'],
+								'title'		=> $_target_entry['title'],
 								'status'	=> $_target_entry['statustext'],
 								'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
 								'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
@@ -2022,6 +2023,7 @@
 					'values'	=>	json_encode(array(	
 						array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+						array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
 						array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
 						array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),

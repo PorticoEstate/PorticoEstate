@@ -115,7 +115,9 @@
 				foreach ($entry['data'] as &$data)
 				{
 					$data['link'] = $this->get_relation_link($linkend_location, $data['id']);
-					$data['statustext'] = $this->get_relation_info($linkend_location, $data['id']);
+					$relation_info = $this->get_relation_info($linkend_location, $data['id']);
+					$data['statustext'] = $relation_info['statustext'];
+					$data['title'] = $relation_info['title'];
 				}
 			}
 			return $relation;
@@ -282,44 +284,55 @@
 
 		public function get_relation_info($linkend_location, $id)
 		{
+			$relation_info = array();
 			$id = (int)$id;
 			$type = $linkend_location['location'];
 			if($type == '.ticket')
 			{
-				$this->_db->query("SELECT status FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT status, subject as title FROM fm_tts_tickets WHERE id = {$id}",__LINE__,__FILE__);
 				$this->_db->next_record();
 				$status_code = $this->_db->f('status');
+				$relation_info['title'] = $this->_db->f('title');
 
 				static $status_text;
 				if(!$status_text)
 				{
 					$status_text = execMethod('property.botts.get_status_text');
 				}
-				return $status_text[$status_code];
+				$relation_info['statustext'] = $status_text[$status_code];
+				return $relation_info;
 			}
 			else if($type == '.project.workorder')
 			{
-				$this->_db->query("SELECT fm_workorder_status.descr as status FROM fm_workorder {$this->_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder.id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT fm_workorder_status.descr as status, fm_workorder.title FROM fm_workorder {$this->_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder.id = {$id}",__LINE__,__FILE__);
 				$this->_db->next_record();
-				return $this->_db->f('status');
+				$relation_info['statustext'] = $this->_db->f('status');
+				$relation_info['title'] = $this->_db->f('title');
+				return $relation_info;
 			}
 			else if($type == '.project.request')
 			{
-				$this->_db->query("SELECT fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}",__LINE__,__FILE__);				
+				$this->_db->query("SELECT fm_request.title, fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}",__LINE__,__FILE__);				
 				$this->_db->next_record();
-				return $this->_db->f('status');
+				$relation_info['statustext'] = $this->_db->f('status');
+				$relation_info['title'] = $this->_db->f('title');
+				return $relation_info;
+
 			}
 			else if($type == '.project')
 			{		
-				$this->_db->query("SELECT fm_project_status.descr as status FROM fm_project {$this->_join} fm_project_status ON fm_project.status = fm_project_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT fm_project.name as title, fm_project_status.descr as status FROM fm_project {$this->_join} fm_project_status ON fm_project.status = fm_project_status.id WHERE fm_project.id = {$id}",__LINE__,__FILE__);
 				$this->_db->next_record();
-				return $this->_db->f('status');
+				$relation_info['statustext'] = $this->_db->f('status');
+				$relation_info['title'] = $this->_db->f('title');
+				return $relation_info;
 			}
 			else if( substr($type, 1, 6) == 'entity' )
 			{
 				$type		= explode('.',$type);
 				$entity_id	= $type[2];
 				$cat_id		= $type[3];
+				$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				$metadata = $this->_db->metadata("fm_entity_{$entity_id}_{$cat_id}");
 				if(isset($metadata['status']))
 				{
@@ -327,7 +340,6 @@
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
 					$status_id = (int)$this->_db->f('status');
-					$location_id	= $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 
 					$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
 						. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
@@ -335,8 +347,17 @@
 						. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
-					return $this->_db->f('status');
+					$relation_info['statustext'] = $this->_db->f('status');
 				}
+	
+				$relation_info['title'] = 'N∕A';
+
+				if($short_desc = execMethod('property.soentity.get_short_description',	array('location_id' => $location_id, 'id' => $id)))
+				{
+					$relation_info['title'] = $short_desc;
+				}
+
+				return $relation_info;
 			}
 			else if( substr($type, 1, 5) == 'catch' )
 			{
