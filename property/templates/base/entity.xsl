@@ -285,26 +285,31 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<div id="related">
-						<table cellpadding="2" cellspacing="2" width="80%" align="center">
-							<tr>
-								<td valign='top'>
-									<xsl:value-of select="php:function('lang', 'started from')"/>
-								</td>
-								<td>
-									<div id="datatable-container_1"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign='top'>
-									<xsl:value-of select="php:function('lang', 'used in')"/>
-								</td>
-								<td>
-									<div id="datatable-container_2"/>
-								</td>
-							</tr>
-						</table>
-					</div>
+
+					<xsl:choose>
+						<xsl:when test="value_id !=''">
+							<div id="related">
+								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td valign='top'>
+											<xsl:value-of select="php:function('lang', 'started from')"/>
+										</td>
+										<td>
+											<div id="datatable-container_1"/>
+										</td>
+									</tr>
+									<tr>
+										<td valign='top'>
+											<xsl:value-of select="php:function('lang', 'used in')"/>
+										</td>
+										<td>
+											<div id="datatable-container_2"/>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 
 					<!--
 					<xsl:choose>
