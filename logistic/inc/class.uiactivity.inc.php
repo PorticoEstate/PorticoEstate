@@ -723,7 +723,8 @@
 		{
 			$tabs = array();
 
-			if($activity_id > 0){
+			if($activity_id > 0)
+			{
 
 				$activity = $this->so->get_single($activity_id);
 
@@ -731,13 +732,15 @@
 						   array(
 							'label' => "1: " . lang('Activity details'),
 						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view',
-																				   													 'id' => $activity->get_id()))
+																				   		'id' => $activity->get_id()))
 						), array(
 							'label' => "2: " . lang('Requirement allocation'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
-																				   													 'activity_id' => $activity->get_id()))
+																				   		 'activity_id' => $activity->get_id()))
 						));
-			}else{
+			}
+			else
+			{
 				$tabs = array(
 						   array(
 							'label' => "1: " . lang('Activity details')
