@@ -1015,6 +1015,7 @@ location name	property	no	Modul
 location not chosen!	property	no	Lokalisering er ikke valgt
 location type	property	no	Lokaliserings type
 location type not chosen!	property	no	Lokaliseringsnivå ikke valgt
+log	property	no	Logg
 longevity	property	no	Levetid
 lookup	property	no	Slå opp
 lookup template	property	no	Slå opp standardbeskrivelser

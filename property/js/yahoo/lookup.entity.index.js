@@ -3,11 +3,11 @@
 //--------------------------------------------------------
 
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2;
+ 	var oMenuButton_0, oMenuButton_1;//, oMenuButton_2;
  	var selectsButtons = [
-	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'districtbutton',dependiente:''},
-	{order:1, var_URL:'district_id',name:'btn_district_id',	style:'districtbutton',	dependiente:''},
-	{order:2, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
+//	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'districtbutton',dependiente:''},
+	{order:0, var_URL:'district_id',name:'btn_district_id',	style:'districtbutton',	dependiente:''},
+	{order:1, var_URL:'criteria_id', name:'btn_criteria_id',style:'criteriabutton',dependiente:''}
 	]
 
 	// define buttons
@@ -26,6 +26,25 @@
 		date_search : 0 //if search has link "Data search"
 	}
 	
+  	this.myParticularRenderEvent = function()
+  	{
+  	}
+	
+	this.onChangeSelect = function(type)
+	{
+		var myselect=document.getElementById("sel_"+ type);
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values." +type +"='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
+
+
 	/****************************************************************************************/
 		
 	this.particular_setting = function()

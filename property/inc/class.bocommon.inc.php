@@ -2007,7 +2007,7 @@
 		 * @param array $insert_record array containing fields to collect from post
 		 * @return updated values
 		 */
-		function collect_locationdata($values = '',$insert_record = array())
+		function collect_locationdata($values = array(),$insert_record = array())
 		{
 //_debug_array($insert_record);die();
 			if($insert_record)
@@ -2024,7 +2024,7 @@
 				{
 					foreach ($insert_record['extra'] as $key => $column)
 					{
-						if(isset($_POST[$key]))
+						if(isset($_POST[$key]) && $_POST[$key])
 						{
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
