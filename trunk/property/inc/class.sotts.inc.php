@@ -791,14 +791,35 @@
 			if(isset($ticket['origin_id']) && $ticket['origin_id'] && isset($ticket['origin_item_id']) && $ticket['origin_item_id'])
 			{
 				$interlink_data = array
-					(
-						'location1_id'		=> $ticket['origin_id'],
-						'location1_item_id' => $ticket['origin_item_id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
-						'location2_item_id' => $id,
-						'account_id'		=> $this->account
-					);
+				(
+					'location1_id'		=> $ticket['origin_id'],
+					'location1_item_id' => $ticket['origin_item_id'],
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location2_item_id' => $id,
+					'account_id'		=> $this->account
+				);
+			}
+			else if(isset($ticket['extra']) && is_array($ticket['extra']) && isset($ticket['extra']['p_num']) && $ticket['extra']['p_num'])
+			{
+				$ticket['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$ticket['extra']['p_entity_id']}.{$ticket['extra']['p_cat_id']}");
+ 
+ 				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = '. (int)$ticket['extra']['p_entity_id'] . ' AND id = ' . (int)$ticket['extra']['p_cat_id']);
+				$this->db->next_record();
+				$prefix = $this->db->f('prefix');
+				$ticket['origin_item_id']		= (int) ltrim($ticket['extra']['p_num'], $prefix);
+			
+				$interlink_data = array
+				(
+					'location1_id'		=> $ticket['origin_id'],
+					'location1_item_id' => $ticket['origin_item_id'],
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location2_item_id' => $id,
+					'account_id'		=> $this->account
+				);
+			}
 
+			if($interlink_data)
+			{
 				$interlink 	= CreateObject('property.interlink');
 				$interlink->add($interlink_data,$this->db);
 			}

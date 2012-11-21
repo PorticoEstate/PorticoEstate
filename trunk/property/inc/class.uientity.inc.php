@@ -1969,7 +1969,7 @@
 					}
 				}
 
-				$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
+				$tabs['related']	= array('label' => lang('log'), 'link' => '#related');
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
 				{
