@@ -153,24 +153,31 @@
 			return $values;
 		}
 
-		public function save($data,$action='',$values_attribute = array())
+		public function save($data = array())
 		{
-			if(is_array($values_attribute))
+			if(isset($data['attributes']) && is_array($data['attributes']))
 			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				$data['attributes'] = $this->custom->convert_attribute_save($data['attributes']);
 			}
 
-			if ($action=='edit')
+			try
 			{
-				if ($data['id'] != '')
+				if (isset($data['id']) && $data['id'])
 				{
-
-					$receipt = $this->so->edit($data,$values_attribute);
+					$receipt = $this->so->edit($data);
+				}
+				else
+				{
+					$receipt = $this->so->add($data);
 				}
 			}
-			else
+
+			catch(Exception $e)
 			{
-				$receipt = $this->so->add($data,$values_attribute);
+				if ( $e )
+				{
+					throw $e;				
+				}
 			}
 
 			return $receipt;

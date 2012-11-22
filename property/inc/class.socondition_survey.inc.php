@@ -178,6 +178,8 @@
 
 		function add($data)
 		{
+			throw new Exception('Test socondition_survey::add()');
+
 			$table = 'fm_condition_survey';
 			$custom['sql_text'] = $this->_db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
