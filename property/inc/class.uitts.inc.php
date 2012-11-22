@@ -1780,7 +1780,6 @@
 
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 
-
 				if(!$values['subject'] && isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter a title !'));

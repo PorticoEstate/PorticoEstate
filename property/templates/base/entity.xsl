@@ -292,7 +292,7 @@
 								<table cellpadding="2" cellspacing="2" width="80%" align="center">
 									<tr>
 										<td valign='top'>
-											<xsl:value-of select="php:function('lang', 'started from')"/>
+											<!--<xsl:value-of select="php:function('lang', 'started from')"/>-->
 										</td>
 										<td>
 											<div id="datatable-container_1"/>
@@ -300,7 +300,7 @@
 									</tr>
 									<tr>
 										<td valign='top'>
-											<xsl:value-of select="php:function('lang', 'used in')"/>
+											<!--<xsl:value-of select="php:function('lang', 'used in')"/>-->
 										</td>
 										<td>
 											<div id="datatable-container_2"/>
@@ -310,24 +310,6 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
-					<!--
-					<xsl:choose>
-						<xsl:when test="related_link != ''">
-							<div id="related">
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td>
-											<table width="100%" cellpadding="2" cellspacing="2" align="center">
-												<xsl:apply-templates select="related_link"/>
-											</table>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-					-->
 				</div>
 				<xsl:choose>
 					<xsl:when test="mode = 'edit'">
@@ -510,21 +492,4 @@
 				</xsl:for-each>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:template>
-
-	<!-- New template-->
-	<xsl:template match="related_link">
-		<xsl:variable name="lang_entity_statustext">
-			<xsl:value-of select="lang_entity_statustext"/>
-		</xsl:variable>
-		<xsl:variable name="entity_link">
-			<xsl:value-of select="entity_link"/>
-		</xsl:variable>
-		<tr>
-			<td class="small_text" align="left">
-				<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;">
-					<xsl:value-of select="text_entity"/>
-				</a>
-			</td>
-		</tr>
 	</xsl:template>
