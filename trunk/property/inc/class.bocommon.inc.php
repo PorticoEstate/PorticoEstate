@@ -2012,11 +2012,14 @@
 //_debug_array($insert_record);die();
 			if($insert_record)
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				if( isset($insert_record['location']) && is_array($insert_record['location']) )
 				{
-					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+					for ($i=0; $i<count($insert_record['location']); $i++)
 					{
-						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+						{
+							$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						}
 					}
 				}
 
@@ -2034,7 +2037,10 @@
 				{
 					foreach ($insert_record['additional_info'] as $additional_info)
 					{
-						$values['additional_info'][$additional_info['input_text']]	= phpgw::get_var($additional_info['input_name'], 'string', 'POST');
+						if($additional_info_value = phpgw::get_var($additional_info['input_name'], 'string', 'POST'))
+						{
+							$values['additional_info'][$additional_info['input_text']]	= $additional_info_value;
+						}
 					}
 				}
 			}

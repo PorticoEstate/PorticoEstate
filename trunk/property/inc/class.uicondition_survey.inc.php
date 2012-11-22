@@ -34,6 +34,7 @@
 	{
 
 		private $bo;
+		private $receipt = array();
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
@@ -332,23 +333,40 @@
 			
 			if ($id )
 			{
-				$project = $this->so->get_single($id);
+				$values = $this->bo->read_single(array('id' => $id));
 			}
 			else
 			{
-				$project = new logistic_project();
+				$values = array();
 			}
 			
-			$project->populate();
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$values = $this->_populate($values);
 			
-			if( $project->validate() )
+			if( !$this->receipt['error'] )
 			{
-				$id = $this->so->store($project);
+				try
+				{
+					$id = $this->bo->save($values);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit( $values );
+						return;
+					}
+				}
+
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));	
 			}
 			else
 			{
-				$this->edit( $project );
+				$this->edit( $values );
 			}
 		}
 
@@ -363,6 +381,52 @@
 				$entry['name'] = $entry['org_name'];
 			}
 			return array('ResultSet'=> array('Result'=>$values));
+		}
+
+
+		/*
+		* Overrides with incoming data from POST
+		*/
+		private function _populate($data = array())
+		{
+			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+			$values = $this->bocommon->collect_locationdata($data,$insert_record);
+			
+			/*
+			* Extra data from custom fields
+			*/
+			$values['attributes']	= phpgw::get_var('values_attribute');
+
+			if(is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as $attribute )
+				{
+					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+				}
+			}
+
+			if(!isset($values['cat_id']) || !$values['cat_id'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+			}
+
+			if(isset($values['title']) || !$values['title'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please give a title !'));
+			}
+
+			if(!isset($values['report_date']) || !$values['report_date'])
+			{
+				$receipt['error'][]=array('msg'=>lang('Please select a date!'));
+			}
+
+
+			phpgwapi_cache::message_set('test-message', 'error'); 
+
+			return $values;
 		}
 
 		private function _get_categories($selected = 0)
