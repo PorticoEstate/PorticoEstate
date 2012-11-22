@@ -1977,12 +1977,24 @@ JS;
 							(
 								array
 								( //boton 	CATEGORY
+
+									'id' => 'sel_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[0],
+									'onchange'=> 'onChangeSelect("cat_id");',
+									'tab_index' => 1
+
+/*
 									'id' => 'btn_cat_id',
 									'name' => 'cat_id',
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
 									'tab_index' => 1
+*/
 								),
 								array
 								( //boton 	CATEGORY
@@ -2023,11 +2035,12 @@ JS;
 							),
 							'hidden_value' => array
 							(
-								array
+					/*			array
 								( //div values  combo_box_0
 									'id' => 'values_combo_box_0',
 									'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
 								),
+					*/
 								array
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',

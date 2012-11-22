@@ -65,6 +65,12 @@
 
 		public function index()
 		{
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
@@ -267,22 +273,48 @@
 
 			$values = array();
 
+			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+			$tabs = array();
+			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
+			$tabs['import']	= array('label' => lang('import'), 'link' => null);
+
+				$tabs['documents']['link'] = '#documents';
+				$tabs['import']['link'] = '#import';
+
 			if ($id)
 			{
+
 				$values = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
 			}
 
+
 			$categories = $this->_get_categories($survey['category']);
+
+			$bolocation	= CreateObject('property.bolocation');
+			$location_data = $bolocation->initiate_ui_location(array
+				(
+					'values'	=> $values['location_data'],
+					'type_id'	=> 2,
+					'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
+					'lookup_type'	=> $mode == 'edit' ? 'form' : 'view',
+					'tenant'	=> false,
+					'lookup_entity'	=> array(),
+					'entity_data'	=> isset($values['p'])?$values['p']:''
+				));
+
 
 			$data = array
 			(
-				'survey'		=> $values,
-				'categories'	=> array('options' => $categories),
-				'status_list'	=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
-				'editable' 		=> $mode == 'edit'
+				'survey'			=> $values,
+				'categories'		=> array('options' => $categories),
+				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
+				'editable' 			=> $mode == 'edit',
+				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'location_data'		=> $location_data,
 			);
 
-//			$this->use_yui_editor(array('description'));
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 			
