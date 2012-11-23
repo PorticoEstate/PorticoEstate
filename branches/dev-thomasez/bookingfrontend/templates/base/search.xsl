@@ -12,6 +12,7 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
+
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
 	<xsl:variable name="resource"><xsl:value-of select="resource" /></xsl:variable>
@@ -27,6 +28,8 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
+	  <xsl:text> </xsl:text><input id="advanced" type="button" value="{php:function('lang', 'Advanced search')}"/>
+
       <div class="hint" id="hint">
         F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
@@ -92,6 +95,22 @@
 			</xsl:for-each>
 		</select>
 	</div>
+	<div class="freetime" id="field_freetime">
+		<label for="field_from"><xsl:value-of select="php:function('lang', 'From') "/></label><xsl:text> </xsl:text>
+		<span class="date-picker">
+			<input id="field_from" name="from_" type="text">
+				<xsl:attribute name="value"><xsl:value-of select="resource/from_"/></xsl:attribute>
+			</input>
+		</span>
+		<label for="field_to"><xsl:value-of select="php:function('lang', 'To') "/></label><xsl:text> </xsl:text>
+    	<span class="date-picker">
+			<input id="field_to" name="to_" type="text">
+				<xsl:attribute name="value"><xsl:value-of select="resource/to_"/></xsl:attribute>
+			</input>
+		</span>
+	</div>
+   <div style="float: right; margin-right: 250px;"><input type="submit" value="{php:function('lang', 'Search')}"/></div>
+
     </form>
 	
 	<xsl:if test="not(search)">	
@@ -158,6 +177,9 @@
 	            <li>
 	              <div class="header">
 	                <a class="bui_single_view_link"><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute><xsl:value-of select="name"/></a>
+					<xsl:if test="schedule">
+						<xsl:text> - </xsl:text><a style="font-size: 90%;" class="bui_calender_view_link"><xsl:attribute name="href"><xsl:value-of select="schedule"/></xsl:attribute><xsl:value-of select="php:function('lang', 'Goto schedule')" /></a>
+					</xsl:if>
 					<xsl:if test="$layout='bergen'">
 	                	(<xsl:value-of select="php:function('lang', string(type))"/>)
 					</xsl:if>

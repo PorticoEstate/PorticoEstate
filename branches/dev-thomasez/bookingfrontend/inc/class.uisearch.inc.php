@@ -83,10 +83,12 @@
 			$resource['campsite'] = phpgw::get_var('campsites', 'GET', null);
 			$resource['beds'] = phpgw::get_var('bedspaces', 'GET', null);
 			$resource['region'] = phpgw::get_var('regions', 'GET', null);
-	
+			$resource['from_'] = phpgw::get_var('from_', 'GET', null);
+			$resource['to_'] = phpgw::get_var('to_', 'GET', null);
 			$search = null;
 
-			if (strlen($searchterm) || $type || $resource['res'] || $resource['fylke'] || $resource['region'])
+
+			if (strlen($searchterm) || $type || $resource['res'] || $resource['fylke'] || $resource['region'] || $resource['from_'] )
 			{
 				$search = array(
 					'results'    => $this->bo->search($searchterm,$resource),
@@ -135,7 +137,7 @@
 					$params['frontimages'] = array_merge( $params['frontimages'], $building_documents['results'] );
 				}
 			}
-//			echo "<pre>";print_r($resource);exit;
+//			echo "<pre>";print_r($params);exit;
 			
 			self::render_template('search', $params);
 		}

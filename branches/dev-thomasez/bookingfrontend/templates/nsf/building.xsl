@@ -30,8 +30,8 @@
 				
 				<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
 					<h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
-			<xsl:if test="deactivate_sendmessage=0">
 
+			<xsl:if test="deactivate_sendmessage=0">
 			<div>
 	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
 - 				Meldig til saksbehandler for bygg

@@ -399,7 +399,7 @@
 			}
 
 			$role_permissions = $this->get_role_permissions($object);
-			
+
 			$object_id = null;
 			
 			if (!is_null($object))
@@ -407,7 +407,6 @@
 				$object_id = is_array($object) ? $object['id'] : $object;
 				$object = is_array($object) ? $object : parent::read_single($object_id);
 			}
-			
 			if (false != $permission = $this->check_authorization($this->get_subject_global_roles(), $role_permissions, $operation, $object, array('namespace' => 'global')))
 			{
 				return $permission;

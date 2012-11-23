@@ -221,7 +221,6 @@
 			$data = array(
 				'resource'	=>	$resource
 			);
-			
 			self::render_template('resource', $data);
 		}
 

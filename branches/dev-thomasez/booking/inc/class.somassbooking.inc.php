@@ -22,5 +22,15 @@
 				)
 			);
 		}
+		function get_permission($userid,$buildingid)
+		{
+			$sql = "select role from bb_permission where subject_id=".$userid." and object_id=".$buildingid.";";
+			$this->db->query($sql);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('role', false);
+			}
+			return $results;
+		}
 		
 	}

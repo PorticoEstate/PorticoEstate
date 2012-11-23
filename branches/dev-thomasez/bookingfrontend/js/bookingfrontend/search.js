@@ -132,17 +132,32 @@ GenerateEast = function(fylker,fylke) {
 
 YAHOO.booking.initializeDataTable = function()
 {
+	var oFrom = YAHOO.util.Dom.get('field_from'); 
+	if (oFrom.value == null || oFrom.value == '') {
+		YAHOO.util.Dom.setStyle('field_freetime', 'display', 'none');	
+	} else {
+		YAHOO.util.Dom.setStyle('field_freetime', 'display', 'block');	
+	}
+
+
 	var val = YAHOO.util.Dom.get('field_type').value;
 	if(['House'].indexOf(val) >= 0) {
 		YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'inline');	
 		YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
 	} 
-	else if (['Location','Campsite','Boat'].indexOf(val) >= 0) 
+	else if (['Location','Campsite'].indexOf(val) >= 0) 
 	{
+		if (['Location'].indexOf(val) >= 0) {
+			YAHOO.util.Dom.setStyle('field_campsites2', 'display', 'none');	
+	    	YAHOO.util.Dom.setStyle('field_meetingroom', 'display', 'inline');	
+		} else {
+    		YAHOO.util.Dom.setStyle('field_campsites2', 'display', 'inline');	
+	    	YAHOO.util.Dom.setStyle('field_meetingroom', 'display', 'none');	
+        }
 		YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 		YAHOO.util.Dom.setStyle('field_campsites', 'display', 'inline');	
 	}
-	else if (['Equipment',''].indexOf(val) >= 0)		
+	else if (['Equipment','Boat',''].indexOf(val) >= 0)		
 	{
 		YAHOO.util.Dom.setStyle('field_bedspaces', 'display', 'none');	
 		YAHOO.util.Dom.setStyle('field_campsites', 'display', 'none');	
@@ -200,7 +215,6 @@ YAHOO.booking.initializeDataTable = function()
 	        var val = this.value;
 			var fylker = document.getElementById('field_fylker');
 			var bedspaces = document.getElementById('field_bedspaces');
-
 			if (this.id == 'field_type') {
 				if(['House'].indexOf(val) >= 0) {
 					ResetCampsites();
@@ -260,15 +274,32 @@ YAHOO.booking.initializeDataTable = function()
 				GenerateNorth(fylker,fylke);
 			}
 	});
+    YAHOO.util.Event.addListener('advanced', "click", function(e){
+		var val = YAHOO.util.Dom.getStyle('field_freetime' , 'display' );
+		if (val != 'block') {
+			YAHOO.util.Dom.setStyle('field_freetime', 'display', 'block');	
+			
+		} else {
+			YAHOO.util.Dom.setStyle('field_freetime', 'display', 'none');	
+			var oObj1 = YAHOO.util.Dom.get('field_from');
+			var oObj2 = YAHOO.util.Dom.get('field_to');
+			oObj1.value = '';
+			oObj2.value = '';
+			oObj1.innerHTML = '';
+			oObj2.innerHTML = '';
+		}
+
+    });
 
     YAHOO.util.Event.addListener('search', "submit", function(e){
 		var oInput = YAHOO.util.Dom.get('searchterm');
 		if (oInput.value == 'Søk leirplass, hytte, utstyr eller aktivitet') {
-			oInput.value = '';		
+			oInput.value = '%';		
 		}
     });
 
 };
+
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.booking.initializeDataTable);
 

@@ -24,6 +24,7 @@
 			
 			
 			$this->bo = CreateObject('booking.bomassbooking');
+			$this->so = CreateObject('booking.somassbooking');
 			self::set_active_menu('booking::applications::massboooking');
 		}
 				
@@ -93,13 +94,24 @@
 
 		public function index_json()
 		{
-			
-			$buildings = $this->bo->read();
+
+			$buildings = $this->bo->read();	
+			$userid = $this->current_account_id();
+			$admin = booking_account_helper::current_account_member_of_admins();
+			$list = array();
 			foreach($buildings['results'] as &$building)
 			{
+				$myperm = $this->so->get_permission($userid,$building['id']);
+
 				$building['link'] = $this->link(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building['id']));
 				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
+				if(isset($myperm)||$admin) {
+					$list[] = $building;			
+				}	
 			}
+			$buildings['results'] = $list;
+			$buildings['total_records'] = count($list);
+
 			return $this->yui_results($buildings);
 		}
 

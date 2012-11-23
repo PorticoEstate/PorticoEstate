@@ -194,11 +194,6 @@
 								'name' => 'search',
 								'value' => lang('Search')
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
-							),
 						),
 					),
 				),
@@ -244,7 +239,15 @@
 						)
 					)
 				),
+
 			);
+			if (booking_account_helper::current_account_member_of_admins()) {
+				array_push($data['form']['toolbar']['item'], array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+				));
+			}
 
 			self::render_template('datatable', $data);
 		}

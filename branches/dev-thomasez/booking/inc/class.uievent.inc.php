@@ -149,13 +149,20 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
-			$events = $this->bo->so->read($params);
-
+			$events = $this->bo->read($params);
+			$list = array();
 			foreach($events['results'] as &$event)
 			{
+				$myperm = $this->bo->read_single($event['id']);
+
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
+				if(isset($myperm['permission']['write'])) {
+					$list[] = $event;			
+				}	
 			}
+			$events['results']= $list;
+			$events['total_records'] = count($tlist);
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
 			return $this->yui_results($events);
@@ -507,7 +514,7 @@
 					if ($organization['customer_internal'] == 0) {					
 						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
 						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_organization_number']) == 9) {
+						if ((strlen($organization['customer_organization_number']) == 4) || (strlen($organization['customer_organization_number']) == 6)) {
 							$event['customer_organization_number'] = $organization['customer_organization_number'];
 						} else {
 							$errors['organization_number'] = lang('The organization number is wrong or not present');
@@ -515,7 +522,7 @@
 					} else {
 						$event['customer_identifier_type'] = 'organization_number';
 						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_number']) == 5) {
+						if ((strlen($organization['customer_organization_number']) == 4) || (strlen($organization['customer_organization_number']) == 6)) {
  							$event['customer_organization_number'] = $organization['customer_number'];
 						} else {
 							$errors['resource_number'] = lang('The resource number is wrong or not present');
@@ -533,9 +540,10 @@
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
-
 				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data']  && !$errors['contact_name'] && !$errors['cost'])
 				{
+					try {
+					$receipt = $this->bo->update($event);
 					if (phpgw::get_var('mail', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 					{
 						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
@@ -630,8 +638,10 @@
 						$this->send_mailnotification($event['contact_email'], lang('Event changed'), phpgw::get_var('mail', 'POST'));
 						}
 					}
-					$receipt = $this->bo->update($event);
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
+					} catch (booking_unauthorized_exception $e) {
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
 				}
 			}
 

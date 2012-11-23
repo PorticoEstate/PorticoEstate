@@ -58,12 +58,17 @@
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
+//						'write' => true,
 						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time','swiming','sanitation_facilities','animals','internett_phone','handicap','keywords'), true),
 					),
 					'parent_role_permissions' => array
 					(
 						'building' => array
 						(
+							booking_sopermission::ROLE_CASE_OFFICER => array
+							(
+								'write' => true,
+							),
 							booking_sopermission::ROLE_MANAGER => array(
 								'write' => true,
 								'create' => true,
@@ -115,9 +120,14 @@
 		
 		public function populate_grid_data($menuaction)
 		{
+			$frontend = explode(".",$menuaction);
+			$frontend = $frontend[0];
 			$resources = $this->read();
+			$tlist = array();
 			foreach($resources['results'] as &$resource)
 			{
+				$myres = $this->read_single($resource['id']);				
+				
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
 				$resource['full_name'] = $resource['building_name'] . ' / ' . $resource['name'];
@@ -126,14 +136,18 @@
 				{
 					$resource['cost_type']		 = lang($resource['cost_type']);
 				}
-			}
+				if(isset($myres['permission']['write']) || $frontend == "bookingfrontend") {
+					$tlist[] = $resource;			
+				}	
+	
+		}
 			$data = array(
 				 'ResultSet' => array(
-					'totalResultsAvailable' => $resources['total_records'], 
+					'totalResultsAvailable' => count($tlist), 
 					'startIndex' => $resources['start'], 
 					'sortKey' => $resources['sort'], 
 					'sortDir' => $resources['dir'], 
-					'Result' => $resources['results']
+					'Result' => $tlist
 				)
 			);
 			return $data;

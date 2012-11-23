@@ -207,12 +207,12 @@
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.participants') ),
 							'image' => array('property', 'report'),
                         ),
-                        'free_time' => array
-                        (
-                            'text'  => lang('Free time'),
-                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
-							'image' => array('property', 'report'),
-                        ),
+#                        'free_time' => array
+#                        (
+#                            'text'  => lang('Free time'),
+#                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
+#							'image' => array('property', 'report'),
+#                        ),
                         'search_terms' => array
                         (
                             'text'  => lang('Search terms'),

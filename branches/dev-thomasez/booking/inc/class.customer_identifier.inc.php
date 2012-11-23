@@ -160,9 +160,7 @@
 					if (all_cust_fields[field_type] == undefined) { return; }
 
 					Dom.setStyle(all_cust_fields[field_type], 'display', 'block');
-					if (all_cust_fields[field_type].name == 'customer_ssn') {
-						all_cust_fields[field_type].value = '6 siffer (DDMMÅÅ) eller 11 siffer';
-					} else if (all_cust_fields[field_type].name == 'customer_organization_number') {
+					if (all_cust_fields[field_type].name == 'customer_organization_number') {
 						all_cust_fields[field_type].value = '4 eller 6 siffer';
 					} else if (all_cust_fields[field_type].name == 'customer_address') {
 						YAHOO.util.Dom.get('field_customer_street').value = 'Street';

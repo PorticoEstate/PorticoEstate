@@ -9,6 +9,7 @@ class booking_uireports extends booking_uicommon
 			'index'                 =>      true,
 			'participants'          =>      true,
 			'freetime'              =>      true,
+			'freetime2'              =>      true,
 			'searchterms'              =>      true,
 		);
 
@@ -17,6 +18,7 @@ class booking_uireports extends booking_uicommon
 		parent::__construct();
 
 		$this->building_bo = CreateObject('booking.bobuilding');
+		$this->resource_bo = CreateObject('booking.boresource');
 		self::set_active_menu('booking::reportcenter');
 	}
 
@@ -24,6 +26,7 @@ class booking_uireports extends booking_uicommon
 	{
 		$reports[] = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array('menuaction' => 'booking.uireports.participants')));
 		$reports[] = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
+		$reports[] = array('name' => lang('Free time2'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime2')));
 		$reports[] = array('name' => lang('Search terns'), 'url' => self::link(array('menuaction' => 'booking.uireports.searchterms')));
 
 		self::render_template('report_index',
@@ -138,6 +141,100 @@ class booking_uireports extends booking_uicommon
 				array('show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));
 	}
 
+	public function freetime2()
+	{
+		self::set_active_menu('booking::reportcenter::free_time2');
+		$errors = array();
+		$buildings = $this->getResourceTypes();
+		$show = '';
+
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			$show = 'report';
+			
+
+			$days = phpgw::get_var('days', 'POST');
+			$from = phpgw::get_var('from', 'POST');
+
+			$date = new DateTime($from);
+			date_add($date, date_interval_create_from_date_string($days.' days'));
+			$to = date_format($date, 'Y-m-d');
+			
+			$resources = $this->get_free_time(
+					phpgw::get_var('building', 'POST'),
+					$from,
+					$to,
+					$days
+					);
+			
+			$counter = 0;
+
+			foreach($resources['results'] as &$resource)
+			{
+				$temp = array();
+				$resource['from_'] = $from." 14:00:00";
+				$resource['to_'] = $to." 14:00:00";
+				$resource['building_id'] = $resource['building_id'];
+				$resource['building_name'] = $this->getBuildingName($resource['building_id']);
+				$resource['resources'] = array($resource['id']);
+				$resource['resource_name'] = $resource['name'];
+				$temp[] = array('from_', array($from." 14:00:00"));
+				$temp[] = array('to_', array($to." 14:00:00"));
+				$temp[] = array('building_id', $resource['building_id']);
+				$temp[] = array('building_name', $resource['building_name']);
+				$temp[] = array('resources[]', array($resource['id']));
+				$temp[] = array('reminder', 0);
+				$temp[] = array('from_report', true); // indicate that no error messages should be shown
+				$resource['counter'] = $counter;
+				$resource['event_params'] = json_encode($temp);
+				$counter++;
+			}
+
+
+			if (count($resources['results']) == 0)
+			{
+				$show = 'gui';
+				$errors[] = lang('no records found.');
+				$to = phpgw::get_var('to', 'POST');
+				$from = phpgw::get_var('from', 'POST');
+			}
+		}
+		else
+		{
+
+			$to = date("Y-m-d", time());
+			$from = date("Y-m-d", time());
+			$show = 'gui';
+		}
+
+		$this->flash_form_errors($errors);
+
+		self::render_template('report_freetime2',
+				array('show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings, 'allocations' => $resources['results']));
+	}
+
+	private function getBuildingName($id) {
+		
+		$db = & $GLOBALS['phpgw']->db;
+		$sql = "select name from bb_building where id=".$id."";
+		$db->query($sql);
+		if(!$db->next_record())
+		{
+			return False;
+		}
+		return	$db->f('name', false);
+	}
+
+	private function getResourceTypes() {
+		
+		$db = & $GLOBALS['phpgw']->db;
+		$sql = "select distinct type from bb_resource group by type";
+		$db->query($sql);
+
+		return	$db->resultSet;
+	
+	}
+
 	// Merge similar terms from different months. Used when displaying search counters from several months and/or years.
 	private function mergeSimilarTerms( $terms ) {
 		$newTerms = array();
@@ -198,6 +295,52 @@ class booking_uireports extends booking_uicommon
 		) );
 	}
 
+	private function get_free_time($restype, $from, $to, $days)
+	{
+		$db = & $GLOBALS['phpgw']->db;
+
+		foreach( $restype as $key => $value ) {
+			$restype[$key] = "'" . $value . "'";
+		}
+		$restype = implode(",", $restype);
+
+		$sql2 = "SELECT br.id FROM bb_event be, bb_event_resource ber, bb_resource br 
+				WHERE  ('$from 14:00:00' 
+				BETWEEN  be.from_ AND be.to_ OR '$to 14:00:00' 
+				BETWEEN be.from_ AND be.to_ 
+				OR ('$from 14:00:00' < be.from_ 
+				AND '$to 14:00:00' > be.to_))";
+
+		if ($restype)
+			$sql2 .= " AND br.type in (".$restype.") ";
+					
+		$sql .= " AND be.id = ber.event_id AND ber.resource_id = br.id";
+
+
+		$sql = "SELECT * FROM bb_resource br1 
+				WHERE br1.id 
+				NOT IN ($sql2)";
+
+		if ($restype)
+			$sql  .= " AND br1.type IN (".$restype.") ";
+
+
+		$sql .= " ORDER BY br1.type, br1.name";
+
+		$db->query($sql);
+		$result = $db->resultSet;
+
+
+		$retval = array();
+		$retval['total_records'] = count($result);
+		$retval['results'] = $result;
+		$retval['start'] = 0;
+		$retval['sort'] = null;
+		$retval['dir'] = 'asc';
+
+		return $retval;
+
+	}
 	private function get_free_allocations($buildings, $from, $to, $weekdays)
 	{
 		$db = & $GLOBALS['phpgw']->db;

@@ -144,12 +144,26 @@
 		{
 			
 			$buildings = $this->bo->read();
+			$list = array();
+			$tlist = array();
 			foreach($buildings['results'] as &$building)
 			{
+				$mybuilding = $this->bo->read_single($building['id']);
+
 				$building['district'] =lang($building['district']);
 				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
+				
+				if(isset($mybuilding['permission']['write'])) {
+					$tlist[] = $building;			
+				}	
 			}
+			$list['total_records'] = count($tlist);
+			$list['results'] = $tlist;
+			$list['start'] = $buildings['start'];
+			$list['sort'] = $buildings['sort'];
+			$list['dir'] = $buildings['dir'];
+			$buildings = $list;
 			return $this->yui_results($buildings);
 		}
 
@@ -241,6 +255,7 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
+
 			self::render_template('building', array('building' => $building));
 		}
 
