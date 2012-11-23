@@ -238,7 +238,7 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit($mode = 'view');
+			$this->edit(null, $mode = 'view');
 		}
 
 		public function add()
@@ -246,7 +246,7 @@
 			$this->edit();
 		}
 
-		public function edit($mode = 'edit')
+		public function edit($values = array(), $mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
@@ -272,8 +272,7 @@
 				}
 			}
 
-			$values = array();
-
+//_debug_array($values);die();
 			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
@@ -390,6 +389,61 @@
 		private function _populate($data = array())
 		{
 			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+
+			$values	= phpgw::get_var('values');
+			
+			$_fields = array
+			(
+				array
+				(
+					'name' => 'title',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'description',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'cat_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'report_date',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'status_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'vendor_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'vendor_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+			);
+			
+			
+			foreach ($_fields as $_field)
+			{
+				$data[$_field['name']] =  phpgw::get_var($_field['name'], 'POST', $_field['type']);
+			}
+
 			$values = $this->bocommon->collect_locationdata($data,$insert_record);
 			
 			/*
