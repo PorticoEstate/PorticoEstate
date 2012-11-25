@@ -134,20 +134,15 @@
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
-							'key' => 'name',
-							'label' => lang('name'),
+							'key' => 'title',
+							'label' => lang('title'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'description',
+							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
 							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
-						),
-						array(
-							'key' => 'survey_type_label',
-							'label' => lang('type'),
-							'sortable' => false
 						),
 						array(
 							'key' => 'link',
@@ -175,7 +170,7 @@
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uiactivity.edit'
+							'menuaction'	=> 'property.uicondition_survey.edit'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
@@ -211,7 +206,7 @@
 			$export = phpgw::get_var('export');
 
 			$values = $this->bo->read($params);
-
+//_debug_array($values);
 			// ... add result data
 			$result_data = array('results' => $values);
 
@@ -248,6 +243,10 @@
 
 		public function edit($values = array(), $mode = 'edit')
 		{
+/*
+_debug_array($_POST);
+die();
+*/
 			$id 	= phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
@@ -272,7 +271,6 @@
 				}
 			}
 
-//_debug_array($values);die();
 			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
@@ -286,11 +284,15 @@
 			if ($id)
 			{
 
-				$values = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
 			}
 
+			if(isset($values['location_code']) && $values['location_code'])
+			{
+				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+			}
 
-			$categories = $this->_get_categories($survey['category']);
+			$categories = $this->_get_categories($values['cat_id']);
 
 			$bolocation	= CreateObject('property.bolocation');
 			$location_data = $bolocation->initiate_ui_location(array
@@ -303,18 +305,18 @@
 					'lookup_entity'	=> array(),
 					'entity_data'	=> isset($values['p'])?$values['p']:''
 				));
-
+//_debug_array($values);die();
 
 			$data = array
 			(
 				'survey'			=> $values,
+				'location_data'		=> $location_data,
 				'categories'		=> array('options' => $categories),
 				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 			=> $mode == 'edit',
 				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-				'location_data'		=> $location_data,
 			);
-
+//_debug_array($data);die();
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 			
@@ -343,7 +345,8 @@
 			* Overrides with incoming data from POST
 			*/
 			$values = $this->_populate($values);
-			
+
+//_debug_array($values);die();			
 			if( !$this->receipt['error'] )
 			{
 				try
@@ -402,7 +405,7 @@
 				),
 				array
 				(
-					'name' => 'description',
+					'name' => 'descr',
 					'type'	=> 'string',
 					'required'	=> true
 				),
@@ -437,12 +440,21 @@
 					'required'	=> false
 				),
 			);
-			
+
 			
 			foreach ($_fields as $_field)
 			{
-				$data[$_field['name']] =  phpgw::get_var($_field['name'], 'POST', $_field['type']);
+				if($data[$_field['name']] = $_POST['values'][$_field['name']])
+				{
+					$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
+				}
+				if($_field['required'] && !$data[$_field['name']])
+				{
+					$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $_field['name']));
+				}
 			}
+//_debug_array($_POST);
+//_debug_array($data);
 
 			$values = $this->bocommon->collect_locationdata($data,$insert_record);
 			
@@ -476,9 +488,6 @@
 			{
 				$receipt['error'][]=array('msg'=>lang('Please select a date!'));
 			}
-
-
-			phpgwapi_cache::message_set('test-message', 'error'); 
 
 			return $values;
 		}

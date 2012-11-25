@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -2050,6 +2050,7 @@
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
+				$values['location_code']	= implode('-', $values['location']);
 			}
 
 			return $values;
