@@ -97,6 +97,7 @@
 		}
 	}
 	
+/*
 	if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 	{
 		phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
@@ -105,8 +106,8 @@
 		foreach($msgbox_data as & $message)
 		{
 			echo "<div class='{$message['msgbox_class']}'>";
-//			echo "<img src='{$message['msgbox_img']}' alt='{$message['msgbox_img_alt']}' title='{$message['msgbox_img_alt']}'/>";
 			echo $message['msgbox_text'];
 			echo '</div>';
 		}
 	}
+*/

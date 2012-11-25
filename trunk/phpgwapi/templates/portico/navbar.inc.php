@@ -150,6 +150,19 @@ HTML;
 		}
 
 
+		if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+		{
+			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			foreach($msgbox_data as & $message)
+			{
+				echo "<div class='{$message['msgbox_class']}'>";
+				echo $message['msgbox_text'];
+				echo '</div>';
+			}
+		}
+
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');
 	}
