@@ -313,7 +313,10 @@ JS;
 
 					});
 JS;
-					$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+					if(!$view_only)
+					{
+						$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
+					}
 
 				}
 				else if($attributes['datatype'] == 'user')
