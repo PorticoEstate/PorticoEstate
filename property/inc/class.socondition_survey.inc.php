@@ -158,11 +158,11 @@
 			return $values;
 		}
 
-		function read_single($id, $data = array())
+		function read_single($data = array())
 		{
 			$table = 'fm_condition_survey';
 
-			$id = (int) $id;
+			$id		= (int)$data['id'];
 			$this->_db->query("SELECT * FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
 
 			$values = array();
@@ -200,16 +200,81 @@
 
 		function add($data)
 		{
-
 			$table = 'fm_condition_survey';
 
 			$this->_db->transaction_begin();
 
 			$id = $this->_db->next_id($table);
 
+			$value_set			= $this->_get_value_set( $data );
+			$value_set['id']	= $id;
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->_db->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+
+			try
+			{
+				$this->_db->Exception_On_Error = true;
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+				return 0;
+			}
+
+			if($this->_db->transaction_commit())
+			{
+				return $id;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		function edit($data)
+		{
+			$table = 'fm_condition_survey';
+			$id = (int)$data['id'];
+
+			$value_set	= $this->_get_value_set( $data );
+			$value_set	= $this->_db->validate_update($value_set);
+
+			$this->_db->transaction_begin();
+
+			$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
+
+			try
+			{
+				$this->_db->Exception_On_Error = true;
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+
+			$this->_db->transaction_commit();
+			return $id;
+		}
+
+
+		private function _get_value_set($data)
+		{
 			$value_set = array
 			(
-				'id'				=> $id,
 				'title'				=> $this->_db->db_addslashes($data['title']),
 				'descr'				=> $this->_db->db_addslashes($data['descr']),
 				'status_id'			=> (int)$data['status_id'],
@@ -298,49 +363,7 @@
 	//		$value_set['address'] = $address;
 
 			unset($_address);
-
-			$cols = implode(',', array_keys($value_set));
-			$values	= $this->_db->validate_insert(array_values($value_set));
-
-			try
-			{
-				$this->_db->Exception_On_Error = true;
-				$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
-				$this->_db->Exception_On_Error = false;
-			}
-
-			catch(Exception $e)
-			{
-				if ( $e )
-				{
-					throw $e;				
-				}
-			}
-
-			if($this->_db->transaction_commit())
-			{
-				return $id;
-			}
-
-			return 0;
-		}
-
-		function edit($data)
-		{
-			$table = 'fm_condition_survey';
-			$id = (int)$data['id'];
-
-			$value_set	= $this->db->validate_update($value_set);
-
-			$this->db->transaction_begin();
-
-			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}",__LINE__,__FILE__);
-
-			if($this->_db->transaction_commit())
-			{
-				$this->_receipt['message'][] = array('msg'=>lang('survey %1 has been saved',$id));
-			}
-			return $id;
+			return $value_set;
 		}
 
 		function delete($id)
