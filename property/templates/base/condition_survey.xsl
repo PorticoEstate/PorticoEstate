@@ -184,6 +184,29 @@
 				</tr>
 				<tr>
 					<td>
+						<label for="coordinator"><xsl:value-of select="php:function('lang', 'coordinator')" /></label>
+					</td>
+					<td>
+
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+							    <div class="autocomplete">
+							        <input type="hidden" id="coordinator_id" name="values[coordinator_id]"  value="{survey/coordinator_id}"/>
+							        <input type="text" id="coordinator_name" name="values[coordinator_name]" value="{survey/coordinator_name}">
+									</input>
+							        <div id="coordinator_container"/>
+							    </div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="survey/coordinator_name" />
+							</xsl:otherwise>
+						</xsl:choose>
+
+					</td>
+				</tr>
+
+				<tr>
+					<td>
 						<label for="vendor"><xsl:value-of select="php:function('lang', 'vendor')" /></label>
 					</td>
 					<td>
@@ -201,36 +224,6 @@
 								<xsl:value-of select="survey/vendor_name" />
 							</xsl:otherwise>
 						</xsl:choose>
-
-<!--
-
-					</td>
-				</tr>
-				<tr>
-					<td>
-
-						 <div class="label">
- 							<label for="age2">Age:</label>						
-						 </div>
-							<input id="age2" type="text"
-								formvalidator:FormField="yes"
-								formvalidator:type="IntegerField"
-								formvalidator:max="100"
-								formvalidator:min="10"/>
-						<div class="clearDiv"></div>
-
-						  <div class="label">
- 							<label for="income2">Income ($):</label>						
-						 </div>
-							<input id="income2" type="text"
-								formvalidator:FormField="yes"
-								formvalidator:type="DoubleField"
-								formvalidator:maxDecimalPlaces="2"
-								formvalidator:max="40000"
-								formvalidator:maxInclusive="true"/>
-						<div class="clearDiv"></div>
-					
-					-->
 
 					</td>
 				</tr>

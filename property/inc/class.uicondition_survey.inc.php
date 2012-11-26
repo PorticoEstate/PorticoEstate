@@ -35,14 +35,16 @@
 
 		private $bo;
 		private $receipt = array();
-		public $public_functions = array(
-			'query' => true,
-			'index' => true,
-			'view' => true,
-			'add' => true,
-			'edit' => true,
-			'save' => true,
-			'get_vendors'	=> true
+		public $public_functions = array
+		(
+			'query'			=> true,
+			'index'			=> true,
+			'view'			=> true,
+			'add'			=> true,
+			'edit'			=> true,
+			'save'			=> true,
+			'get_vendors'	=> true,
+			'get_users'		=> true
 		);
 
 		public function __construct()
@@ -143,6 +145,11 @@
 							'label' => lang('description'),
 							'sortable' => false,
 							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
+						),
+						array(
+							'key' => 'address',
+							'label' => lang('address'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'link',
@@ -373,8 +380,39 @@
 			}
 		}
 
+		public function get_users()
+		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
+
+			$values = array();
+			foreach($accounts as $account)
+			{
+				if ($account->enabled)
+				{
+					$values[] = array
+					(
+						'id'	=> $account->id,
+						'name'	=> $account->__toString(),
+					);
+				}
+			}
+			return array('ResultSet'=> array('Result'=>$values));
+		}
+
 		public function get_vendors()
 		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
+
 			$query = phpgw::get_var('query');
 
 			$sogeneric = CreateObject('property.sogeneric', 'vendor');
@@ -437,6 +475,18 @@
 				array
 				(
 					'name' => 'vendor_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_name',
 					'type'	=> 'string',
 					'required'	=> false
 				),
