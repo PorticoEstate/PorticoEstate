@@ -1,4 +1,4 @@
-<!-- $Id:$ -->
+<!-- $Id$ -->
 
 	<!-- add / edit -->
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
