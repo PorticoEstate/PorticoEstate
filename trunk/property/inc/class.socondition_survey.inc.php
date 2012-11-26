@@ -150,6 +150,7 @@
 					'id'			=> $this->_db->f('id'),
 					'title'			=> $this->_db->f('title',true),
 					'descr'			=> $this->_db->f('descr',true),
+					'address'		=> $this->_db->f('address',true),
 					'entry_date'	=> $this->_db->f('entry_date'),
 					'user'			=> $this->_db->f('user_id')
 				);
@@ -177,7 +178,7 @@
 					'status_id'			=> (int)$this->_db->f('status_id'),
 					'cat_id'			=> (int)$this->_db->f('category'),
 					'vendor_id'			=> (int)$this->_db->f('vendor_id'),
-					'coordinator'		=> (int)$this->_db->f('coordinator'),
+					'coordinator_id'	=> (int)$this->_db->f('coordinator_id'),
 					'report_date'		=> (int)$this->_db->f('report_date'),
 					'user_id'			=> (int)$this->_db->f('user_id'),
 					'entry_date'		=> (int)$this->_db->f('entry_date'),
@@ -206,8 +207,9 @@
 
 			$id = $this->_db->next_id($table);
 
-			$value_set			= $this->_get_value_set( $data );
-			$value_set['id']	= $id;
+			$value_set					= $this->_get_value_set( $data );
+			$value_set['id']			= $id;
+			$value_set['entry_date']	= time();
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -280,11 +282,10 @@
 				'status_id'			=> (int)$data['status_id'],
 				'category'			=> (int)$data['cat_id'],
 				'vendor_id'			=> (int)$data['vendor_id'],
-				'coordinator'		=> (int)$this->account,
+				'coordinator_id'	=> (int)$data['coordinator_id'],
 				'report_date'		=> phpgwapi_datetime::date_to_timestamp($data['report_date']),
 				'user_id'			=> $this->account,
-				'entry_date'		=> time(),
-				'modified_date'		=> time()
+				'modified_date'		=> time(),
 			);
 
 
@@ -360,9 +361,9 @@
 			}
 
 			$address	= $this->_db->db_addslashes(implode('::', $_address));
-	//		$value_set['address'] = $address;
 
-			unset($_address);
+			$value_set['address'] = $address;
+
 			return $value_set;
 		}
 

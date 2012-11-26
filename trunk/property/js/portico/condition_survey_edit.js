@@ -44,3 +44,11 @@ YUI({
 		'vendor_name', 'vendor_id', 'vendor_container');
 	});
 
+	YAHOO.util.Event.addListener(window, "load", function()
+	{
+		var oArgs = {menuaction:'property.uicondition_survey.get_users'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+	    YAHOO.portico.autocompleteHelper(strURL, 
+		'coordinator_name', 'coordinator_id', 'coordinator_container');
+	});
+

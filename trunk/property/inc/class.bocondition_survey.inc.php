@@ -177,6 +177,10 @@
 				unset($contacts);
 			}
 
+			if($values['coordinator_id'])
+			{
+				$values['coordinator_name']	= $GLOBALS['phpgw']->accounts->get($values['coordinator_id'])->__toString();
+			}
 			return $values;
 		}
 
