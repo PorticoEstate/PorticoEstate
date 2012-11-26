@@ -322,6 +322,11 @@
 				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 			=> $mode == 'edit',
 				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'fileupload'					=> true,
+				'multiple_uploader'				=> true,
+				'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
+														."upload_target:'property.bocondition_survey.addfiles',"
+														."id:'{$id}'}",
 			);
 //_debug_array($data);die();
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
@@ -332,7 +337,10 @@
 			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-			self::render_template_xsl(array('condition_survey'), $data);
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+			self::render_template_xsl(array('condition_survey','files'), $data);
 		}
 
 		public function save()

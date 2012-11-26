@@ -45,6 +45,11 @@
 		var $allrows;
 		public $acl_location = '.project.condition_survey';
 
+		var $public_functions = array
+		(
+			'addfiles'		=> true
+		);
+
 		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.socondition_survey');
@@ -124,6 +129,53 @@
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
 			return $column_list;
+		}
+
+		public function addfiles()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$acl 			= & $GLOBALS['phpgw']->acl;
+			$acl_add 		= $acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 		= $acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$id				= phpgw::get_var('id', 'int');
+			$check			= phpgw::get_var('check', 'bool');
+			$fileuploader	= CreateObject('property.fileuploader');
+
+			if(!$acl_add && !$acl_edit)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			if(!$id)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$test = true;
+			if ($test)
+			{
+				if (!empty($_FILES))
+				{
+					$tempFile = $_FILES['Filedata']['tmp_name'];
+					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
+					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile,$targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
+				}
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+	
+			if($check)
+			{
+				$fileuploader->check("condition_survey/{$id}");
+			}
+			else
+			{
+				$fileuploader->upload("condition_survey/{$id}");
+			}
 		}
 
 		public function read($data = array())

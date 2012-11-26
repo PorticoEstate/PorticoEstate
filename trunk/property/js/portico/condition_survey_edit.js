@@ -52,3 +52,18 @@ YUI({
 		'coordinator_name', 'coordinator_id', 'coordinator_container');
 	});
 
+	this.fileuploader = function()
+	{
+		var requestUrl = phpGWLink('index.php', fileuploader_action);
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+	}
+
+
+	function closeJS_local()
+	{
+		var reqUrl = '<xsl:value-of select="//datatable/source"/>';
+		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+	}
+
+
+
