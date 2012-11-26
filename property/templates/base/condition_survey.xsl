@@ -232,36 +232,27 @@
 					</div>
 
 			<div id="documents">
+				<script type="text/javascript">
+					var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
+				</script>
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<!-- <xsl:call-template name="file_list"/> -->
+					<tr>
+						<td align="left" valign="top">
+							<xsl:value-of select="php:function('lang', 'files')"/>
+						</td>
+						<td>
+							<div id="datatable-container_0"/>
+						</td>
+					</tr>
+					<xsl:call-template name="file_upload"/>
+				</table>
+
 			</div>
 			<div id="import">
 			</div>
 
 
-					<xsl:choose>
-						<xsl:when test="files!='' or fileupload = 1">
-							<div id="files">
-								<script type="text/javascript">
-									var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
-								</script>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<!-- <xsl:call-template name="file_list"/> -->
-									<tr>
-										<td align="left" valign="top">
-											<xsl:value-of select="//lang_files"/>
-										</td>
-										<td>
-											<div id="datatable-container_0"/>
-										</td>
-									</tr>
-									<xsl:choose>
-										<xsl:when test="cat_list='' and fileupload = 1 and mode = 'edit'">
-											<xsl:call-template name="file_upload"/>
-										</xsl:when>
-									</xsl:choose>
-								</table>
-							</div>
-						</xsl:when>
-					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
