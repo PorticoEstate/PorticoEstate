@@ -82,7 +82,7 @@
 			phpgwapi_yui::load_widget('paginator');
 
 			$categories = $this->_get_categories();
-			
+
 
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
@@ -243,10 +243,6 @@
 
 		public function edit($values = array(), $mode = 'edit')
 		{
-/*
-_debug_array($_POST);
-die();
-*/
 			$id 	= phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
@@ -278,13 +274,15 @@ die();
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
 			$tabs['import']	= array('label' => lang('import'), 'link' => null);
 
+			if ($id)
+			{
 				$tabs['documents']['link'] = '#documents';
 				$tabs['import']['link'] = '#import';
 
-			if ($id)
-			{
-
-				$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				if (!$values)
+				{
+					$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				}
 			}
 
 			if(isset($values['location_code']) && $values['location_code'])
@@ -305,10 +303,12 @@ die();
 					'lookup_entity'	=> array(),
 					'entity_data'	=> isset($values['p'])?$values['p']:''
 				));
-//_debug_array($values);die();
+
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'survey'			=> $values,
 				'location_data'		=> $location_data,
 				'categories'		=> array('options' => $categories),
@@ -319,7 +319,7 @@ die();
 //_debug_array($data);die();
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
-			
+
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
 			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
@@ -327,28 +327,32 @@ die();
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
 			self::render_template_xsl(array('condition_survey'), $data);
 		}
-		
+
 		public function save()
 		{
 			$id = phpgw::get_var('id');
-			
+
 			if ($id )
 			{
-				$values = $this->bo->read_single(array('id' => $id));
+				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
 			}
 			else
 			{
 				$values = array();
 			}
-			
+
 			/*
 			* Overrides with incoming data from POST
 			*/
 			$values = $this->_populate($values);
 
-//_debug_array($values);die();			
-			if( !$this->receipt['error'] )
+			if( $this->receipt['error'] )
 			{
+				$this->edit( $values );
+			}
+			else
+			{
+
 				try
 				{
 					$id = $this->bo->save($values);
@@ -364,11 +368,8 @@ die();
 					}
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));	
-			}
-			else
-			{
-				$this->edit( $values );
+				phpgwapi_cache::message_set('ok!', 'message'); 
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
 			}
 		}
 
@@ -394,7 +395,7 @@ die();
 			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
 
 			$values	= phpgw::get_var('values');
-			
+
 			$_fields = array
 			(
 				array
@@ -441,7 +442,7 @@ die();
 				),
 			);
 
-			
+
 			foreach ($_fields as $_field)
 			{
 				if($data[$_field['name']] = $_POST['values'][$_field['name']])
@@ -453,11 +454,16 @@ die();
 					$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $_field['name']));
 				}
 			}
-//_debug_array($_POST);
-//_debug_array($data);
+
+//_debug_array($data);die();
 
 			$values = $this->bocommon->collect_locationdata($data,$insert_record);
-			
+
+			if(!isset($values['location_code']) || ! $values['location_code'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
+			}
+
 			/*
 			* Extra data from custom fields
 			*/
@@ -476,17 +482,17 @@ die();
 
 			if(!isset($values['cat_id']) || !$values['cat_id'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a category !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a category !'));
 			}
 
-			if(isset($values['title']) || !$values['title'])
+			if(!isset($values['title']) || !$values['title'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please give a title !'));
+				$this->receipt['error'][]=array('msg'=>lang('Please give a title !'));
 			}
 
 			if(!isset($values['report_date']) || !$values['report_date'])
 			{
-				$receipt['error'][]=array('msg'=>lang('Please select a date!'));
+				$this->receipt['error'][]=array('msg'=>lang('Please select a date!'));
 			}
 
 			return $values;
@@ -504,7 +510,7 @@ die();
 			{
 				$_category['id'] = $_category['cat_id'];
 			}
-			
+
 			return $categories['cat_list'];
 		}
 	}

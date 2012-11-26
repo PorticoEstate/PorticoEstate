@@ -139,13 +139,13 @@
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
 			{
 				$custom_fields = true;
-				$values = array();
-				$values['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+				$data['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
+			$values = array();
 			if(isset($data['id']) && $data['id'])
 			{
-				$values = $this->so->read_single($data, $values);
+				$values = $this->so->read_single($data);
 			}
 			if($custom_fields)
 			{
@@ -153,6 +153,29 @@
 			}
 
 			$values['report_date']	= $GLOBALS['phpgw']->common->show_date($values['report_date'],$this->dateformat);
+
+			if(isset($values['vendor_id']) && $values['vendor_id'] && !$values['vendor_name'])
+			{
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single(array('id' => $values['vendor_id']),$vendor_data);
+				if(is_array($vendor_data))
+				{
+					foreach($vendor_data['attributes'] as $attribute)
+					{
+						if($attribute['name']=='org_name')
+						{
+							$values['vendor_name']=$attribute['value'];
+							break;
+						}
+					}
+				}
+				unset($contacts);
+			}
 
 			return $values;
 		}
@@ -168,11 +191,11 @@
 			{
 				if (isset($data['id']) && $data['id'])
 				{
-					$receipt = $this->so->edit($data);
+					$id = $this->so->edit($data);
 				}
 				else
 				{
-					$receipt = $this->so->add($data);
+					$id = $this->so->add($data);
 				}
 			}
 
@@ -184,7 +207,7 @@
 				}
 			}
 
-			return $receipt;
+			return $id;
 		}
 
 		public function delete($id)

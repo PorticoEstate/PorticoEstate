@@ -67,7 +67,7 @@
 								</td>
 								<td>
 									<xsl:value-of select="survey/id"/>
-									<input type="hidden" name="values[id]" value="{survey/id}"/>
+									<input type="hidden" name="id" value="{survey/id}"/>
 								</td>
 							</tr>
 						</xsl:when>
