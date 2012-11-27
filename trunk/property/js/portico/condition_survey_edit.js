@@ -61,9 +61,12 @@ YUI({
 
 	function closeJS_local()
 	{
-		var reqUrl = '<xsl:value-of select="//datatable/source"/>';
-		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+	//	var reqUrl = '<xsl:value-of select="//datatable/source"/>';
+	//	YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
 	}
 
-
+	function refresh_files()
+	{
+		alert('refresh_files');
+	}
 
