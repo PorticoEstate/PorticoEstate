@@ -626,7 +626,7 @@
 								</td>
 							</tr>
 							<xsl:choose>
-								<xsl:when test="mode='edit'">
+								<xsl:when test="value_workorder_id!='' and mode='edit'">
 									<xsl:variable name="lang_add_invoice_statustext">
 										<xsl:value-of select="php:function('lang', 'add invoice')"/>
 									</xsl:variable>
