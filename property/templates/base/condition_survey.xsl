@@ -214,8 +214,7 @@
 				   var fileuploader_action = {
 						menuaction:'property.fileuploader.add',
 						upload_target:'property.bocondition_survey.addfiles',
-						id: '<xsl:value-of select='survey/id'/>',
-						phpgw_return_as: 'json'
+						id: '<xsl:value-of select='survey/id'/>'
 					};
 				</script>
 
@@ -230,12 +229,34 @@
 							<div style="clear:both;" id="datatable-container_0"></div>		
 						</td>
 					</tr>
-					<xsl:call-template name="file_upload"/>
+					<xsl:choose>
+						<xsl:when test="editable = 1">
+							<xsl:call-template name="file_upload"/>
+						</xsl:when>
+					</xsl:choose>
 				</table>
+			</div>
+			<xsl:choose>
+				<xsl:when test="editable = 1">
+					<div id="import">
+						<table>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'upload file')"/>
+								</td>
+								<td>
+									<input type="file" name="import_file" size="40">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</xsl:when>
+				</xsl:choose>
 
-			</div>
-			<div id="import">
-			</div>
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
