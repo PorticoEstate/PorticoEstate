@@ -596,7 +596,9 @@
 			}
 			if(isset($insert_record))
 			{
-				$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
+	//			$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
+				phpgwapi_cache::session_set('property', 'insert_record',$insert_record);
+
 			}
 			//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
 

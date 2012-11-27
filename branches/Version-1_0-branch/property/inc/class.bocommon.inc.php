@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -2012,11 +2012,14 @@
 //_debug_array($insert_record);die();
 			if($insert_record)
 			{
-				for ($i=0; $i<count($insert_record['location']); $i++)
+				if( isset($insert_record['location']) && is_array($insert_record['location']) )
 				{
-					if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+					for ($i=0; $i<count($insert_record['location']); $i++)
 					{
-						$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						if(isset($_POST[$insert_record['location'][$i]]) && $_POST[$insert_record['location'][$i]])
+						{
+							$values['location'][$insert_record['location'][$i]]= phpgw::get_var($insert_record['location'][$i], 'string', 'POST');
+						}
 					}
 				}
 
@@ -2034,7 +2037,10 @@
 				{
 					foreach ($insert_record['additional_info'] as $additional_info)
 					{
-						$values['additional_info'][$additional_info['input_text']]	= phpgw::get_var($additional_info['input_name'], 'string', 'POST');
+						if($additional_info_value = phpgw::get_var($additional_info['input_name'], 'string', 'POST'))
+						{
+							$values['additional_info'][$additional_info['input_text']]	= $additional_info_value;
+						}
 					}
 				}
 			}
@@ -2044,6 +2050,7 @@
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
+				$values['location_code']	= implode('-', $values['location']);
 			}
 
 			return $values;

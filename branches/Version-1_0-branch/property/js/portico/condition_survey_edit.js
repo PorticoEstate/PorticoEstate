@@ -44,3 +44,26 @@ YUI({
 		'vendor_name', 'vendor_id', 'vendor_container');
 	});
 
+	YAHOO.util.Event.addListener(window, "load", function()
+	{
+		var oArgs = {menuaction:'property.uicondition_survey.get_users'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+	    YAHOO.portico.autocompleteHelper(strURL, 
+		'coordinator_name', 'coordinator_id', 'coordinator_container');
+	});
+
+	this.fileuploader = function()
+	{
+		var requestUrl = phpGWLink('index.php', fileuploader_action);
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+	}
+
+
+	function closeJS_local()
+	{
+		var reqUrl = '<xsl:value-of select="//datatable/source"/>';
+		YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
+	}
+
+
+

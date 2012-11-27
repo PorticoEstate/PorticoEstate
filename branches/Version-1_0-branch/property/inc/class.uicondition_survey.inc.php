@@ -34,14 +34,17 @@
 	{
 
 		private $bo;
-		public $public_functions = array(
-			'query' => true,
-			'index' => true,
-			'view' => true,
-			'add' => true,
-			'edit' => true,
-			'save' => true,
-			'get_vendors'	=> true
+		private $receipt = array();
+		public $public_functions = array
+		(
+			'query'			=> true,
+			'index'			=> true,
+			'view'			=> true,
+			'add'			=> true,
+			'edit'			=> true,
+			'save'			=> true,
+			'get_vendors'	=> true,
+			'get_users'		=> true
 		);
 
 		public function __construct()
@@ -81,7 +84,7 @@
 			phpgwapi_yui::load_widget('paginator');
 
 			$categories = $this->_get_categories();
-			
+
 
 			$data = array(
 				'datatable_name'	=> lang('condition survey'),
@@ -133,20 +136,20 @@
 							'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
-							'key' => 'name',
-							'label' => lang('name'),
+							'key' => 'title',
+							'label' => lang('title'),
 							'sortable' => true
 						),
 						array(
-							'key' => 'description',
+							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
 							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
 						),
 						array(
-							'key' => 'survey_type_label',
-							'label' => lang('type'),
-							'sortable' => false
+							'key' => 'address',
+							'label' => lang('address'),
+							'sortable' => true
 						),
 						array(
 							'key' => 'link',
@@ -174,7 +177,7 @@
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uiactivity.edit'
+							'menuaction'	=> 'property.uicondition_survey.edit'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
@@ -210,7 +213,7 @@
 			$export = phpgw::get_var('export');
 
 			$values = $this->bo->read($params);
-
+//_debug_array($values);
 			// ... add result data
 			$result_data = array('results' => $values);
 
@@ -237,7 +240,7 @@
 				$this->bocommon->no_access();
 				return;
 			}
-			$this->edit($mode = 'view');
+			$this->edit(null, $mode = 'view');
 		}
 
 		public function add()
@@ -245,7 +248,7 @@
 			$this->edit();
 		}
 
-		public function edit($mode = 'edit')
+		public function edit($values = array(), $mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
@@ -271,8 +274,6 @@
 				}
 			}
 
-			$values = array();
-
 			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
@@ -280,17 +281,23 @@
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
 			$tabs['import']	= array('label' => lang('import'), 'link' => null);
 
+			if ($id)
+			{
 				$tabs['documents']['link'] = '#documents';
 				$tabs['import']['link'] = '#import';
 
-			if ($id)
-			{
-
-				$values = $this->so->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				if (!$values)
+				{
+					$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+				}
 			}
 
+			if(isset($values['location_code']) && $values['location_code'])
+			{
+				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+			}
 
-			$categories = $this->_get_categories($survey['category']);
+			$categories = $this->_get_categories($values['cat_id']);
 
 			$bolocation	= CreateObject('property.bolocation');
 			$location_data = $bolocation->initiate_ui_location(array
@@ -304,56 +311,116 @@
 					'entity_data'	=> isset($values['p'])?$values['p']:''
 				));
 
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'survey'			=> $values,
+				'location_data'		=> $location_data,
 				'categories'		=> array('options' => $categories),
 				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 			=> $mode == 'edit',
 				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-				'location_data'		=> $location_data,
+				'fileupload'					=> true,
+				'multiple_uploader'				=> true,
+				'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
+														."upload_target:'property.bocondition_survey.addfiles',"
+														."id:'{$id}'}",
 			);
-
+//_debug_array($data);die();
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
-			
+
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
 			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-			self::render_template_xsl(array('condition_survey'), $data);
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+			self::render_template_xsl(array('condition_survey','files'), $data);
 		}
-		
+
 		public function save()
 		{
 			$id = phpgw::get_var('id');
-			
+
 			if ($id )
 			{
-				$project = $this->so->get_single($id);
+				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
 			}
 			else
 			{
-				$project = new logistic_project();
+				$values = array();
 			}
-			
-			$project->populate();
-			
-			if( $project->validate() )
+
+			/*
+			* Overrides with incoming data from POST
+			*/
+			$values = $this->_populate($values);
+
+			if( $this->receipt['error'] )
 			{
-				$id = $this->so->store($project);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));	
+				$this->edit( $values );
 			}
 			else
 			{
-				$this->edit( $project );
+
+				try
+				{
+					$id = $this->bo->save($values);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						$this->edit( $values );
+						return;
+					}
+				}
+
+				phpgwapi_cache::message_set('ok!', 'message'); 
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
 			}
+		}
+
+		public function get_users()
+		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
+
+			$query = phpgw::get_var('query');
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
+
+			$values = array();
+			foreach($accounts as $account)
+			{
+				if ($account->enabled)
+				{
+					$values[] = array
+					(
+						'id'	=> $account->id,
+						'name'	=> $account->__toString(),
+					);
+				}
+			}
+			return array('ResultSet'=> array('Result'=>$values));
 		}
 
 		public function get_vendors()
 		{
+			if(!$this->acl_read)
+			{
+				return;
+			}
+
 			$query = phpgw::get_var('query');
 
 			$sogeneric = CreateObject('property.sogeneric', 'vendor');
@@ -363,6 +430,130 @@
 				$entry['name'] = $entry['org_name'];
 			}
 			return array('ResultSet'=> array('Result'=>$values));
+		}
+
+
+		/*
+		* Overrides with incoming data from POST
+		*/
+		private function _populate($data = array())
+		{
+			$insert_record = phpgwapi_cache::session_get('property', 'insert_record');
+
+			$values	= phpgw::get_var('values');
+
+			$_fields = array
+			(
+				array
+				(
+					'name' => 'title',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'descr',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'cat_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'report_date',
+					'type'	=> 'string',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'status_id',
+					'type'	=> 'integer',
+					'required'	=> true
+				),
+				array
+				(
+					'name' => 'vendor_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'vendor_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_id',
+					'type'	=> 'integer',
+					'required'	=> false
+				),
+				array
+				(
+					'name' => 'coordinator_name',
+					'type'	=> 'string',
+					'required'	=> false
+				),
+			);
+
+
+			foreach ($_fields as $_field)
+			{
+				if($data[$_field['name']] = $_POST['values'][$_field['name']])
+				{
+					$data[$_field['name']] =  phpgw::clean_value($data[$_field['name']], $_field['type']);
+				}
+				if($_field['required'] && !$data[$_field['name']])
+				{
+					$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $_field['name']));
+				}
+			}
+
+//_debug_array($data);die();
+
+			$values = $this->bocommon->collect_locationdata($data,$insert_record);
+
+			if(!isset($values['location_code']) || ! $values['location_code'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a location !'));
+			}
+
+			/*
+			* Extra data from custom fields
+			*/
+			$values['attributes']	= phpgw::get_var('values_attribute');
+
+			if(is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as $attribute )
+				{
+					if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+					{
+						$this->receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+				}
+			}
+
+			if(!isset($values['cat_id']) || !$values['cat_id'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a category !'));
+			}
+
+			if(!isset($values['title']) || !$values['title'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please give a title !'));
+			}
+
+			if(!isset($values['report_date']) || !$values['report_date'])
+			{
+				$this->receipt['error'][]=array('msg'=>lang('Please select a date!'));
+			}
+
+			return $values;
 		}
 
 		private function _get_categories($selected = 0)
@@ -377,7 +568,7 @@
 			{
 				$_category['id'] = $_category['cat_id'];
 			}
-			
+
 			return $categories['cat_list'];
 		}
 	}

@@ -1,4 +1,4 @@
-<!-- $Id:$ -->
+<!-- $Id$ -->
 
 	<!-- add / edit -->
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
@@ -54,46 +54,25 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="value_id !=''">
-							<tr>
-								<td class="th_text" valign="top">
-									<a href="{link_pdf}" target="_blank">PDF</a>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
-				</table>
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<tr>
-						<td class="th_text">
-							<xsl:value-of select="lang_entity"/>
-						</td>
-						<td class="th_text">
-							<xsl:value-of select="entity_name"/>
-						</td>
-					</tr>
-					<xsl:choose>
-						<xsl:when test="value_id!=''">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_id"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_num"/>
-									<input type="hidden" name="location_code" value="{location_code}"/>
-									<input type="hidden" name="lookup_tenant" value="{lookup_tenant}"/>
-									<input type="hidden" name="values[id]" value="{value_id}"/>
-									<input type="hidden" name="values[num]" value="{value_num}"/>
-								</td>
-							</tr>
-						</xsl:when>
-					</xsl:choose>
 				</table>
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
 					<div id="generic">
 					<table>
+					<xsl:choose>
+						<xsl:when test="survey/id!=''">
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'id')" />
+								</td>
+								<td>
+									<xsl:value-of select="survey/id"/>
+									<input type="hidden" name="id" value="{survey/id}"/>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
 					<xsl:choose>
 						<xsl:when test="location_data!=''">
 								<xsl:choose>
@@ -113,7 +92,7 @@
 					<td>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
-	   							<input id="title" name='title' type="text"
+	   							<input id="title" name='values[title]' type="text" value="{survey/title}"
 	   								formvalidator:FormField="yes"
 	   								formvalidator:Type="TextBaseField">
 	   							</input>
@@ -126,20 +105,19 @@
 				</tr>
 				<tr>
 					<td>
-
-							<label for="name"><xsl:value-of select="php:function('lang', 'description')" /></label>
+						<label for="name"><xsl:value-of select="php:function('lang', 'description')" /></label>
 					</td>
 					<td>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
-								<textarea id="description" name="values[description]" rows="5" cols="60"
+								<textarea id="descr" name="values[descr]" rows="5" cols="60"
 									formvalidator:FormField="yes"
 	   								formvalidator:Type="TextBaseField">
-									<xsl:value-of select="project/description" disable-output-escaping="yes"/>
+									<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
 								</textarea>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="project/description" disable-output-escaping="yes"/>
+								<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -170,10 +148,16 @@
 							<label for="category"><xsl:value-of select="php:function('lang', 'date')" /></label>
 					</td>
 					<td>
-							<input id="report_date" name='values[report_date]' type="text"
-								formvalidator:FormField="yes"
-								formvalidator:type="TextBaseField"/>
-
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+	 							<input id="report_date" name='values[report_date]' type="text" value="{survey/report_date}"
+									formvalidator:FormField="yes"
+									formvalidator:type="TextBaseField"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="survey/report_date"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</td>
 				</tr>
 				<tr>
@@ -200,6 +184,29 @@
 				</tr>
 				<tr>
 					<td>
+						<label for="coordinator"><xsl:value-of select="php:function('lang', 'coordinator')" /></label>
+					</td>
+					<td>
+
+						<xsl:choose>
+							<xsl:when test="editable = 1">
+							    <div class="autocomplete">
+							        <input type="hidden" id="coordinator_id" name="values[coordinator_id]"  value="{survey/coordinator_id}"/>
+							        <input type="text" id="coordinator_name" name="values[coordinator_name]" value="{survey/coordinator_name}">
+									</input>
+							        <div id="coordinator_container"/>
+							    </div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="survey/coordinator_name" />
+							</xsl:otherwise>
+						</xsl:choose>
+
+					</td>
+				</tr>
+
+				<tr>
+					<td>
 						<label for="vendor"><xsl:value-of select="php:function('lang', 'vendor')" /></label>
 					</td>
 					<td>
@@ -208,7 +215,7 @@
 							<xsl:when test="editable = 1">
 							    <div class="autocomplete">
 							        <input type="hidden" id="vendor_id" name="values[vendor_id]"  value="{survey/vendor_id}"/>
-							        <input type="text" id="vendor_name" name="vendor_name" value="{survey/vendor_name}">
+							        <input type="text" id="vendor_name" name="values[vendor_name]" value="{survey/vendor_name}">
 									</input>
 							        <div id="vendor_container"/>
 							    </div>
@@ -218,36 +225,6 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-<!--
-
-					</td>
-				</tr>
-				<tr>
-					<td>
-
-						 <div class="label">
- 							<label for="age2">Age:</label>						
-						 </div>
-							<input id="age2" type="text"
-								formvalidator:FormField="yes"
-								formvalidator:type="IntegerField"
-								formvalidator:max="100"
-								formvalidator:min="10"/>
-						<div class="clearDiv"></div>
-
-						  <div class="label">
- 							<label for="income2">Income ($):</label>						
-						 </div>
-							<input id="income2" type="text"
-								formvalidator:FormField="yes"
-								formvalidator:type="DoubleField"
-								formvalidator:maxDecimalPlaces="2"
-								formvalidator:max="40000"
-								formvalidator:maxInclusive="true"/>
-						<div class="clearDiv"></div>
-					
-					-->
-
 					</td>
 				</tr>
 
@@ -255,36 +232,27 @@
 					</div>
 
 			<div id="documents">
+				<script type="text/javascript">
+					var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
+				</script>
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<!-- <xsl:call-template name="file_list"/> -->
+					<tr>
+						<td align="left" valign="top">
+							<xsl:value-of select="php:function('lang', 'files')"/>
+						</td>
+						<td>
+							<div id="datatable-container_0"/>
+						</td>
+					</tr>
+					<xsl:call-template name="file_upload"/>
+				</table>
+
 			</div>
 			<div id="import">
 			</div>
 
 
-					<xsl:choose>
-						<xsl:when test="files!='' or fileupload = 1">
-							<div id="files">
-								<script type="text/javascript">
-									var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
-								</script>
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<!-- <xsl:call-template name="file_list"/> -->
-									<tr>
-										<td align="left" valign="top">
-											<xsl:value-of select="//lang_files"/>
-										</td>
-										<td>
-											<div id="datatable-container_0"/>
-										</td>
-									</tr>
-									<xsl:choose>
-										<xsl:when test="cat_list='' and fileupload = 1 and mode = 'edit'">
-											<xsl:call-template name="file_upload"/>
-										</xsl:when>
-									</xsl:choose>
-								</table>
-							</div>
-						</xsl:when>
-					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
@@ -344,18 +312,19 @@
 					</td>
 					<td>
 						<div class="form-buttons">
+							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<xsl:choose>
 								<xsl:when test="editable = 1">
 									<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-									<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 									<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
-									<input class="submit" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
+									<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-									<xsl:variable name="lang_new_activity"><xsl:value-of select="php:function('lang', 't_new_activity')" /></xsl:variable>
-									<input type="submit" name="edit_project" value="{$lang_edit}" title = "{$lang_edit}" />
-									<input type="submit" name="new_activity" value="{$lang_new_activity}" title = "{$lang_new_activity}" />
+									<xsl:variable name="lang_new_survey"><xsl:value-of select="php:function('lang', 'new survey')" /></xsl:variable>
+									<input type="button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
+									<input type="button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
+									<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
@@ -380,14 +349,29 @@
 
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 		</form>
+		<xsl:variable name="new_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.add')" />
+		</xsl:variable>
+		<form name="new_form" id="new_form" action="{$new_url}" method="post">
+		</form>
 
+		<xsl:variable name="edit_params">
+			<xsl:text>menuaction:property.uicondition_survey.edit, id:</xsl:text>
+				<xsl:value-of select="survey/id" />
+			</xsl:variable>
+		<xsl:variable name="edit_url">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
+		</xsl:variable>
+
+		<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
+		</form>
 
 	</xsl:template>
 
 
 <xsl:template match="options">
 	<option value="{id}">
-		<xsl:if test="selected = 'selected'">
+		<xsl:if test="selected = 'selected' or selected = 1">
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:attribute name="title" value="description" />
