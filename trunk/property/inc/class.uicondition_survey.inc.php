@@ -286,8 +286,11 @@
 
 			if ($id)
 			{
+				if($mode == 'edit')
+				{
+					$tabs['import']['link'] = '#import';
+				}
 				$tabs['documents']['link'] = '#documents';
-				$tabs['import']['link'] = '#import';
 
 				if (!$values)
 				{
@@ -315,35 +318,6 @@
 				));
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-/*
-
-		var oArgs = {
-					menuaction:'property.uicondition_survey.get_files',
-					id: '<xsl:value-of select='survey/id'/>'
-				};
-			
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-			
-		var myColumnDefs = [ 
-	        {key:"id", label:'Id', sortable:true},
-	        {key:"name", label:'Aktivitetsnavn', sortable:true},
-	        {key:"start_date", label:'Startdato', sortable:true}, 
-	        {key:"end_date", label:'Sluttdato', sortable:true},
-	     	{key:"responsible_user_name", label:'Ansvarlig', sortable:true},
-	     	{key:"status", label:'Status', sortable:true}
-	    ]; 
-
-		YAHOO.portico.inlineTableHelper("datatable-container_0", requestUrl, myColumnDefs);
-		
-  	});
-  </script>
--->
-	<script>
-		<xsl:for-each select="datatable_def">
-			YAHOO.portico.inlineTableHelper(<xsl:value-of select="container"/>, <xsl:value-of select="requestUrl"/>, <xsl:value-of select="ColumnDefs"/>);
-		</xsl:for-each>
-
-*/
 
 			$file_def = array
 			(
@@ -371,20 +345,22 @@
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-				'fileupload'					=> true,
-				'multiple_uploader'				=> true,
+				'multiple_uploader'				=> $mode == 'edit' ? true : '',
 			);
 //_debug_array($data);die();
-			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
-			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
-			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			if($mode == 'edit')
+			{
+				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
+				phpgwapi_jquery::load_widget('core');
+				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			}
 
 			self::render_template_xsl(array('condition_survey','files'), $data);
 		}
@@ -438,15 +414,17 @@
 
 		public function get_files()
 		{
-			$content_files = array();
-			$content_files[] = array
+			$values = array();
+			$values[] = array
 			(
-				'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+				'id'	=> 1,
+				'name' => 2,
+				'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'hei</a>',
 				'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">'
 			);
 
 
-			return json_encode($content_files);
+			return array('ResultSet'=> array('Result'=>$values));
 
 
 			$id 	= phpgw::get_var('id', 'int');
