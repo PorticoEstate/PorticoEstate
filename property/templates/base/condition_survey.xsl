@@ -10,28 +10,6 @@
 				</script>
 			</xsl:when>
 		</xsl:choose>
-		<script type="text/javascript">
-			var property_js = <xsl:value-of select="property_js"/>;
-			var base_java_url = <xsl:value-of select="base_java_url"/>;
-			var datatable = new Array();
-			var myColumnDefs = new Array();
-
-			<xsl:for-each select="datatable">
-				datatable[<xsl:value-of select="name"/>] = [
-					{
-						values:<xsl:value-of select="values"/>,
-						total_records: <xsl:value-of select="total_records"/>,
-						edit_action:  <xsl:value-of select="edit_action"/>,
-						is_paginator:  <xsl:value-of select="is_paginator"/>,
-						footer:<xsl:value-of select="footer"/>
-					}
-				]
-			</xsl:for-each>
-
-			<xsl:for-each select="myColumnDefs">
-				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
-			</xsl:for-each>
-		</script>
 		<div class="yui-navset" id="survey_edit_tabview">
 	
 		<h1>
@@ -233,16 +211,23 @@
 
 			<div id="documents">
 				<script type="text/javascript">
-					var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
+				   var fileuploader_action = {
+						menuaction:'property.fileuploader.add',
+						upload_target:'property.bocondition_survey.addfiles',
+						id: '<xsl:value-of select='survey/id'/>',
+						phpgw_return_as: 'json'
+					};
 				</script>
+
+				<xsl:call-template name="datasource-definition" />
+
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<!-- <xsl:call-template name="file_list"/> -->
 					<tr>
 						<td align="left" valign="top">
 							<xsl:value-of select="php:function('lang', 'files')"/>
 						</td>
 						<td>
-							<div id="datatable-container_0"/>
+							<div style="clear:both;" id="datatable-container_0"></div>		
 						</td>
 					</tr>
 					<xsl:call-template name="file_upload"/>
@@ -251,8 +236,6 @@
 			</div>
 			<div id="import">
 			</div>
-
-
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
@@ -367,6 +350,19 @@
 		</form>
 
 	</xsl:template>
+
+<xsl:template name="datasource-definition">
+	<script>
+	YAHOO.util.Event.onDOMReady(function(){
+
+		<xsl:for-each select="datatable_def">
+			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, <xsl:value-of select="ColumnDefs"/>);
+		</xsl:for-each>
+
+  	});
+  </script>
+
+</xsl:template>
 
 
 <xsl:template match="options">

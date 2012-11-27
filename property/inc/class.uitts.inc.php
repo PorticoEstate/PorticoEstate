@@ -2391,7 +2391,7 @@
 					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt,'', false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
 				}
 
-				//--------- files
+			//--------- files
 				$bofiles	= CreateObject('property.bofiles');
 				if(isset($values['file_action']) && is_array($values['file_action']))
 				{
@@ -2426,9 +2426,8 @@
 						$bofiles->vfs->override_acl = 0;
 					}
 				}
-				//			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 
-
+			//---------end files
 				if( phpgw::get_var('notify_client_by_sms', 'bool') 
 					&& isset($values['response_text'])
 					&& $values['response_text']
@@ -2451,7 +2450,6 @@
 				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
-			//---------end files
 			$ticket = $this->bo->read_single($id, $values);
 
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))

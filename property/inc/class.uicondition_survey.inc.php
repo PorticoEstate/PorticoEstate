@@ -45,7 +45,8 @@
 			'save'				=> true,
 			'get_vendors'		=> true,
 			'get_users'			=> true,
-			'edit_survey_title'	=> true
+			'edit_survey_title'	=> true,
+			'get_files'			=> true
 		);
 
 		public function __construct()
@@ -314,21 +315,64 @@
 				));
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+/*
+
+		var oArgs = {
+					menuaction:'property.uicondition_survey.get_files',
+					id: '<xsl:value-of select='survey/id'/>'
+				};
+			
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+			
+		var myColumnDefs = [ 
+	        {key:"id", label:'Id', sortable:true},
+	        {key:"name", label:'Aktivitetsnavn', sortable:true},
+	        {key:"start_date", label:'Startdato', sortable:true}, 
+	        {key:"end_date", label:'Sluttdato', sortable:true},
+	     	{key:"responsible_user_name", label:'Ansvarlig', sortable:true},
+	     	{key:"status", label:'Status', sortable:true}
+	    ]; 
+
+		YAHOO.portico.inlineTableHelper("datatable-container_0", requestUrl, myColumnDefs);
+		
+  	});
+  </script>
+-->
+	<script>
+		<xsl:for-each select="datatable_def">
+			YAHOO.portico.inlineTableHelper(<xsl:value-of select="container"/>, <xsl:value-of select="requestUrl"/>, <xsl:value-of select="ColumnDefs"/>);
+		</xsl:for-each>
+
+*/
+
+			$file_def = array
+			(
+				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+			);
+
+
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($file_def),
+			
+			);
 
 			$data = array
 			(
-				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'survey'			=> $values,
-				'location_data'		=> $location_data,
-				'categories'		=> array('options' => $categories),
-				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
-				'editable' 			=> $mode == 'edit',
-				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'datatable_def'					=> $datatable_def,
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'survey'						=> $values,
+				'location_data'					=> $location_data,
+				'categories'					=> array('options' => $categories),
+				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
+				'editable' 						=> $mode == 'edit',
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'fileupload'					=> true,
 				'multiple_uploader'				=> true,
-				'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
-														."upload_target:'property.bocondition_survey.addfiles',"
-														."id:'{$id}'}",
 			);
 //_debug_array($data);die();
 			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
@@ -385,10 +429,129 @@
 					}
 				}
 
+				$this->_handle_files($id);
 				phpgwapi_cache::message_set('ok!', 'message'); 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
 			}
 		}
+
+
+		public function get_files()
+		{
+			$content_files = array();
+			$content_files[] = array
+			(
+				'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+				'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">'
+			);
+
+
+			return json_encode($content_files);
+
+
+			$id 	= phpgw::get_var('id', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uitts.view_file',
+				'id'			=> $id
+			);
+
+			$link_to_files = isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url']:'';
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			$values	= $this->bo->read_single($id);
+
+			$content_files = array();
+
+			foreach($values['files'] as $_entry )
+			{
+				$content_files[] = array
+				(
+					'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="'.$_entry['name'].'" title="'.lang('Check to attach file').'">'
+				);
+			}							
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content_files))
+				{
+					return json_encode($content_files);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content_files;
+		}
+
+
+
+		/**
+		* Store and / or delete files related to an entity
+		*
+		* @param string  $id  entity id
+		*
+		* @return void
+		*/
+		private function _handle_files($id)
+		{
+			$id = (int)$id;
+			if(!$id)
+			{
+				throw new Exception('uicondition_survey::_handle_files() - missing id');
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			if(isset($_POST['file_action']) && is_array($_POST['file_action']))
+			{
+				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
+			}
+			$file_name=str_replace(' ','_',$_FILES['file']['name']);
+
+			if($file_name)
+			{
+				$to_file = $bofiles->fakebase . '/condition_survey/' . $id . '/' . $file_name;
+				if($bofiles->vfs->file_exists(array(
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
+				)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error'); 
+				}
+				else
+				{
+					$bofiles->create_document_dir("condition_survey/{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if(!$bofiles->vfs->cp (array (
+						'from'	=> $_FILES['file']['tmp_name'],
+						'to'	=> $to_file,
+						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error'); 
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+		}
+
+
+		/**
+		* Gets user candidates to be used as coordinator - called as ajax from edit form
+		*
+		* @param string  $query
+		*
+		* @return array 
+		*/
 
 		public function get_users()
 		{
@@ -416,6 +579,14 @@
 			return array('ResultSet'=> array('Result'=>$values));
 		}
 
+		/**
+		* Gets vendor canidated to be used as vendor - called as ajax from edit form
+		*
+		* @param string  $query
+		*
+		* @return array 
+		*/
+
 		public function get_vendors()
 		{
 			if(!$this->acl_read)
@@ -434,6 +605,14 @@
 			return array('ResultSet'=> array('Result'=>$values));
 		}
 
+		/**
+		* Edit title fo entity directly from table
+		*
+		* @param int  $id  id of entity
+		* @param string  $value new title of entity
+		*
+		* @return string text to appear in ui as receipt on action
+		*/
 
 		public function edit_survey_title()
 		{
