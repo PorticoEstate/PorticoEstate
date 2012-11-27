@@ -348,6 +348,7 @@ communication types manager	property	no	Type kommunikasjon
 composites	property	no	Leieobjekter
 condition	property	no	Tilstand
 condition degree	property	no	Tilstandsgrad
+condition survey	property	no	Tilstandsanalyse
 config	property	no	Konfigurer
 configuration	property	no	Konfigurasjon
 confirm status	property	no	Bekreft status
@@ -820,6 +821,7 @@ gab	property	no	GrunnEiendom
 gabnr	property	no	GrunnEiendom
 gallery	property	no	Bildearkiv
 general	property	no	Generelt
+generic	property	no	Generelt
 general address	property	no	Generell adresse
 general info	property	no	generell informasjon
 generate a project from this request	property	no	generer et prosjekt basert på denne anmodningen

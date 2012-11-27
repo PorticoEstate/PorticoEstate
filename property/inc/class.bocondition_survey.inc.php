@@ -266,6 +266,24 @@
 			return $id;
 		}
 
+
+		public function edit_title($data)
+		{
+			try
+			{
+				$this->so->edit_title($data);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+		}
+		
+
 		public function delete($id)
 		{
 			$this->so->delete($id);
