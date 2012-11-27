@@ -37,14 +37,15 @@
 		private $receipt = array();
 		public $public_functions = array
 		(
-			'query'			=> true,
-			'index'			=> true,
-			'view'			=> true,
-			'add'			=> true,
-			'edit'			=> true,
-			'save'			=> true,
-			'get_vendors'	=> true,
-			'get_users'		=> true
+			'query'				=> true,
+			'index'				=> true,
+			'view'				=> true,
+			'add'				=> true,
+			'edit'				=> true,
+			'save'				=> true,
+			'get_vendors'		=> true,
+			'get_users'			=> true,
+			'edit_survey_title'	=> true
 		);
 
 		public function __construct()
@@ -107,7 +108,7 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => lang('new survey'),
+								'value' => lang('new'),
 								'href' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 								'class' => 'new_item'
 							),
@@ -128,6 +129,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'phpgw_return_as' => 'json')),
+					'editor_action' => 'property.uicondition_survey.edit_survey_title',
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -138,13 +140,13 @@
 						array(
 							'key' => 'title',
 							'label' => lang('title'),
-							'sortable' => true
+							'sortable' => true,
+							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:false})'
 						),
 						array(
 							'key' => 'descr',
 							'label' => lang('description'),
 							'sortable' => false,
-							'editor' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})'
 						),
 						array(
 							'key' => 'address',
@@ -432,6 +434,36 @@
 			return array('ResultSet'=> array('Result'=>$values));
 		}
 
+
+		public function edit_survey_title()
+		{
+			$id = phpgw::get_var('id', 'POST', 'int');
+
+			if(!$this->acl_edit)
+			{
+				return lang('no access');
+			}
+			
+			if ($id )
+			{
+				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
+				$values['title'] = phpgw::get_var('value');
+
+				try
+				{
+					$this->bo->edit_title($values);
+				}
+
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						return $e->getMessage(); 
+					}
+				}
+				return 'OK';
+			}
+		}
 
 		/*
 		* Overrides with incoming data from POST
