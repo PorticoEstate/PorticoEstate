@@ -125,7 +125,7 @@
 			if($query)
 			{
 				$query			= $this->_db->db_addslashes($query);
-				$querymethod	= " {$where} name {$this->_like} '%{$query}%'";
+				$querymethod	= " {$where} title {$this->_like} '%{$query}%'";
 			}
 
 			$sql = "SELECT * FROM {$table} $filtermethod $querymethod";
@@ -241,12 +241,59 @@
 			}
 		}
 
-		function edit($data)
+		public function edit($data)
 		{
 			$table = 'fm_condition_survey';
 			$id = (int)$data['id'];
 
 			$value_set	= $this->_get_value_set( $data );
+
+			try
+			{
+				$this->_edit($id, $value_set);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+
+			return $id;
+		}
+
+		public function edit_title($data)
+		{
+			$id = (int)$data['id'];
+
+			$value_set	= array
+			(
+				'title' => $data['title']
+			);
+
+			try
+			{
+				$this->_edit($id, $value_set);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+
+			return $id;
+		}
+
+		private function _edit($id, $value_set)
+		{
+			$table = 'fm_condition_survey';
+			$id = (int)$id;
+
 			$value_set	= $this->_db->validate_update($value_set);
 
 			$this->_db->transaction_begin();

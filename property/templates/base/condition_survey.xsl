@@ -321,7 +321,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
-									<xsl:variable name="lang_new_survey"><xsl:value-of select="php:function('lang', 'new survey')" /></xsl:variable>
+									<xsl:variable name="lang_new_survey"><xsl:value-of select="php:function('lang', 'new')" /></xsl:variable>
 									<input type="button" name="edit_survey" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
 									<input type="button" name="new_survey" value="{$lang_new_survey}" title = "{$lang_new_survey}" onClick="document.new_form.submit();"/>
 									<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>

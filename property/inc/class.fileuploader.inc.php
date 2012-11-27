@@ -125,6 +125,7 @@
 								//		'scriptAccess'   : '{$scriptAccess}',//'sameDomain'|'always' Set to "always" to allow script access across domains
 										'multi'		     : true,
 										'auto'           : true,
+								//		'debug'			 : true,
 										'fileExt'        : '{$fileExt}',
 										'fileDesc'       : 'Files ({$fileDesc})',
 										'queueID'        : 'queue',
