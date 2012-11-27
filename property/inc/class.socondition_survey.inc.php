@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -26,6 +26,8 @@
 	* @subpackage project
  	* @version $Id$
 	*/
+
+	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Description
@@ -64,10 +66,11 @@
 
 		public function __construct()
 		{
-			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db		= & $GLOBALS['phpgw']->db;
-			$this->_join	= & $this->_db->join;
-			$this->_like	= & $this->_db->like;
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->_db			= & $GLOBALS['phpgw']->db;
+			$this->_join		= & $this->_db->join;
+			$this->_like		= & $this->_db->like;
+			$this->custom 		= createObject('property.custom_fields');
 		}
 
 		/**
@@ -139,24 +142,28 @@
 				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$values = array();
 			while ($this->_db->next_record())
 			{
-				$customs[] = array
-					(
-						'custom_id'		=> $this->_db->f('id'),
-						'name'			=> stripslashes($this->_db->f('name')),
-						'entry_date'	=> $this->_db->f('entry_date'),
-						'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->_db->f('user_id'))
-					);
+				$values[] = array
+				(
+					'id'			=> $this->_db->f('id'),
+					'title'			=> $this->_db->f('title',true),
+					'descr'			=> $this->_db->f('descr',true),
+					'address'		=> $this->_db->f('address',true),
+					'entry_date'	=> $this->_db->f('entry_date'),
+					'user'			=> $this->_db->f('user_id')
+				);
 			}
-			return $customs;
+
+			return $values;
 		}
 
-		function read_single($id)
+		function read_single($data = array())
 		{
 			$table = 'fm_condition_survey';
 
-			$id = (int) $id;
+			$id		= (int)$data['id'];
 			$this->_db->query("SELECT * FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
 
 			$values = array();
@@ -164,12 +171,28 @@
 			{
 				$values = array
 				(
-					'id'			=> (int)$this->_db->f('id'),
-					'name'			=> $this->_db->f('name', true),
-					'sql_text'		=> $this->_db->f('sql_text', true),
-					'entry_date'	=> $this->_db->f('entry_date'),
-
+					'id'				=> $id,
+					'title'				=> $this->_db->f('title',true),
+					'descr'				=> $this->_db->f('descr', true),
+					'location_code'		=> $this->_db->f('location_code', true),
+					'status_id'			=> (int)$this->_db->f('status_id'),
+					'cat_id'			=> (int)$this->_db->f('category'),
+					'vendor_id'			=> (int)$this->_db->f('vendor_id'),
+					'coordinator_id'	=> (int)$this->_db->f('coordinator_id'),
+					'report_date'		=> (int)$this->_db->f('report_date'),
+					'user_id'			=> (int)$this->_db->f('user_id'),
+					'entry_date'		=> (int)$this->_db->f('entry_date'),
+					'modified_date'		=> (int)$this->_db->f('modified_date'),
 				);
+
+				if ( isset($data['attributes']) && is_array($data['attributes']) )
+				{
+					$values['attributes'] = $data['attributes'];
+					foreach ( $values['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
+				}
 			}
 
 			return $values;
@@ -179,34 +202,43 @@
 		function add($data)
 		{
 			$table = 'fm_condition_survey';
-			$custom['sql_text'] = $this->_db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
 			$this->_db->transaction_begin();
 
 			$id = $this->_db->next_id($table);
 
-			$value_set = array
-			(
-				'id'				=> $id,
-				'title'				=> $this->_db->db_addslashes($data['title']),
-				'month'				=> $entry['month'],
-				'budget'			=> $entry['budget'],
-				'user_id'			=> $entry['user_id'],
-				'entry_date'		=> $entry['entry_date'],
-				'modified_date'		=> $entry['modified_date']
-			);
+			$value_set					= $this->_get_value_set( $data );
+			$value_set['id']			= $id;
+			$value_set['entry_date']	= time();
+
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
-			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
 
-			$receipt['id']= $id;
+			try
+			{
+				$this->_db->Exception_On_Error = true;
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+				return 0;
+			}
 
 			if($this->_db->transaction_commit())
 			{
-				$this->_receipt['message'][] = array('msg'=>lang('survey %1 has been saved',$id));
 				return $id;
 			}
-			return 0;
+			else
+			{
+				return 0;
+			}
 		}
 
 		function edit($data)
@@ -214,17 +246,125 @@
 			$table = 'fm_condition_survey';
 			$id = (int)$data['id'];
 
-			$value_set	= $this->db->validate_update($value_set);
+			$value_set	= $this->_get_value_set( $data );
+			$value_set	= $this->_db->validate_update($value_set);
 
-			$this->db->transaction_begin();
+			$this->_db->transaction_begin();
 
-			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}",__LINE__,__FILE__);
+			$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
 
-			if($this->_db->transaction_commit())
+			try
 			{
-				$this->_receipt['message'][] = array('msg'=>lang('survey %1 has been saved',$id));
+				$this->_db->Exception_On_Error = true;
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
 			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+
+			$this->_db->transaction_commit();
 			return $id;
+		}
+
+
+		private function _get_value_set($data)
+		{
+			$value_set = array
+			(
+				'title'				=> $this->_db->db_addslashes($data['title']),
+				'descr'				=> $this->_db->db_addslashes($data['descr']),
+				'status_id'			=> (int)$data['status_id'],
+				'category'			=> (int)$data['cat_id'],
+				'vendor_id'			=> (int)$data['vendor_id'],
+				'coordinator_id'	=> (int)$data['coordinator_id'],
+				'report_date'		=> phpgwapi_datetime::date_to_timestamp($data['report_date']),
+				'user_id'			=> $this->account,
+				'modified_date'		=> time(),
+			);
+
+
+			if(isset($data['location']) && is_array($data['location']))
+			{
+				foreach ($data['location'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+				$value_set['location_code'] = implode('-', $data['location']);
+			}
+
+			if(isset($data['extra']) && is_array($data['extra']))
+			{
+				foreach ($data['extra'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+
+				if($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
+				{
+					$entity	= CreateObject('property.soadmin_entity');
+					$entity_category = $entity->read_single_category($data['extra']['p_entity_id'],$data['extra']['p_cat_id']);
+				}
+			}
+
+			if(isset($values['attributes']) && is_array($values['attributes']))
+			{
+				$data_attribute = $this->custom->prepare_for_db($table, $values['attributes']);
+				if(isset($data_attribute['value_set']))
+				{
+					foreach($data_attribute['value_set'] as $input_name => $value)
+					{
+						if(isset($value) && $value)
+						{
+							$value_set[$input_name] = $value;
+						}
+					}
+				}
+			}
+
+			$_address = array();
+			if(isset($data['street_name']) && $data['street_name'])
+			{
+				$_address[] = "{$data['street_name']} {$data['street_number']}";
+			}
+
+			if(isset($data['location_name']) && $data['location_name'])
+			{
+				$_address[] = $data['location_name'];
+			}
+
+			if(isset($data['additional_info']) && $data['additional_info'])
+			{
+				foreach($data['additional_info'] as $key => $value)
+				{
+					if($value)
+					{
+						$_address[] = "{$key}|{$value}";
+					}
+				}
+			}
+
+			if(isset($entity_category) && $entity_category)
+			{
+				$_address[] = "{$entity_category['name']}::{$data['extra']['p_num']}";
+			}
+
+			$address	= $this->_db->db_addslashes(implode('::', $_address));
+
+			$value_set['address'] = $address;
+
+			return $value_set;
 		}
 
 		function delete($id)

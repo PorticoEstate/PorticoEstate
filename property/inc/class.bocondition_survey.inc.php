@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -45,11 +45,17 @@
 		var $allrows;
 		public $acl_location = '.project.condition_survey';
 
+		var $public_functions = array
+		(
+			'addfiles'		=> true
+		);
+
 		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.socondition_survey');
 			$this->custom 		= & $this->so->custom;
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
@@ -125,6 +131,53 @@
 			return $column_list;
 		}
 
+		public function addfiles()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$acl 			= & $GLOBALS['phpgw']->acl;
+			$acl_add 		= $acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$acl_edit 		= $acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$id				= phpgw::get_var('id', 'int');
+			$check			= phpgw::get_var('check', 'bool');
+			$fileuploader	= CreateObject('property.fileuploader');
+
+			if(!$acl_add && !$acl_edit)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			if(!$id)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$test = true;
+			if ($test)
+			{
+				if (!empty($_FILES))
+				{
+					$tempFile = $_FILES['Filedata']['tmp_name'];
+					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
+					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile,$targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
+				}
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+	
+			if($check)
+			{
+				$fileuploader->check("condition_survey/{$id}");
+			}
+			else
+			{
+				$fileuploader->upload("condition_survey/{$id}");
+			}
+		}
+
 		public function read($data = array())
 		{
 			$values = $this->so->read($data);
@@ -138,42 +191,79 @@
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->acl_location))
 			{
 				$custom_fields = true;
-				$values = array();
-				$values['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+				$data['attributes'] = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
+			$values = array();
 			if(isset($data['id']) && $data['id'])
 			{
-				$values = $this->so->read_single($data, $values);
+				$values = $this->so->read_single($data);
 			}
 			if($custom_fields)
 			{
 				$values = $this->custom->prepare($values, 'property', $this->acl_location, $data['view']);
 			}
+
+			$values['report_date']	= $GLOBALS['phpgw']->common->show_date($values['report_date'],$this->dateformat);
+
+			if(isset($values['vendor_id']) && $values['vendor_id'] && !$values['vendor_name'])
+			{
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single(array('id' => $values['vendor_id']),$vendor_data);
+				if(is_array($vendor_data))
+				{
+					foreach($vendor_data['attributes'] as $attribute)
+					{
+						if($attribute['name']=='org_name')
+						{
+							$values['vendor_name']=$attribute['value'];
+							break;
+						}
+					}
+				}
+				unset($contacts);
+			}
+
+			if($values['coordinator_id'])
+			{
+				$values['coordinator_name']	= $GLOBALS['phpgw']->accounts->get($values['coordinator_id'])->__toString();
+			}
 			return $values;
 		}
 
-		public function save($data,$action='',$values_attribute = array())
+		public function save($data = array())
 		{
-			if(is_array($values_attribute))
+			if(isset($data['attributes']) && is_array($data['attributes']))
 			{
-				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				$data['attributes'] = $this->custom->convert_attribute_save($data['attributes']);
 			}
 
-			if ($action=='edit')
+			try
 			{
-				if ($data['id'] != '')
+				if (isset($data['id']) && $data['id'])
 				{
-
-					$receipt = $this->so->edit($data,$values_attribute);
+					$id = $this->so->edit($data);
+				}
+				else
+				{
+					$id = $this->so->add($data);
 				}
 			}
-			else
+
+			catch(Exception $e)
 			{
-				$receipt = $this->so->add($data,$values_attribute);
+				if ( $e )
+				{
+					throw $e;				
+				}
 			}
 
-			return $receipt;
+			return $id;
 		}
 
 		public function delete($id)

@@ -424,6 +424,7 @@
 						return (float) $default;
 					
 					case 'int':
+					case 'integer':
 					case 'number':
 						if ( (int) $value == $value )
 						{
