@@ -25,7 +25,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package property
 	 * @subpackage logistic
-	 * @version $Id: class.uiactivity.inc.php 10101 2012-10-03 09:46:51Z vator $
+	 * @version $Id$
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('logistic.soactivity');
