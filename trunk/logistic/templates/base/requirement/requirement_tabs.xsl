@@ -1,4 +1,4 @@
-<!-- $Id: control_tabs.xsl 9951 2012-08-31 10:14:12Z vator $ -->
+<!-- $Id$ -->
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
