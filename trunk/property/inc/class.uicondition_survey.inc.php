@@ -362,6 +362,8 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 			}
 
+			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
+
 			self::render_template_xsl(array('condition_survey','files'), $data);
 		}
 

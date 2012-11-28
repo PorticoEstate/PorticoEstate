@@ -206,8 +206,8 @@
 					</td>
 				</tr>
 
-					</table>
-					</div>
+				</table>
+			</div>
 
 			<div id="documents">
 				<script type="text/javascript">
@@ -256,58 +256,6 @@
 					</div>
 				</xsl:when>
 				</xsl:choose>
-
-					<xsl:choose>
-						<xsl:when test="documents != ''">
-							<div id="document">
-								<!-- Some style for the expand/contract section-->
-								<style>
-									#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
-									#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
-								</style>
-								<script type="text/javascript">
-									var documents = <xsl:value-of select="documents"/>;
-								</script>
-								<!-- markup for expand/contract links -->
-								<div id="expandcontractdiv">
-									<a id="expand" href="#">
-										<xsl:value-of select="php:function('lang', 'expand all')"/>
-									</a>
-									<xsl:text> </xsl:text>
-									<a id="collapse" href="#">
-										<xsl:value-of select="php:function('lang', 'collapse all')"/>
-									</a>
-								</div>
-								<div id="treeDiv1"/>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-
-					<xsl:choose>
-						<xsl:when test="value_id !=''">
-							<div id="related">
-								<table cellpadding="2" cellspacing="2" width="80%" align="center">
-									<tr>
-										<td valign='top'>
-											<xsl:value-of select="php:function('lang', 'started from')"/>
-										</td>
-										<td>
-											<div id="datatable-container_1"/>
-										</td>
-									</tr>
-									<tr>
-										<td valign='top'>
-											<xsl:value-of select="php:function('lang', 'used in')"/>
-										</td>
-										<td>
-											<div id="datatable-container_2"/>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-
 				</div>
 
 				<table>
@@ -336,15 +284,7 @@
 				</tr>
 
 			</table>
-
-
 			</form>
-		</div>
-		<div id="lightbox-placeholder" style="background-color:#000000;color:#FFFFFF;display:none">
-			<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
-				<xsl:value-of select="php:function('lang', 'fileuploader')"/>
-			</div>
-			<div class="bd" style="text-align:center;"> </div>
 		</div>
 
 		<xsl:variable name="cancel_url">
