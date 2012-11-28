@@ -22,52 +22,48 @@
 		</xsl:variable>
 
 			<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		        <dl>
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">
-							<tr>
-								<td align="left" colspan="3">
+								<dt>
 									<xsl:call-template name="msgbox"/>
-								</td>
-							</tr>
+								</dt>
 						</xsl:when>
 					</xsl:choose>
-				</table>
+				</dl>
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
 					<div id="generic">
-					<table>
+				<dl class="proplist-col">
 					<xsl:choose>
 						<xsl:when test="survey/id!=''">
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'id')" />
-								</td>
-								<td>
+								<dt>
+									<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+								</dt>
+								<dd>
 									<xsl:value-of select="survey/id"/>
 									<input type="hidden" name="id" value="{survey/id}"/>
-								</td>
-							</tr>
+								</dd>
 						</xsl:when>
 					</xsl:choose>
 
 					<xsl:choose>
-						<xsl:when test="location_data!=''">
+						<xsl:when test="location_data2!=''">
 								<xsl:choose>
 									<xsl:when test="editable = 1">
-										<xsl:call-template name="location_form"/>
+										<xsl:call-template name="location_form2"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:call-template name="location_view"/>
+										<xsl:call-template name="location_view2"/>
 									</xsl:otherwise>
 								</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
-				<tr>
-					<td>
+				
+					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 	   							<input id="title" name='values[title]' type="text" value="{survey/title}"
@@ -79,13 +75,13 @@
 								<xsl:value-of select="survey/title" />
 							</xsl:otherwise>
 						</xsl:choose>
-					</td>
-				</tr>
-				<tr>
-					<td>
+					</dd>
+				
+				
+					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang', 'description')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 								<textarea id="descr" name="values[descr]" rows="5" cols="60"
@@ -98,13 +94,13 @@
 								<xsl:value-of select="survey/descr" disable-output-escaping="yes"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</td>
-				</tr>
-				<tr>
-					<td>
+					</dd>
+				
+				
+					<dt>
 						<label for="category"><xsl:value-of select="php:function('lang', 'category')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
  								<select id="cat_id" name="values[cat_id]"
@@ -119,13 +115,13 @@
 								</select>
 							</xsl:otherwise>
 						</xsl:choose>
-					</td>
-				</tr>
-				<tr>
-					<td>
+					</dd>
+				
+				
+					<dt>
 							<label for="category"><xsl:value-of select="php:function('lang', 'date')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 	 							<input id="report_date" name='values[report_date]' type="text" value="{survey/report_date}"
@@ -136,13 +132,13 @@
 								<xsl:value-of select="survey/report_date"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</td>
-				</tr>
-				<tr>
-					<td>
+					</dd>
+				
+				
+					<dt>
 						<label for="status"><xsl:value-of select="php:function('lang', 'status')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
  								<select id="status_id" name="values[status_id]"
@@ -158,13 +154,13 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-					</td>
-				</tr>
-				<tr>
-					<td>
+					</dd>
+				
+				
+					<dt>
 						<label for="coordinator"><xsl:value-of select="php:function('lang', 'coordinator')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 
 						<xsl:choose>
 							<xsl:when test="editable = 1">
@@ -180,14 +176,14 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-					</td>
-				</tr>
+					</dd>
+				
 
-				<tr>
-					<td>
+				
+					<dt>
 						<label for="vendor"><xsl:value-of select="php:function('lang', 'vendor')" /></label>
-					</td>
-					<td>
+					</dt>
+					<dd>
 
 						<xsl:choose>
 							<xsl:when test="editable = 1">
@@ -203,10 +199,10 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-					</td>
-				</tr>
+					</dd>
+				
 
-				</table>
+				</dl>
 			</div>
 
 			<div id="documents">
@@ -220,49 +216,47 @@
 
 				<xsl:call-template name="datasource-definition" />
 
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<tr>
-						<td align="left" valign="top">
-							<xsl:value-of select="php:function('lang', 'files')"/>
-						</td>
-						<td>
+				<dl class="proplist-col">
+					
+						<dt>
+							<label><xsl:value-of select="php:function('lang', 'files')"/></label>
+						</dt>
+						<dd>
 							<div style="clear:both;" id="datatable-container_0"></div>		
-						</td>
-					</tr>
+						</dd>
+					
 					<xsl:choose>
 						<xsl:when test="editable = 1">
 							<xsl:call-template name="file_upload"/>
 						</xsl:when>
 					</xsl:choose>
-				</table>
+				</dl>
 			</div>
 			<xsl:choose>
 				<xsl:when test="editable = 1">
 					<div id="import">
-						<table>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'upload file')"/>
-								</td>
-								<td>
+				<dl class="proplist-col">
+							
+								<dt>
+									<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+								</dt>
+								<dd>
 									<input type="file" name="import_file" size="40">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
 										</xsl:attribute>
 									</input>
-								</td>
-							</tr>
-						</table>
+								</dd>
+							
+						</dl>
 					</div>
 				</xsl:when>
 				</xsl:choose>
 				</div>
 
-				<table>
-				<tr>
-					<td>
-					</td>
-					<td>
+				<dl class="proplist-col">
+				
+
 						<div class="form-buttons">
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<xsl:choose>
@@ -280,10 +274,9 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
-					</td>
-				</tr>
+		
 
-			</table>
+			</dl>
 			</form>
 		</div>
 
@@ -335,3 +328,93 @@
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
+
+	<xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
+		
+			<dt>
+				<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+			</dt>
+			<dd>
+				<input type="file" name="file" size="40">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+					</xsl:attribute>
+				</input>
+			</dd>
+		
+		<xsl:choose>
+			<xsl:when test="multiple_uploader!=''">
+				
+					<dt>
+						<label><a href="javascript:fileuploader()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
+						</a></label>
+					</dt>
+				
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<!-- New template-->
+	<xsl:template match="location_data">
+		<script type="text/javascript">
+			self.name="first_Window";
+			<xsl:value-of select="lookup_functions"/>
+		</script>
+		<xsl:for-each select="location">
+			<tr>
+				<td class="th_text" width="{with}" align="{align}" title="{statustext}">
+					<xsl:choose>
+						<xsl:when test="lookup_link=1">
+							<a href="javascript:{lookup_function_call}" title="{statustext}">
+								<xsl:value-of select="name"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="name"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:choose>
+						<xsl:when test="readonly=1">
+							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
+								<xsl:attribute name="title">
+									<xsl:value-of select="statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+						<xsl:otherwise>
+							<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="statustext"/>
+								</xsl:attribute>
+							</input>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:for-each select="extra">
+						<xsl:choose>
+							<xsl:when test="readonly=1">
+								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
+									<xsl:attribute name="title">
+										<xsl:value-of select="statustext"/>
+									</xsl:attribute>
+								</input>
+							</xsl:when>
+							<xsl:otherwise>
+								<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="statustext"/>
+									</xsl:attribute>
+								</input>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</td>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>

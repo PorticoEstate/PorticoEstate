@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * phpGroupWare - logistic: a part of a Facilities Management System.
+	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
@@ -311,7 +311,7 @@
 					'values'	=> $values['location_data'],
 					'type_id'	=> 2,
 					'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
-					'lookup_type'	=> $mode == 'edit' ? 'form' : 'view',
+					'lookup_type'	=> $mode == 'edit' ? 'form2' : 'view2',
 					'tenant'	=> false,
 					'lookup_entity'	=> array(),
 					'entity_data'	=> isset($values['p'])?$values['p']:''
@@ -340,7 +340,7 @@
 				'datatable_def'					=> $datatable_def,
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'survey'						=> $values,
-				'location_data'					=> $location_data,
+				'location_data2'					=> $location_data,
 				'categories'					=> array('options' => $categories),
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',
@@ -362,9 +362,9 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 			}
 
-			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
+//			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 
-			self::render_template_xsl(array('condition_survey','files'), $data);
+			self::render_template_xsl(array('condition_survey'), $data);
 		}
 
 		public function save()
