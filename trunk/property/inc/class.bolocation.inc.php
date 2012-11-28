@@ -257,12 +257,18 @@
 			{
 				switch($data['lookup_type'])
 				{
-				case 'form':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
-				case 'view':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
+					case 'form':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'form2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
 				}
 			}
 
