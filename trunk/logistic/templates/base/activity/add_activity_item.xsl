@@ -23,6 +23,13 @@
 			</h1>
 		</xsl:otherwise>
 	</xsl:choose>
+
+	 
+	<xsl:choose>
+		<xsl:when test="breadcrumb != ''">
+	 		<xsl:call-template name="breadcrumb" />
+		</xsl:when>
+	</xsl:choose>
 	
 	<div id="activity_details" class="content-wrp">
 		<div id="details">
@@ -43,7 +50,7 @@
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another main activity for this sub activity')" /></label>
 										<select id="select_parent_activity" name="parent_activity_id">
-											<option value="">Velg annen hovedaktivitet</option>
+											<option value="0">Velg annen hovedaktivitet</option>
 											<xsl:for-each select="activities">
 							        	<option value="{id}">
 							        		<xsl:if test="id = $parent_id">
@@ -78,28 +85,30 @@
 									</div>
 								</dt>
 						  </xsl:when>-->
-						  <xsl:otherwise>
-							<dt>		
+						</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="projects != ''">
+								<dt>		
 									<div style="margin-bottom: 1em;">
 										<label style="display:block;"><xsl:value-of select="php:function('lang', 'Choose another project for the activity')" /></label>
 										<select id="select_project" name="select_project"
 												formvalidator:FormField="yes"
 	   											formvalidator:Type="SelectField">
 											<option value=''><xsl:value-of select="php:function('lang', 'Choose another project')" /></option>
-											<xsl:for-each select="projects">
-							        	<option value="{id}">
-							        		<xsl:if test="project/id = project_id">
-								        		<xsl:attribute name="selected">
-							    						selected
-							   						</xsl:attribute>
-								        	</xsl:if>
-							          	<xsl:value-of disable-output-escaping="yes" select="name"/>
-								        </option>
-										  </xsl:for-each>
+												<xsl:for-each select="projects">
+													<option value="{id}">
+							        					<xsl:if test="project/id = project_id">
+								    			    		<xsl:attribute name="selected">
+							    								selected
+							   								</xsl:attribute>
+								    			    	</xsl:if>
+							        				  	<xsl:value-of disable-output-escaping="yes" select="name"/>
+								    			    </option>
+												</xsl:for-each>
 										</select>					
 									</div>
 								</dt>
-						  </xsl:otherwise>
+						  </xsl:when>
 					  </xsl:choose>
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang','Activity name')" /></label>
@@ -263,4 +272,28 @@
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
+</xsl:template>
+
+<!-- =========== BREADCRUMB TEMPLATE  ============== -->
+<xsl:template name="breadcrumb">
+  <div id="breadcrumb">
+		<span class="intro">Du er her:</span>
+		<xsl:for-each select="breadcrumb">
+			<xsl:choose>
+				<xsl:when test="current = 1">
+					<span class="current">
+						<xsl:value-of select="name"/>
+					</span>
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{link}">
+						<xsl:value-of select="name"/>
+					</a>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="not( position() = last() )">
+      			<img src="logistic/images/arrow_right.png" />
+    			</xsl:if>
+      </xsl:for-each>
+	</div>
 </xsl:template>
