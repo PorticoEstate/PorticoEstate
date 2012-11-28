@@ -128,6 +128,12 @@
 		public function get_script_links()
 		{
 			$combine = true;
+			
+			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$combine = false;			
+			}
+			
 			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
 			{
 				$combine = false;
