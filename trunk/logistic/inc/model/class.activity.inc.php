@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id $
+	 * @version $Id$
 	*/
 
 		include_class('logistic', 'model', '/inc/model/');
@@ -42,7 +42,7 @@
 		protected $end_date;
 		protected $responsible_user_id;
 		protected $create_user;
-  	protected $create_date;
+  		protected $create_date;
 		protected $update_user;
 		protected $update_date;
 				
