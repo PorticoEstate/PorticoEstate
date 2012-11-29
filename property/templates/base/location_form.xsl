@@ -5,10 +5,6 @@
 
 	<!-- New template-->
 	<xsl:template match="location_data">
-		<script type="text/javascript">
-			self.name="first_Window";
-			<xsl:value-of select="lookup_functions"/>
-		</script>
 		<xsl:for-each select="location">
 			<tr>
 				<td class="th_text" width="{with}" align="{align}" title="{statustext}">

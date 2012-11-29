@@ -611,7 +611,8 @@
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$location['lookup_functions'] = '';
+				$_lookup_functions = "self.name='first_Window'\n";
+
 				$filter_level = 0;
 				for ($j=0;$j<count($lookup_functions);$j++)
 				{
@@ -630,14 +631,14 @@
 						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
 					}
 
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 						function {$lookup_functions[$j]['name']}
 						{
 JS;
 					if($filter_level)
 					{
-						$location['lookup_functions'] .= <<<JS
+						$_lookup_functions .= <<<JS
 
 							var block = '';
 							var filter = '';
@@ -662,7 +663,7 @@ JS;
 							}
 JS;
 					}
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 							var oArgs = {{$lookup_functions[$j]['link']}};
 							var strURL = phpGWLink('index.php', oArgs);
@@ -671,6 +672,8 @@ JS;
 JS;
 				}
 			}
+
+			$GLOBALS['phpgw']->js->add_code('', $_lookup_functions);
 
 			if(isset($location) && is_array($location))
 			{

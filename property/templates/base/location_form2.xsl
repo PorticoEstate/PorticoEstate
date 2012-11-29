@@ -1,14 +1,10 @@
-  <!-- $Id: location_form.xsl 8437 2011-12-26 19:11:48Z sigurdne $ -->
+  <!-- $Id$ -->
 	<xsl:template name="location_form2">
 		<xsl:apply-templates select="location_data2"/>
 	</xsl:template>
 
 	<!-- New template-->
 	<xsl:template match="location_data2">
-		<script type="text/javascript">
-			self.name="first_Window";
-			<xsl:value-of select="lookup_functions"/>
-		</script>
 		<xsl:for-each select="location">
 			<dt>
 				<label title="{statustext}">
