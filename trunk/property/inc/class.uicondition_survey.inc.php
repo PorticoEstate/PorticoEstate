@@ -64,7 +64,7 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
-			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
+	//		$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
