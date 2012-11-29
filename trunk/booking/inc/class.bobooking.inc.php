@@ -176,10 +176,17 @@ function array_minus($a, $b)
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
+        
+        function getTimestamp($last){ 
+            $now = floor(microtime(true)*1000);
+            return $now-$last;
+        } 
+
 		function building_schedule($building_id, $date)
 		{
 
-			$from = clone $date;
+
+            $from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
 			if($from->format('w') != 1)
@@ -197,6 +204,7 @@ function array_minus($a, $b)
 				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
 			}
+
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
 			$bookings = $this->so->read(array('filters'=> array('id' => $booking_ids)));
 			$bookings = $bookings['results'];
@@ -205,7 +213,10 @@ function array_minus($a, $b)
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
+                unset($booking['audience']);
+                unset($booking['agegroups']);
 			}
+
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
@@ -213,9 +224,14 @@ function array_minus($a, $b)
 			$events = $events['results'];
 			foreach($events as &$event)
 			{
+                
 				$event['name'] = $event['description'];
 				$event['type'] = 'event';
+                unset($event['comments']);
+                unset($event['audience']);
+                unset($event['agegroups']);
 			}
+
 			$bookings = array_merge($allocations, $bookings);
 			$bookings = $this->_remove_event_conflicts($bookings, $events);
 			$bookings = array_merge($events, $bookings);
@@ -225,6 +241,7 @@ function array_minus($a, $b)
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
 			$resources = $resources['results'];
+
 			foreach ($resources as $key => $row) {
     			$sort[$key] = $row['sort'];
 			}
