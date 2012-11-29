@@ -1,4 +1,4 @@
-  <!-- $Id: location_view.xsl 8437 2011-12-26 19:11:48Z sigurdne $ -->
+  <!-- $Id$ -->
 	<xsl:template name="location_view2">
 		<xsl:apply-templates select="location_data2"/>
 	</xsl:template>
