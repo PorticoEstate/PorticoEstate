@@ -4,7 +4,7 @@
 	</xsl:template>
 
 	<!-- New template-->
-	<xsl:template match="location_data2">
+	<xsl:template match="location_data2" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 		<xsl:for-each select="location">
 			<dt>
 				<label title="{statustext}">
@@ -24,16 +24,26 @@
 				<xsl:choose>
 					<xsl:when test="readonly=1">
 						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}" readonly="readonly">
-							<xsl:attribute name="title">
-								<xsl:value-of select="statustext"/>
-							</xsl:attribute>
+							<xsl:if test="input_type != 'hidden' and required = 1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="statustext"/>
+								</xsl:attribute>
+								<xsl:attribute name="formvalidator:FormField">
+									<xsl:text>yes</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="formvalidator:Type">
+									<xsl:text>TextBaseField</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
 						<input size="{size}" type="{input_type}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="statustext"/>
-							</xsl:attribute>
+							<xsl:if test="input_type != 'hidden'">
+								<xsl:attribute name="title">
+									<xsl:value-of select="statustext"/>
+								</xsl:attribute>
+							</xsl:if>
 						</input>
 					</xsl:otherwise>
 				</xsl:choose>
