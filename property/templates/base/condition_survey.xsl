@@ -25,7 +25,8 @@
 				</dl>
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
-					<div id="generic">
+				<div id="generic" class="content-wrp">
+				
 				<dl class="proplist-col">
 					<xsl:choose>
 						<xsl:when test="survey/id!=''">
@@ -322,30 +323,26 @@
 </xsl:template>
 
 	<xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
-		
-			<dt>
-				<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
-			</dt>
-			<dd>
-				<input type="file" name="file" size="40">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-					</xsl:attribute>
-				</input>
-			</dd>
-		
+		<dt>
+			<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+		</dt>
+		<dd>
+			<input type="file" name="file" size="40">
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+				</xsl:attribute>
+			</input>
+		</dd>
 		<xsl:choose>
 			<xsl:when test="multiple_uploader!=''">
-				
-					<dt>
-						<label><a href="javascript:fileuploader()">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-							</xsl:attribute>
+				<dt>
+					<label><a href="javascript:fileuploader()">
+						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-						</a></label>
-					</dt>
-				
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
+					</a></label>
+				</dt>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>

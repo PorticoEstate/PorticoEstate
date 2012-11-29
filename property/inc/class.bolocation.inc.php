@@ -314,6 +314,7 @@
 				$location['location'][$i]['name']					= $location_types[($i)]['name'];
 				$location['location'][$i]['value']					= isset($data['values']['loc' . ($i+1)]) ? $data['values']['loc' . ($i+1)] : '';
 				$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($i)]['name'];
+				$location['location'][$i]['required']				= isset($data['required_level']) && $data['required_level'] == ($i+1);
 
 				$location['location'][$i]['extra'][0]['input_name']		= 'loc' . ($i+1).'_name';
 				$input_name[]							= $location['location'][$i]['extra'][0]['input_name'];

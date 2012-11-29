@@ -310,6 +310,7 @@
 				(
 					'values'	=> $values['location_data'],
 					'type_id'	=> 2,
+					'required_level' => 1,
 					'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
 					'lookup_type'	=> $mode == 'edit' ? 'form2' : 'view2',
 					'tenant'	=> false,
