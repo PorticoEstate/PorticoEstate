@@ -46,7 +46,8 @@
 			'get_vendors'		=> true,
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
-			'get_files'			=> true
+			'get_files'			=> true,
+			'view_file'			=> true
 		);
 
 		public function __construct()
@@ -64,7 +65,6 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
-	//		$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
@@ -216,7 +216,7 @@
 			$export = phpgw::get_var('export');
 
 			$values = $this->bo->read($params);
-//_debug_array($values);
+
 			// ... add result data
 			$result_data = array('results' => $values);
 
@@ -251,9 +251,19 @@
 			$this->edit();
 		}
 
+		/**
+		* Prepare data for view and edit - depending on mode
+		*
+		* @param array  $values  populated object in case of retry
+		* @param string $mode    edit or view
+		* @param int    $id      entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
 		public function edit($values = array(), $mode = 'edit')
 		{
-			$id 	= phpgw::get_var('id', 'int');
+			$id 	= (int)phpgw::get_var('id');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{
@@ -348,7 +358,7 @@
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'multiple_uploader'				=> $mode == 'edit' ? true : '',
 			);
-//_debug_array($data);die();
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
 			if($mode == 'edit')
@@ -368,9 +378,18 @@
 			self::render_template_xsl(array('condition_survey'), $data);
 		}
 
+
+		/**
+		* Saves an entry to the database for new/edit - redirects to view
+		*
+		* @param int  $id  entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
 		public function save()
 		{
-			$id = phpgw::get_var('id');
+			$id = (int)phpgw::get_var('id');
 
 			if ($id )
 			{
@@ -409,28 +428,23 @@
 				}
 
 				$this->_handle_files($id);
+				$this->_handle_import($id);
 				phpgwapi_cache::message_set('ok!', 'message'); 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
 			}
 		}
 
+		/**
+		* Fetch a list of files to be displayed in view/edit
+		*
+		* @param int  $id  entity id
+		*
+		* @return array $ResultSet json resultset
+		*/
 
 		public function get_files()
 		{
-			$values = array();
-			$values[] = array
-			(
-				'id'	=> 1,
-				'name' => 2,
-				'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'hei</a>',
-				'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">'
-			);
-
-
-			return array('ResultSet'=> array('Result'=>$values));
-
-
-			$id 	= phpgw::get_var('id', 'int');
+			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
 
 			if( !$this->acl_read)
 			{
@@ -439,48 +453,64 @@
 
 			$link_file_data = array
 			(
-				'menuaction'	=> 'property.uitts.view_file',
+				'menuaction'	=> 'property.uicondition_survey.view_file',
 				'id'			=> $id
 			);
 
-			$link_to_files = isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url']:'';
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
-			$values	= $this->bo->read_single($id);
+			$link_view_file = self::link($link_file_data);
 
-			$content_files = array();
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
-			foreach($values['files'] as $_entry )
+			$files = $vfs->ls(array(
+				'string' => "/property/condition_survey/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+
+			$lang_view = lang('click to view file');
+			$lang_delete = lang('click to delete file');
+
+			$values = array();
+			foreach($files as $_entry )
 			{
-				$content_files[] = array
+				$values[] = array
 				(
-					'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
-					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="'.$_entry['name'].'" title="'.lang('Check to attach file').'">'
+					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='values[file_action][]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}							
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-
-				if(count($content_files))
-				{
-					return json_encode($content_files);
-				}
-				else
-				{
-					return "";
-				}
-			}
-			return $content_files;
+			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
 		}
 
+
+		/**
+		* Dowloads a single file to the browser
+		*
+		* @param int  $id  entity id
+		*
+		* @return file
+		*/
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				return lang('no access');
+			}
+
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('condition_survey');
+		}
 
 
 		/**
 		* Store and / or delete files related to an entity
 		*
-		* @param string  $id  entity id
+		* @param int  $id  entity id
 		*
 		* @return void
 		*/
@@ -523,6 +553,61 @@
 					$bofiles->vfs->override_acl = 0;
 				}
 			}
+		}
+
+
+		/**
+		* Import deviations found in the survey to the database from a spreadsheet
+		*
+		* @param int  $id  entity id
+		*
+		* @return void
+		*/
+		private function _handle_import($id)
+		{
+			$id = (int)$id;
+			if(!$id)
+			{
+				throw new Exception('uicondition_survey::_handle_import() - missing id');
+			}
+
+			$file = $_FILES['import_file']['tmp_name'];
+
+			phpgwapi_cache::session_set('property', 'import_file', $file);
+
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($file);
+			$AllSheets = $objPHPExcel->getSheetNames();
+_debug_array($file);
+_debug_array($AllSheets);die();
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+
+			$start = 1; // Where to start
+
+			$fields = array_values($data[($start-1)]);
+
+			$rows = count($data)+1;
+
+			$result = array();
+
+			for ($i=$start; $i<$rows; $i++ )
+			{
+				$_result = array();
+				$j=0;
+				foreach($data[$i] as $key => $value)
+				{
+					$_result[$j] = trim($value);
+					$j++;
+				}
+				$result[] = $_result;
+			}
+
+			$msg = "'{$path}' contained " . count($result) . " lines";
+
+_debug_array($msg);
+_debug_array($result);die();
+
 		}
 
 

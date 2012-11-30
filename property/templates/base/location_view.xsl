@@ -10,7 +10,9 @@
 				<xsl:when test="value !=''">
 					<tr>
 						<td class="th_text" width="{with}" align="left">
-							<xsl:value-of select="name"/>
+							<label>
+								<xsl:value-of select="name"/>
+							</label>
 						</td>
 						<td align="left">
 							<xsl:choose>

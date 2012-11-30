@@ -8,16 +8,18 @@
 		<xsl:for-each select="location">
 			<tr>
 				<td class="th_text" width="{with}" align="{align}" title="{statustext}">
-					<xsl:choose>
-						<xsl:when test="lookup_link=1">
-							<a href="javascript:{lookup_function_call}" title="{statustext}">
+					<label>
+						<xsl:choose>
+							<xsl:when test="lookup_link=1">
+								<a href="javascript:{lookup_function_call}" title="{statustext}">
+									<xsl:value-of select="name"/>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
 								<xsl:value-of select="name"/>
-							</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="name"/>
-						</xsl:otherwise>
-					</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>
+					</label>
 				</td>
 				<td>
 					<xsl:choose>
