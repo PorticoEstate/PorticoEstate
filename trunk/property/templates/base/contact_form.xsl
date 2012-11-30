@@ -14,9 +14,11 @@
 		</script>
 		<tr>
 			<td valign="top">
-				<a href="javascript:{field}_contact_lookup()" title="{lang_select_contact_help}">
-					<xsl:value-of select="lang_contact"/>
-				</a>
+				<label>
+					<a href="javascript:{field}_contact_lookup()" title="{lang_select_contact_help}">
+						<xsl:value-of select="lang_contact"/>
+					</a>
+				</label>
 			</td>
 			<td>
 				<table>
