@@ -585,9 +585,12 @@
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
 
-			$step = phpgw::get_var('step', 'REQUEST', 'int');
-			$sheet_id = phpgw::get_var('sheet_id', 'REQUEST', 'int');			
+			$step			= phpgw::get_var('step', 'REQUEST', 'int');
+			$sheet_id		= phpgw::get_var('sheet_id', 'REQUEST', 'int');
 			
+			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'REQUEST', 'int');
+			$start_line	= phpgw::get_var('start_line', 'REQUEST', 'int', 1);
+
 			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
 			{
 				$file = $_FILES['import_file']['tmp_name'];
@@ -597,7 +600,7 @@
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
 			}
 
-
+//_debug_array($_POST);die();
 			phpgw::import_class('phpgwapi.phpexcel');
 
 			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
@@ -626,24 +629,75 @@
 			switch ($step)
 			{
 				case 0:
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
 					$active_tab = 'step_1';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
 					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
 					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
 					break;
 				case 1:
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
 					$active_tab = 'step_2';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
 					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
 					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
 					break;
+				case 2:
+					$active_tab = 'step_3';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' =>  '#step_3');
+					break;
 			}
 			
+
+
+//-----------
+
+
+			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+			$html_table = '<table border="1">';
+			if($data && $step == 1)
+			{
+				$i = 0;
+				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", array_keys($data[1])) . '</th></tr>';
+				foreach($data as $row_key => $row)
+				{
+					if($i>20)
+					{
+						break;
+					}
+
+					$_checked = '';
+					if($start_line == $row_key)
+					{
+						$_checked = 'checked="checked"';
+					}
+
+					$_radio = "<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+
+					$html_table .= "<tr><td>{$_radio}</td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
+					$i++;
+				}
+			}			
+			else if($data && $step == 2)
+			{
+				foreach($data[$start_line] as $_column => $_value)
+				{
+					$_checkbox = "<input id=\"start_line\" type =\"checkbox\" {$_checked} name=\"column\" value=\"{$_column}\">";
+					$html_table .= "<tr><td>{$_value}</td><td>{$_checkbox}</td><tr>";
+				}
+			}
+
+			$html_table .= '</table>';
+
 
 			$data = array
 			(
 				'survey'						=> array('id'=>$id),
 				'step'							=> $step +1,
+				'sheet_id'						=> $sheet_id,
+				'html_table'					=> $html_table,
 				'sheets'						=> array('options' => $sheets),
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 			);
@@ -653,13 +707,8 @@
 
 			self::render_template_xsl(array('condition_survey_import'), $data);
 
-//-----------
 
-
-			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
-
-			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-_debug_array($data);
+//_debug_array($html_table);
 
 return;
 

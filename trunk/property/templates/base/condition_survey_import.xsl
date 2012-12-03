@@ -34,6 +34,7 @@
 									<xsl:value-of select="survey/id"/>
 									<input type="hidden" name="id" value="{survey/id}"/>
 									<input type="hidden" name="step" value="{step}"/>
+									<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
 								</dd>
 						</xsl:when>
 					</xsl:choose>
@@ -142,12 +143,23 @@
 	<div id="step_2" class="content-wrp">
 		<dl class="proplist-col">
 			<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+			<label for="status"><xsl:value-of select="php:function('lang', 'table')" /></label>
 		</dt>
 		<dd>
- 			<select id="sheet_id" name="sheet_id">
-				<xsl:apply-templates select="sheets/options"/>
-			</select>
+			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
+		</dd>
+		</dl>
+	</div>
+</xsl:template>
+
+<xsl:template name="import_step_3" xmlns:php="http://php.net/xsl">
+	<div id="step_2" class="content-wrp">
+		<dl class="proplist-col">
+			<dt>
+			<label for="status"><xsl:value-of select="php:function('lang', 'table')" /></label>
+		</dt>
+		<dd>
+			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
 		</dd>
 		</dl>
 	</div>

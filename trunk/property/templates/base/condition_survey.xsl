@@ -5,7 +5,7 @@
 		<xsl:call-template name="yui_phpgw_i18n"/>
 
 		<div class="yui-navset" id="survey_edit_tabview">
-	
+
 		<h1>
 			<xsl:value-of select="php:function('lang', 'condition survey')" />
 		</h1>
@@ -28,7 +28,7 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
 				<div id="generic" class="content-wrp">
-				
+
 				<dl class="proplist-col">
 					<xsl:choose>
 						<xsl:when test="survey/id!=''">
@@ -54,7 +54,7 @@
 								</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
-				
+
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
 					</dt>
@@ -71,8 +71,8 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
-				
-				
+
+
 					<dt>
 						<label for="name"><xsl:value-of select="php:function('lang', 'description')" /></label>
 					</dt>
@@ -90,8 +90,8 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
-				
-				
+
+
 					<dt>
 						<label for="category"><xsl:value-of select="php:function('lang', 'category')" /></label>
 					</dt>
@@ -105,14 +105,14 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
- 								<select id="cat_id" disabled="disabled">
-									<xsl:apply-templates select="categories/options"/>
-								</select>
-							</xsl:otherwise>
+ 								<xsl:for-each select="categories/options">
+									<xsl:if test="selected = 'selected' or selected = 1">
+										<xsl:value-of disable-output-escaping="yes" select="name"/>
+									</xsl:if>
+								</xsl:for-each>
+ 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
-				
-				
 					<dt>
 							<label for="category"><xsl:value-of select="php:function('lang', 'date')" /></label>
 					</dt>
@@ -128,8 +128,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</dd>
-				
-				
+
 					<dt>
 						<label for="status"><xsl:value-of select="php:function('lang', 'status')" /></label>
 					</dt>
@@ -143,15 +142,15 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
- 								<select id="status_id" disabled="disabled">
-									<xsl:apply-templates select="status_list/options"/>
-								</select>
+ 								<xsl:for-each select="status_list/options">
+									<xsl:if test="selected = 'selected' or selected = 1">
+										<xsl:value-of disable-output-escaping="yes" select="name"/>
+									</xsl:if>
+								</xsl:for-each>
 							</xsl:otherwise>
 						</xsl:choose>
 
 					</dd>
-				
-				
 					<dt>
 						<label for="coordinator"><xsl:value-of select="php:function('lang', 'coordinator')" /></label>
 					</dt>
@@ -172,9 +171,9 @@
 						</xsl:choose>
 
 					</dd>
-				
 
-				
+
+
 					<dt>
 						<label for="vendor"><xsl:value-of select="php:function('lang', 'vendor')" /></label>
 					</dt>
@@ -195,7 +194,7 @@
 						</xsl:choose>
 
 					</dd>
-				
+
 
 				</dl>
 			</div>
@@ -212,14 +211,14 @@
 				<xsl:call-template name="datasource-definition" />
 
 				<dl class="proplist-col">
-					
+
 						<dt>
 							<label><xsl:value-of select="php:function('lang', 'files')"/></label>
 						</dt>
 						<dd>
-							<div style="clear:both;" id="datatable-container_0"></div>		
+							<div style="clear:both;" id="datatable-container_0"></div>
 						</dd>
-					
+
 					<xsl:choose>
 						<xsl:when test="editable = 1">
 							<xsl:call-template name="file_upload"/>
@@ -231,7 +230,7 @@
 				<xsl:when test="editable = 1">
 					<div id="import">
 				<dl class="proplist-col">
-							
+
 								<dt>
 									<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
 								</dt>
@@ -242,7 +241,7 @@
 										</xsl:attribute>
 									</input>
 								</dd>
-							
+
 						</dl>
 					</div>
 				</xsl:when>
@@ -250,7 +249,7 @@
 				</div>
 
 				<dl class="proplist-col">
-				
+
 
 						<div class="form-buttons">
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
@@ -269,7 +268,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
-		
+
 
 			</dl>
 			</form>
