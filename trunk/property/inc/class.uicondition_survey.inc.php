@@ -47,7 +47,8 @@
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
 			'get_files'			=> true,
-			'view_file'			=> true
+			'view_file'			=> true,
+			'import'			=> true
 		);
 
 		public function __construct()
@@ -428,9 +429,15 @@
 				}
 
 				$this->_handle_files($id);
-				$this->_handle_import($id);
-				phpgwapi_cache::message_set('ok!', 'message'); 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
+				if($_FILES['import_file']['tmp_name'])
+				{
+					$this->_handle_import($id);
+				}
+				else
+				{
+					phpgwapi_cache::message_set('ok!', 'message'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
+				}
 			}
 		}
 
@@ -556,6 +563,13 @@
 		}
 
 
+
+		public function import()
+		{
+			$id = phpgw::get_var('step', 'REQUEST', 'int');
+			$this->_handle_import($id);
+		}
+
 		/**
 		* Import deviations found in the survey to the database from a spreadsheet
 		*
@@ -571,17 +585,84 @@
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
 
-			$file = $_FILES['import_file']['tmp_name'];
+			$step = phpgw::get_var('step', 'REQUEST', 'int');
+			$sheet_id = phpgw::get_var('sheet_id', 'REQUEST', 'int');			
+			
+			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
+			{
+				$file = $_FILES['import_file']['tmp_name'];
+				$cached_file ="{$file}_temporary_import_file";
+				// save a copy to survive multiple steps
+				file_put_contents($cached_file, file_get_contents($file));
+				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
+			}
 
-			phpgwapi_cache::session_set('property', 'import_file', $file);
 
 			phpgw::import_class('phpgwapi.phpexcel');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($file);
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
 			$AllSheets = $objPHPExcel->getSheetNames();
-_debug_array($file);
-_debug_array($AllSheets);die();
+			
+			$sheets = array();
+			if($AllSheets)
+			{
+				foreach ($AllSheets as $key => $sheet)
+				$sheets[] = array
+				(
+					'id'	=> $key,
+					'name'	=> $sheet
+				);
+			}
+
+
+//_debug_array($cached_file);
+//_debug_array($AllSheets);die();
+
+
+
+			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+			$tabs = array();
+			
+			switch ($step)
+			{
+				case 0:
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
+					$active_tab = 'step_1';
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					break;
+				case 1:
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
+					$active_tab = 'step_2';
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					break;
+			}
+			
+
+			$data = array
+			(
+				'survey'						=> array('id'=>$id),
+				'step'							=> $step +1,
+				'sheets'						=> array('options' => $sheets),
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+			);
+
+//_debug_array($data);die();
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
+
+			self::render_template_xsl(array('condition_survey_import'), $data);
+
+//-----------
+
+
+			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+
 			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+_debug_array($data);
+
+return;
+
 
 			$start = 1; // Where to start
 
