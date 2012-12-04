@@ -18,6 +18,7 @@
 				</xsl:choose>
 			</xsl:attribute>
 			<td align="left" valign="top">
+				<label>
 				<xsl:value-of select="input_text"/>
 				<xsl:choose>
 					<xsl:when test="datatype='D'">
@@ -26,6 +27,7 @@
 						<xsl:text>]</xsl:text>
 					</xsl:when>
 				</xsl:choose>
+				</label>
 			</td>
 			<td align="left">
 				<xsl:choose>

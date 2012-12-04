@@ -257,12 +257,18 @@
 			{
 				switch($data['lookup_type'])
 				{
-				case 'form':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
-				case 'view':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
-					break;
+					case 'form':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'form2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
+					case 'view2':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view2'),ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'property'));
+						break;
 				}
 			}
 
@@ -308,6 +314,7 @@
 				$location['location'][$i]['name']					= $location_types[($i)]['name'];
 				$location['location'][$i]['value']					= isset($data['values']['loc' . ($i+1)]) ? $data['values']['loc' . ($i+1)] : '';
 				$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($i)]['name'];
+				$location['location'][$i]['required']				= isset($data['required_level']) && $data['required_level'] == ($i+1);
 
 				$location['location'][$i]['extra'][0]['input_name']		= 'loc' . ($i+1).'_name';
 				$input_name[]							= $location['location'][$i]['extra'][0]['input_name'];
@@ -605,7 +612,8 @@
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{
-				$location['lookup_functions'] = '';
+				$_lookup_functions = "self.name='first_Window'\n";
+
 				$filter_level = 0;
 				for ($j=0;$j<count($lookup_functions);$j++)
 				{
@@ -624,14 +632,14 @@
 						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
 					}
 
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 						function {$lookup_functions[$j]['name']}
 						{
 JS;
 					if($filter_level)
 					{
-						$location['lookup_functions'] .= <<<JS
+						$_lookup_functions .= <<<JS
 
 							var block = '';
 							var filter = '';
@@ -656,7 +664,7 @@ JS;
 							}
 JS;
 					}
-					$location['lookup_functions'] .= <<<JS
+					$_lookup_functions .= <<<JS
 
 							var oArgs = {{$lookup_functions[$j]['link']}};
 							var strURL = phpGWLink('index.php', oArgs);
@@ -665,6 +673,8 @@ JS;
 JS;
 				}
 			}
+
+			$GLOBALS['phpgw']->js->add_code('', $_lookup_functions);
 
 			if(isset($location) && is_array($location))
 			{
