@@ -25,6 +25,7 @@
 						<input type="hidden" name="id" value="{survey/id}"/>
 						<input type="hidden" name="step" value="{step}"/>
 						<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
+						<input type="hidden" name="start_line" value="{start_line}"/>
 					</dd>
 
 					<xsl:choose>
@@ -40,6 +41,12 @@
 						<xsl:value-of select="survey/title" />
 					</dd>
 
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'date')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/report_date"/>
+					</dd>
 				</dl>
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
@@ -59,14 +66,19 @@
 							<xsl:call-template name="import_step_3"/>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="step=4">
+							<xsl:call-template name="import_step_4"/>
+						</xsl:when>
+					</xsl:choose>
 
 				</div>
 
 				<dl class="proplist-col">
 					<div class="form-buttons">
+						<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 						<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-						<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-						<input type="submit" name="save_project" value="{$lang_save}" title = "{$lang_save}" />
+						<input type="submit" name="submit_step" value="{$lang_submit}" title = "{$lang_submit}" />
 						<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 					</div>
 			</dl>
@@ -113,24 +125,39 @@
 
 
 <xsl:template name="import_step_1" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-		<dl class="proplist-col">
+	<dl class="proplist-col">
 		<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+			<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+		</dt>
+		<dd>
+			<input type="file" name="import_file" size="40">
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+				</xsl:attribute>
+			</input>
+		</dd>
+	</dl>
+</xsl:template>
+
+
+<xsl:template name="import_step_2" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
+	<dl class="proplist-col">
+		<dt>
+			<label for="status"><xsl:value-of select="php:function('lang', 'sheet')" /></label>
 		</dt>
 		<dd>
  			<select id="sheet_id" name="sheet_id">
 				<xsl:apply-templates select="sheets/options"/>
 			</select>
 		</dd>
-		</dl>
-	
+	</dl>
 </xsl:template>
 
-<xsl:template name="import_step_2" xmlns:php="http://php.net/xsl">
+<xsl:template name="import_step_3" xmlns:php="http://php.net/xsl">
 	<dl class="proplist-col">
 
 		<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+			<label for="status"><xsl:value-of select="php:function('lang', 'sheet')" /></label>
 		</dt>
 		<dd>
 			<xsl:for-each select="sheets/options">
@@ -149,10 +176,10 @@
 	</dl>
 </xsl:template>
 
-<xsl:template name="import_step_3" xmlns:php="http://php.net/xsl">
+<xsl:template name="import_step_4" xmlns:php="http://php.net/xsl">
 	<dl class="proplist-col">
 		<dt>
-			<label><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+			<label><xsl:value-of select="php:function('lang', 'sheet')" /></label>
 		</dt>
 		<dd>
 			<xsl:for-each select="sheets/options">

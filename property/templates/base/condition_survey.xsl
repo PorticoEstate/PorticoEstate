@@ -114,7 +114,7 @@
 						</xsl:choose>
 					</dd>
 					<dt>
-							<label for="category"><xsl:value-of select="php:function('lang', 'date')" /></label>
+							<label for="date"><xsl:value-of select="php:function('lang', 'date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
