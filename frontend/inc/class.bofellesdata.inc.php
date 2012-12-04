@@ -16,11 +16,30 @@
 			}
 			return self::$bo;
 		}
+
+		/* our simple php ping function */
+		function ping($host)
+		{
+	        exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
+	        return $rval === 0;
+		}
 		
 		public function get_db()
 		{
+			if($this->db && is_object($this->db))
+			{
+				return $this->db;
+			}
+
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
+
+			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			{
+				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
+				phpgwapi_cache::message_set($message, 'error');
+				return false;
+			}
 
 			$db = createObject('phpgwapi.db', null, null, true);
 
@@ -40,9 +59,12 @@
 			}
 			catch(Exception $e)
 			{
+				phpgwapi_cache::message_set('Could not connect to backend-server ' . $config->config_data['external_db_host'], 'error'); 
 				$GLOBALS['phpgw']->redirect_link('/home.php');
 			}
+			$this->db = $db;
 			return $db;
+
 		}
 		
 		public function populate_result_units(array $unit_ids)
@@ -52,7 +74,10 @@
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 	        $table = "V_ORG_ENHET";
 	        	
-	        $db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
 	       
 	        $result_units = array();
 	        
@@ -115,8 +140,12 @@
         	
         	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
         	
-        	$db = $this->get_db();
-			$db1 = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
+			$db1 = clone($db);
 			//var_dump($db->Type);
 			if($db->Type == "postgres")
 			{
@@ -236,7 +265,11 @@
         	if(isset($number) && is_numeric($number))
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
-	        	$db = $this->get_db();
+				if(!$db = $this->get_db())
+				{
+					return;
+				}
+
 	        	if($db->Type == "postgres")
 			    {
 			        $sql = strtolower($sql);
@@ -269,7 +302,11 @@
         	if(isset($number) && is_numeric($number))
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
-	        	$db = $this->get_db();
+				if(!$db = $this->get_db())
+				{
+					return;
+				}
+
         	    if($db->Type == "postgres")
 			    {
 			        $sql = strtolower($sql);
@@ -309,7 +346,11 @@
 			$this->log(__class__, __function__);
 
         	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = '{$username}'";
-        	$db = $this->get_db();
+			if(!$db = $this->get_db())
+			{
+				return;
+			}
+
             if($db->Type == "postgres")
 		    {
 		        $sql = strtolower($sql);

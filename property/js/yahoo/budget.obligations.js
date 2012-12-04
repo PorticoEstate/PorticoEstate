@@ -89,11 +89,17 @@
 		{
 			var details;
 			if(oRecord._oData.grouping != "")
+			{
 				details = 1;
+				text = oRecord._oData.grouping;
+			}
 			else
+			{
 				details = 0;
+				text = oRecord._oData.b_account;
+			}
 			
-			elCell.innerHTML = "<a onclick=\"javascript:filter_grouping("+path_values.year+","+oRecord._oData.district_id+","+ oData +","+details+");\" href=\"#\">" + oData + "</a>";
+			elCell.innerHTML = "<a onclick=\"javascript:filter_grouping("+path_values.year+","+oRecord._oData.district_id+","+ text +","+details+");\" href=\"#\">" + text + "</a>";
 		}	
 	/********************************************************************************/
 		var myFormatLink_Count = function(elCell, oRecord, oColumn, oData)

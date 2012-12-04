@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * phpGroupWare - logistic: a part of a Facilities Management System.
+	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
@@ -45,7 +45,10 @@
 			'save'				=> true,
 			'get_vendors'		=> true,
 			'get_users'			=> true,
-			'edit_survey_title'	=> true
+			'edit_survey_title'	=> true,
+			'get_files'			=> true,
+			'view_file'			=> true,
+			'import'			=> true
 		);
 
 		public function __construct()
@@ -63,7 +66,6 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
-			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
@@ -215,7 +217,7 @@
 			$export = phpgw::get_var('export');
 
 			$values = $this->bo->read($params);
-//_debug_array($values);
+
 			// ... add result data
 			$result_data = array('results' => $values);
 
@@ -250,9 +252,19 @@
 			$this->edit();
 		}
 
+		/**
+		* Prepare data for view and edit - depending on mode
+		*
+		* @param array  $values  populated object in case of retry
+		* @param string $mode    edit or view
+		* @param int    $id      entity id - no id means 'new'
+		*
+		* @return void
+		*/
+
 		public function edit($values = array(), $mode = 'edit')
 		{
-			$id 	= phpgw::get_var('id', 'int');
+			$id 	= (int)phpgw::get_var('id');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{
@@ -285,8 +297,11 @@
 
 			if ($id)
 			{
+				if($mode == 'edit')
+				{
+					$tabs['import']['link'] = '#import';
+				}
 				$tabs['documents']['link'] = '#documents';
-				$tabs['import']['link'] = '#import';
 
 				if (!$values)
 				{
@@ -306,8 +321,9 @@
 				(
 					'values'	=> $values['location_data'],
 					'type_id'	=> 2,
+					'required_level' => 1,
 					'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
-					'lookup_type'	=> $mode == 'edit' ? 'form' : 'view',
+					'lookup_type'	=> $mode == 'edit' ? 'form2' : 'view2',
 					'tenant'	=> false,
 					'lookup_entity'	=> array(),
 					'entity_data'	=> isset($values['p'])?$values['p']:''
@@ -315,39 +331,66 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
+			$file_def = array
+			(
+				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+			);
+
+
+			$datatable_def = array();
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_0',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($file_def),
+			
+			);
+
 			$data = array
 			(
-				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'survey'			=> $values,
-				'location_data'		=> $location_data,
-				'categories'		=> array('options' => $categories),
-				'status_list'		=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
-				'editable' 			=> $mode == 'edit',
-				'tabs'				=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
-				'fileupload'					=> true,
-				'multiple_uploader'				=> true,
-				'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
-														."upload_target:'property.bocondition_survey.addfiles',"
-														."id:'{$id}'}",
+				'datatable_def'					=> $datatable_def,
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'survey'						=> $values,
+				'location_data2'					=> $location_data,
+				'categories'					=> array('options' => $categories),
+				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
+				'editable' 						=> $mode == 'edit',
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'multiple_uploader'				=> $mode == 'edit' ? true : '',
 			);
-//_debug_array($data);die();
-			$GLOBALS['phpgw']->jqcal->add_listener('report_date');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
-			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('property', 'portico', 'condition_survey_edit.js');
-			self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
-			self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			if($mode == 'edit')
+			{
+				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
+				phpgwapi_jquery::load_widget('core');
+				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
+				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
+				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+			}
 
-			self::render_template_xsl(array('condition_survey','files'), $data);
+//			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
+
+			self::render_template_xsl(array('condition_survey'), $data);
 		}
+
+
+		/**
+		* Saves an entry to the database for new/edit - redirects to view
+		*
+		* @param int  $id  entity id - no id means 'new'
+		*
+		* @return void
+		*/
 
 		public function save()
 		{
-			$id = phpgw::get_var('id');
+			$id = (int)phpgw::get_var('id');
 
 			if ($id )
 			{
@@ -385,10 +428,377 @@
 					}
 				}
 
-				phpgwapi_cache::message_set('ok!', 'message'); 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
+				$this->_handle_files($id);
+				if($_FILES['import_file']['tmp_name'])
+				{
+					$this->_handle_import($id);
+				}
+				else
+				{
+					phpgwapi_cache::message_set('ok!', 'message'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view', 'id' => $id));
+				}
 			}
 		}
+
+		/**
+		* Fetch a list of files to be displayed in view/edit
+		*
+		* @param int  $id  entity id
+		*
+		* @return array $ResultSet json resultset
+		*/
+
+		public function get_files()
+		{
+			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uicondition_survey.view_file',
+				'id'			=> $id
+			);
+
+
+			$link_view_file = self::link($link_file_data);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/property/condition_survey/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+
+			$lang_view = lang('click to view file');
+			$lang_delete = lang('click to delete file');
+
+			$values = array();
+			foreach($files as $_entry )
+			{
+				$values[] = array
+				(
+					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file' => "<input type='checkbox' name='values[file_action][]' value='{$_entry['name']}' title='$lang_delete'>",
+				);
+			}							
+
+			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
+		}
+
+
+		/**
+		* Dowloads a single file to the browser
+		*
+		* @param int  $id  entity id
+		*
+		* @return file
+		*/
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				return lang('no access');
+			}
+
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('condition_survey');
+		}
+
+
+		/**
+		* Store and / or delete files related to an entity
+		*
+		* @param int  $id  entity id
+		*
+		* @return void
+		*/
+		private function _handle_files($id)
+		{
+			$id = (int)$id;
+			if(!$id)
+			{
+				throw new Exception('uicondition_survey::_handle_files() - missing id');
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			if(isset($_POST['file_action']) && is_array($_POST['file_action']))
+			{
+				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
+			}
+			$file_name=str_replace(' ','_',$_FILES['file']['name']);
+
+			if($file_name)
+			{
+				$to_file = $bofiles->fakebase . '/condition_survey/' . $id . '/' . $file_name;
+				if($bofiles->vfs->file_exists(array(
+					'string' => $to_file,
+					'relatives' => Array(RELATIVE_NONE)
+				)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error'); 
+				}
+				else
+				{
+					$bofiles->create_document_dir("condition_survey/{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if(!$bofiles->vfs->cp (array (
+						'from'	=> $_FILES['file']['tmp_name'],
+						'to'	=> $to_file,
+						'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error'); 
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+		}
+
+
+
+		public function import()
+		{
+			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$this->_handle_import($id);
+		}
+
+		/**
+		* Import deviations found in the survey to the database from a spreadsheet
+		*
+		* @param int  $id  entity id
+		*
+		* @return void
+		*/
+		private function _handle_import($id)
+		{
+			$id = (int)$id;
+			if(!$id)
+			{
+				throw new Exception('uicondition_survey::_handle_import() - missing id');
+			}
+
+			$step			= phpgw::get_var('step', 'REQUEST', 'int');
+			$sheet_id		= phpgw::get_var('sheet_id', 'REQUEST', 'int');
+			
+			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'REQUEST', 'int');
+			$start_line	= phpgw::get_var('start_line', 'REQUEST', 'int', 1);
+
+			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
+			{
+				$file = $_FILES['import_file']['tmp_name'];
+				$cached_file ="{$file}_temporary_import_file";
+				// save a copy to survive multiple steps
+				file_put_contents($cached_file, file_get_contents($file));
+				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
+			}
+
+//_debug_array($_POST);die();
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$AllSheets = $objPHPExcel->getSheetNames();
+			
+			$sheets = array();
+			if($AllSheets)
+			{
+				foreach ($AllSheets as $key => $sheet)
+				$sheets[] = array
+				(
+					'id'	=> $key,
+					'name'	=> $sheet,
+					'selected' => $sheet_id == $key
+				);
+			}
+
+
+//_debug_array($cached_file);
+//_debug_array($AllSheets);die();
+
+
+
+//			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+			$tabs = array();
+			
+			switch ($step)
+			{
+				case 0:
+					$active_tab = 'step_1';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					break;
+				case 1:
+					$active_tab = 'step_2';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					break;
+				case 2:
+					$active_tab = 'step_3';
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_3']	= array('label' => lang('step_3'), 'link' =>  '#step_3');
+					break;
+			}
+			
+//-----------
+
+
+			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+
+			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+			$html_table = '<table border="1">';
+			if($data && $step == 1)
+			{
+				$i = 0;
+				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", array_keys($data[1])) . '</th></tr>';
+				foreach($data as $row_key => $row)
+				{
+					if($i>20)
+					{
+						break;
+					}
+
+					$_checked = '';
+					if($start_line == $row_key)
+					{
+						$_checked = 'checked="checked"';
+					}
+
+					$_radio = "[{$row_key}]<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+
+					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
+					$i++;
+				}
+			}			
+			else if($data && $step == 2)
+			{
+				$_options = array
+				(
+					'Felt_1',
+					'Felt_2',
+					'Felt_3',
+					'Felt_4',
+					'Felt_5',
+					'Felt_6',
+				);
+
+
+		/*
+		 * Create a generic select list
+		 *
+		 * @param string $name string with name of the submitted var which holds the key of the selected item form array
+		 * @param array $selected key(s) of already selected item(s) from $options, eg. '1' or '1,2' or array with keys
+		 * @param array	$options items to populate the <options>
+		 * @param bool $no_lang by default all values are translated by calls to lang(), setting this to true disbales it
+		 * @param string $attribs additional html attributed to be applied to <select>
+		 * @param int $multiple the height of the <select>, if greater than 1, set to 1 to just enable multiple selections
+		 * @return string the populated html select element
+		 */
+				phpgw::import_class('phpgwapi.sbox');
+
+				foreach($data[$start_line] as $_column => $_value)
+				{
+					$_listbox = phpgwapi_sbox::getArrayItem($_column, $selected= 'Felt_6', $_options, true );
+
+					$_checkbox = "<input id=\"start_line\" type =\"checkbox\" {$_checked} name=\"column\" value=\"{$_column}\">";
+					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
+				}
+			}
+
+			$html_table .= '</table>';
+
+
+
+
+
+//
+			$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+
+			if(isset($values['location_code']) && $values['location_code'])
+			{
+				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+			}
+
+			$bolocation	= CreateObject('property.bolocation');
+			$location_data = $bolocation->initiate_ui_location(array
+				(
+					'values'	=> $values['location_data'],
+					'type_id'	=> 2,
+					'lookup_type'	=> 'view2',
+					'tenant'	=> false,
+					'lookup_entity'	=> array(),
+					'entity_data'	=> isset($values['p'])?$values['p']:''
+				));
+//
+
+			$data = array
+			(
+				'survey'						=> $values,
+				'location_data2'				=> $location_data,
+				'step'							=> $step +1,
+				'sheet_id'						=> $sheet_id,
+				'start_line'					=> $start_line,
+				'html_table'					=> $html_table,
+				'sheets'						=> array('options' => $sheets),
+		//		'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'							=>$GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
+			);
+
+//_debug_array($data);die();
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
+
+			self::render_template_xsl(array('condition_survey_import'), $data);
+
+
+//_debug_array($html_table);
+
+return;
+
+
+			$start = 1; // Where to start
+
+			$fields = array_values($data[($start-1)]);
+
+			$rows = count($data)+1;
+
+			$result = array();
+
+			for ($i=$start; $i<$rows; $i++ )
+			{
+				$_result = array();
+				$j=0;
+				foreach($data[$i] as $key => $value)
+				{
+					$_result[$j] = trim($value);
+					$j++;
+				}
+				$result[] = $_result;
+			}
+
+			$msg = "'{$path}' contained " . count($result) . " lines";
+
+_debug_array($msg);
+_debug_array($result);die();
+
+		}
+
+
+		/**
+		* Gets user candidates to be used as coordinator - called as ajax from edit form
+		*
+		* @param string  $query
+		*
+		* @return array 
+		*/
 
 		public function get_users()
 		{
@@ -416,6 +826,14 @@
 			return array('ResultSet'=> array('Result'=>$values));
 		}
 
+		/**
+		* Gets vendor canidated to be used as vendor - called as ajax from edit form
+		*
+		* @param string  $query
+		*
+		* @return array 
+		*/
+
 		public function get_vendors()
 		{
 			if(!$this->acl_read)
@@ -434,6 +852,14 @@
 			return array('ResultSet'=> array('Result'=>$values));
 		}
 
+		/**
+		* Edit title fo entity directly from table
+		*
+		* @param int  $id  id of entity
+		* @param string  $value new title of entity
+		*
+		* @return string text to appear in ui as receipt on action
+		*/
 
 		public function edit_survey_title()
 		{

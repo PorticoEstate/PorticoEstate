@@ -410,13 +410,14 @@
 		{
 			$activity_id = phpgw::get_var('id');
 			$parent_activity_id = phpgw::get_var('parent_id', 'int');
-			$project_id = phpgw::get_var('project_id');
+			$project_id = phpgw::get_var('project_id', 'int');
 
 			if($activity == null)
 			{
 				if( $activity_id && is_numeric($activity_id) )
 				{
 					$activity = $this->so->get_single($activity_id);
+					$project_id = $activity->get_project_id();
 				}
 				else
 				{
@@ -553,6 +554,7 @@
 
 			$activity->populate();
 
+//_debug_array($activity);die();
 			if( $activity->validate() )
 			{
 				$activity_id = $this->so->store($activity);

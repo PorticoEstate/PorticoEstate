@@ -25,6 +25,7 @@ YUI({
                    var form = new Y.Validator(
                         {
                             form:'form',
+							checkOnSubmit:true,
                             defaultIncorrectIndicatorCss:'validator',
                             defaultCorrectIndicatorCss:'indicator',
                             createCorrectIndicator:true,

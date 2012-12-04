@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage logistic
- 	* @version $Id $
+	 * @version $Id$
 	*/
 
 		include_class('logistic', 'model', '/inc/model/');
@@ -42,7 +42,7 @@
 		protected $end_date;
 		protected $responsible_user_id;
 		protected $create_user;
-  	protected $create_date;
+  		protected $create_date;
 		protected $update_user;
 		protected $update_date;
 				
@@ -246,20 +246,21 @@
 		
 		public function populate()
 		{
-			$this->set_id( phpgw::get_var('id', 'int') );
+			$this->set_id( phpgw::get_var('id','POST', 'int') );
 			$this->set_name( phpgw::get_var('name') );
-			$this->set_responsible_user_id( phpgw::get_var('responsible_user_id', 'int') );
+			$this->set_responsible_user_id( phpgw::get_var('responsible_user_id','POST', 'int') );
 			$this->set_description( phpgw::get_var('description') );
 			
-			if( $parent_id = phpgw::get_var('parent_activity_id', 'int') )
+			if( isset($_POST['parent_activity_id']))
 			{
-				$this->set_parent_id( $parent_id );
+				$activity_id = phpgw::get_var('parent_activity_id','POST', 'int');
+				$this->set_parent_id( $activity_id ? $activity_id : '' );
 			}
 			else
 			{
-				$this->set_parent_id( phpgw::get_var('parent_id', 'int') );			
+				$this->set_parent_id( phpgw::get_var('parent_id','POST', 'int') );			
 			}
-			$this->set_project_id( phpgw::get_var('project_id', 'int') );
+			$this->set_project_id( phpgw::get_var('project_id','POST', 'int') );
 			
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$this->set_update_user( $user_id );
@@ -268,15 +269,15 @@
 				$this->set_create_user( $user_id );	
 			}
 			
-			if(phpgw::get_var('start_date','string') != '')
+			if(phpgw::get_var('start_date','POST','string') != '')
 			{
-				$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','string') );
+				$start_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('start_date','POST','string') );
 				$this->set_start_date($start_date_ts);
 			}
 										
-			if( phpgw::get_var('end_date','string') != '')
+			if( phpgw::get_var('end_date','POST','string') != '')
 			{
-				$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','string') );
+				$end_date_ts = phpgwapi_datetime::date_to_timestamp( phpgw::get_var('end_date','POST','string') );
 				$this->set_end_date($end_date_ts);
 			}
 		}

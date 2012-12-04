@@ -104,14 +104,27 @@ dl.form-col dd textarea.full-width {
   width: 33em;
   height: 10em;
 }
+
 dl.form dd input[type="text"],  dl.form dd .autocomplete,
 dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
-  width: 15em;
+    width: 15em;
 }
 dl.form dd .autocomplete,
-dl.form-col dd .autocomplete {
-  padding-bottom: 2em;
+dl.form-col dd .autocomplete,
+dl.form-2col dd .autocomplete {
+    padding-bottom: 2em;
 }
+
+div.autocomplete {
+    width: 15em;
+	position: relative;
+    padding-bottom: 2em;
+}
+/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
+div.autocomplete input {
+	z-index: 500;
+}
+
 
 dl.form dt.heading, dl.form-col dt.heading {
   color: #448;
@@ -148,7 +161,7 @@ div.identifier-header label {
   padding-top: 1em;
 }
 
-.form-buttons input[type=submit]{
+.form-buttons input[type=submit], input[type="button"]{
   margin-right: 5px;
 }
 
