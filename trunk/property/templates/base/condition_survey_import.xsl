@@ -4,7 +4,7 @@
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 		<xsl:call-template name="yui_phpgw_i18n"/>
 
-		<div class="yui-navset" id="survey_edit_tabview">
+		<div class="yui-navset yui-navset-top" id="survey_edit_tabview">
 	
 		<h1>
 			<xsl:value-of select="php:function('lang', 'condition survey import')" />
@@ -17,28 +17,28 @@
 
 			<form name="form" id="form" action="{$action_url}" method="post" ENCTYPE="multipart/form-data">
 		        <dl>
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/id"/>
+						<input type="hidden" name="id" value="{survey/id}"/>
+						<input type="hidden" name="step" value="{step}"/>
+						<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
+					</dd>
+
 					<xsl:choose>
-						<xsl:when test="msgbox_data != ''">
-								<dt>
-									<xsl:call-template name="msgbox"/>
-								</dt>
+						<xsl:when test="location_data2!=''">
+							<xsl:call-template name="location_view2"/>
 						</xsl:when>
 					</xsl:choose>
 
-					<xsl:choose>
-						<xsl:when test="survey/id!=''">
-								<dt>
-									<label><xsl:value-of select="php:function('lang', 'id')" /></label>
-								</dt>
-								<dd>
-									<xsl:value-of select="survey/id"/>
-									<input type="hidden" name="id" value="{survey/id}"/>
-									<input type="hidden" name="step" value="{step}"/>
-									<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
-								</dd>
-						</xsl:when>
-					</xsl:choose>
-
+					<dt>
+						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/title" />
+					</dd>
 
 				</dl>
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -47,29 +47,17 @@
 						<xsl:when test="step=1">
 							<xsl:call-template name="import_step_1"/>
 						</xsl:when>
-						<xsl:otherwise>
-							<div id="step_1" class="content-wrp">
-							</div>
-						</xsl:otherwise>
 					</xsl:choose>
 
 					<xsl:choose>
 						<xsl:when test="step=2">
 							<xsl:call-template name="import_step_2"/>
 						</xsl:when>
-						<xsl:otherwise>
-							<div id="step_2" class="content-wrp">
-							</div>
-						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="step=3">
 							<xsl:call-template name="import_step_3"/>
 						</xsl:when>
-						<xsl:otherwise>
-							<div id="step_3" class="content-wrp">
-							</div>
-						</xsl:otherwise>
 					</xsl:choose>
 
 				</div>
@@ -125,9 +113,8 @@
 
 
 <xsl:template name="import_step_1" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
-	<div id="step_1" class="content-wrp">
 		<dl class="proplist-col">
-			<dt>
+		<dt>
 			<label for="status"><xsl:value-of select="php:function('lang', 'sheets')" /></label>
 		</dt>
 		<dd>
@@ -136,33 +123,57 @@
 			</select>
 		</dd>
 		</dl>
-	</div>
+	
 </xsl:template>
 
 <xsl:template name="import_step_2" xmlns:php="http://php.net/xsl">
-	<div id="step_2" class="content-wrp">
-		<dl class="proplist-col">
-			<dt>
+	<dl class="proplist-col">
+
+		<dt>
+			<label for="status"><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+		</dt>
+		<dd>
+			<xsl:for-each select="sheets/options">
+				<xsl:if test="selected = 'selected' or selected = 1">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</xsl:if>
+			</xsl:for-each>
+		</dd>
+
+ 		<dt>
 			<label for="status"><xsl:value-of select="php:function('lang', 'table')" /></label>
 		</dt>
 		<dd>
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
 		</dd>
-		</dl>
-	</div>
+	</dl>
 </xsl:template>
 
 <xsl:template name="import_step_3" xmlns:php="http://php.net/xsl">
-	<div id="step_2" class="content-wrp">
-		<dl class="proplist-col">
-			<dt>
-			<label for="status"><xsl:value-of select="php:function('lang', 'table')" /></label>
+	<dl class="proplist-col">
+		<dt>
+			<label><xsl:value-of select="php:function('lang', 'sheets')" /></label>
+		</dt>
+		<dd>
+			<xsl:for-each select="sheets/options">
+				<xsl:if test="selected = 'selected' or selected = 1">
+					<xsl:value-of disable-output-escaping="yes" select="name"/>
+				</xsl:if>
+			</xsl:for-each>
+		</dd>
+		<dt>
+			<label><xsl:value-of select="php:function('lang', 'line')" /></label>
+		</dt>
+		<dd>
+			<xsl:value-of select="start_line"/>
+		</dd>
+		<dt>
+			<label><xsl:value-of select="php:function('lang', 'columns')" /></label>
 		</dt>
 		<dd>
 			<xsl:value-of disable-output-escaping="yes" select="html_table"/>
 		</dd>
-		</dl>
-	</div>
+	</dl>
 </xsl:template>
 
 

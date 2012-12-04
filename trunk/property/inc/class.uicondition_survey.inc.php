@@ -566,7 +566,7 @@
 
 		public function import()
 		{
-			$id = phpgw::get_var('step', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'REQUEST', 'int');
 			$this->_handle_import($id);
 		}
 
@@ -613,7 +613,8 @@
 				$sheets[] = array
 				(
 					'id'	=> $key,
-					'name'	=> $sheet
+					'name'	=> $sheet,
+					'selected' => $sheet_id == $key
 				);
 			}
 
@@ -623,7 +624,7 @@
 
 
 
-			phpgwapi_yui::tabview_setup('survey_edit_tabview');
+//			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			
 			switch ($step)
@@ -636,20 +637,18 @@
 					break;
 				case 1:
 					$active_tab = 'step_2';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
 					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
 					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
 					break;
 				case 2:
 					$active_tab = 'step_3';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => null);
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
+					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
 					$tabs['step_3']	= array('label' => lang('step_3'), 'link' =>  '#step_3');
 					break;
 			}
 			
-
-
 //-----------
 
 
@@ -674,32 +673,84 @@
 						$_checked = 'checked="checked"';
 					}
 
-					$_radio = "<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+					$_radio = "[{$row_key}]<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
 
-					$html_table .= "<tr><td>{$_radio}</td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
+					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
 					$i++;
 				}
 			}			
 			else if($data && $step == 2)
 			{
+				$_options = array
+				(
+					'Felt_1',
+					'Felt_2',
+					'Felt_3',
+					'Felt_4',
+					'Felt_5',
+					'Felt_6',
+				);
+
+
+		/*
+		 * Create a generic select list
+		 *
+		 * @param string $name string with name of the submitted var which holds the key of the selected item form array
+		 * @param array $selected key(s) of already selected item(s) from $options, eg. '1' or '1,2' or array with keys
+		 * @param array	$options items to populate the <options>
+		 * @param bool $no_lang by default all values are translated by calls to lang(), setting this to true disbales it
+		 * @param string $attribs additional html attributed to be applied to <select>
+		 * @param int $multiple the height of the <select>, if greater than 1, set to 1 to just enable multiple selections
+		 * @return string the populated html select element
+		 */
+				phpgw::import_class('phpgwapi.sbox');
+
 				foreach($data[$start_line] as $_column => $_value)
 				{
+					$_listbox = phpgwapi_sbox::getArrayItem($_column, $selected= 'Felt_6', $_options, true );
+
 					$_checkbox = "<input id=\"start_line\" type =\"checkbox\" {$_checked} name=\"column\" value=\"{$_column}\">";
-					$html_table .= "<tr><td>{$_value}</td><td>{$_checkbox}</td><tr>";
+					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
 			}
 
 			$html_table .= '</table>';
 
 
+
+
+
+//
+			$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+
+			if(isset($values['location_code']) && $values['location_code'])
+			{
+				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+			}
+
+			$bolocation	= CreateObject('property.bolocation');
+			$location_data = $bolocation->initiate_ui_location(array
+				(
+					'values'	=> $values['location_data'],
+					'type_id'	=> 2,
+					'lookup_type'	=> 'view2',
+					'tenant'	=> false,
+					'lookup_entity'	=> array(),
+					'entity_data'	=> isset($values['p'])?$values['p']:''
+				));
+//
+
 			$data = array
 			(
-				'survey'						=> array('id'=>$id),
+				'survey'						=> $values,
+				'location_data2'				=> $location_data,
 				'step'							=> $step +1,
 				'sheet_id'						=> $sheet_id,
+				'start_line'					=> $start_line,
 				'html_table'					=> $html_table,
 				'sheets'						=> array('options' => $sheets),
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+		//		'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'tabs'							=>$GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
 			);
 
 //_debug_array($data);die();
