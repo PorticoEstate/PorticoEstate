@@ -360,6 +360,15 @@ consume	property	no	Forbrukt
 consume date	property	no	Dato historisk forbruk
 consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
+continue	property	no	Fortsett
+line	property	no	Linje
+sheet	property	no	Ark
+choose file	property	no	Velg Fil
+choose sheet	property	no	Velg Ark
+choose start line	property	no	Velg startlinje
+choose columns	property	no	Velg Kolonner
+table	property	no	Tabell
+condition survey import	property	no	Import av Tilstandsanalyse
 periodization	property	no	Periodisering
 periodization start	property	no	Startperiode
 periodization outline	property	no	Periodiseringsfordeling

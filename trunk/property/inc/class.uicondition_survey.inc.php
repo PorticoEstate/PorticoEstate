@@ -65,7 +65,7 @@
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey";
 		}
 
 
@@ -182,6 +182,17 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uicondition_survey.edit'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'import_survey',
+						'text' 			=> lang('import'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.import'
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
@@ -589,7 +600,28 @@
 			$sheet_id		= phpgw::get_var('sheet_id', 'REQUEST', 'int');
 			
 			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'REQUEST', 'int');
-			$start_line	= phpgw::get_var('start_line', 'REQUEST', 'int', 1);
+
+			if($start_line	= phpgw::get_var('start_line', 'REQUEST', 'int'))
+			{
+				phpgwapi_cache::system_set('property', 'import_sheet_start_line', $start_line);
+			}
+			else
+			{
+				$start_line = phpgwapi_cache::system_get('property', 'import_sheet_start_line');
+				$start_line = $start_line  ? $start_line : 1;
+			}
+
+
+			if($columns = phpgw::get_var('columns'))
+			{
+				phpgwapi_cache::system_set('property', 'import_sheet_columns', $columns);
+			}
+			else
+			{
+				$columns = phpgwapi_cache::system_get('property', 'import_sheet_columns');
+				$columns = $columns && is_array($columns) ? $columns : array();
+			}
+
 
 			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
 			{
@@ -600,63 +632,95 @@
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
 			}
 
-//_debug_array($_POST);die();
-			phpgw::import_class('phpgwapi.phpexcel');
-
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$AllSheets = $objPHPExcel->getSheetNames();
-			
-			$sheets = array();
-			if($AllSheets)
-			{
-				foreach ($AllSheets as $key => $sheet)
-				$sheets[] = array
-				(
-					'id'	=> $key,
-					'name'	=> $sheet,
-					'selected' => $sheet_id == $key
-				);
-			}
-
-
-//_debug_array($cached_file);
-//_debug_array($AllSheets);die();
-
-
-
-//			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			
 			switch ($step)
 			{
 				case 0:
 					$active_tab = 'step_1';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => '#step_1');
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => null);
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 1:
 					$active_tab = 'step_2';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' =>  '#step_2');
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 2:
 					$active_tab = 'step_3';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' =>  '#step_3');
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => '#step_3');
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
+					break;
+				case 3:
+					$active_tab = 'step_4';
+					$lang_submit = lang('import');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 2, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' =>  '#step_4');
+					break;
+				case 4://temporary
+					phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+					unlink($cached_file);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0));
 					break;
 			}
 			
 //-----------
 
+			$data = array();
+			if(!$step || $step == 4)
+			{
+				phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+				unlink($cached_file);
+			}
+			else if ($cached_file)
+			{
+				phpgw::import_class('phpgwapi.phpexcel');
 
-			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+				try
+				{
+					$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+					$AllSheets = $objPHPExcel->getSheetNames();
+			
+					$sheets = array();
+					if($AllSheets)
+					{
+						foreach ($AllSheets as $key => $sheet)
+						$sheets[] = array
+						(
+							'id'	=> $key,
+							'name'	=> $sheet,
+							'selected' => $sheet_id == $key
+						);
+					}
 
-			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+					$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+						unlink($cached_file);
+					}
+				}
+			}
+
+
 			$html_table = '<table border="1">';
-			if($data && $step == 1)
+			if($data && $step == 2)
 			{
 				$i = 0;
 				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", array_keys($data[1])) . '</th></tr>';
@@ -679,46 +743,36 @@
 					$i++;
 				}
 			}			
-			else if($data && $step == 2)
+			else if($data && $step == 3)
 			{
 				$_options = array
 				(
-					'Felt_1',
-					'Felt_2',
-					'Felt_3',
-					'Felt_4',
-					'Felt_5',
-					'Felt_6',
+					'_skip_import_'			=> 'Utelates fra import/implisitt',
+					'building_part'			=> 'bygningsdels kode',
+					'descr'					=> 'Tilstandbeskrivelse',
+					'title'					=> 'Tiltak',
+					'hjemmel'				=> 'Hjemmel/ krav',
+					'condition_degree'		=> 'Tilstandsgrad',
+					'condition_type'		=> 'Konsekvenstype',
+					'consequence'			=> 'Konsekvensgrad',
+					'probability'			=> 'Sannsynlighet',
+					'due_year'				=> 'År (innen)',
+					'percentage_investment'	=> 'Andel % aktivering (U)',
+					'amount'				=> 'Kalkyle netto totalt (VU)',
 				);
 
-
-		/*
-		 * Create a generic select list
-		 *
-		 * @param string $name string with name of the submitted var which holds the key of the selected item form array
-		 * @param array $selected key(s) of already selected item(s) from $options, eg. '1' or '1,2' or array with keys
-		 * @param array	$options items to populate the <options>
-		 * @param bool $no_lang by default all values are translated by calls to lang(), setting this to true disbales it
-		 * @param string $attribs additional html attributed to be applied to <select>
-		 * @param int $multiple the height of the <select>, if greater than 1, set to 1 to just enable multiple selections
-		 * @return string the populated html select element
-		 */
 				phpgw::import_class('phpgwapi.sbox');
 
 				foreach($data[$start_line] as $_column => $_value)
 				{
-					$_listbox = phpgwapi_sbox::getArrayItem($_column, $selected= 'Felt_6', $_options, true );
-
-					$_checkbox = "<input id=\"start_line\" type =\"checkbox\" {$_checked} name=\"column\" value=\"{$_column}\">";
+					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
+					
+					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true );
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
 			}
 
 			$html_table .= '</table>';
-
-
-
-
 
 //
 			$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
@@ -742,6 +796,7 @@
 
 			$data = array
 			(
+				'lang_submit'					=> $lang_submit,
 				'survey'						=> $values,
 				'location_data2'				=> $location_data,
 				'step'							=> $step +1,
