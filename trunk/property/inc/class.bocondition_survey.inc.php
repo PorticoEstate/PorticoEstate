@@ -284,8 +284,35 @@
 		}
 		
 
+		public function import($survey, $import_data)
+		{
+			try
+			{
+				$this->so->import($survey, $import_data);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+		}
+
 		public function delete($id)
 		{
-			$this->so->delete($id);
+			try
+			{
+				$this->so->delete($id);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
 		}
 	}
