@@ -66,6 +66,7 @@
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey";
+	//			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
@@ -668,17 +669,19 @@
 					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 2, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
 					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' =>  '#step_4');
 					break;
+/*
 				case 4://temporary
 					phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
 					unlink($cached_file);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0));
 					break;
+*/
 			}
 			
 //-----------
 
 			$data = array();
-			if(!$step || $step == 4)
+			if(!$step )
 			{
 				phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
 				unlink($cached_file);
@@ -718,6 +721,7 @@
 				}
 			}
 
+			$survey = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
 
 			$html_table = '<table border="1">';
 			if($data && $step == 2)
@@ -771,78 +775,89 @@
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
 			}
+			else if($data && $step == 4)
+			{
+//				_debug_array($columns);
+
+				$rows = count($data)+1;
+
+				$import_data = array();
+
+				for ($i=$start_line; $i<$rows; $i++ )
+				{
+					$_result = array();
+
+					foreach ($columns as $_row_key => $_value_key)
+					{
+						if($_value_key != '_skip_import_')
+						{
+							$_result[$_value_key] =trim($data[$i][$_row_key]);
+						}
+					
+					}
+					$import_data[] = $_result;
+				}
+				if($import_data)
+				{
+					try
+					{
+						$this->bo->import($survey, $import_data);
+					}
+					catch(Exception $e)
+					{
+						if ( $e )
+						{
+							phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						}
+					}
+				}
+
+//				$msg = "'{$cached_file}' contained " . count($import_data) . " lines";
+//				phpgwapi_cache::message_set($msg, 'message'); 
+
+//	_debug_array($import_data);die();
+			}
+
+
 
 			$html_table .= '</table>';
 
-//
-			$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
 
-			if(isset($values['location_code']) && $values['location_code'])
+
+
+			if(isset($survey['location_code']) && $survey['location_code'])
 			{
-				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+				$survey['location_data'] = execMethod('property.solocation.read_single', $survey['location_code']);
 			}
 
 			$bolocation	= CreateObject('property.bolocation');
 			$location_data = $bolocation->initiate_ui_location(array
 				(
-					'values'	=> $values['location_data'],
+					'values'	=> $survey['location_data'],
 					'type_id'	=> 2,
 					'lookup_type'	=> 'view2',
 					'tenant'	=> false,
 					'lookup_entity'	=> array(),
-					'entity_data'	=> isset($values['p'])?$values['p']:''
+					'entity_data'	=> isset($survey['p'])?$survey['p']:''
 				));
-//
 
 			$data = array
 			(
 				'lang_submit'					=> $lang_submit,
-				'survey'						=> $values,
+				'survey'						=> $survey,
 				'location_data2'				=> $location_data,
 				'step'							=> $step +1,
 				'sheet_id'						=> $sheet_id,
 				'start_line'					=> $start_line,
 				'html_table'					=> $html_table,
 				'sheets'						=> array('options' => $sheets),
-		//		'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'tabs'							=>$GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
 			);
 
-//_debug_array($data);die();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
 
 			self::render_template_xsl(array('condition_survey_import'), $data);
 
-
-//_debug_array($html_table);
-
-return;
-
-
-			$start = 1; // Where to start
-
-			$fields = array_values($data[($start-1)]);
-
-			$rows = count($data)+1;
-
-			$result = array();
-
-			for ($i=$start; $i<$rows; $i++ )
-			{
-				$_result = array();
-				$j=0;
-				foreach($data[$i] as $key => $value)
-				{
-					$_result[$j] = trim($value);
-					$j++;
-				}
-				$result[] = $_result;
-			}
-
-			$msg = "'{$path}' contained " . count($result) . " lines";
-
-_debug_array($msg);
-_debug_array($result);die();
 
 		}
 

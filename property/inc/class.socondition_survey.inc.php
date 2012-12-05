@@ -226,7 +226,7 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 				return 0;
 			}
@@ -257,7 +257,7 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
@@ -282,7 +282,7 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
@@ -311,7 +311,7 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
@@ -414,10 +414,91 @@
 			return $value_set;
 		}
 
-		function delete($id)
+		public function import($survey, $import_data = array())
+		{
+			if(!isset($survey['id']) || !$survey['id'])
+			{
+				throw new Exception('property_socondition_survey::import - missing id');
+			}
+
+			$location_data = execMethod('property.solocation.read_single', $survey['location_code']);
+			
+			$_locations = explode('-', $survey['location_code']);
+			$i=1;
+			foreach ($_locations as $_location)
+			{
+				$location["loc{$i}"] = $_location;
+				$i++;
+			}
+
+			$sorequest	= CreateObject('property.sorequest');
+
+_debug_array($survey);			
+
+			$this->_db->transaction_begin();
+
+			foreach ($import_data as $entry)
+			{
+				if( $entry['condition_degree'] )
+				{
+					$request = array();
+					$request['street_name'] = $location_data['street_name'];
+					$request['street_number'] = $location_data['street_number'];
+					$request['location'] = $location;
+					$request['origin'] = array(array('location' => '.project.condition_survey', 'id' => (int)$survey['id']));
+
+					$request['title'] = $entry['title'];
+					$request['descr'] = $entry['descr'];
+					$request['cat_id'] = 13; //???? FIXME
+					$request['building_part'] = $entry['building_part'];
+					$request['coordinator'] = $survey['coordinator_id'];
+					$request['status'] = 'registrert';//???? FIXME
+					$request['budget'] = $entry['amount'];
+					$request['planning_date'] = mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
+					$request['planning_value'] = $entry['amount'];
+					$request['condition'] = array
+					(
+						array
+						(
+							'degree' => $entry['condition_degree'],
+							'condition_type' => $entry['condition_type'],
+							'consequence' => $entry['consequence'],
+							'probability' => $entry['probability']
+						)
+					);
+				}
+
+_debug_array($request);
+		//		$sorequest->add($request, $values_attribute = array())
+
+			}
+		die();
+
+
+			$this->_db->transaction_commit();
+		}
+
+		public function delete($id)
 		{
 			$id = (int) $id;
-			$table = 'fm_condition_survey';
-			$this->_db->query("DELETE FROM $table WHERE id={$id}",__LINE__,__FILE__);
+			$this->_db->transaction_begin();
+
+			try
+			{
+				$this->_db->Exception_On_Error = true;
+				$this->_db->query("DELETE FROM fm_condition_survey WHERE id={$id}",__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
+				$this->_db->Exception_On_Error = false;
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
+			$this->_db->transaction_commit();
 		}
 	}

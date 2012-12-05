@@ -38,6 +38,7 @@
 	{
 		public $sum_budget = 0;
 		public $sum_consume = 0;
+		protected $global_lock = false;
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -780,7 +781,7 @@
 
 		function add($request, $values_attribute = array())
 		{
-			//_debug_array($request);
+//			_debug_array($request);die();
 			$receipt = array();
 
 			$value_set = array();
@@ -825,7 +826,16 @@
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
 
-			$this->db->transaction_begin();
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$id = $this->next_id();
 
@@ -946,18 +956,20 @@
 					. time() . ")",__LINE__,__FILE__);
 			}
 
-			if($this->db->transaction_commit())
+			$this->increment_request_id();
+			$this->historylog->add('SO',$id,$request['status']);
+			$this->historylog->add('TO',$id,$request['cat_id']);
+			$this->historylog->add('CO',$id,$request['coordinator']);
+			$receipt['message'][] = array('msg'=>lang('request %1 has been saved',$id));
+
+
+			if ( !$this->global_lock )
 			{
-				$this->increment_request_id();
-				$this->historylog->add('SO',$id,$request['status']);
-				$this->historylog->add('TO',$id,$request['cat_id']);
-				$this->historylog->add('CO',$id,$request['coordinator']);
-				$receipt['message'][] = array('msg'=>lang('request %1 has been saved',$id));
+				$this->db->transaction_commit();
 			}
-			else
-			{
-				$receipt['error'][] = array('msg'=>lang('request %1 has not been saved',$id));
-			}
+
+//				$receipt['error'][] = array('msg'=>lang('request %1 has not been saved',$id));
+
 			$receipt['id'] = $id;
 			return $receipt;
 		}
