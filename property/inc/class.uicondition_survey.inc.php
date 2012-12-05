@@ -47,6 +47,7 @@
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
 			'get_files'			=> true,
+			'get_related'		=> true,
 			'view_file'			=> true,
 			'import'			=> true
 		);
@@ -305,7 +306,8 @@
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['import']	= array('label' => lang('import'), 'link' => null);
+			$tabs['import']		= array('label' => lang('import'), 'link' => null);
+			$tabs['related']	= array('label' => lang('related'), 'link' => null);
 
 			if ($id)
 			{
@@ -314,6 +316,7 @@
 					$tabs['import']['link'] = '#import';
 				}
 				$tabs['documents']['link'] = '#documents';
+				$tabs['related']['link'] = '#related';
 
 				if (!$values)
 				{
@@ -357,6 +360,23 @@
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> json_encode($file_def),
 			
+			);
+
+			$related_def = array
+			(
+				array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_related', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($related_def)
 			);
 
 			$data = array
@@ -502,6 +522,40 @@
 				);
 			}							
 
+			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
+		}
+
+		function get_related()
+		{
+			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+		
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						$values[] = array
+						(
+							'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'		=> $_target_section['descr'],
+							'title'		=> $_target_entry['title'],
+							'status'	=> $_target_entry['statustext'],
+							'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+							'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						);
+					}
+				}
+			}
 			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
 		}
 

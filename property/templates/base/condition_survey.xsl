@@ -226,31 +226,36 @@
 					</xsl:choose>
 				</dl>
 			</div>
-			<xsl:choose>
-				<xsl:when test="editable = 1">
-					<div id="import">
-				<dl class="proplist-col">
-
-								<dt>
-									<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
-								</dt>
-								<dd>
-									<input type="file" name="import_file" size="40">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-										</xsl:attribute>
-									</input>
-								</dd>
-
+			<div id="import">
+				<xsl:choose>
+					<xsl:when test="editable = 1">
+						<dl class="proplist-col">
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+							</dt>
+							<dd>
+								<input type="file" name="import_file" size="40">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+									</xsl:attribute>
+								</input>
+							</dd>
 						</dl>
-					</div>
 				</xsl:when>
-				</xsl:choose>
-				</div>
-
+			</xsl:choose>
+			</div>
+			<div id="related">
 				<dl class="proplist-col">
-
-
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'related')"/></label>
+					</dt>
+					<dd>
+						<div style="clear:both;" id="datatable-container_1"></div>
+					</dd>
+				</dl>
+			</div>
+			</div>
+				<dl class="proplist-col">
 						<div class="form-buttons">
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<xsl:choose>

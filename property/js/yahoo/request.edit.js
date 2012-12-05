@@ -36,6 +36,10 @@ var  myDataTable_0,myDataTable_1,myDataTable_2;
 		myfoot.appendChild(newTR);
 	}
   	
+	this.myParticularRenderEvent = function()
+	{
+	}
+
 /********************************************************************************/	
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{

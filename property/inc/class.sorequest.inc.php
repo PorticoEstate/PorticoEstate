@@ -781,7 +781,6 @@
 
 		function add($request, $values_attribute = array())
 		{
-//			_debug_array($request);die();
 			$receipt = array();
 
 			$value_set = array();
@@ -801,6 +800,7 @@
 					$value_set[$input_name] = $value;
 				}
 			}
+//	_debug_array($value_set);die();
 
 			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute);
 			if(isset($data_attribute['value_set']))
@@ -896,6 +896,7 @@
 				$this->soproject->update_power_meter($request['power_meter'],$request['location_code'],$address);
 			}
 
+//_debug_array($request['origin']);
 			if(is_array($request['origin']) && isset($request['origin'][0]['data'][0]['id']))
 			{
 				$interlink_data = array
@@ -909,6 +910,7 @@
 
 				$this->interlink->add($interlink_data,$this->db);
 			}
+//_debug_array($interlink_data);die();
 
 			$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
 			$this->db->query($sql,__LINE__,__FILE__);

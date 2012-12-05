@@ -433,19 +433,20 @@
 
 			$sorequest	= CreateObject('property.sorequest');
 
-_debug_array($survey);			
+//_debug_array($survey);			
 
 			$this->_db->transaction_begin();
 
 			foreach ($import_data as $entry)
 			{
-				if( $entry['condition_degree'] )
+				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0)
 				{
 					$request = array();
 					$request['street_name'] = $location_data['street_name'];
 					$request['street_number'] = $location_data['street_number'];
 					$request['location'] = $location;
-					$request['origin'] = array(array('location' => '.project.condition_survey', 'id' => (int)$survey['id']));
+					$request['location_code'] = $survey['location_code'];
+					$request['origin'] = array(array('location' => '.project.condition_survey', 'data' => array(array('id' => (int)$survey['id']))));
 
 					$request['title'] = $entry['title'];
 					$request['descr'] = $entry['descr'];
@@ -466,14 +467,11 @@ _debug_array($survey);
 							'probability' => $entry['probability']
 						)
 					);
+//_debug_array($request);
+					$sorequest->add($request, $values_attribute = array());
 				}
-
-_debug_array($request);
-		//		$sorequest->add($request, $values_attribute = array())
-
 			}
-		die();
-
+//		die();
 
 			$this->_db->transaction_commit();
 		}
