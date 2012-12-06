@@ -3248,7 +3248,7 @@ JS;
 						unset($edateparts);
 					}
 
-					$values['regtid'] 		= date($this->bocommon->datetimeformat);
+					$values['regtid'] 		= date($GLOBALS['phpgw']->db->datetime_format());
 
 
 					$_receipt = array();//local errors

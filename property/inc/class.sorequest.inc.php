@@ -858,7 +858,7 @@
 			$value_set['regulations']			= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
 
 			$cols = implode(',', array_keys($value_set));
-			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
 
 			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
