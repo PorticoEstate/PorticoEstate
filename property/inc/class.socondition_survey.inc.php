@@ -28,13 +28,14 @@
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');
+	phpgw::import_class('property.socommon_core');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_socondition_survey
+	class property_socondition_survey extends property_socommon_core
 	{
 		/**
 		* @var int $_total_records total number of records found
@@ -66,34 +67,9 @@
 
 		public function __construct()
 		{
-			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db			= & $GLOBALS['phpgw']->db;
-			$this->_join		= & $this->_db->join;
-			$this->_like		= & $this->_db->like;
-			$this->custom 		= createObject('property.custom_fields');
+			parent::__construct();
 		}
 
-		/**
-		 * Magic get method
-		 *
-		 * @param string $varname the variable to fetch
-		 *
-		 * @return mixed the value of the variable sought - null if not found
-		 */
-		public function __get($varname)
-		{
-			switch ($varname)
-			{
-				case 'total_records':
-					return $this->_total_records;
-					break;
-				case 'receipt':
-					return $this->_receipt;
-					break;
-				default:
-					return null;
-			}
-		}
 
 		function read($data = array())
 		{
@@ -207,9 +183,19 @@
 
 			$id = $this->_db->next_id($table);
 
-			$value_set					= $this->_get_value_set( $data );
-			$value_set['id']			= $id;
-			$value_set['entry_date']	= time();
+			$value_set						= $this->_get_value_set( $data );
+			$value_set['id']				= $id;
+			$value_set['entry_date']		= time();
+			$value_set['title']				= $this->_db->db_addslashes($data['title']);
+			$value_set['descr']				= $this->_db->db_addslashes($data['descr']);
+			$value_set['status_id']			= (int)$data['status_id'];
+			$value_set['category']			= (int)$data['cat_id'];
+			$value_set['vendor_id']			= (int)$data['vendor_id'];
+			$value_set['coordinator_id']	= (int)$data['coordinator_id'];
+			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
+			$value_set['user_id']			= $this->account;
+			$value_set['modified_date']		= time();
+
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -248,9 +234,19 @@
 
 			$value_set	= $this->_get_value_set( $data );
 
+			$value_set['title']				= $this->_db->db_addslashes($data['title']);
+			$value_set['descr']				= $this->_db->db_addslashes($data['descr']);
+			$value_set['status_id']			= (int)$data['status_id'];
+			$value_set['category']			= (int)$data['cat_id'];
+			$value_set['vendor_id']			= (int)$data['vendor_id'];
+			$value_set['coordinator_id']	= (int)$data['coordinator_id'];
+			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
+			$value_set['user_id']			= $this->account;
+			$value_set['modified_date']		= time();
+
 			try
 			{
-				$this->_edit($id, $value_set);
+				$this->_edit($id, $value_set, 'fm_condition_survey');
 			}
 
 			catch(Exception $e)
@@ -275,7 +271,7 @@
 
 			try
 			{
-				$this->_edit($id, $value_set);
+				$this->_edit($id, $value_set, 'fm_condition_survey');
 			}
 
 			catch(Exception $e)
@@ -287,131 +283,6 @@
 			}
 
 			return $id;
-		}
-
-		private function _edit($id, $value_set)
-		{
-			$table = 'fm_condition_survey';
-			$id = (int)$id;
-
-			$value_set	= $this->_db->validate_update($value_set);
-
-			$this->_db->transaction_begin();
-
-			$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
-
-			try
-			{
-				$this->_db->Exception_On_Error = true;
-				$this->_db->query($sql,__LINE__,__FILE__);
-				$this->_db->Exception_On_Error = false;
-			}
-
-			catch(Exception $e)
-			{
-				if ( $e )
-				{
-					throw $e;
-				}
-			}
-
-			$this->_db->transaction_commit();
-			return $id;
-		}
-
-
-		private function _get_value_set($data)
-		{
-			$value_set = array
-			(
-				'title'				=> $this->_db->db_addslashes($data['title']),
-				'descr'				=> $this->_db->db_addslashes($data['descr']),
-				'status_id'			=> (int)$data['status_id'],
-				'category'			=> (int)$data['cat_id'],
-				'vendor_id'			=> (int)$data['vendor_id'],
-				'coordinator_id'	=> (int)$data['coordinator_id'],
-				'report_date'		=> phpgwapi_datetime::date_to_timestamp($data['report_date']),
-				'user_id'			=> $this->account,
-				'modified_date'		=> time(),
-			);
-
-
-			if(isset($data['location']) && is_array($data['location']))
-			{
-				foreach ($data['location'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
-				}
-				$value_set['location_code'] = implode('-', $data['location']);
-			}
-
-			if(isset($data['extra']) && is_array($data['extra']))
-			{
-				foreach ($data['extra'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
-				}
-
-				if($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
-				{
-					$entity	= CreateObject('property.soadmin_entity');
-					$entity_category = $entity->read_single_category($data['extra']['p_entity_id'],$data['extra']['p_cat_id']);
-				}
-			}
-
-			if(isset($values['attributes']) && is_array($values['attributes']))
-			{
-				$data_attribute = $this->custom->prepare_for_db($table, $values['attributes']);
-				if(isset($data_attribute['value_set']))
-				{
-					foreach($data_attribute['value_set'] as $input_name => $value)
-					{
-						if(isset($value) && $value)
-						{
-							$value_set[$input_name] = $value;
-						}
-					}
-				}
-			}
-
-			$_address = array();
-			if(isset($data['street_name']) && $data['street_name'])
-			{
-				$_address[] = "{$data['street_name']} {$data['street_number']}";
-			}
-
-			if(isset($data['location_name']) && $data['location_name'])
-			{
-				$_address[] = $data['location_name'];
-			}
-
-			if(isset($data['additional_info']) && $data['additional_info'])
-			{
-				foreach($data['additional_info'] as $key => $value)
-				{
-					if($value)
-					{
-						$_address[] = "{$key}|{$value}";
-					}
-				}
-			}
-
-			if(isset($entity_category) && $entity_category)
-			{
-				$_address[] = "{$entity_category['name']}::{$data['extra']['p_num']}";
-			}
-
-			$address	= $this->_db->db_addslashes(implode('::', $_address));
-
-			$value_set['address'] = $address;
-
-			return $value_set;
 		}
 
 		public function import($survey, $import_data = array())
