@@ -181,9 +181,10 @@
 
 			$this->_db->transaction_begin();
 
+			$value_set						= $this->_get_value_set( $data );
+
 			$id = $this->_db->next_id($table);
 
-			$value_set						= $this->_get_value_set( $data );
 			$value_set['id']				= $id;
 			$value_set['entry_date']		= time();
 			$value_set['title']				= $this->_db->db_addslashes($data['title']);
@@ -310,25 +311,26 @@
 
 			foreach ($import_data as $entry)
 			{
-				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0)
+				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && strlen($entry['building_part']) > 2)
 				{
 					$request = array();
-					$request['street_name'] = $location_data['street_name'];
-					$request['street_number'] = $location_data['street_number'];
-					$request['location'] = $location;
-					$request['location_code'] = $survey['location_code'];
-					$request['origin'] = array(array('location' => '.project.condition_survey', 'data' => array(array('id' => (int)$survey['id']))));
-
-					$request['title'] = $entry['title'];
-					$request['descr'] = $entry['descr'];
-					$request['cat_id'] = 13; //???? FIXME
-					$request['building_part'] = $entry['building_part'];
-					$request['coordinator'] = $survey['coordinator_id'];
-					$request['status'] = 'registrert';//???? FIXME
-					$request['budget'] = $entry['amount'];
-					$request['planning_date'] = mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
-					$request['planning_value'] = $entry['amount'];
-					$request['condition'] = array
+					$request['condition_survey_id'] = $survey['id'];
+					$request['street_name']			= $location_data['street_name'];
+					$request['street_number']		= $location_data['street_number'];
+					$request['location']			= $location;
+					$request['location_code']		= $survey['location_code'];
+					$request['origin_id']			= $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
+					$request['origin_item_id']		= (int)$survey['id'];
+					$request['title']				= substr($entry['title'], 0, 255);
+					$request['descr']				= $entry['descr'];
+					$request['cat_id']				= 13; //???? FIXME
+					$request['building_part']		= $entry['building_part'];
+					$request['coordinator']			= $survey['coordinator_id'];
+					$request['status']				= 'registrert';//???? FIXME
+					$request['budget']				= $entry['amount'];
+					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
+					$request['planning_value']		= $entry['amount'];
+					$request['condition']			= array
 					(
 						array
 						(

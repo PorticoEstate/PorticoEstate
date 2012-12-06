@@ -28,44 +28,41 @@
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');
+	phpgw::import_class('property.socommon_core');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_sorequest
+	class property_sorequest extends property_socommon_core
 	{
 		public $sum_budget = 0;
 		public $sum_consume = 0;
 		protected $global_lock = false;
 		function __construct()
 		{
+			parent::__construct();
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
-			$this->custom 		= createObject('property.custom_fields');
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
-			$this->left_join	= & $this->db->left_join;
-			$this->like			= & $this->db->like;
 			$this->interlink 	= CreateObject('property.interlink');
 		}
 
 		function read_priority_key()
 		{
-			$this->db->query("SELECT * FROM fm_request_condition_type ORDER BY priority_key DESC, id ASC",__LINE__,__FILE__);
+			$this->_db->query("SELECT * FROM fm_request_condition_type ORDER BY priority_key DESC, id ASC",__LINE__,__FILE__);
 
 			$priority_key = array();
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				$priority_key[] = array
 				(
-					'id' 			=> $this->db->f('id'),
-					'name' 			=> $this->db->f('name',true),
-					'descr' 		=> $this->db->f('descr',true),
-					'priority_key' 	=> $this->db->f('priority_key')
+					'id' 			=> $this->_db->f('id'),
+					'name' 			=> $this->_db->f('name',true),
+					'descr' 		=> $this->_db->f('descr',true),
+					'priority_key' 	=> $this->_db->f('priority_key')
 				);
 			}
 
@@ -77,7 +74,7 @@
 
 			while (is_array($values['priority_key']) && list($id,$priority_key) = each($values['priority_key']))
 			{
-				$this->db->query("UPDATE fm_request_condition_type SET priority_key = $priority_key WHERE id = $id",__LINE__,__FILE__);
+				$this->_db->query("UPDATE fm_request_condition_type SET priority_key = $priority_key WHERE id = $id",__LINE__,__FILE__);
 			}
 
 			$this->update_score();
@@ -96,11 +93,11 @@
 			else
 			{
 				$request = array();
-				$this->db->query("SELECT id FROM fm_request",__LINE__,__FILE__);
+				$this->_db->query("SELECT id FROM fm_request",__LINE__,__FILE__);
 
-				while ($this->db->next_record())
+				while ($this->_db->next_record())
 				{
-					$request[] = $this->db->f('id');
+					$request[] = $this->_db->f('id');
 				}
 			}
 
@@ -113,37 +110,37 @@
 				if($GLOBALS['phpgw_info']['server']['db_type']=='pgsql' || $GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 				{
 					$sql = "UPDATE fm_request SET score = (SELECT sum(CAST(priority_key as int4) * ( CAST(degree as int4) * CAST(probability as int4) * ( CAST(consequence as int4) )))  FROM fm_request_condition"
-						. " {$this->join}  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = {$id}) WHERE fm_request.id = {$id}";
+						. " {$this->_join}  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = {$id}) WHERE fm_request.id = {$id}";
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->_db->query($sql,__LINE__,__FILE__);
 				}
 				else
 				{
 					$sql = "SELECT sum(priority_key * ( degree * probability * ( consequence ))) AS score FROM fm_request_condition"
-						. " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id";
+						. " $this->_join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id";
 
-					$this->db->query($sql,__LINE__,__FILE__);
+					$this->_db->query($sql,__LINE__,__FILE__);
 
-					$this->db->next_record();
-					$score = $this->db->f('score');
-					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
+					$this->_db->next_record();
+					$score = $this->_db->f('score');
+					$this->_db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
 			}
-			$this->db->query("UPDATE fm_request SET score = 0 WHERE score IS NULL",__LINE__,__FILE__);
-			$this->db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE authorities_demands = 1",__LINE__,__FILE__);
+			$this->_db->query("UPDATE fm_request SET score = 0 WHERE score IS NULL",__LINE__,__FILE__);
+			$this->_db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE authorities_demands = 1",__LINE__,__FILE__);
 		}
 
 		function select_status_list()
 		{
-			$this->db->query("SELECT id, descr FROM fm_request_status ORDER BY sorting ");
+			$this->_db->query("SELECT id, descr FROM fm_request_status ORDER BY sorting ");
 
 			$status = array();
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				$status[] = array
 				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
+					'id'	=> $this->_db->f('id'),
+					'name'	=> $this->_db->f('descr',true)
 				);
 			}
 			return $status;
@@ -151,18 +148,18 @@
 
 		function select_condition_type_list()
 		{
-			$this->db->query("SELECT * FROM fm_request_condition_type ORDER BY id",__LINE__,__FILE__);
+			$this->_db->query("SELECT * FROM fm_request_condition_type ORDER BY id",__LINE__,__FILE__);
 
 			$values = array();
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
-				$id = $this->db->f('id');
+				$id = $this->_db->f('id');
 				$values[$id] = array
 				(
 					'id'		=> $id,
-					'name'		=> $this->db->f('name',true),
-					'descr'		=> $this->db->f('descr',true),
-					'weight'	=> $this->db->f('priority_key')
+					'name'		=> $this->_db->f('name',true),
+					'descr'		=> $this->_db->f('descr',true),
+					'weight'	=> $this->_db->f('priority_key')
 				);
 			}
 			return $values;
@@ -175,18 +172,18 @@
 			foreach($condition_type_list as $condition_type)
 			{
 				$i = (int)$condition_type['id'];
-				$this->db->query("SELECT * FROM fm_request_condition WHERE request_id={$request_id} AND condition_type = {$i}",__LINE__,__FILE__);
+				$this->_db->query("SELECT * FROM fm_request_condition WHERE request_id={$request_id} AND condition_type = {$i}",__LINE__,__FILE__);
 
-				$this->db->next_record();
+				$this->_db->next_record();
 
 				$values[$i] = array
 				(
 					'request_id'		=> $request_id,
-					'condition_type'	=> $this->db->f('condition_type'),
-					'reference'			=> $this->db->f('reference'),
-					'degree'			=> $this->db->f('degree'),
-					'probability'		=> $this->db->f('probability'),
-					'consequence'		=> $this->db->f('consequence')
+					'condition_type'	=> $this->_db->f('condition_type'),
+					'reference'			=> $this->_db->f('reference'),
+					'degree'			=> $this->_db->f('degree'),
+					'probability'		=> $this->_db->f('probability'),
+					'consequence'		=> $this->_db->f('consequence')
 				);
 			}
 
@@ -374,27 +371,27 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
-			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
+			$this->_db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
 			$_attrib = array();
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
-				$_column_name = $this->db->f('column_name');
+				$_column_name = $this->_db->f('column_name');
 				$cols .= ",{$entity_table}.{$_column_name}";
 
 				$cols_return[] 				= $_column_name;
 				$cols_group[]				= $_column_name;
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= $_column_name;
-				$uicols['descr'][]			= $this->db->f('input_text',true);
-				$uicols['statustext'][]		= $this->db->f('statustext',true);
+				$uicols['descr'][]			= $this->_db->f('input_text',true);
+				$uicols['statustext'][]		= $this->_db->f('statustext',true);
 				$uicols['exchange'][]		= '';
 				$uicols['align'][]			= '';
-				$uicols['datatype'][]		= $this->db->f('datatype');
+				$uicols['datatype'][]		= $this->_db->f('datatype');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= false;
 
-				$_attrib[$_column_name] = $this->db->f('id');
+				$_attrib[$_column_name] = $this->_db->f('id');
 			}
 
 			$cols.= ",$entity_table.coordinator";
@@ -413,11 +410,11 @@
 
 
 			$paranthesis = '(';
-			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
+			$joinmethod = "{$this->_left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
 			$paranthesis .= '(';
-			$joinmethod .= "{$this->left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
+			$joinmethod .= "{$this->_left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
 			$paranthesis .= '(';
-			$joinmethod .= "{$this->left_join} fm_request_condition ON {$entity_table}.id = fm_request_condition.request_id)";
+			$joinmethod .= "{$this->_left_join} fm_request_condition ON {$entity_table}.id = fm_request_condition.request_id)";
 
 			$GLOBALS['phpgw']->config->read();
 			$_location_level = isset($GLOBALS['phpgw']->config->config_data['request_location_level']) && $GLOBALS['phpgw']->config->config_data['request_location_level'] ? $GLOBALS['phpgw']->config->config_data['request_location_level'] : 0;
@@ -468,10 +465,10 @@
 				if($status_id == 'open')
 				{
 					$_status_filter = array();
-					$this->db->query("SELECT * FROM fm_request_status WHERE delivered IS NULL AND closed IS NULL");
-					while($this->db->next_record())
+					$this->_db->query("SELECT * FROM fm_request_status WHERE delivered IS NULL AND closed IS NULL");
+					while($this->_db->next_record())
 					{
-						$_status_filter[] = $this->db->f('id');
+						$_status_filter[] = $this->_db->f('id');
 					}
 					$filtermethod .= " $where fm_request.status IN ('" . implode("','", $_status_filter) . "')"; 
 				}
@@ -491,7 +488,7 @@
 
 			if ($building_part)
 			{
-				$filtermethod .= " $where fm_request.building_part {$this->like} '{$building_part}%'";
+				$filtermethod .= " $where fm_request.building_part {$this->_like} '{$building_part}%'";
 				$where = 'AND';
 			}
 
@@ -538,11 +535,11 @@
 				}
 				else
 				{
-					$query = $this->db->db_addslashes($query);
-					$querymethod = " $where (fm_request.title {$this->like} '%$query%' OR fm_request.address {$this->like} '%$query%' OR fm_request.location_code {$this->like} '%$query%' OR fm_request.id =" . (int)$query;
+					$query = $this->_db->db_addslashes($query);
+					$querymethod = " $where (fm_request.title {$this->_like} '%$query%' OR fm_request.address {$this->_like} '%$query%' OR fm_request.location_code {$this->_like} '%$query%' OR fm_request.id =" . (int)$query;
 					for ($i=1;$i<=($_location_level);$i++)
 					{
-						$querymethod .= " OR fm_location{$i}.loc{$i}_name {$this->like} '%$query%'";
+						$querymethod .= " OR fm_location{$i}.loc{$i}_name {$this->_like} '%$query%'";
 					}
 					$querymethod .= ')';
 				}
@@ -579,19 +576,19 @@
 			$cols_return		= $this->bocommon->cols_return;
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
-			$this->db->fetchmode = 'ASSOC';
+			$this->_db->fetchmode = 'ASSOC';
 
 			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget  FROM ({$sql}) as t";
 
-			$this->db->query($sql2,__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->total_records = $this->db->f('cnt');
-			$this->sum_budget	= $this->db->f('sum_budget');
+			$this->_db->query($sql2,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$this->total_records = $this->_db->f('cnt');
+			$this->sum_budget	= $this->_db->f('sum_budget');
 
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
-			$this->db->query($sql3,__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->sum_consume	= $this->db->f('sum_consume');
+			$this->_db->query($sql3,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$this->sum_consume	= $this->_db->f('sum_consume');
 			
 //			_debug_array($sql_arr);
 
@@ -604,11 +601,11 @@
 			{
 				if(!$allrows)
 				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 				}
 				else
 				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+					$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 			}
 			$_datatype = array();
@@ -618,13 +615,13 @@
 			}
 			$dataset = array();
 			$j=0;
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				foreach($cols_return as $key => $field)
 				{
 					$dataset[$j][$field] = array
 						(
-							'value'		=> $this->db->f($field),
+							'value'		=> $this->_db->f($field),
 							'datatype'	=> $_datatype[$field],
 							'attrib_id'	=> $_attrib[$field]
 						);
@@ -635,12 +632,12 @@
 			foreach ($dataset as &$entry)
 			{
 				$sql = "SELECT sum(amount) as consume FROM fm_request_consume WHERE request_id={$entry['request_id']['value']}";
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->next_record();
 
 				$entry['consume'] = array
 				(
-					'value'		=> $this->db->f('consume'),
+					'value'		=> $this->_db->f('consume'),
 					'datatype'	=> false,
 					'attrib_id'	=> false,
 				);
@@ -657,40 +654,40 @@
 			$request_id = (int) $request_id;
 			$sql = "SELECT * FROM fm_request WHERE id={$request_id}";
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$request = array();
-			if ($this->db->next_record())
+			if ($this->_db->next_record())
 			{
 				$request = array
 					(
-						'id'					=> $this->db->f('id'),
-						'request_id'			=> $this->db->f('id'), // FIXME
-						'title'					=> $this->db->f('title', true),
-						'location_code'			=> $this->db->f('location_code'),
-						'descr'					=> $this->db->f('descr', true),
-						'status'				=> $this->db->f('status'),
-						'budget'				=> (int)$this->db->f('budget'),
-						'tenant_id'				=> $this->db->f('tenant_id'),
-						'owner'					=> $this->db->f('owner'),
-						'coordinator'			=> $this->db->f('coordinator'),
-						'access'				=> $this->db->f('access'),
-						'start_date'			=> $this->db->f('start_date'),
-						'end_date'				=> $this->db->f('end_date'),
-						'cat_id'				=> $this->db->f('category'),
-						'branch_id'				=> $this->db->f('branch_id'),
-						'authorities_demands'	=> $this->db->f('authorities_demands'),
-						'score'					=> $this->db->f('score'),
-						'p_num'					=> $this->db->f('p_num'),
-						'p_entity_id'			=> $this->db->f('p_entity_id'),
-						'p_cat_id'				=> $this->db->f('p_cat_id'),
-						'contact_phone'			=> $this->db->f('contact_phone', true),
-						'building_part'			=> $this->db->f('building_part'),
-						'entry_date'			=> $this->db->f('entry_date'),
-						'closed_date'			=> $this->db->f('closed_date'),
-						'in_progress_date'		=> $this->db->f('in_progress_date'),
-						'delivered_date'		=> $this->db->f('delivered_date'),
-						'regulations' 			=> explode(',', $this->db->f('regulations'))
+						'id'					=> $this->_db->f('id'),
+						'request_id'			=> $this->_db->f('id'), // FIXME
+						'title'					=> $this->_db->f('title', true),
+						'location_code'			=> $this->_db->f('location_code'),
+						'descr'					=> $this->_db->f('descr', true),
+						'status'				=> $this->_db->f('status'),
+						'budget'				=> (int)$this->_db->f('budget'),
+						'tenant_id'				=> $this->_db->f('tenant_id'),
+						'owner'					=> $this->_db->f('owner'),
+						'coordinator'			=> $this->_db->f('coordinator'),
+						'access'				=> $this->_db->f('access'),
+						'start_date'			=> $this->_db->f('start_date'),
+						'end_date'				=> $this->_db->f('end_date'),
+						'cat_id'				=> $this->_db->f('category'),
+						'branch_id'				=> $this->_db->f('branch_id'),
+						'authorities_demands'	=> $this->_db->f('authorities_demands'),
+						'score'					=> $this->_db->f('score'),
+						'p_num'					=> $this->_db->f('p_num'),
+						'p_entity_id'			=> $this->_db->f('p_entity_id'),
+						'p_cat_id'				=> $this->_db->f('p_cat_id'),
+						'contact_phone'			=> $this->_db->f('contact_phone', true),
+						'building_part'			=> $this->_db->f('building_part'),
+						'entry_date'			=> $this->_db->f('entry_date'),
+						'closed_date'			=> $this->_db->f('closed_date'),
+						'in_progress_date'		=> $this->_db->f('in_progress_date'),
+						'delivered_date'		=> $this->_db->f('delivered_date'),
+						'regulations' 			=> explode(',', $this->_db->f('regulations'))
 					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
@@ -698,40 +695,40 @@
 					$request['attributes'] = $values['attributes'];
 					foreach ( $request['attributes'] as &$attr )
 					{
-						$attr['value'] 	= $this->db->f($attr['column_name']);
+						$attr['value'] 	= $this->_db->f($attr['column_name']);
 					}
 				}
 
-				$location_code = $this->db->f('location_code');
+				$location_code = $this->_db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
 
 				$sql = "SELECT * FROM fm_request_planning WHERE request_id={$request_id} ORDER BY date ASC";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while($this->db->next_record())
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while($this->_db->next_record())
 				{
 					$request['planning'][] = array
 					(
-						'id'			=> $this->db->f('id'),
-						'amount'		=> $this->db->f('amount'),
-						'date'			=> $this->db->f('date'),
-						'user_id'		=> $this->db->f('user_id'),
-						'entry_date'	=> $this->db->f('entry_date'),
-						'descr'			=> $this->db->f('descr',true)
+						'id'			=> $this->_db->f('id'),
+						'amount'		=> $this->_db->f('amount'),
+						'date'			=> $this->_db->f('date'),
+						'user_id'		=> $this->_db->f('user_id'),
+						'entry_date'	=> $this->_db->f('entry_date'),
+						'descr'			=> $this->_db->f('descr',true)
 					);
 				}
 
 				$sql = "SELECT * FROM fm_request_consume WHERE request_id={$request_id} ORDER BY date ASC";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while($this->db->next_record())
+				$this->_db->query($sql,__LINE__,__FILE__);
+				while($this->_db->next_record())
 				{
 					$request['consume'][] = array
 					(
-						'id'			=> $this->db->f('id'),
-						'amount'		=> $this->db->f('amount'),
-						'date'			=> $this->db->f('date'),
-						'user_id'		=> $this->db->f('user_id'),
-						'entry_date'	=> $this->db->f('entry_date'),
-						'descr'			=> $this->db->f('descr',true)
+						'id'			=> $this->_db->f('id'),
+						'amount'		=> $this->_db->f('amount'),
+						'date'			=> $this->_db->f('date'),
+						'user_id'		=> $this->_db->f('user_id'),
+						'entry_date'	=> $this->_db->f('entry_date'),
+						'descr'			=> $this->_db->f('descr',true)
 					);
 				}
 			}
@@ -742,15 +739,15 @@
 		function request_workorder_data($request_id = '')
 		{
 			$request_id = (int)$request_id;
-			$this->db->query("select budget, id as workorder_id, vendor_id from fm_workorder where request_id='$request_id'");
+			$this->_db->query("select budget, id as workorder_id, vendor_id from fm_workorder where request_id='$request_id'");
 			$budget = array();
-			while ($this->db->next_record())
+			while ($this->_db->next_record())
 			{
 				$budget[] = array
 					(
-						'workorder_id'	=> $this->db->f('workorder_id'),
-						'budget'	=> sprintf("%01.2f",$this->db->f('budget')),
-						'vendor_id'	=> $this->db->f('vendor_id')
+						'workorder_id'	=> $this->_db->f('workorder_id'),
+						'budget'	=> sprintf("%01.2f",$this->_db->f('budget')),
+						'vendor_id'	=> $this->_db->f('vendor_id')
 					);
 			}
 			return $budget;
@@ -761,11 +758,11 @@
 		{
 			$name = 'request';
 			$now = time();
-			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
-			$this->db->next_record();
-			$next_id = $this->db->f('value') +1;
-			$start_date = (int)$this->db->f('start_date');
-			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
+			$this->_db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
+			$this->_db->next_record();
+			$next_id = $this->_db->f('value') +1;
+			$start_date = (int)$this->_db->f('start_date');
+			$this->_db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 			return $next_id;
 		}
 
@@ -773,9 +770,9 @@
 		{
 			$name = 'request';
 			$now = time();
-			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
-			$this->db->next_record();
-			$id = $this->db->f('value')+1;
+			$this->_db->query("SELECT value FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
+			$this->_db->next_record();
+			$id = $this->_db->f('value')+1;
 			return $id;
 		}
 
@@ -785,67 +782,29 @@
 
 			$value_set = array();
 
-			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
-			{
-				if($value)
-				{
-					$value_set[$input_name] = $value;
-				}
-			}
-
-			while (is_array($request['extra']) && list($input_name,$value) = each($request['extra']))
-			{
-				if($value)
-				{
-					$value_set[$input_name] = $value;
-				}
-			}
-//	_debug_array($value_set);die();
-
-			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute);
-			if(isset($data_attribute['value_set']))
-			{
-				foreach($data_attribute['value_set'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
-				}
-			}
-
-			if($request['street_name'])
-			{
-				$address[]= $request['street_name'];
-				$address[]= $request['street_number'];
-				$address	= $this->db->db_addslashes(implode(" ", $address));
-			}
-
-			if(!$address)
-			{
-				$address = $this->db->db_addslashes($request['location_name']);
-			}
+			$data = $request;
+			$data['attributes'] = $values_attribute;
+			
+			$value_set						= $this->_get_value_set( $data );
 
 
-			if ( $this->db->get_transaction() )
+			if ( $this->_db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
 			else
 			{
-				$this->db->transaction_begin();
+				$this->_db->transaction_begin();
 			}
-
 
 			$id = $this->next_id();
 
 			$value_set['id'] 					= $id;
-			$value_set['title']					= $this->db->db_addslashes($request['title']);
+			$value_set['title']					= $this->_db->db_addslashes($request['title']);
 			$value_set['owner']					= $this->account;
 			$value_set['category']				= $request['cat_id'];
-			$value_set['descr']					= $this->db->db_addslashes($request['descr']);
-			$value_set['location_code']			= $request['location_code'];
-			$value_set['address']				= $address;
+			$value_set['descr']					= $this->_db->db_addslashes($request['descr']);
+//			$value_set['location_code']			= $request['location_code'];
 			$value_set['entry_date']			= time();
 			$value_set['budget']				= $request['budget'];
 			$value_set['status']				= $request['status'];
@@ -856,11 +815,12 @@
 			$value_set['start_date']			= $request['start_date'];
 			$value_set['end_date']				= $request['end_date'];
 			$value_set['regulations']			= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
+			$value_set['condition_survey_id'] 	= $request['condition_survey_id'];
 
 			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
+			$values	= $this->_db->validate_insert(array_values($value_set));
 
-			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+			$this->_db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
 
 			if(isset($request['condition']) && is_array($request['condition']))
@@ -870,7 +830,7 @@
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
 					if($_condition_type)
 					{
-						$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
+						$this->_db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 							. "VALUES ("
 							. (int) $id. ","
 							. (int) $_condition_type . ","
@@ -888,7 +848,7 @@
 
 			if($request['extra']['contact_phone'] && $request['extra']['tenant_id'])
 			{
-				$this->db->query("update fm_tenant set contact_phone='". $request['extra']['contact_phone']. "' where id='". $request['extra']['tenant_id']. "'",__LINE__,__FILE__);
+				$this->_db->query("update fm_tenant set contact_phone='". $request['extra']['contact_phone']. "' where id='". $request['extra']['tenant_id']. "'",__LINE__,__FILE__);
 			}
 
 			if ($request['power_meter'] )
@@ -896,49 +856,38 @@
 				$this->soproject->update_power_meter($request['power_meter'],$request['location_code'],$address);
 			}
 
-//_debug_array($request['origin']);
-			if(is_array($request['origin']) && isset($request['origin'][0]['data'][0]['id']))
+			if($interlink_data = $this->_get_interlink_data($id, $request, '.project.request'))
 			{
-				$interlink_data = array
-					(
-						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $request['origin'][0]['location']),
-						'location1_item_id' => $request['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
-						'location2_item_id' => $id,
-						'account_id'		=> $this->account
-					);
-
-				$this->interlink->add($interlink_data,$this->db);
+				$this->interlink->add($interlink_data,$this->_db);
 			}
-//_debug_array($interlink_data);die();
 
 			$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
 
 			$value_set = array();
-			if($this->db->f('in_progress'))
+			if($this->_db->f('in_progress'))
 			{
 				$value_set['in_progress_date']	= time();
 			}
-			if($this->db->f('closed'))
+			if($this->_db->f('closed'))
 			{
 				$value_set['closed_date']		= time();
 			}
-			if($this->db->f('delivered'))
+			if($this->_db->f('delivered'))
 			{
 				$value_set['delivered_date']	= time();
 			}
 
 			if($value_set)
 			{
-				$value_set	= $this->db->validate_update($value_set);
-				$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
+				$value_set	= $this->_db->validate_update($value_set);
+				$this->_db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
 			}
 
 			if($request['planning_value'] && $request['planning_date'])
 			{
-				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+				$this->_db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
 					. "VALUES ('"
 					. $id . "','"
 					. (int)$request['planning_value'] . "',"
@@ -949,7 +898,7 @@
 
 			if($request['consume_value'] && $request['consume_date'])
 			{
-				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+				$this->_db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
 					. "VALUES ('"
 					. $id . "','"
 					. (int)$request['consume_value'] . "',"
@@ -967,7 +916,7 @@
 
 			if ( !$this->global_lock )
 			{
-				$this->db->transaction_commit();
+				$this->_db->transaction_commit();
 			}
 
 //				$receipt['error'][] = array('msg'=>lang('request %1 has not been saved',$id));
@@ -984,23 +933,23 @@
 			{
 				$address[]= $request['street_name'];
 				$address[]= $request['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address = $this->_db->db_addslashes(implode(" ", $address));
 			}
 
 			if(!$address)
 			{
-				$address = $this->db->db_addslashes($request['location_name']);
+				$address = $this->_db->db_addslashes($request['location_name']);
 			}
 
 			$value_set = array
 			(
-				'title' 				=> $this->db->db_addslashes($request['title']),
+				'title' 				=> $this->_db->db_addslashes($request['title']),
 				'status'				=> $request['status'],
 				'category'				=> $request['cat_id'],
 				'start_date'			=> $request['start_date'],
 				'end_date'				=> $request['end_date'],
 				'coordinator'			=> $request['coordinator'],
-				'descr'					=> $this->db->db_addslashes($request['descr']),
+				'descr'					=> $this->_db->db_addslashes($request['descr']),
 				'budget'				=> (int)$request['budget'],
 				'location_code'			=> $request['location_code'],
 				'address'				=> $address,
@@ -1027,40 +976,40 @@
 			}
 
 
-			$this->db->transaction_begin();
+			$this->_db->transaction_begin();
 
-			$this->db->query("SELECT budget,status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
-			$this->db->next_record();
+			$this->_db->query("SELECT budget,status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
+			$this->_db->next_record();
 
-			$old_budget			= $this->db->f('budget');
-			$old_status = $this->db->f('status');
-			$old_category = $this->db->f('category');
-			$old_coordinator = $this->db->f('coordinator');
+			$old_budget			= $this->_db->f('budget');
+			$old_status = $this->_db->f('status');
+			$old_category = $this->_db->f('category');
+			$old_coordinator = $this->_db->f('coordinator');
 			if($old_status != $request['status'])
 			{
 				$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
-				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
+				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->next_record();
 
-				if($this->db->f('in_progress'))
+				if($this->_db->f('in_progress'))
 				{
 					$value_set['in_progress_date']	= time();
 				}
-				if($this->db->f('closed'))
+				if($this->_db->f('closed'))
 				{
 					$value_set['closed_date']		= time();
 				}
-				if($this->db->f('delivered'))
+				if($this->_db->f('delivered'))
 				{
 					$value_set['delivered_date']	= time();
 				}
 			}
 
-			$value_set	= $this->db->validate_update($value_set);
+			$value_set	= $this->_db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$request['id']}'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE fm_request SET $value_set WHERE id= '{$request['id']}'",__LINE__,__FILE__);
 
-			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='{$request['id']}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_request_condition WHERE request_id='{$request['id']}'",__LINE__,__FILE__);
 
 			if(isset($request['condition']) && is_array($request['condition']))
 			{
@@ -1071,7 +1020,7 @@
 					{
 						continue;
 					}
-					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
+					$this->_db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 						. "VALUES ("
 						. (int)$request['id']. ","
 						. (int)$_condition_type . ","
@@ -1088,7 +1037,7 @@
 
 			if($request['extra']['contact_phone'] && $request['extra']['tenant_id'])
 			{
-				$this->db->query("UPDATE fm_tenant SET contact_phone='{$request['extra']['contact_phone']}' WHERE id='{$request['extra']['tenant_id']}'",__LINE__,__FILE__);
+				$this->_db->query("UPDATE fm_tenant SET contact_phone='{$request['extra']['contact_phone']}' WHERE id='{$request['extra']['tenant_id']}'",__LINE__,__FILE__);
 			}
 
 			if ($request['power_meter'] )
@@ -1098,7 +1047,7 @@
 
 			if($request['planning_value'] && $request['planning_date'])
 			{
-				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+				$this->_db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
 					. "VALUES ('"
 					. $request['id']. "','"
 					. (int)$request['planning_value'] . "',"
@@ -1111,13 +1060,13 @@
 			{
 				foreach ($request['delete_planning'] as $delete_planning)
 				{
-					$this->db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);
+					$this->_db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);
 				}
 			}
 
 			if($request['consume_value'] && $request['consume_date'])
 			{
-				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+				$this->_db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
 					. "VALUES ('"
 					. $request['id']. "','"
 					. (int)$request['consume_value'] . "',"
@@ -1130,11 +1079,11 @@
 			{
 				foreach ($request['delete_consume'] as $delete_consume)
 				{
-					$this->db->query("DELETE FROM fm_request_consume WHERE id =" . (int)$delete_consume,__LINE__,__FILE__);
+					$this->_db->query("DELETE FROM fm_request_consume WHERE id =" . (int)$delete_consume,__LINE__,__FILE__);
 				}
 			}
 
-			if($this->db->transaction_commit())
+			if($this->_db->transaction_commit())
 			{
 				if ($old_status != $request['status'])
 				{
@@ -1168,15 +1117,14 @@
 		function delete($request_id )
 		{
 			$request_id = (int) $request_id;
-			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM fm_request_planning WHERE request_id = {$request_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request_consume WHERE request_id = {$request_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM fm_request WHERE id = {$request_id}",__LINE__,__FILE__);
-		//	$this->db->query("DELETE FROM fm_origin WHERE destination = 'request' AND destination_id='" . $request_id . "'",__LINE__,__FILE__);
-			$this->interlink->delete_at_target('property', '.project.request', $request_id, $this->db);
-			$this->db->transaction_commit();
+			$this->_db->transaction_begin();
+			$this->_db->query("DELETE FROM fm_request_planning WHERE request_id = {$request_id}",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_request_consume WHERE request_id = {$request_id}",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_request WHERE id = {$request_id}",__LINE__,__FILE__);
+			$this->interlink->delete_at_target('property', '.project.request', $request_id, $this->_db);
+			$this->_db->transaction_commit();
 		}
 
 		public function get_user_list()
@@ -1184,12 +1132,12 @@
 			$values = array();
 			$users = $GLOBALS['phpgw']->accounts->get_list('accounts', $start=-1, $sort='ASC', $order='account_lastname', $query,$offset=-1);
 			$sql = 'SELECT DISTINCT coordinator FROM fm_request';
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$account_lastname = array();
-			while($this->db->next_record())
+			while($this->_db->next_record())
 			{
-				$user_id	= $this->db->f('coordinator');
+				$user_id	= $this->_db->f('coordinator');
 				if(isset($users[$user_id]))
 				{
 					$name	= $users[$user_id]->__toString();
