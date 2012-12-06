@@ -154,7 +154,8 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$test = true;
+			$test = false;
+
 			if ($test)
 			{
 				if (!empty($_FILES))

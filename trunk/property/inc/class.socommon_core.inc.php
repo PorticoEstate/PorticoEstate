@@ -60,6 +60,11 @@
 		protected $_join;
 
 		/**
+		 * @var string $_join SQL LEFT JOIN statement
+		 */
+		protected $_left_join;
+
+		/**
 		 * @var string $_like SQL LIKE statement
 		 */
 		protected $_like;
@@ -71,6 +76,7 @@
 			$this->_db			= & $GLOBALS['phpgw']->db;
 			$this->_join		= & $this->_db->join;
 			$this->_like		= & $this->_db->like;
+			$this->_left_join	= & $this->db->_left_join;
 			$this->custom		= createObject('property.custom_fields');
 		}
 
@@ -136,6 +142,8 @@
 
 		protected function _get_value_set($data)
 		{
+			$value_set = array();
+
 			if(isset($data['location']) && is_array($data['location']))
 			{
 				foreach ($data['location'] as $input_name => $value)
@@ -212,5 +220,55 @@
 			$value_set['address'] = $address;
 
 			return $value_set;
+		}
+
+		protected function _get_interlink_data($id, $data, $location2)
+		{
+			if(!$id || !$location2)
+			{
+				throw new Exception('property_socommon_core::_get_interlink_data() - missing input');
+			}
+
+			$interlink_data = array();
+
+			if(isset($data['origin']) && is_array($data['origin']))
+			{
+				if($data['origin'][0]['data'][0]['id'])
+				{
+					$data['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', $data['origin'][0]['location']);
+					$data['origin_item_id'] = $data['origin'][0]['data'][0]['id'];
+				}
+			}
+
+			if(isset($data['origin_id']) && $data['origin_id'] && isset($data['origin_item_id']) && $data['origin_item_id'])
+			{
+				$interlink_data = array
+				(
+					'location1_id'		=> $data['origin_id'],
+					'location1_item_id' => $data['origin_item_id'],
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $location2),
+					'location2_item_id' => $id,
+					'account_id'		=> $this->account
+				);
+			}
+			else if(isset($data['extra']) && is_array($data['extra']) && isset($data['extra']['p_num']) && $data['extra']['p_num'])
+			{
+				$data['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$data['extra']['p_entity_id']}.{$data['extra']['p_cat_id']}");
+ 
+ 				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = '. (int)$data['extra']['p_entity_id'] . ' AND id = ' . (int)$data['extra']['p_cat_id']);
+				$this->db->next_record();
+				$prefix = $this->db->f('prefix');
+				$data['origin_item_id']		= (int) ltrim($data['extra']['p_num'], $prefix);
+			
+				$interlink_data = array
+				(
+					'location1_id'		=> $data['origin_id'],
+					'location1_item_id' => $data['origin_item_id'],
+					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location2_item_id' => $id,
+					'account_id'		=> $this->account
+				);
+			}
+			return $interlink_data;
 		}
 	}

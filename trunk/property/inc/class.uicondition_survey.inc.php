@@ -518,7 +518,7 @@
 				$values[] = array
 				(
 					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file' => "<input type='checkbox' name='values[file_action][]' value='{$_entry['name']}' title='$lang_delete'>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}							
 
@@ -595,6 +595,7 @@
 				throw new Exception('uicondition_survey::_handle_files() - missing id');
 			}
 			$bofiles	= CreateObject('property.bofiles');
+
 			if(isset($_POST['file_action']) && is_array($_POST['file_action']))
 			{
 				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
@@ -685,6 +686,7 @@
 				// save a copy to survive multiple steps
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
+				$step = 1;
 			}
 
 			$tabs = array();
