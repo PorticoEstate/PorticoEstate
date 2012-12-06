@@ -1341,7 +1341,7 @@
 
 			$value_set['entry_date'] = time();
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$sql = "SELECT * from fm_location$type_id where location_code ='" . $location['location_code'] . "'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1375,10 +1375,10 @@
 			}
 
 			$cols[] = 'exp_date';
-			$vals[] = date($this->bocommon->datetimeformat,time());
+			$vals[] = date($this->db->datetime_format(),time());
 
 			$cols	=implode(",", $cols);
-			$vals = $this->bocommon->validate_db_insert($vals);
+			$vals = $this->db->validate_insert($vals);
 
 			$this->db->transaction_begin();
 			$sql = "INSERT INTO fm_location" . $type_id ."_history ($cols) VALUES ($vals)";

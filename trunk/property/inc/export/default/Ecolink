@@ -222,15 +222,15 @@
 				$BilagOverf['utbetalingsigndato'],
 				);
 			
-			$values	= $this->bocommon->validate_db_insert($values);
+			$values	= $this->db->validate_insert($values);
 
 			$sql= "INSERT INTO fm_ecobilag (pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
 			. " periode,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,belop,godkjentbelop)"
 			. " values ($values,"
-			. $this->bocommon->moneyformat($BilagOverf['belop']) . ","
-			. $this->bocommon->moneyformat($BilagOverf['godkjentbelop']) . ")";
+			. $this->db->money_format($BilagOverf['belop']) . ","
+			. $this->db->money_format($BilagOverf['godkjentbelop']) . ")";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 		}

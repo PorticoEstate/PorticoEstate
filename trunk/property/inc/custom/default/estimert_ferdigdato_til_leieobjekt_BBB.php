@@ -23,7 +23,7 @@
 
 		if($finnish_date >0)
 		{
-			$finnish_date = date($this->bocommon->dateformat,$finnish_date);
+			$finnish_date = date($db->date_format(),$finnish_date);
 			$db->query("UPDATE fm_location4 set finnish_date = '$finnish_date' WHERE location_code='$location_code'",__LINE__,__FILE__);
 		}
 	}

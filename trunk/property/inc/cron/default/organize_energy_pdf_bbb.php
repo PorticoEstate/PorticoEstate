@@ -166,7 +166,7 @@
 				$insert_values= array
 				(
 					$cron,
-					date($this->bocommon->datetimeformat),
+					date($this->db->datetime_format()),
 					$this->function_name,
 					implode(',',(array_keys($msgbox_data)))
 				);

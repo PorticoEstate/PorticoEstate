@@ -75,7 +75,7 @@
 				}
 			}
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $db->validate_update($value_set);
 			$db->transaction_begin();
 			$db->query("UPDATE fm_entity_2_6 set $value_set WHERE id=" . (int)$receipt['id'],__LINE__,__FILE__);
 			$db->transaction_commit();

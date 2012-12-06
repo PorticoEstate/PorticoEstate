@@ -215,7 +215,7 @@
 			$date_array=phpgwapi_datetime::date_array($values['date']);
 
 			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-//			$date= date($this->bocommon->dateformat,$date);
+//			$date= date($GLOBALS['phpgw']->db->date_format(),$date);
 
 			$new_index=str_replace(",",".",$values['new_index']);
 
@@ -282,7 +282,7 @@
 			$date_array=phpgwapi_datetime::date_array($values['date']);
 
 			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-//			$date= date($this->bocommon->dateformat,$date);
+//			$date= date($GLOBALS['phpgw']->db->date_format(),$date);
 
 			$m_cost			= str_replace(",",".",$values['m_cost']);
 			$w_cost			= str_replace(",",".",$values['w_cost']);
