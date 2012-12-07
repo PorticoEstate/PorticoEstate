@@ -76,7 +76,7 @@
 			$this->_db			= & $GLOBALS['phpgw']->db;
 			$this->_join		= & $this->_db->join;
 			$this->_like		= & $this->_db->like;
-			$this->_left_join	= & $this->db->_left_join;
+			$this->_left_join	= & $this->_db->left_join;
 			$this->custom		= createObject('property.custom_fields');
 		}
 

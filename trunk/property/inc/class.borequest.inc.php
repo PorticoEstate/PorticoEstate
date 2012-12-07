@@ -87,6 +87,8 @@
 			$end_date		= phpgw::get_var('end_date');
 			$building_part	= phpgw::get_var('building_part');
 
+			$this->condition_survey_id = phpgw::get_var('condition_survey_id', 'int', 'REQUEST', 0);
+
 			if(isset($_POST['start']) || isset($_GET['start']))
 			{
 				$this->start = $start;
@@ -443,7 +445,7 @@
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
-				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter));
+				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id));
 
 			$this->total_records	= $this->so->total_records;
 			$this->sum_budget		= $this->so->sum_budget;
@@ -487,6 +489,7 @@
 				$this->uicols['formatter'][] 	= '';
 				$this->uicols['classname'][] 	= '';
 			}
+
 			return $request;
 		}
 
