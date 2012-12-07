@@ -39,11 +39,13 @@
 	{
 		public $sum_budget = 0;
 		public $sum_consume = 0;
+		public $uicols = array();
+
 		protected $global_lock = false;
 		function __construct()
 		{
 			parent::__construct();
-			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
+
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
@@ -212,6 +214,7 @@
 			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
 			$degree_id		= $data['degree_id'];
 			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$condition_survey_id = $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -453,9 +456,16 @@
 				$where = 'AND';
 			}
 
+
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where fm_request.category='{$cat_id}'";
+				$where = 'AND';
+			}
+
+			if ($condition_survey_id > 0)
+			{
+				$filtermethod .= " $where fm_request.condition_survey_id = '{$condition_survey_id}'";
 				$where = 'AND';
 			}
 
@@ -582,7 +592,7 @@
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
-			$this->total_records = $this->_db->f('cnt');
+			$this->_total_records = $this->_db->f('cnt');
 			$this->sum_budget	= $this->_db->f('sum_budget');
 
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";

@@ -201,11 +201,20 @@
 
 			<div id="documents">
 				<script type="text/javascript">
+				   
+				   var survey_id = '<xsl:value-of select='survey/id'/>';
 				   var fileuploader_action = {
 						menuaction:'property.fileuploader.add',
 						upload_target:'property.bocondition_survey.addfiles',
-						id: '<xsl:value-of select='survey/id'/>'
+						id: survey_id
 					};
+					
+					this.show_related_requests = function()
+					{
+						var oArgs = {menuaction:'property.uirequest.index', nonavbar:1, condition_survey_id:survey_id};
+						var requestUrl = phpGWLink('index.php', oArgs);
+						TINY.box.show({iframe:requestUrl, boxid:'frameless',width:screen.width*.9,height:screen.height*.5,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true});
+					}
 				</script>
 
 				<xsl:call-template name="datasource-definition" />
@@ -226,6 +235,27 @@
 					</xsl:choose>
 				</dl>
 			</div>
+			<div id="related">
+				<dl class="proplist-col">
+					<dt>
+						<label>
+							<a href="javascript:show_related_requests()">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'details')"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'details')"/>
+							</a>
+						</label>
+					</dt>
+
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'related')"/></label>
+					</dt>
+					<dd>
+						<div style="clear:both;" id="datatable-container_1"></div>
+					</dd>
+				</dl>
+			</div>
 			<div id="import">
 				<xsl:choose>
 					<xsl:when test="editable = 1">
@@ -243,16 +273,6 @@
 						</dl>
 				</xsl:when>
 			</xsl:choose>
-			</div>
-			<div id="related">
-				<dl class="proplist-col">
-					<dt>
-						<label><xsl:value-of select="php:function('lang', 'related')"/></label>
-					</dt>
-					<dd>
-						<div style="clear:both;" id="datatable-container_1"></div>
-					</dd>
-				</dl>
 			</div>
 			</div>
 				<dl class="proplist-col">

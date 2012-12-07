@@ -56,18 +56,21 @@ YUI({
 	this.fileuploader = function()
 	{
 		var requestUrl = phpGWLink('index.php', fileuploader_action);
-		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){refresh_files()}});
 	}
 
-
-	function closeJS_local()
-	{
-	//	var reqUrl = '<xsl:value-of select="//datatable/source"/>';
-	//	YAHOO.portico.inlineTableHelper('requirement-container', reqUrl, YAHOO.portico.columnDefs);
-	}
 
 	function refresh_files()
 	{
-		alert('refresh_files');
+		var oArgs = {menuaction:'property.uicondition_survey.get_files', id:survey_id};
+		var strURL = phpGWLink('index.php', oArgs, true);
+		YAHOO.portico.updateinlineTableHelper('datatable-container_0', strURL);
 	}
+	
+	function lightbox_hide()
+	{
+		TINY.box.hide();
+		return true;
+	}
+
 

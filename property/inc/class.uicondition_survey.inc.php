@@ -239,7 +239,6 @@
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
 
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			if (!$export)
 			{
@@ -306,8 +305,8 @@
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['import']		= array('label' => lang('import'), 'link' => null);
 			$tabs['related']	= array('label' => lang('related'), 'link' => null);
+			$tabs['import']		= array('label' => lang('import'), 'link' => null);
 
 			if ($id)
 			{
@@ -402,9 +401,10 @@
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 			}
+
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 //			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 
@@ -483,7 +483,7 @@
 
 		public function get_files()
 		{
-			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
 			{
@@ -509,11 +509,33 @@
 			$vfs->override_acl = 0;
 
 
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$total_records = count($files);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $files;
+			}
+			else
+			{
+			//	$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$page = ceil( ( $start / $num_rows) );
+				$files_part = array_chunk($files, $num_rows);
+				$out = $files_part[$page];
+			}
+
+//------ End pagination
+
+
 			$lang_view = lang('click to view file');
 			$lang_delete = lang('click to delete file');
 
 			$values = array();
-			foreach($files as $_entry )
+			foreach($out as $_entry )
 			{
 				$values[] = array
 				(
@@ -522,12 +544,24 @@
 				);
 			}							
 
-			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $values,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+
 		}
 
 		function get_related()
 		{
-			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
 			{
@@ -560,7 +594,7 @@
 
 //------ Start pagination
 
-			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$total_records = count($values);
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
@@ -667,7 +701,7 @@
 
 		public function import()
 		{
-			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'int', 'REQUEST');
 			$this->_handle_import($id);
 		}
 
@@ -686,12 +720,12 @@
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
 
-			$step			= phpgw::get_var('step', 'REQUEST', 'int');
-			$sheet_id		= phpgw::get_var('sheet_id', 'REQUEST', 'int');
+			$step			= phpgw::get_var('step', 'int', 'REQUEST');
+			$sheet_id		= phpgw::get_var('sheet_id', 'int', 'REQUEST');
 			
-			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'REQUEST', 'int');
+			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'int', 'REQUEST');
 
-			if($start_line	= phpgw::get_var('start_line', 'REQUEST', 'int'))
+			if($start_line	= phpgw::get_var('start_line', 'int', 'REQUEST'))
 			{
 				phpgwapi_cache::system_set('property', 'import_sheet_start_line', $start_line);
 			}
@@ -1023,7 +1057,7 @@
 
 		public function edit_survey_title()
 		{
-			$id = phpgw::get_var('id', 'POST', 'int');
+			$id = phpgw::get_var('id', 'int', 'GET');
 
 			if(!$this->acl_edit)
 			{

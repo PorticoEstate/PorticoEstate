@@ -50,6 +50,7 @@
 	var linktToRequest = function(elCell, oRecord, oColumn, oData)
 	{
 	  	elCell.innerHTML = "<a href="+sUrl_request+"&id="+oData+">" + oData + "</a>";
+//	  	elCell.innerHTML = "<a href=" + sUrl_request + "&id=" + oData + "&nonavbar=" + path_values.nonavbar + ">" + oData + "</a>";
 	};
 
 
