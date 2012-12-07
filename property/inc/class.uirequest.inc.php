@@ -1347,7 +1347,7 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$lookup_type = $mode == 'edit' ? 'form' : 'view';
+			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
 			$location_data=$this->bolocation->initiate_ui_location(array(
 					'values'		=> $values['location_data'],
@@ -1659,8 +1659,8 @@
 					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
 					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
 
-					'location_data'						=> $location_data,
-					'location_type'						=> 'form',
+					'location_data2'					=> $location_data,
+			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
 					'lang_save'							=> lang('save'),
