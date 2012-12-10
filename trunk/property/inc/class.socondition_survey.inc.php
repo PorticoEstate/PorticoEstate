@@ -349,6 +349,31 @@
 			$this->_db->transaction_commit();
 		}
 
+		public function get_summation($id)
+		{
+			$table = 'fm_request';
+
+			$condition_survey_id		= (int)$id;
+			$sql = "SELECT category as cat_id, building_part,fm_request_planning.amount, fm_request_planning.date FROM {$table} {$this->_join} fm_request_planning ON fm_request_planning.request_id = {$table}.id  WHERE condition_survey_id={$condition_survey_id}";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while ($this->_db->next_record())
+			{
+				$values[] = array
+				(
+					'building_part'		=> $this->_db->f('building_part'),
+					'amount'			=> $this->_db->f('amount'),
+					'year'				=> date('Y', $this->_db->f('date')),
+					'cat_id'			=> $this->_db->f('cat_id'),
+				);
+			}
+
+			return $values;
+		}
+
+
 		public function delete($id)
 		{
 			$id = (int) $id;
