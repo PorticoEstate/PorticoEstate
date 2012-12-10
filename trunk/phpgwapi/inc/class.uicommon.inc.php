@@ -375,11 +375,14 @@
 				$result['results'] = array();
 			}
 
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
 			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable'	=> $results['total_records'],
 					'totalRecords' 		=> $results['total_records'],// temeporary 
 					'recordsReturned'	=> count($results['results']),
+					'pageSize' 			=> $num_rows,
 					'startIndex' 		=> $results['start'], 
 					'sortKey' 			=> $results['sort'], 
 					'sortDir' 			=> $results['dir'], 

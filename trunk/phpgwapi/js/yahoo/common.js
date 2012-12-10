@@ -326,6 +326,8 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	if(!disablePagination)
 	{
 		options.paginator = YAHOO.portico.setupInlineTablePaginator(paginatorContainer);
+//		options.paginator.setRowsPerPage(20,true);
+
 		url += '&results=' + options.paginator.getRowsPerPage() + '&';
 
 		YAHOO.portico.Paginator[PaginatorName] =options.paginator;
@@ -339,7 +341,14 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
+		metaFields : { 
+			totalResultsAvailable: 'ResultSet.totalResultsAvailable',
+			actions: 'Actions',
+			pageSize: 'ResultSet.pageSize',
+			startIndex: 'ResultSet.startIndex',
+			sortKey: 'ResultSet.sortKey',
+			sortDir: 'ResultSet.sortDir'
+		}
 	};
 	
 	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
@@ -349,10 +358,24 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	   return oPayload;
    }
 	
-	myDataTable.doBeforeLoadData = function(nothing, data) {
-		if (!data.meta.actions) return data;
+	myDataTable.doBeforeLoadData = function(nothing, oResponse, oPayload) {
+
+        oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+//		oPayload.pagination.rowsPerPage= oResponse.meta.pageSize || 10;
+
+		oPayload.pagination = { 
+			rowsPerPage: oResponse.meta.pageSize || 10, 
+			recordOffset: oResponse.meta.startIndex || 0 
+	    }
+/*
+		oPayload.sortedBy = { 
+			key: oResponse.meta.sortKey || "id", 
+			dir: (oResponse.meta.sortDir) ? "yui-dt-" + oResponse.meta.sortDir : "yui-dt-asc" 
+		};
+*/
+		if (!oResponse.meta.actions) return oResponse;
 		
-		actions = data.meta.actions;
+		actions = oResponse.meta.actions;
 		
 		for (var key in actions) {
 			var actionLink = document.createElement('a');
@@ -361,7 +384,7 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 			YAHOO.util.Dom.insertAfter(actionLink, container);
 		};
 		
-		return data;
+		return oResponse;
 	};
 
 	YAHOO.portico.DataTable[DatatableName] = myDataTable;

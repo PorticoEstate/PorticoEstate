@@ -70,7 +70,7 @@ YAHOO.portico.initializeDataTable = function()
 //      baseUrl += 'sort=' + fields[0];
     }
 	
-	  baseUrl += '&results=' + pag.getRowsPerPage() + '&';
+//	  baseUrl += '&results=' + pag.getRowsPerPage() + '&';
     var myDataSource = new YAHOO.util.DataSource(baseUrl);
 
     myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -81,6 +81,7 @@ YAHOO.portico.initializeDataTable = function()
         metaFields : {
             totalResultsAvailable: "ResultSet.totalResultsAvailable",
 			startIndex: 'ResultSet.startIndex',
+			pageSize: 'ResultSet.pageSize',
 			sortKey: 'ResultSet.sortKey',
 			sortDir: 'ResultSet.sortDir'
         }
@@ -463,7 +464,7 @@ YAHOO.portico.initializeDataTable = function()
     myDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
 		oPayload.pagination = { 
-			rowsPerPage: oResponse.meta.paginationRowsPerPage || 10, 
+			rowsPerPage: oResponse.meta.pageSize || 10, 
 			recordOffset: oResponse.meta.startIndex || 0 
 	    }
 		oPayload.sortedBy = { 

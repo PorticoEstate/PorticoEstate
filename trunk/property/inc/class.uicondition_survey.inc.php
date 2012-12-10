@@ -595,6 +595,7 @@
 //------ Start pagination
 
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
 			$total_records = count($values);
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
