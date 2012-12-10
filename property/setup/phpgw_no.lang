@@ -1686,6 +1686,7 @@ sum	property	no	Sum
 sum calculation	property	no	Sum kalkulasjon
 sum deviation	property	no	Sum avvik
 summary	property	no	Sammendrag
+summation	property	no	Summering
 sum of calculation	property	no	Sum kalkulasjon
 sum tax	property	no	sum mva
 sum workorder	property	no	Sum bestilling

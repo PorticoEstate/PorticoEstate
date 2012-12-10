@@ -48,6 +48,7 @@
 			'edit_survey_title'	=> true,
 			'get_files'			=> true,
 			'get_related'		=> true,
+			'get_summation'		=> true,
 			'view_file'			=> true,
 			'import'			=> true
 		);
@@ -306,6 +307,7 @@
 			$active_tab = 'generic';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
 			$tabs['related']	= array('label' => lang('related'), 'link' => null);
+			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
 			$tabs['import']		= array('label' => lang('import'), 'link' => null);
 
 			if ($id)
@@ -316,6 +318,7 @@
 				}
 				$tabs['documents']['link'] = '#documents';
 				$tabs['related']['link'] = '#related';
+				$tabs['summation']['link'] = '#summation';
 
 				if (!$values)
 				{
@@ -376,6 +379,26 @@
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_related', 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> json_encode($related_def)
+			);
+
+			$summation_def = array
+			(
+				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true),
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($summation_def)
 			);
 
 			$data = array
@@ -559,6 +582,49 @@
 
 		}
 
+		function get_summation()
+		{
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$values = $this->bo->get_summation($id);
+			
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $out,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+		}
+
+
 		function get_related()
 		{
 			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
@@ -627,6 +693,8 @@
 			);
 			return $data;
 		}
+
+
 
 
 		/**

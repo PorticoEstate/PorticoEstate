@@ -256,6 +256,16 @@
 					</dd>
 				</dl>
 			</div>
+			<div id="summation">
+				<dl class="proplist-col">
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'summation')"/></label>
+					</dt>
+					<dd>
+						<div style="clear:both;" id="datatable-container_2"></div>
+					</dd>
+				</dl>
+			</div>
 			<div id="import">
 				<xsl:choose>
 					<xsl:when test="editable = 1">

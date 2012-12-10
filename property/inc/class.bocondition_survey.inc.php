@@ -57,6 +57,9 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$this->cats->supress_info	= true;
+
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
 			$sort				= phpgw::get_var('sort');
@@ -300,6 +303,28 @@
 				}
 			}
 		}
+
+		public function get_summation($id)
+		{
+			$data = $this->so->get_summation($id);
+
+			$values	=array();
+			foreach ($data as $entry)
+			{
+				$values[$entry['building_part']][$entry['cat_id']][$entry['year']] += $entry['amount'];
+
+	//			$entry['category'] = $this->get_category_name($entry['cat_id']);
+			}
+_debug_array($values);
+			return $values;
+		}
+
+		function get_category_name($cat_id)
+		{
+			$category = $this->cats->return_single($cat_id);
+			return $category[0]['name'];
+		}
+
 
 		public function delete($id)
 		{
