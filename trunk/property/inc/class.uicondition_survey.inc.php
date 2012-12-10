@@ -385,13 +385,13 @@
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true),
-				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.formatLink'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 			);
 
 			$datatable_def[] = array

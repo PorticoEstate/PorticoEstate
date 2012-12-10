@@ -308,7 +308,13 @@
 //_debug_array($survey);			
 
 			$this->_db->transaction_begin();
-
+/*
+					kategorier:
+					13 => D - Drift
+					202 => Kombinasjon
+					14 => U - Investering
+					12 => V - Planlagt
+*/
 			foreach ($import_data as $entry)
 			{
 				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && strlen($entry['building_part']) > 2)
@@ -354,7 +360,10 @@
 			$table = 'fm_request';
 
 			$condition_survey_id		= (int)$id;
-			$sql = "SELECT category as cat_id, building_part,fm_request_planning.amount, fm_request_planning.date FROM {$table} {$this->_join} fm_request_planning ON fm_request_planning.request_id = {$table}.id  WHERE condition_survey_id={$condition_survey_id}";
+			$sql = "SELECT category as cat_id, left(building_part,1) as building_part_, sum(fm_request_planning.amount) as amount , EXTRACT(YEAR from to_timestamp(fm_request_planning.date) ) as year"
+			." FROM {$table} {$this->_join} fm_request_planning ON fm_request_planning.request_id = {$table}.id"
+			." WHERE condition_survey_id={$condition_survey_id}"
+			." GROUP BY building_part_ ,category, year ORDER BY building_part_";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -363,9 +372,9 @@
 			{
 				$values[] = array
 				(
-					'building_part'		=> $this->_db->f('building_part'),
+					'building_part'		=> $this->_db->f('building_part_'),
 					'amount'			=> $this->_db->f('amount'),
-					'year'				=> date('Y', $this->_db->f('date')),
+					'year'				=> $this->_db->f('year'),//date('Y', $this->_db->f('date')),
 					'cat_id'			=> $this->_db->f('cat_id'),
 				);
 			}
