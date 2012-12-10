@@ -309,22 +309,55 @@
 			$data = $this->so->get_summation($id);
 
 			$values	=array();
+			$i=0;
 			foreach ($data as $entry)
 			{
-				$values[$entry['building_part']][$entry['cat_id']][$entry['year']] += $entry['amount'];
+				$i = $entry['building_part'];
+				
+				$values[$i]['building_part'] = $entry['building_part'];
+				$values[$i]['category'] = $this->get_category_name($entry['cat_id']);
+				
+				$diff = $entry['year'] - date('Y');
+				if($diff < 0)
+				{
+					$period = 1;
+				}
+				else
+				{
+					$period = ceil($diff/5) +1;
+					$period  = $period < 6 ? $period : 6;
+				}
+	
+				for ($j = 1; $j < 7 ; $j++ )
+				{
+					if($j == $period)
+					{
+						$values[$i]["period_{$j}"] += $entry['amount'];
+						$values[$i]['sum'] += $entry['amount'];
+					}
+					else
+					{
+						$values[$i]["period_{$j}"] += 0;					
+					}
+				}
 
-	//			$entry['category'] = $this->get_category_name($entry['cat_id']);
+				$i++;
 			}
-_debug_array($values);
+//_debug_array($values);
 			return $values;
 		}
 
 		function get_category_name($cat_id)
 		{
-			$category = $this->cats->return_single($cat_id);
-			return $category[0]['name'];
-		}
+			static $category_name = array();
 
+			if(!isset($category_name[$cat_id]))
+			{
+				$category = $this->cats->return_single($cat_id);
+				$category_name[$cat_id] = $category[0]['name'];
+			}
+			return $category_name[$cat_id];
+		}
 
 		public function delete($id)
 		{

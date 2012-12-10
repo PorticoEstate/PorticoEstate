@@ -102,6 +102,13 @@ YAHOO.portico.initializeDataTable = function()
 	/* Inline editor from 'rental'*/
 
 
+	var highlightEditableCell = function(oArgs) {
+		var elCell = oArgs.target;
+		if(YAHOO.util.Dom.hasClass(elCell, "yui-dt-editable")) {
+			myDataTable.highlightCell(elCell);
+		}
+	};
+
 	myDataTable.editor_action = YAHOO.portico.editor_action;
 
 		// Handle mouseover and click events for inline editing
@@ -338,7 +345,10 @@ YAHOO.portico.initializeDataTable = function()
    }
 
 
-	myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+	if(!myDataTable.editor_action)
+	{
+		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+	}
 
 	myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
 
@@ -536,12 +546,6 @@ YAHOO.portico.initializeDataTable = function()
 
 };
 
-	var highlightEditableCell = function(oArgs) {
-		var elCell = oArgs.target;
-		if(YAHOO.util.Dom.hasClass(elCell, "yui-dt-editable")) {
-			myDataTable.highlightCell(elCell);
-		}
-	};
 
 
 

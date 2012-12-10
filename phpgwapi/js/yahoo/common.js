@@ -15,6 +15,16 @@ YAHOO.portico.lang = function(section, config) {
 	return config;
 };
 
+/*
+
+	YAHOO.portico.FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+alert('hei');
+//		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">ee"+amount+"</div>";
+	}	
+*/
+
 /** Hook widgets to translations **/
 YAHOO.portico.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
 	YAHOO.portico.lang('Calendar', config);
