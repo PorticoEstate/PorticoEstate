@@ -6928,7 +6928,7 @@
 	* Update property version from 0.9.17.655 to 0.9.17.656
 	* Add Condition Survey as a referencing level to requests
 	*/
-/*	$test[] = '0.9.17.655';
+	$test[] = '0.9.17.655';
 	function property_upgrade0_9_17_655()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -6946,4 +6946,4 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-*/
+
