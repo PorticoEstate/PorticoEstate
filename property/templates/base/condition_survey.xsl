@@ -1,5 +1,22 @@
 <!-- $Id$ -->
 
+<func:function name="phpgw:conditional">
+	<xsl:param name="test"/>
+	<xsl:param name="true"/>
+	<xsl:param name="false"/>
+
+	<func:result>
+		<xsl:choose>
+			<xsl:when test="$test">
+	        	<xsl:value-of select="$true"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$false"/>
+			</xsl:otherwise>
+		</xsl:choose>
+  	</func:result>
+</func:function>
+
 	<!-- add / edit -->
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 		<xsl:call-template name="yui_phpgw_i18n"/>
@@ -336,10 +353,33 @@
 
 <xsl:template name="datasource-definition">
 	<script>
-	YAHOO.util.Event.onDOMReady(function(){
-
-		<xsl:for-each select="datatable_def">
-			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, <xsl:value-of select="ColumnDefs"/>);
+		var columnDefs = [];
+		YAHOO.util.Event.onDOMReady(function(){
+			<xsl:for-each select="datatable_def">
+				columnDefs = [
+					<xsl:for-each select="ColumnDefs">
+					{
+						resizeable: true,
+						key: "<xsl:value-of select="key"/>",
+						<xsl:if test="label">
+						label: "<xsl:value-of select="label"/>",
+						</xsl:if>
+						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+						<xsl:if test="hidden">
+						hidden: true,
+						</xsl:if>
+						<xsl:if test="formatter">
+						formatter: <xsl:value-of select="formatter"/>,
+						</xsl:if>
+						<xsl:if test="editor">
+						editor: <xsl:value-of select="editor"/>,
+					    </xsl:if>
+						className: "<xsl:value-of select="className"/>"
+					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+				</xsl:for-each>
+				];
+			
+			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
 		</xsl:for-each>
 
   	});

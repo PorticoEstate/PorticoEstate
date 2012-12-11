@@ -351,7 +351,7 @@
 			$file_def = array
 			(
 				array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+				array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true),
 			);
 
 
@@ -360,7 +360,7 @@
 			(
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> json_encode($file_def),
+				'ColumnDefs'	=> $file_def,
 			
 			);
 
@@ -378,14 +378,14 @@
 			(
 				'container'		=> 'datatable-container_1',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_related', 'id' => $id,'phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> json_encode($related_def)
+				'ColumnDefs'	=> $related_def
 			);
 
 			$summation_def = array
 			(
 				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.formatLink'),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
@@ -398,7 +398,7 @@
 			(
 				'container'		=> 'datatable-container_2',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
-				'ColumnDefs'	=> json_encode($summation_def)
+				'ColumnDefs'	=> $summation_def
 			);
 
 			$data = array
