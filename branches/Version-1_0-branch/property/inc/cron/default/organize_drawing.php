@@ -190,12 +190,12 @@
 
 				$insert_values= array(
 					$cron,
-					date($this->bocommon->datetimeformat),
+					date($this->db->datetime_format()),
 					$this->function_name,
 					implode(',',(array_keys($msgbox_data)))
 					);
 
-				$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+				$insert_values	= $this->db->validate_insert($insert_values);
 
 				$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 						. "VALUES ($insert_values)";
@@ -416,7 +416,7 @@
 						$values['loc3'],
 						);
 
-					$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+					$insert_values	= $this->db->validate_insert($insert_values);
 
 					$sql = "INSERT INTO fm_document (document_name,title,access,category,entry_date,document_date,version,coordinator,status,"
 						. "location_code,address,branch_id,vendor_id,user_id,loc1,loc2,loc3) "

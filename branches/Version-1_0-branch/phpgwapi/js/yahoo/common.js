@@ -15,6 +15,16 @@ YAHOO.portico.lang = function(section, config) {
 	return config;
 };
 
+/*
+
+	YAHOO.portico.FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+alert('hei');
+//		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">ee"+amount+"</div>";
+	}	
+*/
+
 /** Hook widgets to translations **/
 YAHOO.portico.js_alias_method_chain(YAHOO.widget.Calendar, 'init', 'i18n', function(id, container, config) {
 	YAHOO.portico.lang('Calendar', config);
@@ -205,8 +215,8 @@ YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
 
 	var DatatableName = 'datatable_container' + container;
 	var PaginatorName = 'paginator_container' + container;
-
-	requestUrl = requestUrl ? requestUrl : YAHOO.portico.requestUrl.DatatableName;
+//console.log(YAHOO.portico.Paginator);
+	requestUrl = requestUrl ? requestUrl : YAHOO.portico.requestUrl[DatatableName];
 
 	var callback =
 	{
@@ -220,13 +230,11 @@ YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
 				return;
 			}
 
-			YAHOO.portico.Paginator.PaginatorName.setRowsPerPage(values_ds.ResultSet.Result.length,true);
+			var Paginator = YAHOO.portico.Paginator[PaginatorName];
 
 			//delete values of datatable
-			YAHOO.portico.DataTable.DatatableName.getRecordSet().reset();
-
-			//reset total records always to zero
-			YAHOO.portico.Paginator.PaginatorName.setTotalRecords(0,true);
+			var DataTable = YAHOO.portico.DataTable[DatatableName];
+			DataTable.getRecordSet().reset();
 
 			//obtain records of the last DS and add to datatable
 			var record = values_ds.ResultSet.Result;
@@ -234,32 +242,37 @@ YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
 
 			if(record.length)
 			{
-				YAHOO.portico.DataTable.DatatableName.addRows(record);
+				DataTable.addRows(record);
 			}
 			else
 			{
-				YAHOO.portico.DataTable.DatatableName.render();
+				DataTable.render();
 			}
 
-			//update paginator with news values
-			YAHOO.portico.Paginator.PaginatorName.setTotalRecords(newTotalRecords,true);
+			if(Paginator)
+			{
+				Paginator.setRowsPerPage(values_ds.ResultSet.Result.length,true);
+				//reset total records always to zero
+				Paginator.setTotalRecords(0,true);
 
-			if(typeof(values_ds.ResultSet.results) == 'undefined')
-			{
-				var results = 10;
-			}
-			else
-			{
-				var results = values_ds.ResultSet.results;
-			}
+				//update paginator with news values
+				Paginator.setTotalRecords(newTotalRecords,true);
+				if(typeof(values_ds.ResultSet.results) == 'undefined')
+				{
+					var results = 10;
+				}
+				else
+				{
+					var results = values_ds.ResultSet.results;
+				}
 				
-			var activePage = Math.floor(values_ds.ResultSet.startIndex / results) + 1;
-			YAHOO.portico.Paginator.PaginatorName.setPage(activePage,true); //true no fuerza un recarge solo cambia el paginator
+				var activePage = Math.floor(values_ds.ResultSet.startIndex / results) + 1;
+				Paginator.setPage(activePage,true); //true no fuerza un recarge solo cambia el paginator
+			}
 
 			//update "sortedBy" values
-
 			values_ds.ResultSet.sortDir == "asc"? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
-			YAHOO.portico.DataTable.DatatableName.set("sortedBy",{key:values_ds.ResultSet.sortKey,dir:dir_ds});
+			DataTable.set("sortedBy",{key:values_ds.ResultSet.sortKey,dir:dir_ds});
 		},
 		failure: function(o) {window.alert('Server or your connection is dead.')},
 		timeout: 10000,
@@ -319,13 +332,15 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	options = options || {};
 	options.dynamicData = true;
 	
+	YAHOO.portico.Paginator[PaginatorName] = {};
 	if(!disablePagination)
 	{
 		options.paginator = YAHOO.portico.setupInlineTablePaginator(paginatorContainer);
+//		options.paginator.setRowsPerPage(20,true);
+
 		url += '&results=' + options.paginator.getRowsPerPage() + '&';
 
-
-		YAHOO.portico.Paginator.PaginatorName =options.paginator;
+		YAHOO.portico.Paginator[PaginatorName] =options.paginator;
 	}
 
 
@@ -336,7 +351,14 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	myDataSource.connXhrMode = "queueRequests";
 	myDataSource.responseSchema = {
 		resultsList: "ResultSet.Result",
-		metaFields : { totalResultsAvailable: "ResultSet.totalResultsAvailable", actions: 'Actions' }
+		metaFields : { 
+			totalResultsAvailable: 'ResultSet.totalResultsAvailable',
+			actions: 'Actions',
+			pageSize: 'ResultSet.pageSize',
+			startIndex: 'ResultSet.startIndex',
+			sortKey: 'ResultSet.sortKey',
+			sortDir: 'ResultSet.sortDir'
+		}
 	};
 	
 	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
@@ -346,10 +368,24 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	   return oPayload;
    }
 	
-	myDataTable.doBeforeLoadData = function(nothing, data) {
-		if (!data.meta.actions) return data;
+	myDataTable.doBeforeLoadData = function(nothing, oResponse, oPayload) {
+
+        oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+//		oPayload.pagination.rowsPerPage= oResponse.meta.pageSize || 10;
+
+		oPayload.pagination = { 
+			rowsPerPage: oResponse.meta.pageSize || 10, 
+			recordOffset: oResponse.meta.startIndex || 0 
+	    }
+/*
+		oPayload.sortedBy = { 
+			key: oResponse.meta.sortKey || "id", 
+			dir: (oResponse.meta.sortDir) ? "yui-dt-" + oResponse.meta.sortDir : "yui-dt-asc" 
+		};
+*/
+		if (!oResponse.meta.actions) return oResponse;
 		
-		actions = data.meta.actions;
+		actions = oResponse.meta.actions;
 		
 		for (var key in actions) {
 			var actionLink = document.createElement('a');
@@ -358,11 +394,11 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 			YAHOO.util.Dom.insertAfter(actionLink, container);
 		};
 		
-		return data;
+		return oResponse;
 	};
 
-	YAHOO.portico.DataTable.DatatableName = myDataTable;
-	YAHOO.portico.requestUrl.DatatableName = url;
+	YAHOO.portico.DataTable[DatatableName] = myDataTable;
+	YAHOO.portico.requestUrl[DatatableName] = url;
 
 	return {dataTable: myDataTable, dataSource: myDataSource};
 };

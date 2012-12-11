@@ -44,6 +44,9 @@
 		var $cat_id;
 		var $district_id;
 		var	$xsl_rootdir;
+		protected $join;
+		protected $left_join;
+		protected $like;
 
 		var $public_functions = array
 			(
@@ -63,31 +66,10 @@
 			}
 			$this->async = &$GLOBALS['phpgw']->asyncservice;
 
-			$this->join		= $this->socommon->join;
+			$this->join			= $this->socommon->join;
 			$this->left_join	= $this->socommon->left_join;
-			$this->like		= $this->socommon->like;
+			$this->like			= $this->socommon->like;
 
-			switch($GLOBALS['phpgw_info']['server']['db_type'])
-			{
-			case 'mssql':
-				$this->dateformat 		= "M d Y";
-				$this->datetimeformat 	= "M d Y g:iA";
-				break;
-			case 'mysql':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				break;
-			case 'pgsql':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				//					$this->dateformat 		= "F j, Y";
-				//					$this->datetimeformat 	= "F j, Y g:iA";
-				break;
-			case 'postgres':
-				$this->dateformat 		= "Y-m-d";
-				$this->datetimeformat 	= "Y-m-d G:i:s";
-				break;
-			}
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
 
@@ -136,19 +118,6 @@
 			return $msgbox_data;
 		}
 
-		function moneyformat($amount)
-		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
-			{
-				$moneyformat	= "CONVERT(MONEY,"."'$amount'".",0)";
-			}
-			else
-			{
-				$moneyformat	= "'" . $amount . "'";
-			}
-
-			return $moneyformat;
-		}
 
 		function confirm_session()
 		{
@@ -1458,41 +1427,6 @@
 		}
 
 
-		function validate_db_insert($values)
-		{
-			foreach($values as $value)
-			{
-				if($value || $value === 0)
-				{
-					$insert_value[]	= "'".$value."'";
-				}
-				else
-				{
-					$insert_value[]	= 'NULL';
-				}
-			}
-
-			$values	= implode(",", $insert_value);
-			return $values;
-		}
-
-		function validate_db_update($value_set)
-		{
-			while (is_array($value_set) && list($field,$value) = each($value_set))
-			{
-				if($value || $value === 0)
-				{
-					$value_entry[]= "$field='$value'";
-				}
-				else
-				{
-					$value_entry[]= "$field=NULL";
-				}
-			}
-
-			$value_set	= implode(",", $value_entry);
-			return $value_set;
-		}
 
 		function fm_cache($name='',$value='')
 		{

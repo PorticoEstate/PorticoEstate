@@ -380,7 +380,7 @@
 				}
 			}
 			
-			$results = $results ? $results : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
 
 			$data = array(
 				 'ResultSet' => array(
@@ -389,9 +389,8 @@
 					'sortKey' => 'location_code', 
 					'sortDir' => "ASC", 
 					'Result' => $values,
-					//FIXME: Sigurd 18 oct 2012...
-					'pageSize' => $results,
-					'activePage' => floor($this->bo->start / $results) + 1
+					'pageSize' => $num_rows,
+					'activePage' => floor($this->bo->start / $num_rows) + 1
 				)
 			);
 

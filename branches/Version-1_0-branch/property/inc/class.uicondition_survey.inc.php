@@ -47,6 +47,8 @@
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
 			'get_files'			=> true,
+			'get_related'		=> true,
+			'get_summation'		=> true,
 			'view_file'			=> true,
 			'import'			=> true
 		);
@@ -65,7 +67,8 @@
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::condition_survey";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey";
+	//			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
 		}
 
 
@@ -186,6 +189,17 @@
 						'parameters'	=> json_encode($parameters)
 					);
 
+			$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'import_survey',
+						'text' 			=> lang('import'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.import'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
 			self::render_template_xsl('datatable_common', $data);
 		}
 
@@ -226,7 +240,6 @@
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
 
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 
 			if (!$export)
 			{
@@ -293,7 +306,9 @@
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['import']	= array('label' => lang('import'), 'link' => null);
+			$tabs['related']	= array('label' => lang('related'), 'link' => null);
+			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
+			$tabs['import']		= array('label' => lang('import'), 'link' => null);
 
 			if ($id)
 			{
@@ -302,6 +317,8 @@
 					$tabs['import']['link'] = '#import';
 				}
 				$tabs['documents']['link'] = '#documents';
+				$tabs['related']['link'] = '#related';
+				$tabs['summation']['link'] = '#summation';
 
 				if (!$values)
 				{
@@ -347,6 +364,43 @@
 			
 			);
 
+			$related_def = array
+			(
+				array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_1',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_related', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($related_def)
+			);
+
+			$summation_def = array
+			(
+				array('key' => 'building_part','label'=>lang('building part'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'category','label'=>lang('category'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'period_1','label'=>lang('year') . ':: < 1' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.formatLink'),
+				array('key' => 'period_2','label'=>lang('year') . ':: 1 - 5' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_3','label'=>lang('year') . ':: 6 - 10' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_4','label'=>lang('year') . ':: 11 - 15' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_5','label'=>lang('year') . ':: 16 - 20' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'period_6','label'=>lang('year') . ':: 21 +' ,'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'sum','label'=>lang('sum'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+			);
+
+			$datatable_def[] = array
+			(
+				'container'		=> 'datatable-container_2',
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'ColumnDefs'	=> json_encode($summation_def)
+			);
+
 			$data = array
 			(
 				'datatable_def'					=> $datatable_def,
@@ -370,9 +424,10 @@
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 				self::add_javascript('phpgwapi', 'yui3', 'gallery-formvalidator/gallery-formvalidator-min.js');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
-				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 			}
+
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 //			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 
@@ -451,7 +506,7 @@
 
 		public function get_files()
 		{
-			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 
 			if( !$this->acl_read)
 			{
@@ -477,21 +532,169 @@
 			$vfs->override_acl = 0;
 
 
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$total_records = count($files);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $files;
+			}
+			else
+			{
+			//	$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$page = ceil( ( $start / $num_rows) );
+				$files_part = array_chunk($files, $num_rows);
+				$out = $files_part[$page];
+			}
+
+//------ End pagination
+
+
 			$lang_view = lang('click to view file');
 			$lang_delete = lang('click to delete file');
 
 			$values = array();
-			foreach($files as $_entry )
+			foreach($out as $_entry )
 			{
 				$values[] = array
 				(
 					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
-					'delete_file' => "<input type='checkbox' name='values[file_action][]' value='{$_entry['name']}' title='$lang_delete'>",
+					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
 			}							
 
-			return array('ResultSet'=> array('Result'=>$values), 'totalResultsAvailable' => count($values));
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $values,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+
 		}
+
+		function get_summation()
+		{
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$values = $this->bo->get_summation($id);
+			
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $out,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+		}
+
+
+		function get_related()
+		{
+			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+		
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						$values[] = array
+						(
+							'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'		=> $_target_section['descr'],
+							'title'		=> $_target_entry['title'],
+							'status'	=> $_target_entry['statustext'],
+							'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+							'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						);
+					}
+				}
+			}
+
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+//------ End pagination
+
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $out,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+		}
+
+
 
 
 		/**
@@ -529,6 +732,7 @@
 				throw new Exception('uicondition_survey::_handle_files() - missing id');
 			}
 			$bofiles	= CreateObject('property.bofiles');
+
 			if(isset($_POST['file_action']) && is_array($_POST['file_action']))
 			{
 				$bofiles->delete_file("/condition_survey/{$id}/", array('file_action' => $_POST['file_action']));
@@ -566,7 +770,7 @@
 
 		public function import()
 		{
-			$id = phpgw::get_var('id', 'REQUEST', 'int');
+			$id = phpgw::get_var('id', 'int', 'REQUEST');
 			$this->_handle_import($id);
 		}
 
@@ -585,11 +789,32 @@
 				throw new Exception('uicondition_survey::_handle_import() - missing id');
 			}
 
-			$step			= phpgw::get_var('step', 'REQUEST', 'int');
-			$sheet_id		= phpgw::get_var('sheet_id', 'REQUEST', 'int');
+			$step			= phpgw::get_var('step', 'int', 'REQUEST');
+			$sheet_id		= phpgw::get_var('sheet_id', 'int', 'REQUEST');
 			
-			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'REQUEST', 'int');
-			$start_line	= phpgw::get_var('start_line', 'REQUEST', 'int', 1);
+			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'int', 'REQUEST');
+
+			if($start_line	= phpgw::get_var('start_line', 'int', 'REQUEST'))
+			{
+				phpgwapi_cache::system_set('property', 'import_sheet_start_line', $start_line);
+			}
+			else
+			{
+				$start_line = phpgwapi_cache::system_get('property', 'import_sheet_start_line');
+				$start_line = $start_line  ? $start_line : 1;
+			}
+
+
+			if($columns = phpgw::get_var('columns'))
+			{
+				phpgwapi_cache::system_set('property', 'import_sheet_columns', $columns);
+			}
+			else
+			{
+				$columns = phpgwapi_cache::system_get('property', 'import_sheet_columns');
+				$columns = $columns && is_array($columns) ? $columns : array();
+			}
+
 
 			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
 			{
@@ -598,65 +823,101 @@
 				// save a copy to survive multiple steps
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'condition_survey_import_file',$cached_file);
+				$step = 1;
 			}
 
-//_debug_array($_POST);die();
-			phpgw::import_class('phpgwapi.phpexcel');
-
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$AllSheets = $objPHPExcel->getSheetNames();
-			
-			$sheets = array();
-			if($AllSheets)
-			{
-				foreach ($AllSheets as $key => $sheet)
-				$sheets[] = array
-				(
-					'id'	=> $key,
-					'name'	=> $sheet,
-					'selected' => $sheet_id == $key
-				);
-			}
-
-
-//_debug_array($cached_file);
-//_debug_array($AllSheets);die();
-
-
-
-//			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
 			
 			switch ($step)
 			{
 				case 0:
 					$active_tab = 'step_1';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => '#step_1');
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => null);
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => '#step_1');
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => null);
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 1:
 					$active_tab = 'step_2';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => '#step_2');
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' => null);
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' =>  '#step_2');
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => null);
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
 					break;
 				case 2:
 					$active_tab = 'step_3';
-					$tabs['step_1']	= array('label' => lang('step_1'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_2']	= array('label' => lang('step_2'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
-					$tabs['step_3']	= array('label' => lang('step_3'), 'link' =>  '#step_3');
+					$lang_submit = lang('continue');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => '#step_3');
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' => null);
 					break;
+				case 3:
+					$active_tab = 'step_4';
+					$lang_submit = lang('import');
+					$tabs['step_1']	= array('label' => lang('choose file'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_2']	= array('label' => lang('choose sheet'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 1, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_3']	= array('label' => lang('choose start line'), 'link' => self::link(array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 2, 'sheet_id' => $sheet_id, 'start_line' => $start_line )));
+					$tabs['step_4']	= array('label' => lang('choose columns'), 'link' =>  '#step_4');
+					break;
+/*
+				case 4://temporary
+					phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+					unlink($cached_file);
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'property.uicondition_survey.import', 'id' =>$id, 'step' => 0));
+					break;
+*/
 			}
 			
 //-----------
 
+			$data = array();
+			if(!$step )
+			{
+				phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+				unlink($cached_file);
+			}
+			else if ($cached_file)
+			{
+				phpgw::import_class('phpgwapi.phpexcel');
 
-			$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+				try
+				{
+					$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+					$AllSheets = $objPHPExcel->getSheetNames();
+			
+					$sheets = array();
+					if($AllSheets)
+					{
+						foreach ($AllSheets as $key => $sheet)
+						$sheets[] = array
+						(
+							'id'	=> $key,
+							'name'	=> $sheet,
+							'selected' => $sheet_id == $key
+						);
+					}
 
-			$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+					$data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+						unlink($cached_file);
+					}
+				}
+			}
+
+			$survey = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
+
 			$html_table = '<table border="1">';
-			if($data && $step == 1)
+			if($data && $step == 2)
 			{
 				$i = 0;
 				$html_table .= "<tr><th align = 'center'>". lang('start'). "</th><th align='center'>" . implode("</th><th align='center'>", array_keys($data[1])) . '</th></tr>';
@@ -679,115 +940,117 @@
 					$i++;
 				}
 			}			
-			else if($data && $step == 2)
+			else if($data && $step == 3)
 			{
 				$_options = array
 				(
-					'Felt_1',
-					'Felt_2',
-					'Felt_3',
-					'Felt_4',
-					'Felt_5',
-					'Felt_6',
+					'_skip_import_'			=> 'Utelates fra import/implisitt',
+					'building_part'			=> 'bygningsdels kode',
+					'descr'					=> 'Tilstandbeskrivelse',
+					'title'					=> 'Tiltak',
+					'hjemmel'				=> 'Hjemmel/ krav',
+					'condition_degree'		=> 'Tilstandsgrad',
+					'condition_type'		=> 'Konsekvenstype',
+					'consequence'			=> 'Konsekvensgrad',
+					'probability'			=> 'Sannsynlighet',
+					'due_year'				=> 'År (innen)',
+					'percentage_investment'	=> 'Andel % aktivering (U)',
+					'amount'				=> 'Kalkyle netto totalt (VU)',
 				);
 
-
-		/*
-		 * Create a generic select list
-		 *
-		 * @param string $name string with name of the submitted var which holds the key of the selected item form array
-		 * @param array $selected key(s) of already selected item(s) from $options, eg. '1' or '1,2' or array with keys
-		 * @param array	$options items to populate the <options>
-		 * @param bool $no_lang by default all values are translated by calls to lang(), setting this to true disbales it
-		 * @param string $attribs additional html attributed to be applied to <select>
-		 * @param int $multiple the height of the <select>, if greater than 1, set to 1 to just enable multiple selections
-		 * @return string the populated html select element
-		 */
 				phpgw::import_class('phpgwapi.sbox');
 
 				foreach($data[$start_line] as $_column => $_value)
 				{
-					$_listbox = phpgwapi_sbox::getArrayItem($_column, $selected= 'Felt_6', $_options, true );
-
-					$_checkbox = "<input id=\"start_line\" type =\"checkbox\" {$_checked} name=\"column\" value=\"{$_column}\">";
+					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
+					
+					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true );
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
 			}
+			else if($data && $step == 4)
+			{
+//				_debug_array($columns);
+
+				$rows = count($data)+1;
+
+				$import_data = array();
+
+				for ($i=$start_line; $i<$rows; $i++ )
+				{
+					$_result = array();
+
+					foreach ($columns as $_row_key => $_value_key)
+					{
+						if($_value_key != '_skip_import_')
+						{
+							$_result[$_value_key] =trim($data[$i][$_row_key]);
+						}
+					
+					}
+					$import_data[] = $_result;
+				}
+				if($import_data)
+				{
+					try
+					{
+						$this->bo->import($survey, $import_data);
+					}
+					catch(Exception $e)
+					{
+						if ( $e )
+						{
+							phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+						}
+					}
+				}
+
+//				$msg = "'{$cached_file}' contained " . count($import_data) . " lines";
+//				phpgwapi_cache::message_set($msg, 'message'); 
+
+//	_debug_array($import_data);die();
+			}
+
+
 
 			$html_table .= '</table>';
 
 
 
 
-
-//
-			$values = $this->bo->read_single( array('id' => $id,  'view' => $mode == 'view') );
-
-			if(isset($values['location_code']) && $values['location_code'])
+			if(isset($survey['location_code']) && $survey['location_code'])
 			{
-				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
+				$survey['location_data'] = execMethod('property.solocation.read_single', $survey['location_code']);
 			}
 
 			$bolocation	= CreateObject('property.bolocation');
 			$location_data = $bolocation->initiate_ui_location(array
 				(
-					'values'	=> $values['location_data'],
+					'values'	=> $survey['location_data'],
 					'type_id'	=> 2,
 					'lookup_type'	=> 'view2',
 					'tenant'	=> false,
 					'lookup_entity'	=> array(),
-					'entity_data'	=> isset($values['p'])?$values['p']:''
+					'entity_data'	=> isset($survey['p'])?$survey['p']:''
 				));
-//
 
 			$data = array
 			(
-				'survey'						=> $values,
+				'lang_submit'					=> $lang_submit,
+				'survey'						=> $survey,
 				'location_data2'				=> $location_data,
 				'step'							=> $step +1,
 				'sheet_id'						=> $sheet_id,
 				'start_line'					=> $start_line,
 				'html_table'					=> $html_table,
 				'sheets'						=> array('options' => $sheets),
-		//		'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'tabs'							=>$GLOBALS['phpgw']->common->create_tabs($tabs, $active_tab),
 			);
 
-//_debug_array($data);die();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey import');
 
 			self::render_template_xsl(array('condition_survey_import'), $data);
 
-
-//_debug_array($html_table);
-
-return;
-
-
-			$start = 1; // Where to start
-
-			$fields = array_values($data[($start-1)]);
-
-			$rows = count($data)+1;
-
-			$result = array();
-
-			for ($i=$start; $i<$rows; $i++ )
-			{
-				$_result = array();
-				$j=0;
-				foreach($data[$i] as $key => $value)
-				{
-					$_result[$j] = trim($value);
-					$j++;
-				}
-				$result[] = $_result;
-			}
-
-			$msg = "'{$path}' contained " . count($result) . " lines";
-
-_debug_array($msg);
-_debug_array($result);die();
 
 		}
 
@@ -863,7 +1126,7 @@ _debug_array($result);die();
 
 		public function edit_survey_title()
 		{
-			$id = phpgw::get_var('id', 'POST', 'int');
+			$id = phpgw::get_var('id', 'int', 'GET');
 
 			if(!$this->acl_edit)
 			{

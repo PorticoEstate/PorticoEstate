@@ -234,6 +234,10 @@
 			{
 				$link = array('menuaction' => "property.uirequest.{$function}", 'id' => $id);
 			}
+			else if($type == '.project.condition_survey')
+			{
+				$link = array('menuaction' => "property.uicondition_survey.{$function}", 'id' => $id);
+			}
 			else if($type == '.project')
 			{
 				$link = array('menuaction' => "property.uiproject.{$function}", 'id' => $id);
@@ -313,6 +317,15 @@
 			else if($type == '.project.request')
 			{
 				$this->_db->query("SELECT fm_request.title, fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}",__LINE__,__FILE__);				
+				$this->_db->next_record();
+				$relation_info['statustext'] = $this->_db->f('status');
+				$relation_info['title'] = $this->_db->f('title');
+				return $relation_info;
+
+			}
+			else if($type == '.project.condition_survey')
+			{
+				$this->_db->query("SELECT fm_condition_survey.title, fm_condition_survey_status.descr as status FROM fm_condition_survey {$this->_join} fm_condition_survey_status ON fm_condition_survey.status_id = fm_condition_survey_status.id WHERE fm_condition_survey.id = {$id}",__LINE__,__FILE__);				
 				$this->_db->next_record();
 				$relation_info['statustext'] = $this->_db->f('status');
 				$relation_info['title'] = $this->_db->f('title');

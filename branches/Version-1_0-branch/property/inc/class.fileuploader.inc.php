@@ -149,7 +149,17 @@
 											{
 												alert('Du må laste siden på nytt for å vise resultatet');
 											}
-											parent.lightbox.hide();
+											try
+											{
+												if(!parent.lightbox_hide())
+												{
+													parent.lightbox.hide();
+												}
+											}
+											catch (ex)
+											{
+											}
+
 										  }
 									});
 								});

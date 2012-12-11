@@ -6924,3 +6924,26 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.655 to 0.9.17.656
+	* Add Condition Survey as a referencing level to requests
+	*/
+	$test[] = '0.9.17.655';
+	function property_upgrade0_9_17_655()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','title',array(
+			'type'		=> 'varchar',
+			'precision'	=> 255,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.656';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

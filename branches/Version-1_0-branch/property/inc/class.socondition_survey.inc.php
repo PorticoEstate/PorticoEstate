@@ -28,13 +28,14 @@
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');
+	phpgw::import_class('property.socommon_core');
 
 	/**
 	 * Description
 	 * @package property
 	 */
 
-	class property_socondition_survey
+	class property_socondition_survey extends property_socommon_core
 	{
 		/**
 		* @var int $_total_records total number of records found
@@ -66,34 +67,9 @@
 
 		public function __construct()
 		{
-			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db			= & $GLOBALS['phpgw']->db;
-			$this->_join		= & $this->_db->join;
-			$this->_like		= & $this->_db->like;
-			$this->custom 		= createObject('property.custom_fields');
+			parent::__construct();
 		}
 
-		/**
-		 * Magic get method
-		 *
-		 * @param string $varname the variable to fetch
-		 *
-		 * @return mixed the value of the variable sought - null if not found
-		 */
-		public function __get($varname)
-		{
-			switch ($varname)
-			{
-				case 'total_records':
-					return $this->_total_records;
-					break;
-				case 'receipt':
-					return $this->_receipt;
-					break;
-				default:
-					return null;
-			}
-		}
 
 		function read($data = array())
 		{
@@ -205,11 +181,22 @@
 
 			$this->_db->transaction_begin();
 
+			$value_set						= $this->_get_value_set( $data );
+
 			$id = $this->_db->next_id($table);
 
-			$value_set					= $this->_get_value_set( $data );
-			$value_set['id']			= $id;
-			$value_set['entry_date']	= time();
+			$value_set['id']				= $id;
+			$value_set['entry_date']		= time();
+			$value_set['title']				= $this->_db->db_addslashes($data['title']);
+			$value_set['descr']				= $this->_db->db_addslashes($data['descr']);
+			$value_set['status_id']			= (int)$data['status_id'];
+			$value_set['category']			= (int)$data['cat_id'];
+			$value_set['vendor_id']			= (int)$data['vendor_id'];
+			$value_set['coordinator_id']	= (int)$data['coordinator_id'];
+			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
+			$value_set['user_id']			= $this->account;
+			$value_set['modified_date']		= time();
+
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -226,7 +213,7 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 				return 0;
 			}
@@ -248,16 +235,26 @@
 
 			$value_set	= $this->_get_value_set( $data );
 
+			$value_set['title']				= $this->_db->db_addslashes($data['title']);
+			$value_set['descr']				= $this->_db->db_addslashes($data['descr']);
+			$value_set['status_id']			= (int)$data['status_id'];
+			$value_set['category']			= (int)$data['cat_id'];
+			$value_set['vendor_id']			= (int)$data['vendor_id'];
+			$value_set['coordinator_id']	= (int)$data['coordinator_id'];
+			$value_set['report_date']		= phpgwapi_datetime::date_to_timestamp($data['report_date']);
+			$value_set['user_id']			= $this->account;
+			$value_set['modified_date']		= time();
+
 			try
 			{
-				$this->_edit($id, $value_set);
+				$this->_edit($id, $value_set, 'fm_condition_survey');
 			}
 
 			catch(Exception $e)
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
@@ -275,35 +272,127 @@
 
 			try
 			{
-				$this->_edit($id, $value_set);
+				$this->_edit($id, $value_set, 'fm_condition_survey');
 			}
 
 			catch(Exception $e)
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
 			return $id;
 		}
 
-		private function _edit($id, $value_set)
+		public function import($survey, $import_data = array())
 		{
-			$table = 'fm_condition_survey';
-			$id = (int)$id;
+			if(!isset($survey['id']) || !$survey['id'])
+			{
+				throw new Exception('property_socondition_survey::import - missing id');
+			}
 
-			$value_set	= $this->_db->validate_update($value_set);
+			$location_data = execMethod('property.solocation.read_single', $survey['location_code']);
+			
+			$_locations = explode('-', $survey['location_code']);
+			$i=1;
+			foreach ($_locations as $_location)
+			{
+				$location["loc{$i}"] = $_location;
+				$i++;
+			}
+
+			$sorequest	= CreateObject('property.sorequest');
+
+//_debug_array($survey);			
 
 			$this->_db->transaction_begin();
+/*
+					kategorier:
+					13 => D - Drift
+					202 => Kombinasjon
+					14 => U - Investering
+					12 => V - Planlagt
+*/
+			foreach ($import_data as $entry)
+			{
+				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && strlen($entry['building_part']) > 2)
+				{
+					$request = array();
+					$request['condition_survey_id'] = $survey['id'];
+					$request['street_name']			= $location_data['street_name'];
+					$request['street_number']		= $location_data['street_number'];
+					$request['location']			= $location;
+					$request['location_code']		= $survey['location_code'];
+					$request['origin_id']			= $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
+					$request['origin_item_id']		= (int)$survey['id'];
+					$request['title']				= substr($entry['title'], 0, 255);
+					$request['descr']				= $entry['descr'];
+					$request['cat_id']				= 13; //???? FIXME
+					$request['building_part']		= $entry['building_part'];
+					$request['coordinator']			= $survey['coordinator_id'];
+					$request['status']				= 'registrert';//???? FIXME
+					$request['budget']				= $entry['amount'];
+					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
+					$request['planning_value']		= $entry['amount'];
+					$request['condition']			= array
+					(
+						array
+						(
+							'degree' => $entry['condition_degree'],
+							'condition_type' => $entry['condition_type'],
+							'consequence' => $entry['consequence'],
+							'probability' => $entry['probability']
+						)
+					);
+//_debug_array($request);
+					$sorequest->add($request, $values_attribute = array());
+				}
+			}
+//		die();
 
-			$sql = "UPDATE {$table} SET $value_set WHERE id= {$id}";
+			$this->_db->transaction_commit();
+		}
+
+		public function get_summation($id)
+		{
+			$table = 'fm_request';
+
+			$condition_survey_id		= (int)$id;
+			$sql = "SELECT category as cat_id, left(building_part,1) as building_part_, sum(fm_request_planning.amount) as amount , EXTRACT(YEAR from to_timestamp(fm_request_planning.date) ) as year"
+			." FROM {$table} {$this->_join} fm_request_planning ON fm_request_planning.request_id = {$table}.id"
+			." WHERE condition_survey_id={$condition_survey_id}"
+			." GROUP BY building_part_ ,category, year ORDER BY building_part_";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while ($this->_db->next_record())
+			{
+				$values[] = array
+				(
+					'building_part'		=> $this->_db->f('building_part_'),
+					'amount'			=> $this->_db->f('amount'),
+					'year'				=> $this->_db->f('year'),//date('Y', $this->_db->f('date')),
+					'cat_id'			=> $this->_db->f('cat_id'),
+				);
+			}
+
+			return $values;
+		}
+
+
+		public function delete($id)
+		{
+			$id = (int) $id;
+			$this->_db->transaction_begin();
 
 			try
 			{
 				$this->_db->Exception_On_Error = true;
-				$this->_db->query($sql,__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_condition_survey WHERE id={$id}",__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
 				$this->_db->Exception_On_Error = false;
 			}
 
@@ -311,113 +400,10 @@
 			{
 				if ( $e )
 				{
-					throw $e;				
+					throw $e;
 				}
 			}
 
 			$this->_db->transaction_commit();
-			return $id;
-		}
-
-
-		private function _get_value_set($data)
-		{
-			$value_set = array
-			(
-				'title'				=> $this->_db->db_addslashes($data['title']),
-				'descr'				=> $this->_db->db_addslashes($data['descr']),
-				'status_id'			=> (int)$data['status_id'],
-				'category'			=> (int)$data['cat_id'],
-				'vendor_id'			=> (int)$data['vendor_id'],
-				'coordinator_id'	=> (int)$data['coordinator_id'],
-				'report_date'		=> phpgwapi_datetime::date_to_timestamp($data['report_date']),
-				'user_id'			=> $this->account,
-				'modified_date'		=> time(),
-			);
-
-
-			if(isset($data['location']) && is_array($data['location']))
-			{
-				foreach ($data['location'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
-				}
-				$value_set['location_code'] = implode('-', $data['location']);
-			}
-
-			if(isset($data['extra']) && is_array($data['extra']))
-			{
-				foreach ($data['extra'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$value_set[$input_name] = $value;
-					}
-				}
-
-				if($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
-				{
-					$entity	= CreateObject('property.soadmin_entity');
-					$entity_category = $entity->read_single_category($data['extra']['p_entity_id'],$data['extra']['p_cat_id']);
-				}
-			}
-
-			if(isset($values['attributes']) && is_array($values['attributes']))
-			{
-				$data_attribute = $this->custom->prepare_for_db($table, $values['attributes']);
-				if(isset($data_attribute['value_set']))
-				{
-					foreach($data_attribute['value_set'] as $input_name => $value)
-					{
-						if(isset($value) && $value)
-						{
-							$value_set[$input_name] = $value;
-						}
-					}
-				}
-			}
-
-			$_address = array();
-			if(isset($data['street_name']) && $data['street_name'])
-			{
-				$_address[] = "{$data['street_name']} {$data['street_number']}";
-			}
-
-			if(isset($data['location_name']) && $data['location_name'])
-			{
-				$_address[] = $data['location_name'];
-			}
-
-			if(isset($data['additional_info']) && $data['additional_info'])
-			{
-				foreach($data['additional_info'] as $key => $value)
-				{
-					if($value)
-					{
-						$_address[] = "{$key}|{$value}";
-					}
-				}
-			}
-
-			if(isset($entity_category) && $entity_category)
-			{
-				$_address[] = "{$entity_category['name']}::{$data['extra']['p_num']}";
-			}
-
-			$address	= $this->_db->db_addslashes(implode('::', $_address));
-
-			$value_set['address'] = $address;
-
-			return $value_set;
-		}
-
-		function delete($id)
-		{
-			$id = (int) $id;
-			$table = 'fm_condition_survey';
-			$this->_db->query("DELETE FROM $table WHERE id={$id}",__LINE__,__FILE__);
 		}
 	}

@@ -430,7 +430,7 @@
 			$values['belop'] 			= $values['amount'];
 			$values['godkjentbelop']	= $values['amount'];
 
-			$_dateformat = $this->bocommon->dateformat;
+			$_dateformat = $GLOBALS['phpgw']->db->date_format();
 
 			$invoice_date 	= $values['invoice_date'] ? phpgwapi_datetime::date_to_timestamp($values['invoice_date']) : time();
 			$payment_date 	= $values['payment_date'] ? phpgwapi_datetime::date_to_timestamp($values['payment_date']) : time();
@@ -538,15 +538,15 @@
 			$values['belop'] 			= $values['amount'];
 			$values['godkjentbelop']	= $values['amount'];
 
-			$values['fakturadato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear']));
+			$values['fakturadato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear']));
 
 			if($values['num_days'])
 			{
-				$values['forfallsdato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear'])+(86400*$values['num_days']));
+				$values['forfallsdato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['smonth'],$values['sday'],$values['syear'])+(86400*$values['num_days']));
 			}
 			else
 			{
-				$values['forfallsdato'] = date($this->bocommon->dateformat,mktime(2,0,0,$values['emonth'],$values['eday'],$values['eyear']));
+				$values['forfallsdato'] = date($GLOBALS['phpgw']->db->date_format(),mktime(2,0,0,$values['emonth'],$values['eday'],$values['eyear']));
 			}
 
 			$values['artid'] 			= $values['art'];

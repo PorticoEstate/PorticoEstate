@@ -114,7 +114,7 @@
 						</xsl:choose>
 					</dd>
 					<dt>
-							<label for="category"><xsl:value-of select="php:function('lang', 'date')" /></label>
+							<label for="date"><xsl:value-of select="php:function('lang', 'date')" /></label>
 					</dt>
 					<dd>
 						<xsl:choose>
@@ -201,11 +201,20 @@
 
 			<div id="documents">
 				<script type="text/javascript">
+				   
+				   var survey_id = '<xsl:value-of select='survey/id'/>';
 				   var fileuploader_action = {
 						menuaction:'property.fileuploader.add',
 						upload_target:'property.bocondition_survey.addfiles',
-						id: '<xsl:value-of select='survey/id'/>'
+						id: survey_id
 					};
+					
+					this.show_related_requests = function()
+					{
+						var oArgs = {menuaction:'property.uirequest.index', nonavbar:1, condition_survey_id:survey_id};
+						var requestUrl = phpGWLink('index.php', oArgs);
+						TINY.box.show({iframe:requestUrl, boxid:'frameless',width:screen.width*.9,height:screen.height*.5,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true});
+					}
 				</script>
 
 				<xsl:call-template name="datasource-definition" />
@@ -226,31 +235,57 @@
 					</xsl:choose>
 				</dl>
 			</div>
-			<xsl:choose>
-				<xsl:when test="editable = 1">
-					<div id="import">
+			<div id="related">
 				<dl class="proplist-col">
+					<dt>
+						<label>
+							<a href="javascript:show_related_requests()">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'details')"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'details')"/>
+							</a>
+						</label>
+					</dt>
 
-								<dt>
-									<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
-								</dt>
-								<dd>
-									<input type="file" name="import_file" size="40">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-										</xsl:attribute>
-									</input>
-								</dd>
-
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'related')"/></label>
+					</dt>
+					<dd>
+						<div style="clear:both;" id="datatable-container_1"></div>
+					</dd>
+				</dl>
+			</div>
+			<div id="summation">
+				<dl class="proplist-col">
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'summation')"/></label>
+					</dt>
+					<dd>
+						<div style="clear:both;" id="datatable-container_2"></div>
+					</dd>
+				</dl>
+			</div>
+			<div id="import">
+				<xsl:choose>
+					<xsl:when test="editable = 1">
+						<dl class="proplist-col">
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'upload file')"/></label>
+							</dt>
+							<dd>
+								<input type="file" name="import_file" size="40">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+									</xsl:attribute>
+								</input>
+							</dd>
 						</dl>
-					</div>
 				</xsl:when>
-				</xsl:choose>
-				</div>
-
+			</xsl:choose>
+			</div>
+			</div>
 				<dl class="proplist-col">
-
-
 						<div class="form-buttons">
 							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<xsl:choose>
