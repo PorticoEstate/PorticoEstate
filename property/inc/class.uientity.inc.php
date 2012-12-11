@@ -198,6 +198,80 @@
 			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
 		}
 
+
+		/**
+		* Function to get related via Ajax-call using api-version of yui
+		*
+		*/
+		function get_related()
+		{
+			$id 	= phpgw::get_var('id', 'REQUEST', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+		
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						$values[] = array
+						(
+							'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'		=> $_target_section['descr'],
+							'title'		=> $_target_entry['title'],
+							'status'	=> $_target_entry['statustext'],
+							'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
+							'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+						);
+					}
+				}
+			}
+
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+//------ End pagination
+
+
+			$data = array(
+				 'ResultSet' => array(
+					'totalResultsAvailable' => $total_records,
+					'startIndex' => $start,
+					'sortKey' => 'type', 
+					'sortDir' => "ASC", 
+					'Result' => $out,
+					'pageSize' => $num_rows,
+					'activePage' => floor($start / $num_rows) + 1
+				)
+			);
+			return $data;
+		}
+
+
 		function get_files()
 		{
 			$id 	= phpgw::get_var('id', 'int');

@@ -46,6 +46,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
+		var $nonavbar;
 
 		var $public_functions = array
 			(
@@ -94,6 +95,16 @@
 			$this->building_part		= $this->bo->building_part;
 			$this->allrows				= $this->bo->allrows;
 			$this->p_num				= $this->bo->p_num;
+			$this->condition_survey_id	= $this->bo->condition_survey_id;
+			$this->nonavbar 			= phpgw::get_var('nonavbar', 'bool');
+
+			if( $this->nonavbar )
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar']		= true;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+				$GLOBALS['phpgw_info']['flags']['noframework']	= true;
+			}
 		}
 
 		function save_sessiondata()
@@ -226,6 +237,8 @@
 		//				'status_id'	=> $this->status_id,
 						'project_id'	=> $project_id,
 		//				'query'		=> $this->query,
+						'condition_survey_id'=> $this->condition_survey_id,
+						'nonavbar' => $this->nonavbar,
 						'p_num'		=> $this->p_num,
 						'start_date'=> $this->start_date,
 						'end_date' 	=> $this->end_date
@@ -242,6 +255,8 @@
 					."status_id:'{$this->status_id}',"
 					."degree_id:'{$this->degree_id}',"
 					."property_cat_id:'{$this->property_cat_id}',"
+					."condition_survey_id:'{$this->condition_survey_id}',"
+					."nonavbar:'{$this->nonavbar}',"
 					."district_id: '{$this->district_id}',"
 					."start_date:'{$this->start_date}',"
 					."end_date: '{$this->end_date}',"
@@ -304,6 +319,8 @@
 							(
 								'menuaction' 		=> 'property.uirequest.index',
 								'lookup'        	=> $lookup,
+								'condition_survey_id'=> $this->condition_survey_id,
+								'nonavbar'			=> $this->nonavbar,
 								'property_cat_id'	=> $this->property_cat_id,
 								'cat_id'			=> $this->cat_id,
 								'filter'			=> $this->filter,
@@ -881,6 +898,7 @@
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
+//_debug_array($datatable['rows']);
 				foreach( $datatable['rows']['row'] as $row )
 				{
 					$json_row = array();
@@ -1329,7 +1347,7 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
-			$lookup_type = $mode == 'edit' ? 'form' : 'view';
+			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
 			$location_data=$this->bolocation->initiate_ui_location(array(
 					'values'		=> $values['location_data'],
@@ -1641,8 +1659,8 @@
 					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
 					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
 
-					'location_data'						=> $location_data,
-					'location_type'						=> 'form',
+					'location_data2'					=> $location_data,
+			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
 					'lang_save'							=> lang('save'),

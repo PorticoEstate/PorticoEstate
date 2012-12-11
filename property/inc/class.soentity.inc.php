@@ -1181,7 +1181,11 @@
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";
+						$metadata = $this->db->metadata($entity_table);
+						if(isset($metadata[$order]))
+						{
+							$ordermethod = " ORDER BY $entity_table.$order $sort";
+						}
 				}
 			}
 			else

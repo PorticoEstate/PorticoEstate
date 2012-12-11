@@ -181,12 +181,12 @@
 
 			$insert_values= array(
 				$cron,
-				date($this->bocommon->datetimeformat),
+				date($this->db->datetime_format()),
 				$this->function_name,
 				$receipt
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 					. "VALUES ($insert_values)";
@@ -265,10 +265,10 @@
 			for ($i=0; $i<count($owner_utf); $i++)
 			{
 				$sql2_utf = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($owner_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($owner_utf[$i]) . ")";
 
 				$sql2_latin = "INSERT INTO fm_owner (id,org_name,remark,category,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($owner_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($owner_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -374,9 +374,9 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($objekt_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($objekt_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -430,9 +430,9 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($bygg_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($bygg_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -494,9 +494,9 @@
 			{
 
 				$sql2_utf = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($seksjon_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
-					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($seksjon_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -584,10 +584,10 @@
 
 				$sql2_utf = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leieobjekt_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leieobjekt_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_location4 (location_code, loc1, loc4, leieobjekttype_id, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
                       tenant_id, beregnet_boa, flyttenr)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leieobjekt_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leieobjekt_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -650,9 +650,9 @@
 				$this->db_boei->query("DELETE FROM fm_tenant WHERE id=" . (int)$leietaker_latin[$i]['id'],__LINE__,__FILE__);
 
 				$sql2_utf = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leietaker_utf[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leietaker_utf[$i]) . ")";
 				$sql2_latin = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift,entry_date,owner_id)"
-					. "VALUES (" . $this->bocommon->validate_db_insert($leietaker_latin[$i]) . ")";
+					. "VALUES (" . $this->db->validate_insert($leietaker_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
@@ -724,7 +724,7 @@
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
 				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
+				. " innflyttetdato = '" . date($this->db->date_format(),strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 				$sql2_latin = " UPDATE  fm_location4 SET "
 				. " tenant_id = '" . $this->db_boei->f('leietaker_id') . "',"

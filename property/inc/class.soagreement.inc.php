@@ -42,9 +42,9 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->db           = clone($GLOBALS['phpgw']->db);
 			$this->db2          = clone($this->db);
-			$this->join			= $this->bocommon->join;
-			$this->left_join	= $this->bocommon->left_join;
-			$this->like			= $this->bocommon->like;
+			$this->join			= $this->db->join;
+			$this->left_join	= $this->db->left_join;
+			$this->like			= $this->db->like;
 			//			$this->role		= 'agreement';
 		}
 
@@ -757,7 +757,7 @@
 			if($cols)
 			{
 				$cols	= "," . implode(",", $cols);
-				$vals	= $this->bocommon->validate_db_insert($vals);
+				$vals	= $this->db->validate_insert($vals);
 			}
 
 			$this->db->query("INSERT INTO $table (id,name,descr,entry_date,category,start_date,end_date,termination_date,vendor_id,user_id $cols) "
@@ -850,7 +850,7 @@
 			$value_set['status']	= $values['status'];
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
@@ -873,7 +873,7 @@
 
 			if($value_set)
 			{
-				$value_set	= ',' . $this->bocommon->validate_db_update($value_set);
+				$value_set	= ',' . $this->db->validate_update($value_set);
 			}
 
 			$this->db->query("UPDATE fm_activity_price_index set entry_date=" . time() . "$value_set WHERE agreement_id=" . intval($values['agreement_id']) . ' AND activity_id=' . intval($values['id']));

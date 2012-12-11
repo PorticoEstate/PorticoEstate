@@ -57,6 +57,9 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', $this->acl_location);
+			$this->cats->supress_info	= true;
+
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
 			$sort				= phpgw::get_var('sort');
@@ -154,7 +157,8 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$test = true;
+			$test = false;
+
 			if ($test)
 			{
 				if (!empty($_FILES))
@@ -284,8 +288,90 @@
 		}
 		
 
+		public function import($survey, $import_data)
+		{
+			try
+			{
+				$this->so->import($survey, $import_data);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
+		}
+
+		public function get_summation($id)
+		{
+			$data = $this->so->get_summation($id);
+
+			$values	=array();
+			$i=0;
+			foreach ($data as $entry)
+			{
+				$i = $entry['building_part'];
+				
+				$values[$i]['building_part'] = $entry['building_part'];
+				$values[$i]['category'] = $this->get_category_name($entry['cat_id']);
+				
+				$diff = $entry['year'] - date('Y');
+				if($diff < 0)
+				{
+					$period = 1;
+				}
+				else
+				{
+					$period = ceil($diff/5) +1;
+					$period  = $period < 6 ? $period : 6;
+				}
+	
+				for ($j = 1; $j < 7 ; $j++ )
+				{
+					if($j == $period)
+					{
+						$values[$i]["period_{$j}"] += $entry['amount'];
+						$values[$i]['sum'] += $entry['amount'];
+					}
+					else
+					{
+						$values[$i]["period_{$j}"] += 0;					
+					}
+				}
+
+				$i++;
+			}
+//_debug_array($values);
+			return $values;
+		}
+
+		function get_category_name($cat_id)
+		{
+			static $category_name = array();
+
+			if(!isset($category_name[$cat_id]))
+			{
+				$category = $this->cats->return_single($cat_id);
+				$category_name[$cat_id] = $category[0]['name'];
+			}
+			return $category_name[$cat_id];
+		}
+
 		public function delete($id)
 		{
-			$this->so->delete($id);
+			try
+			{
+				$this->so->delete($id);
+			}
+
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;				
+				}
+			}
 		}
 	}
