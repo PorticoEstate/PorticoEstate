@@ -426,6 +426,8 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3/gallery-formvalidator/validatorCss.css');
 			}
 
+			self::add_javascript('property', 'portico', 'condition_survey.js');
+
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
