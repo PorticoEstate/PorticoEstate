@@ -207,6 +207,45 @@ YAHOO.portico.setupInlineTablePaginator = function(container) {
 	return pag;
 };
 
+YAHOO.portico.getTotalSum = function(name_column,round,paginator,datatable)
+{
+	if(!paginator.getPageRecords())
+	{
+		return '0,00';
+	}
+	begin = end = 0;
+	end = datatable.getRecordSet().getLength();
+	tmp_sum = 0;
+	for(i = begin; i < end; i++)
+	{
+		tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+	}
+
+	return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
+}
+
+  	YAHOO.portico.td_sum = function(sum)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = 1;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.style.fontWeight = 'bolder';
+		newTD.style.textAlign = 'right';
+		newTD.style.paddingRight = '0.8em';
+		newTD.style.whiteSpace = 'nowrap';
+		newTD.appendChild(document.createTextNode(sum));
+		newTR.appendChild(newTD);
+  	}
+
+  	YAHOO.portico.td_empty = function(colspan)
+  	{
+		newTD = document.createElement('td');
+		newTD.colSpan = colspan;
+		newTD.style.borderTop="1px solid #000000";
+		newTD.appendChild(document.createTextNode(''));
+		newTR.appendChild(newTD);
+  	}
+
 
 YAHOO.portico.updateinlineTableHelper = function(container, requestUrl)
 {

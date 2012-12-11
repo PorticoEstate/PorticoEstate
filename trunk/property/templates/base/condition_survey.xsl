@@ -382,6 +382,16 @@
 			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, columnDefs);
 		</xsl:for-each>
 
+		var PaginatorName2 = 'paginator_containerdatatable-container_2';
+		var DatatableName2 = 'datatable_containerdatatable-container_2';
+
+		var  myPaginator_2 = YAHOO.portico.Paginator[PaginatorName2];
+		var  myDataTable_2 = YAHOO.portico.DataTable[DatatableName2];
+
+		myDataTable_2.subscribe("renderEvent", function()
+		{
+			addFooterDatatable2(myPaginator_2,myDataTable_2);
+		});
   	});
   </script>
 
