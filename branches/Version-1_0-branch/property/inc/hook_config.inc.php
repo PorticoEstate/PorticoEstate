@@ -277,4 +277,88 @@ HTML;
 HTML;
 		}
 		return $out;
+
 	}
+	/**
+	* Get HTML listboks with categories that are candidates for condition survey import categories
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function condition_survey_import_cat($config)
+	{
+		$filters = array
+		(
+			1 => 'Investment',
+			2 => 'Operation',
+			3 => 'Combined::Investment/Operation',
+			4 => 'Special'
+		);
+
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
+		$cats->supress_info = true;
+		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+
+		$filter_assigned = isset($config['condition_survey_import_cat']) ? $config['condition_survey_import_cat'] : array();
+
+		$out = '';
+		foreach ( $filters as $filter_key => $filter_name)
+		{
+			$out .=  <<<HTML
+			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[condition_survey_import_cat][{$filter_key}]">
+HTML;
+			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
+			foreach ( $values as $key => $category)
+			{
+				if(! $category['active'])
+				{
+					continue;
+				}
+
+				$selected = '';
+				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $category['id'])
+				{
+					$selected = 'selected =  "selected"';
+				}
+
+				$out .=  <<<HTML
+				<option value='{$category['id']}'{$selected} title = '{$category['description']}'>{$category['name']}</option>
+HTML;
+			}
+
+			$out .=  <<<HTML
+			</select></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with initial status that are to be set when condition survey are imported
+	*
+	* @param $config
+	* @return string HTML listboxes to be placed in a table
+	*/
+	function condition_survey_initial_status($config)
+	{
+		$status_entries = execMethod('property.sorequest.select_status_list');
+
+		$status_assigned = isset($config['condition_survey_initial_status']) ? $config['condition_survey_initial_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+

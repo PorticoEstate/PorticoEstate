@@ -366,6 +366,10 @@ dl.proplist-col dd.address {
   white-space: nowrap;
 }
 
+div.nowrap {
+  white-space: nowrap;
+}
+
 .date-container .close-btn {
   display: block;
   float: right;

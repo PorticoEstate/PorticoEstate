@@ -305,21 +305,73 @@
 
 			$sorequest	= CreateObject('property.sorequest');
 
-//_debug_array($survey);			
-
 			$this->_db->transaction_begin();
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+
+			if(!isset($config->config_data['condition_survey_import_cat']) || !is_array($config->config_data['condition_survey_import_cat']))
+			{
+				throw new Exception('property_socondition_survey::import - condition survey import categories not configured');
+			}
+
+
+			if(!isset($config->config_data['condition_survey_initial_status']) || !$config->config_data['condition_survey_initial_status'])
+			{
+				throw new Exception('property_socondition_survey::import - condition survey initial status not configured');
+			}
+
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$cats->supress_info = true;
+			$categories = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+
 /*
-					kategorier:
-					13 => D - Drift
-					202 => Kombinasjon
-					14 => U - Investering
-					12 => V - Planlagt
+		$cats_candidates = array
+		(
+			1 => 'Investment',
+			2 => 'Operation',
+			3 => 'Combined::Investment/Operation',
+			4 => 'Special'
+		);
+
 */
 			foreach ($import_data as $entry)
 			{
+
 				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && strlen($entry['building_part']) > 2)
 				{
 					$request = array();
+
+					if( $entry['percentage_investment'] == 100)
+					{
+						if(isset($config->config_data['condition_survey_import_cat'][1]))
+						{
+							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][1];
+						}
+					}
+					else if(!$entry['percentage_investment'])
+					{
+						if(isset($config->config_data['condition_survey_import_cat'][2]))
+						{
+							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][2];
+						}
+					}
+					else if($entry['percentage_investment'] && $entry['percentage_investment'] < 100)
+					{
+						if(isset($config->config_data['condition_survey_import_cat'][3]))
+						{
+							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][3];
+						}
+					}
+
+					if(!isset($request['cat_id']) || !$request['cat_id'])
+					{
+						$request['cat_id'] = (int)$categories[0]['id'];
+					}
+
+					$this->_check_building_part($entry['building_part']);
+
+
 					$request['condition_survey_id'] = $survey['id'];
 					$request['street_name']			= $location_data['street_name'];
 					$request['street_number']		= $location_data['street_number'];
@@ -329,10 +381,9 @@
 					$request['origin_item_id']		= (int)$survey['id'];
 					$request['title']				= substr($entry['title'], 0, 255);
 					$request['descr']				= $entry['descr'];
-					$request['cat_id']				= 13; //???? FIXME
 					$request['building_part']		= $entry['building_part'];
 					$request['coordinator']			= $survey['coordinator_id'];
-					$request['status']				= 'registrert';//???? FIXME
+					$request['status']				= $config->config_data['condition_survey_initial_status'];
 					$request['budget']				= $entry['amount'];
 					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
 					$request['planning_value']		= $entry['amount'];
@@ -346,13 +397,36 @@
 							'probability' => $entry['probability']
 						)
 					);
+
 //_debug_array($request);
 					$sorequest->add($request, $values_attribute = array());
+					if($entry['amount_extra'] > 0)
+					{
+						if(isset($config->config_data['condition_survey_import_cat'][4]))
+						{
+							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][4];
+						}
+
+						$request['planning_value']	=$entry['amount_extra'];
+						$request['cat_id']				= 13; //???? FIXME
+						$sorequest->add($request, $values_attribute = array());
+					}
 				}
 			}
 //		die();
 
 			$this->_db->transaction_commit();
+		}
+
+		private function _check_building_part($id)
+		{
+			$sql = "SELECT id FROM fm_building_part WHERE id = '{$id}'";
+			$this->_db->query($sql,__LINE__,__FILE__);
+			if(!$this->_db->next_record())
+			{
+				$sql = "INSERT INTO fm_building_part (id, descr) VALUES ('{$id}', '{$id}::__')";
+				$this->_db->query($sql,__LINE__,__FILE__);
+			}
 		}
 
 		public function get_summation($id)
