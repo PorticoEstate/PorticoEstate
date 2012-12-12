@@ -86,6 +86,7 @@ YAHOO.portico.initializeDataTable = function()
 			sortDir: 'ResultSet.sortDir'
         }
     };
+
     var myDataTable = new YAHOO.widget.DataTable("datatable-container", 
         YAHOO.portico.columnDefs, myDataSource, {
             paginator: pag,

@@ -479,11 +479,27 @@
 	<tr class="row_off">
 		<td>{lang_filter_buildingpart}:</td>
 		<td>
-				<!--to be able to blank the setting - need an empty value
-				<input type = 'hidden' name="newsettings[list_location_level][]" value="">-->
-				<table>
-					{hook_filter_buildingpart}
-				</table>
+			<table>
+				{hook_filter_buildingpart}
+			</table>
+		</td>
+	</tr>
+
+	<tr class="row_on">
+		<td>{lang_condition_survey_import_category}:</td>
+		<td>
+			<table>
+				{hook_condition_survey_import_cat}
+			</table>
+		</td>
+	</tr>
+
+	<tr class="row_off">
+		<td>{lang_initial_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_initial_status]">
+				{hook_condition_survey_initial_status}
+			</select>
 		</td>
 	</tr>
 
