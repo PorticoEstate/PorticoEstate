@@ -250,11 +250,13 @@
 		{
 			$time = time();
 
-			if ( date('j',$time) < 7 ) //Day of the month without leading zeros
+			$_lag = date('n') == 1 ? 12 : 7;
+
+			if ( date('j',$time) < $_lag ) //Day of the month without leading zeros
 			{
-				$time = $time - (7 * 24 * 3600);
+				$time = $time - ($_lag * 24 * 3600);
 			}
-			
+
 			$month = date('n', $time);
 			$year = date('Y',$time);
 			$check_year = true;
@@ -275,10 +277,24 @@
 					$check_year = false;
 				}
 			}
+
+			if(count($period_list) == 1) //last month in year
+			{
+				$year++;
+				$period = sprintf("%s%02d",$year,1);
+				$period_list[] = array
+				(
+					'id'	=> $period,
+					'name'	=> $period
+				);
+			
+			}
+
 			foreach ($period_list as &$_period)
 			{
 				$_period['selected'] = $_period['id'] == $selected ? 1 : 0;
 			}
+
 			return $period_list;
 		}
 
