@@ -958,6 +958,7 @@
 					'due_year'				=> 'År (innen)',
 					'percentage_investment'	=> 'Andel % aktivering (U)',
 					'amount'				=> 'Kalkyle netto totalt (VU)',
+					'amount_extra'			=> 'Merkostnad ENØK (U)',
 				);
 
 				phpgw::import_class('phpgwapi.sbox');
