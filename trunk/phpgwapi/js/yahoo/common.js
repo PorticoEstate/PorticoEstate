@@ -19,7 +19,7 @@ YAHOO.portico.lang = function(section, config) {
 YAHOO.portico.FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
 {
 	var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
-	elCell.innerHTML = "<div align=\"right\"><pre>"+amount+"</pre></div>";
+	elCell.innerHTML = "<div class='nowrap' align=\"right\">"+amount+"</div>";
 }	
 
 
@@ -400,11 +400,15 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	
 	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
 	
+	myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+	myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
 	myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
 	   oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
 	   return oPayload;
    }
 	
+
 	myDataTable.doBeforeLoadData = function(nothing, oResponse, oPayload) {
 
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
