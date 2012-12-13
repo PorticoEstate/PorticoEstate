@@ -6947,3 +6947,67 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.656 to 0.9.17.657
+	* Alter planing dates to hold bigint
+	*/
+	$test[] = '0.9.17.656';
+	function property_upgrade0_9_17_656()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','start_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','end_date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_consume','date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_planning','date',array(
+			'type'		=> 'int',
+			'precision'	=> 8,
+			'nullable'	=> false
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.657';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -37,39 +37,11 @@
 
 	class property_socondition_survey extends property_socommon_core
 	{
-		/**
-		* @var int $_total_records total number of records found
-		*/
-		protected $_total_records = 0;
-
-
-		/**
-		* @var int $_receipt feedback on actions
-		*/
-		protected $_receipt = array();
-
-
-		/**
-		 * @var object $_db reference to the global database object
-		 */
-		protected $_db;
-
-		/**
-		 * @var string $_join SQL JOIN statement
-		 */
-		protected $_join;
-
-		/**
-		 * @var string $_like SQL LIKE statement
-		 */
-		protected $_like;
-
 
 		public function __construct()
 		{
 			parent::__construct();
 		}
-
 
 		function read($data = array())
 		{
@@ -104,8 +76,11 @@
 				$querymethod	= " {$where} title {$this->_like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM {$table} $filtermethod $querymethod";
+			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id";
+			$sql = "SELECT DISTINCT $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id , count(condition_survey_id) AS cnt"
+			. " FROM {$table} {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
+	
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_total_records = $this->_db->num_rows();
 
@@ -128,7 +103,8 @@
 					'descr'			=> $this->_db->f('descr',true),
 					'address'		=> $this->_db->f('address',true),
 					'entry_date'	=> $this->_db->f('entry_date'),
-					'user'			=> $this->_db->f('user_id')
+					'user'			=> $this->_db->f('user_id'),
+					'cnt'			=> $this->_db->f('cnt'),
 				);
 			}
 
@@ -335,6 +311,15 @@
 		);
 
 */
+			$_update_buildingpart = array();
+			$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
+			
+			if($filter_key = array_search('.project.request', $filter_buildingpart))
+			{
+				$_update_buildingpart = array("filter_{$filter_key}" => 1);
+			}
+
+
 			foreach ($import_data as $entry)
 			{
 
@@ -369,7 +354,7 @@
 						$request['cat_id'] = (int)$categories[0]['id'];
 					}
 
-					$this->_check_building_part($entry['building_part']);
+					$this->_check_building_part($entry['building_part'],$_update_buildingpart);
 
 
 					$request['condition_survey_id'] = $survey['id'];
@@ -385,8 +370,8 @@
 					$request['coordinator']			= $survey['coordinator_id'];
 					$request['status']				= $config->config_data['condition_survey_initial_status'];
 					$request['budget']				= $entry['amount'];
-					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
 					$request['planning_value']		= $entry['amount'];
+					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
 					$request['condition']			= array
 					(
 						array
@@ -398,7 +383,6 @@
 						)
 					);
 
-//_debug_array($request);
 					$sorequest->add($request, $values_attribute = array());
 					if($entry['amount_extra'] > 0)
 					{
@@ -406,19 +390,17 @@
 						{
 							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][4];
 						}
-
 						$request['planning_value']	=$entry['amount_extra'];
-						$request['cat_id']				= 13; //???? FIXME
+						$request['budget']			=$entry['amount_extra'];
 						$sorequest->add($request, $values_attribute = array());
 					}
 				}
 			}
-//		die();
 
 			$this->_db->transaction_commit();
 		}
 
-		private function _check_building_part($id)
+		private function _check_building_part($id, $_update_buildingpart)
 		{
 			$sql = "SELECT id FROM fm_building_part WHERE id = '{$id}'";
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -426,6 +408,12 @@
 			{
 				$sql = "INSERT INTO fm_building_part (id, descr) VALUES ('{$id}', '{$id}::__')";
 				$this->_db->query($sql,__LINE__,__FILE__);
+			}
+
+			if($_update_buildingpart)
+			{
+				$value_set	= $this->_db->validate_update($_update_buildingpart);
+				$this->_db->query("UPDATE fm_building_part SET {$value_set} WHERE id = '{$id}'",__LINE__,__FILE__);
 			}
 		}
 
