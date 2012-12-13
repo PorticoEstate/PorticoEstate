@@ -159,6 +159,11 @@
 							'sortable' => true
 						),
 						array(
+							'key' => 'cnt',
+							'label' => lang('count'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -300,6 +305,8 @@
 					return;
 				}
 			}
+
+			phpgwapi_cache::session_clear('property.request','session_data');
 
 			phpgwapi_yui::tabview_setup('survey_edit_tabview');
 			$tabs = array();
@@ -795,6 +802,16 @@
 			$sheet_id		= phpgw::get_var('sheet_id', 'int', 'REQUEST');
 			
 			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'int', 'REQUEST');
+
+			if(!$step )
+			{
+				if($cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
+				{
+					phpgwapi_cache::session_clear('property', 'condition_survey_import_file');
+					unlink($cached_file);
+					unset($cached_file);
+				}
+			}
 
 			if($start_line	= phpgw::get_var('start_line', 'int', 'REQUEST'))
 			{

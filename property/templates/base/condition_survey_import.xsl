@@ -54,39 +54,46 @@
 						<xsl:when test="step=1">
 							<xsl:call-template name="import_step_1"/>
 						</xsl:when>
-					</xsl:choose>
-
-					<xsl:choose>
 						<xsl:when test="step=2">
 							<xsl:call-template name="import_step_2"/>
 						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
 						<xsl:when test="step=3">
 							<xsl:call-template name="import_step_3"/>
 						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
 						<xsl:when test="step=4">
 							<xsl:call-template name="import_step_4"/>
 						</xsl:when>
+						<xsl:otherwise>
+							<dl class="proplist-col">
+								<dt>
+									<label><xsl:value-of select="php:function('lang', 'finished')" /></label>
+								</dt>
+							</dl>
+						</xsl:otherwise>
 					</xsl:choose>
-
 				</div>
 
 				<dl class="proplist-col">
 					<div class="form-buttons">
 						<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 						<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
-						<input type="submit" name="submit_step" value="{$lang_submit}" title = "{$lang_submit}" />
+						<xsl:choose>
+							<xsl:when test="$lang_submit != ''">
+								<input type="submit" name="submit_step" value="{$lang_submit}" title = "{$lang_submit}" />
+							</xsl:when>
+						</xsl:choose>
 						<input class="button" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/>
 					</div>
 			</dl>
 			</form>
 		</div>
 
+		<xsl:variable name="cancel_params">
+			<xsl:text>menuaction:property.uicondition_survey.view, id:</xsl:text>
+				<xsl:value-of select="survey/id" />
+			</xsl:variable>
 		<xsl:variable name="cancel_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.index')" />
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $cancel_params )" />
 		</xsl:variable>
 
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
@@ -109,19 +116,6 @@
 		</form>
 
 	</xsl:template>
-
-<xsl:template name="datasource-definition">
-	<script>
-	YAHOO.util.Event.onDOMReady(function(){
-
-		<xsl:for-each select="datatable_def">
-			YAHOO.portico.inlineTableHelper("<xsl:value-of select="container"/>", <xsl:value-of select="requestUrl"/>, <xsl:value-of select="ColumnDefs"/>);
-		</xsl:for-each>
-
-  	});
-  </script>
-
-</xsl:template>
 
 
 <xsl:template name="import_step_1" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">

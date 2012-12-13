@@ -1419,9 +1419,7 @@
 					break;
 			}
 
-			$sogeneric = CreateObject('property.sogeneric');
-
-			$categories= $sogeneric->get_list($data);
+			$categories = execMethod('property.sogeneric.get_list',$data);
 
 			return $this->select_list($data['selected'],$categories);
 		}
