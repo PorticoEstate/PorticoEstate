@@ -159,13 +159,13 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','request',$data);
+				phpgwapi_cache::session_set('property.request','session_data', $data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','request');
+			$data =	phpgwapi_cache::session_get('property.request','session_data', $data);
 
 			$this->start			= $data['start'];
 			$this->query			= $data['query'];

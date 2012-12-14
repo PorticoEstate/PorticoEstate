@@ -24,7 +24,7 @@ YAHOO.portico.renderUiFormItems = function(container) {
 YAHOO.portico.setupPaginator = function() {
 	var paginatorConfig = {
         rowsPerPage: 10,
-        alwaysVisible: false,
+        alwaysVisible: true,
         template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
         pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
         containers: ['paginator']
