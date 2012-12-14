@@ -1295,6 +1295,7 @@ prizing	property	no	Priser
 probability	property	no	Sannsynlighet
 project	property	no	prosjekt
 .project	property	no	Prosjekt
+project.condition_survey	property	no	Tilstandsanalyse
 project.workorder	property	no	Prosjekt::Bestilling
 project %1 has been edited	property	no	Prosjekt %1 er oppdatert
 project %1 has been saved	property	no	Prosjekt %1 er lagret
