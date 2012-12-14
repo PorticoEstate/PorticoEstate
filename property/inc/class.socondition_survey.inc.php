@@ -49,31 +49,35 @@
 			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
 			$query		= isset($data['query']) ? $data['query'] : '';
 			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
-			$order		= isset($data['order']) ? $data['order'] : '' ;
+			$dir		= isset($data['dir']) ? $data['dir'] : '' ;
 			$cat_id		= isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 
 			$table = 'fm_condition_survey';
-			if ($order)
+			if ($sort)
 			{
-				$ordermethod = " order by $order $sort";
+				$metadata = $this->_db->metadata($table);
+				if(isset($metadata[$sort]))
+				{
+					$ordermethod = " ORDER BY {$table}.$sort $dir";
+				}
 			}
 			else
 			{
-				$ordermethod = ' order by id DESC';
+				$ordermethod = " ORDER BY {$table}.id DESC";
 			}
 
 			$where = 'WHERE';
 			if ($cat_id)
 			{
-				$filtermethod .= " {$where} category = {$cat_id}";
+				$filtermethod .= " {$where} {$table}.category = {$cat_id}";
 				$where = 'AND';
 			}
 
 			if($query)
 			{
 				$query			= $this->_db->db_addslashes($query);
-				$querymethod	= " {$where} title {$this->_like} '%{$query}%'";
+				$querymethod	= " {$where} {$table}.title {$this->_like} '%{$query}%'";
 			}
 
 			$groupmethod = "GROUP BY $table.id,$table.title,$table.descr,$table.address,$table.entry_date,$table.user_id";

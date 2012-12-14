@@ -217,18 +217,10 @@
 				'query' => phpgw::get_var('query'),
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
-				'cat_id' => phpgw::get_var('dir', 'int', 'REQUEST', 0),
+				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('allrows', 'bool')
 			);
 
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -237,7 +229,6 @@
 
 			$values = $this->bo->read($params);
 
-			// ... add result data
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
@@ -246,9 +237,12 @@
 			$result_data['dir'] = $params['dir'];
 
 
-			if (!$export)
+			if ($export)
 			{
-				//Add action column to each row in result table
+				
+			}
+			else
+			{
 				array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
 			}
 			return $this->yui_results($result_data);
