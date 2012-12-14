@@ -120,7 +120,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('download'),
-								'href' => self::link(array('menuaction' => 'property.uicondition_survey.index', 'export' => true, 'allrows' => true)),
+								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.index', 'export' => true, 'allrows' => true)) . '")',
 								'class' => 'new_item'
 							),
 							array(
