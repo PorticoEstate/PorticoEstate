@@ -101,7 +101,7 @@
 				<div class="body">
 					<div id="voucher_details">
 						<!--<xsl:call-template name="yui_phpgw_i18n"/>-->
-						<table align = "center" width="95%">
+						<table align = "center" width="95%" border="0">
 							<xsl:apply-templates select="filter_form" />
 							<xsl:apply-templates select="filter_invoice" />
 						</table>
@@ -156,62 +156,63 @@
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
-	<td colspan = '6'>
-	<table>
-	<tr>
 		<td>
-			<xsl:value-of select="php:function('lang', 'janitor')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'supervisor')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'budget responsible')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'search criteria')" />
-		</td>
-		<td>
-			<xsl:value-of select="php:function('lang', 'search')" />
-		</td>
-	</tr>
-	  <tr id="filters">
-		<td>
-		  <select id="janitor_lid" name="janitor_lid">
-			<xsl:apply-templates select="janitor_list/options"/>
-		  </select>
-		</td>		
-		<td>
-		  <select id="supervisor_lid" name="supervisor_lid">
-			<xsl:apply-templates select="supervisor_list/options"/>
-		  </select>
-		</td>		
-		<td>
-		  <select id="budget_responsible_lid" name="budget_responsible_lid">
-			<xsl:apply-templates select="budget_responsible_list/options"/>
-		  </select>
-		</td>		
-		<td>
-		  <select id="criteria" name="criteria">
-			<xsl:apply-templates select="criteria_list/options"/>
-		  </select>
-		</td>		
-		<td>
-			<input type="text" name="query" id="query"/>
-		</td>
-		<td>
-			<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
-			<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		</td>	  		
-	  </tr>
-	  </table>
-	  </td>
+			<table border="0">
+				<tr>
+					<td>
+						<label><xsl:value-of select="php:function('lang', 'janitor')" /></label>
+					</td>
+					<td>
+						<label><xsl:value-of select="php:function('lang', 'supervisor')" /></label>
+					</td>
+					<td>
+						<label><xsl:value-of select="php:function('lang', 'budget responsible')" /></label>
+					</td>
+					<td>
+						<label><xsl:value-of select="php:function('lang', 'search criteria')" /></label>
+					</td>
+					<td >
+						<label><xsl:value-of select="php:function('lang', 'search')" /></label>
+					</td>
+				</tr>
+			  	<!--<tr id="filters">-->
+			  	<tr>
+					<td>
+					  <select id="janitor_lid" name="janitor_lid">
+						<xsl:apply-templates select="janitor_list/options"/>
+					  </select>
+					</td>		
+					<td>
+					  <select id="supervisor_lid" name="supervisor_lid">
+						<xsl:apply-templates select="supervisor_list/options"/>
+					  </select>
+					</td>		
+					<td>
+					  <select id="budget_responsible_lid" name="budget_responsible_lid">
+						<xsl:apply-templates select="budget_responsible_list/options"/>
+					  </select>
+					</td>		
+					<td>
+					  <select id="criteria" name="criteria">
+						<xsl:apply-templates select="criteria_list/options"/>
+					  </select>
+					</td>		
+					<td>
+						<input type="text" name="query" id="query"/>
+					</td>
+					<td>
+						<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
+						<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
+					</td>	  		
+				</tr>
+		  	</table>
+		  </td>
 	  </tr>
 </xsl:template>
 
 <xsl:template match="filter_invoice" xmlns:php="http://php.net/xsl">
 	<tr>
-		<td colspan='4'>
+		<td >
 			<form id="invoice_queryForm" name="invoice_queryForm">
 				<xsl:attribute name="method">
 					<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
