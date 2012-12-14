@@ -134,24 +134,31 @@
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','mail2sms');
 
 			$GLOBALS['phpgw_info']['user']['account_id'] = $data['account_id'];
-			$GLOBALS['phpgw']->preferences->account_id = $data['account_id'];
-			$pref = $GLOBALS['phpgw']->preferences->read();
-			$GLOBALS['phpgw_info']['user']['preferences']['felamimail'] = isset($pref['felamimail']) ? $pref['felamimail'] : '';
+			$GLOBALS['phpgw']->preferences->set_account_id($data['data_id'], true);
+
+			$GLOBALS['phpgw_info']['user']['preferences']= $GLOBALS['phpgw']->preferences->read();
 
 			$boPreferences  = CreateObject('felamimail.bopreferences');
-			$boPreferences->setProfileActive(false);
-			$boPreferences->setProfileActive(true,2); //2 for selected user
+
 			$bofelamimail	= CreateObject('felamimail.bofelamimail');
+
+//			$bofelamimail->closeConnection();
+//			$boPreferences->setProfileActive(false);
+//			$boPreferences->setProfileActive(true,2); //2 for selected user
 
 			$connectionStatus = $bofelamimail->openConnection();
 			$headers = $bofelamimail->getHeaders('INBOX', 1, $maxMessages = 15, $sort = 0, $_reverse = 1, $_filter = array('string' => '', 'type' => 'quick', 'status' => 'unseen'));
 
+//_debug_array($headers);
+//die();
+
+			$sms = array();
 			$j = 0;
 			if (isset($headers['header']) && is_array($headers['header']))
 			{
 				foreach ($headers['header'] as $header)
 				{
-					if($header['seen'] == 0)
+					if(!$header['seen'])
 					{
 						$sms[$j]['message'] = utf8_encode($header['subject']);
 						$bodyParts = $bofelamimail->getMessageBody($header['uid']);
@@ -164,32 +171,24 @@
 						$sms[$j]['message'] = substr($sms[$j]['message'],0,160);
 						$j++;
 					}
+					$bofelamimail->flagMessages('read', $header['uid']);
 				}
 			}
-			if($connectionStatus == 'true')
+
+			if($connectionStatus)
 			{
 				$bofelamimail->closeConnection();
 			}
 
 			$bosms	= CreateObject('sms.bosms',false);
-			if(isset($sms) && is_array($sms))
+			foreach ($sms as $entry)
 			{
-				foreach ($sms as $entry)
-				{
-					$bosms->send_sms(array('p_num_text'=>$data['cellphone'], 'message' =>$entry['message']));
-				}
+				$bosms->send_sms(array('p_num_text'=>$data['cellphone'], 'message' =>$entry['message']));
 			}
 
-			$msg = $j . ' messages er sendt';
+			$msg = $j . ' meldinger er sendt';
 			$this->receipt['message'][]=array('msg'=> $msg);
 
-			if($j>0)
-			{
-				return $msg;
-			}
-			else
-			{
-				return false;
-			}
+			return $j ? $msg : false;
 		}
 	}
