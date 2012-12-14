@@ -6965,7 +6965,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project','end_date',array(
 			'type'		=> 'int',
 			'precision'	=> 8,
-			'nullable'	=> false
+			'nullable'	=> true
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','start_date',array(
@@ -6977,7 +6977,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder','end_date',array(
 			'type'		=> 'int',
 			'precision'	=> 8,
-			'nullable'	=> false
+			'nullable'	=> true
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request','start_date',array(
