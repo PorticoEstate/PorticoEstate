@@ -7042,7 +7042,26 @@
 			)
 		);
 
-// tabell for fm_project_buffer_budget
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_buffer_budget', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'buffer_project_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount_in' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'from_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'amount_out' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'to_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'remark' => array('type' => 'text','nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -7050,4 +7069,3 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-
