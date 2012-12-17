@@ -173,24 +173,6 @@
 										<dd>
 											<xsl:value-of select="value_request_id"/>
 										</dd>
-										<xsl:choose>
-											<xsl:when test="mode ='edit'">
-												<xsl:call-template name="location_form2"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:call-template name="location_view2"/>
-												<xsl:choose>
-													<xsl:when test="contact_phone !=''">
-														<dt><label>
-															<xsl:value-of select="lang_contact_phone"/>
-														</label></dt>
-														<dd>
-															<xsl:value-of select="contact_phone"/>
-														</dd>											
-													</xsl:when>
-												</xsl:choose>
-											</xsl:otherwise>
-										</xsl:choose>
 									
 										<dt><label>
 											<xsl:value-of select="php:function('lang', 'entry date')"/>
@@ -293,6 +275,26 @@
 									</dd>
 								
 							</xsl:for-each>
+
+							<xsl:choose>
+								<xsl:when test="mode ='edit'">
+									<xsl:call-template name="location_form2"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:call-template name="location_view2"/>
+									<xsl:choose>
+										<xsl:when test="contact_phone !=''">
+											<dt><label>
+												<xsl:value-of select="lang_contact_phone"/>
+											</label></dt>
+											<dd>
+												<xsl:value-of select="contact_phone"/>
+											</dd>											
+										</xsl:when>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
+
 							<xsl:variable name="lang_request_title">
 								<xsl:value-of select="php:function('lang', 'enter request title')"/>
 							</xsl:variable>
