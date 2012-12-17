@@ -752,6 +752,12 @@
 
 			if($file_name)
 			{
+				if(!is_file($_FILES['file']['tmp_name']))
+				{
+					phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					return;
+				}
+
 				$to_file = $bofiles->fakebase . '/condition_survey/' . $id . '/' . $file_name;
 				if($bofiles->vfs->file_exists(array(
 					'string' => $to_file,
