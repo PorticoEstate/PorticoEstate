@@ -36,9 +36,9 @@ Returns mixed
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
-			function add_workorder()
+			function add_sub_entry()
 			{
-				document.add_workorder_form.submit();
+				document.add_sub_entry_form.submit();
 			}
 		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
@@ -54,12 +54,12 @@ Returns mixed
 			<xsl:choose>
 				<xsl:when test="value_project_id &gt; 0  and mode='edit'">
 					<td valign="top">
-						<xsl:variable name="lang_add_workorder">
-							<xsl:value-of select="lang_add_workorder"/>
+						<xsl:variable name="lang_add_sub_entry">
+							<xsl:value-of select="lang_add_sub_entry"/>
 						</xsl:variable>
-						<input type="button" name="add_workorder" value="{$lang_add_workorder}" onClick="add_workorder()">
+						<input type="button" name="add_sub_entry" value="{$lang_add_sub_entry}" onClick="add_sub_entry()">
 							<xsl:attribute name="title">
-								<xsl:value-of select="lang_add_workorder_statustext"/>
+								<xsl:value-of select="lang_add_sub_entry_statustext"/>
 							</xsl:attribute>
 						</input>
 					</td>
@@ -167,6 +167,22 @@ Returns mixed
 									</xsl:for-each>
 								</xsl:otherwise>
 							</xsl:choose>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'project type')"/>
+								</td>
+								<td>
+									<select name="values[project_type_id]">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'project type')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="project_types/options"/>
+									</select>
+								</td>
+							</tr>
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_name"/>
@@ -714,8 +730,8 @@ Returns mixed
 		<!-- AQUI VA EL SCRIPT -->
 		<xsl:choose>
 			<xsl:when test="mode='edit'">
-				<xsl:variable name="add_workorder_action"><xsl:value-of select="add_workorder_action"/>&amp;project_id=<xsl:value-of select="value_project_id"/></xsl:variable>
-				<form method="post" name="add_workorder_form" action="{$add_workorder_action}">
+				<xsl:variable name="add_sub_entry_action"><xsl:value-of select="add_sub_entry_action"/></xsl:variable>
+				<form method="post" name="add_sub_entry_form" action="{$add_sub_entry_action}">
 				</form>
 			</xsl:when>
 		</xsl:choose>

@@ -1481,6 +1481,8 @@
 		'fm_project' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => true),
+				'project_type_id' => array('type' => 'int','precision' => '2','nullable' => true),
 				'name' => array('type' => 'varchar','precision' => '255','nullable' => False),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'access' => array('type' => 'varchar','precision' => '7','nullable' => True),
@@ -1530,6 +1532,7 @@
 				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'order_amount' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'closed' => array('type' => 'int','precision' => 2,'nullable' => True),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)

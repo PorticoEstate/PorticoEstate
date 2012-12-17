@@ -117,6 +117,7 @@
 			$district_id	= isset($data['district_id'])?$data['district_id']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
+			$project_type_id = $data['project_type_id'] ? (int)$data['project_type_id']:0;
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -475,10 +476,15 @@
 				$where= 'AND';
 			}
 
+			if($project_type_id)
+			{
+				$filtermethod .= " {$where} fm_project.project_type_id={$project_type_id}";
+				$where= 'AND';
+			}
 
 			if($wo_hour_cat_id)
 			{
-				$filtermethod .= " $where fm_wo_hours_category.id=$wo_hour_cat_id ";
+				$filtermethod .= " $where fm_wo_hours_category.id=$wo_hour_cat_id";
 				$where= 'AND';
 			}
 
@@ -796,6 +802,7 @@
 				$project = array
 					(
 						'project_id'			=> $this->db->f('id'),
+						'project_type_id'		=> $this->db->f('project_type_id'),
 						'title'					=> $this->db->f('title'),
 						'name'					=> $this->db->f('name'),
 						'location_code'			=> $this->db->f('location_code'),
@@ -998,6 +1005,7 @@
 			$values= array
 				(
 					$id,
+					$project['project_type_id'],
 					$project['project_group'],
 					$project['name'],
 					'public',
@@ -1026,7 +1034,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
+			$this->db->query("INSERT INTO fm_project (id,project_type_id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
 				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location,periodization_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
@@ -1177,6 +1185,7 @@
 			$project['name'] = $this->db->db_addslashes($project['name']);
 
 			$value_set=array(
+				'project_type_id'	=> $project['project_type_id'],
 				'project_group'		=> $project['project_group'],
 				'name'				=> $project['name'],
 				'status'			=> $project['status'],
@@ -1239,9 +1248,17 @@
 				'closed_b_period' => isset($project['closed_b_period']) && $project['closed_b_period'] ? $project['closed_b_period'] : array(),
 				'closed_orig_b_period' => isset($project['closed_orig_b_period']) && $project['closed_orig_b_period'] ? $project['closed_orig_b_period'] : array()
 			);
+			$_active_period = array
+			(
+				'active_b_period' => isset($project['active_b_period']) && $project['active_b_period'] ? $project['active_b_period'] : array(),
+				'active_orig_b_period' => isset($project['active_orig_b_period']) && $project['active_orig_b_period'] ? $project['active_orig_b_period'] : array()
+			);
 
 			$this->close_period_from_budget($project['id'], $_closed_period);
+			$this->activate_period_from_budget($project['id'], $_active_period);
+
 			unset($_close_period);
+			unset($_active_period);
 
 			if($project['delete_b_period'])
 			{
@@ -1451,7 +1468,9 @@
 						'budget'			=> (int)$this->db->f('budget'),
 						'user_id'			=> $this->db->f('user_id'),
 						'entry_date'		=> $this->db->f('entry_date'),
-						'modified_date'		=> $this->db->f('modified_date')
+						'modified_date'		=> $this->db->f('modified_date'),
+						'closed'			=> $this->db->f('closed'),
+						'active'			=> $this->db->f('active')
 					);
 				}
 
@@ -1474,7 +1493,10 @@
 							'budget'			=> $entry['budget'],
 							'user_id'			=> $entry['user_id'],
 							'entry_date'		=> $entry['entry_date'],
-							'modified_date'		=> $entry['modified_date']
+							'modified_date'		=> $entry['modified_date'],
+							'closed'			=> $entry['closed'],
+							'active'			=> $entry['active']
+
 						);
 						$cols = implode(',', array_keys($value_set));
 						$values	= $this->db->validate_insert(array_values($value_set));
@@ -1601,7 +1623,8 @@
 					'budget'			=> $budget,
 					'user_id'			=> $this->account,
 					'entry_date'		=> $now,
-					'modified_date'		=> $now
+					'modified_date'		=> $now,
+					'active'			=> 1
 				);
 
 				$cols = implode(',', array_keys($value_set));
@@ -1616,26 +1639,22 @@
 		{
 			$project_id = (int) $project_id;
 			$closed_period = array();
+			$active_period = array();
 			$project_budget = array();
 			$project_order_amount = array();
-
 
 			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
-				$year = $this->db->f('year');
-				$month = $this->db->f('month');
-		//		$period = $month ? $year . sprintf("%02s", $month) : $year . date('m');
-				$period = $year . sprintf("%02s", $month);
+				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
 				
  				$project_budget[$period] = (int)$this->db->f('budget');
  				$project_order_amount[$period] = $this->db->f('order_amount');
  				$closed_period[$period] = !!$this->db->f('closed');
+  				$active_period[$period] = !!$this->db->f('active');
 			}
-			unset($year);			
-
 
 			$sql = "SELECT id AS order_id FROM fm_workorder WHERE project_id = {$project_id}";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1659,7 +1678,6 @@
 					$periode = $this->db->f('periode');
 
 					$year = substr( $periode, 0, 4 );
-	//				$month = substr( $periode, 4, 2 );
 
 					$_found = false;
 					if(isset($project_budget[$periode]))
@@ -1693,7 +1711,6 @@
 				{
 					$periode = $this->db->f('periode');
 					$year = substr( $periode, 0, 4 );
-	//				$month = substr( $periode, 4, 2 );
 					if(!$periode)
 					{
 						$year = date('Y');
@@ -1823,7 +1840,7 @@
 			$sort_period = array();
 			$values = array();
 
-			foreach ($project_budget as $period => $budget)
+			foreach ($project_budget as $period => $_budget)
 			{
 				$_sum_orders = 0;
 				$_actual_cost = 0;
@@ -1835,7 +1852,7 @@
 						$_sum_orders += $order['amount'];
 			//			$_sum_orders -= $order['actual_cost'];
 
-						if($budget >= 0)
+						if($_budget >= 0)
 						{
 							if($order['actual_cost'] >= 0)
 							{
@@ -1869,7 +1886,6 @@
 						{
 							$_sum_orders = 0;
 						}
-
 					}
 
 					unset($orders[$period]);
@@ -1877,11 +1893,11 @@
 
 				$values[] = array
 				(
-					'project_id'		=> $project_id,
-					'period'			=> $period,
-					'budget'			=> $budget,
-					'sum_orders'		=> $_sum_orders,
-					'actual_cost'		=> $_actual_cost,
+					'project_id'			=> $project_id,
+					'period'				=> $period,
+					'budget'				=> $_budget,
+					'sum_orders'			=> $_sum_orders,
+					'actual_cost'			=> $_actual_cost,
 				);
 
 				$sort_period[] = $period;
@@ -1922,15 +1938,16 @@
 					{
 						$_sum_orders = 0;
 					}
+
 				}
 
 				$values[] = array
 				(
-					'project_id'		=> $project_id,
-					'period'			=> $period,
-					'budget'			=> 0,
-					'sum_orders'		=> $_sum_orders,
-					'actual_cost'		=> $_actual_cost,
+					'project_id'			=> $project_id,
+					'period'				=> $period,
+					'budget'				=> 0,
+					'sum_orders'			=> $_sum_orders,
+					'actual_cost'			=> $_actual_cost,
 				);
 
 				$sort_period[] = $period;
@@ -1947,11 +1964,20 @@
 				$entry['year'] = substr( $entry['period'], 0, 4 );
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
-				$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];
+				if($active_period[$entry['period']])
+				{
+					$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];				
+				}
+				else
+				{
+					$entry['diff'] =  0;
+				}
+
 				$deviation = $entry['budget'] - $entry['actual_cost'];
 				$entry['deviation'] = $deviation;
 				$entry['deviation_percent'] = $deviation/$entry['budget'] * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
+				$entry['active'] = $active_period[$entry['period']];
 			}
 
 //_debug_array( $values);die();
@@ -2002,6 +2028,47 @@
 			{
 				$when = explode('_', $period);
 				$sql = "UPDATE fm_project_budget SET closed = 0 WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+//_debug_array($close_period);
+//_debug_array($open_period);die();
+
+
+		}
+
+		function activate_period_from_budget($project_id, $data)
+		{
+			$project_id = (int) $project_id;
+			$close_period = array();
+			$open_period = array();
+
+			foreach($data['active_orig_b_period'] as $period)
+			{
+				if(!in_array($period, $data['active_b_period']))
+				{
+					$inactive_period[] = $period;
+				}
+			}
+
+			foreach($data['active_b_period'] as $period)
+			{
+				if(!in_array($period, $data['active_orig_b_period']))
+				{
+					$active_period[] = $period;
+				}
+			}
+
+			foreach ($active_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET active = 1 WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			foreach ($inactive_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_project_budget SET active = 0 WHERE project_id = {$project_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 //_debug_array($close_period);

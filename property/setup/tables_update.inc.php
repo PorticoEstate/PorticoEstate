@@ -7011,3 +7011,43 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.657 to 0.9.17.658
+	* Add project types
+	*/
+	$test[] = '0.9.17.657';
+	function property_upgrade0_9_17_657()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','parent_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','project_type_id',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+// tabell for fm_project_buffer_budget
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.658';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
