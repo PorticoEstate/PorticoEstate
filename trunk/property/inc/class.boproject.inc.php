@@ -42,6 +42,7 @@
 		var $order;
 		var $cat_id;
 		var $allrows;
+		var $project_type_id;
 
 		var $public_functions = array
 			(
@@ -78,6 +79,8 @@
 			$wo_hour_cat_id			= phpgw::get_var('wo_hour_cat_id', 'int');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$criteria_id			= phpgw::get_var('criteria_id', 'int');
+			$project_type_id		= phpgw::get_var('project_type_id', 'int');
+
 			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
@@ -122,6 +125,10 @@
 			{
 				$this->criteria_id = $criteria_id;
 			}
+			if(isset($_POST['project_type_id']) || isset($_GET['project_type_id']))
+			{
+				$this->project_type_id = $project_type_id;
+			}
 		}
 
 		function save_sessiondata($data)
@@ -147,6 +154,7 @@
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
+			$this->project_type_id	= isset($data['project_type_id'])?$data['project_type_id']:'';
 		}
 
 		function column_list($selected = array())
@@ -206,6 +214,30 @@
 				);
 
 			return $columns;
+		}
+
+		public function get_project_types($selected)
+		{
+			$values = array
+			(
+				array
+				(
+					'id'	=> 1,
+					'name'	=> lang('operation')
+				),
+				array
+				(
+					'id'	=> 2,
+					'name'	=> lang('investment')
+				),
+				array
+				(
+					'id'	=> 3,
+					'name'	=> lang('buffer')
+				),
+			
+			);
+			return $this->bocommon->select_list($selected, $values);
 		}
 
 		function select_status_list($format='',$selected='')
@@ -414,7 +446,9 @@
 			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
-				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id)));
+				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
+				'project_type_id'	=> $this->project_type_id));
+
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

@@ -90,14 +90,37 @@ var  myPaginator_4, myDataTable_4;
 	}
 
 /********************************************************************************/
+
+	this.getTotalSum_active = function(name_column,round,paginator,datatable)
+	{
+		if(!paginator.getPageRecords())
+		{
+			return '0,00';
+		}
+		begin = end = 0;
+		end = datatable.getRecordSet().getLength();
+
+		tmp_sum = 0;
+		for(i = begin; i < end; i++)
+		{
+			if(datatable.getRecordSet().getRecords(0)[i].getData('flag_active'))
+			{
+				tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+			}
+		}
+
+		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
+	}
+
+
   	this.addFooterDatatable0 = function(paginator,datatable)
   	{
   		//call getTotalSum(name of column) in property.js
-  		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
-  		tmp_sum2 = getTotalSum('sum_orders',0,paginator,datatable);
-  		tmp_sum3 = getTotalSum('actual_cost',0,paginator,datatable);
-  		tmp_sum4 = getTotalSum('diff',0,paginator,datatable);
- 		tmp_sum5 = getTotalSum('deviation',0,paginator,datatable);
+  		tmp_sum1 = getTotalSum_active('budget',0,paginator,datatable);
+  		tmp_sum2 = getTotalSum_active('sum_orders',0,paginator,datatable);
+  		tmp_sum3 = getTotalSum_active('actual_cost',0,paginator,datatable);
+  		tmp_sum4 = getTotalSum_active('diff',0,paginator,datatable);
+ 		tmp_sum5 = getTotalSum_active('deviation',0,paginator,datatable);
 
   		if(typeof(tableYUI0)=='undefined')
   		{
@@ -119,7 +142,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum3);
 		td_sum(tmp_sum4);
 		td_sum(tmp_sum5);
-		td_empty(4);
+		td_empty(7);
 
 		myfoot = tableYUI0.createTFoot();
 		myfoot.setAttribute("id","myfoot");

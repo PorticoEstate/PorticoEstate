@@ -82,7 +82,22 @@
 			}
 
 			$values = $this->query();
-			_debug_array($values);
+
+			$descr = array();
+			$columns = array();
+			$columns[]	= 'id';
+			$columns[]	= 'title';
+			$columns[]	= 'descr';
+			$columns[]	= 'address';
+			$columns[]	= 'cnt';
+
+			foreach($columns as $_column)
+			{
+				$descr[] = lang(str_replace('_', ' ', $_column));
+			}
+
+			$this->bocommon->download($values,$columns,$descr);
+
 		}
 
 
