@@ -1547,7 +1547,6 @@
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'buffer_project_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
-				'amount_in' => array('type' => 'int','precision' => '4','nullable' => true),
 				'amount_in' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'from_project' => array('type' => 'int','precision' => '4','nullable' => true),
 				'amount_out' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
