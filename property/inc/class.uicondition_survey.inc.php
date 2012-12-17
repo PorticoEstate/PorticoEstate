@@ -50,7 +50,8 @@
 			'get_related'		=> true,
 			'get_summation'		=> true,
 			'view_file'			=> true,
-			'import'			=> true
+			'import'			=> true,
+			'download'			=> true
 		);
 
 		public function __construct()
@@ -69,6 +70,19 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::project::condition_survey";
 	//			$GLOBALS['phpgw']->css->add_external_file('logistic/templates/base/css/base.css');
+		}
+
+
+		public function download()
+		{
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$values = $this->query();
+			_debug_array($values);
 		}
 
 
@@ -120,7 +134,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('download'),
-								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.index', 'export' => true, 'allrows' => true)) . '")',
+								'href' => 'javascript:window.open("'. self::link(array('menuaction' => 'property.uicondition_survey.download', 'export' => true, 'allrows' => true)) . '","window")',
 								'class' => 'new_item'
 							),
 							array(
@@ -221,13 +235,14 @@
 				'allrows' => phpgw::get_var('allrows', 'bool')
 			);
 
-			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
 
-			$export = phpgw::get_var('export');
-
 			$values = $this->bo->read($params);
+			if ( phpgw::get_var('export', 'bool'))
+			{
+				return $values;
+			}
 
 			$result_data = array('results' => $values);
 
@@ -236,15 +251,8 @@
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
 
+			array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
 
-			if ($export)
-			{
-				
-			}
-			else
-			{
-				array_walk(	$result_data['results'], array($this, '_add_links'), "property.uicondition_survey.view" );
-			}
 			return $this->yui_results($result_data);
 		}
 
