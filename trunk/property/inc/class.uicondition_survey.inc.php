@@ -858,7 +858,12 @@
 			}
 
 
-			if(!$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file'))
+			if($step > 1)
+			{
+			 	$cached_file = phpgwapi_cache::session_get('property', 'condition_survey_import_file');
+			}
+
+			if($step ==1 || isset($_FILES['import_file']['tmp_name']))
 			{
 				$file = $_FILES['import_file']['tmp_name'];
 				$cached_file ="{$file}_temporary_import_file";
