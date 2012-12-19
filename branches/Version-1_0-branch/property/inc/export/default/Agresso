@@ -358,6 +358,7 @@
 
 			$meld = $error_desr;
 
+			phpgwapi_cache::message_set($error_desr, 'error'); 
 			//Vis feilmelding
 //			echo $meld;
 
@@ -1025,11 +1026,13 @@
 				{
 					$this->db->transaction_commit();
 					$message = 'Godkjent: periode: '.$_periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
+					phpgwapi_cache::message_set($message, 'message'); 
 				}
 				else
 				{
 					$this->db->transaction_abort();
 					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';
+					phpgwapi_cache::message_set($message, 'error'); 
 				}
 			}
 			elseif($download=='on' && $pre_transfer && !$this->debug):
@@ -1059,11 +1062,13 @@
 
 					$this->db->transaction_commit();
 					$message = 'Ankomstregistrering: periode: '.$periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
+					phpgwapi_cache::message_set($message, 'message'); 
 				}
 				else
 				{
 					$this->db->transaction_abort();
 					$message = 'Noe gikk galt med ankomstregistrering!';
+					phpgwapi_cache::message_set($message, 'error'); 
 				}
 			}
 			else:
@@ -1082,8 +1087,6 @@
 				echo "<pre>{$buffer}</pre>";
 			}
 			endif;
-
-			return $message;
 		}
 
 		function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
