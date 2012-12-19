@@ -53,6 +53,7 @@
 		var $currentapp;
 		var $district_id;
 		var $criteria_id;
+		var $project_type_id;
 
 		var $public_functions = array
 			(
@@ -97,23 +98,25 @@
 			$this->district_id		= $this->bo->district_id;
 			$this->user_id			= $this->bo->user_id;
 			$this->criteria_id		= $this->bo->criteria_id;
+			$this->project_type_id	= $this->bo->project_type_id;
 		}
 
 		function save_sessiondata()
 		{
 			$data = array
 				(
-					'start'			=> $this->start,
-					'query'			=> $this->query,
-					'sort'			=> $this->sort,
-					'order'			=> $this->order,
-					'filter'		=> $this->filter,
-					'cat_id'		=> $this->cat_id,
-					'status_id'		=> $this->status_id,
-					'wo_hour_cat_id'=> $this->wo_hour_cat_id,
-					'district_id'	=> $this->district_id,
-					'user_id'		=> $this->user_id,
-					'criteria_id'	=> $this->criteria_id
+					'start'				=> $this->start,
+					'query'				=> $this->query,
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'filter'			=> $this->filter,
+					'cat_id'			=> $this->cat_id,
+					'status_id'			=> $this->status_id,
+					'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
+					'district_id'		=> $this->district_id,
+					'user_id'			=> $this->user_id,
+					'criteria_id'		=> $this->criteria_id,
+					'project_type_id'	=> $this->project_type_id
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -227,6 +230,7 @@
 					."cat_id:'{$this->cat_id}',"
 					."user_id:'{$this->user_id}',"
 					."criteria_id:'{$this->criteria_id}',"
+					."project_type_id:':{$this->project_type_id}',"
 					."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
 					."second_display:1,"
 					."status_id:'{$this->status_id}'";
@@ -252,30 +256,33 @@
 							'second_display'=>true
 				);
  */
-				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$values_combo_box[0]  = $this->bo->get_project_types($this->project_type_id);
+				array_unshift ($values_combo_box[0],array ('id'=>'','name'=> lang('project type')));
+
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
-				array_unshift ($values_combo_box[0],$default_value);
+				array_unshift ($values_combo_box[1],$default_value);
 
-				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
+				$values_combo_box[2] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
+				array_unshift ($values_combo_box[2]['cat_list'],$default_value);
 
-				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
-				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
-				array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
+				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
+				array_unshift ($values_combo_box[3],array ('id'=>'all','name'=> lang('all')));
+				array_unshift ($values_combo_box[3],array ('id'=>'open','name'=> lang('open')));
 
-				$values_combo_box[3]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
 				$default_value = array ('id'=>'','name'=>lang('no hour category'));
-				array_unshift ($values_combo_box[3],$default_value);
-
-				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
-				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
-				$default_value = array ('id'=>'','name'=>lang('no user'));
+				$values_combo_box[5]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[5],$default_value);
+
+				$values_combo_box[6]  = $this->bo->get_user_list($this->filter);
+				array_unshift ($values_combo_box[6],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
+				$default_value = array ('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[6],$default_value);
 
 
 				$datatable['actions']['form'] = array
@@ -298,12 +305,21 @@
 							(
 								array
 								( //boton 	DISTRICT
+									'id' => 'btn_project_type',
+									'name' => 'project_type_id',
+									'value'	=> lang('project type'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton 	DISTRICT
 									'id' => 'btn_district_id',
 									'name' => 'district_id',
 									'value'	=> lang('district'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 1
+									'tab_index' => 2
 								),
 								array
 								( //boton 	CATEGORY
@@ -312,7 +328,7 @@
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 2
+									'tab_index' => 3
 								),
 								array
 								( //boton 	STATUS
@@ -321,7 +337,7 @@
 									'value'	=> lang('Status'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 3
+									'tab_index' => 4
 								),
 								array
 								( //boton 	HOUR CATEGORY
@@ -330,7 +346,7 @@
 									'value'	=> lang('Hour category'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 4
+									'tab_index' => 5
 								),
 								array
 								( //boton 	search criteria
@@ -339,7 +355,7 @@
 									'value'	=> lang('search criteria'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 5
+									'tab_index' => 6
 								),/*
 								array
 								( //boton 	USER
@@ -348,7 +364,7 @@
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 5
+									'tab_index' => 6
 								),*/
 									array
 									( //boton 	USER
@@ -358,9 +374,9 @@
 										'value'	=> lang('User'),
 										'type' => 'select',
 										'style' => 'filter',
-										'values' => $values_combo_box[5],
+										'values' => $values_combo_box[6],
 										'onchange'=> 'onChangeSelect("filter");',
-										'tab_index' => 6
+										'tab_index' => 7
 									),
 								//for link "columns", next to Export button
 								array
@@ -373,21 +389,21 @@
 										'menuaction' => 'property.uiproject.columns'
 									))."','','width=300,height=600,scrollbars=1')",
 									'value' => lang('columns'),
-									'tab_index' => 12
+									'tab_index' => 13
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 11
+									'tab_index' => 12
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								array
 								( //hidden start_date
@@ -415,7 +431,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 9
+									'tab_index' => 10
 								),
 								// FIXME test on lightbox for date search
 			/*
@@ -434,7 +450,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 8
+									'tab_index' => 9
 								),
 								array
 								( // TEXT INPUT
@@ -444,7 +460,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 7
+									'tab_index' => 8
 								),
 							),
 							'hidden_value' => array
@@ -457,12 +473,12 @@
 								array
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+									'value'	=> $this->bocommon->select2String($values_combo_box[1])
 								),
 								array
 								( //div values  combo_box_2
 									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+									'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 								),
 								array
 								( //div values  combo_box_3
@@ -473,6 +489,11 @@
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
 									'value'	=> $this->bocommon->select2String($values_combo_box[4])
+								),
+								array
+								( //div values  combo_box_5
+									'id' => 'values_combo_box_5',
+									'value'	=> $this->bocommon->select2String($values_combo_box[5])
 								)/*,
 								array
 								( //div values  combo_box_5
@@ -1427,7 +1448,7 @@
 					$values['origin'] = '';
 				}
 
-				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project)
+				if(!isset($values['workorder_budget']) && $save && !$_transfer_new_project && !$values['project_type_id']==3)
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'project_id'=> $id));
 				}
@@ -1681,14 +1702,20 @@
 			{
 				$content_budget = $this->bo->get_budget($id);
 				$lang_delete = lang('Check to delete period');
-				$lang_delete = lang('Check to close period');
+				$lang_close = lang('Check to close period');
+				$lang_active = lang('Check to activate period');
+
 				foreach($content_budget as & $b_entry)
 				{
 					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
-					
+					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';					
+
+					$b_entry['flag_active'] = $b_entry['active'];
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
 					$b_entry['closed'] = "<input type='checkbox' name='values[closed_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_close}' $checked>";
 					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
+					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
+					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
 					$value_remainder -= $b_entry['sum_orders'];
 					$value_remainder -= $b_entry['actual_cost'];
 				}
@@ -1724,8 +1751,18 @@
 														array('key' => 'deviation_percent','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 														array('key' => 'closed_orig','hidden' => true),
+														array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
+														array('key' => 'active_orig','hidden' => true),
+														array('key' => 'flag_active','hidden' => true),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
+
+/*
+														array('key' => 'subtract_sum_orders','hidden' => true),
+														array('key' => 'subtract_actual_cost','hidden' => true),
+														array('key' => 'subtract_budget','hidden' => true),
+
+*/
 
 //_debug_array($values['workorder_budget']);die();
 			$datavalues[1] = array
@@ -1884,8 +1921,31 @@
 
 			$periodization_list = $this->bo->get_periodizations_with_outline();
 
+			$sub_entry_action_data = array();
+
+			if($id && !$values['project_type_id']==3)
+			{
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiworkorder.edit',
+					'project_id'	=> $id
+				);
+			}
+			else if($id && $values['project_type_id']==3)
+			{
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiproject.edit',
+					'bypass'		=> 1,
+					'parent_id'		=> $id,
+					'origin'		=> '.project',
+					'origin_id'		=> $id
+				);
+			}
+
 			$data = array
 				(
+					'project_types'						=> array('options' => $this->bo->get_project_types($values['project_type_id'])),
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -1912,9 +1972,11 @@
 					'lang_delete_request_statustext'	=> lang('Check to delete this request from this project'),
 					'link_select_request'				=> $GLOBALS['phpgw']->link('/index.php',$link_request_data),
 					'link_request'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.view')),
-					'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-					'lang_add_workorder'				=> lang('Add workorder'),
-					'lang_add_workorder_statustext'		=> lang('Add a workorder to this project'),
+
+					'add_sub_entry_action'				=> $GLOBALS['phpgw']->link('/index.php', $sub_entry_action_data ),
+
+					'lang_add_sub_entry'				=> $values['project_type_id']==3 ? lang('add project') : lang('Add workorder'),
+					'lang_add_sub_entry_statustext'		=> $values['project_type_id']==3 ? lang('add a project to this buffer') : lang('Add a workorder to this project'),
 					'lang_no_workorders'				=> lang('No workorder budget'),
 					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 					'record_history'					=> $record_history,
@@ -2128,6 +2190,7 @@
 			{
 				$ids = array_values(explode(',',trim($id_to_update,',')));
 			}
+
 			else
 			{
 				$ids = array();
@@ -2281,6 +2344,7 @@
 
 		function view()
 		{
+
 			if(!$this->acl_read)
 			{
 				$this->bocommon->no_access();
@@ -2422,7 +2486,7 @@
 				'myColumnDefs'						=> $myColumnDefs,
 				'myButtons'							=> $myButtons,
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'add_workorder_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'add_sub_entry_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
 				'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 				'lang_start_date'					=> lang('Project start date'),
 				'value_start_date'					=> $values['start_date'],

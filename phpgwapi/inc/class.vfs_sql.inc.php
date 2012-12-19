@@ -1066,6 +1066,11 @@
 		 */
 		function cp ($data)
 		{
+			if(!$data['from'])
+			{
+				throw new Exception('nothing to copy from');
+			}
+
 			if (!is_array ($data))
 			{
 				$data = array ();

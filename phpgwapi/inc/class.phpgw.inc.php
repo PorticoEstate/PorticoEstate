@@ -408,6 +408,7 @@
 						$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
 						break;
 
+					case 'boolean':
 					case 'bool':
 						if ( preg_match('/^[false|0|no]$/', $value) )
 						{
