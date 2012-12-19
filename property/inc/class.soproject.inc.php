@@ -671,10 +671,14 @@
 					$project['actual_cost']		= 0;
 					$project['billable_hours']	= 0;
 
-					$sql_workder  = 'SELECT contract_sum, addition, calculation, budget, actual_cost,'
-					. ' billable_hours,closed'
+					$sql_workder  = 'SELECT combined_cost, actual_cost, billable_hours,closed'//, contract_sum, addition, calculation, budget'
 					. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 					. " WHERE project_id = '{$project['project_id']}'";
+//_debug_array($sql_workder);
+					if ($start_date)
+					{
+						$sql_workder .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
+					}
 
 					$this->db->query($sql_workder);
 					while ($this->db->next_record())
@@ -685,6 +689,11 @@
 							$_sum = 0;
 							$closed = true;
 						}
+						else
+						{
+							$_sum = $this->db->f('combined_cost');
+						}
+/*	
 						else if(abs($this->db->f('contract_sum')) > 0)
 						{
 							$_sum = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
@@ -701,7 +710,7 @@
 						{
 							$_sum = 0;
 						}
-
+*/
 						$_actual_cost = (int)$this->db->f('actual_cost');
 
 						if($closed)
