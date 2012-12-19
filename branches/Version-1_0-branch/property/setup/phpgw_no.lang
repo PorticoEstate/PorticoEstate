@@ -227,6 +227,7 @@ billable hours changed	property	no	Egne timer endret
 billable rate changed	property	no	Fakturerbar sats endret
 billable hours has been updated	property	no	Egne timer er oppdatert
 bill per unit	property	no	Pris pr enhet, ex mva
+buffer	property	no	Buffer
 bulk update status	property	no	Masseoppdatering av status
 branch	property	no	Fag
 b - responsible	property	no	Anviser
@@ -1164,6 +1165,7 @@ opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open JasperReport %1 in new window	property	no	Åpne JasperReport %1 i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
+operation	property	no	Drift
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
@@ -1294,6 +1296,7 @@ priority keys has been updated	property	no	prioriteringsnøkkel er oppdatert
 prizing	property	no	Priser
 probability	property	no	Sannsynlighet
 project	property	no	prosjekt
+project type	property	no	Prosjekt type
 .project	property	no	Prosjekt
 project.condition_survey	property	no	Tilstandsanalyse
 project.workorder	property	no	Prosjekt::Bestilling

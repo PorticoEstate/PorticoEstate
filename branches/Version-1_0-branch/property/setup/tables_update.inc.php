@@ -7011,3 +7011,61 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.657 to 0.9.17.658
+	* Add project types
+	*/
+	$test[] = '0.9.17.657';
+	function property_upgrade0_9_17_657()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','parent_id',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','project_type_id',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_budget','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_project_buffer_budget', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+					'buffer_project_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount_in' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'from_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'amount_out' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'to_project' => array('type' => 'int','precision' => '4','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'remark' => array('type' => 'text','nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.658';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
