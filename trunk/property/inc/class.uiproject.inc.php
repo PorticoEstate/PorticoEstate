@@ -374,7 +374,7 @@
 										'value'	=> lang('User'),
 										'type' => 'select',
 										'style' => 'filter',
-										'values' => $values_combo_box[5],
+										'values' => $values_combo_box[6],
 										'onchange'=> 'onChangeSelect("filter");',
 										'tab_index' => 7
 									),
@@ -2344,6 +2344,7 @@
 
 		function view()
 		{
+
 			if(!$this->acl_read)
 			{
 				$this->bocommon->no_access();
