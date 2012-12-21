@@ -1744,7 +1744,8 @@
 					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_orders','label'=>lang('budget') . '::' . lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'deviation','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
@@ -1781,10 +1782,11 @@
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'combined_cost','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
@@ -2344,6 +2346,7 @@
 
 		function view()
 		{
+
 
 			if(!$this->acl_read)
 			{

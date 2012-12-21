@@ -276,6 +276,7 @@
 				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
 				$paranthesis .='(';
 
+				$cols .= ',fm_workorder_status.closed';
 				$cols .= ',fm_vendor.org_name';
 				$cols_return[] = 'org_name';
 				$uicols['input_type'][]		= 'hidden';
@@ -305,7 +306,7 @@
 				$cols .= ',fm_workorder.combined_cost';
 				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'combined_cost';
+				$uicols['name'][]			= 'obligation';
 				$uicols['descr'][]			= lang('sum orders');
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['exchange'][]		= false;
@@ -716,12 +717,35 @@
 
 			$count_cols_return=count($cols_return);
 
+			$_order_list = array();
 			while ($this->db->next_record())
 			{
 				$workorder_list[] = array('workorder_id' => $this->db->f('id'));
+				$_order_list[] = $this->db->f('id');
 			}
 
 			$this->db->set_fetch_single(false);
+
+			$_actual_cost_arr = array();
+			if($workorder_list)
+			{
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, sum(amount) AS actual_cost"
+				. " FROM fm_workorder {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .') GROUP BY fm_workorder.id, closed';
+
+				unset($_order_list);
+				$this->db->query($sql_cost,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$_actual_cost_arr[$this->db->f('order_id')] = array
+					(
+						'actual_cost'	=> $this->db->f('actual_cost'),
+						'closed'		=> !!$this->db->f('closed')
+					);
+				}
+			
+			}
 
 			foreach($workorder_list as &$workorder)
 			{
@@ -732,8 +756,41 @@
 				{
 					$workorder[$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
-				$workorder['budget'] = $workorder['combined_cost'];
-				$workorder['combined_cost'] = $workorder['combined_cost'] - $workorder['actual_cost'];
+				$workorder['actual_cost'] = 0;
+				$workorder['obligation'] = 0;
+
+				if (isset($_actual_cost_arr[$workorder['workorder_id']]))
+				{
+					$_combined_cost = $workorder['combined_cost'];
+			//		$_pending_cost = round($this->db2->f('pending_cost'));
+	
+			//		$_taxfactor = 1 + ($_taxcode[(int)$this->db2->f('mvakode')]/100);
+			//		$_actual_cost = round($this->db2->f('actual_cost')/$_taxfactor);
+			//		$_actual_cost = round($this->db2->f('actual_cost'));
+					$workorder['actual_cost'] =  $_actual_cost_arr[$workorder['workorder_id']]['actual_cost'];
+
+					if(!$_actual_cost_arr[$workorder['workorder_id']]['closed'])
+					{
+						$_obligation = $_combined_cost - $workorder['actual_cost'];
+						if((int)$workorder['budget'] >= 0)
+						{
+							if($_obligation < 0)
+							{
+								$_obligation = 0;
+							}
+						}
+						else
+						{
+							if($_obligation > 0)
+							{
+								$_obligation = 0;
+							}
+						}
+						$workorder['obligation'] = $_obligation;
+					}
+				}
+
+//---------
 				$workorder['grants'] = (int)$this->grants[$this->db->f('project_owner')];
 
 				$location_code=	$this->db->f('location_code');
@@ -746,35 +803,8 @@
 					$workorder['query_location']['loc' . ($m+1)]=implode("-", array_slice($location, 0, ($m+1)));
 				}
 
-				$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
-				. " FROM fm_ecobilag  WHERE pmwrkord_code = '{$workorder['workorder_id']}'";
 
-				$this->db->query($sql_workder);
-				while ($this->db->next_record())
-				{
-					$_actual_cost = (int)$this->db->f('actual_cost');
-					$workorder['combined_cost']	-= $_actual_cost;
-					$workorder['actual_cost']	+= $_actual_cost;
-				}
-
-
-
-				if($workorder['budget'] > 0)
-				{
-					if($workorder['combined_cost'] < 0)
-					{
-						$workorder['combined_cost'] = 0;
-					}
-				}
-				else
-				{
-					if($workorder['combined_cost'] > 0)
-					{
-						$workorder['combined_cost'] = 0;
-					}
-				}
-
-				$workorder['diff'] =  $workorder['budget'] - $workorder['combined_cost'] - $workorder['actual_cost'];
+				$workorder['diff'] =  $workorder['budget'] - $workorder['obligation'] - $workorder['actual_cost'];
 			}
 
 			return $workorder_list;
