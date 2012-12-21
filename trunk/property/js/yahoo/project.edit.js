@@ -118,9 +118,10 @@ var  myPaginator_4, myDataTable_4;
   		//call getTotalSum(name of column) in property.js
   		tmp_sum1 = getTotalSum_active('budget',0,paginator,datatable);
   		tmp_sum2 = getTotalSum_active('sum_orders',0,paginator,datatable);
-  		tmp_sum3 = getTotalSum_active('actual_cost',0,paginator,datatable);
-  		tmp_sum4 = getTotalSum_active('diff',0,paginator,datatable);
- 		tmp_sum5 = getTotalSum_active('deviation',0,paginator,datatable);
+  		tmp_sum3 = getTotalSum_active('sum_oblications',0,paginator,datatable);
+  		tmp_sum4 = getTotalSum_active('actual_cost',0,paginator,datatable);
+  		tmp_sum5 = getTotalSum_active('diff',0,paginator,datatable);
+ 		tmp_sum6 = getTotalSum_active('deviation',0,paginator,datatable);
 
   		if(typeof(tableYUI0)=='undefined')
   		{
@@ -142,6 +143,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum3);
 		td_sum(tmp_sum4);
 		td_sum(tmp_sum5);
+		td_sum(tmp_sum6);
 		td_empty(7);
 
 		myfoot = tableYUI0.createTFoot();
@@ -152,15 +154,16 @@ var  myPaginator_4, myDataTable_4;
   	this.addFooterDatatable1 = function(paginator,datatable)
   	{
   		//call getTotalSum(name of column) in property.js
-   		tmp_sum0 = getTotalSum('cost',2,paginator,datatable);
-/*
+   		tmp_sum0 = getTotalSum('cost',0,paginator,datatable);
+
   		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
+/*
   		tmp_sum2 = getTotalSum('calculation',2,paginator,datatable);
   		tmp_sum3 = getTotalSum('contract_sum',2,paginator,datatable);
 */
-  		tmp_sum4 = getTotalSum('combined_cost',2,paginator,datatable);
-  		tmp_sum5 = getTotalSum('actual_cost',2,paginator,datatable);
-  		tmp_sum6 = getTotalSum('diff',2,paginator,datatable);
+  		tmp_sum4 = getTotalSum('obligation',0,paginator,datatable);
+  		tmp_sum5 = getTotalSum('actual_cost',0,paginator,datatable);
+  		tmp_sum6 = getTotalSum('diff',0,paginator,datatable);
 
 
   		if(typeof(tableYUI1)=='undefined')
@@ -179,7 +182,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum('Sum');
 		td_empty(2);
 		td_sum(tmp_sum0);
-//		td_sum(tmp_sum1);
+		td_sum(tmp_sum1);
 //		td_sum(tmp_sum2);
 //		td_sum(tmp_sum3);
 		td_empty(1);

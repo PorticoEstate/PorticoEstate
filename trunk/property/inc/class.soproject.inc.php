@@ -671,89 +671,54 @@
 					$project['actual_cost']		= 0;
 					$project['billable_hours']	= 0;
 
-					$sql_workder  = 'SELECT combined_cost, actual_cost, billable_hours,closed'//, contract_sum, addition, calculation, budget'
-					. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-					. " WHERE project_id = '{$project['project_id']}'";
-//_debug_array($sql_workder);
+					$sql_workder_date_filter = '';
 					if ($start_date)
 					{
-						$sql_workder .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
+						$sql_workder_date_filter = "AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
 					}
 
-					$this->db->query($sql_workder);
+					$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost'//, contract_sum, addition, calculation, budget'
+					. " FROM fm_workorder"
+					. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+					. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+					. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}"
+					. " GROUP BY fm_workorder.id, budget, combined_cost, billable_hours, closed";
+//_debug_array($sql_workder);
+
+					$this->db->query($sql_workder,__LINE__,__FILE__);
+
+					$_obligation = 0;
+					$project['obligation'] = 0;
+
 					while ($this->db->next_record())
 					{
-						$closed = false;
-						if($this->db->f('closed'))
+						$_combined_cost = $this->db->f('combined_cost');
+						$_actual_cost =  $this->db->f('actual_cost');
+						if(!$this->db->f('closed'))
 						{
-							$_sum = 0;
-							$closed = true;
-						}
-						else
-						{
-							$_sum = $this->db->f('combined_cost');
-						}
-/*	
-						else if(abs($this->db->f('contract_sum')) > 0)
-						{
-							$_sum = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
-						}
-						else if(abs($this->db->f('calculation')) > 0)
-						{
-							$_sum = $this->db->f('calculation');
-						}
-						else if(abs($this->db->f('budget')) > 0)
-						{
-							$_sum = $this->db->f('budget');
-						}
-						else
-						{
-							$_sum = 0;
-						}
-*/
-						$_actual_cost = (int)$this->db->f('actual_cost');
-
-						if($closed)
-						{
-							$__actual_cost = 0;
-						}
-						else
-						{
-							$__actual_cost = $_actual_cost;
+							$_obligation = $_combined_cost - $_actual_cost;
+							if((int)$this->db->f('budget') >= 0)
+							{
+								if($_obligation < 0)
+								{
+									$_obligation = 0;
+								}
+							}
+							else
+							{
+								if($_obligation > 0)
+								{
+									$_obligation = 0;
+								}
+							}
+							$project['obligation'] += $_obligation;
 						}
 
-						$project['combined_cost']	+= ($_sum - $__actual_cost);
-						$project['actual_cost']		+= $_actual_cost;
 						$project['billable_hours']	+= (int)$this->db->f('billable_hours');
-					}
-
-					$sql_workder  = 'SELECT godkjentbelop AS actual_cost'
-					. " FROM fm_ecobilag {$this->join} fm_workorder ON fm_ecobilag.pmwrkord_code  = fm_workorder.id"
-					. " WHERE fm_workorder.project_id = '{$project['project_id']}'";
-
-					$this->db->query($sql_workder);
-					while ($this->db->next_record())
-					{
-						$_actual_cost = (int)$this->db->f('actual_cost');
-						$project['combined_cost']	-= $_actual_cost;
 						$project['actual_cost']		+= $_actual_cost;
 					}
 
-					if($project['budget'] >= 0)
-					{
-						if($project['combined_cost'] < 0)
-						{
-							$project['combined_cost'] = 0;
-						}
-					}
-					else
-					{
-						if($project['combined_cost'] > 0)
-						{
-							$project['combined_cost'] = 0;
-						}
-					}
-
+					$project['combined_cost']	= $project['obligation'];
 					$project['diff'] =  $project['budget'] - $project['combined_cost'] - $project['actual_cost'];
 				}
 
@@ -884,22 +849,26 @@
 		function project_workorder_data($project_id = 0)
 		{
 			$project_id = (int) $project_id;
-			$budget = array();
-			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+			$values = array();
+			$this->db->query("SELECT fm_workorder.title,combined_cost, fm_workorder.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id as b_account_id"
 				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " WHERE project_id={$project_id}");
+				. " WHERE project_id={$project_id}",__LINE__,__FILE__);
 
+			$_orders = array();
+			
 			while ($this->db->next_record())
 			{
-				$budget[] = array(
+				$values[] = array(
 					'workorder_id'		=> $this->db->f('workorder_id'),
 					'title'				=> $this->db->f('title',true),
 					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
 					'calculation'		=> $this->db->f('calculation'),
-					'actual_cost'		=> $this->db->f('actual_cost'),
+					'combined_cost'		=> (int)$this->db->f('combined_cost'),
+					'actual_cost'		=> 0,
+					'obligation'		=> 0,
 					'vendor_id'			=> $this->db->f('vendor_id'),
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
@@ -908,16 +877,60 @@
 					'contract_sum'		=> (int)$this->db->f('contract_sum'),
 					'addition_percentage'	=> (int)$this->db->f('addition')
 				);
+				$_orders[] = $this->db->f('workorder_id');
 			}
 
-			foreach ($budget as &$entry)
+
+			if($_orders)
 			{
-				$this->db->query("SELECT sum(godkjentbelop) AS actual_cost FROM fm_ecobilag WHERE pmwrkord_code = '{$entry['workorder_id']}' GROUP BY pmwrkord_code");
-				$this->db->next_record();
-				$entry['actual_cost'] +=$this->db->f('actual_cost');
+				$_actual_cost_arr = array();
+
+				$sql_cost = "SELECT order_id, sum(amount) AS actual_cost"
+				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. ' WHERE order_id IN (' . implode(',', $_orders ) .') GROUP BY order_id';
+				$this->db->query($sql_cost,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$_actual_cost_arr[$this->db->f('order_id')] = $this->db->f('actual_cost');
+				}
 			}
 
-			return $budget;
+			foreach ($values as &$entry)
+			{
+				$_combined_cost = round($entry['combined_cost']);
+	
+				$_actual_cost = isset($_actual_cost_arr[$entry['workorder_id']]) && $_actual_cost_arr[$entry['workorder_id']] ? $_actual_cost_arr[$entry['workorder_id']] : 0;
+
+		//		FIXME
+		//		$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
+		//		$_actual_cost = round($actual_cost/$_taxfactor);
+
+				$entry['actual_cost'] = $_actual_cost;
+
+				$_obligation = 0;
+				if(!$entry['closed'])
+				{
+					$_obligation = $_combined_cost - $_actual_cost;
+					if($entry['budget'] >= 0)
+					{
+						if($_obligation < 0)
+						{
+							$_obligation = 0;
+						}
+					}
+					else
+					{
+						if($_obligation > 0)
+						{
+							$_obligation = 0;
+						}
+					}
+					$entry['obligation'] = $_obligation;
+				}
+				$entry['diff'] =  $entry['budget'] - $entry['obligation'] - $entry['actual_cost'];
+			}
+
+			return $values;
 		}
 
 		function branch_p_list($project_id = '')
@@ -1595,7 +1608,7 @@
 			foreach ($periodization_outline as $outline)
 			{
 				$partial_budget = $budget * $outline['value'] / 100;
-				$this->_updat_budget($project_id, $year, $outline['month'], $partial_budget);
+				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget);
 			}
 
 			$sql = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE project_id = {$project_id}";
@@ -1608,7 +1621,7 @@
 		}
 
 
-		private function _updat_budget($project_id, $year, $month, $budget)
+		private function _update_budget($project_id, $year, $month, $budget)
 		{
 			$month = (int) $month;
 			$budget = (int) $budget;
@@ -1665,25 +1678,37 @@
   				$active_period[$period] = !!$this->db->f('active');
 			}
 
-			$sql = "SELECT id AS order_id FROM fm_workorder WHERE project_id = {$project_id}";
+			$sql = "SELECT fm_workorder.id AS order_id, combined_cost, budget,fm_workorder_status.closed"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+			 	. " WHERE project_id = {$project_id}";
+//	_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$_orders = array();
 			while ($this->db->next_record())
 			{
-				$_orders[] = $this->db->f('order_id');
+				$_orders[$this->db->f('order_id')] = array
+				(
+					'combined_cost'	=> $this->db->f('combined_cost'),
+					'budget'		=> $this->db->f('budget'),
+					'closed'		=> !!$this->db->f('closed')
+				);
 			}
 
-
+//_debug_array($_orders);
+$test = 0;
 			$orders = array();
-			if($_orders)
+			if ( $_orders )
 			{
-				$_order_filter = implode(',', $_orders);
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, pmwrkord_code AS order, periode FROM fm_ecobilagoverf WHERE pmwrkord_code IN ({$_order_filter}) GROUP BY pmwrkord_code, periode ORDER BY periode ASC ";
-
+				$sql = "SELECT order_id, periode, amount AS actual_cost"
+				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. ' WHERE order_id IN (' . implode(',', array_keys($_orders) ) .') ORDER BY periode ASC';
+//_debug_array($sql);
 				$this->db->query($sql,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
+					$_order_id = $this->db->f('order_id');
 					$periode = $this->db->f('periode');
 
 					$year = substr( $periode, 0, 4 );
@@ -1691,7 +1716,7 @@
 					$_found = false;
 					if(isset($project_budget[$periode]))
 					{
-						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+						$orders[$periode][$_order_id]['actual_cost'] += $this->db->f('actual_cost');
 						$_found = true;
 					}
 					else
@@ -1701,7 +1726,8 @@
 							$_period = $year . sprintf("%02s", $i);
 							if(isset($project_budget[$_period]))
 							{
-								$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+								$orders[$_period][$_order_id]['actual_cost'] += $this->db->f('actual_cost');
+//_debug_array($test+=$this->db->f('actual_cost'));
 								$_found = true;
 								break;
 							}
@@ -1710,47 +1736,10 @@
 					
 					if(!$_found)
 					{
-						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
+						$orders[$periode][$_order_id]['actual_cost'] += $this->db->f('actual_cost');
 					}
 				}
 //_debug_array($orders);die();
-				$sql = "SELECT sum(godkjentbelop) AS actual_cost, pmwrkord_code AS order, periode FROM fm_ecobilag WHERE pmwrkord_code IN ({$_order_filter}) GROUP BY pmwrkord_code, periode ORDER BY pmwrkord_code, periode ASC ";
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
-				{
-					$periode = $this->db->f('periode');
-					$year = substr( $periode, 0, 4 );
-					if(!$periode)
-					{
-						$year = date('Y');
-						$periode = date('Ym');
-					}
-
-					$_found = false;
-					if(isset($project_budget[$periode]))
-					{
-						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
-						$_found = true;
-					}
-					else
-					{
-						for ($i=0;$i<13;$i++)
-						{
-							$_period = $year . sprintf("%02s", $i);
-							if(isset($project_budget[$_period]))
-							{
-								$orders[$_period][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
-								$_found = true;
-								break;
-							}
-						}
-					}
-					
-					if(!$_found)
-					{
-						$orders[$periode][$this->db->f('order')]['actual_cost'] += $this->db->f('actual_cost');
-					}
-				}
 			}
 
 			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
@@ -1767,22 +1756,24 @@
 
 			if(!$_use_periodization)
 			{
+/*
 				$config = CreateObject('phpgwapi.config','property');
 				$config->read();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
+*/
 
-				$sql = "SELECT fm_workorder.id, sum(calculation) as calculation, sum(budget) as budget, sum(contract_sum) as contract_sum, fm_workorder.addition, start_date"
+				$sql = "SELECT fm_workorder.id, combined_cost, to_char(to_timestamp(start_date), 'YYYYMM') as period"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-				. " WHERE project_id = {$project_id} AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
-				. " GROUP BY fm_workorder.id, fm_workorder.start_date,fm_workorder.addition ORDER BY start_date ASC";
+				. " WHERE project_id = {$project_id}"// AND (fm_workorder_status.closed IS NULL OR fm_workorder_status.closed != 1)"
+				. " GROUP BY fm_workorder.id, to_char(to_timestamp(start_date), 'YYYYMM'),fm_workorder.addition ORDER BY start_date ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
-
+//_debug_array($sql);
 				while ($this->db->next_record())
 				{
 					$_found = false;
-					$_start_date = $this->db->f('start_date');
-					$_order_period = date('Ym', $_start_date);
+
+					$_order_period = $this->db->f('period');
 					
 					$year = date('Y');
 					
@@ -1813,105 +1804,91 @@
 					{
 						$periode = date('Ym');
 					}
-	
-					if(abs($this->db->f('contract_sum')) > 0)
-					{
-						$_amount = $this->db->f('contract_sum') * ( 1 + ((int)$this->db->f('addition')/100));
-					}
-					else if(abs($this->db->f('calculation')) > 0)
-					{
-						$_amount = $this->db->f('calculation') * $tax;
-					}
-					else if(abs($this->db->f('budget')) > 0)
-					{
-						$_amount = $this->db->f('budget');
-					}
-					else
-					{
-						$_amount = 0;
-					}
 
-					$orders[$periode][$this->db->f('id')]['amount'] = $_amount;
+					$orders[$periode][$this->db->f('id')]['combined_cost'] = $_orders[$this->db->f('id')]['combined_cost'];
 				}
+
 				unset($periode);
 			}
 			else
 			{
-
 				//FIXME
 				foreach ($project_order_amount as $periode => $_amount)
 				{
-					$orders[$periode][] = array('amount' => $_amount);
+					$orders[$periode][] = array('combined_cost' => $_amount);
 				}
 
 			}
 
+//_debug_array($orders);
+//_debug_array($orders); die();
 			$sort_period = array();
 			$values = array();
-
+//_debug_array($project_budget);die();
+//$test = 0;
 			foreach ($project_budget as $period => $_budget)
 			{
-				$_sum_orders = 0;
+				$_sum_orders = array();
+				$_sum_oblications = array();
 				$_actual_cost = 0;
 
 				if(isset($orders[$period]))
 				{
+//_debug_array($orders[$period]);die();
+
 					foreach ($orders[$period] as $order_id => $order)
 					{
-						$_sum_orders += $order['amount'];
-			//			$_sum_orders -= $order['actual_cost'];
-
-						if($_budget >= 0)
-						{
-							if($order['actual_cost'] >= 0)
-							{
-								$_sum_orders -= $order['actual_cost'];
-							}
-							else
-							{
-								$_sum_orders += $order['actual_cost'];							
-							}
-
-							$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
-						}
-						else // income
-						{
-							if($order['actual_cost'] >= 0)
-							{
-								$_sum_orders += $order['actual_cost'];
-							}
-							else
-							{
-								$_sum_orders -= $order['actual_cost'];							
-							}
-
-							$_sum_orders = $_sum_orders < 0 ? $_sum_orders : 0;						
-						}
-						
 						$_actual_cost += $order['actual_cost'];
+//_debug_array( $test+= $order['actual_cost']);
+						$_sum_orders[$order_id] += $order['combined_cost'];
+
+						if(!$_orders[$order_id]['closed'])
+						{
+							$_sum_oblications[$order_id] -= $order['actual_cost'];
+							$_sum_oblications[$order_id] += $order['combined_cost'];
+
+							if($_orders[$order_id]['budget'] >= 0)
+							{
+
+								if($_sum_oblications[$order_id] < 0)
+								{
+									$_sum_oblications[$order_id] = 0;
+								}
+							}
+							else // income
+							{
+								if($_sum_oblications[$order_id] > 0)
+								{
+									$_sum_oblications[$order_id] = 0;
+								}
+							}
+						}
 
 						//override if periode is closed
 						if(isset($closed_period[$period]) && $closed_period[$period])
 						{
-							$_sum_orders = 0;
+							$_sum_oblications[$order_id] = 0;
 						}
 					}
 
 					unset($orders[$period]);
 				}
-
+//die();
 				$values[] = array
 				(
 					'project_id'			=> $project_id,
 					'period'				=> $period,
 					'budget'				=> $_budget,
-					'sum_orders'			=> $_sum_orders,
+					'sum_orders'			=> array_sum($_sum_orders),
+					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
 				);
 
 				$sort_period[] = $period;
 			}
-//_debug_array($values);die();
+
+
+
 			unset($order);
 			unset($order_id);
 			unset($period);
@@ -1919,35 +1896,45 @@
 			reset($orders);
 
 			//remaining
-//_debug_array($orders);
+
 			foreach ($orders as $period => $_orders)
 			{
-				$_sum_orders = 0;
+				$_sum_orders = array();
+				$_sum_oblications = array();
 				$_actual_cost = 0;
 
 				foreach ($_orders as $order_id => $order)
 				{
-					$_sum_orders += $order['amount'];
-					
-					if($order['actual_cost'] > 0 && ($order['amount'] - $order['actual_cost']) > 0)
-					{
-						$_sum_orders -= $order['actual_cost'];
-						$_sum_orders = $_sum_orders > 0 ? $_sum_orders : 0;
-					}
-					else if($order['actual_cost'] < 0 && ($order['amount'] - $order['actual_cost']) < 0)//income
-					{
-						$_sum_orders -= $order['actual_cost'];
-						$_sum_orders = $_sum_orders < 0 ? $_sum_orders : 0;
-					}
-
 					$_actual_cost += $order['actual_cost'];
+
+					$_sum_orders[$order_id] += $order['combined_cost'];
+
+					if(!$_orders[$order_id]['closed'])
+					{
+						$_sum_oblications[$order_id] -= $order['actual_cost'];
+						$_sum_oblications[$order_id] += $order['combined_cost'];
+
+						if($_orders[$order_id]['budget'] >= 0)
+						{
+							if($_sum_oblications[$order_id] < 0)
+							{
+								$_sum_oblications[$order_id] = 0;
+							}
+						}
+						else // income
+						{
+							if($_sum_oblications[$order_id] > 0)
+							{
+								$_sum_oblications[$order_id] = 0;
+							}
+						}
+					}
 
 					//override if periode is closed
 					if(isset($closed_period[$period]) && $closed_period[$period])
 					{
-						$_sum_orders = 0;
+						$_sum_oblications[$order_id] = 0;
 					}
-
 				}
 
 				$values[] = array
@@ -1955,7 +1942,8 @@
 					'project_id'			=> $project_id,
 					'period'				=> $period,
 					'budget'				=> 0,
-					'sum_orders'			=> $_sum_orders,
+					'sum_orders'			=> array_sum($_sum_orders),
+					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
 				);
 
@@ -1975,7 +1963,7 @@
 				$entry['month'] = $month == '00' ? '' : $month;
 				if($active_period[$entry['period']])
 				{
-					$entry['diff'] = $entry['budget'] - $entry['sum_orders'] - $entry['actual_cost'];				
+					$entry['diff'] = $entry['budget'] - $entry['sum_oblications'] - $entry['actual_cost'];				
 				}
 				else
 				{

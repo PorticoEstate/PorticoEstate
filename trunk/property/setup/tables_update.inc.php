@@ -7069,3 +7069,48 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.658 to 0.9.17.659
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.658';
+	function property_upgrade0_9_17_658()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'UPDATE fm_project SET project_type_id = 1 WHERE project_type_id IS NULL';
+		
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+ 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
+		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
+ 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
+                   FROM fm_ecobilagoverf
+                 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
+        		UNION ALL 
+                 	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
+                   FROM fm_ecobilag
+                 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.659';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
