@@ -551,8 +551,8 @@
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
 
 
-			$filtermethod .= " WHERE fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
-//			$filtermethod .= " WHERE fm_workorder_status.closed IS NULL AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+			$filtermethod .= " WHERE (fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+			$filtermethod .= " OR fm_workorder_status.closed IS NULL AND fm_workorder.start_date < $start_date)";
 
 			$where = 'AND';
 
@@ -638,7 +638,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, combined_cost,fm_location1.mva,"
+			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, combined_cost,fm_location1.mva,fm_workorder.start_date,"
 				. " fm_orders_actual_cost_view.actual_cost,pending_cost, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -676,6 +676,14 @@
 				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
 		//		$_actual_cost = round($this->db->f('actual_cost'));
 				$_obligation = $_combined_cost - $_actual_cost - $_pending_cost;
+
+				
+				// only current year
+				if($this->db->f('start_date') < $start_date)
+				{
+					$_actual_cost = 0;
+				}
+
 				$sum_hits += 1;
 
 				if(!$this->db->f('closed'))

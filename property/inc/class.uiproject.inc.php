@@ -1924,6 +1924,11 @@
 			$periodization_list = $this->bo->get_periodizations_with_outline();
 
 			$sub_entry_action_data = array();
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiworkorder.edit',
+					'project_id'	=> $id
+				);
 
 			if($id && !$values['project_type_id']==3)
 			{
