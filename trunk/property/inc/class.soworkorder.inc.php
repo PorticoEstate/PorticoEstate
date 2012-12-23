@@ -1715,6 +1715,8 @@
 			
 			}
 
+//FIXME : condsider removed
+/*
 			foreach ($periodization_outline as $outline)
 			{
 				$partial_amount = $combined_cost * $outline['value'] / 100;
@@ -1722,5 +1724,6 @@
 				$sql = "UPDATE fm_project_budget SET order_amount = order_amount + {$partial_amount} - {$old_combined_cost} WHERE project_id = {$project_id} AND year = {$year} AND month =" . (int)$outline['month'];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
+*/
 		}
 	}

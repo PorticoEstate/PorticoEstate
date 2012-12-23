@@ -154,9 +154,8 @@ var  myPaginator_4, myDataTable_4;
   	this.addFooterDatatable1 = function(paginator,datatable)
   	{
   		//call getTotalSum(name of column) in property.js
-   		tmp_sum0 = getTotalSum('cost',0,paginator,datatable);
-
-  		tmp_sum1 = getTotalSum('budget',0,paginator,datatable);
+  		tmp_sum0 = getTotalSum('budget',0,paginator,datatable);
+   		tmp_sum1 = getTotalSum('cost',0,paginator,datatable);
 /*
   		tmp_sum2 = getTotalSum('calculation',2,paginator,datatable);
   		tmp_sum3 = getTotalSum('contract_sum',2,paginator,datatable);

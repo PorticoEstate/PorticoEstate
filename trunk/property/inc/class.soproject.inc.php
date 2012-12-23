@@ -1665,15 +1665,17 @@
 			$project_budget = array();
 			$project_order_amount = array();
 
-			$sql = "SELECT * FROM fm_project_budget WHERE project_id = {$project_id}";
+			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, start_date"
+			. " FROM fm_project_budget {$this->left_join} fm_workorder ON fm_project_budget.project_id = fm_workorder.project_id WHERE fm_project_budget.project_id = {$project_id}"
+			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active,start_date";
 			$this->db->query($sql,__LINE__,__FILE__);
-
+//	_debug_array($sql);
 			while ($this->db->next_record())
 			{
 				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
 				
  				$project_budget[$period] = (int)$this->db->f('budget');
- 				$project_order_amount[$period] = $this->db->f('order_amount');
+ 				$project_order_amount[$period] = $period == date('Ym') ? $this->db->f('order_amount') : 0;
  				$closed_period[$period] = !!$this->db->f('closed');
   				$active_period[$period] = !!$this->db->f('active');
 			}
