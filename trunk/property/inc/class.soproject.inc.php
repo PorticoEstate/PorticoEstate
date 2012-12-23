@@ -1585,13 +1585,15 @@
 
 			if($periodization_id)
 			{
-				$this->db->query("SELECT month, value FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC",__LINE__,__FILE__);
+				$this->db->query("SELECT month, value,dividend,divisor FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC",__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
 					$periodization_outline[] = array
 					(
 						'month' => $this->db->f('month'),
 						'value' => $this->db->f('value'),
+						'dividend' => $this->db->f('dividend'),
+						'divisor' => $this->db->f('divisor')
 					);
 				}
 			}
@@ -1601,13 +1603,24 @@
 				(
 					'month' => 0,
 					'value' => 100,
+					'dividend' => 1,
+					'divisor' => 1,
+
 				);
 			
 			}
 			
 			foreach ($periodization_outline as $outline)
 			{
-				$partial_budget = $budget * $outline['value'] / 100;
+				if ($outline['dividend'] && $outline['divisor'])
+				{
+					$partial_budget = $budget * $outline['dividend'] / $outline['divisor'];				
+				}
+				else
+				{
+					$partial_budget = $budget * $outline['value'] / 100;				
+				}
+
 				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget);
 			}
 
