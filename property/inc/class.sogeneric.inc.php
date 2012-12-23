@@ -2412,10 +2412,29 @@
 								'name'		=> 'value',
 								'descr'		=> lang('value'),
 								'type'		=> 'numeric',
-								'nullable'	=> false,
+								'nullable'	=> true,
 								'size'		=> 4,
 								'sortable'	=> true
 							),
+							array
+							(
+								'name'		=> 'dividend',
+								'descr'		=> lang('fraction::dividend'),
+								'type'		=> 'integer',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'		=> 'divisor',
+								'descr'		=> lang('fraction::divisor'),
+								'type'		=> 'integer',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+
 							array
 							(
 								'name' => 'remark',

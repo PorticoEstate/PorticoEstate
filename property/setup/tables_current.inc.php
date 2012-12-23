@@ -1309,6 +1309,8 @@
 				'periodization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'month' => array('type' => 'int','precision' => '4','nullable' => true),
 				'value' => array('type' => 'decimal','precision' => '20','scale' => '6','nullable' => false,'default' => '0.000000'),
+				'dividend' => array('type' => 'int','precision' => '4','nullable' => true),
+				'divisor' => array('type' => 'int','precision' => '4','nullable' => true),
 				'remark' => array('type' => 'varchar','precision' => '60','nullable' => False),
 			),
 			'pk' => array('id'),
