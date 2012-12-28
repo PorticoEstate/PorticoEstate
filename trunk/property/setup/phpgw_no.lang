@@ -14,6 +14,7 @@ accounting dim d	property	no	Regnskap dim d
 accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
 accounting voucher type	property	no	Regnskap type faktura
+accumulated	property	no	Akkumulert
 acl_locastion is missing	property	no	ACL-lokalisering mangler
 acquisition date	property	no	Anskaffelses dato
 action	property	no	Handling

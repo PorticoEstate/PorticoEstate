@@ -40,6 +40,7 @@ Returns mixed
 			{
 				document.add_sub_entry_form.submit();
 			}
+			var project_type_id = '<xsl:value-of select="project_type_id"/>';
 		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -453,6 +454,9 @@ Returns mixed
 									<div id="datatable-container_0"/>
 								</td>
 							</tr>
+			<xsl:choose>
+				<xsl:when test="project_type_id !='3'">
+
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_reserve"/>
@@ -484,16 +488,10 @@ Returns mixed
 									<xsl:text> % )</xsl:text>
 								</td>
 							</tr>
-<!--
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_planned_cost"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_planned_cost"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
--->
+							</xsl:when>
+							<xsl:otherwise>
+							</xsl:otherwise>
+					</xsl:choose>
 							<tr>
 								<td class="th_text" valign="top">
 									<xsl:value-of select="lang_workorder_id"/>
@@ -522,6 +520,7 @@ Returns mixed
 									<div id="datatable-container_2"/>
 								</td>
 							</tr>
+
 						</table>
 						<!--  DATATABLE DEFINITIONS-->
 						<script type="text/javascript">

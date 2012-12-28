@@ -43,7 +43,11 @@
 		tmp_sum = 0;
 		for(i = begin; i < end; i++)
 		{
-			tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+			if(tmp_record = parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column)))
+			{
+				tmp_sum += tmp_record;
+			}
+			//tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
 		}
 
 		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
