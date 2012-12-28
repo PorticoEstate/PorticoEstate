@@ -84,7 +84,16 @@ var  myPaginator_4, myDataTable_4;
 /********************************************************************************/	
 	this.myParticularRenderEvent = function()
 	{
-		this.addFooterDatatable0(myPaginator_0,myDataTable_0);
+
+		if(project_type_id == 3)
+		{
+			this.addFooterDatatable_buffer(myPaginator_0,myDataTable_0);
+		}
+		else
+		{
+			this.addFooterDatatable0(myPaginator_0,myDataTable_0);		
+		}
+
 		this.addFooterDatatable1(myPaginator_1,myDataTable_1);
 		this.addFooterDatatable2(myPaginator_2,myDataTable_2);
 	}
@@ -112,6 +121,39 @@ var  myPaginator_4, myDataTable_4;
 		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
 	}
 
+
+  	this.addFooterDatatable_buffer = function(paginator,datatable)
+  	{
+  		//call getTotalSum(name of column) in property.js
+  		tmp_sum1 = getTotalSum('amount_in',0,paginator,datatable);
+  		tmp_sum2 = getTotalSum('amount_out',0,paginator,datatable);
+  		tmp_sum3 = tmp_sum1 + tmp_sum2;
+
+  		if(typeof(tableYUI0)=='undefined')
+  		{
+			tableYUI0 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI0.setAttribute("id","tableYUI0");
+  		}
+  		else
+  		{
+  			tableYUI0.deleteTFoot();
+  		}
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		td_sum('Sum');
+		td_empty(1);
+		td_sum(tmp_sum1);
+		td_empty(1);
+		td_sum(tmp_sum2);
+		td_empty(1);
+		td_sum(tmp_sum3);
+
+		myfoot = tableYUI0.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR);
+	}
 
   	this.addFooterDatatable0 = function(paginator,datatable)
   	{
@@ -144,7 +186,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum4);
 		td_sum(tmp_sum5);
 		td_sum(tmp_sum6);
-		td_empty(7);
+		td_empty(9);
 
 		myfoot = tableYUI0.createTFoot();
 		myfoot.setAttribute("id","myfoot");

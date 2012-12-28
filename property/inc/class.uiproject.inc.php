@@ -1188,6 +1188,12 @@
 						$error_id=true;
 					}
 
+					if(!isset($values['project_type_id']) || !$values['project_type_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a project type!'));
+						$error_id=true;
+					}
+
 					if(!$values['name'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a project NAME !'));
@@ -1628,6 +1634,7 @@
 						{
 							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
+
 							if(isset($prefs2['email']))
 							{
 								$supervisor_email[] = array
@@ -1719,6 +1726,7 @@
 					$value_remainder -= $b_entry['sum_orders'];
 					$value_remainder -= $b_entry['actual_cost'];
 				}
+				unset($b_entry);
 			}
 
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
@@ -1726,30 +1734,51 @@
 
 
 //_debug_array($content_budget);die();
-			$datavalues[0] = array
+
+
+
+			if( isset($values['project_type_id']) && $values['project_type_id']==3)
+			{
+
+				$myColumnDefs[0] = array
 				(
-					'name'					=> "0",
-					'values' 				=> json_encode($content_budget),
-					'total_records'			=> count($content_budget),
-					'edit_action'			=> "''",
-					'permission'   			=> "''",
-					'is_paginator'			=> 1,
-					'footer'				=> 0
+					'name'		=> "0",
+					'values'	=>	json_encode(array
+											(
+												array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+												array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'user_name','label'=>lang('user'),'sortable'=>true,'resizeable'=>true)
+											)
+										)
 				);
 
-
-			$myColumnDefs[0] = array
+				$content_budget = $this->bo->get_buffer_budget($id);
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+				}
+				unset($b_entry);
+			}
+			else
+			{
+				$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_orders','label'=>lang('budget') . '::' . lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation_percent','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 														array('key' => 'closed_orig','hidden' => true),
 														array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
@@ -1757,13 +1786,19 @@
 														array('key' => 'flag_active','hidden' => true),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
+			}
 
-/*
-														array('key' => 'subtract_sum_orders','hidden' => true),
-														array('key' => 'subtract_actual_cost','hidden' => true),
-														array('key' => 'subtract_budget','hidden' => true),
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'edit_action'			=> "''",
+					'permission'   			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+			);
 
-*/
 
 //_debug_array($values['workorder_budget']);die();
 			$datavalues[1] = array
@@ -1953,6 +1988,7 @@
 			$data = array
 				(
 					'project_types'						=> array('options' => $this->bo->get_project_types($values['project_type_id'])),
+					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -2121,6 +2157,7 @@
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
