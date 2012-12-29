@@ -88,9 +88,16 @@
 			$revision				= phpgw::get_var('revision', 'int');
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$details				= phpgw::get_var('details', 'bool');
+			$direction				= phpgw::get_var('direction');
 
 			$this->start			= $start;
-			$this->query			= isset($query) ? $query : $this->query;
+			$this->query			= $query ? $query : $this->query;
+			$this->direction		= $direction ? $direction : $this->direction;
+			if( !$this->direction )
+			{
+				$this->direction = 'expences';
+			}
+			
 			$this->filter			= isset($filter) && $filter ? $filter : '';
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
@@ -133,6 +140,7 @@
 			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
 			$this->dimb_id			= isset($data['dimb_id'])?$data['dimb_id']:'';
 			$this->details			= isset($data['details'])?$data['details']:'';
+			$this->direction		= isset($data['direction'])?$data['direction']:'';
 		}
 
 		function check_perms($has, $needed)
@@ -183,7 +191,8 @@
 				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
 				'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
-				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department));
+				'details' => $this->details,'dimb_id' => $this->dimb_id, 'department' => $this->department,
+				'direction'	=> $this->direction));
 
 			$this->total_records		= $this->so->total_records;
 			$this->sum_budget_cost		= $this->so->sum_budget_cost;
