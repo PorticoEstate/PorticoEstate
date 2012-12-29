@@ -5,6 +5,8 @@
 %1 group	property	no	%1 gruppe
 %1 is notified	property	no	Melding sendt til %1
 %1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+expences	property	no	Utgifter
+income	property	no	Inntekter
 about	common	no	Om
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
