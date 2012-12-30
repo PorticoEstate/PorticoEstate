@@ -927,7 +927,10 @@
 					}
 					$entry['obligation'] = $_obligation;
 				}
-				$entry['diff'] =  $entry['budget'] - $entry['obligation'] - $entry['actual_cost'];
+
+				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $_combined_cost;
+				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];				
+//				$entry['diff'] =  $entry['budget'] - $entry['obligation'] - $entry['actual_cost'];
 			}
 
 			return $values;
@@ -1991,7 +1994,8 @@ $test = 0;
 				$entry['month'] = $month == '00' ? '' : $month;
 				if($active_period[$entry['period']])
 				{
-					$entry['diff'] = $entry['budget'] - $entry['sum_oblications'] - $entry['actual_cost'];				
+					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];				
 				}
 				else
 				{
@@ -2220,7 +2224,7 @@ $test = 0;
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0)
 		{
 			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
 			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
@@ -2229,7 +2233,13 @@ $test = 0;
 			if($user_id)
 			{
 				$user_id = (int) $user_id;
-				$filter = "AND fm_{$type}.user_id = $user_id";
+				$filter .= "AND fm_{$type}.user_id = $user_id";
+			}
+
+			if($ecodimb)
+			{
+				$ecodimb = (int) $ecodimb;
+				$filter .= "AND fm_{$type}.ecodimb = $ecodimb";
 			}
 
 			if($status_filter)
