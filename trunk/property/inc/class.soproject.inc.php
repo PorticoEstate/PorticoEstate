@@ -2244,8 +2244,15 @@ $test = 0;
 
 			if($status_filter)
 			{
-				$user_id = (int) $user_id;
-				$filter .= "AND fm_{$type}.status = '{$status_filter}'";
+				if($status_filter == 'open')
+				{
+					$filter .= " AND fm_{$type}_status.closed IS NULL"; 
+
+				}
+				else
+				{
+					$filter .= " AND fm_{$type}.status='{$status_filter}' ";
+				}
 			}
 
 			switch($type)
@@ -2283,7 +2290,7 @@ $test = 0;
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
+					$sql = "SELECT {$table}.id, project_id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
 					. " {$join_method}"
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR start_date is NULL"
 					. " ORDER BY {$table}.id DESC";
@@ -2301,6 +2308,7 @@ $test = 0;
 				$values[] = array
 				(
 					'id'			=> $this->db->f('id'),
+					'project_id'	=> $this->db->f('project_id'),
 					'title'			=> htmlspecialchars_decode($this->db->f('title',true)),
 					'status'		=> $this->db->f('status',true),
 					'actual_cost'	=> (float)$this->db->f('actual_cost'),

@@ -2218,7 +2218,7 @@
 			$execute		= phpgw::get_var('execute', 'bool', 'POST');
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
-			$type 			= phpgw::get_var('type');
+			$type 			= phpgw::get_var('type','string', 'REQUEST' , 'project');
 			$ecodimb 		= phpgw::get_var('ecodimb');
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
@@ -2271,29 +2271,36 @@
 			switch($type)
 			{
 				case 'project':
-					$_key = 'num_open';
-					$_label = lang('open');
-					break;
-				case 'workorder':
-					$_key = 'actual_cost';
-					$_label = lang('actual cost');
-					break;
-				default:
-					$_key = 'num_open';
-					$_label = lang('open');
-			}
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => $_key,'label'=>$_label,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
-				);
+					);
+					break;
+				case 'workorder':
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(	
+														array('key' => 'project_id','label'=>lang('project'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
+														))
+					);
+
+					break;
+			}
+
 
 			$user_list	= $this->bocommon->get_user_list('select', $user_id, $extra=false, $default = $user_id, $start=-1, $sort='ASC', $order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
@@ -2305,16 +2312,23 @@
 			switch($type)
 			{
 				case 'project':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_new));
 					break;
 				case 'workorder':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_new));
 					break;
 				default:
 					$status_list_filter = array();
 			}
+
+			if($status_list_filter)
+			{
+				array_unshift ($status_list_filter,array ('id'=>'open','name'=> lang('open')));
+			}
+			
+			$status_list_filter = $this->bocommon->select_list($status_filter,$status_list_filter);
 
 			$type_array = array
 			(
