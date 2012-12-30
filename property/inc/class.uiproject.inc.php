@@ -54,6 +54,7 @@
 		var $district_id;
 		var $criteria_id;
 		var $project_type_id;
+		var $ecodimb;
 
 		var $public_functions = array
 			(
@@ -1635,6 +1636,7 @@
 							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
 
+
 							if(isset($prefs2['email']))
 							{
 								$supervisor_email[] = array
@@ -2217,6 +2219,7 @@
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
 			$type 			= phpgw::get_var('type');
+			$ecodimb 		= phpgw::get_var('ecodimb');
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
@@ -2250,7 +2253,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb);
 			}
 
 			$total_records	= count($list);
@@ -2348,6 +2351,7 @@
 				'status_list_new'		=> array('options' => $status_list_new),
 				'type_list'				=> array('options' => $type_array),
 				'user_list'				=> array('options' => $user_list),
+				'ecodimb_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=>'dimb','selected' => $ecodimb))),
 				'start_date'			=> $start_date,
 				'end_date'				=> $end_date,
 				'total_records'			=> $total_records,

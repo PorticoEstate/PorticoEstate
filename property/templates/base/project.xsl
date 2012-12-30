@@ -844,6 +844,22 @@ Returns mixed
 					</tr>
 					<tr>
 						<td>
+							<xsl:value-of select="php:function('lang', 'dimb')"/>
+						</td>
+						<td>
+							<select name="ecodimb">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</xsl:attribute>
+								<option value="0">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="ecodimb_list/options"/>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
 							<xsl:value-of select="php:function('lang', 'user')"/>
 						</td>
 						<td>
