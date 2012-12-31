@@ -37,6 +37,7 @@
 	class property_soproject
 	{
 		var $total_records = 0;
+		private $global_lock = false;
 
 		function __construct()
 		{
@@ -53,6 +54,8 @@
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 			$this->acl->set_account_id($this->account);
 			$this->grants		= $this->acl->get_grants('property','.project');
+			$this->config = CreateObject('phpgwapi.config','property');
+			$this->config->read();
 		}
 
 		function select_status_list()
@@ -645,7 +648,7 @@
 				}
 
 				$this->db->set_fetch_single(false);
-
+//$test=array();
 				foreach($project_list as &$project)
 				{
 					$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
@@ -696,6 +699,7 @@
 						$_actual_cost =  $this->db->f('actual_cost');
 						if(!$this->db->f('closed'))
 						{
+//$test[] = $this->db->f('id');
 							$_obligation = $_combined_cost - $_actual_cost;
 							if((int)$this->db->f('budget') >= 0)
 							{
@@ -748,7 +752,7 @@
 				}
 
 				$values = $this->custom->translate_value($dataset, $location_id);
-
+//_debug_array($test);
 				return $values;
 			}
 
@@ -1486,6 +1490,7 @@
 					unset($action_params);
 				}
 
+				$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed'; 
 
 				if($old_status != $project['status'])
 				{
@@ -1496,11 +1501,11 @@
 				{
 					$historylog->add('S',$project['id'],$project['status'], $old_status);
 
-					$this->db->query("UPDATE fm_workorder SET status='closed' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
-
+		//			$this->db->query("UPDATE fm_workorder SET status='{$workorder_closed_status}' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
+					$this->_update_status_workorder(true, $workorder_closed_status, $workorders);
 					foreach($workorders as $workorder_id)
 					{
-						$historylog_workorder->add('S',$workorder_id,'closed');
+		//				$historylog_workorder->add('S',$workorder_id,'closed');
 					}
 
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
@@ -1511,14 +1516,19 @@
 
 					if ($close_workorders)
 					{
+		//				$this->db->query("UPDATE fm_workorder SET status='{$workorder_closed_status}' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
+
+						$this->_update_status_workorder(true, $workorder_closed_status, $workorders);
 						foreach($workorders as $workorder_id)
 						{
-							$historylog_workorder->add('SC',$workorder_id,'closed');
+		//					$historylog_workorder->add('SC',$workorder_id,'closed');
 						}
 					}
 					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $project['status'];
 				}
 
+/*
+				// Handled in _update_status_workorder();
 				if($close_pending_action)
 				{
 					$action_params = array
@@ -1541,6 +1551,7 @@
 					}
 					unset($action_params);
 				}
+*/
 			}
 
 			if(isset($project['project_group']) && $project['project_group'])
@@ -2227,6 +2238,7 @@ $test = 0;
 		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0)
 		{
 			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
+			$start_date -= 3600*24;
 			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
 
 			$filter = '';
@@ -2330,6 +2342,7 @@ $test = 0;
 			}
 			$historylog	= CreateObject('property.historylog','project');
 
+			$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : false; 
 
 			$this->db->transaction_begin();
 			foreach ($ids as $id)
@@ -2364,9 +2377,27 @@ $test = 0;
 
 				$this->db->query("SELECT * FROM fm_project_status WHERE id = '{$status_new}'");
 				$this->db->next_record();
-				if ($this->db->f('approved') || $this->db->f('closed'))
+				$approved = $this->db->f('approved');
+				$closed = $this->db->f('closed');
+
+				if ($approved || $closed)
 				{
 					execMethod('property.sopending_action.close_pending_action', $action_params_approved);
+				}
+
+				if($closed && $workorder_closed_status)
+				{
+					$sql = "SELECT fm_workorder.id FROM fm_workorder"
+					. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+					. " WHERE project_id = '{$id}' AND closed IS NULL";
+
+					$this->db->query($sql);
+					$orders[] = array();
+					while($this->db->next_record())
+					{
+						$orders[] = $this->db->f('id');
+					}
+					$this->_update_status_workorder($execute, $workorder_closed_status, $orders);
 				}
 			}
 
@@ -2382,7 +2413,15 @@ $test = 0;
 			}
 			$historylog	= CreateObject('property.historylog','workorder');
 
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			foreach ($ids as $id)
 			{
 				if(!$id)
@@ -2399,7 +2438,7 @@ $test = 0;
 				{
 					$this->db->query("UPDATE fm_workorder SET status = '{$status_new}' WHERE id = '{$id}'",__LINE__,__FILE__);
 					$historylog->add('S', $id, $status_new, $old_status);
-					$historylog->add('RM', $id,'Status endret via masseoppdatering');
+					$historylog->add('RM', $id,'Status endret via masseoppdatering eller prosjekt');
 				}
 
 				$action_params_approved = array
@@ -2443,7 +2482,10 @@ $test = 0;
 				}
 			}
 
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
 		}
 
 		public function get_user_list()
