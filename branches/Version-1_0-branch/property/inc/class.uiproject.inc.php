@@ -54,6 +54,7 @@
 		var $district_id;
 		var $criteria_id;
 		var $project_type_id;
+		var $ecodimb;
 
 		var $public_functions = array
 			(
@@ -1188,6 +1189,12 @@
 						$error_id=true;
 					}
 
+					if(!isset($values['project_type_id']) || !$values['project_type_id'])
+					{
+						$receipt['error'][]=array('msg'=>lang('Please select a project type!'));
+						$error_id=true;
+					}
+
 					if(!$values['name'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a project NAME !'));
@@ -1628,6 +1635,8 @@
 						{
 							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
+
+
 							if(isset($prefs2['email']))
 							{
 								$supervisor_email[] = array
@@ -1719,6 +1728,7 @@
 					$value_remainder -= $b_entry['sum_orders'];
 					$value_remainder -= $b_entry['actual_cost'];
 				}
+				unset($b_entry);
 			}
 
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
@@ -1726,29 +1736,51 @@
 
 
 //_debug_array($content_budget);die();
-			$datavalues[0] = array
+
+
+
+			if( isset($values['project_type_id']) && $values['project_type_id']==3)
+			{
+
+				$myColumnDefs[0] = array
 				(
-					'name'					=> "0",
-					'values' 				=> json_encode($content_budget),
-					'total_records'			=> count($content_budget),
-					'edit_action'			=> "''",
-					'permission'   			=> "''",
-					'is_paginator'			=> 1,
-					'footer'				=> 0
+					'name'		=> "0",
+					'values'	=>	json_encode(array
+											(
+												array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
+												array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+												array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'user_name','label'=>lang('user'),'sortable'=>true,'resizeable'=>true)
+											)
+										)
 				);
 
-
-			$myColumnDefs[0] = array
+				$content_budget = $this->bo->get_buffer_budget($id);
+				foreach($content_budget as & $b_entry)
+				{
+					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+				}
+				unset($b_entry);
+			}
+			else
+			{
+				$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
 					'values'	=>	json_encode(array(	array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'month','label'=>lang('month'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'sum_orders','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+											//			array('key' => 'sum_orders','label'=> lang('order'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'sum_oblications','label'=>lang('sum orders'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'deviation_percent','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'deviation_period','label'=>lang('deviation'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_acc','label'=>lang('deviation'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'deviation_percent_period','label'=>lang('deviation') . '::' . lang('percent'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'deviation_percent_acc','label'=>lang('percent'). '::' . lang('accumulated'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
 														array('key' => 'closed','label'=>lang('closed'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 														array('key' => 'closed_orig','hidden' => true),
 														array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter'),
@@ -1756,13 +1788,19 @@
 														array('key' => 'flag_active','hidden' => true),
 														array('key' => 'delete_year','label'=>lang('Delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
+			}
 
-/*
-														array('key' => 'subtract_sum_orders','hidden' => true),
-														array('key' => 'subtract_actual_cost','hidden' => true),
-														array('key' => 'subtract_budget','hidden' => true),
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_budget),
+					'total_records'			=> count($content_budget),
+					'edit_action'			=> "''",
+					'permission'   			=> "''",
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+			);
 
-*/
 
 //_debug_array($values['workorder_budget']);die();
 			$datavalues[1] = array
@@ -1781,10 +1819,11 @@
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'cost','label'=>lang('cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'addition_percentage','label'=> '%','sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'combined_cost','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'obligation','label'=>lang('sum orders'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'diff','label'=>lang('difference'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
 														array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
@@ -1922,6 +1961,11 @@
 			$periodization_list = $this->bo->get_periodizations_with_outline();
 
 			$sub_entry_action_data = array();
+				$sub_entry_action_data = array
+				(
+					'menuaction'	=> 'property.uiworkorder.edit',
+					'project_id'	=> $id
+				);
 
 			if($id && !$values['project_type_id']==3)
 			{
@@ -1946,6 +1990,7 @@
 			$data = array
 				(
 					'project_types'						=> array('options' => $this->bo->get_project_types($values['project_type_id'])),
+					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -2114,6 +2159,7 @@
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
+
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('connection');
 			phpgwapi_yui::load_widget('loader');
@@ -2172,7 +2218,8 @@
 			$execute		= phpgw::get_var('execute', 'bool', 'POST');
 			$status_filter 	= phpgw::get_var('status_filter');
 			$status_new 	= phpgw::get_var('status_new');
-			$type 			= phpgw::get_var('type');
+			$type 			= phpgw::get_var('type','string', 'REQUEST' , 'project');
+			$ecodimb 		= phpgw::get_var('ecodimb');
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
@@ -2206,7 +2253,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb);
 			}
 
 			$total_records	= count($list);
@@ -2224,29 +2271,36 @@
 			switch($type)
 			{
 				case 'project':
-					$_key = 'num_open';
-					$_label = lang('open');
-					break;
-				case 'workorder':
-					$_key = 'actual_cost';
-					$_label = lang('actual cost');
-					break;
-				default:
-					$_key = 'num_open';
-					$_label = lang('open');
-			}
-
-			$myColumnDefs[0] = array
-				(
-					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => $_key,'label'=>$_label,'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
-				);
+					);
+					break;
+				case 'workorder':
+					$myColumnDefs[0] = array
+					(
+						'name'		=> "0",
+						'values'	=>	json_encode(array(	
+														array('key' => 'project_id','label'=>lang('project'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
+														))
+					);
+
+					break;
+			}
+
 
 			$user_list	= $this->bocommon->get_user_list('select', $user_id, $extra=false, $default = $user_id, $start=-1, $sort='ASC', $order='account_lastname',$query='',$offset=-1);
 			foreach ($user_list as &$entry)
@@ -2258,16 +2312,23 @@
 			switch($type)
 			{
 				case 'project':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'project_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'project_status',	'selected' => $status_new));
 					break;
 				case 'workorder':
-					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_filter));
+					$status_list_filter = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status'));
 					$status_list_new = execMethod('property.bogeneric.get_list', array('type' => 'workorder_status',	'selected' => $status_new));
 					break;
 				default:
 					$status_list_filter = array();
 			}
+
+			if($status_list_filter)
+			{
+				array_unshift ($status_list_filter,array ('id'=>'open','name'=> lang('open')));
+			}
+			
+			$status_list_filter = $this->bocommon->select_list($status_filter,$status_list_filter);
 
 			$type_array = array
 			(
@@ -2304,6 +2365,7 @@
 				'status_list_new'		=> array('options' => $status_list_new),
 				'type_list'				=> array('options' => $type_array),
 				'user_list'				=> array('options' => $user_list),
+				'ecodimb_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=>'dimb','selected' => $ecodimb))),
 				'start_date'			=> $start_date,
 				'end_date'				=> $end_date,
 				'total_records'			=> $total_records,
@@ -2344,6 +2406,7 @@
 
 		function view()
 		{
+
 
 			if(!$this->acl_read)
 			{
@@ -2446,6 +2509,7 @@
 			}
 
 			$datavalues[2] = array
+
 				(
 					'name'					=> "2",
 					'values' 				=> json_encode($content_invoice),

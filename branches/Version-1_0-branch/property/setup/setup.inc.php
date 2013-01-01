@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.658';
+	$setup_info['property']['version']		= '0.9.17.661';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -99,6 +99,7 @@
 		'fm_b_account',
 		'fm_b_account_category',
 		'fm_workorder',
+		'fm_workorder_budget',
 		'fm_workorder_history',
 		'fm_workorder_status',
 		'fm_activities',
@@ -128,6 +129,7 @@
 		'fm_ns3420',
 		'fm_project_status',
 		'fm_project',
+		'fm_project_buffer_budget',
 		'fm_projectbranch',
 		'fm_project_group',
 		'fm_project_history',

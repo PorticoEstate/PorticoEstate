@@ -550,6 +550,22 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_workorder_budget' => array(
+			'fd' => array(
+				'order_id' => array('type' => 'int','precision' => 8,'nullable' => False),
+				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
+				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'combined_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('order_id','year','month'),
+			'fk' => array('fm_workorder' => array('order_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_activities' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -1309,6 +1325,8 @@
 				'periodization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'month' => array('type' => 'int','precision' => '4','nullable' => true),
 				'value' => array('type' => 'decimal','precision' => '20','scale' => '6','nullable' => false,'default' => '0.000000'),
+				'dividend' => array('type' => 'int','precision' => '4','nullable' => true),
+				'divisor' => array('type' => 'int','precision' => '4','nullable' => true),
 				'remark' => array('type' => 'varchar','precision' => '60','nullable' => False),
 			),
 			'pk' => array('id'),
@@ -1545,12 +1563,15 @@
 		'fm_project_buffer_budget' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
+				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
 				'buffer_project_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => False),
 				'amount_in' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'from_project' => array('type' => 'int','precision' => '4','nullable' => true),
 				'amount_out' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'to_project' => array('type' => 'int','precision' => '4','nullable' => true),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'remark' => array('type' => 'text','nullable' => true),
 			),

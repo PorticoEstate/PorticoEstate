@@ -5,6 +5,8 @@
 %1 group	property	no	%1 gruppe
 %1 is notified	property	no	Melding sendt til %1
 %1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+expences	property	no	Utgifter
+income	property	no	Inntekter
 about	common	no	Om
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
@@ -14,6 +16,7 @@ accounting dim d	property	no	Regnskap dim d
 accounting tax	property	no	Regnskap mva-kode
 accounting voucher category	property	no	Regnskap kategorier faktura
 accounting voucher type	property	no	Regnskap type faktura
+accumulated	property	no	Akkumulert
 acl_locastion is missing	property	no	ACL-lokalisering mangler
 acquisition date	property	no	Anskaffelses dato
 action	property	no	Handling
@@ -823,6 +826,8 @@ format type	property	no	Format type
 formats	property	no	Formater
 forward	property	no	Videresend
 fraction	property	no	Fraksjon
+fraction::dividend	property	no	Brøk::teller
+fraction::divisor	property	no	Brøk::nevner
 from	property	no	Fra
 from date	property	no	Fra dato
 funding	property	no	Finansiering

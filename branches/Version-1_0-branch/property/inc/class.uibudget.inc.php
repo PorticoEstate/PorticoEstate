@@ -78,6 +78,7 @@
 			$this->grouping		= $this->bo->grouping;
 			$this->revision		= $this->bo->revision;
 			$this->details		= $this->bo->details;
+			$this->direction	= $this->bo->direction;
 
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 
@@ -94,7 +95,8 @@
 					'filter'		=> $this->filter,
 					'cat_id'		=> $this->cat_id,
 					'dimb_id'		=> $this->dimb_id,
-					'allrows'		=> $this->allrows
+					'allrows'		=> $this->allrows,
+					'direction'		=> $this->direction
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -994,21 +996,22 @@
 			$datatable = array();
 			$values_combo_box = array();
 			$dry_run = false;
-
+			$this->save_sessiondata();
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 					(
-						'menuaction'	=>'property.uibudget.obligations',
-						'cat_id'		=>$this->cat_id,
-						'filter'		=>$this->filter,
-						'query'			=>$this->query,
-						'district_id'	=>$this->district_id,
-						'grouping'		=>$this->grouping,
-						'year'			=>$this->year,
+						'menuaction'	=> 'property.uibudget.obligations',
+						'cat_id'		=> $this->cat_id,
+						'filter'		=> $this->filter,
+						'query'			=> $this->query,
+						'district_id'	=> $this->district_id,
+						'grouping'		=> $this->grouping,
+						'year'			=> $this->year,
 						'details'		=> $this->details,
 						'allrows'		=> $this->allrows,
-						'dimb_id'		=>$this->dimb_id
+						'dimb_id'		=> $this->dimb_id,
+						'direction'		=> $this->direction
 					));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -1021,6 +1024,7 @@
 					."year:'{$this->year}',"
 					."details:'{$this->details}',"
 					."dimb_id:'{$this->dimb_id}',"
+					."direction:'{$this->direction}',"
 					."allrows:'{$this->allrows}',"
 					."download:'obligations'";
 
@@ -1061,6 +1065,23 @@
 				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
 				array_unshift ($values_combo_box[5],$default_value);
+
+
+				$values_combo_box[6]  = array
+				(
+					array
+					(
+						'id' => 'expences',
+						'name'	=> lang('expences'),
+						'selected'	=> $this->direction == 'expences' ? 1 : 0
+					),
+					array
+					(
+						'id' => 'income',
+						'name'	=> lang('income'),
+						'selected'	=> $this->direction == 'income' ? 1 : 0
+					)
+				);
 
 				$datatable['actions']['form'] = array
 					(
@@ -1167,7 +1188,19 @@
 									'style' => 'filter',
 									'values' => $values_combo_box[5],
 									'onchange'=> 'onChangeSelect("dimb_id");',
-									'tab_index' => 5
+									'tab_index' => 6
+								),
+								array
+								( //boton 	USER
+									//	'id' => 'btn_user_id',
+									'id' => 'sel_direction',
+									'name' => 'direction',
+									'value'	=> lang('direction'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[6],
+									'onchange'=> 'onChangeSelect("direction");',
+									'tab_index' => 7
 								),
 
 								array
@@ -1175,7 +1208,7 @@
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 8
+									'tab_index' => 10
 								),
 								array
 								( //boton     SEARCH
@@ -1183,7 +1216,7 @@
 									'name' 		=> 'search',
 									'value'    	=> lang('search'),
 									'type' 		=> 'button',
-									'tab_index' => 7
+									'tab_index' => 9
 								),
 								array
 								( // TEXT IMPUT
@@ -1193,7 +1226,7 @@
 									'type' 		=> 'text',
 									'size'    	=> 28,
 									'onkeypress'=> 'return pulsar(event)',
-									'tab_index' => 6
+									'tab_index' => 8
 								)
 							),
 							'hidden_value' => array

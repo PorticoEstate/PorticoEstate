@@ -605,6 +605,13 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 
+			$_status_list = $this->so->select_status_list();
+			$status_text = array();
+			foreach ($_status_list as $_status_entry)
+			{
+				$status_text[$_status_entry['id']] = $_status_entry['name'];
+			}
+
 			$i=0;
 			foreach ($history_array as $value) 
 			{
@@ -633,7 +640,7 @@
 					case 'CO': $type = lang('Initial Coordinator'); break;
 					case 'C': $type = lang('Coordinator changed'); break;
 					case 'TO': $type = lang('Initial Category'); break;
-						case 'T': $type = lang('Category changed'); break;
+					case 'T': $type = lang('Category changed'); break;
 					case 'SO': $type = lang('Initial Status'); break;
 					case 'S': $type = lang('Status changed'); break;
 					case 'SC': $type = lang('Status confirmed'); break;
@@ -647,10 +654,9 @@
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
-
-						$record_history[$i]['value_action']	= $type?$type:'';
+				$record_history[$i]['value_action']	= $type ? $type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -693,6 +699,11 @@
 						$category 								= $this->cats->return_single($value['old_value']);
 						$record_history[$i]['value_old_value']	= $category[0]['name'];
 					}
+				}
+				else if ($value['status'] == 'S' || $value['status'] == 'SO')
+				{
+					$record_history[$i]['value_new_value']	= $status_text[$value['new_value']];
+					$record_history[$i]['value_old_value']	= $status_text[$value['old_value']];
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
