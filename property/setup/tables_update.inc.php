@@ -7069,3 +7069,148 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.658 to 0.9.17.659
+	* Add view on fm_ecobilag
+	*/
+	$test[] = '0.9.17.658';
+	function property_upgrade0_9_17_658()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$sql = 'UPDATE fm_project SET project_type_id = 1 WHERE project_type_id IS NULL';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+ 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
+		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
+ 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
+                   FROM fm_ecobilagoverf
+                 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
+        		UNION ALL 
+                 	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
+                   FROM fm_ecobilag
+                 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.659';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.659 to 0.9.17.660
+	* Add fraction to periodization outline as an alternative
+	*/
+	$test[] = '0.9.17.659';
+	function property_upgrade0_9_17_659()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_eco_periodization_outline','dividend',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_eco_periodization_outline','divisor',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_periodization_outline','value',array(
+			'type'		=> 'decimal',
+			'precision'	=> '20',
+			'scale'		=> '6',
+			'nullable'	=> true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.660';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.660 to 0.9.17.661
+	* Add year and active-flag to project_buffer_budget
+	*/
+	$test[] = '0.9.17.660';
+	function property_upgrade0_9_17_660()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','year',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','month',array(
+			'type'		=> 'int',
+			'precision'	=> 4,
+			'nullable'	=> false,
+			'default'	=> 0
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_buffer_budget','active',array(
+			'type'		=> 'int',
+			'precision'	=> 2,
+			'nullable'	=> true
+			)
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_project_budget SET active = 1',__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_workorder_budget',  array(
+				'fd' => array(
+					'order_id' => array('type' => 'int','precision' => 8,'nullable' => False),
+					'year' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
+					'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'combined_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('order_id','year','month'),
+				'fk' => array('fm_workorder' => array('order_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.661';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -262,13 +262,11 @@
 				}
 			}
 			
-			// Sigurd: START as categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
 			
 			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 			$control_areas_array = $control_areas['cat_list'];
-			// END as categories
 		
 			if($control != null)
 				$procedures_array = $this->so_procedure->get_procedures_by_control_area($control->get_control_area_id());
@@ -289,7 +287,7 @@
 				'tabs'									=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
 				'view'									=> "control_details",
 				'editable' 							=> true,
-				'control'								=> ($control != null) ? $control->toArray() : null,
+				'control'								=> ($control != null) ? $control : null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
 				'role_array'						=> $role_array,
@@ -404,7 +402,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
 				'view'						=> "control_groups",
 				'editable' 				=> true,
-				'control'					=> $control->toArray(),
+				'control'					=> $control,
 				'control_area'		=> $control_area,
 				'control_groups'	=> $control_groups,
 			);
@@ -523,7 +521,7 @@
 				'tabs'											=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'view'											=> 'control_items',
 				'control_group_ids'					=> implode($control_group_ids, ","),
-				'control'				    				=> $control->toArray(),
+				'control'				    				=> $control,
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
@@ -543,30 +541,57 @@
 		 */ 
 		public function save_control_items(){
 			$control_id = phpgw::get_var('control_id');
-			
+
 			// Fetching selected control items. Tags are on the format 1:2 (group:item). 
 			$control_tag_ids = phpgw::get_var('control_tag_ids');
 			
-			// Deleting earlier saved control items
-			$this->so_control_item_list->delete_control_items($control_id);
-	
+			$saved_control_items = $this->so_control_item_list->get_control_items_by_control($control_id, "return_object");
+			
+			// Deleting formerly saved control items
+			foreach ($saved_control_items as $saved_control_item)
+			{
+				$exists = false;
+				$saved_control_item_id = $saved_control_item->get_id();
+				  
+				foreach ($control_tag_ids as $control_item_tag)
+				{
+					$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":")+1, strlen($control_item_tag));
+					
+					if($control_item_id == $saved_control_item_id)
+					{
+						$exists = true;
+					}
+				}
+				
+				if($exists == false)
+				{
+					$exists = false;
+					$status = $this->so_control_item_list->delete($control_id, $saved_control_item_id);
+				}
+			}
+						
 			$order_nr = 1;
-			// Saving control items if submit save control items is clicked 
+			// Saving new control items 
 			foreach ($control_tag_ids as $control_item_tag)
-			{	
+			{
 				// Fetch control_item_id from tag string
 				$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":")+1, strlen($control_item_tag));
-							
-				// Saves control item
-				$control_item_list = new controller_control_item_list();
-				$control_item_list->set_control_id($control_id);
-				$control_item_list->set_control_item_id($control_item_id);
-				$control_item_list->set_order_nr($order_nr);
-				$this->so_control_item_list->add($control_item_list);
 				
-				$order_nr++;
-			}	
-	
+				$saved_control_list_item = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
+				
+				if( $saved_control_list_item == null )
+				{
+					// Saves control item
+					$control_item_list = new controller_control_item_list();
+					$control_item_list->set_control_id($control_id);
+					$control_item_list->set_control_item_id($control_item_id);
+					$control_item_list->set_order_nr($order_nr);
+					$this->so_control_item_list->add($control_item_list);
+					
+					$order_nr++;
+				}
+			}
+			
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id ));	
 		}
 
@@ -601,7 +626,7 @@
 			(
 				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
 				'view'													=> "sort_check_list",
-				'control'												=> $control->toArray(),
+				'control'												=> $control,
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
@@ -621,7 +646,7 @@
 
 			$data = array
 			(
-				'control'	=> $control->toArray(),
+				'control'	=> $control
 			);
 		  
 			self::render_template_xsl('control/control_details', $data);

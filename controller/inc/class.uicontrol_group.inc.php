@@ -547,7 +547,7 @@
 			$item_order_arr = explode(",", $item_order_str);
 			
 			$db_control_group_list = $this->so_control_group_list->get_db();
-					
+			
 			// Saves order for control groups
 			foreach($group_order_arr as $group_id_order){
 				$group_id_order_arr = explode(":", $group_id_order);
@@ -561,7 +561,6 @@
 				
 				// Updates group order if control_group_list object exists	
 				if( $control_group_list != null ){
-					
 					$control_group_list->set_order_nr( $group_order_nr );
 					$id = $this->so_control_group_list->update( $control_group_list );
 					

@@ -139,14 +139,21 @@
 
 			$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
-			$this->db->next_record();
+			$result = $this->db->next_record();
 
-			$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
-			$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
-			$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
-			$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
-
-			return $control_item_list;
+			if( $result )
+			{
+				$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id'), 'int'));
+				$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
+				$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
+				$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr'), 'int'));
+			
+				return $control_item_list;
+			}
+			else
+			{
+				return null;	
+			}
 		}
 		
 		/**
