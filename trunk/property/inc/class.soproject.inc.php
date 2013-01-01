@@ -1406,25 +1406,35 @@
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
 					$new_budget_new_project	= (int)$this->db->f('sum_budget');
-	
-					$sql = "SELECT reserve, ecodimb FROM fm_project WHERE id = " . (int)$project['id'];
+
+					$sql = "SELECT ecodimb FROM fm_project WHERE id = {$new_project_id}";
+					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->next_record();
+					$ecodimb_new_project	= (int)$this->db->f('ecodimb');	
+
+					$sql = "SELECT reserve FROM fm_project WHERE id = " . (int)$project['id'];
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
 					$reserve_old_project	= (int)$this->db->f('reserve');
-					$ecodimb_old_project	= (int)$this->db->f('ecodimb');
 
 					if ($new_budget_new_project != $old_budget_new_project)
 					{
 						$historylog->add('B',$new_project_id, $new_budget_new_project, $old_budget_new_project);
 					}
 	
-					$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id}, ecodimb = {$ecodimb_old_project} WHERE project_id = {$project['id']}",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id}, ecodimb = {$ecodimb_new_project} WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 					$this->db->query("UPDATE fm_project SET reserve = 0 WHERE reserve IS NULL AND id = {$new_project_id}" ,__LINE__,__FILE__);
 					$this->db->query("UPDATE fm_project SET budget = {$new_budget_new_project}, reserve = reserve + {$reserve_old_project} WHERE id = {$new_project_id}" ,__LINE__,__FILE__);
 					$this->db->query("UPDATE fm_project SET budget = 0, reserve = 0 WHERE id =  " . (int)$project['id'] ,__LINE__,__FILE__);
 					$this->db->query("DELETE FROM fm_project_budget WHERE project_id =  " . (int)$project['id'] ,__LINE__,__FILE__);
 					$historylog->add('RM',(int)$project['id'],"Budsjett og alle bestillinger er overført fra prosjekt {$project['id']} til prosjekt {$new_project_id}");
 					$historylog->add('RM',$new_project_id,"Budsjett og alle bestillinger er overført fra prosjekt {$project['id']} til prosjekt {$new_project_id}");
+
+					reset($workorders);
+					foreach($workorders as $workorder_id)
+					{
+						execMethod('property.soworkorder.update_order_budget',$workorder_id);
+					}
 				}
 
 			}
@@ -1756,7 +1766,7 @@
 					'user_id'			=> $this->account,
 					'entry_date'		=> $now,
 					'modified_date'		=> $now,
-					'active'			=> 1
+//					'active'			=> 1
 				);
 
 				$cols = implode(',', array_keys($value_set));
@@ -1868,6 +1878,7 @@ $test = 0;
 			$values = array();
 //_debug_array($project_budget);die();
 //$test = 0;
+			$_delay_period = 0;
 			foreach ($project_budget as $period => $_budget)
 			{
 				$_sum_orders = array();
@@ -1886,8 +1897,8 @@ $test = 0;
 
 						if(!$order['closed'])
 						{
-							$_sum_oblications[$order_id] -= $order['actual_cost'];
 							$_sum_oblications[$order_id] += $order['combined_cost'];
+							$_sum_oblications[$order_id] -= $order['actual_cost'];
 
 							if($project_total_budget >= 0)
 							{
@@ -1907,6 +1918,12 @@ $test = 0;
 						}
 
 						//override if periode is closed
+						if(!isset($active_period[$period]) || !$active_period[$period])
+						{
+							$_delay_period += $_sum_oblications[$order_id];
+							$_sum_oblications[$order_id] = 0;
+						}
+						//override if periode is closed
 						if(isset($closed_period[$period]) && $closed_period[$period])
 						{
 							$_sum_oblications[$order_id] = 0;
@@ -1915,6 +1932,13 @@ $test = 0;
 
 					unset($_orders[$period]);
 				}
+
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				{
+					$_sum_oblications[] += $_delay_period;
+					$_delay_period =0;
+				}
+
 //die();
 				$values[] = array
 				(
@@ -1928,8 +1952,6 @@ $test = 0;
 
 				$sort_period[] = $period;
 			}
-
-
 
 			unset($order);
 			unset($order_id);

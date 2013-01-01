@@ -1737,6 +1737,25 @@
 			}
 */
 		}
+
+		/**
+		* Maintain correct periodizing in relation to current project (in case the order is moved)
+		*
+		**/
+		public function update_order_budget($order_id)
+		{
+			$this->db->query("SELECT fm_workorder.start_date, periodization_id, fm_workorder.budget, combined_cost"
+			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+			. " WHERE fm_workorder.id = '{$order_id}'",__LINE__,__FILE__);
+			$this->db->next_record();
+			$start_date			= $this->db->f('start_date');
+			$periodization_id	= (int)$this->db->f('periodization_id');
+			$budget				= $this->db->f('budget');
+			$combined_cost		= $this->db->f('combined_cost');
+
+			$this->_update_order_budget($order_id, date('Y', $start_date), $periodization_id, $budget,$combined_cost);
+		}
+
 		private function _update_order_budget($order_id, $year, $periodization_id, $budget, $combined_cost = 0)
 		{
 			$order_id = $order_id;//might be bigint
@@ -1771,7 +1790,6 @@
 				);
 
 			}
-
 			$sql = "DELETE FROM fm_workorder_budget WHERE order_id = '{$order_id}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 
