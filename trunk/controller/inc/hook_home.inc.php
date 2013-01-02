@@ -48,24 +48,36 @@
 	$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 	$styling  = "\n".'<!-- BEGIN checklist info -->'."\n ";
-	$styling .= "<style>"; 
-	$styling .= " .home_portal_content a { color:#0066CC;text-decoration: none;text-transform: uppercase;} .home_portal{margin:20px 20px 0 10px;} "; 
+	$styling .= "<style>";
 	$styling .= " .home-box { background: none repeat scroll 0 0 #EDF5FF; border-color: #DBE5EF; border-radius: 4px; margin: 5px 20px 20px;}";
 	$styling .= " .home-box .home_portal { margin: 0;border: 1px solid #DEEAF8;}";
-	$styling .= " .home_portal_content { padding:5px 10px;}";
-	$styling .= " .home_portal_title h2 { overflow:hidden;clear:left;font-size: 13px;font-weight: bold;text-transform:uppercase; background: #DEEAF8; margin: 0; padding: 2px 10px; color: #1C3C6F;}";
-	$styling .= " .property_tickets .home_portal_title h2 { font-size: 20px; padding: 5px 10px;}";
-	$styling .= " .home_portal_content ul li { clear: left; overflow: hidden; padding: 3px 0;}";
+
+	$styling .= " .home_portal { margin:20px 20px 0 10px; }"; 
+	$styling .= " .home_portal a { color:#0066CC;text-decoration: none;text-transform: uppercase;}"; 
+	$styling .= " .home_portal h2 { overflow:hidden;clear:left;font-size: 13px;font-weight: bold;text-transform:uppercase; background: #DEEAF8; margin: 0; padding: 2px 10px; color: #1C3C6F;}";
+	$styling .= " .home_portal h2 div{ display:block;float:left;cursor: pointer;vertical-align: middle;}";
 	$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}"; 
 	$styling .= " .home_portal .control-area { width:200px;}";
 	$styling .= " .home_portal .control { width:300px;}";
 	$styling .= " .home_portal .date { width:300px;}";
+	$styling .= " .home_portal li { margin: 5px;}";
 	$styling .= " .home_portal li div { display: block;float:left;cursor: pointer;vertical-align: middle;}";
-	$styling .= " .home_portal_title h2 div{ display:block;float:left;cursor: pointer;vertical-align: middle;}";
-	$styling .= "  h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
-	$styling .= "  h4.expand_trigger img { vertical-align:middle;margin-right:3px; }";
-	$styling .= "  h4.expand_trigger span { vertical-align:middle; }";
-	$styling .= "  .expand_list{ display:none; }";
+	
+	$styling .= " .home_portal_content ul li { clear: both; overflow: hidden;}";
+	$styling .= " .home_portal_content { padding:5px 10px;}";
+	$styling .= " .property_tickets .home_portal_title h2 { font-size: 20px; padding: 5px 10px;}";
+	
+	$styling .= " h2.heading { font-size: 22px; font-weight: normal;margin: 0 0 0 20px;}";
+	
+	$styling .= " h4.expand_trigger { clear:both;overflow:hidden;font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0; }";
+	$styling .= " h4.expand_trigger img { float:left;vertical-align:middle;margin-right:3px; }";
+	$styling .= " h4.expand_trigger span { float:left;display:block;vertical-align:middle; }";
+	$styling .= " h4.expand_trigger span.deadline { width:805px; }";
+	$styling .= " h4.expand_trigger span.num_check_lists { width:200px; }";
+	
+	$styling .= " .expand_list{ display:none; overflow:hidden; }";
+	$styling .= " .expand_list li{ clear:both;overflow:hidden; }";
+	
 	$styling .= "</style>"; 
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
 	echo $styling;
@@ -232,28 +244,22 @@
 			}
 		}
 	}
-		
-	$portalbox0 = CreateObject('phpgwapi.listbox', array
-	(
-		'title'		=> "<div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div>",
-		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'width'	=> '100%',
-		'outerborderwidth'	=> '0',
-		'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
-	));
 
+	$my_undone_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
+	
 	// Sorts my_undone_controls by deadline date
 	ksort($my_undone_controls);
 	
+	$my_undone_controls_HTML .= "<ul>";
+	
 	foreach($my_undone_controls as $date_ts => $controls_on_date)
 	{
+		  // If number of controls on a date exceeds 1 it will be put in expand list  
 			if(count( $controls_on_date) > 1 )
 			{
-				$portalbox0->data[] = array(		  	
-						'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Frist: "  . date($dateformat, $date_ts) .  "</span><span style='display:inline-block;width:200px;'>Antall kontroller: " .  count($controls_on_date) . "</span></h4><ul class='expand_list'>"
-					);
+				$my_undone_controls_HTML .= "<li>";
+				$my_undone_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>Frist: "  . date($dateformat, $date_ts) .  "</span><span class='num_check_lists'>Antall kontroller: " .  count($controls_on_date) . "</span></h4></a>";
+				$my_undone_controls_HTML .= "<ul class='expand_list'>";
 			}
 		
 		foreach($controls_on_date as $my_undone_control)
@@ -291,17 +297,17 @@
 					
 					if(count( $controls_on_date) > 1 )
 					{
-						$portalbox0->data[] = array(		  	
-							'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></li>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
+					
+						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
-						$portalbox0->data[] = array(		  	
-							'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
+					
+						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 					
 				}
@@ -322,17 +328,17 @@
 	    		
 					if(count( $controls_on_date) > 1 )
 					{
-						$portalbox0->data[] = array(		  	
-							'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></li>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+					
+						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
-						$portalbox0->data[] = array(		  	
-							'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+				
+						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 				}	
 			}
@@ -349,30 +355,30 @@
 			
 				if(count( $controls_on_date) > 1 )
 				{
-					$portalbox0->data[] = array(		  	
-						'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></li>",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
-					);
+					$link = "";
+					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+			
+					$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 				}	
 				else
 				{
-					$portalbox0->data[] = array(		  	
-						'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div>",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
-					);
+					$link = "";
+					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+			
+					$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 				}
 			}
 		}
 		
 		if(count( $controls_on_date) > 1 )
 		{
-			$portalbox0->data[] = array(		  	
-					'text' => "</ul>"
-				);
+			$my_undone_controls_HTML .= "</ul>"; 
 		}
 	}
 	
-	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine glemte kontroller</h2><div class='home-box'>".$portalbox0->draw()."</div>\n".'<!-- END checklist info -->'."\n";
+	$my_undone_controls_HTML .= "</div>"; // home_portal
+	
+	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine glemte kontroller</h2><div class='home-box'>".$my_undone_controls_HTML."</div>\n".'<!-- END checklist info -->'."\n";
 
 	
 	/* =======================================  PLANNED CONTROLS FOR CURRENT USER  ================================= */
@@ -469,7 +475,6 @@
 			$next_date = "Planlagt: " . date($dateformat, $check_list->get_planned_date());
 			$portalbox1_data[] = array(
 				$check_list->get_planned_date(), array(
-		//			'text' => "<div class='control'>{$current_control["title"]}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>{$next_date}</div>",
 					'text' => "<div class='date'>{$next_date}</div><div class='control'>{$current_control["title"]}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div>",
 					'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list->get_id()))
 			));
@@ -491,19 +496,9 @@
 
 	
 	
-	
 	/* ================================  CONTROLS ASSIGNED TO CURRENT USER  ================================= */
 	
-	$portalbox2 = CreateObject('phpgwapi.listbox', array
-	(
-		'title'		=> "<div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div>",
-		'primary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'secondary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'tertiary'	=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-		'width'	=> '100%',
-		'outerborderwidth'	=> '0',
-		'header_background_image'	=> $GLOBALS['phpgw']->common->image('phpgwapi','bg_filler', '.png', False)
-	));
+	$my_assigned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
 	
 	$my_controls = array();
 	$repeat_type = null;
@@ -545,7 +540,7 @@
 		{
 			foreach($components_with_controls_array as $component)
 			{
-		    	$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
+		    $my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
 			}
 		}
 	}
@@ -555,7 +550,6 @@
 	$from_date_ts =  mktime(0, 0, 0, date("n"), date("j"), date("Y") );
 	
 	// Generates an array with undone controls 
-	
 	foreach($my_controls as $container_arr)
 	{	
 		$location_code = $container_arr[0];
@@ -620,16 +614,21 @@
 	$cats->supress_info	= true;
 	$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => '','globals' => true,'use_acl' => $this->_category_acl));
 
+	$my_assigned_controls_HTML .= "<ul>";
+	
 	foreach($my_assigned_controls as $date_ts => $assigned_controls_on_date)
 	{
 		if(count( $assigned_controls_on_date) > 1 )
 		{
-			$portalbox2->data[] = array(		  	
-//					'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span><span style='display:inline-block;width:200px;'>" . date($dateformat, $date_ts) . "</span></h4><ul class='expand_list'>"
-					'text' => "<h4 class='expand_trigger' style='font-size: 12px;color:#031647;background: #D0DEF4;padding:2px 4px;margin:0;'><img height='12' src='controller/images/arrow_right.png' /><span style='display:inline-block;width:805px'>Frist: "  . date($dateformat, $date_ts) .  "</span><span style='display:inline-block;width:200px;'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span></h4><ul class='expand_list'>"
-				);
+			$my_assigned_controls_HTML .= "<li>";
+			$my_assigned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>Frist: "  . date($dateformat, $date_ts) .  "</span><span class='num_controls'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span></h4></a>";
 		}
 		
+		if(count( $assigned_controls_on_date ) > 1 )
+		{
+			$my_assigned_controls_HTML .= "<ul class='expand_list'>";
+		} 
+			
 		foreach($assigned_controls_on_date as $my_assigned_control)
 		{
 			$check_list_status = $my_assigned_control[0];
@@ -665,19 +664,17 @@
 					
 				if(count( $assigned_controls_on_date) > 1 )
 					{
-						$portalbox2->data[] = array(		  	
-					//		'text' => "<li><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div></li>",
-							'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></li>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
+						
+						$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
-						$portalbox2->data[] = array(		  	
-					//		'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
-							'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
+						
+						$my_assigned_controls_HTML .= "<a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 				}
 				else if($check_list_type == "component")
@@ -697,19 +694,17 @@
 
 					if(count( $assigned_controls_on_date) > 1 )
 					{
-						$portalbox2->data[] = array(		  	
-			//				'text' => "<li><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div></li>",
-							'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></li>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+						
+						$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
-						$portalbox2->data[] = array(		  	
-			//				'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
-							'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div>",
-							'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts))
-						);
+						$link = "";
+						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+						
+						$my_assigned_controls_HTML .= "<a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 				}	
 			}
@@ -726,29 +721,31 @@
 
 				if(count( $assigned_controls_on_date ) > 1 )
 				{
-					$portalbox2->data[] = array(		  	
-					//	'text' => "<li><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div></li>",
-						'text' => "<li><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></li>",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
-					);
-				}	
+					$link = "";
+					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+					
+					$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+				}
 				else
 				{
-					$portalbox2->data[] = array(		  	
-						//'text' => "<div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div><div class='date'>Fristdato {$date_str}</div>",
-						'text' => "<div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div>",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id))
-					);
+					$link = "";
+					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+					
+					$my_assigned_controls_HTML .= "<a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 				}
 			}
 		}
 		
 		if(count( $assigned_controls_on_date ) > 1 )
+			{
+				$my_assigned_controls_HTML .= "</li>";
+			}
+		
+		if(count( $assigned_controls_on_date ) > 1 )
 		{
-			$portalbox2->data[] = array(		  	
-					'text' => "</ul>"
-				);
-		}
+			$my_assigned_controls_HTML .= "</ul>";
+		 }
+		  
 	}
 
-	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>".$portalbox2->draw()."</div>\n".'<!-- END checklist info -->'."\n";
+	echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
