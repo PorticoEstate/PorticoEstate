@@ -82,7 +82,6 @@
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
 	echo $styling;
 	
-//	echo "<script src='controller/js/controller/jquery.js'></script>";
 	echo "<script src='phpgwapi/js/jquery/js/jquery-1.7.2.min.js'></script>";
 	
 	$script = "<script>";
