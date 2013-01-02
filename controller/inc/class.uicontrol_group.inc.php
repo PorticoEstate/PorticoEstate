@@ -383,9 +383,7 @@
 				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-	//			self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
-	//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 			else if(isset($_POST['save_control_group_items']))
@@ -529,9 +527,7 @@
 				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-	//			self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
-	//			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
