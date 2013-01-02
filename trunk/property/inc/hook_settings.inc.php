@@ -236,6 +236,17 @@
 	unset($soworkorder);
 	unset($socommon);
 
+
+	$default_project_type =array
+	(
+		'1'	=> lang('operation'),
+		'2' => lang('investment'),
+		'3' => lang('buffer')
+	);
+
+	create_select_box('Default project type','default_project_type',$default_project_type,'Select your default project type');
+
+
 	create_select_box('Default project status','project_status',$_status_project,'The default status for your projects');
 	create_select_box('Default workorder status','workorder_status',$_status_workorder,'The default status for your workorders');
 	create_select_box('Default project categories','project_category',$_categories_project,'The default category for your projects and workorders');

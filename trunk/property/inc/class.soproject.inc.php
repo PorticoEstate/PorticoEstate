@@ -680,12 +680,20 @@
 						$sql_workder_date_filter = "AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
 					}
 
+/*
 					$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost'//, contract_sum, addition, calculation, budget'
 					. " FROM fm_workorder"
 					. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 					. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 					. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}"
 					. " GROUP BY fm_workorder.id, budget, combined_cost, billable_hours, closed";
+
+*/
+					$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, actual_cost, pending_cost'//, contract_sum, addition, calculation, budget'
+					. " FROM fm_workorder"
+					. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+					. " {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
+					. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}";
 //_debug_array($sql_workder);
 
 					$this->db->query($sql_workder,__LINE__,__FILE__);
@@ -696,7 +704,7 @@
 					while ($this->db->next_record())
 					{
 						$_combined_cost = $this->db->f('combined_cost');
-						$_actual_cost =  $this->db->f('actual_cost');
+						$_actual_cost =  $this->db->f('actual_cost') + (float)$this->db->f('pending_cost');
 						if(!$this->db->f('closed'))
 						{
 //$test[] = $this->db->f('id');

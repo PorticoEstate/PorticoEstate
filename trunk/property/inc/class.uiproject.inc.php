@@ -1987,9 +1987,11 @@
 				);
 			}
 
+			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
+			
 			$data = array
 				(
-					'project_types'						=> array('options' => $this->bo->get_project_types($values['project_type_id'])),
+					'project_types'						=> array('options' => $this->bo->get_project_types($project_type_id)),
 					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
 					'mode'								=> $mode,
