@@ -533,7 +533,6 @@
 											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 			
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
@@ -618,7 +617,6 @@
 											 								 'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_month'), $data);
 			
 			phpgwapi_jquery::load_widget('core');
-//			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 		}
 		
