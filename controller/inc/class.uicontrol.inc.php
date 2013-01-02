@@ -379,7 +379,7 @@
 			}
 			
 			// Fetches control groups based on selected control area						
-			$contro_area = execMethod('phpgwapi.categories.return_single', $control->get_control_area_id());			
+			$control_area = execMethod('phpgwapi.categories.return_single', $control->get_control_area_id());			
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
 			$control_groups = array();
@@ -508,7 +508,6 @@
 					if(!$status_control_item_saved){
 						$control_items_for_group_array[] = array("checked" => 0, "control_item" => $control_item->toArray());
 					}
-						
 				}
 				
 				$groups_with_control_items[] = array("control_group" => $control_group->toArray(), "group_control_items" => $control_items_for_group_array);
