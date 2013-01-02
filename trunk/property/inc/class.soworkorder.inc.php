@@ -729,10 +729,16 @@
 			$_actual_cost_arr = array();
 			if($workorder_list)
 			{
+/*
 				$sql_cost = "SELECT fm_workorder.id as order_id,closed, sum(amount) AS actual_cost"
 				. " FROM fm_workorder {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .') GROUP BY fm_workorder.id, closed';
+*/
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost"
+				. " FROM fm_workorder {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')';
 
 				unset($_order_list);
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -740,7 +746,7 @@
 				{
 					$_actual_cost_arr[$this->db->f('order_id')] = array
 					(
-						'actual_cost'	=> $this->db->f('actual_cost'),
+						'actual_cost'	=> $this->db->f('actual_cost') + (float)$this->db->f('pending_cost'),
 						'closed'		=> !!$this->db->f('closed')
 					);
 				}
