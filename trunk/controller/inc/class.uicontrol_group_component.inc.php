@@ -179,7 +179,6 @@
 				phpgwapi_jquery::load_widget('core');
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-//				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('control_group_component_tabs', 'common', 'add_component_to_control_group'), $data);
