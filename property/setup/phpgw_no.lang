@@ -8,6 +8,10 @@
 expences	property	no	Utgifter
 income	property	no	Inntekter
 about	common	no	Om
+amount in	property	no	Inn
+from project	property	no	Fra prosjekt
+amount out	property	no	Ut
+to project	property	no	Til prosjekt
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
 accounting categories	property	no	Kategorier regnskap

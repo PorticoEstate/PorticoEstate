@@ -1314,7 +1314,7 @@
 
 				if(isset($project['transfer_amount']) && $project['transfer_amount'] && isset($project['transfer_target']) && $project['transfer_target'])
 				{
-					$this->_update_buffer_budget($project['id'], date('Y',$project['start_date']), $project['transfer_amount'], null,$project['transfer_target']);
+					$this->_update_buffer_budget($project['id'], date('Y'), $project['transfer_amount'], null,$project['transfer_target']);
 				}
 			}
 			else // investment or operation
@@ -1825,9 +1825,19 @@
 			$sql = "SELECT budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-			if ($this->db->next_record())
+			if ($old_budget = $this->db->next_record())
 			{
-				$sql = "UPDATE fm_project_budget SET budget = {$budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
+				if($action == 'add')
+				{
+					$new_budget = $old_budget + $budget;
+				}
+				else
+				{
+					$new_budget = $budget;				
+				}
+				
+				$sql = "UPDATE fm_project_budget SET budget = {$new_budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";				
+				
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 			else
