@@ -60,6 +60,19 @@ var  myPaginator_4, myDataTable_4;
 	};
 
 /********************************************************************************/	
+
+	var oArgs_project = {menuaction:'property.uiproject.edit'};
+	var sUrl_project = phpGWLink('index.php', oArgs_project);
+
+	var project_link = function(elCell, oRecord, oColumn, oData)
+	{
+	  	if(oData > 0)
+	  	{
+	  		elCell.innerHTML = "<a href="+sUrl_project + "&id="+oData+">" + oData + "</a>";
+	  	}
+	}	
+
+
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
