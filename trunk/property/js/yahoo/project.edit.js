@@ -127,7 +127,11 @@ var  myPaginator_4, myDataTable_4;
   		//call getTotalSum(name of column) in property.js
   		tmp_sum1 = getTotalSum('amount_in',0,paginator,datatable);
   		tmp_sum2 = getTotalSum('amount_out',0,paginator,datatable);
-  		tmp_sum3 = tmp_sum1 + tmp_sum2;
+
+  		tmp_sum3 = parseInt(tmp_sum1.replace(/ /g,''))
+  		  		 - parseInt(tmp_sum2.replace(/ /g,''));
+
+		tmp_sum3 = YAHOO.util.Number.format(tmp_sum3, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 
   		if(typeof(tableYUI0)=='undefined')
   		{

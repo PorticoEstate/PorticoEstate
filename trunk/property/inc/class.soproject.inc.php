@@ -869,7 +869,7 @@
 				. " WHERE project_id={$project_id}",__LINE__,__FILE__);
 
 			$_orders = array();
-			
+
 			while ($this->db->next_record())
 			{
 				$values[] = array(
@@ -910,7 +910,7 @@
 			foreach ($values as &$entry)
 			{
 				$_combined_cost = round($entry['combined_cost']);
-	
+
 				$_actual_cost = isset($_actual_cost_arr[$entry['workorder_id']]) && $_actual_cost_arr[$entry['workorder_id']] ? $_actual_cost_arr[$entry['workorder_id']] : 0;
 
 		//		FIXME
@@ -941,7 +941,7 @@
 				}
 
 				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $_combined_cost;
-				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];				
+				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
 //				$entry['diff'] =  $entry['budget'] - $entry['obligation'] - $entry['actual_cost'];
 			}
 
@@ -1077,7 +1077,7 @@
 
 			if($project['budget'])
 			{
-				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget']);
+				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1311,12 +1311,17 @@
 					$this->_update_buffer_budget($project['id'], $project['budget_year'], $project['budget'], null,null);
 				}
 
+
+				if(isset($project['transfer_amount']) && $project['transfer_amount'] && isset($project['transfer_target']) && $project['transfer_target'])
+				{
+					$this->_update_buffer_budget($project['id'], date('Y',$project['start_date']), $project['transfer_amount'], null,$project['transfer_target']);
+				}
 			}
 			else // investment or operation
 			{
 				if($project['budget'])
 				{
-					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget']);
+					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all']);
 				}
 
 				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = " . (int)$project['id'],__LINE__,__FILE__);
@@ -1409,7 +1414,7 @@
 					{
 						$historylog->add('B',$project['id'],0, $old_budget);
 					}
-	
+
 					$sql = "SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = {$new_project_id}";
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
@@ -1418,7 +1423,7 @@
 					$sql = "SELECT ecodimb FROM fm_project WHERE id = {$new_project_id}";
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
-					$ecodimb_new_project	= (int)$this->db->f('ecodimb');	
+					$ecodimb_new_project	= (int)$this->db->f('ecodimb');
 
 					$sql = "SELECT reserve FROM fm_project WHERE id = " . (int)$project['id'];
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -1429,7 +1434,7 @@
 					{
 						$historylog->add('B',$new_project_id, $new_budget_new_project, $old_budget_new_project);
 					}
-	
+
 					$this->db->query("UPDATE fm_workorder SET project_id = {$new_project_id}, ecodimb = {$ecodimb_new_project} WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 					$this->db->query("UPDATE fm_project SET reserve = 0 WHERE reserve IS NULL AND id = {$new_project_id}" ,__LINE__,__FILE__);
 					$this->db->query("UPDATE fm_project SET budget = {$new_budget_new_project}, reserve = reserve + {$reserve_old_project} WHERE id = {$new_project_id}" ,__LINE__,__FILE__);
@@ -1624,26 +1629,36 @@
 		}
 
 
-		function update_budget($project_id, $year, $periodization_id, $budget)
+		function update_budget($project_id, $year, $periodization_id, $budget, $budget_periodization_all = false,$action = 'update')
 		{
 			$project_id = (int) $project_id;
 			$year = $year ? (int) $year : date('Y');
 
 			$periodization_id = (int) $periodization_id;
 			$periodization_outline = array();
+			$skip_period = 0;
 
 			if($periodization_id)
 			{
 				$this->db->query("SELECT month, value,dividend,divisor FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC",__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
+					$month = $this->db->f('month');
+					if($month < date('n'))
+					{
+						$skip_period ++;
+					}
 					$periodization_outline[] = array
 					(
-						'month' => $this->db->f('month'),
+						'month' => $month,
 						'value' => $this->db->f('value'),
 						'dividend' => $this->db->f('dividend'),
 						'divisor' => $this->db->f('divisor')
 					);
+				}
+				if($skip_period && $skip_period == count($periodization_outline))
+				{
+					$skip_period -= 1;
 				}
 			}
 			else
@@ -1656,21 +1671,43 @@
 					'divisor' => 1,
 
 				);
-			
+
 			}
-			
-			foreach ($periodization_outline as $outline)
+
+			//reset skip in case of 'all'
+			if($budget_periodization_all)
 			{
+				$skip_period = 0;
+			}
+
+			$percentage_to_move = 0;
+			foreach ($periodization_outline as $_key => $outline)
+			{
+				if($skip_period && $skip_period == ($_key+1))
+				{
+					if ($outline['dividend'] && $outline['divisor'])
+					{
+						$percentage_to_move += $outline['dividend'] / $outline['divisor'];
+					}
+					else
+					{
+						$percentage_to_move += $outline['value']/100;
+					}
+
+					continue;
+				}
+
 				if ($outline['dividend'] && $outline['divisor'])
 				{
-					$partial_budget = $budget * $outline['dividend'] / $outline['divisor'];				
+					$partial_budget = $budget * $outline['dividend'] / $outline['divisor'];
 				}
 				else
 				{
-					$partial_budget = $budget * $outline['value'] / 100;				
+					$partial_budget = $budget * $outline['value'] / 100;
 				}
+				$partial_budget = $partial_budget * (1 + $percentage_to_move);
 
-				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget);
+				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action);
 			}
 
 			$sql = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE project_id = {$project_id}";
@@ -1708,9 +1745,9 @@
 
 		private function _update_buffer_budget($project_id, $year, $amount, $from_project, $to_project)
 		{
-			$year = (int) $year;
-			$amount = (int) $amount;
-			
+			$year			= (int) $year;
+			$amount			= (int) $amount;
+
 			if(!$year)
 			{
 				$year = date('Y');
@@ -1730,7 +1767,7 @@
 			{
 				throw new Exception('property_soproject::update_buffer_budget() - wrong input');
 			}
-			
+
 			$value_set = array
 			(
 				'buffer_project_id'	=> $project_id,
@@ -1744,12 +1781,42 @@
 				'active'			=> 1
 			);
 
+			$from_project	= (int) $from_project;
+			$to_project		= (int) $to_project;
+
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->query("INSERT INTO fm_project_buffer_budget ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+
+			$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project_id,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$new_budget =(int)$this->db->f('amount_in') + (int)$this->db->f('amount_out');
+
+			$this->db->query("SELECT budget FROM fm_project WHERE id = " . (int)$project_id,__LINE__,__FILE__);
+			$this->db->next_record();
+			$old_budget	= (int)$this->db->f('budget');
+
+			if ($old_budget != $new_budget)
+			{
+				$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int)$project_id,__LINE__,__FILE__);
+				$historylog	= CreateObject('property.historylog','project');
+				$historylog->add('B',$project_id,$new_budget, $old_budget);
+			}
+
+			/**
+			* Transfer fund to another project
+			**/
+			if( $amount_out )
+			{
+				$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$to_project}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$periodization_id = $this->db->f('periodization_id');
+				$this->update_budget($to_project, $year, $periodization_id, $amount_out, 'add');
+			}
 		}
 
-		private function _update_budget($project_id, $year, $month, $budget)
+		private function _update_budget($project_id, $year, $month, $budget, $action = 'update')
 		{
 			$month = (int) $month;
 			$budget = (int) $budget;
@@ -1801,7 +1868,7 @@
 			while ($this->db->next_record())
 			{
 				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
-				
+
  				$project_budget[$period] = (int)$this->db->f('budget');
  				$closed_period[$period] = !!$this->db->f('closed');
   				$active_period[$period] = !!$this->db->f('active');
@@ -1871,7 +1938,7 @@ $test = 0;
 							}
 						}
 					}
-					
+
 					if(!$_found)
 					{
 						$_orders[$periode][$_order_id]['actual_cost'] += $this->db->f('actual_cost');
@@ -1908,7 +1975,8 @@ $test = 0;
 							$_sum_oblications[$order_id] += $order['combined_cost'];
 							$_sum_oblications[$order_id] -= $order['actual_cost'];
 
-							if($project_total_budget >= 0)
+					//		if($project_total_budget >= 0)
+							if($_budget >= 0)
 							{
 
 								if($_sum_oblications[$order_id] < 0)
@@ -2036,7 +2104,7 @@ $test = 0;
 				if($active_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
-					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];				
+					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 				}
 				else
 				{
@@ -2318,7 +2386,7 @@ $test = 0;
 
 					break;
 				case 'workorder':
-					
+
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
 					$title_field = 'fm_workorder.title';
