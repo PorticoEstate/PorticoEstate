@@ -164,7 +164,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum1);
 		td_empty(1);
 		td_sum(tmp_sum2);
-		td_empty(1);
+		td_sum('Total');
 		td_sum(tmp_sum3);
 
 		myfoot = tableYUI0.createTFoot();
