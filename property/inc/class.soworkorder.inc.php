@@ -1610,6 +1610,43 @@
 
 			set_time_limit (0);
 
+
+			$this->db->query("SELECT id, budget,project_type_id FROM fm_project ORDER BY id ASC",__LINE__,__FILE__);
+
+			$projects = array();
+			while ($this->db->next_record())
+			{
+				$projects[] = array
+				(
+					'id' 				=> (int)$this->db->f('id'),
+					'budget'			=> (int)$this->db->f('budget'),
+					'project_type_id'	=> (int)$this->db->f('project_type_id')
+				);
+			}
+
+
+			foreach ($projects as $project)
+			{
+				if($project['project_type_id'] == 3)//buffer
+				{
+					$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['id'],__LINE__,__FILE__);
+					$this->db->next_record();
+					$new_budget =(int)$this->db->f('amount_in') - (int)$this->db->f('amount_out');
+				}
+				else
+				{
+					$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = " . (int)$project['id'],__LINE__,__FILE__);
+					$this->db->next_record();
+					$new_budget =(int)$this->db->f('sum_budget');
+				}
+
+				if ($project['budget'] != $new_budget)
+				{
+					$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int)$project['id'],__LINE__,__FILE__);
+				}
+
+			}
+
 			$this->db->query("SELECT id FROM fm_workorder ORDER BY id ASC",__LINE__,__FILE__);
 
 			$orders = array();
