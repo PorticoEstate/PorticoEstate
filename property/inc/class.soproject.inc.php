@@ -1985,7 +1985,8 @@
 
 			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, start_date"
 			. " FROM fm_project_budget {$this->left_join} fm_workorder ON fm_project_budget.project_id = fm_workorder.project_id WHERE fm_project_budget.project_id = {$project_id}"
-			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active,start_date";
+			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active,start_date"
+			. " ORDER BY fm_project_budget.year, fm_project_budget.month";
 			$this->db->query($sql,__LINE__,__FILE__);
 //	_debug_array($sql);
 			while ($this->db->next_record())
@@ -1996,6 +1997,7 @@
  				$closed_period[$period] = !!$this->db->f('closed');
   				$active_period[$period] = !!$this->db->f('active');
 			}
+
 			$project_total_budget = array_sum($project_budget);
 
 			$sql = "SELECT fm_workorder.id AS order_id, fm_workorder_budget.combined_cost, fm_workorder_budget.budget, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed"
@@ -2003,7 +2005,7 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 			 	. " WHERE project_id = {$project_id}";
-//	_debug_array($sql);
+//	_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$_order_list = array();
@@ -2021,7 +2023,7 @@
 				);
 			}
 
-//_debug_array($_orders);
+//_debug_array($_orders);die();
 $test = 0;
 			if ( $_order_list )
 			{
