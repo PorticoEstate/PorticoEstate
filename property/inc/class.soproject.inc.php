@@ -1342,7 +1342,7 @@
 					$this->db->next_record();
 					if(!$this->db->f('project_type_id') ==3)
 					{
-							throw new Exception('property_soproject::edit() - target project is not a buffer-project');
+						throw new Exception('property_soproject::edit() - target project is not a buffer-project');
 					}
 
 					$this->_update_buffer_budget($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
@@ -1753,7 +1753,11 @@
 				$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$from_project}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$periodization_id = $this->db->f('periodization_id');
-				$this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
+				$transferred = $this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
+				if(!$transferred == $amount_in)
+				{
+					throw new Exception('property_soproject::update_buffer_budget() - failed to transefer the full amount');
+				}
 			}
 		}
 
@@ -1762,6 +1766,77 @@
 		{
 			$project_id = (int) $project_id;
 			$year = $year ? (int) $year : date('Y');
+
+
+			if($action == 'subtract')
+			{
+				$incoming_budget = $budget;
+				$acc_partial = 0;
+
+				$orig_budget = $this->get_budget($project_id);
+//_debug_array($orig_budget);
+				$hit = false;
+				foreach ($orig_budget as $entry)
+				{
+					if($entry['year'] == $year && $entry['active'])
+					{
+						$partial_budget = 0;
+						$month = (int)substr($entry['period'],-2);
+						$hit = true; // found at least one.
+						if($entry['budget'] >= 0)
+						{
+							if($entry['diff'] > 0)
+							{
+								if($entry['diff'] < $budget)
+								{
+
+									$partial_budget = $entry['diff'];
+									$budget -= $partial_budget;
+								}
+								else
+								{
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget > 0 ? $partial_budget : 0; 
+									$budget = 0;
+								}
+							}
+						}
+						if($entry['budget'] < 0)
+						{
+							if($entry['diff'] < 0)
+							{
+								if($entry['diff'] > $budget)
+								{
+									$partial_budget = $entry['diff'];
+									$budget -= $partial_budget;
+								}
+								else
+								{
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget < 0 ? $partial_budget : 0; 
+									$budget = 0;
+								}
+							}
+						}
+						if($partial_budget)
+						{
+							$acc_partial += $partial_budget;
+							$this->_update_budget($project_id, $year, $month, $partial_budget, $action);
+						}
+					}
+				}
+//_debug_array($budget);
+//die();
+				if($hit && $budget) // still some left to go - place it on the last one
+				{
+
+					$acc_partial += $budget;
+
+					$this->_update_budget($project_id, $year, $month, $budget, $action);					
+				}
+
+				return $acc_partial;
+			}
 
 			$periodization_id = (int) $periodization_id;
 			$periodization_outline = array();
@@ -1808,27 +1883,6 @@
 				$skip_period = 0;
 			}
 
-
-			if($action == 'subtract')
-			{
-				$orig_budget = $this->get_budget($project_id);
-				foreach ($orig_budget as $entry)
-				{
-					if($entry['year'] == $year && $entry['active'])
-					{
-						
-						if($entry['budget'] >= 0)
-						{
-						
-							_debug_array($entry);
-						}
-
-					}
-				}
-
-				_debug_array($orig_budget);die();
-
-			}
 
 			$percentage_to_move = 0;
 			foreach ($periodization_outline as $_key => $outline)
@@ -1877,9 +1931,10 @@
 			$now = time();
 
 			$sql = "SELECT budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
-
+//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
-			if ($old_budget = $this->db->next_record())
+			$this->db->next_record();
+			if ($old_budget = $this->db->f('budget'))
 			{
 				if($action == 'add')
 				{
@@ -1895,7 +1950,7 @@
 				}
 
 				$sql = "UPDATE fm_project_budget SET budget = {$new_budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";				
-				
+//_debug_array($sql);
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 			else
