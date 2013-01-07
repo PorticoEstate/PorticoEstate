@@ -51,6 +51,7 @@ $(document).ready(function(){
 			});
 		});
     
+   // Request url for saving groups and items within group
    var oArgs = {menuaction:'controller.uicontrol_group.save_group_and_item_order'};
 	 var requestUrl = phpGWLink('index.php', oArgs, true);
 
