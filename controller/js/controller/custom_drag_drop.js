@@ -50,9 +50,10 @@ $(document).ready(function(){
 				item_order_arr.push( item_id + ":" + item_order_nr );
 			});
 		});
-	
-		var requestUrl = "index.php?menuaction=controller.uicontrol_group.save_group_and_item_order";
-		
+    
+   var oArgs = {menuaction:'controller.uicontrol_group.save_group_and_item_order'};
+	 var requestUrl = phpGWLink('index.php', oArgs, true);
+
 		$(submitBtn).find(".text").text("Lagrer");
 		
 		$(submitBtn).find(".text").append("<img id='loading' src='controller/images/loading.gif' />");
