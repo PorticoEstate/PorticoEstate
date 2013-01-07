@@ -64,7 +64,7 @@
 			$PeriodTo = 209912;
 
 			$doc = new DOMDocument('1.0', 'utf-8');
-			$domElement = $doc->createElement('AttributeValueList');
+			$domElement = $doc->createElement('MaalepunktListe');
 			$domElement->setAttribute('xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
 			$domElement->setAttribute('xsi:noNamespaceSchemaLocation','..\XmlSchema\AttributeValueList.xsd');
 
@@ -73,24 +73,25 @@
 					$Attribute = array
 					(
 						'ID'			=> 'TJ',
-						'Name'			=> 'MALEPID',
-						'Value'			=> substr($this->db->f('maalepunkt_id'),-8),
-					//	'id' 			=> $this->db->f('id'),
-						'Description'	=> $this->db->f('address'),
-						'PeriodFrom'	=> $PeriodFrom,
-						'PeriodTo'		=> $PeriodTo,
+						'Verdi'			=> substr($this->db->f('maalepunkt_id'),-8),
+						'Firma'			=> 'BB',
+						'Beskrivelse'	=> $this->db->f('address'),
+						'PeriodeFra'	=> $PeriodFrom,
+						'PeriodeTil'		=> $PeriodTo,
 						'Status'		=> 'N',
-						'Percentage'	=> '100',
-						'RelationValueList'	=> array
+						'BegrepsLister'	=> array
 						(
-							'RelationValue'	=> array
+							'BegrepsListe'	=> array
 							(
 								array
 								(
-									'ID'			=> 'A3',
-									'Name'			=> 'FIRMA',
-									'Value'			=> 'BB',
-									'Percentage'	=> '100'
+									'Begrep' => array
+									(
+										'ID'			=> 'A3',
+									//	'Name'			=> 'FIRMA',
+										'Verdi'			=> 'BB',
+									//	'Percentage'	=> '100'
+									)
 								),
 								array
 								(
@@ -131,14 +132,14 @@
 						)
 					);
 
-				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'AttributeValue');
+				$xmldata = phpgwapi_xmlhelper::toXML($Attribute, 'Maalepunkt');
 
 				$reader = new XMLReader();
 				$reader->XML($xmldata,'utf-8');
 
 				while ($reader->read())
 				{
-					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'AttributeValue')
+					if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'Maalepunkt')
 					{
 						$domnode = $reader->expand();
 						$domElement->appendChild($domnode);
