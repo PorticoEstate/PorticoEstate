@@ -413,6 +413,13 @@
 			return	$this->so->update_priority_key($values);
 		}
 
+		public function read_survey_data($data)
+		{
+			$values = $this->so->read_survey_data($data);
+			$this->total_records	= $this->so->total_records;
+			return $values;
+		}
+
 		function read($data)
 		{
 			$custom	= createObject('phpgwapi.custom_fields');
@@ -460,6 +467,7 @@
 				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
 				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
 				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
+				$request[$i]['planned_year'] = $request[$i]['planned_year'] ? date('Y',$request[$i]['planned_year']) : '';
 				$request[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['closed_date'],$dateformat);
 				$request[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['in_progress_date'],$dateformat);
 				$request[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['delivered_date'],$dateformat);
