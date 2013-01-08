@@ -252,7 +252,7 @@
 					</xsl:choose>
 				</dl>
 			</div>
-			<div id="related">
+			<div id="request">
 				<dl class="proplist-col">
 					<dt>
 						<label>
@@ -266,7 +266,7 @@
 					</dt>
 
 					<dt>
-						<label><xsl:value-of select="php:function('lang', 'related')"/></label>
+						<label><xsl:value-of select="php:function('lang', 'request')"/></label>
 					</dt>
 					<dd>
 						<div style="clear:both;" id="datatable-container_1"></div>

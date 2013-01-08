@@ -47,7 +47,7 @@
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
 			'get_files'			=> true,
-			'get_related'		=> true,
+			'get_request'	=> true,
 			'get_summation'		=> true,
 			'view_file'			=> true,
 			'import'			=> true,
@@ -330,7 +330,7 @@
 			$tabs['generic']	= array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
 			$tabs['documents']	= array('label' => lang('documents'), 'link' => null);
-			$tabs['related']	= array('label' => lang('related'), 'link' => null);
+			$tabs['request']	= array('label' => lang('request'), 'link' => null);
 			$tabs['summation']	= array('label' => lang('summation'), 'link' => null);
 			$tabs['import']		= array('label' => lang('import'), 'link' => null);
 
@@ -341,7 +341,7 @@
 					$tabs['import']['link'] = '#import';
 				}
 				$tabs['documents']['link'] = '#documents';
-				$tabs['related']['link'] = '#related';
+				$tabs['request']['link'] = '#request';
 				$tabs['summation']['link'] = '#summation';
 
 				if (!$values)
@@ -385,23 +385,24 @@
 				'container'		=> 'datatable-container_0',
 				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_files', 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $file_def,
-			
+
 			);
 
 			$related_def = array
 			(
 				array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'user','label'=>lang('user'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+//				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
+				array('key' => 'planned_year','label'=>lang('year'),'sortable'=>true,'resizeable'=>true),
 			);
+
 
 			$datatable_def[] = array
 			(
 				'container'		=> 'datatable-container_1',
-				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_related', 'id' => $id,'phpgw_return_as'=>'json'))),
+				'requestUrl'	=> json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_request', 'id' => $id,'phpgw_return_as'=>'json'))),
 				'ColumnDefs'	=> $related_def
 			);
 
@@ -563,7 +564,7 @@
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$total_records = count($files);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 
 			if($allrows)
 			{
@@ -591,7 +592,7 @@
 					'file_name' => "<a href='{$link_view_file}&amp;file_name={$_entry['name']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
 					'delete_file' => "<input type='checkbox' name='file_action[]' value='{$_entry['name']}' title='$lang_delete'>",
 				);
-			}							
+			}
 
 			$data = array(
 				 'ResultSet' => array(
@@ -618,10 +619,10 @@
 			}
 
 			$values = $this->bo->get_summation($id);
-			
+
 			$total_records = count($values);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 
 			if($allrows)
@@ -651,7 +652,7 @@
 		}
 
 
-		function get_related()
+		function get_request()
 		{
 			$id 	= phpgw::get_var('id', 'int', 'REQUEST');
 
@@ -659,68 +660,43 @@
 			{
 				return;
 			}
-		
-			$interlink 	= CreateObject('property.interlink');
-			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
 
-
-			$values = array();
-			if($target)
-			{
-				foreach($target as $_target_section)
-				{
-					foreach ($_target_section['data'] as $_target_entry)
-					{
-						$values[] = array
-						(
-							'url'		=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
-							'type'		=> $_target_section['descr'],
-							'title'		=> $_target_entry['title'],
-							'status'	=> $_target_entry['statustext'],
-							'user'		=> $GLOBALS['phpgw']->accounts->get($_target_entry['account_id'])->__toString(),
-							'entry_date'=> $GLOBALS['phpgw']->common->show_date($_target_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-						);
-					}
-				}
-			}
-
-//------ Start pagination
-
+			$borequest	= CreateObject('property.borequest');
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$sortKey = phpgw::get_var('sort', 'string', 'REQUEST', 'request_id');
+			$sortDir = phpgw::get_var('dir', 'string', 'REQUEST', 'ASC');
 
-			$total_records = count($values);
+			$criteria = array
+			(
+				'condition_survey_id'	=> $id,
+				'start'					=> $start,
+				'order'					=> $sortKey,
+				'sort'					=> $sortDir
+			);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+			$values = $borequest->read_survey_data($criteria);
+			$total_records = $borequest->total_records;
 
-			if($allrows)
+			$base_url = self::link(array('menuaction' => 'property.uirequest.edit'));
+			foreach ($values as &$_entry)
 			{
-				$out = $values;
-			}
-			else
-			{
-				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
-				$values_part = array_chunk($values, $num_rows);
-				$out = $values_part[$page];
+					$_entry['url']	= "<a href=\"{$base_url}&id={$_entry['id']}\" >{$_entry['id']}</a>";
 			}
 
-//------ End pagination
-
-
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $total_records,
 					'startIndex' => $start,
-					'sortKey' => 'type', 
-					'sortDir' => "ASC", 
-					'Result' => $out,
+					'sortKey' => $sortKey, 
+					'sortDir' => $sortDir, 
+					'Result' => $values,
 					'pageSize' => $num_rows,
 					'activePage' => floor($start / $num_rows) + 1
 				)
 			);
 			return $data;
 		}
-
-
 
 
 		/**
@@ -823,7 +799,7 @@
 
 			$step			= phpgw::get_var('step', 'int', 'REQUEST');
 			$sheet_id		= phpgw::get_var('sheet_id', 'int', 'REQUEST');
-			
+
 			$sheet_id = $sheet_id ? $sheet_id : phpgw::get_var('selected_sheet_id', 'int', 'REQUEST');
 
 			if(!$step )
@@ -874,7 +850,7 @@
 			}
 
 			$tabs = array();
-			
+
 			switch ($step)
 			{
 				case 0:
@@ -917,7 +893,7 @@
 					break;
 */
 			}
-			
+
 //-----------
 
 			$data = array();
@@ -934,7 +910,7 @@
 				{
 					$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
 					$AllSheets = $objPHPExcel->getSheetNames();
-			
+
 					$sheets = array();
 					if($AllSheets)
 					{
@@ -986,7 +962,7 @@
 					$html_table .= "<tr><td><pre>{$_radio}</pre></td><td>" . implode('</td><td>', array_values($row)) . '</td></tr>';
 					$i++;
 				}
-			}			
+			}
 			else if($data && $step == 3)
 			{
 				$_options = array
@@ -1011,7 +987,7 @@
 				foreach($data[$start_line] as $_column => $_value)
 				{
 					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
-					
+
 					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true );
 					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
 				}
@@ -1034,7 +1010,7 @@
 						{
 							$_result[$_value_key] =trim($data[$i][$_row_key]);
 						}
-					
+
 					}
 					$import_data[] = $_result;
 				}
@@ -1180,7 +1156,7 @@
 			{
 				return lang('no access');
 			}
-			
+
 			if ($id )
 			{
 				$values = $this->bo->read_single( array('id' => $id,  'view' => true) );
