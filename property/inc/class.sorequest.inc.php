@@ -193,6 +193,99 @@
 		}
 
 
+		function read_survey_data($data)
+		{
+			$start					= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$condition_survey_id	= $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
+			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order					= isset($data['order'])?$data['order']:'';
+
+
+			if ($order)
+			{
+				switch($order)
+				{
+					case 'planned_year':
+						$ordermethod = " ORDER BY planned_year $sort";
+						break;
+					case 'url':
+						$ordermethod = " ORDER BY fm_request.id $sort";
+						break;
+					default:
+						$ordermethod = " ORDER BY $order $sort";					
+				}
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY fm_request.id DESC';
+			}
+
+			$filtermethod = " WHERE fm_request.condition_survey_id = '{$condition_survey_id}'";
+
+
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " AND fm_request.category='{$cat_id}'";
+			}
+
+			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
+			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
+			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
+			. " sum(fm_request_planning.amount) as planned_budget, fm_request.budget,fm_request.score,min(fm_request_planning.date) as planned_year"
+			. " FROM (((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
+			. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
+			. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
+			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
+			. " {$filtermethod}"
+			. " GROUP BY fm_request_status.descr,fm_request.budget,"
+			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
+			. " fm_request.in_progress_date,fm_request.delivered_date,title,budget,score,fm_request.id,fm_request_status.descr";
+
+			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget  FROM ({$sql}) as t";
+
+			$this->_db->query($sql2,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$this->_total_records = $this->_db->f('cnt');
+			$this->sum_budget	= $this->_db->f('sum_budget');
+//_debug_array($sql);
+
+/*
+			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
+			$this->_db->query($sql3,__LINE__,__FILE__);
+			$this->_db->next_record();
+			$this->sum_consume	= $this->_db->f('sum_consume');
+*/			
+
+			if(!$allrows)
+			{
+				$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
+			}
+			
+			$values = array();
+			
+			while ($this->_db->next_record())
+			{
+				$values[] = array
+				(
+					'id'				=> $this->_db->f('request_id'),
+					'status'			=> $this->_db->f('status',true),
+					'building_part'		=> $this->_db->f('building_part'),
+					'title'				=> $this->_db->f('title',true),
+					'condition_degree'	=> $this->_db->f('condition_degree'),
+					'budget'			=> $this->_db->f('budget'),
+					'planned_budget'	=> $this->_db->f('planned_budget'),
+					'score'				=> $this->_db->f('score'),
+					'planned_year'		=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'cat_id'			=> $this->_db->f('cat_id'),
+				);
+			}
+			return $values;
+		}
+
 		function read($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
@@ -374,6 +467,22 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
+
+			$cols.= ",min(fm_request_planning.date) as planned_year";
+			$cols_return[] 				= 'planned_year';
+//			$cols_group[] 				= 'planned_year';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'planned_year';
+			$uicols['descr'][]			= lang('planned year');
+			$uicols['statustext'][]		= lang('planned year');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
+
 			$this->_db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
 			$_attrib = array();
 			while ($this->_db->next_record())
@@ -414,6 +523,10 @@
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->_left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
+
+			$paranthesis .= '(';
+			$joinmethod .= "{$this->_left_join} fm_request_planning ON {$entity_table}.id = fm_request_planning.request_id)";
+
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->_left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
 			$paranthesis .= '(';
@@ -433,7 +546,14 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				switch($order)
+				{
+					case 'planned_year':
+						$ordermethod = " ORDER BY planned_year $sort";
+						break;
+					default:
+						$ordermethod = " order by $order $sort";					
+				}
 			}
 			else
 			{
@@ -816,7 +936,7 @@
 			$value_set['descr']					= $this->_db->db_addslashes($request['descr']);
 //			$value_set['location_code']			= $request['location_code'];
 			$value_set['entry_date']			= time();
-			$value_set['budget']				= $request['budget'];
+			$value_set['budget']				= (int)$request['budget'];
 			$value_set['status']				= $request['status'];
 			$value_set['branch_id']				= $request['branch_id'];
 			$value_set['coordinator']			= $request['coordinator'];
