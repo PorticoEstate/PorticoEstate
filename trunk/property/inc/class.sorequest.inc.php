@@ -229,7 +229,7 @@
 			}
 
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
-			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,"
+			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
 			. " sum(fm_request_planning.amount) as planned_budget, fm_request.budget,fm_request.score,min(fm_request_planning.date) as planned_year"
 			. " FROM (((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
@@ -280,6 +280,7 @@
 					'planned_budget'	=> $this->_db->f('planned_budget'),
 					'score'				=> $this->_db->f('score'),
 					'planned_year'		=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'cat_id'			=> $this->_db->f('cat_id'),
 				);
 			}
 			return $values;
@@ -935,7 +936,7 @@
 			$value_set['descr']					= $this->_db->db_addslashes($request['descr']);
 //			$value_set['location_code']			= $request['location_code'];
 			$value_set['entry_date']			= time();
-			$value_set['budget']				= $request['budget'];
+			$value_set['budget']				= (int)$request['budget'];
 			$value_set['status']				= $request['status'];
 			$value_set['branch_id']				= $request['branch_id'];
 			$value_set['coordinator']			= $request['coordinator'];

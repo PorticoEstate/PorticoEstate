@@ -136,6 +136,17 @@
 									</input>
 								</form>
 							</td>
+							<td>
+								<form method="post" action="{ticket_link}">
+									<xsl:variable name="lang_start_ticket">
+										<xsl:value-of select="php:function('lang', 'start ticket')"/>
+									</xsl:variable>
+									<input type="hidden" name="values[subject]" value="{value_title}"/>
+									<input type="hidden" name="values[details]" value="{value_descr}"/>
+									<input type="submit" name="start_ticket" value="{$lang_start_ticket}">
+									</input>
+								</form>
+							</td>
 						</tr>
 					</xsl:when>
 				</xsl:choose>
