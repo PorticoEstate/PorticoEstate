@@ -415,7 +415,32 @@
 
 		public function read_survey_data($data)
 		{
+
+			$interlink 	= CreateObject('property.interlink');
+
+
 			$values = $this->so->read_survey_data($data);
+
+			foreach($values as &$entry)
+			{
+				$target = $interlink->get_relation('property', $this->acl_location, $entry['id'], 'target');
+				$related = array();
+				if($target)
+				{
+					foreach($target as $_target_section)
+					{
+						foreach ($_target_section['data'] as $_target_entry)
+						{
+							$related[] = "<a href=\"{$_target_entry['link']}\" title=\"{$_target_entry['title']}\">{$_target_section['descr']}::{$_target_entry['id']}::{$_target_entry['statustext']}</a>";
+						}
+					}
+					$entry['related'] = implode(' /</br>',$related);
+				}
+
+				$category 			= $this->cats->return_single($entry['cat_id']);
+				$entry['category']	= $category[0]['name'];
+			}
+
 			$this->total_records	= $this->so->total_records;
 			return $values;
 		}

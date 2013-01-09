@@ -390,14 +390,17 @@
 
 			$related_def = array
 			(
-				array('key' => 'url','label'=>lang('id'),'sortable'=>false,'resizeable'=>true),
-				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true,'width' => '100'),//width not working...
 				array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'score','label'=>lang('score'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 //				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 				array('key' => 'planned_year','label'=>lang('year'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'related','label'=>lang('related'),'sortable'=>false,'resizeable'=>true),
 			);
-
 
 			$datatable_def[] = array
 			(
@@ -624,6 +627,9 @@
 
 			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			$allrows = true;
+			$num_rows = $total_records;
 
 			if($allrows)
 			{
