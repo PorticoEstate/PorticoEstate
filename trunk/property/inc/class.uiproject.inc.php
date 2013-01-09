@@ -100,6 +100,7 @@
 			$this->user_id			= $this->bo->user_id;
 			$this->criteria_id		= $this->bo->criteria_id;
 			$this->project_type_id	= $this->bo->project_type_id;
+			$this->filter_year		= $this->bo->filter_year;
 		}
 
 		function save_sessiondata()
@@ -231,10 +232,11 @@
 					."cat_id:'{$this->cat_id}',"
 					."user_id:'{$this->user_id}',"
 					."criteria_id:'{$this->criteria_id}',"
-					."project_type_id:':{$this->project_type_id}',"
+					."project_type_id:'{$this->project_type_id}',"
 					."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
 					."second_display:1,"
-					."status_id:'{$this->status_id}'";
+					."status_id:'{$this->status_id}',"
+					."filter_year:'{$this->filter_year}'";
 
 				$datatable['config']['allow_allrows'] = false;
 
@@ -280,10 +282,13 @@
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[5],$default_value);
 
-				$values_combo_box[6]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[6],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
+				$values_combo_box[6]  = $this->bo->get_filter_year_list($this->filter_year);
+				array_unshift ($values_combo_box[6],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
+
+				$values_combo_box[7]  = $this->bo->get_user_list($this->filter);
+				array_unshift ($values_combo_box[7],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[6],$default_value);
+				array_unshift ($values_combo_box[7],$default_value);
 
 
 				$datatable['actions']['form'] = array
@@ -297,7 +302,8 @@
 								'district_id'       => $this->district_id,
 								'part_of_town_id'   => $this->part_of_town_id,
 								'lookup'        	=> $lookup,
-								'cat_id'        	=> $this->cat_id
+								'cat_id'        	=> $this->cat_id,
+								'filter_year'		=> $this->filter_year
 							)
 						),
 						'fields'	=> array
@@ -357,28 +363,27 @@
 									'type' => 'button',
 									'style' => 'filter',
 									'tab_index' => 6
-								),/*
+								),
 								array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
+								( //boton 	filter_year
+									'id' => 'btn_filter_year',
+									'name' => 'filter_year',
+									'value'	=> lang('year'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 6
-								),*/
-									array
-									( //boton 	USER
-										//	'id' => 'btn_user_id',
-										'id' => 'sel_filter', // testing traditional listbox for long list
-										'name' => 'filter',
-										'value'	=> lang('User'),
-										'type' => 'select',
-										'style' => 'filter',
-										'values' => $values_combo_box[6],
-										'onchange'=> 'onChangeSelect("filter");',
-										'tab_index' => 7
-									),
+									'tab_index' => 7
+								),
+								array
+								(
+									'id' => 'sel_filter', 
+									'name' => 'filter',
+									'value'	=> lang('User'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[7],
+									'onchange'=> 'onChangeSelect("filter");',
+									'tab_index' => 8
+								),
 								//for link "columns", next to Export button
 								array
 								(
@@ -390,21 +395,21 @@
 										'menuaction' => 'property.uiproject.columns'
 									))."','','width=300,height=600,scrollbars=1')",
 									'value' => lang('columns'),
-									'tab_index' => 13
+									'tab_index' => 14
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 12
+									'tab_index' => 13
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 11
+									'tab_index' => 12
 								),
 								array
 								( //hidden start_date
@@ -432,7 +437,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								// FIXME test on lightbox for date search
 			/*
@@ -451,7 +456,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 9
+									'tab_index' => 10
 								),
 								array
 								( // TEXT INPUT
@@ -461,7 +466,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 8
+									'tab_index' => 9
 								),
 							),
 							'hidden_value' => array
@@ -495,12 +500,12 @@
 								( //div values  combo_box_5
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)/*,
+								),
 								array
-								( //div values  combo_box_5
-									'id' => 'values_combo_box_5',
-									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)*/
+								( //div values  combo_box_6
+									'id' => 'values_combo_box_6',
+									'value'	=> $this->bocommon->select2String($values_combo_box[6])
+								)
 							)
 						)
 					)

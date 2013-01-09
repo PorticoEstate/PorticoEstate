@@ -121,6 +121,7 @@
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
 			$project_type_id = $data['project_type_id'] ? (int)$data['project_type_id']:0;
+			$filter_year	= isset($data['filter_year']) ? $data['filter_year'] : '';
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -689,11 +690,34 @@
 					. " GROUP BY fm_workorder.id, budget, combined_cost, billable_hours, closed";
 
 */
-					$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, actual_cost, pending_cost'//, contract_sum, addition, calculation, budget'
-					. " FROM fm_workorder"
-					. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-					. " {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
-					. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}";
+
+					if ($filter_year && $filter_year != 'all')
+					{
+						$_year_arr = array();
+						for ($i=1;$i<14;$i++)
+						{
+							$_year_arr[] = sprintf("%04s%02s", $filter_year, $i);
+						}
+
+						$sql_filter_period = 'AND periode IN (' . implode(',', $_year_arr) . ')';
+
+						$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost'
+						. " FROM fm_workorder"
+						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
+						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} "
+						. " GROUP BY fm_workorder.id, budget, combined_cost, billable_hours, closed";
+//_debug_array($sql_workder);
+
+					}
+					else
+					{
+						$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, actual_cost, pending_cost'//, contract_sum, addition, calculation, budget'
+						. " FROM fm_workorder"
+						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+						. " {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
+						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}";
+					}
 //_debug_array($sql_workder);
 
 					$this->db->query($sql_workder,__LINE__,__FILE__);
@@ -708,7 +732,18 @@
 						if(!$this->db->f('closed'))
 						{
 //$test[] = $this->db->f('id');
-							$_obligation = $_combined_cost - $_actual_cost;
+
+							if ($filter_year && $filter_year != 'all')
+							{
+								if($filter_year == date('Y'))
+								{
+									$_obligation = $_combined_cost - $_actual_cost;
+								}
+							}
+							else
+							{
+								$_obligation = $_combined_cost - $_actual_cost;
+							}
 							if((int)$this->db->f('budget') >= 0)
 							{
 								if($_obligation < 0)
@@ -2759,5 +2794,32 @@ $test = 0;
 			}
 
 			return $values;
+		}
+
+		public function get_filter_year_list()
+		{
+			$sql = 'SELECT min(start_date) AS start_date FROM fm_project WHERE start_date <> 0';
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$start_year = date('Y',$this->db->f('start_date'));
+			}
+			else
+			{
+				$start_year = date('Y');
+			}
+			$end_year = date('Y') + 1;
+			$year_list = array();
+			for ($i=$start_year;$i< $end_year ;$i++)
+			{
+				$year_list[] = array
+				(
+					'id'	=> $i,
+					'name'	=> $i
+				);
+			}
+			$year_list = array_reverse($year_list);
+
+			return $year_list;
 		}
 	}
