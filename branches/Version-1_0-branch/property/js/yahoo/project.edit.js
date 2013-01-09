@@ -60,6 +60,19 @@ var  myPaginator_4, myDataTable_4;
 	};
 
 /********************************************************************************/	
+
+	var oArgs_project = {menuaction:'property.uiproject.edit'};
+	var sUrl_project = phpGWLink('index.php', oArgs_project);
+
+	var project_link = function(elCell, oRecord, oColumn, oData)
+	{
+	  	if(oData > 0)
+	  	{
+	  		elCell.innerHTML = "<a href="+sUrl_project + "&id="+oData+">" + oData + "</a>";
+	  	}
+	}	
+
+
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{
 		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
@@ -127,7 +140,11 @@ var  myPaginator_4, myDataTable_4;
   		//call getTotalSum(name of column) in property.js
   		tmp_sum1 = getTotalSum('amount_in',0,paginator,datatable);
   		tmp_sum2 = getTotalSum('amount_out',0,paginator,datatable);
-  		tmp_sum3 = tmp_sum1 + tmp_sum2;
+
+  		tmp_sum3 = parseInt(tmp_sum1.replace(/ /g,''))
+  		  		 - parseInt(tmp_sum2.replace(/ /g,''));
+
+		tmp_sum3 = YAHOO.util.Number.format(tmp_sum3, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 
   		if(typeof(tableYUI0)=='undefined')
   		{
@@ -147,7 +164,7 @@ var  myPaginator_4, myDataTable_4;
 		td_sum(tmp_sum1);
 		td_empty(1);
 		td_sum(tmp_sum2);
-		td_empty(1);
+		td_sum('Total');
 		td_sum(tmp_sum3);
 
 		myfoot = tableYUI0.createTFoot();

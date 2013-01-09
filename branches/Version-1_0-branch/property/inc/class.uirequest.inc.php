@@ -1579,9 +1579,23 @@
 			}
 
 
+			$ticket_link_data = array
+			(
+				'menuaction'		=> 'property.uitts.add',
+				'bypass'			=> true,
+				'location_code'		=> $values['location_code'],
+			//	'p_num'				=> 0,
+			//	'p_entity_id'		=> 0,
+			///	'p_cat_id'			=> 0,
+				'origin'			=> $this->acl_location,
+				'origin_id'			=> $id
+			);
+
+
 			$data = array
 				(
 					'mode'								=> $mode,
+					'ticket_link'						=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 					'value_authorities_demands' 		=> isset($this->config->config_data['authorities_demands']) &&  $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'show_dates'						=> $show_dates,

@@ -307,12 +307,13 @@
 		public function get_summation($id)
 		{
 			$data = $this->so->get_summation($id);
-
+//$total = 0;
+//_debug_array($data);
 			$values	=array();
 			$i=0;
 			foreach ($data as $entry)
 			{
-				$i = $entry['building_part'];
+				$i = $entry['building_part'] . '_' . $entry['cat_id'];
 				
 				$values[$i]['building_part'] = $entry['building_part'];
 				$values[$i]['category'] = $this->get_category_name($entry['cat_id']);
@@ -330,21 +331,26 @@
 	
 				for ($j = 1; $j < 7 ; $j++ )
 				{
+					$values[$i]["period_{$j}"] += 0;
+					$values[$i]['sum'] += 0;
 					if($j == $period)
 					{
 						$values[$i]["period_{$j}"] += $entry['amount'];
 						$values[$i]['sum'] += $entry['amount'];
 					}
-					else
-					{
-						$values[$i]["period_{$j}"] += 0;					
-					}
 				}
-
-				$i++;
 			}
-//_debug_array($values);
-			return $values;
+			unset($entry);
+
+			$ret	=array();
+			foreach ($values as $entry)
+			{
+				$ret[] = $entry;
+			}
+
+//_debug_array($total);
+//_debug_array($ret);
+			return $ret;
 		}
 
 		function get_category_name($cat_id)

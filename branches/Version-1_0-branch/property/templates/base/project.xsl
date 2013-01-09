@@ -388,7 +388,7 @@ Returns mixed
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>
-								<xsl:when test="value_project_id!='' and mode='edit'">
+								<xsl:when test="value_project_id!='' and mode='edit' and project_type_id !=3">
 									<tr>
 										<td valign="top">
 											<xsl:value-of select="php:function('lang', 'move')"/>
@@ -430,17 +430,28 @@ Returns mixed
 													<xsl:apply-templates select="year_list/options"/>
 												</select>
 											</td>
-											<td>
-												<select name="values[budget_periodization]">
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'periodization')"/>
-													</xsl:attribute>
-													<option value="0">
-														<xsl:value-of select="php:function('lang', 'periodization')"/>
-													</option>
-													<xsl:apply-templates select="periodization_list/options"/>
-												</select>
-											</td>
+											<xsl:choose>
+											<xsl:when test="project_type_id !='3'">
+												<td>
+													<select name="values[budget_periodization]">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'periodization')"/>
+														</xsl:attribute>
+														<option value="0">
+															<xsl:value-of select="php:function('lang', 'periodization')"/>
+														</option>
+														<xsl:apply-templates select="periodization_list/options"/>
+													</select>
+												</td>
+												<td>
+													<input type="checkbox" name="values[budget_periodization_all]" value="True">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'all')"/>
+														</xsl:attribute>
+													</input>
+												</td>
+											</xsl:when>
+										</xsl:choose>
 										</tr>
 									</table>
 								</td>
@@ -454,44 +465,93 @@ Returns mixed
 									<div id="datatable-container_0"/>
 								</td>
 							</tr>
-			<xsl:choose>
-				<xsl:when test="project_type_id !='3'">
 
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_reserve"/>
-								</td>
-								<td><input type="text" name="values[reserve]" value="{value_reserve}"><xsl:attribute name="title"><xsl:value-of select="lang_reserve_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_sum"/>
-								</td>
-								<td><xsl:value-of select="value_sum"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_remainder"/>
-								</td>
-								<td><xsl:value-of select="value_remainder"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_reserve_remainder"/>
-								</td>
-								<td>
-									<xsl:value-of select="value_reserve_remainder"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-									<xsl:text> </xsl:text> ( <xsl:value-of select="value_reserve_remainder_percent"/>
-									<xsl:text> % )</xsl:text>
-								</td>
-							</tr>
-							</xsl:when>
-							<xsl:otherwise>
-							</xsl:otherwise>
-					</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="value_project_id!='' and mode='edit'">
+										<tr>
+											<td valign="top">
+												<xsl:value-of select="php:function('lang', 'transfer')"/>
+											</td>
+											<td>
+												<table>
+													<tr>
+														<td valign="top">
+															<xsl:value-of select="php:function('lang', 'amount')"/>
+														</td>
+														<td valign="top">
+															<xsl:value-of select="php:function('lang', 'project')"/>
+														</td>
+														<td valign="top">
+															<xsl:value-of select="php:function('lang', 'remark')"/>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<input type="text" name="values[transfer_amount]" value="">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'amount to transfer')"/>
+																</xsl:attribute>
+															</input>
+														</td>
+														<td>
+															<input type="text" name="values[transfer_target]" value="">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'target project')"/>
+																</xsl:attribute>
+															</input>
+														</td>
+														<td>
+															<input type="text" name="values[transfer_remark]" value="">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'remark')"/>
+																</xsl:attribute>
+															</input>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+
+								</xsl:when>
+							</xsl:choose>
+
+							<xsl:choose>
+								<xsl:when test="project_type_id !='3'">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_reserve"/>
+										</td>
+										<td><input type="text" name="values[reserve]" value="{value_reserve}"><xsl:attribute name="title"><xsl:value-of select="lang_reserve_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_sum"/>
+										</td>
+										<td><xsl:value-of select="value_sum"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_remainder"/>
+										</td>
+										<td><xsl:value-of select="value_remainder"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_reserve_remainder"/>
+										</td>
+										<td>
+											<xsl:value-of select="value_reserve_remainder"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+											<xsl:text> </xsl:text> ( <xsl:value-of select="value_reserve_remainder_percent"/>
+											<xsl:text> % )</xsl:text>
+										</td>
+									</tr>
+									</xsl:when>
+									<xsl:otherwise>
+									</xsl:otherwise>
+							</xsl:choose>
 							<tr>
 								<td class="th_text" valign="top">
 									<xsl:value-of select="lang_workorder_id"/>

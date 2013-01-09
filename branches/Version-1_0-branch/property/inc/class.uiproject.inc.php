@@ -1130,7 +1130,7 @@
 				{
 					if($GLOBALS['phpgw']->session->is_repost())
 					{
-						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+//						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 					}
 
 					$save=true;
@@ -1750,10 +1750,10 @@
 												array('key' => 'year','label'=>lang('year'),'sortable'=>false,'resizeable'=>true),
 												array('key' => 'entry_date','label'=>lang('entry date'),'sortable'=>true,'resizeable'=>true),
 												array('key' => 'amount_in','label'=>lang('amount in'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-												array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'resizeable'=>true),
+												array('key' => 'from_project','label'=>lang('from project'),'sortable'=>true,'resizeable'=>true,'formatter'=>'project_link'),
 												array('key' => 'amount_out','label'=>lang('amount out'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
-												array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'resizeable'=>true),
-												array('key' => 'user_name','label'=>lang('user'),'sortable'=>true,'resizeable'=>true)
+												array('key' => 'to_project','label'=>lang('to project'),'sortable'=>true,'resizeable'=>true,'formatter'=>'project_link'),
+												array('key' => 'remark','label'=>lang('remark'),'sortable'=>true,'resizeable'=>true)
 											)
 										)
 				);

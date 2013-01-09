@@ -7188,6 +7188,7 @@
 
 
 		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_project_budget SET active = 1',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_request set budget = 0 WHERE budget IS NULL',__LINE__,__FILE__);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_workorder_budget',  array(
