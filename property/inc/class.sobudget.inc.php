@@ -148,12 +148,13 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( descr $this->like '%$query%') OR fm_budget.b_account_id='$query'";
+				$querymethod = " $where ( descr {$this->like} '%$query%' OR fm_budget.b_account_id='$query')";
 			}
 
 
-			$sql = "SELECT fm_budget.*, fm_budget.category as cat_id, ecodimb, descr,fm_b_account.category as grouping FROM fm_budget {$this->join} fm_b_account ON fm_budget.b_account_id = fm_b_account.id $filtermethod $querymethod";
-
+			$sql = "SELECT fm_budget.*, fm_budget.category as cat_id, ecodimb, descr,fm_b_account.category as grouping"
+			. " FROM fm_budget {$this->join} fm_b_account ON fm_budget.b_account_id = fm_b_account.id"
+			. " $filtermethod $querymethod";
 
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
