@@ -38,6 +38,7 @@
 		var $start;
 		var $query;
 		var $filter;
+		var $filter_year;
 		var $sort;
 		var $order;
 		var $cat_id;
@@ -68,11 +69,16 @@
 				$this->use_session = true;
 			}
 
+			
+			
+			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
+			
 			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query					= phpgw::get_var('query');
 			$sort					= phpgw::get_var('sort');
 			$order					= phpgw::get_var('order');
 			$filter					= phpgw::get_var('filter', 'int');
+			$filter_year			= phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
 			$cat_id					= phpgw::get_var('cat_id', 'int');
 			$status_id				= phpgw::get_var('status_id');
 			$user_id				= phpgw::get_var('user_id', 'int');
@@ -84,6 +90,7 @@
 			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
+			$this->filter_year		= $filter_year;
 
 			if(isset($_POST['query']) || isset($_GET['query']))
 			{
@@ -447,7 +454,7 @@
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
 				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
-				'project_type_id'	=> $this->project_type_id));
+				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
 
 			$this->total_records = $this->so->total_records;
 
@@ -905,5 +912,10 @@
 		public function get_periodizations_with_outline()
 		{
 			return $this->so->get_periodizations_with_outline();
+		}
+		public function get_filter_year_list($selected)
+		{
+			$values = $this->so->get_filter_year_list();
+			return $this->bocommon->select_list($selected, $values);
 		}
 	}

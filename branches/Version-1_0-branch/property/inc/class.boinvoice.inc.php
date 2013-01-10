@@ -250,7 +250,7 @@
 		{
 			$time = time();
 
-			$_lag = date('n') == 1 ? 12 : 7;
+			$_lag = date('n') == 1 ? 17 : 7;//6 days into next month, 16 days into next year
 
 			if ( date('j',$time) < $_lag ) //Day of the month without leading zeros
 			{
