@@ -70,12 +70,12 @@
 			while ($this->db->next_record())
 			{
 				xmlwriter_start_element($memory,'Maalepunkt');
-					xmlwriter_write_element($memory,'ID', 'TJ'); 
-					xmlwriter_write_element($memory,'Verdi', substr($this->db->f('maalepunkt_id'),-8)); 
-					xmlwriter_write_element($memory,'Firma', 'BB'); 
-					xmlwriter_write_element($memory,'Beskrivelse', $this->db->f('address')); 
-					xmlwriter_write_element($memory,'PeriodeFra', $PeriodFrom); 
-					xmlwriter_write_element($memory,'PeriodeTil', $PeriodTo); 
+					xmlwriter_write_element($memory,'ID', 'TJ');
+					xmlwriter_write_element($memory,'Verdi', substr($this->db->f('maalepunkt_id'),-8));
+					xmlwriter_write_element($memory,'Beskrivelse', $this->db->f('address'));
+					xmlwriter_write_element($memory,'Firma', 'BB');
+					xmlwriter_write_element($memory,'PeriodeFra', $PeriodFrom);
+					xmlwriter_write_element($memory,'PeriodeTil', $PeriodTo);
 					xmlwriter_write_element($memory,'Status', 'N');
 				    xmlwriter_start_element($memory,'BegrepsLister');
 						xmlwriter_start_element($memory,'BegrepsListe');
@@ -114,12 +114,12 @@
 								xmlwriter_write_comment($memory , 'Fagkode' );
 								xmlwriter_write_element($memory,'ID', 'B1');
 								xmlwriter_write_element($memory,'Verdi', '999');
-							xmlwriter_end_element($memory);	
+							xmlwriter_end_element($memory);
 							xmlwriter_start_element($memory,'Begrep');
 								xmlwriter_write_comment($memory , 'AV' );
 								xmlwriter_write_element($memory,'ID', 'AV');
 								xmlwriter_write_element($memory,'Verdi', '');
-							xmlwriter_end_element($memory);	
+							xmlwriter_end_element($memory);
 						xmlwriter_end_element($memory);
 					xmlwriter_end_element($memory);
 				xmlwriter_end_element($memory);
@@ -137,7 +137,7 @@
 		protected function log_end()
 		{
 			$msgbox_data =  $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
-	
+
 			$insert_values= array
 			(
 				0,
@@ -325,7 +325,7 @@
 			return 	$transfer_ok;
 		}
 
-		protected function phpftp_connect() 
+		protected function phpftp_connect()
 		{
 			$server				= $this->config->config_data['common']['host'];
 			$user				= $this->config->config_data['common']['user'];
