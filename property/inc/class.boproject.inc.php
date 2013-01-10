@@ -69,12 +69,16 @@
 				$this->use_session = true;
 			}
 
+			
+			
+			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
+			
 			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query					= phpgw::get_var('query');
 			$sort					= phpgw::get_var('sort');
 			$order					= phpgw::get_var('order');
 			$filter					= phpgw::get_var('filter', 'int');
-			$filter_year			= phpgw::get_var('filter_year', 'string', 'REQUEST', 'all');
+			$filter_year			= phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
 			$cat_id					= phpgw::get_var('cat_id', 'int');
 			$status_id				= phpgw::get_var('status_id');
 			$user_id				= phpgw::get_var('user_id', 'int');
@@ -86,6 +90,7 @@
 			$this->allrows			= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
+			$this->filter_year		= $filter_year;
 
 			if(isset($_POST['query']) || isset($_GET['query']))
 			{
@@ -102,10 +107,6 @@
 			if(isset($_POST['filter']) || isset($_GET['filter']))
 			{
 				$this->filter = $filter;
-			}
-			if(isset($_POST['filter_year']) || isset($_GET['filter_year']))
-			{
-				$this->filter_year = $filter_year;
 			}
 			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{

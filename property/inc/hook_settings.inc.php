@@ -246,6 +246,13 @@
 
 	create_select_box('Default project type','default_project_type',$default_project_type,'Select your default project type');
 
+	$default_project_filter_year =array
+	(
+		'current_year'	=> lang('current year'),
+		'all' 			=> lang('all'),
+	);
+
+	create_select_box('Default project year filter','default_project_filter_year',$default_project_filter_year,'Select your default project year filter');
 
 	create_select_box('Default project status','project_status',$_status_project,'The default status for your projects');
 	create_select_box('Default workorder status','workorder_status',$_status_workorder,'The default status for your workorders');
