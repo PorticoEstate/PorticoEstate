@@ -1618,12 +1618,14 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$order_budget = array();
+			$_dummy_year = date('Y');
 			while ($this->db->next_record())
 			{
 				$period = sprintf("%s%02d",
 							$this->db->f('year'),
 							$this->db->f('month')
 						);
+				$_dummy_period = $period;
 
 				$order_budget[$period] = array
 				(
@@ -1681,7 +1683,13 @@
 
 					if(!$_found)
 					{
-						$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+						$dummy_year = substr( $_dummy_period, 0, 4 );
+						$dummy_month = substr( $_dummy_period, -2);
+
+						$order_budget[$_dummy_period]['year'] = $_dummy_year;
+						$order_budget[$_dummy_period]['month'] = $_dummy_month;
+
+						$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
 					}
 				}
 			}
@@ -1743,6 +1751,8 @@
 //die();
 				$values[] = array
 				(
+					'year'					=> $_budget['year'],
+					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '',
 					'period'				=> $period,
 					'budget'				=> $_budget['budget'],
 					'sum_orders'			=> $_sum_orders,
@@ -1758,8 +1768,31 @@
 				array_multisort($sort_period, SORT_ASC, $values);
 			}
 
-			return $values;
 
+			foreach ($values as &$entry)
+			{
+	//			$entry['year'] = substr( $entry['period'], 0, 4 );
+	//			$month = substr( $entry['period'], 4, 2 );
+	//			$entry['month'] = $month == '00' ? '' : $month;
+				if($active_period[$entry['period']])
+				{
+					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+				}
+				else
+				{
+					$entry['diff'] =  0;
+				}
+				$_deviation = $entry['budget'] - $entry['actual_cost'];
+				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+				$entry['deviation_period'] = $deviation;
+				$entry['deviation_acc'] += $deviation;
+				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['closed'] = $closed_period[$entry['period']];
+				$entry['active'] = $active_period[$entry['period']];
+			}
+			return $values;
 		}
 
 		/**
