@@ -1361,6 +1361,10 @@
 			if($id)
 			{
 				$record_history = $this->bo->read_record_history($id);
+				$content_budget = $this->bo->get_budget($id);
+//_debug_array($content_budget);die();
+
+
 			}
 			else
 			{

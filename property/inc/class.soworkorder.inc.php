@@ -1598,6 +1598,170 @@
 			}
 		}
 
+
+		/**
+		* Get periodized budget for an order
+		*
+		* @return array Array with budget information.
+		*/
+
+		function get_budget($order_id)
+		{
+
+			$closed_period = array();
+			$active_period = array();
+
+			$sql = "SELECT fm_workorder_budget.budget, fm_workorder_budget.combined_cost, year, month, closed"
+			. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id WHERE order_id = '{$order_id}'"
+			. " ORDER BY year, month";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$order_budget = array();
+			while ($this->db->next_record())
+			{
+				$period = sprintf("%s%02d",
+							$this->db->f('year'),
+							$this->db->f('month')
+						);
+
+				$order_budget[$period] = array
+				(
+					'order_id' 			=> $order_id,
+					'budget'			=> (int)$this->db->f('budget'),
+					'combined_cost'		=> (int)$this->db->f('combined_cost'),
+					'year'				=> (int)$this->db->f('year'),
+					'month'				=> (int)$this->db->f('month'),
+					'actual_cost'		=> 0, //for now..
+					'closed_order'		=> false,
+				);
+
+ 				$closed_period[$period] = false;
+  				$active_period[$period] = true;
+			}
+
+
+			if ( $order_budget )
+			{
+				$sql = "SELECT order_id, periode, amount AS actual_cost"
+				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
+//_debug_array($sql);
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$periode = $this->db->f('periode');
+					if(!$periode)
+					{
+						$periode = date('Ym');
+					}
+
+					$year = substr( $periode, 0, 4 );
+
+					$_found = false;
+					if(isset($order_budget[$periode]))
+					{
+						$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+						$_found = true;
+					}
+					else
+					{
+						for ($i=0;$i<13;$i++)
+						{
+							$_period = $year . sprintf("%02s", $i);
+							if(isset($order_budget[$_period]))
+							{
+								$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
+//_debug_array($test+=$this->db->f('actual_cost'));
+								$_found = true;
+								break;
+							}
+						}
+					}
+
+					if(!$_found)
+					{
+						$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+					}
+				}
+			}
+
+			$sort_period = array();
+			$values = array();
+//_debug_array($project_budget);die();
+//$test = 0;
+			$_delay_period = 0;
+			foreach ($order_budget as $period => $_budget)
+			{
+				$_sum_orders = 0;
+				$_sum_oblications = 0;
+				$_actual_cost = 0;
+
+				$_actual_cost += $_budget['actual_cost'];
+//_debug_array( $test+= $_budget['actual_cost']);
+				$_sum_orders += $_budget['combined_cost'];
+
+				if(!$_budget['closed_order'])
+				{
+					$_sum_oblications += $_budget['combined_cost'];
+					$_sum_oblications -= $_budget['actual_cost'];
+
+			//		if($project_total_budget >= 0)
+					if($_budget['budget'] >= 0)
+					{
+						if($_sum_oblications < 0)
+						{
+							$_sum_oblications = 0;
+						}
+					}
+					else // income
+					{
+						if($_sum_oblications > 0)
+						{
+							$_sum_oblications = 0;
+						}
+					}
+				}
+
+				//override if periode is closed
+				if(!isset($active_period[$period]) || !$active_period[$period])
+				{
+					$_delay_period += $_sum_oblications;
+					$_sum_oblications = 0;
+				}
+				//override if periode is closed
+				if(isset($closed_period[$period]) && $closed_period[$period])
+				{
+					$_sum_oblications = 0;
+				}
+
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				{
+					$_sum_oblications[] += $_delay_period;
+					$_delay_period =0;
+				}
+//die();
+				$values[] = array
+				(
+					'period'				=> $period,
+					'budget'				=> $_budget['budget'],
+					'sum_orders'			=> $_sum_orders,
+					'sum_oblications'		=> $_sum_oblications,
+					'actual_cost'			=> $_actual_cost,
+				);
+
+				$sort_period[] = $period;
+			}
+			
+			if($values)
+			{
+				array_multisort($sort_period, SORT_ASC, $values);
+			}
+
+			return $values;
+
+		}
+
 		/**
 		* Recalculate actual cost from payment history for all workorders
 		*

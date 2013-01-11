@@ -1711,6 +1711,8 @@
 
 			//---datatable settings---------------------------------------------------	
 
+			$sum_actual_cost = 0;
+			$sum_oblications = 0;
 
 			if($id)
 			{
@@ -1718,9 +1720,17 @@
 				$lang_delete = lang('Check to delete period');
 				$lang_close = lang('Check to close period');
 				$lang_active = lang('Check to activate period');
+				$values['sum'] = 0;
 
 				foreach($content_budget as & $b_entry)
 				{
+					if($b_entry['active'])
+					{
+						$sum_actual_cost	+= $b_entry['actual_cost'];
+						$sum_oblications	+= $b_entry['sum_oblications'];
+						$values['sum']		+= $b_entry['budget'];
+					}
+
 					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
 					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';					
 
@@ -1730,19 +1740,23 @@
 					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
 					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
 					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
-					$value_remainder -= $b_entry['sum_orders'];
-					$value_remainder -= $b_entry['actual_cost'];
+					
 				}
 				unset($b_entry);
 			}
 
+			if(isset($values['reserve']) && $values['reserve']!=0)
+			{
+				$reserve_remainder=$values['reserve']-$values['deviation'];
+				$remainder_percent= number_format(($reserve_remainder/$values['reserve'])*100, 2, ',', '');
+				$values['sum'] = $values['sum'] + $values['reserve'];
+			}
+
+			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
 
-
 //_debug_array($content_budget);die();
-
-
 
 			if( isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
