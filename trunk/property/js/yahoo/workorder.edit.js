@@ -27,6 +27,20 @@ var vendor_id;
 	  	}
 	};
 
+	var FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+	var FormatterAmount2 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
 
 	var oArgs_invoicehandler_2 = {menuaction:'property.uiinvoice2.index'};
 	var sUrl_invoicehandler_2 = phpGWLink('index.php', oArgs_invoicehandler_2);
@@ -100,7 +114,7 @@ var vendor_id;
 
   		if(typeof(tableYUI)=='undefined')
   		{
-			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[2].parentNode;
 			tableYUI.setAttribute("id","tableYUI");
   		}
   		else
