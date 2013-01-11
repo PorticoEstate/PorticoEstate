@@ -819,6 +819,11 @@
 			return $ser_list;
 		}
 
+		public function get_budget($order_id)
+		{
+			return $this->so->get_budget($order_id);
+		}
+
 		/**
 		* Recalculate actual cost from payment history for all workorders
 		*

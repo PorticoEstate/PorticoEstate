@@ -2018,9 +2018,9 @@
 			$project_budget = array();
 			$project_total_budget = 0;
 
-			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, start_date"
+			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount"
 			. " FROM fm_project_budget {$this->left_join} fm_workorder ON fm_project_budget.project_id = fm_workorder.project_id WHERE fm_project_budget.project_id = {$project_id}"
-			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active,start_date"
+			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active"
 			. " ORDER BY fm_project_budget.year, fm_project_budget.month";
 			$this->db->query($sql,__LINE__,__FILE__);
 //	_debug_array($sql);
