@@ -6,8 +6,8 @@
 	<!-- New template-->
 	<xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
 		<xsl:for-each select="attributes_group">
-			<div id="{link}">
-				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
+			<div id="{link}" class="fields_wrp">
+				<table style="float:left;">
 					<xsl:apply-templates select="attributes"/>
 				</table>
 			</div>
@@ -25,7 +25,7 @@
 		<xsl:choose>
 			<xsl:when test="datatype='section'">
 				<tr>
-					<td colspan='2'>
+					<td  colspan="2">
 						<xsl:value-of select="descr" disable-output-escaping="yes"/>				
 					</td>
 				</tr>
@@ -35,7 +35,7 @@
 		<tr>
 			<xsl:choose>
 				<xsl:when test="not(hide_row)">
-					<td align="left" width="19%" valign="top" title="{$statustext}">
+					<td  class="first" title="{$statustext}">
 						<label>
 						<xsl:choose>
 							<xsl:when test="helpmsg=1">
@@ -72,7 +72,7 @@
 				</xsl:when>
 			</xsl:choose>
 
-			<td align="left">
+			<td>
 				<xsl:choose>
 					<xsl:when test="name!=''">
 						<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"/>
@@ -120,7 +120,7 @@
 								</select>
 							</xsl:when>
 							<xsl:when test="datatype='AB'">
-								<table>
+								<table style="float:left;">
 									<tr>
 										<td>
 											<xsl:variable name="contact_name">
@@ -468,7 +468,7 @@
 								</table>
 							</xsl:when>
 							<xsl:when test="datatype='T'">
-								<textarea id="id_{name}" cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]">
+								<textarea id="id_{name}"  name="values_attribute[{counter}][value]">
 									<xsl:choose>
 										<xsl:when test="disabled!=''">
 											<xsl:attribute name="disabled">
