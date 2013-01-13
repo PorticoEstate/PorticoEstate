@@ -82,7 +82,8 @@
 			$b_account			= phpgw::get_var('b_account');
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$criteria_id		= phpgw::get_var('criteria_id', 'int');
-			$this->allrows			= phpgw::get_var('allrows', 'bool');
+			$this->allrows		= phpgw::get_var('allrows', 'bool');
+			$this->obligation	= phpgw::get_var('obligation', 'bool');
 
 			$this->start		= $start ? $start : 0;
 			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
@@ -462,7 +463,8 @@
 				'wo_hour_cat_id' => $this->wo_hour_cat_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
 				'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
-				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
+				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id),
+				'obligation' => $this->obligation) );
 
 			$this->total_records = $this->so->total_records;
 
