@@ -556,7 +556,9 @@
 				'year' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'month' => array('type' => 'int','precision' => 2,'nullable' => False,'default' => 0),
 				'budget' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'contract_sum' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'combined_cost' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
+				'active' => array('type' => 'int','precision' => 2,'nullable' => True),
 				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)

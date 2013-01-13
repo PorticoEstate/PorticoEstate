@@ -580,13 +580,19 @@
 													<xsl:apply-templates select="year_list/options"/>
 												</select>
 											</td>
-											<td>
-												<input type="checkbox" name="values[budget_periodization]" value="True">
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'periodization')"/>
-													</xsl:attribute>
-												</input>
-											</td>
+											<xsl:choose>
+												<xsl:when test="periodization_data/id !=''">
+													<td>
+														<input type="checkbox" name="values[budget_periodization]" value="{periodization_data/id}" checked='checked'>
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'periodization')"/>
+																<xsl:text>::</xsl:text>
+																<xsl:value-of select="periodization_data/descr"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</xsl:when>
+											</xsl:choose>
 										</tr>
 									</table>
 								</td>
