@@ -1373,5 +1373,12 @@ p.no_items_msg {
   margin: 2px;
   padding: 4px 8px;
   cursor: pointer;
+}
 
+.yui-skin-sam .autocomplete .yui-ac-content {
+    overflow: visible;
+}
+
+.yui-skin-sam .autocomplete .yui-ac-content li {
+    white-space: wrap;
 }
