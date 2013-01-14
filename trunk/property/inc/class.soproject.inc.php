@@ -1405,6 +1405,11 @@
 
 					$this->_update_buffer_budget($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
 
+					$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
+					$this->db->next_record();
+					$new_budget =(int)$this->db->f('amount_in') - (int)$this->db->f('amount_out');
+					$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
+
 					if(isset($project['transfer_remark']) && $project['transfer_remark'])
 					{
 						$historylog->add('RM',$project['id'],$project['transfer_remark'], false);
@@ -1814,7 +1819,7 @@
 				$transferred = $this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
 				if(!$transferred == $amount_in)
 				{
-					throw new Exception('property_soproject::update_buffer_budget() - failed to transefer the full amount');
+					throw new Exception('property_soproject::update_buffer_budget() - failed to transfer the full amount');
 				}
 			}
 		}
@@ -1832,7 +1837,7 @@
 				$acc_partial = 0;
 
 				$orig_budget = $this->get_budget($project_id);
-//_debug_array($orig_budget);
+
 				$hit = false;
 				foreach ($orig_budget as $entry)
 				{
@@ -1891,6 +1896,11 @@
 					$acc_partial += $budget;
 
 					$this->_update_budget($project_id, $year, $month, $budget, $action);					
+				}
+				
+				if(!$hit)
+				{
+					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');				
 				}
 
 				return $acc_partial;
