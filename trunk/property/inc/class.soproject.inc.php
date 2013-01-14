@@ -293,6 +293,12 @@
 
 				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
+
+				$joinmethod .= " {$this->left_join} fm_project_budget ON ($entity_table.id = fm_project_budget.project_id))";
+				$paranthesis .='(';
+				$joinmethod .= " {$this->left_join} fm_project_buffer_budget ON ($entity_table.id = fm_project_buffer_budget.buffer_project_id))";
+				$paranthesis .='(';
+
 /*
 				$joinmethod .= " {$this->left_join} fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
 				$paranthesis .='(';
@@ -531,6 +537,14 @@
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where= 'AND';
 			}
+
+			if ($filter_year && $filter_year != 'all')
+			{
+				$filter_year = (int)$filter_year;
+				$filtermethod .= " $where (fm_project_budget.year={$filter_year} OR fm_project_buffer_budget.year={$filter_year})";
+				$where= 'AND';
+			}
+
 			//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
@@ -707,7 +721,8 @@
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 					//	. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND year = '{$filter_year}')"
 						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
+//						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
 						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " GROUP BY fm_workorder.id, billable_hours, closed";
 //_debug_array($sql_workder);
