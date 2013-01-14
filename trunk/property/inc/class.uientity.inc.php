@@ -1784,7 +1784,7 @@
 							$attributes[$i]['attributes'][] = array
 							(
 								'datatype' => 'section',
-								'descr' => "<H{$group['level']}> {$group['descr']} </H{$group['level']}>",
+								'descr' => '<H' . ($group['level'] + 1) .  "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
 								'level' => $group['level'],
 							);
 							$attributes[$i]['attributes'] = array_merge($attributes[$i]['attributes'], $group['attributes']);
