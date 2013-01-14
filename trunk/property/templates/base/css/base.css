@@ -423,7 +423,6 @@ div.allocation-list
 }
 #dt-dlg_c .underlay {overflow:hidden;}
 .inprogress {position:absolute;} /* transitional progressive enhancement state */
-}
 
 dl.controller-description {
   width: 70%;
@@ -1337,14 +1336,14 @@ p.no_items_msg {
 }
 
 .fields_wrp td {
-  padding: 3px 0;
-  vertical-align: middle;
-  width: 250px;
+  padding: 7px 0;
+  vertical-align: top;
 }
 
 .fields_wrp td.first {
   padding-right: 5px;
-  text-align: right;
+  text-align: left;
+  width: 250px;
 }
 
 .fields_wrp label {
@@ -1353,7 +1352,7 @@ p.no_items_msg {
   line-height: 1.5em;
 }
 
-.fields_wrp h1 {
+.fields_wrp h2 {
   font-size: 20px;
   margin: 0;
 }
@@ -1362,17 +1361,13 @@ p.no_items_msg {
   width: 250px;
 }
 
-.yui-ac-bd {
-
-}
-
-.yui-ac-bd ul{
+.autocomplete ul{
   background: none repeat scroll 0 0 #FFFFFF;
   border: 1px solid #AEC6E3;
   position:absolute;
 }
 
-.yui-ac-bd li{
+.autocomplete li{
   background: none repeat scroll 0 0 #D4E1F8;
   list-style: none outside none;
   margin: 2px;
