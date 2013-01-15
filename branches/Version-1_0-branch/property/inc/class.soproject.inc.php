@@ -293,6 +293,12 @@
 
 				$joinmethod .= " {$this->join} fm_project_status ON ($entity_table.status = fm_project_status.id))";
 				$paranthesis .='(';
+
+				$joinmethod .= " {$this->left_join} fm_project_budget ON ($entity_table.id = fm_project_budget.project_id))";
+				$paranthesis .='(';
+				$joinmethod .= " {$this->left_join} fm_project_buffer_budget ON ($entity_table.id = fm_project_buffer_budget.buffer_project_id))";
+				$paranthesis .='(';
+
 /*
 				$joinmethod .= " {$this->left_join} fm_workorder ON ($entity_table.id = fm_workorder.project_id))";
 				$paranthesis .='(';
@@ -531,6 +537,14 @@
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where= 'AND';
 			}
+
+			if ($filter_year && $filter_year != 'all')
+			{
+				$filter_year = (int)$filter_year;
+				$filtermethod .= " $where (fm_project_budget.year={$filter_year} OR fm_project_buffer_budget.year={$filter_year})";
+				$where= 'AND';
+			}
+
 			//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
@@ -701,24 +715,32 @@
 
 						$sql_filter_period = 'AND periode IN (' . implode(',', $_year_arr) . ')';
 
-						$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost'
+						$sql_workder  = "SELECT fm_workorder.id, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+						. " billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost"
 						. " FROM fm_workorder"
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
-						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} "
-						. " GROUP BY fm_workorder.id, budget, combined_cost, billable_hours, closed";
+					//	. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND year = '{$filter_year}')"
+						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
+//						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
+						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
+						. " GROUP BY fm_workorder.id, billable_hours, closed";
 //_debug_array($sql_workder);
 
 					}
 					else
 					{
-						$sql_workder  = 'SELECT fm_workorder.id, budget, combined_cost, billable_hours, closed, actual_cost, pending_cost'//, contract_sum, addition, calculation, budget'
+						$sql_workder  = "SELECT fm_workorder.id, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+						. " billable_hours, closed, actual_cost, pending_cost"
 						. " FROM fm_workorder"
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
+						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
 						. " {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
-						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}";
+						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}"
+						. " GROUP BY fm_workorder.id, billable_hours, closed, actual_cost, pending_cost";
+
 					}
-//_debug_array($sql_workder);
+//~ _debug_array($sql_workder);
 
 					$this->db->query($sql_workder,__LINE__,__FILE__);
 
@@ -821,39 +843,40 @@
 			if ($this->db->next_record())
 			{
 				$project = array
-					(
-						'project_id'			=> $this->db->f('id'),
-						'project_type_id'		=> $this->db->f('project_type_id'),
-						'title'					=> $this->db->f('title'),
-						'name'					=> $this->db->f('name'),
-						'location_code'			=> $this->db->f('location_code'),
-						'key_fetch'				=> $this->db->f('key_fetch'),
-						'key_deliver'			=> $this->db->f('key_deliver'),
-						'other_branch'			=> $this->db->f('other_branch'),
-						'key_responsible'		=> $this->db->f('key_responsible'),
-						'descr'					=> $this->db->f('descr', true),
-						'status'				=> $this->db->f('status'),
-						'budget'				=> (int)$this->db->f('budget'),
-			//			'planned_cost'			=> (int)$this->db->f('planned_cost'),
-						'reserve'				=> (int)$this->db->f('reserve'),
-						'tenant_id'				=> $this->db->f('tenant_id'),
-						'user_id'				=> $this->db->f('user_id'),
-						'coordinator'			=> $this->db->f('coordinator'),
-						'access'				=> $this->db->f('access'),
-						'start_date'			=> $this->db->f('start_date'),
-						'end_date'				=> $this->db->f('end_date'),
-						'cat_id'				=> $this->db->f('category'),
-						'grants' 				=> (int)$this->grants[$this->db->f('user_id')],
-						'p_num'					=> $this->db->f('p_num'),
-						'p_entity_id'			=> $this->db->f('p_entity_id'),
-						'p_cat_id'				=> $this->db->f('p_cat_id'),
-						'contact_phone'			=> $this->db->f('contact_phone'),
-						'project_group'			=> $this->db->f('project_group'),
-						'ecodimb'				=> $this->db->f('ecodimb'),
-						'b_account_id'			=> $this->db->f('account_group'),
-						'contact_id'			=> $this->db->f('contact_id'),
-						'inherit_location'		=>  $this->db->f('inherit_location')
-					);
+				(
+					'project_id'			=> $this->db->f('id'),
+					'project_type_id'		=> $this->db->f('project_type_id'),
+					'title'					=> $this->db->f('title'),
+					'name'					=> $this->db->f('name'),
+					'location_code'			=> $this->db->f('location_code'),
+					'key_fetch'				=> $this->db->f('key_fetch'),
+					'key_deliver'			=> $this->db->f('key_deliver'),
+					'other_branch'			=> $this->db->f('other_branch'),
+					'key_responsible'		=> $this->db->f('key_responsible'),
+					'descr'					=> $this->db->f('descr', true),
+					'status'				=> $this->db->f('status'),
+					'budget'				=> (int)$this->db->f('budget'),
+			//		'planned_cost'			=> (int)$this->db->f('planned_cost'),
+					'reserve'				=> (int)$this->db->f('reserve'),
+					'tenant_id'				=> $this->db->f('tenant_id'),
+					'user_id'				=> $this->db->f('user_id'),
+					'coordinator'			=> $this->db->f('coordinator'),
+					'access'				=> $this->db->f('access'),
+					'start_date'			=> $this->db->f('start_date'),
+					'end_date'				=> $this->db->f('end_date'),
+					'cat_id'				=> $this->db->f('category'),
+					'grants' 				=> (int)$this->grants[$this->db->f('user_id')],
+					'p_num'					=> $this->db->f('p_num'),
+					'p_entity_id'			=> $this->db->f('p_entity_id'),
+					'p_cat_id'				=> $this->db->f('p_cat_id'),
+					'contact_phone'			=> $this->db->f('contact_phone'),
+					'project_group'			=> $this->db->f('project_group'),
+					'ecodimb'				=> $this->db->f('ecodimb'),
+					'b_account_id'			=> $this->db->f('account_group'),
+					'contact_id'			=> $this->db->f('contact_id'),
+					'inherit_location'		=> $this->db->f('inherit_location'),
+					'periodization_id'		=> $this->db->f('periodization_id')
+				);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
@@ -1382,6 +1405,11 @@
 
 					$this->_update_buffer_budget($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
 
+					$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
+					$this->db->next_record();
+					$new_budget =(int)$this->db->f('amount_in') - (int)$this->db->f('amount_out');
+					$this->db->query("UPDATE fm_project SET budget = {$new_budget} WHERE id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
+
 					if(isset($project['transfer_remark']) && $project['transfer_remark'])
 					{
 						$historylog->add('RM',$project['id'],$project['transfer_remark'], false);
@@ -1791,7 +1819,7 @@
 				$transferred = $this->update_budget($from_project, $year, $periodization_id, $amount_in, false, 'subtract');
 				if(!$transferred == $amount_in)
 				{
-					throw new Exception('property_soproject::update_buffer_budget() - failed to transefer the full amount');
+					throw new Exception('property_soproject::update_buffer_budget() - failed to transfer the full amount');
 				}
 			}
 		}
@@ -1809,7 +1837,7 @@
 				$acc_partial = 0;
 
 				$orig_budget = $this->get_budget($project_id);
-//_debug_array($orig_budget);
+
 				$hit = false;
 				foreach ($orig_budget as $entry)
 				{
@@ -1868,6 +1896,11 @@
 					$acc_partial += $budget;
 
 					$this->_update_budget($project_id, $year, $month, $budget, $action);					
+				}
+				
+				if(!$hit)
+				{
+					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');				
 				}
 
 				return $acc_partial;
@@ -2018,9 +2051,9 @@
 			$project_budget = array();
 			$project_total_budget = 0;
 
-			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, start_date"
+			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount"
 			. " FROM fm_project_budget {$this->left_join} fm_workorder ON fm_project_budget.project_id = fm_workorder.project_id WHERE fm_project_budget.project_id = {$project_id}"
-			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active,start_date"
+			. " GROUP BY fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget, fm_project_budget.closed, fm_project_budget.active"
 			. " ORDER BY fm_project_budget.year, fm_project_budget.month";
 			$this->db->query($sql,__LINE__,__FILE__);
 //	_debug_array($sql);
@@ -2485,6 +2518,7 @@ $test = 0;
 
 			for ($i=0;$i<count($workorder_id);$i++)
 			{
+				$this->db->query("DELETE FROM fm_workorder_budget WHERE order_id='{$workorder_id[$i]}'",__LINE__,__FILE__);
 				$this->db->query("DELETE FROM fm_wo_hours WHERE workorder_id='{$workorder_id[$i]}'",__LINE__,__FILE__);
 				$this->db->query("DELETE FROM fm_workorder_history  WHERE  history_record_id='{$workorder_id[$i]}'",__LINE__,__FILE__);
 			}

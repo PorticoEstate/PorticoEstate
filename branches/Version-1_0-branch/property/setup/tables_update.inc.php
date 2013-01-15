@@ -7215,3 +7215,39 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.661 to 0.9.17.662
+	* Add year and active-flag to project_buffer_budget
+	*/
+	$test[] = '0.9.17.661';
+	function property_upgrade0_9_17_661()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_budget','active',array(
+			'type'			=> 'int',
+			'precision'		=> 2,
+			'nullable'		=> true,
+			'default'		=> 1
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_budget','contract_sum', array(
+			'type'		=> 'decimal',
+			'precision' => '20',
+			'scale'		=> '2',
+			'nullable'	=> True,
+			'default'	=> '0.00'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_workorder_budget SET active = 1',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.662';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
