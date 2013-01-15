@@ -523,6 +523,7 @@
 									<xsl:call-template name="cat_sub_select"/>
 								</td>
 							</tr>
+
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="php:function('lang', 'contract sum')"/>
@@ -560,6 +561,49 @@
 								</td>
 								<td>
 									<input type="text" name="values[addition_rs]" value="{value_addition_rs}" onMouseout="window.status='';return true;"><xsl:attribute name="title"><xsl:value-of select="lang_addition_rs_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'when')"/>
+								</td>
+								<td>
+									<table>
+										<tr>
+											<td>
+												<select name="values[budget_year]">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</xsl:attribute>
+													<option value="0">
+														<xsl:value-of select="php:function('lang', 'year')"/>
+													</option>
+													<xsl:apply-templates select="year_list/options"/>
+												</select>
+											</td>
+											<xsl:choose>
+												<xsl:when test="periodization_data/id !=''">
+													<td>
+														<input type="checkbox" name="values[budget_periodization]" value="{periodization_data/id}" checked='checked'>
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'periodization')"/>
+																<xsl:text>::</xsl:text>
+																<xsl:value-of select="periodization_data/descr"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</xsl:when>
+											</xsl:choose>
+										</tr>
+									</table>
+								</td>
+
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'budget')"/>
+								</td>
+								<td>
+									<div id="paging_5"/>
+									<div id="datatable-container_5"/>
 								</td>
 							</tr>
 							<tr>

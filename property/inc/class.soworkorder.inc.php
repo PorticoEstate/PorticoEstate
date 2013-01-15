@@ -138,6 +138,7 @@
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$obligation		= isset($data['obligation']) ? $data['obligation'] : '';
 			$wo_hour_cat_id	= isset($data['wo_hour_cat_id']) ? $data['wo_hour_cat_id'] : '';
 			$b_group		= isset($data['b_group']) ? $data['b_group'] : '';
 			$ecodimb		= isset($data['ecodimb']) ? $data['ecodimb'] : '';
@@ -598,8 +599,18 @@
 				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
 
-				$filtermethod .= " $where fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
+				$filtermethod .= " $where (fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+				if($obligation)
+				{
+					$filtermethod .= " OR fm_workorder_status.closed IS NULL)";
+				}
+				else
+				{
+					$filtermethod .= ')';
+				}
+
 				$where= 'AND';
+
 			}
 
 			$querymethod = '';
@@ -735,10 +746,13 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .') GROUP BY fm_workorder.id, closed';
 */
-				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost"
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost,"
+				. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost"
 				. " FROM fm_workorder {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')';
+				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
+				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')'
+				. " GROUP BY fm_workorder.id,closed, actual_cost, pending_cost";
 
 				unset($_order_list);
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -747,6 +761,8 @@
 					$_actual_cost_arr[$this->db->f('order_id')] = array
 					(
 						'actual_cost'	=> $this->db->f('actual_cost') + (float)$this->db->f('pending_cost'),
+						'budget'		=> $this->db->f('budget'),
+						'combined_cost'	=> $this->db->f('combined_cost'),
 						'closed'		=> !!$this->db->f('closed')
 					);
 				}
@@ -767,6 +783,9 @@
 
 				if (isset($_actual_cost_arr[$workorder['workorder_id']]))
 				{
+					$workorder['budget'] = $_actual_cost_arr[$workorder['workorder_id']]['budget'];
+					$workorder['combined_cost'] = $_actual_cost_arr[$workorder['workorder_id']]['combined_cost'];
+
 					$_combined_cost = $workorder['combined_cost'];
 			//		$_pending_cost = round($this->db2->f('pending_cost'));
 
@@ -836,50 +855,60 @@
 			if ($this->db->next_record())
 			{
 				$workorder = array
-					(
-						'id'					=> $this->db->f('id'),
-						'workorder_id'			=> $this->db->f('id'), // FIXME
-						'project_id'			=> $this->db->f('project_id'),
-						'title'					=> $this->db->f('title'),
-						'name'					=> $this->db->f('name'),
-						'key_fetch'				=> $this->db->f('key_fetch'),
-						'key_deliver'			=> $this->db->f('key_deliver'),
-						'key_responsible'		=> $this->db->f('key_responsible'),
-						'charge_tenant'			=> $this->db->f('charge_tenant'),
-						'descr'					=> stripslashes($this->db->f('descr')),
-						'status'				=> $this->db->f('status'),
-						'budget'				=> (int)$this->db->f('budget'),
-						'calculation'			=> $this->db->f('calculation'),
-						'b_account_id'			=> (int)$this->db->f('account_id'),
-						'addition_percentage'	=> (int)$this->db->f('addition'),
-						'addition_rs'			=> (int)$this->db->f('rig_addition'),
-			//			'act_mtrl_cost'			=> $this->db->f('act_mtrl_cost'),
-			//			'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
-						'user_id'				=> $this->db->f('user_id'),
-						'vendor_id'				=> $this->db->f('vendor_id'),
-			//			'coordinator'			=> $this->db->f('coordinator'),
-						'access'				=> $this->db->f('access'),
-						'start_date'			=> $this->db->f('start_date'),
-						'end_date'				=> $this->db->f('end_date'),
-						'cat_id'				=> $this->db->f('category'),
-						'chapter_id'			=> $this->db->f('chapter_id'),
-						'chapter'				=> $this->db->f('chapter'),
-						'deviation'				=> $this->db->f('deviation'),
-						'ecodimb'				=> $this->db->f('ecodimb'),
-						'location_code'			=> $this->db->f('location_code'),
-						'p_num'					=> $this->db->f('p_num'),
-						'p_entity_id'			=> $this->db->f('p_entity_id'),
-						'p_cat_id'				=> $this->db->f('p_cat_id'),
-						'contact_phone'			=> $this->db->f('contact_phone'),
-						'tenant_id'				=> $this->db->f('tenant_id'),
-						'cat_id'				=> $this->db->f('category'),
-						'grants'				=> (int)$this->grants[$this->db->f('user_id')],
-						'billable_hours'		=> $this->db->f('billable_hours'),
-						'contract_sum'			=> $this->db->f('contract_sum'),
-						'approved'				=> $this->db->f('approved'),
-						'mail_recipients'		=> explode(',', trim($this->db->f('mail_recipients'),',')),
-						'actual_cost'			=> $this->db->f('actual_cost')
-					);
+				(
+					'id'					=> $this->db->f('id'),
+					'workorder_id'			=> $this->db->f('id'), // FIXME
+					'project_id'			=> $this->db->f('project_id'),
+					'title'					=> $this->db->f('title'),
+					'name'					=> $this->db->f('name'),
+					'key_fetch'				=> $this->db->f('key_fetch'),
+					'key_deliver'			=> $this->db->f('key_deliver'),
+					'key_responsible'		=> $this->db->f('key_responsible'),
+					'charge_tenant'			=> $this->db->f('charge_tenant'),
+					'descr'					=> stripslashes($this->db->f('descr')),
+					'status'				=> $this->db->f('status'),
+					'calculation'			=> $this->db->f('calculation'),
+					'b_account_id'			=> (int)$this->db->f('account_id'),
+					'addition_percentage'	=> (int)$this->db->f('addition'),
+					'addition_rs'			=> (int)$this->db->f('rig_addition'),
+			//		'act_mtrl_cost'			=> $this->db->f('act_mtrl_cost'),
+			//		'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
+					'user_id'				=> $this->db->f('user_id'),
+					'vendor_id'				=> $this->db->f('vendor_id'),
+			//		'coordinator'			=> $this->db->f('coordinator'),
+					'access'				=> $this->db->f('access'),
+					'start_date'			=> $this->db->f('start_date'),
+					'end_date'				=> $this->db->f('end_date'),
+					'cat_id'				=> $this->db->f('category'),
+					'chapter_id'			=> $this->db->f('chapter_id'),
+					'chapter'				=> $this->db->f('chapter'),
+					'deviation'				=> $this->db->f('deviation'),
+					'ecodimb'				=> $this->db->f('ecodimb'),
+					'location_code'			=> $this->db->f('location_code'),
+					'p_num'					=> $this->db->f('p_num'),
+					'p_entity_id'			=> $this->db->f('p_entity_id'),
+					'p_cat_id'				=> $this->db->f('p_cat_id'),
+					'contact_phone'			=> $this->db->f('contact_phone'),
+					'tenant_id'				=> $this->db->f('tenant_id'),
+					'cat_id'				=> $this->db->f('category'),
+					'grants'				=> (int)$this->grants[$this->db->f('user_id')],
+					'billable_hours'		=> $this->db->f('billable_hours'),
+					'approved'				=> $this->db->f('approved'),
+					'mail_recipients'		=> explode(',', trim($this->db->f('mail_recipients'),',')),
+					'actual_cost'			=> $this->db->f('actual_cost')
+				);
+
+				$sql = "SELECT periodization_id,"
+					. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+					. " sum(fm_workorder_budget.contract_sum) AS contract_sum"
+					. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+					. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+					. " WHERE fm_workorder.id = '{$workorder_id}' GROUP BY periodization_id";
+
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$workorder['budget']			= (int)$this->db->f('budget');
+				$workorder['contract_sum']		= $this->db->f('contract_sum');
 			}
 
 			//_debug_array($workorder);
@@ -1116,6 +1145,7 @@
 			$workorder['contract_sum'] 		= str_replace(array(' ',','),array('','.'),$workorder['contract_sum']);
 
 
+			$combined_cost = 0;
 			if ( abs((int)$workorder['contract_sum']) > 0)
 			{
 				$addition = 1 + ((int)$workorder['addition_percentage']/100);
@@ -1164,12 +1194,21 @@
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
 
+
+/*
 			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$workorder['project_id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$periodization_id = $this->db->f('periodization_id');
-
+*/
+			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int) $workorder['budget_periodization'] : 0;
 //			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']), $periodization_id, $combined_cost);
-			$this->_update_order_budget($id, date('Y', $workorder['start_date']), $periodization_id, $workorder['budget'],$combined_cost);
+			if($combined_cost)
+			{
+				$this->_update_order_budget($id, $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+			}
+
+
+
 
 /*
 			if($workorder['charge_tenant'])
@@ -1222,14 +1261,12 @@
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
-			$this->db->query("SELECT status,budget,calculation,billable_hours,approved,combined_cost FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT status,calculation,billable_hours,approved FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			$old_status			= $this->db->f('status');
-			$old_budget			= $this->db->f('budget');
 			$old_billable_hours	= $this->db->f('billable_hours');
 			$old_approved		= $this->db->f('approved');
-			$old_combined_cost	= $this->db->f('combined_cost');
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
 			{
@@ -1243,14 +1280,14 @@
 				$addition = 1 + ((int)$workorder['addition_percentage']/100);
 				$combined_cost = (int)$workorder['contract_sum'] * $addition;
 			}
-			else if ($this->db->f('calculation') > 0)
+/*			else if ($this->db->f('calculation') > 0)
 			{
 				$calculation = $this->db->f('calculation');
 				$config	= CreateObject('phpgwapi.config','property');
 				$config->read_repository();
 				$tax = 1+(($config->config_data['fm_tax'])/100);
 				$combined_cost = $calculation * $tax;
-			}
+			}*/
 			else
 			{
 				$combined_cost = (int)$workorder['budget'];
@@ -1279,7 +1316,7 @@
 				'end_date'			=> $workorder['end_date'],
 				'descr'				=> $workorder['descr'],
 				'budget'			=> (int)$workorder['budget'],
-				'combined_cost'		=> $combined_cost,
+//				'combined_cost'		=> $combined_cost,
 				'key_deliver'		=> $workorder['key_deliver'],
 				'key_fetch'			=> $workorder['key_fetch'],
 				'account_id'		=> $workorder['b_account_id'],
@@ -1291,7 +1328,7 @@
 				'ecodimb'			=> $workorder['ecodimb'],
 				'category'			=> $workorder['cat_id'],
 				'billable_hours'	=> $workorder['billable_hours'],
-				'contract_sum'		=> $workorder['contract_sum'],
+//				'contract_sum'		=> $workorder['contract_sum'],
 				'approved'			=> $workorder['approved'],
 				'mail_recipients'	=> isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
@@ -1343,13 +1380,43 @@
 			$value_set_invoice	= $this->db->validate_update($value_set_invoice);
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_invoice} WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
 
+			if($workorder['delete_b_period'])
+			{
+				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_budget		= $this->db->f('budget');
 
+				$this->delete_period_from_budget($workorder['id'], $workorder['delete_b_period']);
+
+				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$new_budget		= $this->db->f('budget');
+
+				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
+
+			}
+
+/*
 			$this->db->query("SELECT periodization_id FROM fm_project WHERE id = {$workorder['project_id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$periodization_id = $this->db->f('periodization_id');
-
+*/
+			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int) $workorder['budget_periodization'] : 0;
 //			$this->_update_project_budget($workorder['project_id'], date('Y', $workorder['start_date']), $periodization_id, $combined_cost,$old_combined_cost);
-			$this->_update_order_budget($workorder['id'], date('Y', $workorder['start_date']), $periodization_id, $workorder['budget'],$combined_cost);
+			if($combined_cost)
+			{
+				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$old_budget		= $this->db->f('budget');
+
+				$this->_update_order_budget($workorder['id'], $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+
+				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
+				$this->db->next_record();
+				$new_budget		= $this->db->f('budget');
+
+				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
+			}
 
 
 /*			if($workorder['charge_tenant'])
@@ -1439,10 +1506,6 @@
 				}
 			}
 
-			if ($old_budget != $workorder['budget'])
-			{
-				$historylog->add('B', $workorder['id'], $workorder['budget'], $old_budget);
-			}
 
 			if (isset($workorder['new_project_id']) && $workorder['new_project_id'] && ($workorder['new_project_id'] != $workorder['project_id']))
 			{
@@ -1473,12 +1536,12 @@
 		{
 			$this->db->transaction_begin();
 			$this->interlink->delete_at_target('property', '.project.workorder', $workorder_id, $this->db);
-			$this->db->query("DELETE FROM fm_workorder WHERE id='" . $workorder_id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_workorder_budget WHERE order_id='{$workorder_id}'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_workorder_history  WHERE  history_record_id='" . $workorder_id   . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_wo_hours WHERE workorder_id='" . $workorder_id   . "'",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_orders WHERE id='" . $workorder_id . "'",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_workorder WHERE id='" . $workorder_id . "'",__LINE__,__FILE__);
 			$this->db->transaction_commit();
-
 		}
 
 		public function get_user_list()
@@ -1598,6 +1661,221 @@
 			}
 		}
 
+
+		/**
+		* Get periodized budget for an order
+		*
+		* @return array Array with budget information.
+		*/
+
+		function get_budget($order_id)
+		{
+			if(!$order_id)
+			{
+				return array();
+			}
+
+			$closed_period = array();
+			$active_period = array();
+			$_dummy_period = '';
+
+			$sql = "SELECT fm_workorder_budget.budget, fm_workorder_budget.combined_cost, year, month, closed"
+			. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id WHERE order_id = '{$order_id}'"
+			. " ORDER BY year, month";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$order_budget = array();
+			while ($this->db->next_record())
+			{
+				$period = sprintf("%s%02d",
+							$this->db->f('year'),
+							$this->db->f('month')
+						);
+				$_dummy_period = $period;
+
+				$order_budget[$period] = array
+				(
+					'order_id' 			=> $order_id,
+					'budget'			=> (int)$this->db->f('budget'),
+					'combined_cost'		=> (int)$this->db->f('combined_cost'),
+					'year'				=> (int)$this->db->f('year'),
+					'month'				=> (int)$this->db->f('month'),
+					'actual_cost'		=> 0, //for now..
+					'closed_order'		=> false,
+				);
+
+ 				$closed_period[$period] = false;
+  				$active_period[$period] = true;
+			}
+
+//			if ( $order_budget )
+			{
+				$sql = "SELECT order_id, periode, amount AS actual_cost"
+				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
+//_debug_array($sql);
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$periode = $this->db->f('periode');
+					if(!$periode)
+					{
+						$periode = date('Ym');
+						$_dummy_period = $_dummy_period ? $_dummy_period : $periode;
+					}
+
+					$year = substr( $periode, 0, 4 );
+
+					$_found = false;
+					if(isset($order_budget[$periode]))
+					{
+						$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+						$_found = true;
+					}
+					else
+					{
+						for ($i=0;$i<13;$i++)
+						{
+							$_period = $year . sprintf("%02s", $i);
+							if(isset($order_budget[$_period]))
+							{
+								$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
+//_debug_array($test+=$this->db->f('actual_cost'));
+								$_found = true;
+								break;
+							}
+						}
+					}
+
+					if(!$_found)
+					{
+						$order_budget[$_dummy_period]['year'] = substr( $_dummy_period, 0, 4 );
+						$order_budget[$_dummy_period]['month'] = substr( $_dummy_period, -2);
+						$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
+					}
+				}
+			}
+
+			$sort_period = array();
+			$values = array();
+//_debug_array($project_budget);die();
+//$test = 0;
+			$_delay_period = 0;
+			foreach ($order_budget as $period => $_budget)
+			{
+				$_sum_orders = 0;
+				$_sum_oblications = 0;
+				$_actual_cost = 0;
+
+				$_actual_cost += $_budget['actual_cost'];
+//_debug_array( $test+= $_budget['actual_cost']);
+				$_sum_orders += $_budget['combined_cost'];
+
+				if(!$_budget['closed_order'])
+				{
+					$_sum_oblications += $_budget['combined_cost'];
+					$_sum_oblications -= $_budget['actual_cost'];
+
+			//		if($project_total_budget >= 0)
+					if($_budget['budget'] >= 0)
+					{
+						if($_sum_oblications < 0)
+						{
+							$_sum_oblications = 0;
+						}
+					}
+					else // income
+					{
+						if($_sum_oblications > 0)
+						{
+							$_sum_oblications = 0;
+						}
+					}
+				}
+
+				//override if periode is closed
+				if(!isset($active_period[$period]) || !$active_period[$period])
+				{
+					$_delay_period += $_sum_oblications;
+					$_sum_oblications = 0;
+				}
+				//override if periode is closed
+				if(isset($closed_period[$period]) && $closed_period[$period])
+				{
+					$_sum_oblications = 0;
+				}
+
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				{
+					$_sum_oblications[] += $_delay_period;
+					$_delay_period =0;
+				}
+//die();
+				$values[] = array
+				(
+					'year'					=> $_budget['year'],
+					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '',
+					'period'				=> $period,
+					'budget'				=> $_budget['budget'],
+					'sum_orders'			=> $_sum_orders,
+					'sum_oblications'		=> $_sum_oblications,
+					'actual_cost'			=> $_actual_cost,
+				);
+
+				$sort_period[] = $period;
+			}
+			
+			if($values)
+			{
+				array_multisort($sort_period, SORT_ASC, $values);
+			}
+
+
+			foreach ($values as &$entry)
+			{
+	//			$entry['year'] = substr( $entry['period'], 0, 4 );
+	//			$month = substr( $entry['period'], 4, 2 );
+	//			$entry['month'] = $month == '00' ? '' : $month;
+				if($active_period[$entry['period']])
+				{
+					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+				}
+				else
+				{
+					$entry['diff'] =  0;
+				}
+				$_deviation = $entry['budget'] - $entry['actual_cost'];
+				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+				$entry['deviation_period'] = $deviation;
+				$entry['deviation_acc'] += $deviation;
+				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['closed'] = $closed_period[$entry['period']];
+				$entry['active'] = $active_period[$entry['period']];
+			}
+			return $values;
+		}
+
+
+		/**
+		* Delete entries from periodized workorder budget
+		*
+		* @return void
+		*/
+
+		function delete_period_from_budget($order_id, $data)
+		{
+			foreach($data as $entry)
+			{
+				$when = explode('_', $entry);
+				$sql = "DELETE FROM fm_workorder_budget WHERE order_id = {$order_id} AND year = " . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+
 		/**
 		* Recalculate actual cost from payment history for all workorders
 		*
@@ -1662,7 +1940,12 @@
 			$tax = 1+(($config->config_data['fm_tax'])/100);
 
 //			$this->db->query("UPDATE fm_project_budget SET order_amount = 0",__LINE__,__FILE__);
+/**
+ * FIXME: won't work for periodized order that last several years
+ *
+ **/
 
+/*
 			foreach ($orders as $id => $dummy)
 			{
 				$this->db->query("SELECT project_id, start_date, combined_cost, budget,calculation,contract_sum,addition,ecodimb FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
@@ -1708,9 +1991,9 @@
 				}
 
 		//		$this->_update_project_budget($project_id, date('Y', $start_date), $periodization_id, $combined_cost);
-				$this->_update_order_budget($id, date('Y', $start_date), $periodization_id, $budget, $combined_cost);
+				$this->_update_order_budget($id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
 			}
-
+*/
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
 
@@ -1787,19 +2070,25 @@
 		**/
 		public function update_order_budget($order_id)
 		{
-			$this->db->query("SELECT fm_workorder.start_date, periodization_id, fm_workorder.budget, combined_cost"
+			$this->db->query("SELECT fm_workorder_budget.year, periodization_id,"
+			. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+			. " sum(fm_workorder_budget.contract_sum) AS contract_sum"
 			. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
-			. " WHERE fm_workorder.id = '{$order_id}'",__LINE__,__FILE__);
-			$this->db->next_record();
-			$start_date			= $this->db->f('start_date');
-			$periodization_id	= (int)$this->db->f('periodization_id');
-			$budget				= $this->db->f('budget');
-			$combined_cost		= $this->db->f('combined_cost');
+			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+			. " WHERE fm_workorder.id = '{$order_id}' GROUP BY year, periodization_id",__LINE__,__FILE__);
 
-			$this->_update_order_budget($order_id, date('Y', $start_date), $periodization_id, $budget,$combined_cost);
+			while($this->db->next_record())
+			{
+				$start_date			= $this->db->f('start_date');
+				$periodization_id	= (int)$this->db->f('periodization_id');
+				$budget				= $this->db->f('budget');
+				$contract_sum		= $this->db->f('contract_sum');
+				$combined_cost		= $this->db->f('combined_cost');
+				$this->_update_order_budget($order_id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
+			}
 		}
 
-		private function _update_order_budget($order_id, $year, $periodization_id, $budget, $combined_cost = 0)
+		private function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
 		{
 			$order_id = $order_id;//might be bigint
 			$year = $year ? (int) $year : date('Y');
@@ -1833,7 +2122,7 @@
 				);
 
 			}
-			$sql = "DELETE FROM fm_workorder_budget WHERE order_id = '{$order_id}'";
+			$sql = "DELETE FROM fm_workorder_budget WHERE order_id = '{$order_id}' AND year = {$year}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			foreach ($periodization_outline as $outline)
@@ -1842,18 +2131,22 @@
 				{
 					$partial_budget = $budget * $outline['dividend'] / $outline['divisor'];
 					$partial_cost = $combined_cost * $outline['dividend'] / $outline['divisor'];
+					$partial_contract = $contract_sum * $outline['dividend'] / $outline['divisor'];
+
 				}
 				else
 				{
 					$partial_budget = $budget * $outline['value'] / 100;
 					$partial_cost = $combined_cost * $outline['value'] / 100;
+					$partial_contract = $contract_sum * $outline['value'] / 100;
+
 				}
 
-				$this->_update_budget($order_id, $year, $outline['month'], $partial_budget, $partial_cost);
+				$this->_update_budget($order_id, $year, $outline['month'], $partial_budget, $partial_contract, $partial_cost);
 			}
 		}
 
-		private function _update_budget($order_id, $year, $month, $budget,$combined_cost)
+		private function _update_budget($order_id, $year, $month, $budget,$contract_sum,$combined_cost)
 		{
 			$month = (int) $month;
 			$budget = (int) $budget;
@@ -1864,7 +2157,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			if ($this->db->next_record())
 			{
-				$sql = "UPDATE fm_workorder_budget SET budget = '{$budget}', combined_cost = '{$combined_cost}', modified_date = {$now} WHERE order_id = '{$order_id}' AND year = {$year} AND month = {$month}";
+				$sql = "UPDATE fm_workorder_budget SET budget = '{$budget}', contract_sum ='{$contract_sum}', combined_cost = '{$combined_cost}', modified_date = {$now} WHERE order_id = '{$order_id}' AND year = {$year} AND month = {$month}";
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 			else
@@ -1875,6 +2168,7 @@
 					'year'				=> $year,
 					'month'				=> $month,
 					'budget'			=> $budget,
+					'contract_sum'		=> $contract_sum,
 					'combined_cost'		=> $combined_cost,
 					'user_id'			=> $this->account,
 					'entry_date'		=> $now,
@@ -1883,6 +2177,8 @@
 
 				$cols = implode(',', array_keys($value_set));
 				$values	= $this->db->validate_insert(array_values($value_set));
+//_debug_array($values);die();
+
 				$this->db->query("INSERT INTO fm_workorder_budget ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 			}
 		}
