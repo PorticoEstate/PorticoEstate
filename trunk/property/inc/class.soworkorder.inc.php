@@ -1670,6 +1670,10 @@
 
 		function get_budget($order_id)
 		{
+			if(!$order_id)
+			{
+				return array();
+			}
 
 			$closed_period = array();
 			$active_period = array();
