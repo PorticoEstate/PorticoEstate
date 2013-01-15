@@ -67,6 +67,18 @@
 
 	<!-- add / edit -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+
+		<xsl:variable name="done_action">
+			<xsl:value-of select="done_action"/>
+		</xsl:variable>
+		<xsl:variable name="lang_done">
+			<xsl:value-of select="lang_done"/>
+		</xsl:variable>
+		<xsl:variable name="lang_save">
+			<xsl:value-of select="lang_save"/>
+		</xsl:variable>
+
+
 		<script type="text/javascript">
 			function calculate_workorder()
 			{
@@ -90,6 +102,30 @@
 
 			<div id="receipt"></div>
 			<input type="hidden" id = "lean" name="lean" value="{lean}"/>
+			<xsl:choose>
+				<xsl:when test="mode='edit' and lean = 0">
+					<td>
+						<table>
+							<tr height="50">
+								<td>
+									<input type="button" name="save" value="{$lang_save}" onClick="document.form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_save_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<input type="button" name="done" value="{$lang_done}" onClick="document.workorder_cancel.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_done_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
 					<td>
@@ -842,11 +878,8 @@
 					<table>
 						<tr height="50">
 							<td>
-								<xsl:variable name="lang_save">
-									<xsl:value-of select="lang_save"/>
-								</xsl:variable>
 								<input type="hidden" name="values[save]" value="1"/>
-								<input type="submit" name="save" value="{$lang_save}" onMouseout="window.status='';return true;">
+								<input type="submit" name="save" value="{$lang_save}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_save_statustext"/>
 									</xsl:attribute>
@@ -860,14 +893,8 @@
 		<table>
 			<tr>
 				<td>
-					<xsl:variable name="done_action">
-						<xsl:value-of select="done_action"/>
-					</xsl:variable>
-					<xsl:variable name="lang_done">
-						<xsl:value-of select="lang_done"/>
-					</xsl:variable>
-					<form id="workorder_cancel" method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+					<form id="workorder_cancel" name="workorder_cancel" method="post" action="{$done_action}">
+						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>
 							</xsl:attribute>
