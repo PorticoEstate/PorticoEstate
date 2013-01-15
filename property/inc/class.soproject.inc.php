@@ -47,6 +47,7 @@
 			$this->custom 		= createObject('property.custom_fields');
 
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db2           = clone ($this->db);
 			$this->join			= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
@@ -692,7 +693,7 @@
 					$sql_workder_date_filter = '';
 					if ($start_date)
 					{
-						$sql_workder_date_filter = "AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date ";
+						$sql_workder_date_filter = "AND fm_workorder.start_date >= {$start_date} AND fm_workorder.start_date <= {$end_date} ";
 					}
 
 /*
@@ -705,24 +706,26 @@
 
 */
 
+					$get_spesific = false; 
 					if ($filter_year && $filter_year != 'all')
 					{
+						$get_spesific = true; 
 						$_year_arr = array();
 						for ($i=1;$i<14;$i++)
 						{
 							$_year_arr[] = sprintf("%04s%02s", $filter_year, $i);
 						}
 
-						$sql_filter_period = 'AND periode IN (' . implode(',', $_year_arr) . ')';
+						$sql_filter_period = 'AND (periode IN (' . implode(',', $_year_arr) . ') OR periode IS NULL)';
 
-						$sql_workder  = "SELECT fm_workorder.id, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+						$sql_workder  = "SELECT fm_workorder.id,"// sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
 						. " billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost"
 						. " FROM fm_workorder"
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
 					//	. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND year = '{$filter_year}')"
-						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
-//						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
+//						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
+//						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
 						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " GROUP BY fm_workorder.id, billable_hours, closed";
 //_debug_array($sql_workder);
@@ -734,7 +737,7 @@
 						. " billable_hours, closed, actual_cost, pending_cost"
 						. " FROM fm_workorder"
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
+						. " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND active = 1)"
 						. " {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
 						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}"
 						. " GROUP BY fm_workorder.id, billable_hours, closed, actual_cost, pending_cost";
@@ -749,12 +752,27 @@
 
 					while ($this->db->next_record())
 					{
-						$_combined_cost = $this->db->f('combined_cost');
+						if($get_spesific)
+						{
+							$this->db2->query("SELECT sum(fm_workorder_budget.budget) AS budget,"
+							 . " sum(fm_workorder_budget.combined_cost) AS combined_cost"
+							 . " FROM fm_workorder_budget WHERE year = {$filter_year} AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
+							 $this->db2->next_record();
+
+							$_combined_cost = $this->db2->f('combined_cost');
+							$_budget = $this->db2->f('budget');
+						}
+						else
+						{
+							$_combined_cost = $this->db->f('combined_cost');
+							$_budget = $this->db->f('budget');
+						}
+
 						$_actual_cost =  $this->db->f('actual_cost') + (float)$this->db->f('pending_cost');
 						if(!$this->db->f('closed'))
 						{
 //$test[] = $this->db->f('id');
-
+/*
 							if ($filter_year && $filter_year != 'all')
 							{
 								if($filter_year == date('Y'))
@@ -766,7 +784,10 @@
 							{
 								$_obligation = $_combined_cost - $_actual_cost;
 							}
-							if((int)$this->db->f('budget') >= 0)
+*/
+							$_obligation = $_combined_cost - $_actual_cost;
+
+							if((int)$_budget >= 0)
 							{
 								if($_obligation < 0)
 								{
@@ -2068,11 +2089,12 @@
 
 			$project_total_budget = array_sum($project_budget);
 
-			$sql = "SELECT fm_workorder.id AS order_id, fm_workorder_budget.combined_cost, fm_workorder_budget.budget, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed"
+			$sql = "SELECT fm_workorder.id AS order_id, sum(fm_workorder_budget.combined_cost) AS combined_cost, sum(fm_workorder_budget.budget) AS budget, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
-			 	. " WHERE project_id = {$project_id}";
+			 	. " WHERE fm_workorder_budget.active = 1 AND project_id = {$project_id}"
+			 	. " GROUP BY fm_workorder.id, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed";
 //	_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 
