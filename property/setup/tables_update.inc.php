@@ -7225,6 +7225,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_budget','active',array(
 			'type'			=> 'int',
