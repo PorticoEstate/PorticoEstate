@@ -756,7 +756,8 @@
 						{
 							$this->db2->query("SELECT sum(fm_workorder_budget.budget) AS budget,"
 							 . " sum(fm_workorder_budget.combined_cost) AS combined_cost"
-							 . " FROM fm_workorder_budget WHERE year = {$filter_year} AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
+//							 . " FROM fm_workorder_budget WHERE year = {$filter_year} AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
+							 . " FROM fm_workorder_budget WHERE active =1 AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
 							 $this->db2->next_record();
 
 							$_combined_cost = $this->db2->f('combined_cost');
