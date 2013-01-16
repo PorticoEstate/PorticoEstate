@@ -690,6 +690,7 @@
 					$project['actual_cost']		= 0;
 					$project['billable_hours']	= 0;
 
+
 					$sql_workder_date_filter = '';
 					if ($start_date)
 					{
@@ -709,6 +710,11 @@
 					$get_spesific = false; 
 					if ($filter_year && $filter_year != 'all')
 					{
+						$this->db->query("SELECT sum(fm_project_budget.budget) AS budget"
+							 . " FROM fm_project_budget WHERE project_id ='{$project['project_id']}' AND year = '{$filter_year}'",__LINE__,__FILE__);
+						$this->db->next_record();
+						$project['budget'] =  $this->db->f('budget');
+
 						$get_spesific = true; 
 						$_year_arr = array();
 						for ($i=1;$i<14;$i++)
@@ -733,6 +739,11 @@
 					}
 					else
 					{
+						$this->db->query("SELECT sum(fm_project_budget.budget) AS budget"
+						 . " FROM fm_project_budget WHERE active =1 AND project_id ='{$project['project_id']}'",__LINE__,__FILE__);
+						$this->db->next_record();
+						$project['budget'] =  $this->db->f('budget');
+
 						$sql_workder  = "SELECT fm_workorder.id, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
 						. " billable_hours, closed, actual_cost, pending_cost"
 						. " FROM fm_workorder"
@@ -752,7 +763,7 @@
 
 					while ($this->db->next_record())
 					{
-						if($get_spesific)
+						if(true)
 						{
 							$this->db2->query("SELECT sum(fm_workorder_budget.budget) AS budget,"
 							 . " sum(fm_workorder_budget.combined_cost) AS combined_cost"
@@ -773,7 +784,7 @@
 						if(!$this->db->f('closed'))
 						{
 //$test[] = $this->db->f('id');
-/*
+
 							if ($filter_year && $filter_year != 'all')
 							{
 								if($filter_year == date('Y'))
@@ -785,8 +796,8 @@
 							{
 								$_obligation = $_combined_cost - $_actual_cost;
 							}
-*/
-							$_obligation = $_combined_cost - $_actual_cost;
+
+//							$_obligation = $_combined_cost - $_actual_cost;
 
 							if((int)$_budget >= 0)
 							{
@@ -942,7 +953,7 @@
 		{
 			$project_id = (int) $project_id;
 			$values = array();
-			$this->db->query("SELECT fm_workorder.title,combined_cost, fm_workorder.actual_cost, fm_workorder.budget, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id as b_account_id"
 				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -955,10 +966,8 @@
 				$values[] = array(
 					'workorder_id'		=> $this->db->f('workorder_id'),
 					'title'				=> $this->db->f('title',true),
-					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
 					'calculation'		=> $this->db->f('calculation'),
-					'combined_cost'		=> (int)$this->db->f('combined_cost'),
 					'actual_cost'		=> 0,
 					'obligation'		=> 0,
 					'vendor_id'			=> $this->db->f('vendor_id'),
@@ -971,7 +980,6 @@
 				);
 				$_orders[] = $this->db->f('workorder_id');
 			}
-
 
 			if($_orders)
 			{
@@ -989,6 +997,15 @@
 
 			foreach ($values as &$entry)
 			{
+				$this->db2->query("SELECT sum(fm_workorder_budget.budget) AS budget,"
+				 . " sum(fm_workorder_budget.combined_cost) AS combined_cost"
+				 . " FROM fm_workorder_budget WHERE active =1 AND order_id ='{$entry['workorder_id']}'",__LINE__,__FILE__);
+				 $this->db2->next_record();
+
+				$entry['combined_cost'] = $this->db2->f('combined_cost');
+				$entry['budget'] = $this->db2->f('budget');
+
+
 				$_combined_cost = round($entry['combined_cost']);
 
 				$_actual_cost = isset($_actual_cost_arr[$entry['workorder_id']]) && $_actual_cost_arr[$entry['workorder_id']] ? $_actual_cost_arr[$entry['workorder_id']] : 0;
