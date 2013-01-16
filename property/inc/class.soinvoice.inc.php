@@ -560,10 +560,10 @@
 			}
 
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
-				. " currency,budsjettansvarligid,org_name";
+				. " currency,budsjettansvarligid,org_name,periode";
 			
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
-				. " currency,budsjettansvarligid,org_name"
+				. " currency,budsjettansvarligid,org_name,periode"
 				. " FROM $table"
 				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
@@ -586,6 +586,7 @@
 					'approved_amount'		=> $this->db->f('godkjentbelop'),
 					'vendor'				=> $this->db->f('org_name'),
 					'currency'				=> $this->db->f('currency'),
+					'period'				=> $this->db->f('periode'),
 					'budget_responsible'	=> $this->db->f('budsjettansvarligid')
 				);
 			}
