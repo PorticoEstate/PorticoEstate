@@ -183,7 +183,7 @@
 			return $invoice;
 		}
 
-		function read_invoice_sub($voucher_id='',$paid='')
+		function read_invoice_sub($voucher_id=0,$paid = false)
 		{
 			$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid, 'results' => $this->results,'allrows'=>$this->allrows));
@@ -298,7 +298,7 @@
 			return $period_list;
 		}
 
-		function tax_code_list($selected='')
+		function tax_code_list($selected='', $tax_codes = array())
 		{
 			if(!$selected && $selected !== '0' )
 			{
@@ -308,7 +308,11 @@
 			{
 				$selected = (int)$selected;
 			}
-			$tax_codes = $this->so->tax_code_list();
+
+			if(! $tax_codes)
+			{
+				$tax_codes = $this->so->tax_code_list();
+			}
 			
 			foreach ($tax_codes as &$tax_code)
 			{

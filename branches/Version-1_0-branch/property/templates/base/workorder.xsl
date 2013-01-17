@@ -705,30 +705,26 @@
 									</input>
 								</td>
 							</tr>
-							<xsl:choose>
-								<xsl:when test="value_workorder_id!='' and mode='edit'">
-									<xsl:variable name="lang_add_invoice_statustext">
-										<xsl:value-of select="php:function('lang', 'add invoice')"/>
-									</xsl:variable>
-									<tr>
-										<td valign="top">
+							<tr>
+								<td >
+									<xsl:choose>
+										<xsl:when test="value_workorder_id!='' and mode='edit'">
+											<xsl:variable name="lang_add_invoice_statustext">
+												<xsl:value-of select="php:function('lang', 'add invoice')"/>
+											</xsl:variable>
 											<a href="javascript:showlightbox_manual_invoide({value_workorder_id})" title="{$lang_add_invoice_statustext}">
 												<xsl:value-of select="php:function('lang', 'add invoice')"/>
 											</a>
-										</td>
-										<td>
 											<div id="manual_invoice_lightbox" style="background-color:#000000;color:#FFFFFF;display:none">
 												<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
 													<xsl:value-of select="php:function('lang', 'add invoice')"/>
 												</div>
 												<div class="bd" style="text-align:center;"> </div>
 											</div>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
-							<tr>
-								<td colspan="2">
+										</xsl:when>
+									</xsl:choose>
+								</td>
+								<td>
 									<div id="paging_2"> </div>
 									<div id="datatable-container_2"/>
 								</td>

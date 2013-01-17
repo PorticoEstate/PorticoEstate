@@ -664,12 +664,7 @@
 
 				if($get_bilagsnr_ut)
 				{
-					$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
-					$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
-					$this->db->next_record();
-					$bilagsnr_ut = $this->db->f('value');
-	
-					$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+					$bilagsnr_ut = $this->increment_voucher_id();
 				}
 			}
 
@@ -986,6 +981,18 @@
 			return $message;
 		}
 
+		protected function increment_voucher_id()
+		{
+			$name = 'bilagsnr_ut';
+			$now = time();
+			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
+			$this->db->next_record();
+			$next_id = $this->db->f('value') +1;
+			$start_date = (int)$this->db->f('start_date');
+			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
+
+			return $next_id;
+		}
 
 		protected function _delete_from_fm_ecobilag($bilagsnr)
 		{

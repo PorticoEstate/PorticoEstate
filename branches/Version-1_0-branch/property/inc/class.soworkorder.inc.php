@@ -1380,6 +1380,18 @@
 			$value_set_invoice	= $this->db->validate_update($value_set_invoice);
 			$this->db->query("UPDATE fm_ecobilag SET {$value_set_invoice} WHERE pmwrkord_code = '{$workorder['id']}'" ,__LINE__,__FILE__);
 
+			$_active_period = array
+			(
+				'active_b_period' => isset($workorder['active_b_period']) && $workorder['active_b_period'] ? $workorder['active_b_period'] : array(),
+				'active_orig_b_period' => isset($workorder['active_orig_b_period']) && $workorder['active_orig_b_period'] ? $workorder['active_orig_b_period'] : array()
+			);
+
+			$this->activate_period_from_budget($workorder['id'], $_active_period);
+
+			unset($_close_period);
+			unset($_active_period);
+
+
 			if($workorder['delete_b_period'])
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'",__LINE__,__FILE__);
@@ -1679,7 +1691,7 @@
 			$active_period = array();
 			$_dummy_period = '';
 
-			$sql = "SELECT fm_workorder_budget.budget, fm_workorder_budget.combined_cost, year, month, closed"
+			$sql = "SELECT fm_workorder_budget.budget, fm_workorder_budget.combined_cost, year, month, active, closed"
 			. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 			. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id WHERE order_id = '{$order_id}'"
 			. " ORDER BY year, month";
@@ -1706,7 +1718,7 @@
 				);
 
  				$closed_period[$period] = false;
-  				$active_period[$period] = true;
+  				$active_period[$period] = $this->db->f('active');
 			}
 
 //			if ( $order_budget )
@@ -1871,6 +1883,48 @@
 			{
 				$when = explode('_', $entry);
 				$sql = "DELETE FROM fm_workorder_budget WHERE order_id = {$order_id} AND year = " . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+		/**
+		* Set active status on budget periods
+		*
+		* @return void
+		*/
+
+		function activate_period_from_budget($order_id, $data)
+		{
+			$close_period = array();
+			$open_period = array();
+//_debug_array($data);die();
+			foreach($data['active_orig_b_period'] as $period)
+			{
+				if(!in_array($period, $data['active_b_period']))
+				{
+					$inactive_period[] = $period;
+				}
+			}
+
+			foreach($data['active_b_period'] as $period)
+			{
+				if(!in_array($period, $data['active_orig_b_period']))
+				{
+					$active_period[] = $period;
+				}
+			}
+
+			foreach ($active_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_workorder_budget SET active = 1 WHERE order_id = {$order_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			foreach ($inactive_period as $period)
+			{
+				$when = explode('_', $period);
+				$sql = "UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$order_id} AND year =" . (int) $when[0] . ' AND month = ' . (int) $when[1];
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 		}
@@ -2088,9 +2142,8 @@
 			}
 		}
 
-		private function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
+		public function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
 		{
-			$order_id = $order_id;//might be bigint
 			$year = $year ? (int) $year : date('Y');
 
 			$periodization_id = (int) $periodization_id;
