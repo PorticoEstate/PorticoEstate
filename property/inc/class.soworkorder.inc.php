@@ -2142,9 +2142,8 @@
 			}
 		}
 
-		private function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
+		public function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
 		{
-			$order_id = $order_id;//might be bigint
 			$year = $year ? (int) $year : date('Y');
 
 			$periodization_id = (int) $periodization_id;
