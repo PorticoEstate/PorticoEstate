@@ -424,8 +424,10 @@
 			}
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
-				. "fm_workorder.claim_issued FROM $table"
+				. "fm_workorder.claim_issued,fm_workorder_status.closed,periodization_id,project_type_id"
+				. " FROM {$table}"
 				. " {$this->left_join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+				. " {$this->left_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
@@ -445,7 +447,6 @@
 
 			$i = 0;
 
-			$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 			$invoice = array();
 			while ($this->db->next_record())
 			{
@@ -471,7 +472,9 @@
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'status'				=> $this->db->f('status'),
-						'closed'				=> $this->db->f('status') == $closed,
+						'closed'				=> !!$this->db->f('closed'),
+						'project_type_id'		=> $this->db->f('project_type_id'),
+						'periodization_id'		=> $this->db->f('periodization_id'),
 						'voucher_id'			=> $this->db->f('bilagsnr'),
 						'voucher_out_id'		=> $this->db->f('bilagsnr_ut'),
 						'id'					=> $this->db->f('id'),
@@ -560,10 +563,10 @@
 			}
 
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
-				. " currency,budsjettansvarligid,org_name";
+				. " currency,budsjettansvarligid,org_name,periode";
 			
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
-				. " currency,budsjettansvarligid,org_name"
+				. " currency,budsjettansvarligid,org_name,periode"
 				. " FROM $table"
 				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
@@ -586,6 +589,7 @@
 					'approved_amount'		=> $this->db->f('godkjentbelop'),
 					'vendor'				=> $this->db->f('org_name'),
 					'currency'				=> $this->db->f('currency'),
+					'period'				=> $this->db->f('periode'),
 					'budget_responsible'	=> $this->db->f('budsjettansvarligid')
 				);
 			}

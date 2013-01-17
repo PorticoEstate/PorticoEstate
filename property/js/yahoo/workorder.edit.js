@@ -134,7 +134,7 @@ var vendor_id;
 		td_empty(3);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
-		td_empty(5);
+		td_empty(6);
 
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");
@@ -166,7 +166,7 @@ var vendor_id;
   	this.addFooterDatatable5 = function(paginator,datatable)
   	{
   		tmp_sum1 = getTotalSum_active('budget',0,paginator,datatable);
- //		tmp_sum2 = getTotalSum_active('sum_orders',0,paginator,datatable);
+ 		tmp_sum2 = getTotalSum_active('sum_orders',0,paginator,datatable);
   		tmp_sum3 = getTotalSum_active('sum_oblications',0,paginator,datatable);
   		tmp_sum4 = getTotalSum_active('actual_cost',0,paginator,datatable);
   		tmp_sum5 = getTotalSum_active('diff',0,paginator,datatable);
@@ -188,7 +188,7 @@ var vendor_id;
 		td_sum('Sum');
 		td_empty(1);
 		td_sum(tmp_sum1);
-//		td_sum(tmp_sum2);
+		td_sum(tmp_sum2);
 		td_sum(tmp_sum3);
 		td_sum(tmp_sum4);
 		td_sum(tmp_sum5);
