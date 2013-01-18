@@ -751,13 +751,28 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .') GROUP BY fm_workorder.id, closed';
 */
-				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost,"
+				$config	= CreateObject('phpgwapi.config','property');
+				$config->read_repository();
+
+				if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
+				{
+					$_join_district =	"{$this->join} fm_locations ON fm_workorder.location_code = fm_locations.location_code"
+										. " {$this->join} fm_location1 ON fm_location1.loc1 = fm_locations.loc1";
+				}
+				else
+				{
+					$_join_district = "{$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
+				}
+
+
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost,fm_location1.mva,"
 				. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost"
 				. " FROM fm_workorder {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
+				. " {$_join_district}"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')'
-				. " GROUP BY fm_workorder.id,closed, actual_cost, pending_cost";
+				. " GROUP BY fm_workorder.id,closed, actual_cost, pending_cost, fm_location1.mva";
 
 				unset($_order_list);
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -772,6 +787,13 @@
 					);
 				}
 
+			}
+
+			$this->db->query('SELECT id, percent FROM fm_ecomva',__LINE__,__FILE__);
+			$_taxcode = array(0 => 0);
+			while ($this->db->next_record())
+			{
+				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
 			foreach($workorder_list as &$workorder)
@@ -794,10 +816,10 @@
 					$_combined_cost = $workorder['combined_cost'];
 			//		$_pending_cost = round($this->db2->f('pending_cost'));
 
-			//		$_taxfactor = 1 + ($_taxcode[(int)$this->db2->f('mvakode')]/100);
+					$_taxfactor = 1 + ($_taxcode[(int)$this->db2->f('mva')]/100);
 			//		$_actual_cost = round($this->db2->f('actual_cost')/$_taxfactor);
 			//		$_actual_cost = round($this->db2->f('actual_cost'));
-					$workorder['actual_cost'] =  $_actual_cost_arr[$workorder['workorder_id']]['actual_cost'];
+					$workorder['actual_cost'] =  round($_actual_cost_arr[$workorder['workorder_id']]['actual_cost']/$_taxfactor);
 
 					if(!$_actual_cost_arr[$workorder['workorder_id']]['closed'])
 					{
