@@ -89,7 +89,6 @@
 			$this->obligation	= $obligation;
 
 			$this->start		= $start ? $start : 0;
-			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			if(array_key_exists('district_id',$_POST) || array_key_exists('district_id',$_GET) )
 			{
@@ -121,6 +120,10 @@
 			if(array_key_exists('cat_id',$_POST) || array_key_exists('cat_id',$_GET))
 			{
 				$this->cat_id = $cat_id;
+			}
+			if(array_key_exists('criteria_id',$_POST) || array_key_exists('criteria_id',$_GET))
+			{
+				$this->criteria_id = $criteria_id;
 			}
 			if(array_key_exists('status_id',$_POST)  || array_key_exists('status_id',$_GET))
 			{
