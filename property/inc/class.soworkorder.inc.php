@@ -754,6 +754,7 @@
 				$config	= CreateObject('phpgwapi.config','property');
 				$config->read_repository();
 
+
 				if(isset($config->config_data['location_at_workorder']) && $config->config_data['location_at_workorder'])
 				{
 					$_join_district =	"{$this->join} fm_locations ON fm_workorder.location_code = fm_locations.location_code"
@@ -783,7 +784,8 @@
 						'actual_cost'	=> $this->db->f('actual_cost') + (float)$this->db->f('pending_cost'),
 						'budget'		=> $this->db->f('budget'),
 						'combined_cost'	=> $this->db->f('combined_cost'),
-						'closed'		=> !!$this->db->f('closed')
+						'closed'		=> !!$this->db->f('closed'),
+						'mva'			=> (int)$this->db->f('mva'),
 					);
 				}
 
@@ -814,11 +816,8 @@
 					$workorder['combined_cost'] = $_actual_cost_arr[$workorder['workorder_id']]['combined_cost'];
 
 					$_combined_cost = $workorder['combined_cost'];
-			//		$_pending_cost = round($this->db2->f('pending_cost'));
 
-					$_taxfactor = 1 + ($_taxcode[(int)$this->db2->f('mva')]/100);
-			//		$_actual_cost = round($this->db2->f('actual_cost')/$_taxfactor);
-			//		$_actual_cost = round($this->db2->f('actual_cost'));
+					$_taxfactor = 1 + ($_taxcode[$_actual_cost_arr[$workorder['workorder_id']]['mva']]/100);
 					$workorder['actual_cost'] =  round($_actual_cost_arr[$workorder['workorder_id']]['actual_cost']/$_taxfactor);
 
 					if(!$_actual_cost_arr[$workorder['workorder_id']]['closed'])
