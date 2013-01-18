@@ -758,15 +758,18 @@
 				$budget			= $this->db->f('budget');
 				$contract_sum	= $this->db->f('contract_sum');
 				
-				$this->db->query("SELECT periodization_id"
+				$this->db->query("SELECT periodization_id, contract_sum"
 				. " FROM fm_workorder {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
 				. " WHERE fm_workorder.id = '{$id}'",__LINE__,__FILE__);
 
 				$this->db->next_record();
 
 				$periodization_id	= $this->db->f('periodization_id');
-
-				$soworkorder->_update_order_budget($id, date('Y'), $periodization_id, $budget	 , $contract_sum, $calculation);
+				$contract_sum		= $this->db->f('contract_sum');
+				if(!abs($contract_sum) > 0)
+				{
+					$soworkorder->_update_order_budget($id, date('Y'), $periodization_id, $budget	 , $contract_sum, $calculation);
+				}
 			}
 
 			$this->db->transaction_commit();
