@@ -1081,12 +1081,12 @@
 						$action='add';
 					}
 					$receipt = $this->bo->save($values,$action);
+					$historylog	= CreateObject('property.historylog','workorder');
 					if (! $receipt['error'])
 					{
 						$id = $receipt['id'];
 						//temporary
 						execMethod('property.soXport.update_actual_cost_from_archive',array($id => true));
-						$historylog	= CreateObject('property.historylog','workorder');
 					}
 					$function_msg = lang('Edit Workorder');
 					//----------files
@@ -1178,11 +1178,10 @@
 					$toarray_sms = array();
 
 					if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
-//				 		&& $config->config_data['mailnotification'])
-						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-					)
+				 		&& $config->config_data['mailnotification'])
+//						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 					{
-						if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
+						if(!$this->account==$project['coordinator'] && $config->config_data['notify_project_owner'])
 						{
 							$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
 							if(isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
