@@ -752,17 +752,21 @@
 
 			if(isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
 			{
-				$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+				if(!$_tenant_id = $workorder['extra']['tenant_id'])
+				{
+					$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+					$_tenant_id = $project['tenant_id'];
+				}
 
 				$boclaim = CreateObject('property.botenant_claim');
 
 				$value_set = array
-					(
-						'workorder' 		=> $target,
-						'project_id'		=> $workorder['project_id'],
-					);
+				(
+					'workorder' 		=> $target,
+					'project_id'		=> $workorder['project_id'],
+				);
 
-				$claim = $boclaim->read(array('project_id' => $project['project_id']));
+				$claim = $boclaim->read(array('project_id' => $workorder['project_id']));
 				$target = array();
 				if($claim)
 				{
@@ -782,7 +786,7 @@
 				else
 				{
 					$value_set['amount']		= 0;
-					$value_set['tenant_id']		= $project['tenant_id'];
+					$value_set['tenant_id']		= $_tenant_id;
 					$value_set['b_account_id']	= $workorder['b_account_id'];
 					$value_set['cat_id']		= 99;
 					$value_set['status']		= 'open';
