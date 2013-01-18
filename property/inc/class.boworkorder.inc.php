@@ -60,7 +60,10 @@
 			$this->cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 	= & $this->so->interlink;
-			if ($session)
+			
+			$obligation	= phpgw::get_var('obligation', 'bool');
+			
+			if ($session && !$obligation)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
@@ -83,7 +86,7 @@
 			$district_id		= phpgw::get_var('district_id', 'int');
 			$criteria_id		= phpgw::get_var('criteria_id', 'int');
 			$this->allrows		= phpgw::get_var('allrows', 'bool');
-			$this->obligation	= phpgw::get_var('obligation', 'bool');
+			$this->obligation	= $obligation;
 
 			$this->start		= $start ? $start : 0;
 			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
