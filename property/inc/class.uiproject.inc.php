@@ -2244,6 +2244,7 @@
 			$id_to_update	= phpgw::get_var('id_to_update');
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
+			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
 			
 			if(isset($_POST['user_id']))
 			{
@@ -2274,7 +2275,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget);
 			}
 
 			$total_records	= count($list);
@@ -2300,6 +2301,8 @@
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
@@ -2314,6 +2317,8 @@
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
@@ -2375,8 +2380,24 @@
 				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
 			}
 
+
+
+			$year	= date('Y');
+			$limit	= $year + 2;
+
+			while ($year < $limit)
+			{
+				$year_list[] = array
+				(
+					'id'	=>  $year,
+					'name'	=>  $year
+				);
+				$year++;
+			}
+
 			$data = array
 			(
+				'year_list'				=> array('options' => $year_list),
 				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'				=> $datavalues,
 				'myColumnDefs'			=> $myColumnDefs,

@@ -82,7 +82,7 @@
 			while ($this->db->next_record())
 			{
 				$branch[] = array
-					( 
+					(
 						'id' => $this->db->f('id'),
 						'name'	=> $this->db->f('descr',true)
 					);
@@ -97,7 +97,7 @@
 			while ($this->db->next_record())
 			{
 				$location[] = array
-					( 
+					(
 						'id' => $this->db->f('id'),
 						'name'	=> $this->db->f('descr',true)
 					);
@@ -478,7 +478,7 @@
 					{
 						$_status_filter[] = $this->db->f('id');
 					}
-					$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')"; 
+					$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
 				}
 				else
 				{
@@ -710,7 +710,7 @@
 
 */
 
-					$get_spesific = false; 
+					$get_spesific = false;
 					if ($filter_year && $filter_year != 'all')
 					{
 						$this->db->query("SELECT sum(fm_project_budget.budget) AS budget"
@@ -718,7 +718,7 @@
 						$this->db->next_record();
 						$project['budget'] =  $this->db->f('budget');
 
-						$get_spesific = true; 
+						$get_spesific = true;
 						$_year_arr = array();
 						for ($i=1;$i<14;$i++)
 						{
@@ -1177,7 +1177,7 @@
 
 			if($project['budget'])
 			{
-				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all']);
+				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all'],'update', $project['budget_periodization_activate']);
 			}
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1461,7 +1461,7 @@
 
 				if($project['budget'])
 				{
-					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all']);
+					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget'],$project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 				}
 
 				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = " . (int)$project['id'],__LINE__,__FILE__);
@@ -1653,7 +1653,7 @@
 					unset($action_params);
 				}
 
-				$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed'; 
+				$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 
 				if($old_status != $project['status'])
 				{
@@ -1867,7 +1867,7 @@
 		}
 
 
-		function update_budget($project_id, $year, $periodization_id, $budget, $budget_periodization_all = false, $action = 'update')
+		function update_budget($project_id, $year, $periodization_id, $budget, $budget_periodization_all = false, $action = 'update', $activate = 0)
 		{
 			$project_id = (int) $project_id;
 			$year = $year ? (int) $year : date('Y');
@@ -1901,7 +1901,7 @@
 								else
 								{
 									$partial_budget = $budget;
-									$partial_budget = $partial_budget > 0 ? $partial_budget : 0; 
+									$partial_budget = $partial_budget > 0 ? $partial_budget : 0;
 									$budget = 0;
 								}
 							}
@@ -1918,7 +1918,7 @@
 								else
 								{
 									$partial_budget = $budget;
-									$partial_budget = $partial_budget < 0 ? $partial_budget : 0; 
+									$partial_budget = $partial_budget < 0 ? $partial_budget : 0;
 									$budget = 0;
 								}
 							}
@@ -1937,12 +1937,12 @@
 
 					$acc_partial += $budget;
 
-					$this->_update_budget($project_id, $year, $month, $budget, $action);					
+					$this->_update_budget($project_id, $year, $month, $budget, $action);
 				}
-				
+
 				if(!$hit)
 				{
-					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');				
+					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');
 				}
 
 				return $acc_partial;
@@ -2021,7 +2021,7 @@
 				}
 				$partial_budget = $partial_budget * (1 + $percentage_to_move);
 
-				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action);
+				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action, $activate);
 			}
 
 			$sql = "SELECT sum(budget) as sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = {$project_id}";
@@ -2034,13 +2034,13 @@
 		}
 
 
-		private function _update_budget($project_id, $year, $month, $budget, $action = 'update')
+		private function _update_budget($project_id, $year, $month, $budget, $action = 'update', $active = 0)
 		{
 			$month = (int) $month;
 			$budget = (int) $budget;
 			$now = time();
-
-			$sql = "SELECT budget FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
+			$active = (int) $active;
+			$sql = "SELECT budget,active FROM fm_project_budget WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -2052,14 +2052,16 @@
 				}
 				else if ($action == 'update')
 				{
-					$new_budget = $budget;				
+					$new_budget = $budget;
+//					$active = (int)$this->db->f('active');
 				}
 				else if ($action == 'subtract')
 				{
 					$new_budget = $old_budget - $budget;
+//					$active = (int)$this->db->f('active');
 				}
 
-				$sql = "UPDATE fm_project_budget SET budget = {$new_budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";				
+				$sql = "UPDATE fm_project_budget SET budget = {$new_budget}, modified_date = {$now} WHERE project_id = {$project_id} AND year = {$year} AND month = {$month}";
 //_debug_array($sql);
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
@@ -2074,8 +2076,10 @@
 					'user_id'			=> $this->account,
 					'entry_date'		=> $now,
 					'modified_date'		=> $now,
-//					'active'			=> 1
+					'active'			=> $active // only for new entries
 				);
+
+//_debug_array($value_set);die();
 
 				$cols = implode(',', array_keys($value_set));
 				$values	= $this->db->validate_insert(array_values($value_set));
@@ -2570,8 +2574,16 @@ $test = 0;
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0)
 		{
+
+			if($transfer_budget)
+			{
+				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
+				_debug_array($ids);
+				die();
+			}
+
 			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
 			$start_date -= 3600*24;
 			$end_date = $end_date ? phpgwapi_datetime::date_to_timestamp($end_date) : time();
@@ -2593,7 +2605,7 @@ $test = 0;
 			{
 				if($status_filter == 'open')
 				{
-					$filter .= " AND fm_{$type}_status.closed IS NULL"; 
+					$filter .= " AND fm_{$type}_status.closed IS NULL";
 
 				}
 				else
@@ -2602,9 +2614,14 @@ $test = 0;
 				}
 			}
 
+			$sql_budget = "SELECT DISTINCT year, active FROM fm_{$type}_budget WHERE ";
+
 			switch($type)
 			{
 				case 'project':
+
+					$sql_budget .= 'project_id = %d ORDER BY year';
+
 					if($closed_orders)
 					{
 						$filter .=  " AND fm_open_workorder_view.project_id IS NULL";
@@ -2614,15 +2631,17 @@ $test = 0;
 					$status_table = 'fm_project_status';
 					$title_field = 'fm_project.name as title';
 					$this->_update_status_project($execute, $status_new, $ids);
-					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date, count(project_id) as num_open FROM {$table}"
+					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
 					. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
-					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter})"
-					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date"
+					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL)  {$filter}"
+					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date,project_type_id"
 					. " ORDER BY {$table}.id DESC";
 
 					break;
 				case 'workorder':
+
+					$sql_budget .= 'order_id = %d ORDER BY year';
 
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
@@ -2630,6 +2649,8 @@ $test = 0;
 					$actual_cost = ',actual_cost';
 
 					$join_method = "{$this->join} {$status_table} ON  {$table}.status = {$status_table}.id";
+					$join_method .= " {$this->join} fm_project ON  {$table}.project_id = fm_project.id";
+
 					if($paid)
 					{
 						$join_method .=  " {$this->join} fm_orders_actual_cost_view ON fm_workorder.id = fm_orders_actual_cost_view.order_id";
@@ -2637,14 +2658,21 @@ $test = 0;
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, project_id, $status_table.descr as status ,{$title_field},start_date {$actual_cost} FROM {$table}"
-					. " {$join_method}"
-					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR start_date is NULL"
+					$sql = "SELECT {$table}.id, project_id, $status_table.descr as status ,{$title_field},{$table}.start_date {$actual_cost},project_type_id"
+					. " FROM {$table} {$join_method}"
+					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR {$table}.start_date is NULL"
 					. " ORDER BY {$table}.id DESC";
 					break;
 				default:
 					return array();
 			}
+
+			$project_types = array
+			(
+				1	=> lang('operation'),
+				2	=> lang('investment'),
+				3	=> lang('buffer')
+			);
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$values = array();
@@ -2654,19 +2682,32 @@ $test = 0;
 			{
 				$values[] = array
 				(
-					'id'			=> $this->db->f('id'),
-					'project_id'	=> $this->db->f('project_id'),
-					'title'			=> htmlspecialchars_decode($this->db->f('title',true)),
-					'status'		=> $this->db->f('status',true),
-					'actual_cost'	=> (float)$this->db->f('actual_cost'),
-					'start_date'	=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),
-					'num_open'		=> (int)$this->db->f('num_open'),
+					'id'				=> $this->db->f('id'),
+					'project_id'		=> $this->db->f('project_id'),
+					'title'				=> htmlspecialchars_decode($this->db->f('title',true)),
+					'status'			=> $this->db->f('status',true),
+					'actual_cost'		=> (float)$this->db->f('actual_cost'),
+					'start_date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),
+					'num_open'			=> (int)$this->db->f('num_open'),
+					'project_type'		=> $project_types[$this->db->f('project_type_id')],
 				);
 			}
 
+			foreach($values as &$entry)
+			{
+				$sql = sprintf($sql_budget,$entry['id']);
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				$budget = array();
+
+				while ($this->db->next_record())
+				{
+					$budget[] = $this->db->f('year') . '[' . $this->db->f('active') . ']';
+				}
+				$entry['budget'] = implode(';', $budget);
+			}
+
 			return $values;
-
-
 		}
 
 		protected function _update_status_project($execute, $status_new, $ids)
@@ -2677,7 +2718,7 @@ $test = 0;
 			}
 			$historylog	= CreateObject('property.historylog','project');
 
-			$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : false; 
+			$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : false;
 
 			$this->db->transaction_begin();
 			foreach ($ids as $id)

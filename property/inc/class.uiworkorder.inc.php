@@ -991,6 +991,7 @@
 						if(!$approve_role['is_supervisor'] && ! $approve_role['is_budget_responsible'])
 						{
 							$receipt['error'][]=array('msg'=>lang('you do not have permission to approve this order') );
+							$values['approved'] = false;
 							$error_id=true;
 						}
 					}
@@ -2063,6 +2064,7 @@
 				'lang_key_deliver_statustext'			=> lang('Select where to deliver the key'),
 
 				'value_approved'						=> isset($values['approved']) ? $values['approved'] : '',
+				'value_continuous'						=> isset($values['continuous']) ? $values['continuous'] : '',
 				'need_approval'							=> $need_approval,
 				'lang_ask_approval'						=> lang('Ask for approval'),
 				'lang_ask_approval_statustext'			=> lang('Check this to send a mail to your supervisor for approval'),
