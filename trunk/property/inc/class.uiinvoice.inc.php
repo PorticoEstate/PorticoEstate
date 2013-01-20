@@ -1869,6 +1869,10 @@ JS;
 							{
 								$_checked = 'checked="checked"';
 							}
+							else if(!$invoices['continuous'])
+							{
+								$_checked = 'checked="checked"';
+							}
 
 							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_orig][{$j}]' id='values[close_order_orig][{$j}]' class='myValuesForPHP ' type='hidden' value='{$invoices['closed']}'/>";
 							$json_row[$uicols[$i]['col_name']]  .= " <input name='values[close_order_tmp][{$j}]' id='values[close_order_tmp][{$j}]' class='close_order_tmp transfer_idClass' type='checkbox' value='true' {$_checked}/>";

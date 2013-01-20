@@ -510,14 +510,6 @@
 												</input>
 											</td>
 										</tr>
-										<tr>
-											<td valign="top">
-												<xsl:value-of select="php:function('lang', 'selected mail addresses')"/>
-											</td>
-											<td>
-												<xsl:value-of select="mail_recipients"/>
-											</td>
-										</tr>
 									</tr>
 								</xsl:when>
 								<xsl:otherwise>
@@ -557,6 +549,32 @@
 								</td>
 								<td>
 									<xsl:call-template name="cat_sub_select"/>
+								</td>
+							</tr>
+							
+							<tr>
+								<xsl:variable name="lang_continuous">
+									<xsl:value-of select="php:function('lang', 'continuous')"/>
+								</xsl:variable>
+								<td valign="top">
+									<xsl:value-of select="$lang_continuous"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[continuous]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_continuous"/>
+										</xsl:attribute>
+										<xsl:if test="value_continuous = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:if test="mode != 'edit'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
 								</td>
 							</tr>
 

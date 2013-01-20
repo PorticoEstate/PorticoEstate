@@ -1426,7 +1426,7 @@
 			}			
 
 			$sql = "SELECT {$table}.*,fm_workorder_status.descr as status, fm_workorder.charge_tenant,org_name,"
-				. "fm_workorder.claim_issued, fm_workorder_status.closed FROM {$table}"
+				. " fm_workorder.claim_issued, fm_workorder.continuous, fm_workorder_status.closed FROM {$table}"
 				. " {$this->left_join} fm_workorder ON fm_workorder.id = {$table}.pmwrkord_code"
 				. " {$this->left_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
@@ -1482,6 +1482,7 @@
 						'period'				=> $this->db->f('periode'),
 						'periodization'			=> $this->db->f('periodization'),
 						'periodization_start'	=> $this->db->f('periodization_start'),
+						'continuous'			=> $this->db->f('continuous'),
 					);
 			}
 

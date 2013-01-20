@@ -766,14 +766,14 @@
 				}
 
 
-				$sql_cost = "SELECT fm_workorder.id as order_id,closed, actual_cost, pending_cost,fm_location1.mva,"
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, sum(fm_orders_paid_or_pending_view.amount) as actual_cost, fm_location1.mva,"
 				. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost"
-				. " FROM fm_workorder {$this->left_join} fm_orders_pending_cost_view ON fm_workorder.id = fm_orders_pending_cost_view.order_id"
+				. " FROM fm_workorder {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
 				. " {$_join_district}"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')'
-				. " GROUP BY fm_workorder.id,closed, actual_cost, pending_cost, fm_location1.mva";
+				. " GROUP BY fm_workorder.id,closed, fm_location1.mva";
 
 				unset($_order_list);
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -781,7 +781,7 @@
 				{
 					$_actual_cost_arr[$this->db->f('order_id')] = array
 					(
-						'actual_cost'	=> $this->db->f('actual_cost') + (float)$this->db->f('pending_cost'),
+						'actual_cost'	=> $this->db->f('actual_cost'),
 						'budget'		=> $this->db->f('budget'),
 						'combined_cost'	=> $this->db->f('combined_cost'),
 						'closed'		=> !!$this->db->f('closed'),
@@ -921,7 +921,8 @@
 					'billable_hours'		=> $this->db->f('billable_hours'),
 					'approved'				=> $this->db->f('approved'),
 					'mail_recipients'		=> explode(',', trim($this->db->f('mail_recipients'),',')),
-					'actual_cost'			=> $this->db->f('actual_cost')
+					'actual_cost'			=> $this->db->f('actual_cost'),
+					'continuous'			=> $this->db->f('continuous')
 				);
 
 				$sql = "SELECT periodization_id,"
@@ -1209,14 +1210,16 @@
 					$workorder['billable_hours'],
 					$workorder['contract_sum'],
 					$workorder['approved'],
+					$workorder['continuous'],
 					isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : ''
 				);
 
 			$values	= $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours,contract_sum,approved,mail_recipients  $cols) "
-				. "VALUES ( $values $vals)",__LINE__,__FILE__);
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,"
+				. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,mail_recipients  $cols) "
+				. "VALUES ( {$values} {$vals})",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
 
@@ -1356,6 +1359,7 @@
 				'billable_hours'	=> $workorder['billable_hours'],
 //				'contract_sum'		=> $workorder['contract_sum'],
 				'approved'			=> $workorder['approved'],
+				'continuous'		=> $workorder['continuous'],
 				'mail_recipients'	=> isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 
