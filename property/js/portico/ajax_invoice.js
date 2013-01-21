@@ -343,6 +343,15 @@ function update_form_values( line_id, voucher_id_orig ){
 				{
 					checked_close_order = "checked = \"checked\"";
 				}
+				else if(voucher[0].project_type_id == 1 && voucher[0].periodization_id) // operation projekts
+				{
+					checked_close_order = "checked = \"checked\"";
+				}
+				else if(!voucher[0].continuous)
+				{
+					checked_close_order = "checked = \"checked\"";
+				}
+				
 				var htmlString_close_order = "<input type=\"checkbox\" name=\"values[close_order]\" value=\"1\" title=\"close order\"" + checked_close_order + "></input>" + close_order_status;
 				$("#close_order").html( htmlString_close_order );
 				$("#close_order_orig").val( voucher[0].closed );
