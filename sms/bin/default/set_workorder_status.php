@@ -23,7 +23,7 @@
 		3 => 'i_arbeid',
 	);
 
-	$param 		= explode(' ' , $command_param);
+	$param 		= explode(' ', $command_param);
 
 	if (ctype_digit($param[0]) && ctype_digit($param[1]))
 	{
