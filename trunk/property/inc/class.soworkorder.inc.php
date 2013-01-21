@@ -762,7 +762,8 @@
 				}
 				else
 				{
-					$_join_district = "{$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
+					$_join_district = "{$this->join} fm_project ON fm_project.id = fm_workorder.project_id"
+										. " {$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
 				}
 
 
