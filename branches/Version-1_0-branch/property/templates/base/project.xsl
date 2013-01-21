@@ -447,6 +447,15 @@ Returns mixed
 													<input type="checkbox" name="values[budget_periodization_all]" value="True">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'all')"/>
+															<xsl:text> </xsl:text>
+															<xsl:value-of select="php:function('lang', 'periods')"/>
+														</xsl:attribute>
+													</input>
+												</td>
+												<td>
+													<input type="checkbox" name="values[budget_periodization_activate]" value="1">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'activate')"/>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -976,6 +985,22 @@ Returns mixed
 									<xsl:value-of select="php:function('lang', 'select status')"/>
 								</option>
 								<xsl:apply-templates select="status_list_new/options"/>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'transfer budget')"/>
+						</td>
+						<td>
+							<select name="transfer_budget">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'transfer budget')"/>
+								</xsl:attribute>
+								<option value="0">
+									<xsl:value-of select="php:function('lang', 'select year')"/>
+								</option>
+								<xsl:apply-templates select="year_list/options"/>
 							</select>
 						</td>
 					</tr>

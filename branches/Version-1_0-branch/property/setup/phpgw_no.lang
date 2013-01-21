@@ -369,6 +369,7 @@ consume date	property	no	Dato historisk forbruk
 consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
 continue	property	no	Fortsett
+continuous	property	no	Løpende
 line	property	no	Linje
 sheet	property	no	Ark
 choose file	property	no	Velg Fil
@@ -1942,6 +1943,7 @@ you are not approved for this dimb: %1	property	no	Du mangler rettigheter for de
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet
+you do not have permission to approve this order	property	no	Du har ikke rettighteter for a godkjenne bestillingen
 you have to select a budget responsible for this invoice in order to add the invoice	property	no	Du må velge en anviser for å kunne legge til en faktura
 you have to select a budget responsible for this invoice in order to make the import	property	no	Du må velge en anviser for å importere
 you have to select the conversion for this import	property	no	Du må velge importformat
