@@ -23,7 +23,7 @@
 		3 => 'i_arbeid',
 	);
 
-	$param 		= explode(' ' , $command_param);
+	$param 		= explode(' ', $command_param);
 
 	if (ctype_digit($param[0]) && ctype_digit($param[1]))
 	{
@@ -47,12 +47,12 @@
 					$this->db->query("SELECT status FROM fm_project WHERE id='{$project_id}'",__LINE__,__FILE__);
 					$this->db->next_record();
 					$status_old = $this->db->f('status');
-					if(!$status_old == 'i_arbeid')
+					if($status_old != 'i_arbeid')
 					{
 						$this->db->query("UPDATE fm_project SET status = 'i_arbeid' WHERE id='{$project_id}'" ,__LINE__,__FILE__);
 						$historylog_project	= CreateObject('property.historylog','project');
 						$historylog_project->add('S',$project_id,'i_arbeid', $status_old);
-						$historylog_project->add('RM',$project_id,$status . ': endret av: ' . $sms_sender);
+						$historylog_project->add('RM',$project_id,"Bestilling {$workorder_id} endret av: {$sms_sender}");
 					}
 				}
 				$command_output = 'success';

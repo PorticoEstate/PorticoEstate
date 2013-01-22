@@ -762,20 +762,20 @@
 				}
 				else
 				{
-					$_join_district = "{$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
+					$_join_district = "{$this->join} fm_project ON fm_project.id = fm_workorder.project_id"
+										. " {$this->join} fm_location1 ON fm_project.loc1 = fm_location1.loc1";
 				}
 
 
-				$sql_cost = "SELECT fm_workorder.id as order_id,closed, sum(fm_orders_paid_or_pending_view.amount) as actual_cost, fm_location1.mva,"
+				$sql_cost = "SELECT fm_workorder.id as order_id,closed, fm_location1.mva,"
 				. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost"
-				. " FROM fm_workorder {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " FROM fm_workorder" // {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
+				. " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND fm_workorder_budget.active = 1)"
 				. " {$_join_district}"
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')'
 				. " GROUP BY fm_workorder.id,closed, fm_location1.mva";
 
-				unset($_order_list);
 				$this->db->query($sql_cost,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
@@ -787,7 +787,15 @@
 						'closed'		=> !!$this->db->f('closed'),
 						'mva'			=> (int)$this->db->f('mva'),
 					);
+
+					$this->db2->query('SELECT sum(fm_orders_paid_or_pending_view.amount) as actual_cost'
+					. ' FROM fm_orders_paid_or_pending_view WHERE order_id = '. $this->db->f('order_id'),__LINE__,__FILE__);
+					$this->db2->next_record();
+					$_actual_cost_arr[$this->db->f('order_id')]['actual_cost'] = $this->db2->f('actual_cost');
 				}
+
+				unset($_order_list);
+
 
 			}
 
