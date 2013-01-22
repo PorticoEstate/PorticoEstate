@@ -776,6 +776,10 @@
 				. ' WHERE fm_workorder.id IN (' . implode(',', $_order_list ) .')'
 				. " GROUP BY fm_workorder.id,closed, fm_location1.mva";
 
+
+				$_get_accounting = false;
+				if($_get_accounting)
+				{
 				$this->db->query($sql_cost,__LINE__,__FILE__);
 				while ($this->db->next_record())
 				{
@@ -795,6 +799,7 @@
 				}
 
 				unset($_order_list);
+				}
 
 
 			}

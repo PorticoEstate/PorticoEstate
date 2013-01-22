@@ -710,6 +710,10 @@
 
 */
 
+					$_get_accounting = false;
+					if($_get_accounting)
+					{
+
 					$get_spesific = false;
 					if ($filter_year && $filter_year != 'all')
 					{
@@ -826,6 +830,7 @@
 
 					$project['combined_cost']	= $project['obligation'];
 					$project['diff'] =  $project['budget'] - $project['combined_cost'] - $project['actual_cost'];
+				}
 				}
 
 				unset($project);
