@@ -49,6 +49,7 @@
 		private $so_project;
 		private $so_resource_type_requirement;
 		private $so_resource_allocation;
+		private $nonavbar;
 
 		public $public_functions = array(
 			'query' 									=> true,
@@ -76,6 +77,18 @@
 			$this->so_resource_allocation = CreateObject('logistic.sorequirement_resource_allocation');
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "logistic::project::requirement";
+
+/*
+			if( $this->nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $this->nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+*/
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
+			$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 		}
 
 
@@ -145,10 +158,17 @@
 					$rows[] = $result->serialize();
 				}
 			}
-
+//_debug_array($rows);
 			$line_id = 0; // optional preselect
 			foreach($rows as &$entry)
 			{
+
+//FIXME: hent verdier
+/*
+				$_filters = array('requirement_id' => $entry['id']);
+				$requirement_values_array = $this->so_requirement_value->get(0, false, $sort_field, $sort_ascending, $search_for, $search_type, $_filters);
+
+*/
 				$_checked = '';
 
 				if($entry['id'] == $line_id)
@@ -156,7 +176,7 @@
 					$_checked = 'checked="checked"';
 				}
 				
-			  $num_required = $entry['no_of_items'];
+				$num_required = $entry['no_of_items'];
 	  
 				$filters = array('requirement_id' => $entry['id']);
 				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
@@ -179,7 +199,8 @@
 					$entry['alloc_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Tildel ressurser</a>";
 				}
 				
-				$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
+				//$href = self::link(array('menuaction' => 'logistic.uirequirement.edit', 'id' => $entry['id']));
+				$href = "javascript:load_requirement_edit_id({$entry['id']});";
 				$entry['edit_requirement_link'] = "<a class=\"btn-sm alloc\" href=\"{$href}\">Endre behov</a>";
 			}
 
@@ -466,7 +487,6 @@
 				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
 			}
 
-
 			if ($requirement_id)
 			{
 				$requirement = $this->so->get_single($requirement_id);
@@ -602,12 +622,12 @@
 
 			$data = array
 			(
-				'tabs'													=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'													=> "requirement_values",
-				'requirement' 									=> $requirement,
+				'tabs'							=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'							=> "requirement_values",
+				'requirement' 					=> $requirement,
 				'requirement_attributes_array'	=> $requirement_attributes_array,
-				'distict_locations' 						=> $distict_locations_array,
-				'editable' 											=> true,
+				'distict_locations' 			=> $distict_locations_array,
+				'editable' 						=> true,
 			);
 
 			if($activity_id > 0)
@@ -623,6 +643,13 @@
 
 		public function view_requirement_values()
 		{
+			if( $nonavbar	= phpgw::get_var('nonavbar', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = $nonavbar;
+				$GLOBALS['phpgw_info']['flags']['noheader_xsl'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter']		= true;
+			}
+
 			$requirement_id = phpgw::get_var('requirement_id');
 
 			if ($requirement_id && is_numeric($requirement_id))
@@ -732,7 +759,7 @@
 					$this->so_requirement_value->store($requirement_value);
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values', 'requirement_id' => $requirement_id, 'nonavbar' => $this->nonavbar));
 		}		
 		
 		public function get_custom_attributes($location_id, $activity_id){
@@ -780,7 +807,8 @@
 		{
 			$tabs = array();
 
-			if($requirement_id > 0){
+			if($requirement_id > 0)
+			{
 
 				$requirement = $this->so->get_single($requirement_id);
 
@@ -788,13 +816,17 @@
 						   array(
 							'label' => "1: " . lang('Requirement details'),
 						   'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view',
-																				   													 'id' => $requirement->get_id()))
+																				   	 'id' => $requirement->get_id(),
+																				   	 'nonavbar' => $this->nonavbar))
 						), array(
 							'label' => "2: " . lang('Add constraints'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'logistic.uirequirement.view_requirement_values',
-																				   													 'requirement_id' => $requirement->get_id()))
+																				   	'requirement_id' => $requirement->get_id(),
+																				   	 'nonavbar' => $this->nonavbar))
 						));
-			}else{
+			}
+			else
+			{
 				$tabs = array(
 						   array(
 							'label' => "1: " . lang('Requirement details')
