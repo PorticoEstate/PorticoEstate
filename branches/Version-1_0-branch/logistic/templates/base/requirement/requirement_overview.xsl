@@ -51,6 +51,13 @@
 		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
 	}
 
+	function load_requirement_edit_id( id ){
+		var oArgs = {menuaction: 'logistic.uirequirement.edit', id:id, nonavbar: true, lean: true};
+		var requestUrl = phpGWLink('index.php', oArgs);
+
+		TINY.box.show({iframe:requestUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true, close: true,closejs:function(){closeJS_local()}});
+	}
+
 	function closeJS_local()
 	{
 		var reqUrl = '<xsl:value-of select="//datatable/source"/>';

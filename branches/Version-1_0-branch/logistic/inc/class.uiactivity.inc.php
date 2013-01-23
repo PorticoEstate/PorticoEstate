@@ -220,7 +220,8 @@
 						'text' 			=> lang('t_new_requirement'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'logistic.uirequirement.edit'
+							'menuaction'	=> 'logistic.uirequirement.edit',
+							'nonavbar'		=> true
 						)),
 						'parameters'	=> json_encode($parameters3)
 					);

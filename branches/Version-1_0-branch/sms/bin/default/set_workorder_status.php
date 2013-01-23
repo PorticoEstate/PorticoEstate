@@ -51,6 +51,7 @@
 					{
 						$this->db->query("UPDATE fm_project SET status = 'i_arbeid' WHERE id='{$project_id}'" ,__LINE__,__FILE__);
 						$historylog_project	= CreateObject('property.historylog','project');
+						$historylog_project->account = 6;
 						$historylog_project->add('S',$project_id,'i_arbeid', $status_old);
 						$historylog_project->add('RM',$project_id,"Bestilling {$workorder_id} endret av: {$sms_sender}");
 					}
