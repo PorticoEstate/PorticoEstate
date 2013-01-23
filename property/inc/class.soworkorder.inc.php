@@ -147,6 +147,7 @@
 			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
+			$filter_year	= isset($data['filter_year']) ? $data['filter_year'] : '';
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -342,6 +343,8 @@
 				$uicols['sortable'][]		= '';
 
 				$joinmethod .= " {$this->left_join} fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
+				$paranthesis .='(';
+				$joinmethod .= " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id))";
 				$paranthesis .='(';
 
 				//----- wo_hour_status
@@ -613,6 +616,13 @@
 
 			}
 
+			if ($filter_year && $filter_year != 'all')
+			{
+				$filter_year = (int)$filter_year;
+				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year})";
+				$where= 'AND';
+			}
+
 			$querymethod = '';
 			if($query)
 			{
@@ -777,7 +787,13 @@
 				. " GROUP BY fm_workorder.id,closed, fm_location1.mva";
 
 
-				$_get_accounting = false;
+				$_paid_filter = '';
+				if ($filter_year && $filter_year != 'all')
+				{
+					$_paid_filter = " AND (periode > {$filter_year}00 AND periode < {$filter_year}13 OR periode IS NULL)";
+				}
+
+				$_get_accounting = true;
 				if($_get_accounting)
 				{
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -793,14 +809,13 @@
 					);
 
 					$this->db2->query('SELECT sum(fm_orders_paid_or_pending_view.amount) as actual_cost'
-					. ' FROM fm_orders_paid_or_pending_view WHERE order_id = '. $this->db->f('order_id'),__LINE__,__FILE__);
+					. ' FROM fm_orders_paid_or_pending_view WHERE order_id = '. $this->db->f('order_id') . $_paid_filter,__LINE__,__FILE__);
 					$this->db2->next_record();
 					$_actual_cost_arr[$this->db->f('order_id')]['actual_cost'] = $this->db2->f('actual_cost');
 				}
 
 				unset($_order_list);
 				}
-
 
 			}
 

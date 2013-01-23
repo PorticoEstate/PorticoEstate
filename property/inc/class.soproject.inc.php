@@ -710,7 +710,7 @@
 
 */
 
-					$_get_accounting = false;
+					$_get_accounting = true;
 					if($_get_accounting)
 					{
 
@@ -738,7 +738,7 @@
 						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"// AND year = '{$filter_year}')"
 //						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
 //						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode > {$filter_year}00 AND periode < {$filter_year}13 OR periode IS NULL))"
 //						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " WHERE (project_id = '{$project['project_id']}' AND fm_workorder_budget.year = {$filter_year} ) OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " GROUP BY fm_workorder.id, billable_hours, closed";
