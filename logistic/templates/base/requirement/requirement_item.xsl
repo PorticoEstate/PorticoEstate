@@ -142,9 +142,9 @@
 						<input type="submit" name="save_requirement" value="{$lang_save}" title = "{$lang_save}" />
 						<input type="submit" name="cancel_requirement" value="{$lang_cancel}" title = "{$lang_cancel}" />				
 								
-						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+					<!--	<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
 						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
-						</a>
+						</a>-->
 						
 					</xsl:when>
 					<xsl:otherwise>
@@ -160,9 +160,9 @@
 						  <xsl:value-of select="php:function('lang', 'edit')" />
 						</a>
 
-						<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
+						<!--<a style="margin-left: 20px;" id="view-resources-btn" class="btn non-focus" href="{$view_resources_url}">
 						  <xsl:value-of select="php:function('lang', 'View resources overview')" />
-						</a>
+						</a>-->
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
