@@ -655,8 +655,13 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'location_id',
+							'key' => 'location_label',
 							'label' => lang('Resource type'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'criterias',
+							'label' => lang('Criterias'),
 							'sortable' => false
 						),
 						array(

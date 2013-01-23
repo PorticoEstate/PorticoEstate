@@ -156,7 +156,8 @@
 				'start_date' => $this->get_start_date() ? date($date_format, $this->get_start_date()): '',
 				'end_date' => $this->get_end_date() ? date($date_format, $this->get_end_date()): '',
 				'no_of_items' => $this->get_no_of_items(),
-				'location_id' => $category_label,
+				'location_id' => $this->get_location_id(),
+				'location_label' => $category_label,
 			);
 		}
 		
