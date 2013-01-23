@@ -55,6 +55,7 @@
 		var $sub;
 		var $currentapp;
 		var $criteria_id;
+		var	$filter_year;
 
 		var $public_functions = array
 			(
@@ -105,6 +106,7 @@
 			$this->district_id			= $this->bo->district_id;
 			$this->criteria_id			= $this->bo->criteria_id;
 			$this->obligation			= $this->bo->obligation;
+			$this->filter_year			= $this->bo->filter_year;
 		}
 
 		function save_sessiondata()
@@ -268,6 +270,7 @@
 					."status_id:'{$this->status_id}',"
 					."second_display:1,"
 					."criteria_id:'{$this->criteria_id}',"
+					."filter_year:'{$this->filter_year}',"
 					."cat_id:'{$this->cat_id}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
@@ -290,10 +293,13 @@
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-				$values_combo_box[5]  = $this->bo->get_user_list($this->filter);
-				array_unshift ($values_combo_box[5],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
+				$values_combo_box[5]  = execMethod('property.boproject.get_filter_year_list',$this->filter_year);
+				array_unshift ($values_combo_box[5],array ('id'=>'all','name'=> lang('all') . ' ' . lang('year')));
+
+				$values_combo_box[6]  = $this->bo->get_user_list($this->filter);
+				array_unshift ($values_combo_box[6],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[5],$default_value);
+				array_unshift ($values_combo_box[6],$default_value);
 
 
 				$datatable['actions']['form'] = array
@@ -314,6 +320,7 @@
 								'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 								'paid'				=> $this->paid,
 								'district_id'       => $this->district_id,
+								'filter_year'		=> $this->filter_year
 							)
 						),
 						'fields'	=> array
@@ -365,16 +372,15 @@
 									'style' => 'filter',
 									'tab_index' => 5
 								),
-							/*	array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'filter',
-									'value'	=> lang('User'),
+								array
+								( //boton 	filter_year
+									'id' => 'btn_filter_year',
+									'name' => 'filter_year',
+									'value'	=> lang('year'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 5
+									'tab_index' => 6
 								),
-							*/
 									array
 									( //boton 	USER
 										//	'id' => 'btn_user_id',
@@ -383,9 +389,9 @@
 										'value'	=> lang('User'),
 										'type' => 'select',
 										'style' => 'filter',
-										'values' => $values_combo_box[5],
+										'values' => $values_combo_box[6],
 										'onchange'=> 'onChangeSelect("filter");',
-										'tab_index' => 6
+										'tab_index' => 7
 									),
 								//for link "columns", next to Export button
 								array
@@ -398,21 +404,21 @@
 										'menuaction' => 'property.uiworkorder.columns'
 									))."','','width=300,height=600,scrollbars=1')",
 									'value' => lang('columns'),
-									'tab_index' => 12
+									'tab_index' => 13
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 11
+									'tab_index' => 12
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								array
 								(
@@ -440,7 +446,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 9
+									'tab_index' => 10
 								),
 								array
 								( //boton     SEARCH
@@ -448,7 +454,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 8
+									'tab_index' => 9
 								),
 								array
 								( // TEXT IMPUT
@@ -458,7 +464,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 18,
-									'tab_index' => 7
+									'tab_index' => 8
 								),
 							),
 							'hidden_value' => array
@@ -487,13 +493,12 @@
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
 									'value'	=> $this->bocommon->select2String($values_combo_box[4])
-								)/*,
+								),
 								array
 								( //div values  combo_box_5
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
-								)*/
-
+								)
 							)
 						)
 					)
