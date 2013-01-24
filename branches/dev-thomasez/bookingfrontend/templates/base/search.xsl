@@ -34,7 +34,12 @@
         F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
 	<div class="freetime" id="field_freetime">
-      <input type="hidden" name="advsearch" id="field_advsearch" value="{resource/advsearch}" />
+     <xsl:if test="resource/advsearch != '1'">      
+	  <input type="hidden" name="advsearch" id="field_advsearch" value="0" />						
+     </xsl:if>      
+     <xsl:if test="resource/advsearch != '0'">      
+	  <input type="hidden" name="advsearch" id="field_advsearch" value="1" />						
+     </xsl:if>      
 	  <div class="settings" id="regions">
 			<select name='regions' id='field_regions'>
 			<option value=''><xsl:value-of select="php:function('lang', 'Select Area')" />...</option>
