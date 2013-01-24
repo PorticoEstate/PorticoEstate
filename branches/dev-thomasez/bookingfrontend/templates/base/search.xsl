@@ -33,6 +33,8 @@
       <div class="hint" id="hint">
         F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
+	<div class="freetime" id="field_freetime">
+      <input type="hidden" name="advsearch" id="field_advsearch" value="{resource/advsearch}" />
 	  <div class="settings" id="regions">
 			<select name='regions' id='field_regions'>
 			<option value=''><xsl:value-of select="php:function('lang', 'Select Area')" />...</option>
@@ -95,7 +97,7 @@
 			</xsl:for-each>
 		</select>
 	</div>
-	<div class="freetime" id="field_freetime">
+	<div class="freetime2" id="field_freetime2">
 		<label for="field_from"><xsl:value-of select="php:function('lang', 'From') "/></label><xsl:text> </xsl:text>
 		<span class="date-picker">
 			<input id="field_from" name="from_" type="text">
@@ -110,7 +112,7 @@
 		</span>
 	</div>
    <div style="float: right; margin-right: 250px;"><input type="submit" value="{php:function('lang', 'Search')}"/></div>
-
+   </div>
     </form>
 	
 	<xsl:if test="not(search)">	

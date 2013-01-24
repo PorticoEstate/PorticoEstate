@@ -132,13 +132,12 @@ GenerateEast = function(fylker,fylke) {
 
 YAHOO.booking.initializeDataTable = function()
 {
-	var oFrom = YAHOO.util.Dom.get('field_from'); 
-	if (oFrom.value == null || oFrom.value == '') {
+  	var oAdv = YAHOO.util.Dom.get('field_advsearch');
+	if (oAdv.value == null || oAdv.value == '0') {
 		YAHOO.util.Dom.setStyle('field_freetime', 'display', 'none');	
 	} else {
 		YAHOO.util.Dom.setStyle('field_freetime', 'display', 'block');	
 	}
-
 
 	var val = YAHOO.util.Dom.get('field_type').value;
 	if(['House'].indexOf(val) >= 0) {
@@ -276,13 +275,15 @@ YAHOO.booking.initializeDataTable = function()
 	});
     YAHOO.util.Event.addListener('advanced', "click", function(e){
 		var val = YAHOO.util.Dom.getStyle('field_freetime' , 'display' );
+    	var oAdv = YAHOO.util.Dom.get('field_advsearch');
 		if (val != 'block') {
 			YAHOO.util.Dom.setStyle('field_freetime', 'display', 'block');	
-			
+			oAdv.value="1";
 		} else {
 			YAHOO.util.Dom.setStyle('field_freetime', 'display', 'none');	
 			var oObj1 = YAHOO.util.Dom.get('field_from');
 			var oObj2 = YAHOO.util.Dom.get('field_to');
+			oAdv.value="0";
 			oObj1.value = '';
 			oObj2.value = '';
 			oObj1.innerHTML = '';

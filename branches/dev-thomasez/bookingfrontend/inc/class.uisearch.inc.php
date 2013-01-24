@@ -85,8 +85,9 @@
 			$resource['region'] = phpgw::get_var('regions', 'GET', null);
 			$resource['from_'] = phpgw::get_var('from_', 'GET', null);
 			$resource['to_'] = phpgw::get_var('to_', 'GET', null);
+			$resource['advsearch'] = phpgw::get_var('advsearch', 'GET', null);
 			$search = null;
-
+            
 
 			if (strlen($searchterm) || $type || $resource['res'] || $resource['fylke'] || $resource['region'] || $resource['from_'] )
 			{
@@ -137,7 +138,7 @@
 					$params['frontimages'] = array_merge( $params['frontimages'], $building_documents['results'] );
 				}
 			}
-//			echo "<pre>";print_r($params);exit;
+#			echo "<pre>";print_r($params);exit;
 			
 			self::render_template('search', $params);
 		}
