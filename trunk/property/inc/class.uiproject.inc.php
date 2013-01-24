@@ -2278,6 +2278,52 @@
 				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget);
 			}
 
+			foreach ($list as &$entry)
+			{
+				$_obligation = '';
+				$entry['new_budget'] = '';
+
+				if($entry['project_type_id'] != 3)
+				{
+					$_obligation = 0;
+
+					if(!$entry['closed'] && $type == 'project')
+					{
+						$_budget_arr = $this->bo->get_budget($entry['id']);
+						foreach($_budget_arr as $_budget_entry)
+						{
+							if($_budget_entry['active'])
+							{
+								$_obligation += $_budget_entry['sum_oblications'];
+							}
+						}
+
+						$_obligation = round($_obligation);
+
+						$entry['new_budget'] = "<input type='text' name='values[new_budget][{$entry['id']}]' value='{$_obligation}' title=''>";
+					}
+
+					if(!$entry['closed'] && $type == 'workorder')
+					{
+						$_budget_arr = execMethod('property.soworkorder.get_budget', $entry['id']);
+						foreach($_budget_arr as $_budget_entry)
+						{
+							if($_budget_entry['active'])
+							{
+								$_obligation += $_budget_entry['sum_oblications'];
+							}
+						}
+
+						$_obligation = round($_obligation);
+
+						$entry['new_budget'] = "<input type='text' name='values[new_budget][{$entry['id']}]' value='{$_obligation}' title=''>";
+					}
+
+
+				}
+				$entry['obligation'] = $_obligation;
+			}
+
 			$total_records	= count($list);
 			$datavalues[0] = array
 			(
@@ -2303,6 +2349,8 @@
 														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
@@ -2319,6 +2367,9 @@
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))

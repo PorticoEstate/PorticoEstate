@@ -1163,6 +1163,7 @@ nullable not chosen!	property	no	Nullable ikke valgt
 num	property	no	Num
 number	property	no	Nummer
 obligations	property	no	Regnskap
+obligation	property	no	Forpliktet
 of	property	no	av
 on behalf of assigned	property	no	På vegne av tildelt
 on behalf of assigned - vacation mode	property	no	På vegne av tildelt - feriemodus
