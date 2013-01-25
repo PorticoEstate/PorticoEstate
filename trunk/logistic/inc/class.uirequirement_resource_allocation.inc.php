@@ -301,9 +301,18 @@
 
 			if($requirement)
 			{
-				$loc_arr = $GLOBALS['phpgw']->locations->get_name($requirement->get_location_id());
-				$entity_arr = explode('.',$loc_arr['location']);
-
+// find allocated
+				$allocated_objects = $this->so->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
+				
+				$allocated = array();
+				if($allocated_objects)
+				{
+					foreach ($allocated_objects as $allocated_object)
+					{
+						$allocated[] = $allocated_object->get_resource_id();
+					}
+				}
+//
 				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
 
 				$criterias_array = array();
@@ -311,10 +320,6 @@
 				$location_id = $requirement->get_location_id();
 
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
-				$entity_arr = explode('.',$loc_arr['location']);
-
-				$entity_id = $entity_arr[2];
-				$cat_id = $entity_arr[3];
 
 				$criterias_array['location_id'] = $location_id;
 				$criterias_array['allrows'] = true;
@@ -341,26 +346,30 @@
 						$operator_str = ">";
 					}
 
-					$attrib_data = $custom->get('property', ".entity.{$entity_id}.{$cat_id}", $cust_attribute_id);
+					$attrib_data = $custom->get($loc_arr['appname'], $loc_arr['location'], $cust_attribute_id);
 
 					$view_criterias_array[] =  array(
-							'operator' 						=> 	$operator_str,
-							'value' 							=> 	$attrib_value,
-							"cust_attribute_data" => $attrib_data
+							'operator'						=> $operator_str,
+							'value' 						=> $attrib_value,
+							'cust_attribute_data'			=> $attrib_data
 						);
 
 					$condition = array(
 						'operator' 		=> $operator_str,
-						'value' 			=> $attrib_value,
-						'attribute_id' => $cust_attribute_id
+						'value' 		=> $attrib_value,
+						'attribute_id'	=> $cust_attribute_id
 					);
 
 					$criterias_array['conditions'][] = $condition;
 				}
 			}
 		    
-			$so_entity	= CreateObject('property.soentity',$entity_id,$cat_id);
-			$allocation_suggestions = $so_entity->get_eav_list($criterias_array);
+			$allocation_suggestions = execMethod('property.soentity.get_eav_list', $criterias_array);
+			
+			foreach ($allocation_suggestions as &$allocation_suggestion)
+			{
+				$allocation_suggestion['allocated'] = in_array($allocation_suggestion['id'],$allocated);
+			}
 
 			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
 
