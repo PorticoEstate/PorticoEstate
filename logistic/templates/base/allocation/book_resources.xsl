@@ -76,7 +76,7 @@
 					<div class="resource heading">
 							<span class="desc">Kort beskrivelse</span>
 							<span class="loc_id">Lokasjons id</span>
-							<span class="type">Type</span>
+						<!--	<span class="type">Type</span> -->
 							<span class="loc_code">Lokasjons kode</span>
 					</div>
 					<xsl:for-each select="allocation_suggestions">
@@ -90,11 +90,15 @@
 						    	<xsl:attribute name="class">resource even</xsl:attribute>
 						    </xsl:otherwise>
 						  </xsl:choose>
-						
-							<input type="checkbox" value="{id}" name="chosen_resources[]" />
+							<input type="checkbox" value="{id}" name="chosen_resources[]" >
+								<xsl:if test="allocated = 1">
+							    	<xsl:attribute name="checked">checked</xsl:attribute>
+							    	<xsl:attribute name="disabled">disabled</xsl:attribute>
+								</xsl:if>
+							</input>
 							<span class="desc"><xsl:value-of select="short_description" /></span>
 							<span class="loc_id"><xsl:value-of select="location_id" /></span>
-							<span class="type"><xsl:value-of select="type_lokale" /></span>
+						<!--	<span class="type"><xsl:value-of select="type_lokale" /></span> -->
 							<span class="loc_code"><xsl:value-of select="location_code" /></span>
 						</div>
 					</xsl:for-each>
