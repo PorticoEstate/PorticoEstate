@@ -71,6 +71,21 @@ var tableYUI;
 			}
 		}
 		document.form.id_to_update.value = values_tophp;
+		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('myValuesForPHP');
+
+		values_tophp = [];
+		var temp_id = false;
+		var temp_value = false;
+
+		for(i=0;i<valuesForPHP.length;i++)
+		{
+			temp_id = valuesForPHP[i].name;
+			temp_value = valuesForPHP[i].value;
+	//		values_tophp[temp_id] =  temp_value;
+			values_tophp[i] = temp_id + '::' + temp_value;
+
+		}
+		document.form.new_budget.value = values_tophp;
 	}
 
 

@@ -2245,7 +2245,20 @@
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
 			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
-			
+			$__new_budget 	= phpgw::get_var('new_budget');
+
+			$_new_budget = explode(',', trim($__new_budget, ','));
+
+			$new_budget = array();
+			foreach($_new_budget as $_entry)
+			{
+				$budget_arr = explode('::', $_entry);
+				$new_budget[$budget_arr[0]][$budget_arr[1]] = $budget_arr[2];
+			}
+			unset($_entry);
+			unset($budget_arr);
+
+//_debug_array($new_budget);die();			
 			if(isset($_POST['user_id']))
 			{
 				$user_id 	= phpgw::get_var('user_id', 'int');
@@ -2275,7 +2288,7 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget);
 			}
 
 			foreach ($list as &$entry)
@@ -2286,40 +2299,37 @@
 				if($entry['project_type_id'] != 3)
 				{
 					$_obligation = 0;
+					$_order = 0;
 
 					if(!$entry['closed'] && $type == 'project')
 					{
 						$_budget_arr = $this->bo->get_budget($entry['id']);
-						foreach($_budget_arr as $_budget_entry)
-						{
-							if($_budget_entry['active'])
-							{
-								$_obligation += $_budget_entry['sum_oblications'];
-							}
-						}
-
-						$_obligation = round($_obligation);
-
-						$entry['new_budget'] = "<input type='text' name='values[new_budget][{$entry['id']}]' value='{$_obligation}' title=''>";
 					}
 
 					if(!$entry['closed'] && $type == 'workorder')
 					{
 						$_budget_arr = execMethod('property.soworkorder.get_budget', $entry['id']);
+					}
+
+					if($_budget_arr)
+					{
 						foreach($_budget_arr as $_budget_entry)
 						{
 							if($_budget_entry['active'])
 							{
 								$_obligation += $_budget_entry['sum_oblications'];
+								$_order += $_budget_entry['sum_orders'];	
 							}
 						}
 
 						$_obligation = round($_obligation);
 
-						$entry['new_budget'] = "<input type='text' name='values[new_budget][{$entry['id']}]' value='{$_obligation}' title=''>";
+						$entry['new_budget'] = "<input type='text' class='myValuesForPHP' id='{$entry['id']}::budget_amount' name='{$entry['id']}::budget_amount' value='{$_obligation}' title=''></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::obligation' name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::order_amount' name='{$entry['id']}::order_amount' value='{$_order}'></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
+						
 					}
-
-
 				}
 				$entry['obligation'] = $_obligation;
 			}
