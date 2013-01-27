@@ -1066,6 +1066,7 @@ Returns mixed
 							<div id="paging_0"> </div>
 							<div id="datatable-container_0"/>
 							<input type="hidden" name="id_to_update" value=""/>
+							<input type="hidden" name="new_budget" value=""/>
 						</td>
 					</tr>
 				</form>

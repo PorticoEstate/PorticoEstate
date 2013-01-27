@@ -2580,13 +2580,26 @@ $test = 0;
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0,$new_budget = array())
 		{
 
-			if($transfer_budget)
+			if($transfer_budget && $execute)
 			{
 				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
-				_debug_array($ids);
+
+//_debug_array($new_budget);
+
+				foreach($new_budget as $_id => $_budget)
+				{
+					if((int)$_budget['latest_year'] >= (int)$transfer_budget)
+					{
+						continue;
+					}
+_debug_array($_id);
+_debug_array($_budget);
+
+				}
+
 				die();
 			}
 
@@ -2709,14 +2722,17 @@ $test = 0;
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				$budget = array();
+				$_year = 0;
 
 				while ($this->db->next_record())
 				{
+					$_year = $this->db->f('year');
 					$_active = $this->db->f('active') ? X : 0;
 					$_budget = number_format((int)$this->db->f('budget'), 0, ',', '.');
-					$budget[] = $this->db->f('year') . " [{$_active}/ {$_budget}]";
+					$budget[] = $_year . " [{$_active}/ {$_budget}]";
 				}
 				$entry['budget'] = implode(' ;', $budget);
+				$entry['latest_year'] = $_year;
 			}
 
 			return $values;
