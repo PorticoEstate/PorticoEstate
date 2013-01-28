@@ -210,7 +210,8 @@
 						array(
 							'key'	=>	'title',
 							'label'	=>	lang('Control title'),
-							'sortable'	=>	false
+							'sortable'	=>	false,
+              'formatter' => 'YAHOO.portico.formatLink'
 						),
 						array(
 							'key' => 'description',
