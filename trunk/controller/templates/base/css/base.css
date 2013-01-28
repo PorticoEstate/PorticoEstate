@@ -393,6 +393,11 @@ a {
   padding: 5px 20px;
 }
 
+#innertoolbar-button, input[type="button"], #innertoolbar-button, input[type="submit"] {
+  margin-right: 3px;
+  padding: 3px 20px;
+}
+
 #innertoolbar-button {
   font-size: 1em;
   line-height: 1.2em;
