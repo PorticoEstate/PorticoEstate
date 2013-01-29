@@ -67,6 +67,7 @@
 				'columns'				=> true,
 				'bulk_update_status'	=> true,
 				'project_group'			=> true,
+				'view_file'				=> true
 			);
 
 		function property_uiproject()
@@ -130,6 +131,16 @@
 			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('project');
 		}
 
 		function columns()
@@ -1004,7 +1015,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','files','attributes_form'));
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -1278,6 +1289,44 @@
 						{
 							$id = $receipt['id'];
 						}
+
+					//----------files
+						$bofiles	= CreateObject('property.bofiles');
+						if(isset($values['file_action']) && is_array($values['file_action']))
+						{
+							$bofiles->delete_file("/project/{$id}/", $values);
+						}
+
+						$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+						if($file_name)
+						{
+							$to_file = "{$bofiles->fakebase}/project/{$id}/{$file_name}";
+
+							if($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+							{
+								$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+							}
+							else
+							{
+								$bofiles->create_document_dir("project/$id");
+								$bofiles->vfs->override_acl = 1;
+	
+								if(!$bofiles->vfs->cp (array (
+									'from'	=> $_FILES['file']['tmp_name'],
+									'to'	=> $to_file,
+									'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
+							}
+						}
+					//-----------
+
 
 						if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
 							&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
@@ -1956,6 +2005,57 @@
 
 
 
+//--------------files
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiproject.view_file',
+				'id'		=> $id
+			);
+
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$_files = $this->bo->get_files($id);
+			
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z=0;
+			$content_files = array();
+			foreach( $_files as $_file )
+			{
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				}
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$z++;
+			}									
+
+			$datavalues[5] = array
+			(
+				'name'					=> "5",
+				'values' 				=> json_encode($content_files),
+				'total_records'			=> count($content_files),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 0,
+				'footer'				=> 0
+			);
+
+			$myColumnDefs[5] = array
+				(
+					'name'		=> "5",
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+//--------------files
+
+
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
 
@@ -2005,7 +2105,7 @@
 					'origin_id'		=> $id
 				);
 			}
-
+			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 			
 			$data = array
@@ -2025,7 +2125,7 @@
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
-					'tabs'								=> self::_generate_tabs($tabs),
+					'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
@@ -2190,8 +2290,6 @@
 
 //			$template_vars = array();
 //			$template_vars['datatable'] = $datatable;
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
@@ -2683,15 +2781,16 @@
 			);
 		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array())
+		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
 		{
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'location'		=> array('label' => lang('location'), 'link' => '#location'),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-					'history'		=> array('label' => lang('history'), 'link' => '#history')
+					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
 				);
 			$tabs = array_merge($tabs, $tabs_);
 			foreach($suppress as $tab => $remove)
@@ -2703,6 +2802,6 @@
 			}
 			phpgwapi_yui::tabview_setup('project_tabview');
 
-			return  phpgwapi_yui::tabview_generate($tabs, 'general');
+			return  phpgwapi_yui::tabview_generate($tabs, $selected);
 		}
 	}
