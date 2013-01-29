@@ -57,19 +57,21 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$anlegg = array();
 
+			$TreeID = '202';
 			$PeriodFrom = date('Ym');
 			$PeriodTo = 209912;
 
 			$memory = xmlwriter_open_memory();
 			xmlwriter_set_indent ( $memory , true );
 			xmlwriter_start_document($memory,'1.0','UTF-8');
-			xmlwriter_start_element($memory,'MaalepunktListe');
+			xmlwriter_start_element($memory,'TreeListe');
+				xmlwriter_write_attribute($memory,'TreeID',$TreeID);
 				xmlwriter_write_attribute($memory,'xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance');
-				xmlwriter_write_attribute($memory,'xsi:noNamespaceSchemaLocation','..\XmlSchema\AttributeValueList.xsd');
+				xmlwriter_write_attribute($memory,'xsi:noNamespaceSchemaLocation','TreeListe.xsd');
 
 			while ($this->db->next_record())
 			{
-				xmlwriter_start_element($memory,'Maalepunkt');
+				xmlwriter_start_element($memory,'Tree');
 					xmlwriter_write_element($memory,'ID', 'TJ');
 					xmlwriter_write_element($memory,'Verdi', substr($this->db->f('maalepunkt_id'),-8));
 					xmlwriter_write_element($memory,'Beskrivelse', $this->db->f('address'));
