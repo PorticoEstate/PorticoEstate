@@ -4,61 +4,62 @@
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 	<script>
-		<xsl:text>
+<xsl:text>
 
-			$(document).ready(function(){
+$(document).ready(function(){
 
-			var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
-			var baseUrl = phpGWLink('index.php', oArgs, false);
+	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
+	var baseUrl = phpGWLink('index.php', oArgs, false);
 
-			var location_type = $("#loc_type").val();
+	var location_type = $("#loc_type").val();
 
-			$("#search-location-name").autocomplete({
-			source: function( request, response ) {
+	$("#search-location-name").autocomplete({
+		source: function( request, response ) {
 			location_type = $("#loc_type").val();
-
+		
 			$.ajax({
-			url: baseUrl,
-			dataType: "json",
-			data: {
-			location_name: request.term,
-			level: location_type,
-			phpgw_return_as: "json"
-			},
-			success: function( data ) {
-			response( $.map( data, function( item ) {
-			return {
-			label: item.name,
-			value: item.location_code
-			}
-			}));
-			}
+				url: baseUrl,
+				dataType: "json",
+				data: {
+					location_name: request.term,
+					level: location_type,
+					phpgw_return_as: "json"
+				},
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.name,
+							value: item.location_code
+						}
+					}));
+				}
 			});
-			},
-			focus: function (event, ui) {
-			$(event.target).val(ui.item.label);
-			return false;
-			},
-			minLength: 1,
-			select: function( event, ui ) {
-			chooseLocation( ui.item.label, ui.item.value);
-			}
-			});
-			});
-			function chooseLocation( label, value ){
-			var currentYear = $("#currentYear").val();
-			var currentMonth = $("#currentMonth").val();
+		},
+		focus: function (event, ui) {
+ 			$(event.target).val(ui.item.label);
+  			return false;
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+		  chooseLocation( ui.item.label, ui.item.value);
+		}
+	});
+});
 
-			var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
-			var baseUrl = phpGWLink('index.php', oArgs, false);
-			var requestUrl = baseUrl +  "&amp;location_code=" + value + "&amp;year=" + currentYear + "&amp;month=" + currentMonth;
+function chooseLocation( label, value ){
+	var currentYear = $("#currentYear").val();
+	var currentMonth = $("#currentMonth").val();
+	
+	var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
+	var baseUrl = phpGWLink('index.php', oArgs, false);
+	var requestUrl = baseUrl +  "&amp;location_code=" + value + "&amp;year=" + currentYear + "&amp;month=" + currentMonth;
+	
+	window.location.replace(requestUrl);
+}
 
-			window.location.replace(requestUrl);
-			}
+</xsl:text>
 
-		</xsl:text>
-
-	</script>
+</script>
 
 	<div id="main_content">
 		<div id="control_plan" class="month_view">
