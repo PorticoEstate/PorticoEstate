@@ -1,8 +1,5 @@
-<!-- $Id$ -->
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
-	<xsl:variable name="session_url">&amp;
-		<xsl:value-of select="php:function('get_phpgw_session_url')" />
-	</xsl:variable>
+<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 	<script>
 		<xsl:text>
@@ -171,10 +168,8 @@
 										<xsl:value-of select="$session_url"/>
 									</xsl:attribute>
 
-									<xsl:variable name="month_str">short_month
-										<xsl:number/> capitalized
-									</xsl:variable>
-									<xsl:value-of select="php:function('lang', $month_str)" />
+									<xsl:variable name="month_str">short_month <xsl:number/> capitalized</xsl:variable>
+								<xsl:value-of select="php:function('lang', $month_str)" />
 								</a>
 							</th>
 						</xsl:for-each>
