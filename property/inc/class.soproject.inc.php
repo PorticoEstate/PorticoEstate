@@ -710,7 +710,7 @@
 
 */
 
-					$_get_accounting = false;
+					$_get_accounting = true;
 					if($_get_accounting)
 					{
 
@@ -2580,27 +2580,58 @@ $test = 0;
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0,$new_budget = array())
+		private function transfer_budget($id, $budget, $year)
 		{
+			$this->db->transaction_begin();
 
-			if($transfer_budget && $execute)
+			$id = (int) $id;
+			$year = (int) $year;
+			$this->db->query("SELECT periodization_id, project_type_id FROM fm_project WHERE id = {$id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$periodization_id = $this->db->f('periodization_id');
+			$project_type_id = $this->db->f('project_type_id');
+			$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
+			
+			if($budget['budget_amount'])
+			{
+				$this->update_budget($id, $year, $periodization_id, (int) $budget['budget_amount'], true, 'update', true);
+			}
+			
+			if($project_type_id == 1)//operation
+			{
+				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
+			}
+
+			$this->db->transaction_commit();
+		}
+
+
+		public function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget_year=0,$new_budget = array())
+		{
+			if($transfer_budget_year && $execute && $new_budget)
 			{
 				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
 
-//_debug_array($new_budget);
-
 				foreach($new_budget as $_id => $_budget)
 				{
-					if((int)$_budget['latest_year'] >= (int)$transfer_budget)
+					if((int)$_budget['latest_year'] >= (int)$transfer_budget_year)
 					{
 						continue;
 					}
-_debug_array($_id);
-_debug_array($_budget);
-
+					switch($type)
+					{
+						case 'project':
+							$this->transfer_budget($_id, $_budget, $transfer_budget_year);
+							break;
+						case 'workorder':
+							_debug_array( $_budget);
+							break;
+						default:
+							throw new Exception('property_soproject::bulk_update_status() - not a valid type');
+					}
 				}
 
-				die();
+//				die();
 			}
 
 			$start_date = $start_date ? phpgwapi_datetime::date_to_timestamp($start_date) : time();
