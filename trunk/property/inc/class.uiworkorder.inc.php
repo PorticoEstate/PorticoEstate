@@ -1055,6 +1055,11 @@
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
+				if(!$values['contract_sum'] && !$values['budget'])
+				{
+					$receipt['error'][]=array('msg'=>lang('please enter either a budget or contrakt sum'));
+				}
+
 				if(isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit(ltrim($values['addition_rs'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('Rig addition') . ': ' . lang('Please enter an integer !'));
@@ -2542,11 +2547,11 @@
 		{
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-					'documents'		=> array('label' => lang('documents'), 'link' => '#documents'),
-					'history'		=> array('label' => lang('history'), 'link' => '#history')
+					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')"),
 				);
 			$tabs = array_merge($tabs, $tabs_);
 

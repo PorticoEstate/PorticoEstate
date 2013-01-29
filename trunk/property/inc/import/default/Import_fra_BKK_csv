@@ -196,7 +196,7 @@
 					if($value < 0)
 					{
 						$buffer[$this->id]['artid'] = 2;					
-						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_2();
+						$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr_2() . '_k';
 					}
 					else
 					{

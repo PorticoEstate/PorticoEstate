@@ -1248,6 +1248,7 @@ please enter a request title !	property	no	Angi tittel for anmodning
 please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	angi enten material kostnader, arbeidskostnader eller begge
 please enter a workorder title !	property	no	Angi en bestillings tittel
+please enter either a budget or contrakt sum	property	no	Angi enten budsjett eller konstraktsum (eller begge)
 please enter precision as integer !	property	no	Angi heltall for presisjon
 please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	Angi detaljer
