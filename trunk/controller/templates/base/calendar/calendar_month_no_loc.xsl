@@ -51,7 +51,7 @@ function chooseLocation( label, value ){
 	var currentYear = $("#currentYear").val();
 	var currentMonth = $("#currentMonth").val();
 
-	var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_year'};
+	var oArgs = {menuaction:'controller.uicalendar.view_calendar_for_month'};
 	var baseUrl = phpGWLink('index.php', oArgs, false);
 	var requestUrl = baseUrl +  "&amp;location_code=" + value + "&amp;year=" + currentYear + "&amp;month=" + currentMonth;
 
