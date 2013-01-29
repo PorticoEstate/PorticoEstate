@@ -64,24 +64,7 @@ function chooseLocation( label, value ){
 
 <div id="main_content">
 	<div id="control_plan" class="month_view">
-		<div class="top">
-
-      <xsl:choose>
-        <xsl:when test="current_location/child::node()">
-          <xsl:choose>
-            <xsl:when test="location_level = 1">
-              <h1>Kontrollplan for eiendom: <xsl:value-of select="current_location/loc1_name"/></h1>
-            </xsl:when>
-            <xsl:otherwise>
-                <h1>Kontrollplan for bygg: <xsl:value-of select="current_location/loc2_name"/></h1>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <h1>Eiendom/bygg ikke valgt</h1>
-        </xsl:otherwise>
-      </xsl:choose>
-
+		<div id="no-loc" class="top">
       <h1>Eiendom/bygg ikke valgt</h1>
 			<h3>Månedsoversikt</h3>
 
@@ -107,48 +90,6 @@ function chooseLocation( label, value ){
 				</div>
 				<input type="text" value="" id="search-location-name" />
 			</div>
-
-			<!-- =====================  SELECT LIST FOR MY ASSIGNED LOCATIONS  ================= -->
-			<div id="choose-my-location" class="select-box">
-				<label>Velg et annet bygg/eiendom du har ansvar for</label>
-
-				<form action="#">
-					<input type="hidden" name="period_type" value="view_month" />
-					<input type="hidden" name="year">
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="current_year"/>
-				      </xsl:attribute>
-					</input>
-					<input type="hidden" name="month">
-				      <xsl:attribute name="value">
-				      	<xsl:value-of select="current_month_nr"/>
-				      </xsl:attribute>
-					</input>
-
-					<select id="choose_my_location" class="selectLocation">
-						<option>Velg bygg</option>
-						<xsl:for-each select="my_locations">
-								<xsl:choose>
-									<xsl:when test="location_code = //current_location/location_code">
-										<option selected="SELECTED">
-											<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>
-											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-										</option>
-									</xsl:when>
-									<xsl:otherwise>
-										<option>
-											<xsl:attribute name="value"><xsl:value-of disable-output-escaping="yes" select="location_code"/></xsl:attribute>
-											<xsl:value-of disable-output-escaping="yes" select="loc1_name"/>
-										</option>
-									</xsl:otherwise>
-								</xsl:choose>
-						</xsl:for-each>
-					</select>
-				</form>
-			</div>
-		</div>
-		<div class="middle">
-
 		</div>
 	</div>
 </div>
