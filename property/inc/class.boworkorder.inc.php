@@ -39,6 +39,7 @@
 		var $filter;
 		var $sort;
 		var $order;
+		var $filter_year;
 		var $cat_id;
 		var $order_sent_adress; // in case we want to resend the order as an reminder
 		var $allrows;
@@ -69,11 +70,14 @@
 				$this->use_session = true;
 			}
 
+			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
+
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
 			$sort				= phpgw::get_var('sort');
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
+			$filter_year		= phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$status_id			= phpgw::get_var('status_id');
 			$wo_hour_cat_id		= phpgw::get_var('wo_hour_cat_id', 'int');
@@ -89,6 +93,7 @@
 			$this->obligation	= $obligation;
 
 			$this->start		= $start ? $start : 0;
+			$this->filter_year	= $filter_year;
 
 			if(array_key_exists('district_id',$_POST) || array_key_exists('district_id',$_GET) )
 			{
@@ -470,7 +475,7 @@
 				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
 				'b_group'=>$this->b_group,'ecodimb'=>$this->ecodimb, 'paid'=>$this->paid,'b_account' => $this->b_account,
 				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id),
-				'obligation' => $this->obligation) );
+				'obligation' => $this->obligation, 'filter_year' => $this->filter_year) );
 
 			$this->total_records = $this->so->total_records;
 

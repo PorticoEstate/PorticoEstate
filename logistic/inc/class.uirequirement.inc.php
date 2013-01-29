@@ -158,17 +158,56 @@
 					$rows[] = $result->serialize();
 				}
 			}
+
+			//Sigurd
+			$custom	= createObject('phpgwapi.custom_fields');
+
 //_debug_array($rows);
 			$line_id = 0; // optional preselect
 			foreach($rows as &$entry)
 			{
 
-//FIXME: hent verdier
-/*
+//-----------Sigurd
 				$_filters = array('requirement_id' => $entry['id']);
 				$requirement_values_array = $this->so_requirement_value->get(0, false, $sort_field, $sort_ascending, $search_for, $search_type, $_filters);
 
-*/
+				$location_id = $entry['location_id'];
+				$criterias = array();
+				if( count( $requirement_values_array ) > 0 )
+				{
+					foreach($requirement_values_array as $requirement_value)
+					{
+						$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+						$cust_attribute_id = $requirement_value->get_cust_attribute_id();
+
+						$attrib_data = $custom->get('property', $loc_arr['location'], $cust_attribute_id);
+
+						$_criterie = $attrib_data['input_text'];
+					
+						if(isset($attrib_data['choice']))
+						{
+							foreach ($attrib_data['choice'] as $_choice)
+							{
+								if($_choice['id'] == $requirement_value->get_value())
+								{
+									$_criterie .= "::{$_choice['value']}";
+									break;
+								}
+							}
+						}
+						else if($requirement_value->get_value())
+						{
+							$_criterie .= "::{$requirement_value->get_value()}";					
+						}
+					
+						$criterias[] = $_criterie;
+
+//						$operator	= $requirement_value->get_operator();
+					}
+				}
+				$entry['criterias'] = implode(',',$criterias);
+
+//-------------
 				$_checked = '';
 
 				if($entry['id'] == $line_id)
@@ -288,7 +327,7 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'location_id',
+							'key' => 'location_label',
 							'label' => lang('Resource type'),
 							'sortable' => false
 						),

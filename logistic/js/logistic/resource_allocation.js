@@ -20,7 +20,8 @@ $(document).ready(function(){
 				  var obj = jQuery.parseJSON(data);
 	    		  
 	    		  if(obj.status == "deleted"){
-	    			  $(thisRow).remove();
+	    				$(thisRow).remove();
+						YAHOO.portico.updateinlineTableHelper('requirement-container');
 				  }
 			  },
 			  error: function(XMLHttpRequest, textStatus, errorThrown) {

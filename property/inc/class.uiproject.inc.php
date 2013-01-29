@@ -67,6 +67,7 @@
 				'columns'				=> true,
 				'bulk_update_status'	=> true,
 				'project_group'			=> true,
+				'view_file'				=> true
 			);
 
 		function property_uiproject()
@@ -130,6 +131,16 @@
 			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('project');
 		}
 
 		function columns()
@@ -1004,7 +1015,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','files','attributes_form'));
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -1278,6 +1289,44 @@
 						{
 							$id = $receipt['id'];
 						}
+
+					//----------files
+						$bofiles	= CreateObject('property.bofiles');
+						if(isset($values['file_action']) && is_array($values['file_action']))
+						{
+							$bofiles->delete_file("/project/{$id}/", $values);
+						}
+
+						$file_name = @str_replace(' ','_',$_FILES['file']['name']);
+
+						if($file_name)
+						{
+							$to_file = "{$bofiles->fakebase}/project/{$id}/{$file_name}";
+
+							if($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+							{
+								$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+							}
+							else
+							{
+								$bofiles->create_document_dir("project/$id");
+								$bofiles->vfs->override_acl = 1;
+	
+								if(!$bofiles->vfs->cp (array (
+									'from'	=> $_FILES['file']['tmp_name'],
+									'to'	=> $to_file,
+									'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
+							}
+						}
+					//-----------
+
 
 						if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
 							&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
@@ -1956,6 +2005,57 @@
 
 
 
+//--------------files
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uiproject.view_file',
+				'id'		=> $id
+			);
+
+			$link_to_files =(isset($config->config_data['files_url'])?$config->config_data['files_url']:'');
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+
+			$_files = $this->bo->get_files($id);
+			
+			$lang_view_file = lang('click to view file');
+			$lang_delete_file = lang('Check to delete file');
+			$z=0;
+			$content_files = array();
+			foreach( $_files as $_file )
+			{
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = "<a href='{$link_to_files}/{$_file['directory']}/{$_file['file_name']}' target=\"_blank\" title='{$lang_view_file}'>{$_file['name']}</a>";
+				}
+				else
+				{
+					$content_files[$z]['file_name'] = "<a href=\"{$link_view_file}&amp;file_name={$_file['file_name']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
+				}
+				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
+				$z++;
+			}									
+
+			$datavalues[5] = array
+			(
+				'name'					=> "5",
+				'values' 				=> json_encode($content_files),
+				'total_records'			=> count($content_files),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 0,
+				'footer'				=> 0
+			);
+
+			$myColumnDefs[5] = array
+				(
+					'name'		=> "5",
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
+				);
+
+//--------------files
+
+
 //	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
 
@@ -2005,7 +2105,7 @@
 					'origin_id'		=> $id
 				);
 			}
-
+			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 			
 			$data = array
@@ -2025,7 +2125,7 @@
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
-					'tabs'								=> self::_generate_tabs($tabs),
+					'tabs'								=> self::_generate_tabs($tabs,array('documents' => $id?false:true, 'history' => $id?false:true),$selected_tab),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',
@@ -2191,8 +2291,6 @@
 //			$template_vars = array();
 //			$template_vars['datatable'] = $datatable;
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
@@ -2245,7 +2343,20 @@
 			$paid			= phpgw::get_var('paid', 'bool', 'POST');
 			$closed_orders	= phpgw::get_var('closed_orders', 'bool', 'POST');
 			$transfer_budget= phpgw::get_var('transfer_budget', 'integer');
-			
+			$__new_budget 	= phpgw::get_var('new_budget');
+
+			$_new_budget = explode(',', trim($__new_budget, ','));
+
+			$new_budget = array();
+			foreach($_new_budget as $_entry)
+			{
+				$budget_arr = explode('::', $_entry);
+				$new_budget[$budget_arr[0]][$budget_arr[1]] = $budget_arr[2];
+			}
+			unset($_entry);
+			unset($budget_arr);
+
+//_debug_array($new_budget);die();			
 			if(isset($_POST['user_id']))
 			{
 				$user_id 	= phpgw::get_var('user_id', 'int');
@@ -2275,7 +2386,50 @@
 
 			if(($execute || $get_list) && $type)
 			{
-				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget);
+				$list = $this->bo->bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id,$ids,$paid,$closed_orders,$ecodimb,$transfer_budget,$new_budget);
+			}
+
+			foreach ($list as &$entry)
+			{
+				$_obligation = '';
+				$entry['new_budget'] = '';
+
+				if($entry['project_type_id'] != 3)
+				{
+					$_obligation = 0;
+					$_order = 0;
+
+					if(!$entry['closed'] && $type == 'project')
+					{
+						$_budget_arr = $this->bo->get_budget($entry['id']);
+					}
+
+					if(!$entry['closed'] && $type == 'workorder')
+					{
+						$_budget_arr = execMethod('property.soworkorder.get_budget', $entry['id']);
+					}
+
+					if($_budget_arr)
+					{
+						foreach($_budget_arr as $_budget_entry)
+						{
+							if($_budget_entry['active'])
+							{
+								$_obligation += $_budget_entry['sum_oblications'];
+								$_order += $_budget_entry['sum_orders'];	
+							}
+						}
+
+						$_obligation = round($_obligation);
+
+						$entry['new_budget'] = "<input type='text' class='myValuesForPHP' id='{$entry['id']}::budget_amount' name='{$entry['id']}::budget_amount' value='{$_obligation}' title=''></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::obligation' name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::order_amount' name='{$entry['id']}::order_amount' value='{$_order}'></input>";
+						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
+						
+					}
+				}
+				$entry['obligation'] = $_obligation;
 			}
 
 			$total_records	= count($list);
@@ -2303,6 +2457,8 @@
 														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
 					);
@@ -2319,6 +2475,9 @@
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
@@ -2622,15 +2781,16 @@
 			);
 		}
 
-		protected function _generate_tabs($tabs_ = array(), $suppress = array())
+		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')
 		{
 			$tabs = array
 				(
-					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'location'		=> array('label' => lang('location'), 'link' => '#location'),
-					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget'),
-					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination'),
-					'history'		=> array('label' => lang('history'), 'link' => '#history')
+					'general'		=> array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
+					'location'		=> array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
+					'budget'		=> array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
+					'coordination'	=> array('label' => lang('coordination'), 'link' => '#coordination', 'function' => "set_tab('coordination')"),
+					'documents'		=> array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
+					'history'		=> array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')")
 				);
 			$tabs = array_merge($tabs, $tabs_);
 			foreach($suppress as $tab => $remove)
@@ -2642,6 +2802,6 @@
 			}
 			phpgwapi_yui::tabview_setup('project_tabview');
 
-			return  phpgwapi_yui::tabview_generate($tabs, 'general');
+			return  phpgwapi_yui::tabview_generate($tabs, $selected);
 		}
 	}

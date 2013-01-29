@@ -393,6 +393,11 @@ a {
   padding: 5px 20px;
 }
 
+#innertoolbar-button, input[type="button"], #innertoolbar-button, input[type="submit"] {
+  margin-right: 3px;
+  padding: 3px 20px;
+}
+
 #innertoolbar-button {
   font-size: 1em;
   line-height: 1.2em;
@@ -516,7 +521,7 @@ h1 img{
 }
 
 #control_item_details .styleWrp {
-  background: none repeat scroll 0 0 #F2F8FF;
+  background: none repeat scroll 0 0 #FFFFFF;
   border: 1px solid #DBE5EF;
   border-radius: 4px;
   padding: 10px;
@@ -661,6 +666,7 @@ ul.items {
   padding: 0;
   position: relative;
 }
+
 ul.items li.list_item{
   position:relative;
   z-index: 1;
@@ -674,8 +680,12 @@ ul.items li.list_item{
   padding: 5px;
 }
 
-#control_items form{
-  margin-bottom: 20px;
+#control_items form {
+  margin-bottom: 25px;
+}
+
+#control_items ul{
+  margin-bottom: 10px;
 }
 
 /* =======================================  DRAG LIST  ========================================= */
@@ -683,9 +693,11 @@ ul.items li.list_item{
 .drag_group{
   margin-bottom: 10px;
 }
+
 .drag_group a:hover{
   cursor: move;
 }
+
 .drag_elem{
   z-index: 100;
   position:absolute;
@@ -704,6 +716,7 @@ ul.expand_list h4 {
   margin-bottom: 6px;
   margin-top: 0;
 }
+
 ul.expand_list h4 img {
   height: 12px;
 }
@@ -722,6 +735,7 @@ ul.expand_list h4 span {
   padding-left: 5px;
   vertical-align: middle;
 }
+
 ul.expand_list .expand_item {
   display: none;
 }
@@ -739,10 +753,12 @@ dl.proplist, dl.proplist-col {
   margin: 10px 0 15px 0;
   width: 120px;
 }
+
 .delete {
   cursor: pointer;
   margin-left: 5px;
 }
+
 .yui-navset .yui-content.tab_content {
   padding: 20px;
 }
@@ -1144,6 +1160,12 @@ ul.check_list {
 #search-location {
   float: right;
   margin-bottom: 10px;
+}
+
+#no-loc #search-location {
+    clear: both;
+    float: left;
+    margin-bottom: 10px;
 }
 
 #search-location-name {

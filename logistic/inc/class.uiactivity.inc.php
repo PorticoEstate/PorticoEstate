@@ -444,7 +444,7 @@
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-			$activities = $this->so->get();
+			$activities = $this->so->get(0, 0, 'name', true, null, null, null, true);
 
 			if($activity_id)
 			{
@@ -655,8 +655,13 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'location_id',
+							'key' => 'location_label',
 							'label' => lang('Resource type'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'criterias',
+							'label' => lang('Criterias'),
 							'sortable' => false
 						),
 						array(
