@@ -2590,18 +2590,22 @@ $test = 0;
 			$this->db->next_record();
 			$periodization_id = $this->db->f('periodization_id');
 			$project_type_id = $this->db->f('project_type_id');
-			$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
-			
-			if($budget['budget_amount'])
+
+			if(abs($budget['obligation']) > 0)
 			{
-				$this->update_budget($id, $year, $periodization_id, (int) $budget['budget_amount'], true, 'update', true);
+				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
 			}
-			
+
 			if($project_type_id == 1)//operation
 			{
 				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
-			}
+			}			
 
+			if($budget['budget_amount'])
+			{
+				$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+			}
+			
 			$this->db->transaction_commit();
 		}
 
@@ -2612,19 +2616,19 @@ $test = 0;
 			{
 				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
 
-				foreach($new_budget as $_id => $_budget)
+				foreach($ids as $_id)
 				{
-					if((int)$_budget['latest_year'] >= (int)$transfer_budget_year)
+					if((int)$new_budget[$_id]['latest_year'] >= (int)$transfer_budget_year)
 					{
 						continue;
 					}
 					switch($type)
 					{
 						case 'project':
-							$this->transfer_budget($_id, $_budget, $transfer_budget_year);
+							$this->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
 							break;
 						case 'workorder':
-							_debug_array( $_budget);
+							_debug_array( $new_budget[$_id]);
 							break;
 						default:
 							throw new Exception('property_soproject::bulk_update_status() - not a valid type');
