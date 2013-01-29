@@ -563,12 +563,9 @@
 			$end_periode = date('Ym',mktime(2,0,0,12,31,$year));
 
 
-
-			$filtermethod .= " WHERE (fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
-			$filtermethod .= " OR fm_workorder_status.closed IS NULL AND fm_workorder.start_date < $start_date)";
-
-			$filtermethod = " WHERE (fm_workorder_budget.year = $year OR fm_workorder_status.closed IS NULL)";
-
+			$filtermethod = '';
+			$filtermethod_order = " WHERE (fm_workorder_budget.year = $year OR fm_workorder_status.closed IS NULL)";
+			$filtermethod_paid = " WHERE (fm_orders_paid_or_pending_view.periode > {$year}00 and fm_orders_paid_or_pending_view.periode < {$year}13)";
 
 			$where = 'AND';
 
@@ -654,23 +651,50 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
-				. " fm_location1.mva,fm_workorder.start_date,"
-				. " fm_orders_actual_cost_view.actual_cost,pending_cost, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
+			$sql = "SELECT fm_workorder.id AS id, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost,fm_location1.mva,"
+				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
 				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
-				. " {$this->left_join} fm_orders_actual_cost_view ON  fm_workorder.id = fm_orders_actual_cost_view.order_id"
-				. " {$this->left_join} fm_orders_pending_cost_view ON  fm_workorder.id = fm_orders_pending_cost_view.order_id"
+				. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " {$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
-				. " GROUP BY fm_workorder.id, fm_workorder_status.closed,fm_location1.mva,fm_workorder.start_date,fm_orders_actual_cost_view.actual_cost,pending_cost, fm_b_account.{$b_account_field}, district_id, fm_workorder.ecodimb";
+				. " {$filtermethod_paid}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " GROUP BY fm_workorder.id, fm_location1.mva,"
+				. " fm_b_account.{$b_account_field}, district_id, fm_workorder.ecodimb";
 
-			//_debug_array($sql);
+//			_debug_array($sql);
 			//die();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$_temp_paid_info = array();
+
+			while ($this->db->next_record())
+			{
+				$_id = $this->db->f('id');
+				$_temp_paid_info[$_id] = array
+				(
+					'actual_cost'			=> $this->db->f('actual_cost'),
+					'mva'					=> (int)$this->db->f('mva'),
+					'district_id'			=> (int)$this->db->f('district_id'),
+					'ecodimb'				=> (int)$this->db->f('ecodimb'),
+					$b_account_field		=> $this->db->f($b_account_field),
+				);
+			}
+
+
+			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, fm_workorder.combined_cost,fm_location1.mva,fm_workorder.start_date,"
+				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
+				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
+				. " {$_join_district}"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}";
+
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			$sum_actual_cost = 0;
@@ -688,19 +712,19 @@
 					$_local_combined_cost[$_id] = round($this->db->f('combined_cost'));
 					$_combined_cost = $_local_combined_cost[$_id];
 				}
-				unset($_id);
-				$_pending_cost = round($this->db->f('pending_cost'));
 
 				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mva')]/100);
-				$_actual_cost = round($this->db->f('actual_cost')/$_taxfactor);
-		//		$_actual_cost = round($this->db->f('actual_cost'));
-				$_obligation = $_combined_cost - $_actual_cost - $_pending_cost;
+				$_actual_cost = isset($_temp_paid_info[$_id]['actual_cost']) && $_temp_paid_info[$_id]['actual_cost'] ? round($_temp_paid_info[$_id]['actual_cost']/$_taxfactor) : 0;
+		//		$_actual_cost = round($_temp_paid_info[$_id]['actual_cost']);
+				$_obligation = $_combined_cost - $_actual_cost;
 
+				unset($_temp_paid_info[$_id]);
+				unset($_id);
 
 				// only the current year
 				if($this->db->f('start_date') < $start_date)
 				{
-					$_actual_cost = 0;
+//					$_actual_cost = 0;
 				}
 
 				$sum_hits += 1;
@@ -737,6 +761,20 @@
 
 			}
 
+
+//			_debug_array($_temp_paid_info);
+			
+			foreach ($_temp_paid_info as $_id => $_paid)
+			{
+				$accout_info[$_paid[$b_account_field]] = true;
+				$district[$_paid['district_id']] = true;
+				$ecodimb[$_paid['ecodimb']] = true;
+
+				$_taxfactor = 1 + ($_taxcode[(int)$_paid['mva']]/100);
+				$_actual_cost =  round($_paid['actual_cost']/$_taxfactor);
+				$sum_actual_cost += $_actual_cost;
+				$actual_cost[$_paid[$b_account_field]][(int)$_paid['district_id']][(int)$_paid['ecodimb']] += $_actual_cost;
+			}
 
 //			_debug_array($obligations);
 

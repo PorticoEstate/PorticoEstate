@@ -266,6 +266,7 @@
 						{
 							case '=':
 							case 'equal':
+							case 'eq':
 								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 								break;
 							case 'gt':

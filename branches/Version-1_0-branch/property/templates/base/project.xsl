@@ -41,6 +41,11 @@ Returns mixed
 				document.add_sub_entry_form.submit();
 			}
 			var project_type_id = '<xsl:value-of select="project_type_id"/>';
+
+			function set_tab(tab = '')
+			{
+				document.form.tab.value = tab;			
+			}
 		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -67,7 +72,8 @@ Returns mixed
 				</xsl:when>
 			</xsl:choose>
 		</table>
-		<form method="post" name="form" action="{form_action}">
+		<form ENCTYPE="multipart/form-data" method="post" name="form" action="{form_action}">
+			<input type="hidden" name="tab" value=""/>
 			<div class="yui-navset" id="project_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
@@ -731,10 +737,28 @@ Returns mixed
 							</xsl:choose>
 						</table>
 					</div>
-					<div id="history">
-						<div id="paging_4"> </div>
-						<div id="datatable-container_4"/>
-					</div>
+					<xsl:choose>
+						<xsl:when test="value_project_id &gt; 0">
+							<div id="documents">
+								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td align="left" valign="top">
+											<xsl:value-of select="php:function('lang', 'files')"/>
+										</td>
+										<td>
+											<div id="datatable-container_5"/>
+										</td>
+									</tr>
+									<xsl:call-template name="file_upload"/>
+								</table>
+							</div>
+							<div id="history">
+								<div id="paging_4"> </div>
+								<div id="datatable-container_4"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+
 					<xsl:call-template name="attributes_values"/>
 				</div>
 			</div>
@@ -1066,6 +1090,7 @@ Returns mixed
 							<div id="paging_0"> </div>
 							<div id="datatable-container_0"/>
 							<input type="hidden" name="id_to_update" value=""/>
+							<input type="hidden" name="new_budget" value=""/>
 						</td>
 					</tr>
 				</form>

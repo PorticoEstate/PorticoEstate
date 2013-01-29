@@ -738,7 +738,7 @@
 						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"// AND year = '{$filter_year}')"
 //						. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id )"
 //						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id {$sql_filter_period})"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode < {$filter_year}13 OR periode IS NULL))"
+						. " {$this->left_join} fm_orders_paid_or_pending_view ON (fm_workorder.id = fm_orders_paid_or_pending_view.order_id AND( periode > {$filter_year}00 AND periode < {$filter_year}13 OR periode IS NULL))"
 //						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter} OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " WHERE (project_id = '{$project['project_id']}' AND fm_workorder_budget.year = {$filter_year} ) OR (project_id = '{$project['project_id']}' AND fm_workorder_status.closed IS NULL)"
 						. " GROUP BY fm_workorder.id, billable_hours, closed";
@@ -2580,13 +2580,26 @@ $test = 0;
 		}
 
 
-		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0)
+		function bulk_update_status($start_date, $end_date, $status_filter, $status_new, $execute, $type, $user_id = 0,$ids,$paid = false, $closed_orders = false, $ecodimb = 0, $transfer_budget=0,$new_budget = array())
 		{
 
-			if($transfer_budget)
+			if($transfer_budget && $execute)
 			{
 				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
-				_debug_array($ids);
+
+//_debug_array($new_budget);
+
+				foreach($new_budget as $_id => $_budget)
+				{
+					if((int)$_budget['latest_year'] >= (int)$transfer_budget)
+					{
+						continue;
+					}
+_debug_array($_id);
+_debug_array($_budget);
+
+				}
+
 				die();
 			}
 
@@ -2620,13 +2633,13 @@ $test = 0;
 				}
 			}
 
-			$sql_budget = "SELECT DISTINCT year, active FROM fm_{$type}_budget WHERE ";
+			$sql_budget = "SELECT DISTINCT year, active, sum(budget) as budget FROM fm_{$type}_budget WHERE ";
 
 			switch($type)
 			{
 				case 'project':
 
-					$sql_budget .= 'project_id = %d ORDER BY year';
+					$sql_budget .= 'project_id = %d GROUP BY year, active ORDER BY year';
 
 					if($closed_orders)
 					{
@@ -2637,17 +2650,17 @@ $test = 0;
 					$status_table = 'fm_project_status';
 					$title_field = 'fm_project.name as title';
 					$this->_update_status_project($execute, $status_new, $ids);
-					$sql = "SELECT DISTINCT {$table}.id, $status_table.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
+					$sql = "SELECT DISTINCT {$table}.id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
 					. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
 					. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL)  {$filter}"
-					. " GROUP BY {$table}.id, $status_table.descr ,{$table}.name, {$table}.start_date,project_type_id"
+					. " GROUP BY {$table}.id, {$status_table}.closed, {$status_table}.descr ,{$table}.name, {$table}.start_date,project_type_id"
 					. " ORDER BY {$table}.id DESC";
 
 					break;
 				case 'workorder':
 
-					$sql_budget .= 'order_id = %d ORDER BY year';
+					$sql_budget .= 'order_id = %d GROUP BY year, active ORDER BY year';
 
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
@@ -2664,7 +2677,8 @@ $test = 0;
 					}
 
 					$this->_update_status_workorder($execute, $status_new, $ids);
-					$sql = "SELECT {$table}.id, project_id, $status_table.descr as status ,{$title_field},{$table}.start_date {$actual_cost},project_type_id"
+					$sql = "SELECT {$table}.id, project_id,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date {$actual_cost},"
+					. " project_type_id, continuous"
 					. " FROM {$table} {$join_method}"
 					. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} {$filter}) OR {$table}.start_date is NULL"
 					. " ORDER BY {$table}.id DESC";
@@ -2690,11 +2704,14 @@ $test = 0;
 				(
 					'id'				=> $this->db->f('id'),
 					'project_id'		=> $this->db->f('project_id'),
+					'closed'			=> $this->db->f('closed'),
 					'title'				=> htmlspecialchars_decode($this->db->f('title',true)),
 					'status'			=> $this->db->f('status',true),
 					'actual_cost'		=> (float)$this->db->f('actual_cost'),
 					'start_date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),
 					'num_open'			=> (int)$this->db->f('num_open'),
+					'project_type_id'	=> $this->db->f('project_type_id'),
+					'continuous'		=> $this->db->f('continuous') ? X : '',
 					'project_type'		=> $project_types[$this->db->f('project_type_id')],
 				);
 			}
@@ -2705,12 +2722,17 @@ $test = 0;
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				$budget = array();
+				$_year = 0;
 
 				while ($this->db->next_record())
 				{
-					$budget[] = $this->db->f('year') . '[' . $this->db->f('active') . ']';
+					$_year = $this->db->f('year');
+					$_active = $this->db->f('active') ? X : 0;
+					$_budget = number_format((int)$this->db->f('budget'), 0, ',', '.');
+					$budget[] = $_year . " [{$_active}/ {$_budget}]";
 				}
-				$entry['budget'] = implode(';', $budget);
+				$entry['budget'] = implode(' ;', $budget);
+				$entry['latest_year'] = $_year;
 			}
 
 			return $values;

@@ -88,6 +88,11 @@
 			{
 				document.send_workorder_form.submit();
 			}
+			function set_tab(tab = '')
+			{
+				document.form.tab.value = tab;			
+			}
+
 		</script>
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -161,6 +166,7 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}">
+			<input type="hidden" name="tab" value=""/>
 			<div class="yui-navset" id="workorder_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div class="yui-content">
