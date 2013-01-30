@@ -793,7 +793,7 @@
 					$_paid_filter = " AND (periode > {$filter_year}00 AND periode < {$filter_year}13 OR periode IS NULL)";
 				}
 
-				$_get_accounting = false;
+				$_get_accounting = true;
 				if($_get_accounting)
 				{
 				$this->db->query($sql_cost,__LINE__,__FILE__);
