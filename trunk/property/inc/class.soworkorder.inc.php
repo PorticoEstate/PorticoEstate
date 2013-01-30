@@ -793,7 +793,7 @@
 					$_paid_filter = " AND (periode > {$filter_year}00 AND periode < {$filter_year}13 OR periode IS NULL)";
 				}
 
-				$_get_accounting = false;
+				$_get_accounting = true;
 				if($_get_accounting)
 				{
 				$this->db->query($sql_cost,__LINE__,__FILE__);
@@ -2192,7 +2192,7 @@
 			$sql = "SELECT periodization_id, project_type_id, continuous"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
-			. " WHERE id = {$id}";
+			. " WHERE fm_workorder.id = {$id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -2203,23 +2203,21 @@
 
 			if(abs($budget['obligation']) > 0)
 			{
-				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
+//				$transferred = $this->_update_order_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], $contract_sum, $combined_cost = 0, $action = 'subtract', $activate = 0);
 			}
 
 			if($project_type_id == 1)//operation
 			{
-				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id}",__LINE__,__FILE__);
 			}			
 
 			if($budget['budget_amount'])
 			{
-				$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], $budget['budget_amount'], $budget['budget_amount'], $action = 'update', true);
 			}
 			
 			$this->db->transaction_commit();
 		}
-
-
 
 		/**
 		* Maintain correct periodizing in relation to current project (in case the order is moved)
@@ -2251,6 +2249,8 @@
 
 			if($action == 'subtract')
 			{
+				throw new Exception('property_soproject::_update_order_budget() - FIXME: subtract not implemented');
+
 				$incoming_budget = $budget;
 				$acc_partial = 0;
 
@@ -2318,7 +2318,7 @@
 
 				if(!$hit)
 				{
-					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');
+					throw new Exception('property_soproject::_update_order_budget() - found no active budget to transfer from');
 				}
 
 				return $acc_partial;
