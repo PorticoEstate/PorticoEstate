@@ -2176,6 +2176,51 @@
 */
 		}
 
+
+
+		/**
+		* Transfer budget and cost from one year to the next
+		*
+		**/
+
+		public function transfer_budget($id, $budget, $year)
+		{
+			$this->db->transaction_begin();
+
+			$id = (int) $id;
+			$year = (int) $year;
+			$sql = "SELECT periodization_id, project_type_id, continuous"
+			. " FROM fm_workorder"
+			. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+			. " WHERE id = {$id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$periodization_id = $this->db->f('periodization_id');
+			$project_type_id = $this->db->f('project_type_id');
+			$continuous = $this->db->f('continuous');
+
+			if(abs($budget['obligation']) > 0)
+			{
+				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
+			}
+
+			if($project_type_id == 1)//operation
+			{
+				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
+			}			
+
+			if($budget['budget_amount'])
+			{
+				$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+			}
+			
+			$this->db->transaction_commit();
+		}
+
+
+
 		/**
 		* Maintain correct periodizing in relation to current project (in case the order is moved)
 		*
@@ -2200,9 +2245,87 @@
 			}
 		}
 
-		public function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0)
+		public function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0, $action = 'update', $activate = 0)
 		{
 			$year = $year ? (int) $year : date('Y');
+
+			if($action == 'subtract')
+			{
+				$incoming_budget = $budget;
+				$acc_partial = 0;
+
+				$orig_budget = $this->get_budget($order_id);
+
+				$hit = false;
+				foreach ($orig_budget as $entry)
+				{
+					if($entry['year'] == $year && $entry['active'])
+					{
+						$partial_budget = 0;
+						$month = (int)substr($entry['period'],-2);
+						$hit = true; // found at least one.
+						if($entry['budget'] >= 0)
+						{
+							if($entry['diff'] > 0)
+							{
+								if($entry['diff'] < $budget)
+								{
+
+									$partial_budget = $entry['diff'];
+									$budget -= $partial_budget;
+								}
+								else
+								{
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget > 0 ? $partial_budget : 0;
+									$budget = 0;
+								}
+							}
+						}
+						if($entry['budget'] < 0)
+						{
+							if($entry['diff'] < 0)
+							{
+								if($entry['diff'] > $budget)
+								{
+									$partial_budget = $entry['diff'];
+									$budget -= $partial_budget;
+								}
+								else
+								{
+									$partial_budget = $budget;
+									$partial_budget = $partial_budget < 0 ? $partial_budget : 0;
+									$budget = 0;
+								}
+							}
+						}
+						if($partial_budget)
+						{
+							$acc_partial += $partial_budget;
+							$this->_update_budget($order_id, $year, $month, $partial_budget, $partial_contract, $partial_cost, $action);
+						}
+					}
+				}
+//_debug_array($budget);
+//die();
+				if($hit && $budget) // still some left to go - place it on the last one
+				{
+
+					$acc_partial += $budget;
+
+					$this->_update_budget($order_id, $year, $month, $budget, $contract, $cost, $action);
+				}
+
+				if(!$hit)
+				{
+					throw new Exception('property_soproject::update_buffer_budget() - found no active budget to transfer from');
+				}
+
+				return $acc_partial;
+			}
+
+
+
 
 			$periodization_id = (int) $periodization_id;
 			$periodization_outline = array();

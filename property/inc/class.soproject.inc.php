@@ -2614,7 +2614,8 @@ $test = 0;
 		{
 			if($transfer_budget_year && $execute && $new_budget)
 			{
-				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
+				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget_year} </H1>";
+				$soworkorder = CreateObject('property.soworkorder');
 
 				foreach($ids as $_id)
 				{
@@ -2628,7 +2629,7 @@ $test = 0;
 							$this->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
 							break;
 						case 'workorder':
-							_debug_array( $new_budget[$_id]);
+							$soworkorder->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
 							break;
 						default:
 							throw new Exception('property_soproject::bulk_update_status() - not a valid type');
