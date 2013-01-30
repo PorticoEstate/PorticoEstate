@@ -88,7 +88,7 @@
 			{
 				document.send_workorder_form.submit();
 			}
-			function set_tab(tab = '')
+			function set_tab(tab)
 			{
 				document.form.tab.value = tab;			
 			}

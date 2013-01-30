@@ -42,7 +42,7 @@ Returns mixed
 			}
 			var project_type_id = '<xsl:value-of select="project_type_id"/>';
 
-			function set_tab(tab = '')
+			function set_tab(tab)
 			{
 				document.form.tab.value = tab;			
 			}
