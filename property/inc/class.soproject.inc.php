@@ -710,7 +710,7 @@
 
 */
 
-					$_get_accounting = false;
+					$_get_accounting = true;
 					if($_get_accounting)
 					{
 
@@ -2591,7 +2591,7 @@ $test = 0;
 			$periodization_id = $this->db->f('periodization_id');
 			$project_type_id = $this->db->f('project_type_id');
 
-			if(abs($budget['obligation']) > 0)
+			if(abs($budget['obligation']) > 0 && $project_type_id == 2) // investment
 			{
 				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
 			}
