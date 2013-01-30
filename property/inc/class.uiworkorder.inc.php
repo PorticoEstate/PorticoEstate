@@ -1055,7 +1055,7 @@
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
-				if(!$values['contract_sum'] && !$values['budget'])
+				if(!$id && (!$values['contract_sum'] && !$values['budget']))
 				{
 					$receipt['error'][]=array('msg'=>lang('please enter either a budget or contrakt sum'));
 				}
