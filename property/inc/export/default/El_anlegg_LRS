@@ -31,15 +31,16 @@
 	 * Description
 	 * @package property
 	 */
+	phpgw::import_class('phpgwapi.datetime');
 
 	class export_conv
 	{
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 
-		var $debug;
-		var $client_code = 14;
+		var $debug = false;
 		protected $connection = false;
 		protected $receipt = array();
+		protected $type = '202';
 
 		function  __construct()
 		{
@@ -50,14 +51,14 @@
 			$this->config				= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
-		protected function get_anlegg()
+		protected function get_xmldata()
 		{
-			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1";
+			$sql= "SELECT * FROM fm_entity_1_11 WHERE auto_kontering = 1 AND category = 2";//kun fellesmålere som er merket med autokontering
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$anlegg = array();
 
-			$TreeID = '202';
+			$TreeID = $this->type;
 			$PeriodFrom = date('Ym');
 			$PeriodTo = 209912;
 
@@ -129,9 +130,12 @@
 			xmlwriter_end_element($memory);
 			$xml = xmlwriter_output_memory($memory,true);
 
-			header('Content-type: text/xml');
-
-			echo $xml; die();
+			if($this->debug)
+			{
+				header('Content-type: text/xml');
+				echo $xml;
+				die();
+			}
 
 			return $xml;
 		}
@@ -163,15 +167,13 @@
 //			$this->debug=True;
 
 			//Bestem filnavn
-			$external_ref = '';
-			$Filnavn = $this->LagFilnavn($external_ref);
+			$Filnavn = $this->LagFilnavn();
 
 			if (!$Filnavn)
 			{
 				$message='LagFilnavn: Filnavn er i bruk';
 				$receipt['error'][]= array('msg' => $message);
 				$this->log_end();
-				echo $message;
 				return;
 			}
 
@@ -183,23 +185,19 @@
 			else
 			{
 				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
-				if($this->debug)
+				$receipt['error'][]= array('msg' => $message);
+				if(!$this->debug)
 				{
-					echo $message;
-				}
-				else
-				{
-					$receipt['error'][]= array('msg' => $message);
 					$this->log_end();
 				}
 			}
 
 			//Velg ut alle anlegg som skal overføres
-			$anlegg = $this->get_anlegg();
+			$xmldata = $this->get_xmldata();
 
-			if ($anlegg)
+			if ($xmldata)
 			{
-				$this->receipt['message'][]= array('msg' => $this->transfer_anlegg($anlegg, $Filnavn, $download));
+				$this->transfer_anlegg($xmldata, $Filnavn, $download);
 			}
 
 			if($this->connection)
@@ -224,15 +222,12 @@
 		}
 
 
-		protected function LagFilnavn ($external_ref = '')
+		protected function LagFilnavn()
 		{
-			if(!$external_ref)
-			{
-				$external_ref = mt_rand();
-			}
+			$timestamp = date('YmdGi', phpgwapi_datetime::user_localtime());
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
+			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($Filnavn))
@@ -268,18 +263,20 @@
 				if($transfer_ok)
 				{
 					$message = "El Anlegg er overført, fil: {$Filnavn}";
+					phpgwapi_cache::message_set($message, 'message'); 
 				}
 				else
 				{
 					$message = 'Noe gikk galt med overføring av El Anlegg';
+					phpgwapi_cache::message_set($message, 'error'); 
 				}
 			}
 			else
 			{
-				$message = $xmldata;
+				header('Content-type: text/xml');
+				echo $xmldata;
+				die();
 			}
-
-			return $message;
 		}
 
 
