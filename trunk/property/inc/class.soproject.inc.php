@@ -2591,8 +2591,10 @@ $test = 0;
 			$periodization_id = $this->db->f('periodization_id');
 			$project_type_id = $this->db->f('project_type_id');
 
-			if(abs($budget['obligation']) > 0 && $project_type_id == 2) // investment
+			if($project_type_id == 2) // investment
 			{
+//get active sum..
+throw new Exception('property_soproject::transfer_budget() - FIXME:get active sum..');
 				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
 			}
 
@@ -2669,13 +2671,13 @@ $test = 0;
 				}
 			}
 
-			$sql_budget = "SELECT DISTINCT year, active, sum(budget) as budget FROM fm_{$type}_budget WHERE ";
+			$sql_budget = "SELECT DISTINCT year, month, active, sum(budget) as amount FROM fm_{$type}_budget WHERE ";
 
 			switch($type)
 			{
 				case 'project':
 
-					$sql_budget .= 'project_id = %d GROUP BY year, active ORDER BY year';
+					$sql_budget .= 'project_id = %d GROUP BY year, month, active ORDER BY year';
 
 					if($closed_orders)
 					{
@@ -2696,7 +2698,7 @@ $test = 0;
 					break;
 				case 'workorder':
 
-					$sql_budget .= 'order_id = %d GROUP BY year, active ORDER BY year';
+					$sql_budget .= 'order_id = %d GROUP BY year, month, active ORDER BY year';
 
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
@@ -2758,17 +2760,31 @@ $test = 0;
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				$budget = array();
+				$_budget = array();
 				$_year = 0;
+				$_active_amount = array();
 
 				while ($this->db->next_record())
 				{
 					$_year = $this->db->f('year');
+					$_amount = $this->db->f('amount');
 					$_active = $this->db->f('active') ? X : 0;
-					$_budget = number_format((int)$this->db->f('budget'), 0, ',', '.');
-					$budget[] = $_year . " [{$_active}/ {$_budget}]";
+					if($_active)
+					{
+						$_active_amount[$_year] += $_amount;
+					}
+					
+					$_budget[$_year] += $_amount;
 				}
+
+				foreach ($_budget as $__year => $__budget)
+				{
+					$budget[] = $__year . ' [' . number_format((int)$_active_amount[$__year], 0, ',', '.') . '/' . number_format((int)$__budget, 0, ',', '.') . ']';				
+				}
+
 				$entry['budget'] = implode(' ;', $budget);
 				$entry['latest_year'] = $_year;
+				$entry['active_amount'] = array_sum($_active_amount);
 			}
 
 			return $values;
