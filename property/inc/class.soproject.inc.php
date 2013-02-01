@@ -2586,6 +2586,7 @@ $test = 0;
 
 			$id = (int) $id;
 			$year = (int) $year;
+			$latest_year = (int)$budget['latest_year'];
 			$this->db->query("SELECT periodization_id, project_type_id FROM fm_project WHERE id = {$id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$periodization_id = $this->db->f('periodization_id');
@@ -2593,21 +2594,39 @@ $test = 0;
 
 			if($project_type_id == 2) // investment
 			{
-//get active sum..
-throw new Exception('property_soproject::transfer_budget() - FIXME:get active sum..');
-				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
-			}
+				// total budget
+				$this->db->query("SELECT budget FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$last_budget = $this->db->f('budget');
+				if(!$last_budget)
+				{
+					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
+				}
 
-			if($project_type_id == 1)//operation
+				//paid last year
+				$this->db->query("SELECT sum(amount) as paid FROM fm_project"
+				. " {$this->join} fm_workorder ON fm_project.id = fm_workorder.project_id"
+				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$paid_last_year = $this->db->f('paid');
+				
+				$subtract = $last_budget - $paid_last_year;
+//_debug_array($subtract);die();
+				$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');				
+
+				$new_budget = $last_budget - $paid_last_year;
+				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
+			}
+			else if($project_type_id == 1)//operation
 			{
 				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
+				if($budget['budget_amount'])
+				{
+					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+				}
 			}			
-
-			if($budget['budget_amount'])
-			{
-				$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
-			}
-			
+		
 			$this->db->transaction_commit();
 		}
 
