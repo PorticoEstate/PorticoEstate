@@ -2394,7 +2394,7 @@
 				$_obligation = '';
 				$entry['new_budget'] = '';
 
-				if($entry['project_type_id'] != 3)
+				if($entry['project_type_id'] == 1) // operation
 				{
 					$_obligation = 0;
 					$_order = 0;
@@ -2429,6 +2429,16 @@
 						
 					}
 				}
+				else if ($entry['project_type_id'] == 2)
+				{
+					$entry['new_budget'] = 'auto';
+					$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
+				}
+				else if ($entry['project_type_id'] == 3)
+				{
+					$entry['budget'] = '';
+				}
+
 				$entry['obligation'] = $_obligation;
 			}
 
