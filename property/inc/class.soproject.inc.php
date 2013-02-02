@@ -2595,7 +2595,7 @@ $test = 0;
 			if($project_type_id == 2) // investment
 			{
 				// total budget
-				$this->db->query("SELECT budget FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				$this->db->query("SELECT sum(budget) FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$last_budget = $this->db->f('budget');
 				if(!$last_budget)
@@ -2610,23 +2610,23 @@ $test = 0;
 				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
-				
+
 				$subtract = $last_budget - $paid_last_year;
 //_debug_array($subtract);die();
-				$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');				
+				$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
 
 				$new_budget = $last_budget - $paid_last_year;
 				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
 			}
 			else if($project_type_id == 1)//operation
 			{
-				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
 				if($budget['budget_amount'])
 				{
 					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
 				}
-			}			
-		
+				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
+			}
+
 			$this->db->transaction_commit();
 		}
 
@@ -2690,12 +2690,11 @@ $test = 0;
 				}
 			}
 
-			$sql_budget = "SELECT DISTINCT year, month, active, sum(budget) as amount FROM fm_{$type}_budget WHERE ";
-
 			switch($type)
 			{
 				case 'project':
 
+					$sql_budget = "SELECT DISTINCT year, month, active, sum(budget) as amount FROM fm_project_budget WHERE ";
 					$sql_budget .= 'project_id = %d GROUP BY year, month, active ORDER BY year';
 
 					if($closed_orders)
@@ -2717,6 +2716,7 @@ $test = 0;
 					break;
 				case 'workorder':
 
+					$sql_budget = "SELECT DISTINCT year, month, active, sum(combined_cost) as amount FROM fm_workorder_budget WHERE ";
 					$sql_budget .= 'order_id = %d GROUP BY year, month, active ORDER BY year';
 
 					$table = 'fm_workorder';
@@ -2792,13 +2792,13 @@ $test = 0;
 					{
 						$_active_amount[$_year] += $_amount;
 					}
-					
+
 					$_budget[$_year] += $_amount;
 				}
 
 				foreach ($_budget as $__year => $__budget)
 				{
-					$budget[] = $__year . ' [' . number_format((int)$_active_amount[$__year], 0, ',', '.') . '/' . number_format((int)$__budget, 0, ',', '.') . ']';				
+					$budget[] = $__year . ' [' . number_format((int)$_active_amount[$__year], 0, ',', '.') . '/' . number_format((int)$__budget, 0, ',', '.') . ']';
 				}
 
 				$entry['budget'] = implode(' ;', $budget);

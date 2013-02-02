@@ -2394,7 +2394,7 @@
 				$_obligation = '';
 				$entry['new_budget'] = '';
 
-				if($entry['project_type_id'] == 1) // operation
+				if($entry['project_type_id'] == 1 || $entry['continuous']) // operation or continuous
 				{
 					$_obligation = 0;
 					$_order = 0;

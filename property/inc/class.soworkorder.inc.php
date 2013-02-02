@@ -521,7 +521,7 @@
 
 				if($status_id == 'open')
 				{
-					$filtermethod .= " $where fm_workorder_status.closed IS NULL"; 
+					$filtermethod .= " $where fm_workorder_status.closed IS NULL";
 
 /*					$_status_filter = array();
 					$this->db->query("SELECT * FROM fm_workorder_status WHERE closed IS NULL");
@@ -530,7 +530,7 @@
 					{
 						$_status_filter[] = $this->db->f('id');
 					}
-					$filtermethod .= " $where fm_workorder.status IN ('" . implode("','", $_status_filter) . "')"; 
+					$filtermethod .= " $where fm_workorder.status IN ('" . implode("','", $_status_filter) . "')";
 */
 				}
 				else
@@ -1029,9 +1029,9 @@
 				}
 			}
 
-			$this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}"); 
-			$this->db->next_record(); 
-			$project_sum = $this->db->f('budget') + $this->db->f('reserve'); 
+			$this->db->query("SELECT budget, reserve FROM fm_project WHERE id={$project_id}");
+			$this->db->next_record();
+			$project_sum = $this->db->f('budget') + $this->db->f('reserve');
 
 			$project_planned_cost = round($project_sum - $orded_or_paid);
 
@@ -1895,7 +1895,7 @@
 
 				$sort_period[] = $period;
 			}
-			
+
 			if($values)
 			{
 				array_multisort($sort_period, SORT_ASC, $values);
@@ -2185,10 +2185,13 @@
 
 		public function transfer_budget($id, $budget, $year)
 		{
+//_debug_array($budget);die();
 			$this->db->transaction_begin();
 
 			$id = (int) $id;
 			$year = (int) $year;
+			$latest_year = (int)$budget['latest_year'];
+
 			$sql = "SELECT periodization_id, project_type_id, continuous"
 			. " FROM fm_workorder"
 			. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
@@ -2201,21 +2204,56 @@
 			$project_type_id = $this->db->f('project_type_id');
 			$continuous = $this->db->f('continuous');
 
-			if(abs($budget['obligation']) > 0)
+//~ * Løpende bestillinger settes til null via masseoppdatering, evt at nytt budsjett tastes inn i masseoppdatering (siste er ønskelig).
+//~ * For Driftsbestillinger settes Betalt til null, Budsjett settes til restforpliktelse (budsjett tidligere trekkes ned med restforpliktelse)
+//~ * For Investeringsbestillinger skal disse ikke se på år
+
+
+			if($continuous)
 			{
-//				$transferred = $this->_update_order_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], $contract_sum, $combined_cost = 0, $action = 'subtract', $activate = 0);
+				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				if($budget['budget_amount'])
+				{
+					$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
+				}
+			}
+			else if($project_type_id == 1)//operation
+			{
+				if(abs($budget['obligation']) > 0)
+				{
+					$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $budget['obligation'], $contract_sum, $combined_cost = 0, $action = 'subtract', $activate = 0);
+				}
+
+				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
+
+				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+			}
+			else if($project_type_id == 2)//investment
+			{
+				// total budget
+				$this->db->query("SELECT sum(combined_cost) AS budget FROM fm_workorder_budget WHERE order_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$last_budget = $this->db->f('budget');
+				if(!$last_budget)
+				{
+					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
+				}
+
+				//paid last year
+				$this->db->query("SELECT sum(amount) as paid FROM fm_workorder"
+				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$paid_last_year = $this->db->f('paid');
+				
+				$subtract = $last_budget - $paid_last_year;
+//_debug_array($subtract);die();
+				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $subtract, $subtract, $subtract, $action = 'subtract');
+
+				$new_budget = $last_budget - $paid_last_year;
+				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
 			}
 
-			if($project_type_id == 1)//operation
-			{
-				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id}",__LINE__,__FILE__);
-			}			
-
-			if($budget['budget_amount'])
-			{
-				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], $budget['budget_amount'], $budget['budget_amount'], $action = 'update', true);
-			}
-			
 			$this->db->transaction_commit();
 		}
 
@@ -2246,16 +2284,14 @@
 		public function _update_order_budget($order_id, $year, $periodization_id, $budget, $contract_sum, $combined_cost = 0, $action = 'update', $activate = 0)
 		{
 			$year = $year ? (int) $year : date('Y');
-
+//_debug_array($year);
 			if($action == 'subtract')
 			{
-				throw new Exception('property_soproject::_update_order_budget() - FIXME: subtract not implemented');
-
 				$incoming_budget = $budget;
 				$acc_partial = 0;
 
 				$orig_budget = $this->get_budget($order_id);
-
+//_debug_array($orig_budget);
 				$hit = false;
 				foreach ($orig_budget as $entry)
 				{
@@ -2264,7 +2300,7 @@
 						$partial_budget = 0;
 						$month = (int)substr($entry['period'],-2);
 						$hit = true; // found at least one.
-						if($entry['budget'] >= 0)
+						if($entry['sum_orders'] >= 0)
 						{
 							if($entry['diff'] > 0)
 							{
@@ -2282,7 +2318,7 @@
 								}
 							}
 						}
-						if($entry['budget'] < 0)
+						else if($entry['sum_orders'] < 0)
 						{
 							if($entry['diff'] < 0)
 							{
@@ -2302,7 +2338,7 @@
 						if($partial_budget)
 						{
 							$acc_partial += $partial_budget;
-							$this->_update_budget($order_id, $year, $month, $partial_budget, $partial_contract, $partial_cost, $action);
+							$this->_update_budget($order_id, $year, $month, $partial_budget, $partial_budget, $partial_budget, $action);
 						}
 					}
 				}
@@ -2313,19 +2349,16 @@
 
 					$acc_partial += $budget;
 
-					$this->_update_budget($order_id, $year, $month, $budget, $contract, $cost, $action);
+					$this->_update_budget($order_id, $year, $month, $budget, $budget, $budget, $action);
 				}
 
 				if(!$hit)
 				{
-					throw new Exception('property_soproject::_update_order_budget() - found no active budget to transfer from');
+//					throw new Exception('property_soproject::_update_order_budget() - found no active budget to transfer from');
 				}
 
 				return $acc_partial;
 			}
-
-
-
 
 			$periodization_id = (int) $periodization_id;
 			$periodization_outline = array();
