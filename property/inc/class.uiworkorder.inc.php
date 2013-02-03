@@ -2295,7 +2295,11 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select type invoice!'));
 				}
 
-				if (!$values['vendor_id'])
+				if($values['vendor_id'] == 99)
+				{
+					$values['invoice_id'] = $boinvoice->get_auto_generated_invoice_num($values['vendor_id']);
+				}
+				else if (!$values['vendor_id'])
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select Vendor!'));
 				}
@@ -2316,7 +2320,7 @@
 
 				if (!$values['invoice_id'])
 				{
-					$receipt['error'][] = array('msg'=>lang('Please - enter a invoice num!'));
+					$receipt['error'][] = array('msg'=>lang('please enter a invoice num!'));
 				}
 
 				if (!$values['payment_date'] && !$values['num_days'])
