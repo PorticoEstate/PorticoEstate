@@ -958,15 +958,27 @@
 			return $this->db->f('power_meter');
 		}
 
-		function project_workorder_data($project_id = 0)
+		function project_workorder_data($data = array())
 		{
-			$project_id = (int) $project_id;
+			$project_id = (int) $data['project_id'];
+			$year = (int) $data['year'];
 			$values = array();
-			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+
+			$filter_year = '';
+			if($year)
+			{
+//				$start_date = mktime(0, 0, 0, 1, 1, $year)
+//				$end_date = mktime(23, 59, 59, 12, 31, $year)
+				$filter_year = "AND fm_workorder_budget.year = {$year}";
+			}
+
+			$this->db->query("SELECT DISTINCT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id as b_account_id"
-				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " WHERE project_id={$project_id}",__LINE__,__FILE__);
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " WHERE project_id={$project_id} {$filter_year}",__LINE__,__FILE__);
 
 			$_orders = array();
 
@@ -3037,6 +3049,32 @@ $test = 0;
 			}
 			$year_list = array_reverse($year_list);
 
+			return $year_list;
+		}
+
+		public function get_order_time_span($id)
+		{
+			if(!$id)
+			{
+				return array();
+			}
+			$year_list = array();
+			$sql = 'SELECT min(start_date) AS start_date, max(end_date) AS end_date FROM fm_workorder WHERE project_id = ' . (int) $id;
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$start_year = $this->db->f('start_date') ?  date('Y',$this->db->f('start_date')) : date('Y');
+				$end_year = $this->db->f('end_date') ?  date('Y',$this->db->f('end_date')) : date('Y');
+
+				for ($i=$start_year;$i< ($end_year+1) ;$i++)
+				{
+					$year_list[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+			}
 			return $year_list;
 		}
 	}

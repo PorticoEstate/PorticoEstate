@@ -67,7 +67,8 @@
 				'columns'				=> true,
 				'bulk_update_status'	=> true,
 				'project_group'			=> true,
-				'view_file'				=> true
+				'view_file'				=> true,
+				'get_orders'			=> true
 			);
 
 		function property_uiproject()
@@ -1871,11 +1872,13 @@
 
 
 //_debug_array($values['workorder_budget']);die();
+			$content_orders = $this->get_orders($id, date('Y'));
+			//FIXME: deviation from this one
 			$datavalues[1] = array
 				(
 					'name'					=> "1",
-					'values' 				=> json_encode($values['workorder_budget']),
-					'total_records'			=> count($values['workorder_budget']),
+					'values' 				=> json_encode($content_orders),
+					'total_records'			=> count($content_orders),
 					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 					'is_paginator'			=> 1,
 					'footer'				=> 0
@@ -2105,6 +2108,7 @@
 					'origin_id'		=> $id
 				);
 			}
+
 			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 			
@@ -2131,6 +2135,7 @@
 					'value_origin_type'					=> isset($origin)?$origin:'',
 					'value_origin_id'					=> isset($origin_id)?$origin_id:'',
 					'year_list'							=> array('options' => $year_list),
+					'order_time_span'					=> array('options' => $this->bo->get_order_time_span($id)),
 					'periodization_list'				=> array('options' => $periodization_list),
 					'lang_select_request'				=> lang('Select request'),
 					'lang_select_request_statustext'	=> lang('Add request for this project'),
@@ -2305,6 +2310,35 @@
 
 			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_project_edit', 'property' );
+		}
+
+
+		public function get_orders($project_id = 0, $year = 0)
+		{
+			if(!$project_id)
+			{
+				$project_id = phpgw::get_var('project_id', 'int');
+			}
+			if(!$year)
+			{
+				$year = phpgw::get_var('year', 'int');
+			}
+
+			$content = $this->bo->get_orders(array('project_id'=> $project_id,'year'=> $year));
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content;
 		}
 
 		function delete()
