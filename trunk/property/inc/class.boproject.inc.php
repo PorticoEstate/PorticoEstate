@@ -69,10 +69,10 @@
 				$this->use_session = true;
 			}
 
-			
-			
+
+
 			$default_filter_year 	= isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_filter_year'] == 'current_year' ? date('Y') : 'all';
-			
+
 			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query					= phpgw::get_var('query');
 			$sort					= phpgw::get_var('sort');
@@ -242,7 +242,7 @@
 					'id'	=> 3,
 					'name'	=> lang('buffer')
 				),
-			
+
 			);
 			return $this->bocommon->select_list($selected, $values);
 		}
@@ -429,7 +429,7 @@
 			else
 			{
 				return $criteria;
-			}			
+			}
 		}
 
 		function select_key_location_list($selected='')
@@ -517,7 +517,7 @@
 								)
 							),
 							'text'			=> $origin[0]['data'][0]['id'],
-							'statustext'	=> $origin[0]['data'][0]['statustext'],											
+							'statustext'	=> $origin[0]['data'][0]['statustext'],
 						);
 					}
 				}
@@ -527,13 +527,6 @@
 
 		function read_single($project_id = 0, $values = array(), $view = false)
 		{
-			$contacts	= CreateObject('property.sogeneric');
-			$contacts->get_location_info('vendor',false);
-
-			$config				= CreateObject('phpgwapi.config','property');
-			$config->read();
-			$tax = 1+(isset($config->config_data['fm_tax'])?$config->config_data['fm_tax']:0)/100;
-
 			$values['attributes'] = $this->custom->find('property', '.project', 0, '', 'ASC', 'attrib_sort', true, true);
 			if($project_id)
 			{
@@ -550,70 +543,6 @@
 			$dateformat				= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values['start_date']	= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
 			$values['end_date']		= isset($values['end_date']) && $values['end_date'] ? $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat) : '';
-			$workorder_data			= $this->so->project_workorder_data($project_id);
-
-			$sum_deviation = 0;
-//combined_cost
-//diff
-
-			for ($i=0;$i<count($workorder_data);$i++)
-			{
-				$sum_deviation+= $workorder_data[$i]['deviation'];
-
-/*
-				$_cost = (float)number_format(0, 2, ',', '');
-				if(abs($workorder_data[$i]['contract_sum']) > 0)
-				{
-					$_cost = (float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
-				}
-				else if(abs($workorder_data[$i]['calculation']) > 0)
-				{
-					$_cost = (float)number_format($workorder_data[$i]['calculation'] * $tax, 2, ',', '');
-				}
-				else if(abs($workorder_data[$i]['budget']) > 0)
-				{
-					$_cost = (float)number_format($workorder_data[$i]['budget'] * $tax, 2, ',', '');
-				}
-*/				
-				$values['workorder_budget'][$i]['cost'] = $workorder_data[$i]['combined_cost'];
-				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['actual_cost'];
-							
-				$values['workorder_budget'][$i]['title']=htmlspecialchars_decode($workorder_data[$i]['title']);
-				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
-	//			$values['workorder_budget'][$i]['contract_sum']=(float)number_format($workorder_data[$i]['contract_sum'] * (1+(((int)$workorder_data[$i]['addition_percentage'])/100)), 2, ',', '');
-				$values['workorder_budget'][$i]['budget']= $workorder_data[$i]['budget'];
-	//			$values['workorder_budget'][$i]['calculation']=(float)number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
-				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
-				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
-	//			$values['workorder_budget'][$i]['actual_cost'] = (float)number_format($workorder_data[$i]['actual_cost'] ? $workorder_data[$i]['actual_cost'] : 0, 2, ',', '');
-				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
-//				$values['workorder_budget'][$i]['paid_percent'] = (int)$workorder_data[$i]['paid_percent'];
-				$values['workorder_budget'][$i]['addition_percentage'] = $workorder_data[$i]['addition_percentage'];
-
-				$values['workorder_budget'][$i]['obligation'] = $workorder_data[$i]['obligation'];
-
-//				$values['workorder_budget'][$i]['combined_cost'] = $workorder_data[$i]['closed'] ? 0 : ($_cost - $workorder_data[$i]['actual_cost']);
-				$values['workorder_budget'][$i]['diff'] = $workorder_data[$i]['diff'];
-
-				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
-				{
-					$vendor['attributes'] = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-
-					$vendor	= $contacts->read_single(array('id' => $workorder_data[$i]['vendor_id']), $vendor);
-					foreach($vendor['attributes'] as $attribute)
-					{
-						if($attribute['name']=='org_name')
-						{
-							$values['workorder_budget'][$i]['vendor_name']=$attribute['value'];
-							break;
-						}
-					}
-				}
-			}
-			if($workorder_data)
-			{
-				$values['deviation']= $sum_deviation;
-			}
 
 			if($values['location_code'])
 			{
@@ -651,6 +580,48 @@
 			$values['target'] = $this->interlink->get_relation('property', '.project', $project_id, 'target');
 
 			//_debug_array($values);
+			return $values;
+		}
+
+		public function get_orders($data)
+		{
+			$contacts	= CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor',false);
+
+			static $vendor_name = array();
+			$values	= $this->so->project_workorder_data($data);
+
+			$sum_deviation = 0;
+			foreach ($values as &$entry)
+			{
+				$sum_deviation+= $entry['deviation'];
+
+				$entry['cost'] = $entry['combined_cost'];
+				$entry['title']=htmlspecialchars_decode($entry['title']);
+
+				if(isset($entry['vendor_id']) && $entry['vendor_id'])
+				{
+					if(isset($vendor_name[$entry['vendor_id']]) && $vendor_name[$entry['vendor_id']])
+					{
+						$entry['vendor_name'] = $vendor_name[$entry['vendor_id']];
+					}
+					else
+					{
+						$vendor['attributes'] = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+						$vendor	= $contacts->read_single(array('id' => $entry['vendor_id']), $vendor);
+						foreach($vendor['attributes'] as $attribute)
+						{
+							if($attribute['name']=='org_name')
+							{
+								$entry['vendor_name'] = $attribute['value'];
+								$vendor_name[$entry['vendor_id']] = $attribute['value'];
+								break;
+							}
+						}
+					}
+				}
+			}
 			return $values;
 		}
 
@@ -694,7 +665,7 @@
 			$historylog	= CreateObject('property.historylog','project');
 			$history_array = $historylog->return_array(array('O'),array(),'','',$id);
 			$i=0;
-			foreach ($history_array as $value) 
+			foreach ($history_array as $value)
 			{
 
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
@@ -937,5 +908,11 @@
 		{
 			$values = $this->so->get_filter_year_list();
 			return $this->bocommon->select_list($selected, $values);
+		}
+
+		public function get_order_time_span($id)
+		{
+			$values = $this->so->get_order_time_span($id);
+			return $this->bocommon->select_list(date('Y'), $values);
 		}
 	}
