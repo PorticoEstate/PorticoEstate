@@ -888,5 +888,8 @@
 			return $approve;
 		}
 
-
+		public function get_auto_generated_invoice_num($vendor_id)
+		{
+			return $this->so->get_auto_generated_invoice_num($vendor_id);
+		}
 	}

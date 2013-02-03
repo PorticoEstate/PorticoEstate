@@ -1229,6 +1229,7 @@ please choose a file	property	no	Velg en fil
 please either select generate id or type a equipment id !	property	no	enten valg GENERER ID eller angi et utstyrs ID
 please enter a apartment id !	property	no	angi leilighet ID
 please enter a building id !	property	no	angi bygg ID
+please enter a invoice num!	property	no	Angi Fakturanummer
 please enter a description!	property	no	angi en beskrivelse!
 please enter a entrance id !	property	no	angi inngang ID
 please enter a index !	property	no	Angi en indeks
