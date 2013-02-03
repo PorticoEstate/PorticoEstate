@@ -748,7 +748,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -887,7 +887,7 @@
 
 				if(!$id)
 				{
-					phpgwapi_cache::message_set('ID is required for the function uiworkorder::view()', 'error'); 
+					phpgwapi_cache::message_set('ID is required for the function uiworkorder::view()', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.index'));
 				}
 			}
@@ -1042,7 +1042,7 @@
 
 				if(isset($config->config_data['workorder_require_vendor']) && $config->config_data['workorder_require_vendor'] == 1 && !$values['vendor_id'])
 				{
-					$receipt['error'][]=array('msg'=>lang('no vendor'));				
+					$receipt['error'][]=array('msg'=>lang('no vendor'));
 				}
 
 				if(!$values['b_account_id'])
@@ -1077,6 +1077,14 @@
 				if(isset($values['addition_percentage']) && $values['addition_percentage'] && !ctype_digit($values['addition_percentage']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Percentage addition') . ': ' . lang('Please enter an integer !'));
+				}
+
+				if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
+				{
+					if(isset($config->config_data['workorder_approval_status']) && $config->config_data['workorder_approval_status'])
+					{
+						$values['status'] = $config->config_data['workorder_approval_status'];
+					}
 				}
 
 				if($id)
@@ -1228,10 +1236,10 @@
 
 						if($toarray_sms)
 						{
-							$historylog->add('MS',$id,implode(',',$toarray_sms));						
+							$historylog->add('MS',$id,implode(',',$toarray_sms));
 						}
 					}
-						
+
 					reset($notify_list);
 					foreach($notify_list as $entry)
 					{
@@ -1294,7 +1302,7 @@
 						);
 					}
 					$result['receipt'] = $receipt;
-	
+
 					return $result;
 				}
 
@@ -1434,7 +1442,7 @@
 				{
 					$location_template_type='view';
 				}
-				
+
 				$location_data=$bolocation->initiate_ui_location(array(
 					'values'			=> $_location_data,
 					'type_id'			=> $mode == 'edit' ? $max_level : count(explode('-',$_location_data['location_data']['location_code'])),
@@ -1534,7 +1542,7 @@
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);				
+					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 					$supervisor_email[] = array
 					(
 						'id'	  => $supervisor_id,
@@ -1653,7 +1661,7 @@
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
 				}
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
-			}									
+			}
 
 			$datavalues[1] = array
 				(
@@ -1689,7 +1697,7 @@
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'status'				=> $entry['status'],
 					'period'				=> $entry['period'],
-					'invoice_id'			=> $entry['invoice_id'],					
+					'invoice_id'			=> $entry['invoice_id'],
 					'budget_account'		=> $entry['budget_account'],
 					'dima'					=> $entry['dima'],
 					'dimb'					=> $entry['dimb'],
@@ -1704,7 +1712,7 @@
 					'budget_responsible'	=> $entry['budget_responsible'],
 					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);	
+				);
 			}
 //_debug_array($content_invoice);
 			$datavalues[2] = array
@@ -1750,7 +1758,7 @@
 									'count'				=> count($myColumnDefs)
 								)
 							);
-			
+
 			$datavalues[] 	= $notify_info['datavalues'];
 			$myColumnDefs[]	= $notify_info['column_defs'];
 			$myButtons		= array();
@@ -1766,11 +1774,11 @@
 					'name'		=> "4",
 					'values'	=>	json_encode(array(	array('key' => 'value_email',	'label'=>lang('email'),	'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true)))
-				);	
+				);
 
 
 			$content_email =  execMethod('property.bocommon.get_vendor_email', isset($values['vendor_id']) ? $values['vendor_id'] : 0 );
-			
+
 			if(isset($values['mail_recipients']) && is_array($values['mail_recipients']))
 			{
 				$_recipients_found = array();
@@ -1808,7 +1816,7 @@
 			foreach($content_budget as & $b_entry)
 			{
 				$checked = $b_entry['closed'] ? 'checked="checked"' : '';
-				$checked2 = $b_entry['active'] ? 'checked="checked"' : '';					
+				$checked2 = $b_entry['active'] ? 'checked="checked"' : '';
 
 				$b_entry['flag_active'] = $b_entry['active'];
 				$b_entry['delete_period'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
@@ -1816,7 +1824,7 @@
 				$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
 				$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
 				$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
-					
+
 			}
 			unset($b_entry);
 
@@ -1874,7 +1882,7 @@
 				}
 			}
 
-/*			
+/*
 			if(isset($project['cat_id']) && $project['cat_id'])
 			{
 				$catetory = $this->cats->return_single($project['cat_id']);
@@ -1894,7 +1902,7 @@
 			{
 				$user['id'] = $user['user_id'];
 			}
-			
+
 			$value_coordinator = isset($project['coordinator']) ? $GLOBALS['phpgw']->accounts->get($project['coordinator'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 
 			$year	= date('Y') -1;
@@ -1989,7 +1997,7 @@
 				'lang_calculation'						=> lang('Calculation'),
 				'value_calculation'						=> (isset($values['calculation'])?$values['calculation']:''),
 				'value_sum_estimated_cost'				=> $sum_estimated_cost,
-					
+
 				'value_contract_sum'					=> isset($receipt['error']) && $receipt['error'] ? $_POST['values']['contract_sum'] : '',
 
 				'actual_cost'							=> (isset($values['actual_cost'])?$values['actual_cost']:''),
@@ -2129,7 +2137,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );	
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );
 		}
 
@@ -2283,7 +2291,7 @@
 
 				if(!execMethod('property.soXport.check_order',$values['order_id']))
 				{
-					$receipt['error'][]=array('msg'=>lang('Not a valid order!'));					
+					$receipt['error'][]=array('msg'=>lang('Not a valid order!'));
 				}
 
 				if (!$values['amount'])
@@ -2397,7 +2405,7 @@
 					'tenant'	=> false,
 					'lookup_type'	=> 'form',
 					'lookup_entity'	=> false,
-					'entity_data'	=> false 
+					'entity_data'	=> false
 				)
 			);
 
@@ -2544,7 +2552,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
-		
+
 		}
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array(), $selected = 'general')

@@ -193,7 +193,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 			if($this->cat_id)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";			
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
 			}
 
 			if(!$this->acl_read)
@@ -387,7 +387,7 @@
 								),
 								array
 								(
-									'id' => 'sel_filter', 
+									'id' => 'sel_filter',
 									'name' => 'filter',
 									'value'	=> lang('User'),
 									'type' => 'select',
@@ -829,7 +829,7 @@
 
 			if($dry_run)
 			{
-				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
@@ -1003,7 +1003,7 @@
 
 				if(!$id)
 				{
-					phpgwapi_cache::message_set('ID is required for the function uiproject::view()', 'error'); 
+					phpgwapi_cache::message_set('ID is required for the function uiproject::view()', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.index'));
 				}
 			}
@@ -1141,7 +1141,7 @@
 					);
 				}
 
-	
+
 				$save='';
 				if (isset($values['save']))
 				{
@@ -1167,7 +1167,7 @@
 							$error_id=true;
 						}
 					}
-	
+
 					if(!isset($values['location']))
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a location !'));
@@ -1271,6 +1271,14 @@
 						}
 					}
 
+					if ($values['approval'] && $values['mail_address'] && $config->config_data['project_approval'])
+					{
+						if(isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
+						{
+							$values['status'] = $config->config_data['project_approval_status'];
+						}
+					}
+
 					if($id)
 					{
 						$values['id'] = $id;
@@ -1315,7 +1323,7 @@
 							{
 								$bofiles->create_document_dir("project/$id");
 								$bofiles->vfs->override_acl = 1;
-	
+
 								if(!$bofiles->vfs->cp (array (
 									'from'	=> $_FILES['file']['tmp_name'],
 									'to'	=> $to_file,
@@ -1400,14 +1408,14 @@
 									}
 								}
 							}
-						
+
 							$notify_list = execMethod('property.notify.read', array
 								(
 									'location_id'		=> $location_id,
 									'location_item_id'	=> $id
 								)
 							);
-						
+
 							$subject=lang('project %1 has been edited',$id);
 
 							if(isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
@@ -1425,13 +1433,13 @@
 									}
 								}
 								unset($entry);
-	
+
 								if($toarray_sms)
 								{
-									$historylog->add('MS',$id,implode(',',$toarray_sms));						
+									$historylog->add('MS',$id,implode(',',$toarray_sms));
 								}
 							}
-						
+
 							reset($notify_list);
 							foreach($notify_list as $entry)
 							{
@@ -1502,7 +1510,7 @@
 			if(isset($bypass_error) || ((!isset($receipt['error']) || $add_request) && !$bypass) && $id)
 			{
 				$_transfer_new_project = isset($values['new_project_id']) && $values['new_project_id'] ? true : false;
-				
+
 				$values	= $this->bo->read_single($id);
 
 				if(!isset($values['origin']))
@@ -1647,7 +1655,7 @@
 				if(isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 				{
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);				
+					$prefs = $this->bocommon->create_preferences('property',$supervisor_id);
 					$supervisor_email[] = array
 					(
 						'id'	  => $supervisor_id,
@@ -1759,7 +1767,7 @@
 				'project_group_descr'	=> $values['project_group_descr']));
 
 
-			//---datatable settings---------------------------------------------------	
+			//---datatable settings---------------------------------------------------
 
 			$sum_actual_cost = 0;
 			$sum_oblications = 0;
@@ -1782,7 +1790,7 @@
 					}
 
 					$checked = $b_entry['closed'] ? 'checked="checked"' : '';
-					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';					
+					$checked2 = $b_entry['active'] ? 'checked="checked"' : '';
 
 					$b_entry['flag_active'] = $b_entry['active'];
 					$b_entry['delete_year'] = "<input type='checkbox' name='values[delete_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_delete}'>";
@@ -1790,7 +1798,7 @@
 					$b_entry['closed_orig'] = "<input type='checkbox' name='values[closed_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked>";
 					$b_entry['active'] = "<input type='checkbox' name='values[active_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' title='{$lang_active}' $checked2>";
 					$b_entry['active_orig'] = "<input type='checkbox' name='values[active_orig_b_period][]' value='{$b_entry['year']}_{$b_entry['month']}' $checked2>";
-					
+
 				}
 				unset($b_entry);
 			}
@@ -1830,7 +1838,7 @@
 				$content_budget = $this->bo->get_buffer_budget($id);
 				foreach($content_budget as & $b_entry)
 				{
-					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+					$b_entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($b_entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
 				unset($b_entry);
 			}
@@ -1900,7 +1908,7 @@
 														array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-		
+
 			$invoices = array();
 			if ($id)
 			{
@@ -1918,7 +1926,7 @@
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
-					'invoice_id'			=> $entry['invoice_id'],					
+					'invoice_id'			=> $entry['invoice_id'],
 					'budget_account'		=> $entry['budget_account'],
 					'dima'					=> $entry['dima'],
 					'dimb'					=> $entry['dimb'],
@@ -1932,7 +1940,7 @@
 					'budget_responsible'	=> $entry['budget_responsible'],
 					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);	
+				);
 			}
 
 			$datavalues[2] = array
@@ -1974,7 +1982,7 @@
 									'count'				=> count($myColumnDefs)
 								)
 							);
-			
+
 			$datavalues[] = $notify_info['datavalues'];
 
 			$myColumnDefs[3] = $notify_info['column_defs'];
@@ -2020,7 +2028,7 @@
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 
 			$_files = $this->bo->get_files($id);
-			
+
 			$lang_view_file = lang('click to view file');
 			$lang_delete_file = lang('Check to delete file');
 			$z=0;
@@ -2037,7 +2045,7 @@
 				}
 				$content_files[$z]['delete_file'] = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['name']}\" title=\"{$lang_delete_file}\">";
 				$z++;
-			}									
+			}
 
 			$datavalues[5] = array
 			(
@@ -2111,7 +2119,7 @@
 
 			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
-			
+
 			$data = array
 				(
 					'project_types'						=> array('options' => $this->bo->get_project_types($project_type_id)),
@@ -2390,7 +2398,7 @@
 			unset($_entry);
 			unset($budget_arr);
 
-//_debug_array($new_budget);die();			
+//_debug_array($new_budget);die();
 			if(isset($_POST['user_id']))
 			{
 				$user_id 	= phpgw::get_var('user_id', 'int');
@@ -2399,7 +2407,7 @@
 			{
 				$user_id 	= $this->account;
 			}
-			
+
 			if($id_to_update)
 			{
 				$ids = array_values(explode(',',trim($id_to_update,',')));
@@ -2450,7 +2458,7 @@
 							if($_budget_entry['active'])
 							{
 								$_obligation += $_budget_entry['sum_oblications'];
-								$_order += $_budget_entry['sum_orders'];	
+								$_order += $_budget_entry['sum_orders'];
 							}
 						}
 
@@ -2460,7 +2468,7 @@
 						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::obligation' name='{$entry['id']}::obligation' value='{$_obligation}' ></input>";
 						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::order_amount' name='{$entry['id']}::order_amount' value='{$_order}'></input>";
 						$entry['new_budget'] .= "<input type='hidden' class='myValuesForPHP' id='{$entry['id']}::latest_year' name='{$entry['id']}::latest_year' value='{$entry['latest_year']}'></input>";
-						
+
 					}
 				}
 				else if ($entry['project_type_id'] == 2)
@@ -2511,7 +2519,7 @@
 					$myColumnDefs[0] = array
 					(
 						'name'		=> "0",
-						'values'	=>	json_encode(array(	
+						'values'	=>	json_encode(array(
 														array('key' => 'project_id','label'=>lang('project'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
@@ -2556,7 +2564,7 @@
 			{
 				array_unshift ($status_list_filter,array ('id'=>'open','name'=> lang('open')));
 			}
-			
+
 			$status_list_filter = $this->bocommon->select_list($status_filter,$status_list_filter);
 
 			$type_array = array
@@ -2671,7 +2679,7 @@
 				'project_group'			=> $values['project_group'],
 				'project_group_descr'	=> $values['project_group_descr']));
 
-			//---datatable settings---------------------------------------------------	
+			//---datatable settings---------------------------------------------------
 
 			$datavalues[0] = array
 				(
@@ -2719,7 +2727,7 @@
 														array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
 				);
 
-	
+
 			$invoices = array();
 			if ($id)
 			{
@@ -2737,7 +2745,7 @@
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
-					'invoice_id'			=> $entry['invoice_id'],					
+					'invoice_id'			=> $entry['invoice_id'],
 					'budget_account'		=> $entry['budget_account'],
 					'dima'					=> $entry['dima'],
 					'dimb'					=> $entry['dimb'],
@@ -2750,7 +2758,7 @@
 					'budget_responsible'	=> $entry['budget_responsible'],
 					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);	
+				);
 			}
 
 			$datavalues[2] = array
