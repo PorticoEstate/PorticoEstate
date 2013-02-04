@@ -2282,6 +2282,7 @@ $test = 0;
 					'sum_orders'			=> array_sum($_sum_orders),
 					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
+					'deviation_acc'			=> 0
 				);
 
 				$sort_period[] = $period;
@@ -2343,6 +2344,7 @@ $test = 0;
 					'sum_orders'			=> array_sum($_sum_orders),
 					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
+					'deviation_acc'			=> 0
 				);
 
 				$sort_period[] = $period;
@@ -2354,6 +2356,8 @@ $test = 0;
 			}
 
 
+			$deviation_acc = 0;
+			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
 				$entry['year'] = substr( $entry['period'], 0, 4 );
@@ -2371,14 +2375,15 @@ $test = 0;
 				$_deviation = $entry['budget'] - $entry['actual_cost'];
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
-				$entry['deviation_acc'] += $deviation;
+				$budget_acc +=$entry['budget'];
+				$deviation_acc += $deviation;
+				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
 
-//_debug_array( $values);die();
 			return $values;
 		}
 
