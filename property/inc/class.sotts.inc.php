@@ -353,7 +353,10 @@
 				$filtermethod .= " {$where} (assignedto={$user_id}";
 				$where = 'AND';
 
-				$membership = $GLOBALS['phpgw']->accounts->membership($user_id);
+				if(!$membership = $GLOBALS['phpgw']->accounts->membership($user_id))
+				{
+					$membership = array(-1 => 0);
+				}
 				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',',array_keys($membership)) . ')))'; 
 			}
 
