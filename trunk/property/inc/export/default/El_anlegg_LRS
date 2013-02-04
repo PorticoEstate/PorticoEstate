@@ -224,7 +224,7 @@
 
 		protected function LagFilnavn()
 		{
-			$timestamp = date('YmdGi', phpgwapi_datetime::user_localtime());
+			$timestamp = date('YmdHi', phpgwapi_datetime::user_localtime());
 			$fil_katalog = $this->config->config_data['export']['path'];
 
 			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
