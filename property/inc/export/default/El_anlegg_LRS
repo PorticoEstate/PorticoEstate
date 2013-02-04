@@ -40,7 +40,7 @@
 		var $debug = false;
 		protected $connection = false;
 		protected $receipt = array();
-		protected $type = '202';
+		protected $type = '211';
 
 		function  __construct()
 		{
