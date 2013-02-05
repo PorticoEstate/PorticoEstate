@@ -6,7 +6,7 @@
 		<xsl:variable name="status_name">
 			<xsl:value-of select="status_name"/>
 		</xsl:variable>
-		<select name="{$status_name}" class="forms" onMouseover="window.status='{$lang_status_statustext}'; return true;" onMouseout="window.status='';return true;">
+		<select name="{$status_name}" class="forms" title="{$lang_status_statustext}">
 			<option value="">
 				<xsl:value-of select="lang_no_status"/>
 			</option>

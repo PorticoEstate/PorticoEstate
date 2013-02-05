@@ -41,6 +41,7 @@ Returns mixed
 				document.add_sub_entry_form.submit();
 			}
 			var project_type_id = '<xsl:value-of select="project_type_id"/>';
+			var project_id = '<xsl:value-of select="value_project_id"/>';
 
 			function set_tab(tab)
 			{
@@ -579,6 +580,15 @@ Returns mixed
 									</xsl:when>
 									<xsl:otherwise>
 										<td>
+											<select id = "order_time_span" name="order_time_span">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'select')"/>
+													</xsl:attribute>
+													<option value="0">
+														<xsl:value-of select="php:function('lang', 'select')"/>
+													</option>
+												<xsl:apply-templates select="order_time_span/options"/>
+											</select>
 											<!-- DataTable -->
 											<div id="paging_1"> </div>
 											<div id="datatable-container_1"/>

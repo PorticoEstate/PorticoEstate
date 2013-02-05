@@ -323,7 +323,7 @@
 					$invoice[$i]['period']					= $this->db->f('periode');
 					$invoice[$i]['periodization']			= $this->db->f('periodization');
 					$invoice[$i]['periodization_start']		= $this->db->f('periodization_start');
-					
+
 					$invoice[$i]['type']					= $art_list[$this->db->f('artid')];
 					$invoice[$i]['kidnr']					= $this->db->f('kidnr');
 					$invoice[$i]['kreditnota']				= $this->db->f('kreditnota');
@@ -395,7 +395,7 @@
 					$ordermethod = " ORDER BY godkjentbelop $sort";
 					break;
 				default:
-					$ordermethod = ' ORDER BY pmwrkord_code DESC, id DESC';					
+					$ordermethod = ' ORDER BY pmwrkord_code DESC, id DESC';
 			}
 
 			$filtermethod = '';
@@ -564,7 +564,7 @@
 
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
 				. " currency,budsjettansvarligid,org_name,periode";
-			
+
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name,periode"
 				. " FROM $table"
@@ -718,7 +718,7 @@
 						'period'		=> $this->db->f('periode'),
 						'district_id'	=> $this->db->f('district_id'),
 						'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class')
-					);	
+					);
 			}
 
 			return $consume;
@@ -907,7 +907,7 @@
 				foreach ($update_paid_percent as $workorder_id => $paid_percent)
 				{
 					$paid_percent = (int) $paid_percent;
-					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= '$workorder_id'");				
+					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= '$workorder_id'");
 
 					$this->db->query("SELECT type FROM fm_orders WHERE id='{$workorder_id}'",__LINE__,__FILE__);
 					$this->db->next_record();
@@ -949,7 +949,7 @@
 						$value_set['budsjettsigndato'] = null;
 						break;
 				}
- 
+
 				switch ( $values['approve'] )
 				{
 					case 'is_janitor':
@@ -972,7 +972,7 @@
 	//			$bilagsnr = (int)$this->db->f('bilagsnr');
 	//			$value_set	= $this->db->validate_update($value_set);
 	//			$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
-				
+
 				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
 				{
 					phpgwapi_cache::message_set( 'Mangler anviser','error');
@@ -992,7 +992,7 @@
 				'process_log'	=> $this->db->db_addslashes($values['process_log']),
 				'process_code'	=> $values['process_code'],
 			);
-			
+
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -1089,7 +1089,7 @@
 				$this->db->query("SELECT user_id FROM fm_ecodimb_role_user WHERE user_id = {$this->account_id} AND role_id IN (3) {$filter_dimb} AND expired_on IS NULL AND active_from < " . time(). ' AND (active_to > ' . time() . ' OR active_to = 0)');
 				$this->db->next_record();
 				$this->role['is_budget_responsible'] = !!$this->db->f('user_id');
-				
+
 			}
 			else
 			{
@@ -1121,7 +1121,7 @@
 				default:
 					$role_filter = "role_id = {$role_id}";
 			}
-			
+
 
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
 			. " {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
@@ -1197,7 +1197,7 @@
 		{
 			$receipt = array();
 			$this->db->transaction_begin();
-			
+
 			if($periodization)
 			{
 				$value = "'{$periodization}'";
@@ -1335,7 +1335,7 @@
 				if($id == $selected)
 				{
 					$selected_found = true;
-				}			
+				}
 
 				$dimb_list[] = array
 				(
@@ -1423,7 +1423,7 @@
 			else
 			{
 				return array();
-			}			
+			}
 
 			$sql = "SELECT {$table}.*,fm_workorder_status.descr as status, fm_workorder.charge_tenant,org_name,"
 				. " fm_workorder.claim_issued, fm_workorder.continuous, fm_workorder_status.closed FROM {$table}"
@@ -1757,7 +1757,7 @@
 				if ($this->db->f('budsjettsigndato'))
 				{
 					$allow_transfer=true;
-				}			
+				}
 			}
 			else
 			{
@@ -1806,7 +1806,7 @@
 		{
 			$sql = "SELECT DISTINCT periode FROM fm_ecobilagoverf ORDER BY periode DESC";
 			$this->db->query($sql,__LINE__,__FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -1840,13 +1840,13 @@
 			{
 				return array();
 			}
-			
+
 			$filter = 'WHERE periode IN(' . implode(',', $data) . ')';
 //			$filter .= ' AND manual_record IS NULL';
 
 			$sql = "SELECT * FROM fm_ecobilagoverf {$filter} ORDER BY periode DESC, id ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -1873,7 +1873,7 @@
 			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
 			. " GROUP BY art, kostnadssted, project_group, currency ORDER BY kostnadssted,project_group, art, currency ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -1900,7 +1900,7 @@
 				$condition = 'WHERE bilagsnr =' . (int) $data['voucher_id'];
 				$global_check = true;
 			}
-			
+
 			$receipt = array();
 			$local_error= false;
 			if($condition)
@@ -1951,7 +1951,7 @@
 				// end check
 
 				$value_set = array();
-				
+
 				foreach ($data['forward'] as $role => $user_lid)
 				{
 					$value_set[$role] =  $user_lid;
@@ -1971,7 +1971,7 @@
 							$value_set['budsjettsigndato'] = null;
 							break;
 					}
- 
+
 					switch ( $data['approve'] )
 					{
 						case 'is_janitor':
@@ -2017,7 +2017,7 @@
 				$order_info['order_exist'] = true;
 			}
 			if ($this->db->f('location_code'))
-			{ 
+			{
 				$parts = explode('-',$this->db->f('location_code'));
 				$order_info['dima'] = implode('', $parts);
 				$order_info['loc1'] = $parts[0];
@@ -2027,7 +2027,7 @@
 			$order_info['spbudact_code']		= $this->db->f('account_id');
 			$order_info['dimb']					= $this->db->f('ecodimb');
 			$order_info['dime']					= $this->db->f('category');
-			$order_info['title']				= $this->db->f('title',true);			
+			$order_info['title']				= $this->db->f('title',true);
 
 			$janitor_user_id 					= $this->db->f('user_id');
 			$order_info['janitor']				= $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
@@ -2095,19 +2095,19 @@
 			{
 				if($this->update_voucher_by_changed_order($data['line_id'], $data['order_id']))
 				{
-					phpgwapi_cache::message_set(lang('voucher info updated from order'), 'message');			
+					phpgwapi_cache::message_set(lang('voucher info updated from order'), 'message');
 					return true;
 				}
 				else
 				{
 					phpgwapi_cache::message_set(lang('something went wrong'), 'error');
-					return false;				
+					return false;
 				}
 			}
 
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$value_set = array();
-			
+
 			$value_set['periode'] = $data['period'];
 			$value_set['periodization'] = $data['periodization'];
 			$value_set['periodization_start'] = $data['periodization_start'];
@@ -2173,7 +2173,7 @@
 					{
 						continue;
 					}
-					
+
 					$split_amount 		= str_replace(array(' ', ','),array('','.'),$split_amount);
 
 					if(!is_numeric($split_amount ))
@@ -2187,7 +2187,7 @@
 					$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
 					$this->db->next_record();
 					$amount = $this->db->f('belop');
-					
+
 					if($amount > 0)
 					{
 						if(($amount - $split_amount) <= 0)
@@ -2258,7 +2258,7 @@
 					'user_id'		=> $this->account_id,
 					'entry_date'	=> time(),
 					'modified_date'	=> time()
-				); 
+				);
 
 				$sql = "SELECT id FROM fm_ecobilag_process_log WHERE bilagsnr = '{$data['voucher_id']}'";
 				$this->db->query($sql,__LINE__,__FILE__);
@@ -2347,12 +2347,12 @@
 						$query = (int) $data['query'];
 						$querymethod = " $where (bilagsnr = {$query} OR bilagsnr_ut = {$query})";
 						break;
-					
+
 					case 'invoice_id':
 						$query = $data['query'];
 						$querymethod = " $where fakturanr = '{$query}'";
 						break;
-					
+
 					case 'order_id':
 						$query = $data['query'];
 						$querymethod = " $where pmwrkord_code = '{$query}'";
@@ -2375,7 +2375,7 @@
 
 					default:
 				}
-				
+
 				$where = 'AND';
 			}
 
@@ -2392,7 +2392,7 @@
 			$lang_type = lang('type');
 			$lang_approved_amount = lang('approved amount');
 			$lang_payment_date = lang('payment date');
-			
+
 			$this->db->query($sql,__LINE__,__FILE__);
 			$values = array();
 
@@ -2429,17 +2429,17 @@
 				{
 					$status = 1;
 				}
-				
+
 				$values[$bilagsnr]['status'][] = $status;
 			}
-			
+
 			$voucers = array();
 			foreach ($values as $bilagsnr => $entry)
 			{
 				$payment_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($entry['payment_date']));
 				$status = $entry['status'];
 				sort($status);
-				
+
 				$voucher_id = $entry['bilagsnr_ut'] ? $entry['bilagsnr_ut'] : $bilagsnr;
 				$name = sprintf("{$lang_payment_date}: % 10s | {$lang_voucer}:% 8s | {$lang_vendor}: % 50s | {$lang_currency}: % 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s",
 							$payment_date,
@@ -2460,5 +2460,15 @@
 			}
 
 			return $voucers;
+		}
+
+		public function get_auto_generated_invoice_num($vendor_id)
+		{
+			$vendor_id = (int) $vendor_id;
+			$sql = "SELECT max(cast(fakturanr as int)) as invoice_num FROM fm_ecobilagoverf WHERE spvend_code = {$vendor_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$invoice_num = $this->db->f('invoice_num') +1;
+			return $invoice_num;
 		}
 	}

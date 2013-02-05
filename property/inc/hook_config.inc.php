@@ -114,6 +114,64 @@ HTML;
 	}
 
 	/**
+	* Get HTML listbox with project status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function project_approval_status($config)
+	{
+		$status_entries = execMethod('property.soproject.select_status_list');
+
+		$status_assigned = isset($config['project_approval_status']) ? $config['project_approval_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with workorder status that are to be set when asking for approval
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function workorder_approval_status($config)
+	{
+		$status_entries = execMethod('property.soworkorder.select_status_list');
+
+		$status_assigned = isset($config['workorder_approval_status']) ? $config['workorder_approval_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
 	* Get HTML listbox with workorder status that are to be set when invoice is processed
 	*
 	* @param $config
