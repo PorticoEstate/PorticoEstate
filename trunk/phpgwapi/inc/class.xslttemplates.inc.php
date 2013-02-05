@@ -90,7 +90,7 @@
 		 /**
 		 * Set the output format
 		 *
-		 * @internal currently supports html and wml
+		 * @internal currently supports html, html5 and wml
 		 * @param string $output the desired output format
 		 */
 		 public function set_output($output)
@@ -100,6 +100,7 @@
 			{
 				case 'wml':
 				case 'html':
+				case 'html5':
 					$this->output = $output;
 					break;
 				default:
@@ -268,7 +269,11 @@ XSLT;
 				switch ( $this->output )
 				{
 					case 'wml':
-						$this->xsldata .= '<xsl:output method = "xml" encoding="utf-8"  doctype-public="-//WAPFORUM//DTD WML 1.3//EN" doctype-system="http://www.wapforum.org/DTD/wml13.dtd" />'."\n";				
+						$this->xsldata .= '<xsl:output method = "xml" encoding="utf-8"  doctype-public="-//WAPFORUM//DTD WML 1.3//EN" doctype-system="http://www.wapforum.org/DTD/wml13.dtd" indent="yes" />'."\n";				
+						break;
+
+					case 'html5':
+						$this->xsldata .= '<xsl:output  method="xml" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes" />'."\n";				
 						break;
 
 					case 'html':
@@ -420,7 +425,19 @@ XSLT;
 
 				return '';
 			}
-			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
+
+			switch ( $this->output)
+			{
+				case 'wml':
+				case 'html5':
+					$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+					break;
+				default:
+			}
+
+			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
+
+			return $html;
 		}
 
 		function pparse()
