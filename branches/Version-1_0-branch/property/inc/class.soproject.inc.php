@@ -710,7 +710,7 @@
 
 */
 
-					$_get_accounting = false;
+					$_get_accounting = true;
 					if($_get_accounting)
 					{
 
@@ -958,15 +958,27 @@
 			return $this->db->f('power_meter');
 		}
 
-		function project_workorder_data($project_id = 0)
+		function project_workorder_data($data = array())
 		{
-			$project_id = (int) $project_id;
+			$project_id = (int) $data['project_id'];
+			$year = (int) $data['year'];
 			$values = array();
-			$this->db->query("SELECT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
+
+			$filter_year = '';
+			if($year)
+			{
+//				$start_date = mktime(0, 0, 0, 1, 1, $year)
+//				$end_date = mktime(23, 59, 59, 12, 31, $year)
+				$filter_year = "AND fm_workorder_budget.year = {$year}";
+			}
+
+			$this->db->query("SELECT DISTINCT fm_workorder.title, fm_workorder.actual_cost, fm_workorder.id as workorder_id,fm_workorder.contract_sum,"
 				. " fm_workorder.vendor_id, fm_workorder.calculation,fm_workorder.rig_addition,fm_workorder.addition,fm_workorder.deviation,fm_workorder.charge_tenant,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id as b_account_id"
-				. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " WHERE project_id={$project_id}",__LINE__,__FILE__);
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " WHERE project_id={$project_id} {$filter_year}",__LINE__,__FILE__);
 
 			$_orders = array();
 
@@ -2270,6 +2282,7 @@ $test = 0;
 					'sum_orders'			=> array_sum($_sum_orders),
 					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
+					'deviation_acc'			=> 0
 				);
 
 				$sort_period[] = $period;
@@ -2331,6 +2344,7 @@ $test = 0;
 					'sum_orders'			=> array_sum($_sum_orders),
 					'sum_oblications'		=> array_sum($_sum_oblications),
 					'actual_cost'			=> $_actual_cost,
+					'deviation_acc'			=> 0
 				);
 
 				$sort_period[] = $period;
@@ -2342,6 +2356,8 @@ $test = 0;
 			}
 
 
+			$deviation_acc = 0;
+			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
 				$entry['year'] = substr( $entry['period'], 0, 4 );
@@ -2359,14 +2375,15 @@ $test = 0;
 				$_deviation = $entry['budget'] - $entry['actual_cost'];
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
-				$entry['deviation_acc'] += $deviation;
+				$budget_acc +=$entry['budget'];
+				$deviation_acc += $deviation;
+				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
 
-//_debug_array( $values);die();
 			return $values;
 		}
 
@@ -2586,26 +2603,47 @@ $test = 0;
 
 			$id = (int) $id;
 			$year = (int) $year;
+			$latest_year = (int)$budget['latest_year'];
 			$this->db->query("SELECT periodization_id, project_type_id FROM fm_project WHERE id = {$id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$periodization_id = $this->db->f('periodization_id');
 			$project_type_id = $this->db->f('project_type_id');
 
-			if(abs($budget['obligation']) > 0)
+			if($project_type_id == 2) // investment
 			{
-				$transferred = $this->update_budget($id, $budget['latest_year'], $periodization_id, $budget['obligation'], false, 'subtract');
-			}
+				// total budget
+				$this->db->query("SELECT sum(budget) FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$last_budget = $this->db->f('budget');
+				if(!$last_budget)
+				{
+					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
+				}
 
-			if($project_type_id == 1)//operation
+				//paid last year
+				$this->db->query("SELECT sum(amount) as paid FROM fm_project"
+				. " {$this->join} fm_workorder ON fm_project.id = fm_workorder.project_id"
+				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$paid_last_year = $this->db->f('paid');
+
+				$subtract = $last_budget - $paid_last_year;
+//_debug_array($subtract);die();
+				$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
+
+				$new_budget = $last_budget - $paid_last_year;
+				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
+			}
+			else if($project_type_id == 1)//operation
 			{
+				if($budget['budget_amount'])
+				{
+					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+				}
 				$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}",__LINE__,__FILE__);
-			}			
-
-			if($budget['budget_amount'])
-			{
-				$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
 			}
-			
+
 			$this->db->transaction_commit();
 		}
 
@@ -2614,7 +2652,8 @@ $test = 0;
 		{
 			if($transfer_budget_year && $execute && $new_budget)
 			{
-				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget} </H1>";
+				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget_year} </H1>";
+				$soworkorder = CreateObject('property.soworkorder');
 
 				foreach($ids as $_id)
 				{
@@ -2628,7 +2667,7 @@ $test = 0;
 							$this->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
 							break;
 						case 'workorder':
-							_debug_array( $new_budget[$_id]);
+							$soworkorder->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
 							break;
 						default:
 							throw new Exception('property_soproject::bulk_update_status() - not a valid type');
@@ -2668,13 +2707,12 @@ $test = 0;
 				}
 			}
 
-			$sql_budget = "SELECT DISTINCT year, active, sum(budget) as budget FROM fm_{$type}_budget WHERE ";
-
 			switch($type)
 			{
 				case 'project':
 
-					$sql_budget .= 'project_id = %d GROUP BY year, active ORDER BY year';
+					$sql_budget = "SELECT DISTINCT year, month, active, sum(budget) as amount FROM fm_project_budget WHERE ";
+					$sql_budget .= 'project_id = %d GROUP BY year, month, active ORDER BY year';
 
 					if($closed_orders)
 					{
@@ -2695,7 +2733,8 @@ $test = 0;
 					break;
 				case 'workorder':
 
-					$sql_budget .= 'order_id = %d GROUP BY year, active ORDER BY year';
+					$sql_budget = "SELECT DISTINCT year, month, active, sum(combined_cost) as amount FROM fm_workorder_budget WHERE ";
+					$sql_budget .= 'order_id = %d GROUP BY year, month, active ORDER BY year';
 
 					$table = 'fm_workorder';
 					$status_table = 'fm_workorder_status';
@@ -2757,17 +2796,31 @@ $test = 0;
 				$this->db->query($sql,__LINE__,__FILE__);
 
 				$budget = array();
+				$_budget = array();
 				$_year = 0;
+				$_active_amount = array();
 
 				while ($this->db->next_record())
 				{
 					$_year = $this->db->f('year');
+					$_amount = $this->db->f('amount');
 					$_active = $this->db->f('active') ? X : 0;
-					$_budget = number_format((int)$this->db->f('budget'), 0, ',', '.');
-					$budget[] = $_year . " [{$_active}/ {$_budget}]";
+					if($_active)
+					{
+						$_active_amount[$_year] += $_amount;
+					}
+
+					$_budget[$_year] += $_amount;
 				}
+
+				foreach ($_budget as $__year => $__budget)
+				{
+					$budget[] = $__year . ' [' . number_format((int)$_active_amount[$__year], 0, ',', '.') . '/' . number_format((int)$__budget, 0, ',', '.') . ']';
+				}
+
 				$entry['budget'] = implode(' ;', $budget);
 				$entry['latest_year'] = $_year;
+				$entry['active_amount'] = array_sum($_active_amount);
 			}
 
 			return $values;
@@ -3001,6 +3054,32 @@ $test = 0;
 			}
 			$year_list = array_reverse($year_list);
 
+			return $year_list;
+		}
+
+		public function get_order_time_span($id)
+		{
+			if(!$id)
+			{
+				return array();
+			}
+			$year_list = array();
+			$sql = 'SELECT min(start_date) AS start_date, max(end_date) AS end_date FROM fm_workorder WHERE project_id = ' . (int) $id;
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$start_year = $this->db->f('start_date') ?  date('Y',$this->db->f('start_date')) : date('Y');
+				$end_year = $this->db->f('end_date') ?  date('Y',$this->db->f('end_date')) : date('Y');
+
+				for ($i=$start_year;$i< ($end_year+1) ;$i++)
+				{
+					$year_list[] = array
+					(
+						'id'	=> $i,
+						'name'	=> $i
+					);
+				}
+			}
 			return $year_list;
 		}
 	}
