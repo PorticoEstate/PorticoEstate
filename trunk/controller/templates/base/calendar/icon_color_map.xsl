@@ -1,7 +1,6 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="icon_color_map" xmlns:php="http://php.net/xsl">
-
-  <ul id="icon_color_map">
+   <ul id="icon_color_map">
     <li>
       <img height="15" src="controller/images/status_icon_yellow_ring.png" />
       <span>Kontroll satt opp</span>
@@ -26,6 +25,9 @@
       <img height="15" src="controller/images/status_icon_red_cross.png" />
       <span>Kontroll ikke gjennomført</span>
     </li>
+    <li>
+      <img height="15" src="controller/images/status_icon_black_cross.png" />
+      <span>Kontroll kansellert</span>
+    </li>
   </ul>
-				
 </xsl:template>
