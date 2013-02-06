@@ -345,7 +345,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/edit_check_list'), $data);
 		}
 		
 		/**
@@ -493,7 +493,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
 		public function print_check_list()
@@ -576,7 +576,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_control_info'), $data);
 		}
 		
 		function view_control_details()
@@ -706,7 +706,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/add_case'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/add_case'), $data);
 		}
 		
 		function view_open_cases()
