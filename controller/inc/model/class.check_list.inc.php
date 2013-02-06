@@ -205,14 +205,14 @@
 		  }
 		 
 		  // Validate STATUS		  		  
-			if( $this->status != 0 and $this->status != 1 )
+			if( $this->status != 0 && $this->status != 1 && $this->status != 3)
 		  { 
 		  	$status = false;
 		  	$this->error_msg_array['status'] = "error_msg_2";
 		  }
 		  
 			// Validate STATUS ON PLANNED DATE		  		  
-			if( $this->status == 0 and ( $this->planned_date == '' or $this->planned_date == 0) )
+			if( $this->status == 0 && ( $this->planned_date == '' or $this->planned_date == 0) )
 		  { 
 		  	$status = false;
 		  	$this->error_msg_array['status'] = "error_msg_7";
