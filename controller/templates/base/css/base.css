@@ -1252,7 +1252,7 @@ ul#icon_color_map {
   border: 1px solid #DDDDDD;
   border-radius: 4px 4px 4px 4px;
   float: right;
-  padding: 1em;
+  padding: 6px 10px;
 }
 
 ul#icon_color_map li {
@@ -1260,8 +1260,9 @@ ul#icon_color_map li {
   padding: 3px 0;
 }
 
-ul#icon_color_map span{
+ul#icon_color_map span {
   margin-left: 10px;
+  vertical-align: middle;
 }
 
 #calendar {
