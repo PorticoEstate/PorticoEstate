@@ -97,7 +97,7 @@
 					</xsl:choose>
 					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
+				Vis kontrolplan (år)
 			</a>
 			<a class="last">
 				<xsl:attribute name="href">
@@ -117,7 +117,7 @@
 					</xsl:choose>
 					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
+				Vis kontrolplan (måned)
 			</a>
 		</div>
 		
