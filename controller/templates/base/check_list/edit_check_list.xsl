@@ -43,7 +43,7 @@
 					</xsl:choose>
 					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
+				Vis kontrolplan (år)
 			</a>
 			<a class="last">
 				<xsl:attribute name="href">
@@ -63,7 +63,7 @@
 					</xsl:choose>
 					<xsl:value-of select="$session_url"/>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
+				Vis kontrolplan (måned)
 			</a>
 		</div>
 		
@@ -85,22 +85,30 @@
 			<div class="row">
 				<label>Status</label>
 				<xsl:variable name="status"><xsl:value-of select="check_list/status"/></xsl:variable>
-				<select id="status" name="status">
-					<xsl:choose>
-						<xsl:when test="check_list/status = 0">
-							<option value="1">Utført</option>
-							<option value="0" SELECTED="SELECTED" >Ikke utført</option>
-						</xsl:when>
-						<xsl:when test="check_list/status = 1">
-							<option value="1" SELECTED="SELECTED">Utført</option>
-							<option value="0">Ikke utført</option>
-						</xsl:when>
-						<xsl:otherwise>
-							<option value="1">Utført</option>
-							<option value="0">Ikke utført</option>
-						</xsl:otherwise>
-					</xsl:choose>
-				</select>
+					<select id="status" name="status">
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+								<option value="1">Utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+                <option value="3">Kansellert</option>
+							</xsl:when>
+							<xsl:when test="check_list/status = 1">
+								<option value="1" SELECTED="SELECTED">Utført</option>
+								<option value="0">Ikke utført</option>
+                <option value="3">Kansellert</option>
+							</xsl:when>
+              <xsl:when test="check_list/status = 3">
+								<option value="3" SELECTED="SELECTED">Kansellert</option>
+								<option value="0">Ikke utført</option>
+                <option value="1">Utført</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+								<option value="1">Utført</option>
+                <option value="3">Kansellert</option>
+							</xsl:otherwise>
+						</xsl:choose>
+					</select>
 			</div>
 			<div class="row">
 				<label>Skal utføres innen</label>

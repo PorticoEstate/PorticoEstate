@@ -42,7 +42,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrollplan for bygg/eiendom (år)
+				Vis kontrollplan (år)
 			</a>
 				
 			<a class="last">
@@ -62,7 +62,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
+				Vis kontrollplan (måned)
 			</a>
 		</div>
 	</div>
@@ -121,15 +121,23 @@
 						<xsl:choose>
 							<xsl:when test="check_list/status = 0">
 								<option value="1">Utført</option>
-								<option value="0" SELECTED="SELECTED" >Ikke utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+                <option value="3">Kansellert</option>
 							</xsl:when>
 							<xsl:when test="check_list/status = 1">
 								<option value="1" SELECTED="SELECTED">Utført</option>
 								<option value="0">Ikke utført</option>
+                <option value="3">Kansellert</option>
+							</xsl:when>
+              <xsl:when test="check_list/status = 3">
+								<option value="3" SELECTED="SELECTED">Kansellert</option>
+								<option value="0">Ikke utført</option>
+                <option value="1">Utført</option>
 							</xsl:when>
 							<xsl:otherwise>
-								<option value="0">Ikke utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
 								<option value="1">Utført</option>
+                <option value="3">Kansellert</option>
 							</xsl:otherwise>
 						</xsl:choose>
 					</select>
@@ -183,7 +191,7 @@
 			
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
-				<input class="btn not_active" type="submit" value="Lagre detaljer" />
+				<input class="btn" type="submit" value="Lagre detaljer" />
 			</div>
 		</form>	
 	 </div>
