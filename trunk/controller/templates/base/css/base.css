@@ -1834,15 +1834,14 @@ li.check_item_case .col_3 {
 
 /* ===============================  FORM REGISTER CASE  ============================= */
 
-.frm_register_case {
-  margin-bottom: 1em;
-}
 .frm_register_case input[type="text"]{
  	width: 170px;  
 }
+
 .frm_register_case select {
   width: 184px;
 }
+
 .frm_register_case textarea {
   display: block;
   height: 100px;
@@ -1850,9 +1849,37 @@ li.check_item_case .col_3 {
   margin-bottom: 1em;
   width: 63%;
 }
+
 .frm_register_case label {
   display: inline-block;
   width: 18%;
+}
+
+.frm_register_case .what-to-do, .frm_register_case .how-to-do {
+  line-height: 20px;
+}
+
+.frm_register_case .how-to-do {
+  margin-bottom: 10px;
+}
+
+.add-cases .expand_list li{
+  background: none repeat scroll 0 0 #EEEEEE;
+  margin-bottom: 10px;
+  padding: 10px; 
+}
+
+.add-cases .expand_list h4{
+  margin-bottom: 0;
+}
+
+.add-cases h3 img {
+  height: 15px;
+  margin-right: 5px;
+}
+
+.add-cases .expand-trigger{
+  cursor: pointer;
 }
 
 
@@ -2023,6 +2050,11 @@ div.controller_checklist {
   margin-bottom: 1em;	
 }
 
+#control_details .frequency .val {
+  margin-left: 5px;
+  text-transform: lowercase;	
+}
+
 #repeat_interval {
   width: 28px;
 }
@@ -2055,9 +2087,11 @@ ul.control_groups h3 {
   margin-left: 11px;
   vertical-align: middle;
 }
+
 #view-procedures .box {
-  background: none repeat scroll 0 0 #E7EFF8;
-  border: 1px solid #DDDDDD;
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #DBE5EF;
+  border-radius: 4px 4px 4px 4px;
   margin-bottom: 20px;
   padding: 0 20px;
 }
