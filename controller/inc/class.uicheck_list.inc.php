@@ -45,6 +45,7 @@
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
+  include_class('controller', 'date_converter', 'inc/helper/');
 		
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
@@ -232,7 +233,7 @@
 					$location_id = phpgw::get_var('location_id');
 					$check_list->set_location_id($location_id);
 					$component_id = phpgw::get_var('component_id');
-					$check_list->set_component_id($component_id);	
+					$check_list->set_component_id($component_id);
 				}
 				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
@@ -240,7 +241,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    			$component->set_xml_short_desc( $short_desc );
+    		$component->set_xml_short_desc( $short_desc );
 				
 				$component_array = $component->toArray();
 				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
@@ -363,9 +364,9 @@
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
-					
-			$deadline_date_ts = phpgwapi_datetime::date_to_timestamp( $deadline_date );
 			
+			$deadline_date_ts = date_converter::date_to_timestamp( $deadline_date );
+			     
 			if($planned_date != '')
 			{
 				$planned_date_ts = phpgwapi_datetime::date_to_timestamp( $planned_date );
