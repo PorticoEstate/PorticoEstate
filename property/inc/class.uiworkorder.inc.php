@@ -2139,6 +2139,9 @@
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.edit', 'property' );
 			$GLOBALS['phpgw']->js->validate_file( 'portico', 'ajax_workorder_edit', 'property' );
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 		}
 
 		function add()
@@ -2486,23 +2489,6 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_invoice' => $data));
-
-/*
-			phpgwapi_yui::load_widget('container');
-			phpgwapi_yui::load_widget('button');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-*/
-/*
-			phpgwapi_yui::load_widget('dragdrop');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('menu');
-			phpgwapi_yui::load_widget('connection');
-			phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-*/
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 			$GLOBALS['phpgw']->css->validate_file('property');
