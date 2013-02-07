@@ -261,8 +261,8 @@
 			(
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'control'									=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control'									=> $control,
+				'check_list' 							=> $check_list,
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month_nr,
@@ -272,10 +272,10 @@
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
-
+      
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl('check_list/add_check_list', $data);
+			self::render_template_xsl( array('check_list/add_check_list', 'check_list/nav_control_plan'), $data );
 		}
 		
 		/**
@@ -327,8 +327,8 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -414,7 +414,7 @@
 
 			if( $check_list->validate() )
 			{
-					$check_list_id  = $this->so->store($check_list);
+				$check_list_id  = $this->so->store($check_list);
 				
 				if( $check_list_id > 0 )
 				{
@@ -476,8 +476,8 @@
 							
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -519,7 +519,7 @@
 			$data = array
 			(
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
-				'check_list'					=> $check_list->toArray()
+				'check_list'										=> $check_list
 			);
 			
 			self::render_template_xsl('check_list/print_check_list', $data);
@@ -563,8 +563,8 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -587,7 +587,7 @@
 			
 			$data = array
 			(
-				'control'						=> $control->toArray(),
+				'control'	=> $control,
 			);
 			
 			self::render_template_xsl('check_list/view_control_details', $data);
@@ -689,8 +689,8 @@
 							
 			$data = array
 			(
-				'control' 													=> $control->toArray(),
-				'check_list' 												=> $check_list->toArray(),
+				'control' 													=> $control,
+				'check_list' 												=> $check_list,
 				'location_array'										=> $location_array,
 				'component_array'										=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
@@ -727,7 +727,7 @@
 			$data = array
 			(
 				'open_check_items_and_cases'	=> $open_check_items_and_cases,
-				'check_list' 									=> $check_list->toArray()
+				'check_list' 									=> $check_list
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases', 'check_list/case_row'), $data );			
@@ -744,7 +744,7 @@
 			$data = array
 			(
 				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
-				'check_list' 													=> $check_list->toArray()
+				'check_list' 													=> $check_list
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
@@ -773,7 +773,7 @@
 			$data = array
 			(
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
-				'check_list'					=> $check_list->toArray()
+				'check_list'					=> $check_list
 			);
 			
 			self::render_template_xsl('check_list/view_control_items', $data);
