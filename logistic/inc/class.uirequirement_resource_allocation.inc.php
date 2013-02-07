@@ -439,7 +439,6 @@
 
 			if( count($chosen_resources) <=  $num_allowed_bookings)
 			{
-
 				foreach($chosen_resources as $resource_id)
 				{
 					$resource_alloc = new logistic_requirement_resource_allocation();
@@ -449,12 +448,9 @@
 					$resource_alloc->set_create_user( $user_id );
 					$resource_alloc->set_start_date( $requirement->get_start_date() );
 					$resource_alloc->set_end_date( $requirement->get_start_date() );
-					$resource_alloc->set_activity_id( $activity_id );
 
 					$resource_alloc_id = $this->so->store( $resource_alloc );
 				}
-
-//				$activity = $this->so_activity->get_single($requirement->get_activity_id()); 
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
 			}

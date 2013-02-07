@@ -51,7 +51,6 @@
 			(
 				'location_id'		=> $resource_alloc->get_location_id(),
 				'item_id'			=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
-				'activity_id'		=> $this->marshal($resource_alloc->get_activity_id(), 'int'),
 				'allocation_id'		=> 0,//not known yet
 				'create_user'		=> $resource_alloc->get_create_user(),
 				'create_date'		=> time(),
@@ -225,10 +224,13 @@
 			{
 				return $values;
 			}
-			$sql = "SELECT item_id, activity_id, allocation_id, start_date, end_date FROM lg_calendar"
-			. " WHERE location_id = {$location_id}"
-			. " AND item_id IN (" . implode(',', $ids) . ')'
-			. " AND end_date >= {$start_date} AND start_date <= {$end_date}";
+			$sql = "SELECT lg_calendar.item_id, lg_requirement.activity_id, lg_calendar.allocation_id, lg_calendar.start_date, lg_calendar.end_date"
+			. " FROM lg_calendar"
+			. " {$this->join} lg_requirement_resource_allocation ON lg_requirement_resource_allocation.id = lg_calendar.allocation_id"
+			. " {$this->join} lg_requirement ON lg_requirement_resource_allocation.requirement_id = lg_requirement.id"
+			. " WHERE lg_calendar.location_id = {$location_id}"
+			. " AND lg_calendar.item_id IN (" . implode(',', $ids) . ')'
+			. " AND lg_calendar.end_date >= {$start_date} AND lg_calendar.start_date <= {$end_date}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())

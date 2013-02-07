@@ -45,7 +45,6 @@
 		protected $fm_bim_item_name;
 		protected $start_date;
 		protected $end_date;
-		protected $activity_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -167,16 +166,6 @@
 		public function get_start_date()
 		{
 			return $this->start_date;
-		}
-
-		public function set_activity_id($activity_id)
-		{
-			$this->activity_id = $activity_id;
-		}
-
-		public function get_activity_id()
-		{
-			return $this->activity_id;
 		}
 
 		/**
