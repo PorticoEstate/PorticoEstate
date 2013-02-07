@@ -149,11 +149,6 @@
 			'precision' => 8,
 			'nullable' => false
 		));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_calendar','activity_id',array(
-			'type' => 'int',
-			'precision' => 4,
-			'nullable' => true
-		));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_calendar','allocation_id',array(
 			'type' => 'int',
 			'precision' => 4,
@@ -162,7 +157,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_requirement_resource_allocation','calendar_id',array(
 			'type' => 'int',
 			'precision' => 4,
-			'nullable' => false,
+			'nullable' => true,
 			'default' => 0//FIXME
 		));
 
