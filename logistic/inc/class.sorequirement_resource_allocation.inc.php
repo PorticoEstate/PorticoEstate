@@ -45,33 +45,60 @@
 
 		protected function add(&$resource_alloc)
 		{
-			$cols = array(
-				'requirement_id',
-				'resource_id',
-				'location_id',
-				'create_user',
-				'create_date'
+			$this->db->transaction_begin();
+
+			$value_set = array
+			(
+				'location_id'		=> $resource_alloc->get_location_id(),
+				'item_id'			=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
+				'activity_id'		=> $this->marshal($resource_alloc->get_activity_id(), 'int'),
+				'allocation_id'		=> 0,//not known yet
+				'create_user'		=> $resource_alloc->get_create_user(),
+				'create_date'		=> time(),
+				'start_date'		=> $resource_alloc->get_start_date(),
+				'end_date'			=> $resource_alloc->get_end_date(),
 			);
 
-			$values = array(
-				$this->marshal($resource_alloc->get_requirement_id(), 'int'),
-				$this->marshal($resource_alloc->get_resource_id(), 'int'),
-				$this->marshal($resource_alloc->get_location_id(), 'int'),
-				$this->marshal($resource_alloc->get_create_user(), 'int'),
-				$this->marshal(strtotime('now'), 'int')
-			);
-
-			$sql = 'INSERT INTO lg_requirement_resource_allocation (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+			$sql = 'INSERT INTO lg_calendar (' . implode(',', array_keys($value_set)) . ') VALUES (' . implode(',', array_values($value_set)) . ')';
 			$result = $this->db->query($sql, __LINE__,__FILE__);
 
 			if($result)
 			{
-				return $this->db->get_last_insert_id('lg_requirement_resource_allocation', 'id');
+				$calendar_id = $this->db->get_last_insert_id('lg_calendar', 'id');
 			}
 			else
 			{
 				return 0;
 			}
+
+			$value_set = array
+			(
+				'requirement_id'	=> $this->marshal($resource_alloc->get_requirement_id(), 'int'),
+				'resource_id'		=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
+				'location_id'		=> $this->marshal($resource_alloc->get_location_id(), 'int'),
+	//			'start_date'		=> $this->marshal($resource_alloc->get_start_date(), 'int'),
+	//			'end_date'			=> $this->marshal($resource_alloc->get_end_date(), 'int'),
+				'create_user'		=> $this->marshal($resource_alloc->get_create_user(), 'int'),
+				'create_date'		=> time(),
+				'calendar_id'		=> $calendar_id
+			);
+
+			$sql = 'INSERT INTO lg_requirement_resource_allocation (' . implode(',', array_keys($value_set)) . ') VALUES (' . implode(',', array_values($value_set)) . ')';
+			$result = $this->db->query($sql, __LINE__,__FILE__);
+
+			if($result)
+			{
+				$allocation_id =  $this->db->get_last_insert_id('lg_requirement_resource_allocation', 'id');
+				$this->db->query("UPDATE lg_calendar SET allocation_id = {$allocation_id} WHERE id = {$calendar_id}", __LINE__,__FILE__);
+			}
+			else
+			{
+				$allocation_id = 0;
+			}
+
+			$this->db->transaction_commit();
+
+			return $allocation_id;
 		}
 
 		protected function update($resource_alloc)
@@ -183,19 +210,52 @@
 			return $allocation;
 		}
 		
+
+		/**
+		* Finds allocated items within timespan
+		*
+		*/
+		public function check_calendar($location_id = 0, $ids = array(), $start_date, $end_date)
+		{
+			$location_id = (int)$location_id;
+			$values = array();
+			$items = array();
+			
+			if (!$ids)
+			{
+				return $values;
+			}
+			$sql = "SELECT item_id, activity_id, allocation_id, start_date, end_date FROM lg_calendar"
+			. " WHERE location_id = {$location_id}"
+			. " AND item_id IN (" . implode(',', $ids) . ')'
+			. " AND end_date >= {$start_date} AND start_date <= {$end_date}";
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$item_id = $this->db->f('item_id');
+				$items[$item_id] = true;
+				$values[$item_id][] = array
+				(
+					'start_date'	=> $this->db->f('start_date'),
+					'end_date'		=> $this->db->f('end_date'),
+					'activity_id'	=> $this->db->f('activity_id'),
+					'allocation_id' => $this->db->f('allocation_id'),
+					'item_id'		=> $item_id
+				);
+			}
+			return array('calendar' => $values, 'items' => $items);
+		}
+
 		function delete($resource_allocation_id)
 		{
+			$this->db->transaction_begin();
+
 			$resource_allocation_id = (int) $resource_allocation_id;
-			$status = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE id = $resource_allocation_id");
-					
-			if( $status )
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			$this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE id = $resource_allocation_id");
+			$this->db->query("DELETE FROM lg_calendar WHERE allocation_id = $resource_allocation_id");
+
+			return !!$this->db->transaction_commit();
 		}
 		
 		public function delete_resources($requirement_id)
@@ -203,17 +263,23 @@
 			
 			echo "i delete_resources: " . $requirement_id;
 			
+			$this->db->transaction_begin();
+
 			$requirement_id = (int) $requirement_id;
-			$status = $this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id");
-					
-			if( $status )
+			$this->db->query("SELECT id FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
+			$ids = array();
+			while ($this->db->next_record())
 			{
-				return true;
+				$ids[] = $this->db->f('id');
 			}
-			else
+			
+			if($ids)
 			{
-				return false;
+				$this->db->query("DELETE FROM lg_calendar WHERE allocation_id = IN ( " . explode(',', $id) . ')',__LINE__,__FILE__);
 			}
+			$this->db->query("DELETE FROM lg_requirement_resource_allocation WHERE requirement_id = $requirement_id",__LINE__,__FILE__);
+
+			return !!$this->db->transaction_commit();
 		}
 
 		public static function get_instance()
