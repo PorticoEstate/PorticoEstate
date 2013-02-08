@@ -2,9 +2,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
-
 <!-- ==================  ADD CHECKLIST  ========================= -->
-
 <div id="main_content" class="medium">
 	<div id="check-list-heading">
 		<div class="box-1">
