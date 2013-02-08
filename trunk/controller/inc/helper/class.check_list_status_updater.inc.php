@@ -15,9 +15,9 @@
 			
 		public function update_check_list_status( $check_list_id )
 		{
-      $db_check_list = $this->so_check_list->get_db();
-			$db_check_list->transaction_begin();
-        
+      //$db_check_list = $this->so_check_list->get_db();
+			//$db_check_list->transaction_begin();
+    
 			$check_list = $this->so_check_list->get_single( $check_list_id );
 		
 			$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null, "return_object");
@@ -51,5 +51,6 @@
 			$check_list->set_num_pending_cases($num_pending_cases);
 			
 			$this->so_check_list->store($check_list);
+      
 		}
 }
