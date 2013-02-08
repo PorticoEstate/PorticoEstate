@@ -129,7 +129,7 @@ $phpgw_baseline = array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'allocation_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'item_inventory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 						'create_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
 						'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),

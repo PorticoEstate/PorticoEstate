@@ -167,4 +167,25 @@
 			return $GLOBALS['setup_info']['logistic']['currentver'];
 		}
 	}
-	
+
+	$test[] = '0.0.5';
+	function logistic_upgrade0_0_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('lg_calendar', array(), 'allocation_id');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_calendar','item_inventory_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.6';
+			return $GLOBALS['setup_info']['logistic']['currentver'];
+		}
+	}
+
