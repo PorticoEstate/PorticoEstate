@@ -58,8 +58,8 @@
 	$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}"; 
 	$styling .= " .home_portal .control-area { width:200px;}";
 	$styling .= " .home_portal .control { width:300px;}";
-	$styling .= " .home_portal .date { width:300px;}";
-	$styling .= " .home_portal li { margin: 5px;}";
+	$styling .= " .home_portal .date { width:130px;}";
+	$styling .= " .home_portal li { overflow: hidden;margin: 10px;}";
 	$styling .= " .home_portal li div { display: block;float:left;cursor: pointer;vertical-align: middle;}";
 	
 	$styling .= " .home_portal_content ul li { clear: both; overflow: hidden;}";
@@ -71,11 +71,11 @@
 	$styling .= " h4.expand_trigger { clear:both;overflow:hidden;font-size: 12px;color:#031647;background: #DEEAF8;padding:2px 4px;margin:0; }";
 	$styling .= " h4.expand_trigger img { float:left;vertical-align:middle;margin-right:3px; }";
 	$styling .= " h4.expand_trigger span { float:left;display:block;vertical-align:middle; }";
-	$styling .= " h4.expand_trigger span.deadline { width:805px; }";
+	$styling .= " h4.expand_trigger span.deadline { margin-right: 10px; }";
 	$styling .= " h4.expand_trigger span.num_check_lists { width:200px; }";
 	
 	$styling .= " .expand_list{ display:none; overflow:hidden; }";
-	$styling .= " .expand_list li{ clear:both;overflow:hidden; }";
+	$styling .= " .expand_list li{ clear:both;overflow:hidden;margin:5px; }";
 	
 	$styling .= "</style>"; 
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
@@ -127,7 +127,7 @@
   
   /* =======================================  PLANNED CONTROLS FOR CURRENT USER  ================================= */
 	
-	$my_planned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
+	$my_planned_controls_HTML = "<div class='home_portal'><h2><div class='date heading'>Planlagt dato</div><div class='date heading'>Fristdato</div><div class='control heading'>Tittel på kontroll</div><div class='title heading'>Lokasjonsnavn</div><div class='control-area heading'>Kontrollområde</div></h2>";
 	
 	// Todays date
 	$from_date_ts =  mktime(0, 0, 0, date("n"), date("j"), date("Y") );
@@ -175,7 +175,7 @@
 
           if($planned_date_for_check_list > 0)
           {
-            $my_planned_controls[$planned_date_for_check_list][] = array( $check_list->get_deadline(), $my_control, "location", $location_code );
+            $my_planned_controls[$planned_date_for_check_list][] = array( $check_list->get_deadline(), $my_control, $check_list->get_id(), "location", $location_code );
           }
         }
 			}
@@ -200,14 +200,7 @@
 	$my_planned_controls_HTML .= "<ul style='overflow:hidden;'>";
 	
 	foreach($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
-	{  
-		if(count( $planned_controls_on_date) > 1 )
-		{
-			$my_planned_controls_HTML .= "<li>";
-			$my_planned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>Frist: "  . date($dateformat, $date_ts) .  "</span><span class='num_controls'>Antall kontroller: " .  count($planned_controls_on_date) . "</span></h4></a>";
-      $my_planned_controls_HTML .= "</li><ul class='expand_list'>";
-    }
-			
+	{  			
 		foreach($planned_controls_on_date as $my_planned_control)
 		{
 			$deadline_ts = $my_planned_control[0];
@@ -215,8 +208,9 @@
 			
       $control_area_name = get_control_area_name( $my_control["control_area_id"] );
 			
-			$date_str = date($dateformat, $deadline_ts);
-			
+			$deadline_formatted = date($dateformat, $deadline_ts);
+      $planned_formatted = date($dateformat, $planned_date_ts);
+		
       $check_list_id = $my_planned_control[2];
       $location_code = $my_planned_control[3];
 
@@ -225,21 +219,11 @@
         $location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
       }
       $location_name = $location_array[$location_code]["loc1_name"];
+     
+      $link = "";
+      $link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 
-      if(count( $planned_controls_on_date ) > 1 )
-      {
-        $link = "";
-        $link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
-
-        $my_planned_controls_HTML .= "<li><a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-      }
-      else
-      {
-        $link = "";
-        $link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
-
-        $my_planned_controls_HTML .= "<li><a href='$link'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-      }
+      $my_planned_controls_HTML .= "<li><a href='$link'><div class='date'>{$planned_formatted}</div><div class='date'>{$deadline_formatted}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
     }
 	}
 		
@@ -345,7 +329,7 @@
 			if(count( $controls_on_date) > 1 )
 			{
 				$my_undone_controls_HTML .= "<li>";
-				$my_undone_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>Frist: "  . date($dateformat, $date_ts) .  "</span><span class='num_check_lists'>Antall kontroller: " .  count($controls_on_date) . "</span></h4></a>";
+				$my_undone_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>"  . date($dateformat, $date_ts) .  "</span><span class='num_check_lists'>(" .  count($controls_on_date) . " kontroller)</span></h4></a>";
 				$my_undone_controls_HTML .= "<ul class='expand_list'>";
 			}
 		
@@ -377,14 +361,14 @@
 						$link = "";
 						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 					
-						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
 						$link = "";
 						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 					
-						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
+						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 					
 				}
@@ -408,14 +392,14 @@
 						$link = "";
 						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 					
-						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+						$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 					else
 					{
 						$link = "";
 						$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 				
-						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
+						$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a>";
 					}
 				}	
 			}
@@ -435,14 +419,14 @@
 					$link = "";
 					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 			
-					$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
+					$my_undone_controls_HTML .= "<li><a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 				}	
 				else
 				{
 					$link = "";
 					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 			
-					$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>Fristdato {$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
+					$my_undone_controls_HTML .= "<a href='{$link}'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a>";
 				}
 			}
 		}
@@ -554,7 +538,7 @@
 		if(count( $assigned_controls_on_date) > 1 )
 		{
 			$my_assigned_controls_HTML .= "<li>";
-			$my_assigned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>Frist: "  . date($dateformat, $date_ts) .  "</span><span class='num_controls'>Antall kontroller: " .  count($assigned_controls_on_date) . "</span></h4></a>";
+			$my_assigned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>"  . date($dateformat, $date_ts) .  "</span><span class='num_controls'>(" .  count($assigned_controls_on_date) . " kontroller)</span></h4></a>";
 		}
 		
 		if(count( $assigned_controls_on_date ) > 1 )
