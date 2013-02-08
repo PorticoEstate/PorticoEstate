@@ -224,9 +224,10 @@
 			{
 				return $values;
 			}
-			$sql = "SELECT lg_calendar.item_id, lg_requirement.activity_id, lg_calendar.allocation_id, lg_calendar.start_date, lg_calendar.end_date"
-			. " FROM lg_calendar"
-			. " {$this->join} lg_requirement_resource_allocation ON lg_requirement_resource_allocation.id = lg_calendar.allocation_id"
+			$sql = "SELECT lg_calendar.item_id, lg_requirement.activity_id,"
+			. " lg_calendar.start_date, lg_calendar.end_date"
+			. " FROM lg_requirement_resource_allocation"
+			. " {$this->join} lg_calendar ON lg_requirement_resource_allocation.calendar_id = lg_calendar.id"
 			. " {$this->join} lg_requirement ON lg_requirement_resource_allocation.requirement_id = lg_requirement.id"
 			. " WHERE lg_calendar.location_id = {$location_id}"
 			. " AND lg_calendar.item_id IN (" . implode(',', $ids) . ')'
@@ -242,7 +243,6 @@
 					'start_date'	=> $this->db->f('start_date'),
 					'end_date'		=> $this->db->f('end_date'),
 					'activity_id'	=> $this->db->f('activity_id'),
-					'allocation_id' => $this->db->f('allocation_id'),
 					'item_id'		=> $item_id
 				);
 			}
