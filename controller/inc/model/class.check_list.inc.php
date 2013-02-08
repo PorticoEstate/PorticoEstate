@@ -205,19 +205,12 @@
 		  }
 		 
 		  // Validate STATUS		  		  
-			if( $this->status != 0 && $this->status != 1 && $this->status != 3)
+			if( ($this->status != controller_check_list::STATUS_NOT_DONE) && ($this->status != controller_check_list::STATUS_DONE) && ($this->status != controller_check_list::STATUS_CANCELED))
 		  { 
 		  	$status = false;
 		  	$this->error_msg_array['status'] = "error_msg_2";
 		  }
-		  
-			// Validate STATUS ON PLANNED DATE		  		  
-			if( $this->status == 0 && ( $this->planned_date == '' or $this->planned_date == 0) )
-		  { 
-		  	$status = false;
-		  	$this->error_msg_array['status'] = "error_msg_7";
-		  }
-
+		    
 		  // Validate COMPLETED DATE when STATUS:DONE		  		  
 			if( ($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date) )
 		  {
