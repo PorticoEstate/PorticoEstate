@@ -251,7 +251,7 @@
 			{
 				$type = "location";
 			}
-			
+			  
 			$control = $this->so_control->get_single( $check_list->get_control_id() );
 			
 			$year = date("Y", $deadline_ts);
@@ -291,9 +291,6 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			
-			$cl_status_updater = new check_list_status_updater();
-			$cl_status_updater->update_check_list_status( $check_list_id );
-		
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$component_id = $check_list->get_component_id();
@@ -416,6 +413,9 @@
 			{
 				$check_list_id  = $this->so->store($check_list);
 				
+        $cl_status_updater = new check_list_status_updater();
+        $cl_status_updater->update_check_list_status( $check_list_id );
+      
 				if( $check_list_id > 0 )
 				{
 					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));	
