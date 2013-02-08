@@ -554,6 +554,14 @@ h1 img{
   margin-top: 20px;	
 }
 
+#control-items .groups li{
+  margin-bottom: 2px;	
+}
+
+#control-items .groups h3 {
+  margin: 15px 0 0;
+}
+
 /* =======================================  ADD CONTROL ITEM LIST VALUES  ========================================= */
 
 #add_control_item_option_panel {
