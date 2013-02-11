@@ -20,7 +20,7 @@
     
 			$check_list = $this->so_check_list->get_single( $check_list_id );
 		
-			$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null, "return_object");
+			$check_items = $this->so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null);
 		
 			$num_open_cases = 0;
 			$num_pending_cases = 0;
