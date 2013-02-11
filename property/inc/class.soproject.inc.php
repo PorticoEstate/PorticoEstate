@@ -2612,10 +2612,10 @@ $test = 0;
 			if($project_type_id == 2) // investment
 			{
 				// total budget
-				$this->db->query("SELECT sum(budget) FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
+				$this->db->query("SELECT sum(budget) as budget FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year} AND active = 1",__LINE__,__FILE__);
 				$this->db->next_record();
 				$last_budget = $this->db->f('budget');
-				if(!$last_budget)
+				if( !abs( $last_budget ) > 0 )
 				{
 					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
 				}
