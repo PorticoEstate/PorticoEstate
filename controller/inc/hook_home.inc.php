@@ -52,7 +52,7 @@
 	$styling .= " .home-box { background: none repeat scroll 0 0 #EDF5FF; border-color: #DBE5EF; border-radius: 4px; margin: 5px 20px 20px;}";
 	$styling .= " .home-box .home_portal { margin: 0;border: 1px solid #EBF3FC;}";
 	$styling .= " .home_portal { margin:20px 20px 0 10px; }"; 
-	$styling .= " .home_portal a { color:#0066CC;text-decoration: none;text-transform: uppercase; clear:both;}"; 
+	$styling .= " .home_portal a { color:#0066CC;text-decoration: none;text-transform: uppercase; clear:both;display:block;}"; 
 	$styling .= " .home_portal h2 { overflow:hidden;clear:left;font-size: 13px;font-weight: bold;text-transform:uppercase; background: #D0DEF4; margin: 0; padding: 2px 10px; color: #1C3C6F;}";
 	$styling .= " .home_portal h2 div{ display:block;float:left;cursor: pointer;vertical-align: middle;}";
 	$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}"; 
