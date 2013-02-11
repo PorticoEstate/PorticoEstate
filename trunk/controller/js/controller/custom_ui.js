@@ -32,27 +32,4 @@ $(document).ready(function() {
 			$(parentNode).addClass('expanded');
 		}
 	});
-	
-	
-	/* ==========================  EXPANDING/COLLAPSING ALL LISTS ====================== */
-	
-	$(".expand_all").live("click", function(){
-		
-		$(this).addClass("focus");
-		$(".collapse_all").removeClass("focus");
-			
-		$(".expand_list").slideDown("slow");
-		$(".expand_list").addClass("expanded");
-		$(".expand-trigger img").attr("src", "controller/images/arrow_down.png");
-	});
-	
-	$(".collapse_all").live("click", function(){
-		$(this).addClass("focus");
-		$(".expand_all").removeClass("focus");
-		
-		$(".expand_list").slideUp("slow");
-		$(".expand_list").removeClass("expanded");
-		$(".expand-trigger img").attr("src", "controller/images/arrow_right.png");
-	});
-	
 });
