@@ -2255,7 +2255,7 @@
 				//paid last year
 				$this->db->query("SELECT sum(amount) as paid FROM fm_workorder"
 				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
-				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
 				
