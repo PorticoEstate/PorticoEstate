@@ -58,7 +58,7 @@
 	$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}"; 
 	$styling .= " .home_portal .control-area { width:200px;}";
 	$styling .= " .home_portal .control { width:300px;}";
-	$styling .= " .home_portal .date { width:130px;}";
+	$styling .= " .home_portal .date { margin-left: 20px;width:130px;}";
 	$styling .= " .home_portal li { overflow: hidden;margin: 10px;}";
 	$styling .= " .home_portal li div { display: block;float:left;cursor: pointer;vertical-align: middle;}";
 	
@@ -75,7 +75,7 @@
 	$styling .= " h4.expand_trigger span.num_check_lists { width:200px; }";
 	
 	$styling .= " .expand_list{ display:none; overflow:hidden; }";
-	$styling .= " .expand_list li{ clear:both;overflow:hidden;margin:5px; }";
+	$styling .= " .expand_list li{ clear:both;overflow:hidden;margin:5px 0; }";
 	
 	$styling .= "</style>"; 
 	$styling .= "\n".'<!-- END checklist info -->'."\n";
