@@ -767,35 +767,52 @@
 									</input>
 								</td>
 							</tr>
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'is eav')"/>
-								</td>
-								<td>
-									<input type="checkbox" name="values[is_eav]" value="1">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
-										</xsl:attribute>
-										<xsl:if test="value_is_eav = '1'">
-											<xsl:attribute name="checked">
-												<xsl:text>checked</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-										<xsl:if test="value_is_eav = '1' or value_id != ''">
-											<xsl:attribute name="disabled">
-												<xsl:text>disabled</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-									<xsl:choose>
-										<xsl:when test="value_is_eav = '1'">
-											<input type="hidden" name="values[is_eav]" value="1"/>
-										</xsl:when>
-									</xsl:choose>
-								</td>
-							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'is eav')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[is_eav]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
+								</xsl:attribute>
+								<xsl:if test="value_is_eav = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="value_is_eav = '1' or value_id != ''">
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:choose>
+								<xsl:when test="value_is_eav = '1'">
+									<input type="hidden" name="values[is_eav]" value="1"/>
+								</xsl:when>
+							</xsl:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'enable bulk')"/>
+						</td>
+						<td>
+							<input type="checkbox" name="values[enable_bulk]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'This category is allowed to reperesent bulk entities')"/>
+								</xsl:attribute>
+								<xsl:if test="value_enable_bulk = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+						</td>
+					</tr>
 					<xsl:choose>
 						<xsl:when test="lang_location_level != ''">
 							<tr>

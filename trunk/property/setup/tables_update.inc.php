@@ -7361,4 +7361,25 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.664 to 0.9.17.665
+	* Add bulk-flag to entities
+	*/
+	$test[] = '0.9.17.664';
+	function property_upgrade0_9_17_664()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','enable_bulk',array(
+				'type' =>	'int',
+				'precision' => 2,
+				'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.665';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
