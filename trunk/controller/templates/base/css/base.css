@@ -1171,9 +1171,9 @@ ul.check_list {
 }
 
 #no-loc #search-location {
-    clear: both;
-    float: left;
-    margin-bottom: 10px;
+  clear: both;
+  float: left;
+  margin-bottom: 10px;
 }
 
 #search-location-name {
@@ -1483,11 +1483,15 @@ a.view_info_box {
 #info_box .case {
  	text-align:left; 	
 }
+ 
+.empty_list h4{
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
 
-.empty_list{
-  font-size: 16px;
-  font-weight: bold;
-  padding: 0 0 5px;
+.empty_list {
+    margin-left: 20px;
 }
 
 .yui-pg-first{
@@ -1886,8 +1890,10 @@ li.check_item_case .col_3 {
   margin-right: 5px;
 }
 
-.add-cases .expand-trigger{
+.add-cases .expand-trigger {
+  background: none repeat scroll 0 0 #DDDDDD;
   cursor: pointer;
+  padding: 7px 10px;
 }
 
 
