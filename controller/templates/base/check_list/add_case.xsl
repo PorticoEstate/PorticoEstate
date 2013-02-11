@@ -37,8 +37,6 @@
 		<h3 class="box_header ext">Registrer sak/måling</h3>
 		<div class="tab_item active ext">
 		
-		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-		
 		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case,phpgw_return_as:json')" /></xsl:variable>
 
 		<ul class="add-cases">
