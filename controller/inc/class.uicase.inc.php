@@ -351,7 +351,7 @@
 			$control_id = $check_list->get_control_id();
 			$control = $this->so_control->get_single( $control_id );
 		
-			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id, "return_array");
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases_by_message($message_ticket_id);
 						
 			$botts = CreateObject('property.botts',true);
 			$message_ticket = $botts->read_single($message_ticket_id);
