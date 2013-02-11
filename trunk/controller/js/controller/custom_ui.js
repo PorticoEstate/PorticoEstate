@@ -19,7 +19,6 @@ $(document).ready(function() {
 	});
   
   $(".expand-trigger").live("click", function(){
-    
     var parentNode = $(this).closest("li");
     
 		if( $(parentNode).hasClass('expanded')){
