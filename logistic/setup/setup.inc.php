@@ -11,10 +11,10 @@
 			'lg_project_type',
 			'lg_activity',
 			'lg_requirement',
-			'lg_requirement_resource_allocation',
 			'lg_resource_type_requirement',
 			'lg_requirement_value',
-			'lg_calendar'
+			'lg_calendar',
+			'lg_requirement_resource_allocation',
 	);
 
 	$setup_info['logistic']['description'] = 'Bergen kommune logistics module';

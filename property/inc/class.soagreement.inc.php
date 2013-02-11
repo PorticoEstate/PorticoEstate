@@ -400,12 +400,15 @@
 			$entity_table = 'fm_activity_price_index';
 
 			$paranthesis ='(';
-			$joinmethod = " $this->join fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
+			$joinmethod = " {$this->join} fm_activities ON ( fm_activities.id = $entity_table.activity_id))";
+			$paranthesis .='(';
+			$joinmethod .= " {$this->join} fm_standard_unit ON (fm_activities.unit = fm_standard_unit.id))";
 
 			$cols = "fm_activities.*, $entity_table.m_cost,$entity_table.w_cost,"
-				. " $entity_table.total_cost,$entity_table.index_count,"
-				. " $entity_table.index_date,$entity_table.activity_id,"
-				. " $entity_table.this_index,$entity_table.agreement_id";
+				. " {$entity_table}.total_cost,$entity_table.index_count,"
+				. " {$entity_table}.index_date,$entity_table.activity_id,"
+				. " {$entity_table}.this_index,$entity_table.agreement_id,"
+				. " fm_standard_unit.name AS unit_name";
 
 
 			$uicols['name'][]			= 'activity_id';
@@ -420,7 +423,7 @@
 			$uicols['descr'][]			= lang('descr');
 			$uicols['input_type'][]		= 'V';
 
-			$uicols['name'][]			= 'unit';
+			$uicols['name'][]			= 'unit_name';
 			$uicols['descr'][]			= lang('unit');
 			$uicols['input_type'][]		= 'V';
 
@@ -460,9 +463,11 @@
 					case 'm_cost':
 					case 'num':
 					case 'descr':
-					case 'unit':
 					case 'm_cost':
 						$ordermethod = "ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					case 'unit_name':
+						$ordermethod = "ORDER BY fm_standard_unit.name {$sort}";
 						break;
 					default:
 						$ordermethod = '';
@@ -514,6 +519,7 @@
 						'num'				=> $this->db->f('num'),
 						'descr'				=> htmlspecialchars_decode($this->db->f('descr',true)),
 						'unit'				=> $this->db->f('unit'),
+						'unit_name'			=> $this->db->f('unit_name'),
 						'm_cost'			=> $this->db->f('m_cost'),
 						'w_cost'			=> $this->db->f('w_cost'),
 						'total_cost'		=> $this->db->f('total_cost'),

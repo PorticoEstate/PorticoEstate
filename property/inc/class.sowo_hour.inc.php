@@ -110,10 +110,12 @@
 				$workorder_id = (isset($data['workorder_id'])?$data['workorder_id']:0);
 			}
 
-			$ordermethod = ' order by grouping_id, record , id asc ';
+			$ordermethod = ' ORDER BY grouping_id, record , id ASC';
 
-			$sql = "SELECT fm_wo_hours.*, fm_wo_hours_category.descr as wo_hour_category"
-				. " FROM fm_wo_hours $this->left_join fm_wo_hours_category on fm_wo_hours.category = fm_wo_hours_category.id WHERE workorder_id='$workorder_id' ";
+			$sql = "SELECT DISTINCT fm_wo_hours.*, fm_wo_hours_category.descr AS wo_hour_category, fm_standard_unit.name AS unit_name"
+				. " FROM fm_wo_hours {$this->left_join} fm_wo_hours_category on fm_wo_hours.category = fm_wo_hours_category.id"
+				. " {$this->left_join} fm_standard_unit ON fm_wo_hours.unit = fm_standard_unit.id"
+				. " WHERE workorder_id='{$workorder_id}'";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -134,6 +136,7 @@
 						'tolerance'			=> $this->db->f('tolerance'),
 						'activity_id'		=> $this->db->f('activity_id'),
 						'unit'				=> $this->db->f('unit'),
+						'unit_name'			=> $this->db->f('unit_name'),
 						'record'			=> $this->db->f('record'),
 						'cost'				=> $this->db->f('cost'),
 						'billperae'			=> $this->db->f('billperae'),
