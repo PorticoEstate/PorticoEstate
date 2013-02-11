@@ -7277,4 +7277,88 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.663 to 0.9.17.664
+	* Alter id from varchar to ingeter
+	*/
+	$test[] = '0.9.17.663';
+	function property_upgrade0_9_17_663()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM fm_standard_unit");
+		$units = array();
+		$i=1;
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$name = $GLOBALS['phpgw_setup']->oProc->f('id');
+
+			$units[$name] = array
+			(
+				'id'	=> $i,
+				'name'	=> $name,
+				'descr'	=> $GLOBALS['phpgw_setup']->oProc->f('descr')
+			);
+			$i++;
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_standard_unit');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_standard_unit',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		foreach ($units as $_name => $unit)
+		{
+			$cols = implode(',', array_keys($unit));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($unit));
+			$sql = "INSERT INTO fm_standard_unit ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$tables = array('fm_activities','fm_wo_hours','fm_template_hours','fm_s_agreement_detail');
+		foreach ($tables as $table)
+		{
+			$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata($table);
+			if(!isset($metadata['unit']))
+			{
+				continue;
+			}
+
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn($table,'unit','_unit');
+			$GLOBALS['phpgw_setup']->oProc->AddColumn($table,'unit',array(
+					'type'			=> 'int',
+					'precision'		=> 4,
+					'nullable'		=> true,
+				)
+			);
+
+			reset($units);
+			foreach ($units as $_name => $unit)
+			{
+				$sql = "UPDATE {$table} SET unit = {$unit['id']} WHERE _unit = '{$_name}'";
+				$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			}
+			$GLOBALS['phpgw_setup']->oProc->DropColumn($table,array(),'_unit');
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.664';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 

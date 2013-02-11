@@ -75,7 +75,7 @@
 				<xsl:value-of select="remark"/>
 			</td>
 			<td align="left">
-				<xsl:value-of select="unit"/>
+				<xsl:value-of select="unit_name"/>
 			</td>
 			<td align="right">
 				<xsl:value-of select="quantity"/>

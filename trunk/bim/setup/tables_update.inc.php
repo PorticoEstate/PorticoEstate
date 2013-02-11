@@ -125,3 +125,44 @@
 			return $GLOBALS['setup_info']['bim']['currentver'];
 		}
 	}
+	/**
+	* Update bim version from 0.9.17.505 to 0.9.17.506
+	*/
+	$test[] = '0.9.17.505';
+	function bim_upgrade0_9_17_505()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_inventory', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'p_location_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'p_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'unit_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'inventory' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'write_off' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'bookable' => array('type' => 'int', 'precision' => 2,'nullable' => False),
+					'active_from' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+					'active_to' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8,'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'expired_on' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+					'expired_by' => array('type' => 'int', 'precision' => 8,'nullable' => True),
+					'remark' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),//'fm_bim_item' => array('location_id' => 'location_id')), 'item_id'=> 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['bim']['currentver'] = '0.9.17.506';
+			return $GLOBALS['setup_info']['bim']['currentver'];
+		}
+	}

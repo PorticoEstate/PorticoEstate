@@ -279,16 +279,16 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_status (id, descr
 # fm_standard_unit
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('mm', 'Millimeter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m', 'Meter')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m2', 'Square meters')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m3', 'Cubic meters')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('km', 'Kilometre')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('Stk', 'Stk')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('kg', 'Kilogram')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('tonn', 'Tonn')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('h', 'Hours')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('RS', 'Round Sum')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (1, 'mm', 'Millimeter')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (2, 'm', 'Meter')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (3, 'm2', 'Square meters')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (4, 'm3', 'Cubic meters')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (5, 'km', 'Kilometre')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (6, 'Stk', 'Stk')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (7, 'kg', 'Kilogram')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (8, 'tonn', 'Tonn')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (9, 'h', 'Hours')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, name, descr) VALUES (10, 'RS', 'Round Sum')");
 
 
 #

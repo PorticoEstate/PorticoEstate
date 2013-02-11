@@ -71,6 +71,24 @@ $phpgw_baseline = array(
 				'ix' => array(),
 				'uc' => array()
 		),
+		'lg_calendar' => array(
+				'fd' => array(
+						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'item_inventory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'create_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
+						'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
+						'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+						'phpgw_locations' => array('location_id' => 'location_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+		),
 		'lg_requirement_resource_allocation' => array(
 				'fd' => array(
 						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
@@ -124,22 +142,5 @@ $phpgw_baseline = array(
 				'ix' => array(),
 				'uc' => array()
 		),
-		'lg_calendar' => array(
-				'fd' => array(
-						'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-						'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'item_inventory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'create_user' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-						'create_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
-						'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
-						'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
-				),
-				'pk' => array('id'),
-				'fk' => array(
-						'phpgw_locations' => array('location_id' => 'location_id')
-				),
-				'ix' => array(),
-				'uc' => array()
-		)
+
 );

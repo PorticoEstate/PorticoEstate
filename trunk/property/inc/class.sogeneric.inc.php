@@ -1446,9 +1446,15 @@
 				$info = array
 					(
 						'table' 			=> 'fm_standard_unit',
-						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'id'				=> array('name' => 'id', 'type' => 'int'),
 						'fields'			=> array
 						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
 							array
 							(
 								'name' => 'descr',
