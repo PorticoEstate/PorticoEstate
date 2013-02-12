@@ -57,9 +57,9 @@
 				{
 					$status = "CONTROL_PLANNED";
 				}
-				else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() < $todays_date_ts )
+        else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_deadline() >= $todays_date_ts )
 				{
-					$status = "CONTROL_NOT_DONE_WITH_CHECKLIST";
+					$status = "CONTROL_REGISTERED";
 				}
 				else if( $this->check_list->get_status() == controller_check_list::STATUS_NOT_DONE & $this->check_list->get_planned_date() > 0 & $this->check_list->get_deadline() < $todays_date_ts )
 				{
@@ -82,16 +82,16 @@
 				{
 					$status = "CONTROL_CANCELED";
 				}
-				
+        
 				$check_list_status_info->set_check_list_id( $this->check_list->get_id() );
 			}
-			
+      
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$check_list_status_info->set_control_id( $this->check_list->get_control_id() );
 			$check_list_status_info->set_deadline_date_txt( date($dateformat, $this->check_list->get_deadline()) );
 			$check_list_status_info->set_deadline_date_ts( $this->check_list->get_deadline() );
 			$check_list_status_info->set_type( $this->type );
-			
+		      
 			if($this->type == "component"){
 				$check_list_status_info->set_component_id( $this->check_list->get_component_id() );
 				$check_list_status_info->set_location_id( $this->check_list->get_location_id() );

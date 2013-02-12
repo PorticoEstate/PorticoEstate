@@ -1,7 +1,5 @@
 <xsl:template name="cases_tab_menu" xmlns:php="http://php.net/xsl">
-
 <xsl:param name="active_tab" />
-
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div class="tab_menu">

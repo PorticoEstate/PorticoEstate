@@ -43,6 +43,8 @@
 		protected $location_code;
 		protected $fm_bim_item_address;
 		protected $fm_bim_item_name;
+		protected $start_date;
+		protected $end_date;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -145,6 +147,27 @@
 			return $this->fm_bim_item_name;
 		}
 
+
+		public function set_end_date($end_date)
+		{
+			$this->end_date = $end_date;
+		}
+
+		public function get_end_date()
+		{
+			return $this->end_date;
+		}
+
+		public function set_start_date($start_date)
+		{
+			$this->start_date = $start_date;
+		}
+
+		public function get_start_date()
+		{
+			return $this->start_date;
+		}
+
 		/**
 		* Get a static reference to the storage object associated with this model object
 		*
@@ -162,14 +185,16 @@
 		public function serialize()
 		{
 			return array(
-				'id' 									=> $this->get_id(),
-				'resource_type_descr' => $this->get_resource_type_descr(),
-				'requirement_id' 			=> $this->get_requirement_id(),
-				'resource_id' 				=> $this->get_resource_id(),
-				'location_id'	 				=> $this->get_location_id(),
-				'location_code' 			=> $this->get_location_code(),
+				'id' 					=> $this->get_id(),
+				'resource_type_descr'	=> $this->get_resource_type_descr(),
+				'requirement_id' 		=> $this->get_requirement_id(),
+				'resource_id' 			=> $this->get_resource_id(),
+				'location_id'	 		=> $this->get_location_id(),
+				'location_code' 		=> $this->get_location_code(),
 				'fm_bim_item_address'	=> $this->get_fm_bim_item_address(),
-				'fm_bim_item_name'		=> $this->get_fm_bim_item_name()
+				'fm_bim_item_name'		=> $this->get_fm_bim_item_name(),
+				'start_date'			=> $this->get_start_date(),
+				'end_date'				=> $this->get_end_date()
 			);
 		}
 	}

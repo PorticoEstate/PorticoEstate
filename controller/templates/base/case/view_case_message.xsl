@@ -39,7 +39,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrollplan for bygg/eiendom (år)
+				Vis kontrollplan (år)
 			</a>
 				
 			<a class="last">
@@ -59,7 +59,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
+				Vis kontrollplan (måned)
 			</a>
 		</div>
 		

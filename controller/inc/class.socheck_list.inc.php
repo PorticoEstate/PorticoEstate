@@ -251,7 +251,7 @@ class controller_socheck_list extends controller_socommon
 	  $sql  = "SELECT * "; 
 		$sql .= "FROM controller_check_list ";
 		$sql .= "WHERE control_id = {$control_id} ";
-		$sql .= "AND deadline = {$deadline_ts}";		
+		$sql .= "AND deadline = {$deadline_ts} ";		
 
 		if($type == "location")
 		{
@@ -265,8 +265,8 @@ class controller_socheck_list extends controller_socommon
 		if($status != null)
 		{
 			$sql .= "AND status = {$status} ";
-		}
-
+		}  
+    
 		$this->db->query($sql);
 		
 		$check_list = null;
@@ -591,7 +591,7 @@ class controller_socheck_list extends controller_socommon
 			$check_lists_array[] = $check_list;
 		}
 		
-		return array( "location_code" => $location_code, "check_lists_array" => $check_lists_array);
+		return $check_lists_array;
 	}
 	
 	/**
@@ -646,39 +646,6 @@ class controller_socheck_list extends controller_socommon
 		
 		return array( "location_code" => $location_code, "check_lists_array" => $check_lists_array);
 	}
-	
-/* Denne ser det ikke ut til at vi bruker: Torstein 9/7-12 
-	function get_check_list_for_date($control_id, $current_date){
-		$sql = 	"SELECT c.id as c_id, title, description, start_date, end_date, control_area_id, c.location_code as c_location_code, repeat_type, repeat_interval, ";
-		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
-		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
-		$sql .= "FROM controller_control c ";
-		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
-		$sql .= "WHERE c.id = {$control_id} "; 
-		$sql .= "AND NOT planned_date IS NULL ";
-
-		$this->db->query($sql);
-		
-		$check_lists_array = array();
-		while ($this->db->next_record()) {
-			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
-			$check_list->set_control_id($control_id);
-			$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'int'));
-			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-			$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
-			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
-			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));	
-			$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id', true), 'int'));
-			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
-			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases', true), 'int'));
-			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases', true), 'int'));
-			
-			$check_lists_array[] = $check_list;
-		}
-
-		return $check_lists_array;
-	}
-	*/
 	
 	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{

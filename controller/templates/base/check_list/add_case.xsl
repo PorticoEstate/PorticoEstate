@@ -1,11 +1,8 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content" class="medium">
-	
 	<div id="check-list-heading">
 		<div class="box-1">
 			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
@@ -26,44 +23,7 @@
 			</xsl:choose>
 		</div>
 		<div class="box-2 select-box">
-			<a>
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_year</xsl:text>
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:value-of select="$session_url"/>
-				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (år)
-			</a>
-			<a class="last">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;month=</xsl:text>
-					<xsl:value-of select="current_month_nr"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:value-of select="$session_url"/>
-				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
-			</a>
+      <xsl:call-template name="nav_control_plan" />
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
@@ -77,17 +37,15 @@
 		<h3 class="box_header ext">Registrer sak/måling</h3>
 		<div class="tab_item active ext">
 		
-		<div class="expand_menu"><div class="expand_all">Vis alle</div><div class="collapse_all focus">Skjul alle</div></div>
-		
 		<xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case,phpgw_return_as:json')" /></xsl:variable>
 
-		<ul class="control_groups">
+		<ul class="add-cases">
 			<xsl:for-each select="control_groups_with_items_array">
 			<xsl:choose>
 				<xsl:when test="control_items/child::node()">
 					<li>
-						<h3><xsl:value-of select="control_group/group_name"/></h3>				
-						<ul class="expand_list">
+						<h3 class="expand-trigger"><img src="controller/images/arrow_right.png" /><xsl:value-of select="control_group/group_name"/></h3>				
+						<ul class="expand_list" style="display:none;">
 							<xsl:for-each select="control_items">
 								<li>
 									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
@@ -97,16 +55,32 @@
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
 													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
-												    <input name="status" type="hidden" value="0" />
-													<input name="type" type="hidden" value="control_item_type_1" />
-													    
-											       	<div>
-											        	<label class="comment">Beskrivelse av sak</label>
-													    <textarea name="case_descr">
+												  <input name="status" type="hidden" value="0" />
+                          <input name="type" type="hidden" value="control_item_type_1" />
+													  
+                          <!--  WHAT TO DO -->
+                          <div class="row what-to-do">
+                            <label>Hva skal sjekkes:</label> 
+                            <div>
+                              <xsl:value-of select="what_to_do"/>
+                            </div>
+                          </div>
+
+                          <!--  HOW TO DO -->
+                          <div class="row how-to-do">
+                            <label>Utførelsesbeskrivelse:</label> 
+                            <div>
+                              <xsl:value-of select="how_to_do"/>
+                            </div>
+                          </div>
+                            
+											    <div>
+                            <label class="comment">Beskrivelse av sak</label>
+													  <textarea name="case_descr">
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
-												 	<input type="submit" class="btn not_active" name="save_control" value="Lagre sak" />
+												 	<input type="submit" class="btn" name="save_control" value="Lagre sak" />
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_2'">
@@ -141,7 +115,7 @@
 														 </textarea>
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												   <input type="submit" name="save_control" value="Lagre måling" class="not_active" title="{$lang_save}" />
+												   <input type="submit" name="save_control" value="Lagre måling" title="{$lang_save}" />
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_3'">
@@ -177,7 +151,7 @@
 														 </textarea>
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												   <input type="submit" name="save_control" value="Lagre sak/måling" class="not_active" title="{$lang_save}" />
+												   <input type="submit" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 												</form>
 											</xsl:when>
 											<xsl:when test="type = 'control_item_type_4'">
@@ -213,11 +187,10 @@
 														 </textarea>
 												   </div>
 											       <xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'register_error')" /></xsl:variable>
-												   <input type="submit" name="save_control" value="Lagre sak/måling" class="not_active" title="{$lang_save}" />
+												   <input type="submit" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 												</form>
 											</xsl:when>
 										</xsl:choose>	
-									
 								</li>
 							</xsl:for-each>
 						</ul>

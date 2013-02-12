@@ -162,7 +162,11 @@
 				$querymethod = " AND (hours_descr $this->like '%$query%' or fm_template_hours.remark $this->like '%$query%' or ns3420_id $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_template_hours.*, chapter_id from fm_template_hours  $this->join fm_template on fm_template.id=fm_template_hours.template_id $filtermethod $querymethod";
+			$sql = "SELECT fm_template_hours.*, chapter_id, fm_standard_unit.name AS unit_name"
+			. " FROM fm_template_hours"
+			. " {$this->join} fm_template on fm_template.id=fm_template_hours.template_id"
+			. " {$this->join} fm_standard_unit ON fm_template_hours.unit = fm_standard_unit.id"
+			. " {$filtermethod} {$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -191,6 +195,7 @@
 						'tolerance'			=> $this->db->f('tolerance'),
 						'activity_id'		=> $this->db->f('activity_id'),
 						'unit'				=> $this->db->f('unit'),
+						'unit_name'			=> $this->db->f('unit_name'),
 						'record'			=> $this->db->f('record'),
 						'cost'				=> $this->db->f('cost'),
 						'billperae'			=> $this->db->f('billperae'),

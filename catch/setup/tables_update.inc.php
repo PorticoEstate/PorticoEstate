@@ -463,3 +463,23 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+
+	/**
+	* Update catch version from 0.9.17.514 to 0.9.17.515
+	* Add bulk-flag to entities
+	*/
+
+	$test[] = '0.9.17.514';
+	function catch_upgrade0_9_17_514()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','enable_bulk',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.515';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+

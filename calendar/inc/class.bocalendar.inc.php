@@ -2437,7 +2437,7 @@
 
 			if (!$user)
 			{
-				$user = $this->owner;
+				$user =  $GLOBALS['phpgw']->accounts->search_person($this->owner);
 			}
 			$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->create_email_preferences($user);
 
@@ -2911,7 +2911,9 @@
 
 			$cats = array();
 			$cat_string[] = '';
-			$this->cat->categories($this->owner,'calendar');
+
+			$this->cat->__construct($GLOBALS['phpgw']->accounts->search_person($this->owner),'calendar');
+
 			if(strpos($event['category'],','))
 			{
 				$cats = explode(',',$event['category']);

@@ -1338,7 +1338,7 @@
 					'values'		=>	json_encode(array(	array(key => id,			label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
 					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
 					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
-					array(key => unit,			label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
+					array(key => unit_name,			label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
 					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
 					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
 					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
@@ -2119,6 +2119,7 @@
 
 			//---datatable1 settings---------------------------------------------------
 			//Prepare array for $datavalues[1]
+
 			for($y=0;$y<count($content);$y++)
 			{
 				for($z=0;$z<=count($content[$y]['row']);$z++)
@@ -2143,16 +2144,16 @@
 			$myColumnDefs[1] = array
 				(
 					'name'			=> "1",
-					'values'		=>	json_encode(array(	array(key => activity_id,	label=>$table_header[0]['header'],	sortable=>true,resizeable=>true),
-					array(key => num,			label=>$table_header[1]['header'],	sortable=>true,resizeable=>true),
-					array(key => descr,			label=>$table_header[2]['header'],	sortable=>true,resizeable=>true),
-					array(key => unit,			label=>$table_header[3]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-					array(key => m_cost,		label=>$table_header[4]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => w_cost,		label=>$table_header[5]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => total_cost,	label=>$table_header[6]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterRight),
-					array(key => this_index,	label=>$table_header[7]['header'],	sortable=>true,resizeable=>true),
-					array(key => index_count,	label=>$table_header[8]['header'],	sortable=>true,resizeable=>true, formatter=>FormatterCenter),
-					array(key => index_date,	label=>$table_header[9]['header'],	sortable=>true,resizeable=>true)
+					'values'		=>	json_encode(array(	array('key' => 'activity_id',	'label'=>$table_header[0]['header'],	'sortable'=>true,'resizeable'=>true),
+					array('key' => 'num',			'label'=>$table_header[1]['header'],	'sortable'=>true,'resizeable'=>true),
+					array('key' => 'descr',			'label'=>$table_header[2]['header'],	'sortable'=>true,'resizeable'=>true),
+					array('key' => 'unit_name',		'label'=>$table_header[3]['header'],	'sortable'=>true,'resizeable'=>true, 'formatter'=>'FormatterCenter'),
+					array('key' => 'm_cost',		'label'=>$table_header[4]['header'],	'sortable'=>true,'resizeable'=>true, 'formatter'=>'FormatterRight'),
+					array('key' => 'w_cost',		'label'=>$table_header[5]['header'],	'sortable'=>true,'resizeable'=>true, 'formatter'=>'FormatterRight'),
+					array('key' => 'total_cost',	'label'=>$table_header[6]['header'],	'sortable'=>true,'resizeable'=>true, 'formatter'=>'FormatterRight'),
+					array('key' => 'this_index',	'label'=>$table_header[7]['header'],	'sortable'=>true,'resizeable'=>true),
+					array('key' => 'index_count',	'label'=>$table_header[8]['header'],	'sortable'=>true,'resizeable'=>true, 'formatter'=>'FormatterCenter'),
+					array('key' => 'index_date',	'label'=>$table_header[9]['header'],	'sortable'=>true,'resizeable'=>true)
 				)));
 
 			//---datatable2 settings---------------------------------------------------

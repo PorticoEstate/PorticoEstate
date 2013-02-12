@@ -78,6 +78,12 @@
 							<span class="loc_id">Lokasjons id</span>
 						<!--	<span class="type">Type</span> -->
 							<span class="loc_code">Lokasjons kode</span>
+							<span class="loc_code">
+								<xsl:value-of select="php:function('lang', 'allocated date')"/>
+							</span>
+							<span class="loc_code">
+								<xsl:value-of select="php:function('lang', 'allocated where')"/>
+							</span>
 					</div>
 					<xsl:for-each select="allocation_suggestions">
 						
@@ -100,6 +106,8 @@
 							<span class="loc_id"><xsl:value-of select="location_id" /></span>
 						<!--	<span class="type"><xsl:value-of select="type_lokale" /></span> -->
 							<span class="loc_code"><xsl:value-of select="location_code" /></span>
+							<span class="loc_code"><xsl:value-of select="allocated_date" /></span>
+							<span class="loc_code"><xsl:value-of select="allocated_where" /></span>
 						</div>
 					</xsl:for-each>
 				</div>			

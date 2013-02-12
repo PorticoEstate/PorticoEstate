@@ -422,6 +422,7 @@
 							'quantity'					=> $hour['quantity'],
 							'cost'						=> $hour['cost'],
 							'unit'						=> $hour['unit'],
+							'unit_name'					=> $hour['unit_name'],
 							'billperae'					=> $hour['billperae'],
 							'deviation'					=> $deviation,
 							'result'					=> ($hour['deviation']+$hour['cost']),
@@ -834,7 +835,7 @@
 			}
 
 			$uicols = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
@@ -1683,6 +1684,7 @@ HTML;
 					$table_view_order[$i]['code'] 		= $email_data['values_view_order'][$i]['code'];
 					$table_view_order[$i]['descr'] 		= $email_data['values_view_order'][$i]['hours_descr']."<br>".$email_data['values_view_order']['remark'];
 					$table_view_order[$i]['unit'] 		= $email_data['values_view_order'][$i]['unit'];
+					$table_view_order[$i]['unit_name']	= $email_data['values_view_order'][$i]['unit_name'];
 					$table_view_order[$i]['quantity'] 	= $email_data['values_view_order'][$i]['quantity'];
 					$table_view_order[$i]['billperae']	= $email_data['values_view_order'][$i]['billperae'];
 					$table_view_order[$i]['cost'] 		= $email_data['values_view_order'][$i]['cost'];
@@ -1704,7 +1706,7 @@ HTML;
 					'values'	=>	json_encode(array(	array('key' => 'post',		'label' => lang('Post'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'code',		'label' => lang('Code'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'descr',		'label' => lang('descr'),		'sortable' => true,'resizeable' => true),
-														array('key' => 'unit',		'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
+														array('key' => 'unit_name',	'label' => lang('Unit'),		'sortable' => true,'resizeable' => true),
 														array('key' => 'quantity',	'label' => lang('Quantity'),	'sortable' => true,'resizeable' => true),
 														array('key' => 'billperae',	'label' => lang('Bill per unit'),'sortable' => true,'resizeable' => true),
 														array('key' => 'cost',		'label' => lang('cost'),		'sortable' => true,'resizeable' => true)))
@@ -1872,7 +1874,7 @@ HTML;
 						$translations['post']			=> $hour['post'],
 						$translations['code']			=> $hour['code'],
 						$translations['descr']			=> $descr,
-						$translations['unit']			=> $hour['unit'],
+						$translations['unit']			=> $hour['unit_name'],
 						$translations['quantity']		=> $hour['quantity'],
 						$translations['billperae']		=> $hour['billperae'],
 						$translations['cost']			=> $hour['cost']
@@ -2282,7 +2284,7 @@ HTML;
 			$uicols = array (
 				'input_type'	=>	array('hidden','text','hidden','hidden','text','text','text','text','text','text','hidden','varchar','select','varchar'),
 				'type'			=>	array('','','','','','','','','','','','text','',''),				
-				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
+				'name'			=>	array('activity_id','num','branch','vendor_id','descr','base_descr','unit_name','w_cost','m_cost','total_cost','this_index','quantity','wo_hour_cat','cat_per_cent'),
 				'formatter'		=>	array('','','','','','','','','','','','','',''),
 				'descr'			=>	array('',lang('Activity Num'),lang('Branch'),lang('Vendor'),lang('Description'),lang('Base'),lang('Unit'),lang('Labour cost'),lang('Material cost'),lang('Total Cost'),'',lang('Quantity'),lang('category'),lang('percent')),
 				'className'		=> 	array('','','','','','','','rightClasss','rightClasss','rightClasss','','','','')
@@ -2384,7 +2386,7 @@ HTML;
 			//*************************************************/
 
 			$uicols_details = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')
@@ -2764,7 +2766,7 @@ HTML;
 			$uicols = array (
 				'input_type'	=>	array('text','text','text','text','text','varchar','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
 				'type'			=>	array('','','','','','text','','','text','','','',''),				
-				'name'			=>	array('building_part','code','hours_descr','unit','billperae','quantity','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
+				'name'			=>	array('building_part','code','hours_descr','unit_name','billperae','quantity','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
 				'formatter'		=>	array('','','','','','','','','','','','','','','','','','',''),
 				'descr'			=>	array(lang('Building part'),lang('Code'),lang('Description'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),'','','','','','','','','','','',''),
 				'className'		=> 	array('','','','','rightClasss','','','','','','','','','','','','','')
@@ -2905,7 +2907,7 @@ HTML;
 
 
 			$uicols_details = array (
-				'name'			=>	array('hour_id','post','code','hours_descr','unit','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
+				'name'			=>	array('hour_id','post','code','hours_descr','unit_name','billperae','quantity','cost','deviation','result','wo_hour_category','cat_per_cent'),
 				'input_type'	=>	array('hidden','text','text','text','text','text','text','text','text','text','text','text'),
 				'descr'			=>	array('',lang('Post'),lang('Code'),lang('Descr'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Cost'),lang('deviation'),lang('result'),lang('Category'),lang('percent')),
 				'className'		=> 	array('','','','','','rightClasss','rightClasss','rightClasss','rightClasss','rightClasss','','rightClasss')

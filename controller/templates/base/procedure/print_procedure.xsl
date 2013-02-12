@@ -49,7 +49,9 @@
 		</div>
 		<div>
 			<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
-			<xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
+      <span style="display: inline-block;width: 600px;">
+        <xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
+      </span>
 		</div>
 		<a href="#print" class="btn" onClick="window.print()">Skriv ut</a>		
 </div>

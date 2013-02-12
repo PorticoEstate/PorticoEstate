@@ -45,6 +45,7 @@
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
+  include_class('controller', 'date_converter', 'inc/helper/');
 		
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
@@ -232,7 +233,7 @@
 					$location_id = phpgw::get_var('location_id');
 					$check_list->set_location_id($location_id);
 					$component_id = phpgw::get_var('component_id');
-					$check_list->set_component_id($component_id);	
+					$check_list->set_component_id($component_id);
 				}
 				
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
@@ -240,7 +241,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    			$component->set_xml_short_desc( $short_desc );
+    		$component->set_xml_short_desc( $short_desc );
 				
 				$component_array = $component->toArray();
 				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
@@ -250,7 +251,7 @@
 			{
 				$type = "location";
 			}
-			
+			  
 			$control = $this->so_control->get_single( $check_list->get_control_id() );
 			
 			$year = date("Y", $deadline_ts);
@@ -260,8 +261,8 @@
 			(
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
-				'control'									=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control'									=> $control,
+				'check_list' 							=> $check_list,
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month_nr,
@@ -271,10 +272,10 @@
 			
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
-
+      
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl('check_list/add_check_list', $data);
+			self::render_template_xsl( array('check_list/add_check_list', 'check_list/nav_control_plan'), $data );
 		}
 		
 		/**
@@ -290,9 +291,6 @@
 				$check_list = $this->so->get_single($check_list_id);
 			}
 			
-			$cl_status_updater = new check_list_status_updater();
-			$cl_status_updater->update_check_list_status( $check_list_id );
-		
 			$control = $this->so_control->get_single($check_list->get_control_id());
 			
 			$component_id = $check_list->get_component_id();
@@ -326,8 +324,8 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -344,7 +342,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/edit_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/edit_check_list'), $data);
 		}
 		
 		/**
@@ -363,9 +361,9 @@
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
-					
-			$deadline_date_ts = phpgwapi_datetime::date_to_timestamp( $deadline_date );
 			
+			$deadline_date_ts = date_converter::date_to_timestamp( $deadline_date );
+			     
 			if($planned_date != '')
 			{
 				$planned_date_ts = phpgwapi_datetime::date_to_timestamp( $planned_date );
@@ -413,8 +411,11 @@
 
 			if( $check_list->validate() )
 			{
-					$check_list_id  = $this->so->store($check_list);
+				$check_list_id  = $this->so->store($check_list);
 				
+        $cl_status_updater = new check_list_status_updater();
+        $cl_status_updater->update_check_list_status( $check_list_id );
+      
 				if( $check_list_id > 0 )
 				{
 					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));	
@@ -475,8 +476,8 @@
 							
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -492,7 +493,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/view_cases_for_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_cases_for_check_list'), $data);
 		}
 		
 		public function print_check_list()
@@ -518,7 +519,7 @@
 			$data = array
 			(
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
-				'check_list'					=> $check_list->toArray()
+				'check_list'										=> $check_list
 			);
 			
 			self::render_template_xsl('check_list/print_check_list', $data);
@@ -562,8 +563,8 @@
 			
 			$data = array
 			(
-				'control' 								=> $control->toArray(),
-				'check_list' 							=> $check_list->toArray(),
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -575,7 +576,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu','check_list/view_control_info'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_control_info'), $data);
 		}
 		
 		function view_control_details()
@@ -586,7 +587,7 @@
 			
 			$data = array
 			(
-				'control'						=> $control->toArray(),
+				'control'	=> $control,
 			);
 			
 			self::render_template_xsl('check_list/view_control_details', $data);
@@ -688,8 +689,8 @@
 							
 			$data = array
 			(
-				'control' 													=> $control->toArray(),
-				'check_list' 												=> $check_list->toArray(),
+				'control' 													=> $control,
+				'check_list' 												=> $check_list,
 				'location_array'										=> $location_array,
 				'component_array'										=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
@@ -705,7 +706,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/add_case'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/add_case'), $data);
 		}
 		
 		function view_open_cases()
@@ -726,7 +727,7 @@
 			$data = array
 			(
 				'open_check_items_and_cases'	=> $open_check_items_and_cases,
-				'check_list' 									=> $check_list->toArray()
+				'check_list' 									=> $check_list
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases', 'check_list/case_row'), $data );			
@@ -743,7 +744,7 @@
 			$data = array
 			(
 				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
-				'check_list' 													=> $check_list->toArray()
+				'check_list' 													=> $check_list
 			);
 			
 			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
@@ -772,7 +773,7 @@
 			$data = array
 			(
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array,
-				'check_list'					=> $check_list->toArray()
+				'check_list'					=> $check_list
 			);
 			
 			self::render_template_xsl('check_list/view_control_items', $data);
