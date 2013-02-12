@@ -45,7 +45,6 @@
 	class controller_uicontrol_item extends phpgwapi_uicommon
 	{
 		private $so;
-		private $so_control_item;
 		private $so_control_group;
 		private $so_control_item_option;
 		
@@ -208,13 +207,12 @@
 				// Edit control item
 				if($control_item_id > 0)
 				{
-					$control_item_array = $this->so->get_single_with_options($control_item_id , "return_array"); 
+					$control_item = $this->so->get_single_with_options($control_item_id); 
 				}
 				// New control item
 				else
 				{
 					$control_item = new controller_control_item();
-					$control_item_array = $control_item->toArray();
 				}	
 			}
 			
@@ -228,13 +226,16 @@
 			$control_groups_array = $this->so_control_group->get_control_group_array();
 
 			// Hack to fix display of &nbsp; char
-			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
-			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
+      $what_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_what_to_do() );
+      $control_item->set_what_to_do( $what_to_do_fixed );
+      
+      $how_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_how_to_do() );
+      $control_item->set_how_to_do( $how_to_do_fixed );
 			
 			$data = array
 			(
 				'editable' 				=> true,
-				'control_item'		=> $control_item_array,
+				'control_item'		=> $control_item,
 				'control_areas'		=> $control_areas_array,
 				'control_groups'	=> $control_groups_array,
 			);
@@ -277,19 +278,55 @@
 			$control_item->set_type($type);
 			$control_item->set_what_to_do($what_to_do_txt);
 			$control_item->set_how_to_do($how_to_do_txt);
-			
+      
 			if( $control_item->validate() )
 			{
-				$saved_control_item_id = $this->so->store($control_item);
-	
-				$this->so->delete_option_values( $saved_control_item_id );
+        $transaction_status = true;
+        
+        $db_control_item = $this->so->get_db();
+        $db_control_item->transaction_begin();
 				
-				if(($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+				$saved_control_item_id = $this->so->store($control_item);
+        
+        if($saved_control_item_id == 0)
+        {
+          $transaction_status = false;
+        }
+	
+        // Delete item option values
+				$delete_status = $this->so->delete_option_values( $saved_control_item_id );
+				
+        if($delete_status == 0)
+        {
+          $transaction_status = false;
+        }
+        
+        if( $transaction_status == true)
+        {
+          $db_control_item->transaction_commit();
+        }
+        else
+        {
+          $db_control_item->transaction_abort();
+        }
+        
+        $option_values = array();
+        $option_values = phpgw::get_var('option_values');
+			
+        $option_values_array = array();
+        foreach($option_values as $option_value){
+          $control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
+          $option_values_array[] = $control_item_option;
+        }
+      
+        $control_item->set_options_array($option_values_array);
+        
+        // Add new control item option values
+				if( ($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
 				{
-					$option_values = phpgw::get_var('option_values');
+					$control_item_options_array = $control_item->get_options_array();
 					
-					foreach($option_values as $option_value){
-						$control_item_option = new controller_control_item_option($option_value, $saved_control_item_id);
+					foreach($control_item_options_array as $control_item_option){
 						$control_item_option_id = $this->so_control_item_option->store( $control_item_option );
 					}
 				}
@@ -312,7 +349,7 @@
 		
 			if(isset($control_item_id) && $control_item_id > 0)
 			{
-				$control_item_array = $this->so->get_single_with_options($control_item_id, "return_array");
+				$control_item = $this->so->get_single_with_options($control_item_id);
 			}
 			else
 			{
@@ -320,17 +357,19 @@
 				return;
 			}
 			
-			$category = execMethod('phpgwapi.categories.return_single', $control_item_array['control_area_id']);
-			$control_item_array['control_area_name'] = $category[0]['name'];
+			$category = execMethod('phpgwapi.categories.return_single', $control_item->get_control_area_id());
+			$control_item->set_control_area_name( $category[0]['name'] );
 			
-			/* Hack to fix display of &nbsp; char */
-			$control_item_array['what_to_do'] = str_replace("&nbsp;", " ",$control_item_array['what_to_do']);
-			$control_item_array['how_to_do'] = str_replace('&nbsp;', ' ', $control_item_array['how_to_do']);
+      // Hack to fix display of &nbsp; char
+      $what_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_what_to_do() );
+      $control_item->set_what_to_do( $what_to_do_fixed );
+      
+      $how_to_do_fixed = str_replace( "&nbsp;", " ",$control_item->get_how_to_do() );
+      $control_item->set_how_to_do( $how_to_do_fixed );
 			
 			$data = array
 			(
-				'value_id'			=> !empty($control_item) ? $control_item->get_id() : 0,
-				'control_item'	=> $control_item_array,
+				'control_item'	=> $control_item,
 				'view'					=> true
 			);
 			

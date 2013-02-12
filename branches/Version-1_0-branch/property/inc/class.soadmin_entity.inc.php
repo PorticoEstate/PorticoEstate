@@ -127,25 +127,22 @@
 
 		function read_category($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start'])&& $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query'])?$data['query']:'';
-				$sort		= isset($data['sort'])?$data['sort']:'DESC';
-				$order		= isset($data['order'])?$data['order']:'';
-				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-				$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
-				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-				$required	= isset($data['required'])?$data['required']:'';
-			}
+			$start		= isset($data['start'])&& $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query'])?$data['query']:'';
+			$sort		= isset($data['sort'])?$data['sort']:'DESC';
+			$order		= isset($data['order'])?$data['order']:'';
+			$allrows	= isset($data['allrows'])?$data['allrows']:'';
+			$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
+			$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$required	= isset($data['required'])?$data['required']:'';
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' order by id asc';
+				$ordermethod = ' ORDER BY id ASC';
 			}
 
 			$table = "fm_{$type}_category";
@@ -154,7 +151,7 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND name {$this->like} '%{$query}%' or descr {$this->like} '%{$query}%'";
+				$querymethod = " AND name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%'";
 			}
 
 			$sql = "SELECT * FROM {$table} WHERE entity_id={$entity_id} {$querymethod}";
@@ -177,14 +174,15 @@
 				$id	= $this->db2->f('id');
 				$category = array
 				(
-					'entity_id'	=> $entity_id,
-					'id'		=> $id,
-					'name'		=> $this->db2->f('name'),
-					'prefix'	=> $this->db2->f('prefix'),
-					'descr'		=> $this->db2->f('descr'),
-					'level'		=> $this->db2->f('level'),
-					'parent_id'	=> $this->db2->f('parent_id'),
-					'is_eav'	=> $this->db2->f('is_eav'),
+					'entity_id'		=> $entity_id,
+					'id'			=> $id,
+					'name'			=> $this->db2->f('name'),
+					'prefix'		=> $this->db2->f('prefix'),
+					'descr'			=> $this->db2->f('descr'),
+					'level'			=> $this->db2->f('level'),
+					'parent_id'		=> $this->db2->f('parent_id'),
+					'is_eav'		=> $this->db2->f('is_eav'),
+					'enable_bulk'	=> $this->db2->f('enable_bulk'),
 				);
 
 				if($required)
@@ -449,6 +447,7 @@
 					'start_project'				=> $this->db->f('start_project'),
 					'start_ticket'				=> $this->db->f('start_ticket'),
 					'is_eav'					=> $this->db->f('is_eav'),
+					'enable_bulk'				=> $this->db->f('enable_bulk'),
 					'jasperupload'				=> $this->db->f('jasperupload'),
 					'parent_id'					=> $this->db->f('parent_id'),
 					'level'						=> $this->db->f('level')
@@ -574,6 +573,7 @@
 					$values['start_project'],
 					$values['start_ticket'],
 					$values['is_eav'],
+					$values['enable_bulk'],
 					$values['jasperupload'],
 					$values['parent_id'],
 					$level
@@ -581,7 +581,7 @@
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (location_id,entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,enable_bulk,jasperupload,parent_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 
@@ -794,6 +794,7 @@
 						'start_project'				=> $entity['start_project'],
 						'start_ticket'				=> $entity['start_ticket'],
 						'is_eav'					=> $entity['is_eav'],
+						'enable_bulk'				=> $entity['enable_bulk'],
 						'jasperupload'				=> $entity['jasperupload'],
 						'parent_id'					=> $entity['parent_id'],
 						'level'						=> $level

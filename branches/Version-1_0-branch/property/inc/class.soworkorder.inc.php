@@ -1775,9 +1775,22 @@
 					'closed_order'		=> false,
 				);
 
- 				$closed_period[$period] = false;
   				$active_period[$period] = $this->db->f('active');
 			}
+
+			foreach ($order_budget as $period => $_budget)
+			{
+				$this->db->query("SELECT closed FROM fm_workorder"
+				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " {$this->join} fm_project_budget ON fm_project.id = fm_project_budget.project_id"
+				. " WHERE fm_workorder.id = '{$_budget['order_id']}'"
+				. " AND fm_project_budget.year = {$_budget['year']}"
+				. " AND fm_project_budget.month = {$_budget['month']}" ,__LINE__,__FILE__);
+				$this->db->next_record();
+ 				$closed_period[$period] = $this->db->f('closed');
+			}
+
+			reset($order_budget);
 
 //			if ( $order_budget )
 			{
@@ -2242,7 +2255,7 @@
 				//paid last year
 				$this->db->query("SELECT sum(amount) as paid FROM fm_workorder"
 				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
-				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_project.id = {$id}",__LINE__,__FILE__);
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
 				

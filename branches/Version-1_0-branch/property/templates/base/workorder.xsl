@@ -739,12 +739,12 @@
 											<a href="javascript:showlightbox_manual_invoide({value_workorder_id})" title="{$lang_add_invoice_statustext}">
 												<xsl:value-of select="php:function('lang', 'add invoice')"/>
 											</a>
-											<div id="manual_invoice_lightbox" style="background-color:#000000;color:#FFFFFF;display:none">
+											<!--<div id="manual_invoice_lightbox" style="background-color:#000000;color:#FFFFFF;display:none">
 												<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center">
 													<xsl:value-of select="php:function('lang', 'add invoice')"/>
 												</div>
 												<div class="bd" style="text-align:center;"> </div>
-											</div>
+											</div>-->
 										</xsl:when>
 									</xsl:choose>
 								</td>

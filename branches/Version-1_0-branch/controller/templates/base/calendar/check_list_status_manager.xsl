@@ -3,7 +3,7 @@
 
   <xsl:param name="location_code" />
   <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
- 
+
   <xsl:choose>
     <xsl:when test="status = 'CONTROL_REGISTERED'">
       <a>
@@ -24,7 +24,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:text>&amp;location_code=</xsl:text>
-              <xsl:value-of select="info/location_code"/>  
+              <xsl:value-of select="info/location_code"/>
             </xsl:otherwise>
           </xsl:choose>
  		 <xsl:value-of select="$session_url"/>
@@ -62,7 +62,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:text>&amp;location_code=</xsl:text>
-              <xsl:value-of select="info/location_code"/>  
+              <xsl:value-of select="info/location_code"/>
             </xsl:otherwise>
           </xsl:choose>
  		 <xsl:value-of select="$session_url"/>
@@ -98,7 +98,7 @@
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
           <xsl:text>&amp;check_list_id=</xsl:text>
           <xsl:value-of select="info/check_list_id"/>
- 		 <xsl:value-of select="$session_url"/>
+            <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <span class="ext_info">
           <xsl:value-of select="info/id"/>
@@ -114,7 +114,7 @@
             <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
             <xsl:text>&amp;check_list_id=</xsl:text>
             <xsl:value-of select="info/check_list_id"/>
- 		 <xsl:value-of select="$session_url"/>
+              <xsl:value-of select="$session_url"/>
           </xsl:attribute>
           <span class="ext_info">
             <xsl:value-of select="info/id"/>
@@ -131,7 +131,7 @@
             <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
             <xsl:text>&amp;check_list_id=</xsl:text>
             <xsl:value-of select="info/check_list_id"/>
- 		 <xsl:value-of select="$session_url"/>
+              <xsl:value-of select="$session_url"/>
           </xsl:attribute>
           <span class="ext_info">
             <xsl:text>&amp;check_list_id=</xsl:text>
@@ -143,7 +143,15 @@
       </div>
     </xsl:when>
     <xsl:when test="status = 'CONTROL_CANCELED'">
-      <img height="15" src="controller/images/status_icon_red_cross.png" />
+      <a>
+        <xsl:attribute name="href">
+          <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+          <xsl:text>&amp;check_list_id=</xsl:text>
+          <xsl:value-of select="info/check_list_id"/>
+            <xsl:value-of select="$session_url"/>
+        </xsl:attribute>
+        <img height="15" src="controller/images/status_icon_black_cross.png" />
+      </a>
     </xsl:when>
     <xsl:when test="status = 'CONTROLS_DONE_WITH_ERRORS'">
       <div class="info_box_wrp">
@@ -196,7 +204,7 @@
           <xsl:value-of select="//current_year"/>
           <xsl:text>&amp;month=</xsl:text>
           <xsl:number />
- 		 <xsl:value-of select="$session_url"/>
+          <xsl:value-of select="$session_url"/>
         </xsl:attribute>
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
@@ -214,7 +222,7 @@
               <xsl:text>index.php?menuaction=controller.uicalendar.view_calendar_for_month</xsl:text>
               <xsl:text>&amp;location_code=</xsl:text>
               <xsl:value-of select="info/location_code"/>
-            </xsl:when> 
+            </xsl:when>
           </xsl:choose>
           <xsl:text>&amp;month=</xsl:text>
           <xsl:value-of select="info/month"/>

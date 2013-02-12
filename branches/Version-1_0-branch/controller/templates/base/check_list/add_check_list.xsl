@@ -2,9 +2,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 
-
 <!-- ==================  ADD CHECKLIST  ========================= -->
-
 <div id="main_content" class="medium">
 	<div id="check-list-heading">
 		<div class="box-1">
@@ -26,44 +24,7 @@
 			</xsl:choose>
 		</div>
 		<div class="box-2 select-box">
-		
-			<a>
-				<xsl:attribute name="href">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				Kontrollplan for bygg/eiendom (år)
-			</a>
-				
-			<a class="last">
-				<xsl:attribute name="href">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
-					<xsl:text>&amp;year=</xsl:text>
-					<xsl:value-of select="current_year"/>
-					<xsl:text>&amp;month=</xsl:text>
-					<xsl:value-of select="current_month_nr"/>
-					<xsl:text>&amp;location_code=</xsl:text>
-					<xsl:choose>
-					  <xsl:when test="type = 'component'">
-						  <xsl:value-of select="building_location_code"/>
-						</xsl:when>
-						<xsl:otherwise>
-						  <xsl:value-of select="location_array/location_code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				Kontrolplan for bygg/eiendom (måned)
-			</a>
+      <xsl:call-template name="nav_control_plan" />
 		</div>
 	</div>
 		
@@ -121,15 +82,23 @@
 						<xsl:choose>
 							<xsl:when test="check_list/status = 0">
 								<option value="1">Utført</option>
-								<option value="0" SELECTED="SELECTED" >Ikke utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+                <option value="3">Kansellert</option>
 							</xsl:when>
 							<xsl:when test="check_list/status = 1">
 								<option value="1" SELECTED="SELECTED">Utført</option>
 								<option value="0">Ikke utført</option>
+                <option value="3">Kansellert</option>
+							</xsl:when>
+              <xsl:when test="check_list/status = 3">
+								<option value="3" SELECTED="SELECTED">Kansellert</option>
+								<option value="0">Ikke utført</option>
+                <option value="1">Utført</option>
 							</xsl:when>
 							<xsl:otherwise>
-								<option value="0">Ikke utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
 								<option value="1">Utført</option>
+                <option value="3">Kansellert</option>
 							</xsl:otherwise>
 						</xsl:choose>
 					</select>
@@ -183,7 +152,7 @@
 			
 			<div class="form-buttons">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
-				<input class="btn not_active" type="submit" value="Lagre detaljer" />
+				<input class="btn" type="submit" value="Lagre detaljer" />
 			</div>
 		</form>	
 	 </div>

@@ -1146,7 +1146,7 @@
 
 			$uicols = array (
 				'input_type'	=>	array(hidden,text,text,text,text,text,text,text),
-				'name'			=>	array(activity_id,num,descr,unit,ns3420,base_descr,branch,dim_d),
+				'name'			=>	array(activity_id,num,descr,unit_name,ns3420,base_descr,branch,dim_d),
 				'formatter'		=>	array('','','','','','','',''),
 				'descr'			=>	array('',lang('Activity Num'),lang('Description'),lang('Unit'),lang('NS3420'),lang('Base'),lang('Branch'),lang('Dim d'))
 			);

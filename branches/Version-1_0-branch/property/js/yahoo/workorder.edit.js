@@ -84,6 +84,12 @@ var vendor_id;
 		var oArgs = {menuaction:'property.uiworkorder.add_invoice', order_id:workorder_id};
 		var sUrl = phpGWLink('index.php', oArgs);
 
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true
+	//	closejs:function(){closeJS_local()}
+		});
+
+/*
 		var onDialogShow = function(e, args, o)
 		{
 			var frame = document.createElement('iframe');
@@ -94,8 +100,10 @@ var vendor_id;
 		};
 		lightbox.showEvent.subscribe(onDialogShow, lightbox);
 		lightbox.show();
+*/
 	}
 
+/*
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		lightbox = new YAHOO.widget.Dialog("manual_invoice_lightbox",  
@@ -108,7 +116,7 @@ var vendor_id;
 
 		YAHOO.util.Dom.setStyle('manual_invoice_lightbox', 'display', 'block');
 	});
-
+*/
 
 /********************************************************************************/
   	this.addFooterDatatable = function(paginator,datatable)

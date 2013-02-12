@@ -130,8 +130,9 @@
 
 		'fm_standard_unit' => array(
 			'fd' => array(
-				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => 255,'nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -574,7 +575,7 @@
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'num' => array('type' => 'varchar','precision' => '25','nullable' => False),
 				'base_descr' => array('type' => 'text','nullable' => True),
-				'unit' => array('type' => 'varchar','precision' => '4','nullable' => True),
+				'unit' => array('type' => 'int','precision' => '4','nullable' => True),
 				'ns3420' => array('type' => 'varchar','precision' => '15','nullable' => True),
 				'remarkreq' => array('type' => 'varchar','precision' => '5','nullable' => True,'default' => 'N'),
 				'minperae' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
@@ -677,7 +678,7 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'billperae' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'vendor_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'unit' => array('type' => 'varchar','precision' => '6','nullable' => True),
+				'unit' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'ns3420_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'tolerance' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part' => array('type' => 'varchar','precision' => '4','nullable' => True),
@@ -744,7 +745,7 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'billperae' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
 				'vendor_id' => array('type' => 'int','precision' => '4','nullable' => True),
-				'unit' => array('type' => 'varchar','precision' => '6','nullable' => True),
+				'unit' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'ns3420_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'tolerance' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part' => array('type' => 'varchar','precision' => '4','nullable' => True),
@@ -1839,6 +1840,7 @@
 				'start_project' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True),
 				'is_eav' => array('type' => 'int','precision' => '2','nullable' => True),
+				'enable_bulk' => array('type' => 'int','precision' => '2','nullable' => True),
 				'jasperupload' => array('type' => 'int','precision' => '2','nullable' => True),
 				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'level' => array('type' => 'int','precision' => '4','nullable' => True)
@@ -2149,7 +2151,7 @@
 				'p_entity_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
 				'p_cat_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
 				'descr' => array('type' => 'text','nullable' => True),
-				'unit' => array('type' => 'varchar', 'precision' => 10,'nullable' => True),
+				'unit' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'quantity' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
 				'frequency' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),

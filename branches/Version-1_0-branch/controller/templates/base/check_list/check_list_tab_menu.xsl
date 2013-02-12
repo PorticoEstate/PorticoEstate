@@ -1,8 +1,7 @@
 <xsl:template name="check_list_tab_menu" xmlns:php="http://php.net/xsl">
-
 <xsl:param name="active_tab" />
-
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+
 <div id="check_list_menu">
 		<!-- ==================  LOADS VIEW CHECKLIST DETAILS   ===================== -->
 		<div class="left_btns">

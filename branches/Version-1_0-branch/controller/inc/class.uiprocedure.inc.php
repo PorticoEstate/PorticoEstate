@@ -559,7 +559,7 @@
 			$data = array
 			(
 				'location'					=> $location_array,
-				'control'					=> $control->toArray(),
+				'control'					=> $control,
 				'control_procedure'			=> $control_procedure,
 				'group_procedures_array'	=> $group_procedures_array
 			);

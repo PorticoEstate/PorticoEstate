@@ -297,22 +297,10 @@
 				$allocation = new logistic_requirement_resource_allocation();
 			}
 
-			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+//			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
 			if($requirement)
 			{
-// find allocated
-				$allocated_objects = $this->so->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
-				
-				$allocated = array();
-				if($allocated_objects)
-				{
-					foreach ($allocated_objects as $allocated_object)
-					{
-						$allocated[] = $allocated_object->get_resource_id();
-					}
-				}
-//
 				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array('requirement_id' => $requirement->get_id()));
 
 				$criterias_array = array();
@@ -365,10 +353,54 @@
 			}
 		    
 			$allocation_suggestions = execMethod('property.soentity.get_eav_list', $criterias_array);
+
+//Start fuzzy
+			$suggestion_ids = array();
+
+
+			foreach ($allocation_suggestions as $allocation_suggestion)
+			{
+				$suggestion_ids[] = $allocation_suggestion['id'];
+			}
+
+			reset($allocation_suggestions);
+
+			$allocated = $this->so->check_calendar($location_id, $suggestion_ids, $requirement->get_start_date(), $requirement->get_end_date() );
+//_debug_array($allocated);die();
+//end fuzzy
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$activities = array();
 			
 			foreach ($allocation_suggestions as &$allocation_suggestion)
 			{
-				$allocation_suggestion['allocated'] = in_array($allocation_suggestion['id'],$allocated);
+				if(isset($allocated['items'][$allocation_suggestion['id']]))
+				{
+					$allocation_suggestion['allocated'] = true;
+					$allocated_where = array();
+					$allocated_date = array();
+					foreach ($allocated['calendar'][$allocation_suggestion['id']] as $calendar_entry)
+					{
+						$allocated_date[] = $GLOBALS['phpgw']->common->show_date($calendar_entry['start_date'] ,$dateformat)
+											. ' - ' . $GLOBALS['phpgw']->common->show_date($calendar_entry['end_date'] ,$dateformat);
+
+						if(!isset($activities[$calendar_entry['activity_id']]))
+						{
+							$activities[$calendar_entry['activity_id']] = $this->so_activity->get_single( $calendar_entry['activity_id'] );
+						}
+						
+						if($activities[$calendar_entry['activity_id']])
+						{
+							$allocated_where[] = $activities[$calendar_entry['activity_id']]->get_name();
+						}
+						else
+						{
+							$allocated_where[] = 'N/A';
+						}
+					}
+
+					$allocation_suggestion['allocated_date'] = implode('; ', $allocated_date);
+					$allocation_suggestion['allocated_where'] = implode('; ', $allocated_where);
+				}
 			}
 
 			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
@@ -392,6 +424,7 @@
 			if($requirement_id && is_numeric($requirement_id))
 			{
 				$requirement = $this->so_requirement->get_single($requirement_id);
+				$activity_id = $requirement->get_activity_id();
 			}
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
@@ -413,11 +446,11 @@
 					$resource_alloc->set_resource_id( $resource_id );
 					$resource_alloc->set_location_id( $requirement->get_location_id() );
 					$resource_alloc->set_create_user( $user_id );
+					$resource_alloc->set_start_date( $requirement->get_start_date() );
+					$resource_alloc->set_end_date( $requirement->get_start_date() );
 
 					$resource_alloc_id = $this->so->store( $resource_alloc );
 				}
-
-				$activity = $this->so_activity->get_single($requirement->get_activity_id()); 
 
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
 			}
@@ -433,10 +466,12 @@
 
 			$status = $this->so->delete($resource_allocation_id);
 
-			if($status){
+			if($status)
+			{
 				return json_encode( array( "status" => "deleted" ) );
 			}
-			else{
+			else
+			{
 				return json_encode( array( "status" => "not_deleted" ) );
 			}
 		} 
