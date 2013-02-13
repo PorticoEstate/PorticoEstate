@@ -91,6 +91,7 @@
 				}
 				if($data[1] && $data[6]) // fakturanr og beløp
 				{
+					++$this->id;
 					$buffer = $this->import_end_record($buffer,$invoice_common);
 				}
 			}
@@ -114,7 +115,6 @@
 
 		function import_start_record($buffer)
 		{
-			++$this->id;
 			$this->currentrecord = array();
 			return $buffer;
 		}
