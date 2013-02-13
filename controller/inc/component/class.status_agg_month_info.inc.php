@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.check_list_status_info.inc.php 8571 2012-01-15 13:46:27Z vator $
+ 	* @version $Id$
 	*/
 
 	class status_agg_month_info
