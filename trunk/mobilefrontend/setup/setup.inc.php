@@ -44,7 +44,7 @@
 	$setup_info['mobilefrontend']['note'] ='';
 
 
-	$setup_info['mobilefrontend']['tables'] = array();
+//	$setup_info['mobilefrontend']['tables'] = array();
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['mobilefrontend']['hooks'] = array

@@ -11,4 +11,4 @@
  	* @version $Id$
 	*/
 
-	$phpgw_baseline = array();
+//	$phpgw_baseline = array();
