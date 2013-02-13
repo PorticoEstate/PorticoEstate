@@ -97,10 +97,9 @@
 		 * 
 		 * @param	$location_id location id
 		 * @param	$location_item_id location item id
-		 * @param $return_type return data as objects or as arrays
 		 * @return array of case object represented as objects or arrays
 		*/
-		public function get_cases_by_message($location_id, $location_item_id, $return_type = "return_object")
+		public function get_cases_by_message($location_id, $location_item_id)
 		{
 			$location_id		= (int) $location_id;
 			$location_item_id	= (int) $location_item_id;
@@ -124,14 +123,7 @@
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
 				
-				if($return_type == "return_object")
-				{
-					$cases_array[] = $case;
-				}
-				else
-				{
-					$cases_array[] = $case->toArray();
-				}
+				$cases_array[] = $case;
 			}
 
 			return $cases_array;
