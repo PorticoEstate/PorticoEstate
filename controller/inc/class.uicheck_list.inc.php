@@ -719,8 +719,9 @@
 
 			foreach($open_check_items_and_cases as $key => $check_item)
 			{
-				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id'], "return_array");
-				$check_item['control_item']['options_array'] = $control_item_with_options['options_array'];
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
+        
+				$check_item['control_item']['options_array'] = $control_item_with_options->get_options_array();
 				$open_check_items_and_cases[$key] = $check_item;
 			}
 

@@ -161,7 +161,7 @@
 		 * @param $return_type return data as objects or as arrays
 		 * @return control item object
 		*/
-		public function get_single_with_options($id, $return_type = "return_object")
+		public function get_single_with_options($id)
 		{
 			$id = (int)$id;
 			$sql  = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
@@ -171,7 +171,6 @@
 			$sql .= "WHERE ci.id = $id";
 
 			$this->db->query($sql);
-			
 			$counter = 0;
 			$control_item = null;
 			while ($this->db->next_record()) 
@@ -198,14 +197,7 @@
 					$control_item_option->set_option_value($this->unmarshal($this->db->f('option_value', true), 'string'));
 					$control_item_option->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 
-					if($return_type == "return_object")
-					{
-						$options_array[] = $control_item_option;
-					}
-					else
-					{
-						$options_array[] = $control_item_option->toArray();
-					}
+					$options_array[] = $control_item_option;
 				}
 			
 				$counter++;
@@ -213,14 +205,7 @@
 			
 			$control_item->set_options_array( $options_array );
 			
-			if($return_type == "return_object")
-			{
-				return $control_item;
-			}
-			else
-			{
-				return $control_item->toArray();
-			}
+			return $control_item;
 		}
 		
 		/**
@@ -233,7 +218,8 @@
 		{
 			$control_item_id = (int)$control_item_id;
 			$sql  = "delete from controller_control_item_option where control_item_id={$control_item_id}";
-			$this->db->query($sql);
+			
+      return $this->db->query($sql);
 		}
 
 		function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
