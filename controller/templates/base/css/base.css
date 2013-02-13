@@ -719,10 +719,12 @@ ul.items li.list_item{
 /* =======================================  EXPAND LIST  ========================================= */
 
 ul.expand_list h4 {
+  background: none repeat scroll 0 0 #D0E2F8;
   cursor: pointer;
   font-size: 1.1em;
   margin-bottom: 6px;
   margin-top: 0;
+  padding: 3px 6px;
 }
 
 ul.expand_list h4 img {
@@ -1483,15 +1485,15 @@ a.view_info_box {
 #info_box .case {
  	text-align:left; 	
 }
- 
+
 .empty_list h4{
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
 }
 
 .empty_list {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .yui-pg-first{
