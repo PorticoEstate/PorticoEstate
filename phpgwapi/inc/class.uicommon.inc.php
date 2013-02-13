@@ -53,8 +53,11 @@
 
 	//	public $flash_msgs;
 
-		public function __construct()
+		public function __construct($currentapp ='')
 		{
+
+			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 		//	self::set_active_menu('controller');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
@@ -66,8 +69,8 @@
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
@@ -87,7 +90,7 @@
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($currentapp);
 		}
 
 		private function get_ui_session_key() {
