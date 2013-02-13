@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package mobilefrontend
 	* @subpackage setup
- 	* @version $Id: tables_current.inc.php 10794 2013-02-11 14:30:13Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	$phpgw_baseline = array();

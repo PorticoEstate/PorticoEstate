@@ -24,7 +24,7 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package mobilefrontend
-	 * @version $Id: class.uiproject.inc.php 10464 2012-11-05 07:46:42Z vator $
+	 * @version $Id$
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 //	phpgw::import_class('phpgwapi.jquery');

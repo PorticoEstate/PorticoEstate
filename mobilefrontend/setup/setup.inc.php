@@ -8,7 +8,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package mobilefrontend
 	* @subpackage setup
- 	* @version $Id: setup.inc.php 10794 2013-02-11 14:30:13Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	$setup_info['mobilefrontend']['name']		= 'mobilefrontend';

@@ -1,4 +1,4 @@
-  <!-- $Id: app_data.xsl 8437 2011-12-26 19:11:48Z sigurdne $ -->
+  <!-- $Id$ -->
 	<xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<h1>
 		<xsl:value-of select="php:function('lang', 'mobilefrontend')"/>
