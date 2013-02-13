@@ -7,8 +7,8 @@
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @package property
-	 * @version $Id: class.hook_helper.inc.php 9412 2012-05-20 16:53:45Z sigurdne $
+	 * @package controller
+	 * @version $Id$
 	 */
 
 	/*

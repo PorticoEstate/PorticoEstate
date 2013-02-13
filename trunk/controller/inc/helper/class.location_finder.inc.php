@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicontrol_group.inc.php 8267 2011-12-11 12:27:18Z sigurdne $
+ 	* @version $Id$
 	*/	
 
 	phpgw::import_class('property.solocation');

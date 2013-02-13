@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.check_item.inc.php 8478 2012-01-03 12:36:37Z vator $
+ 	* @version $Id$
 	*/
 
 	include_class('controller', 'model', 'inc/model/');
