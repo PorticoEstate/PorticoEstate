@@ -314,11 +314,11 @@
 
 				$interlink_data = array
 				(
-					'location1_id'		=> $component_location_id,
+					'location1_id'      => $component_location_id,
 					'location1_item_id' => $component_id,
-					'location2_id'		=> $location_id_ticket,
+					'location2_id'      => $location_id_ticket,
 					'location2_item_id' => $message_ticket_id,
-					'account_id'		=> $user_id
+					'account_id'        => $user_id
 				);
 
 				execMethod('property.interlink.add', $interlink_data);
