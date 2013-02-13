@@ -3,7 +3,7 @@
 
   <xsl:param name="location_code" />
   <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
-
+  
   <xsl:choose>
     <xsl:when test="status = 'CONTROL_REGISTERED'">
       <a>
