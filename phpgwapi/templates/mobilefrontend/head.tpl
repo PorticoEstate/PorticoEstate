@@ -29,21 +29,13 @@
     	<!-- END javascript -->
 
 	</head>
-<body>
-    <div id="wrapper">
-    <div id="header">
-	<div id="login-bar">
-		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a href="{login_url}">{login_text}</a>
-	</div>
-        <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
-		<div id="centerimage"></div>
-		<form action="index.php" method="get" id="header-search" class="{header_search_class}">
-			<input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
-          	<input class="query
-" type="text" name="searchterm"/>
-      		<xsl:text> </xsl:text><input type="submit" value="{lbl_search}"/>
-		</form>
-    </div>
-<div class="yui-skin-sam" id='frontend'>
-<div id="line"></div>
-  <div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
+	<body>
+		<div id="wrapper">
+			<div id="header">
+				<div id="login-bar"><a href="{logout_url}">{logout_text}</a></div>
+        		<div id="logo">	</div>
+				<div id="centerimage"></div>
+			</div>
+			<div class="yui-skin-sam" id='frontend'>
+				<div id="line"></div>
+				<div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
