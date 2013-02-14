@@ -81,6 +81,7 @@
 			$case_descr = phpgw::get_var('case_descr');
 			$type = phpgw::get_var('type');
 			$status = phpgw::get_var('status');
+      $location_code = phpgw::get_var('location_code');
 			 
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -94,7 +95,7 @@
 				$new_check_item = new controller_check_item();
 				$new_check_item->set_check_list_id( $check_list_id );
 				$new_check_item->set_control_item_id( $control_item_id );
-							
+        							
 				$saved_check_item_id = $this->so_check_item->store( $new_check_item );
 				$check_item = $this->so_check_item->get_single($saved_check_item_id);
 			}
@@ -112,6 +113,7 @@
 			$case->set_modified_by($user_id);
 			$case->set_modified_by($user_id);
 			$case->set_status($status);
+      $case->set_location_code( $location_code );
 
 			// Saves selected value from  or measurement
 			if($type == 'control_item_type_2'){
