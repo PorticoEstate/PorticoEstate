@@ -83,6 +83,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+        $case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 					
 				return $case;
 			}
@@ -122,6 +123,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+        $case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				
 				$cases_array[] = $case;
 			}
@@ -148,6 +150,7 @@
 					'modified_date',
 					'modified_by',
 					'measurement',
+          'location_code'
 			);
 
 			$values = array(
@@ -160,10 +163,12 @@
 				$this->marshal($case->get_entry_date(), 'int'),
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
-				$this->marshal($case->get_measurement(), 'string')
+				$this->marshal($case->get_measurement(), 'string'),
+        $this->marshal($case->get_location_code(), 'string')
 			);
 
-			$result = $this->db->query('INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+      $sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+      $result = $this->db->query( $sql, __LINE__,__FILE__);
 
 			return $result ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
 		}
@@ -188,7 +193,8 @@
 				'entry_date = ' . $this->marshal($case->get_entry_date(), 'int'),
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
-				'measurement = ' . $this->marshal($case->get_measurement(), 'string')
+				'measurement = ' . $this->marshal($case->get_measurement(), 'string'),
+        'location_code = ' . $this->marshal($case->get_location_code(), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);

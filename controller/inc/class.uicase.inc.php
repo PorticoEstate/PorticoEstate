@@ -137,7 +137,7 @@
 			}
 			else{
 				return json_encode( array( "status" => "not_saved" ) );
-			}	
+			}
 		}
 		
 		function save_case(){
