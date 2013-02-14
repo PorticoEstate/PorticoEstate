@@ -140,30 +140,9 @@ JS;
 #		$tpl_vars['help_text'] = lang('help');
 #		$tpl_vars['help_url'] = => '#';
 	}
-	$bouser = CreateObject('bookingfrontend.bouser');
-	if($bouser->is_logged_in())
-	{
-		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
-		$tpl_vars['login_url'] = 'logout.php';
-	}
-	else
-	{
-		$tpl_vars['login_text'] = lang('Login');
-		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
-		$config		= CreateObject('phpgwapi.config','bookingfrontend');
-		$config->read();
-		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
-		$custom_login_url = isset($config->config_data['custom_login_url']) && $config->config_data['custom_login_url'] ? $config->config_data['custom_login_url'] : '';
-		if($login_parameter)
-		{
-			$login_parameter = ltrim($login_parameter, '&');
-			$tpl_vars['login_url'] .= "&{$login_parameter}";
-		}
-		if($custom_login_url)
-		{
-			$tpl_vars['login_url'] = $custom_login_url;
-		}
-	}
+
+	$tpl_vars['logout_text'] = lang('logout');
+	$tpl_vars['logout_url'] = 'logout.php';
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
