@@ -28,7 +28,7 @@
 	/**
 	* Include phpgroupware header
 	*/
-	require_once 'header.inc.php';
+	require_once '../header.inc.php';
 
 	// check if forward parameter is set
 	if ( isset($_GET['phpgw_forward']) && is_array($_GET['phpgw_forward']) )
