@@ -1410,6 +1410,7 @@ ul#icon_color_map span {
   font-size: 21px;
   padding-left: 500px;
 }
+
 /* ===============================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
@@ -1418,7 +1419,7 @@ a.view_info_box {
   font-size: 10px;
   font-weight: bold;
   height: 15px;
-  padding-top: 1px;
+  line-height: 15px;
   text-align: center;
   text-decoration: none;
 }
@@ -1883,8 +1884,9 @@ li.check_item_case .col_3 {
   padding: 10px; 
 }
 
-.add-cases .expand_list h4{
-  margin-bottom: 0;
+.add-cases .expand_list h4 {
+    background: none repeat scroll 0 0 #EEEEEE;
+    margin-bottom: 0;
 }
 
 .add-cases h3 img {
