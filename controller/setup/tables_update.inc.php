@@ -827,7 +827,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','location_code',array(
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','location_code',array(
 			'type' => 'varchar', 
 			'precision' => '30',
 			'nullable' => true
