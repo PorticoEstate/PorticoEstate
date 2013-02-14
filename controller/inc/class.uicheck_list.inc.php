@@ -667,6 +667,7 @@
 				'current_month_nr' 									=> $month
 			);
 			
+      
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
