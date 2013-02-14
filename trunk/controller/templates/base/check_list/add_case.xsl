@@ -30,7 +30,9 @@
 		<xsl:call-template name="check_list_tab_menu" />
 	</div>
 		
-	
+	<div style="margin:20px 0;">
+			<xsl:call-template name="select_buildings_on_property" />
+	</div>
 
 	<div id="view_cases">
 
