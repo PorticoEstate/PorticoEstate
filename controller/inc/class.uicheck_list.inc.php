@@ -668,45 +668,6 @@
 				}
 			}
 			
-			/* ================  Ikke slett!!! Kode som henter ut  utstyr basert på lokasjon  ==================       
-			
-			//get control items based on control group/component connection
-			$control_groups_for_control = $this->so_control_group->get_control_group_ids_for_control($control->get_id());
-			//_debug_array($control_groups_for_control);
-
-			foreach($control_groups_for_control as $cg)
-			{
-				$components_for_control_group[] = array($cg => $this->so_control_group->get_components_for_control_group($cg));
-			}
-			
-			//_debug_array($components_for_control_group);
-			
-			$control_group_check_items = array();
-			foreach($components_for_control_group as $cg_components)
-			{
-				foreach($control_groups_for_control as $cg_control)
-				{
-					$components = $cg_components[$cg_control];
-					//_debug_array($components);
-					$location_has_component = false;
-					foreach($components as $comp)
-					{
-						if(!$location_has_component)
-						{
-							//check if current location has component
-							$location_has_component = $this->so_control_item->location_has_component($comp, $check_list->get_location_code);
-						}
-					}
-					if($location_has_component)
-					{
-						//the check items for the control group shall be added
-						$check_items = $this->so_control_item->get_items_for_control_group($control->get_id(), $cg_control);
-						$control_group_check_items[] = $check_items;
-					}
-				}
-			}
-			=====================================================================*/
-			//_debug_array($control_group_check_items);
 			
 			$level = $this->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
