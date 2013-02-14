@@ -570,6 +570,11 @@ HTML;
 	else
 	{
 	*/
+		if(isset($GLOBALS['phpgw_info']['flags']['template_set']) && $GLOBALS['phpgw_info']['flags']['template_set'] )
+		{
+			$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['flags']['template_set'];
+		}
+
 		$c = createObject('phpgwapi.config','phpgwapi');
 		$c->read();
 		foreach ($c->config_data as $k => $v)
