@@ -168,6 +168,6 @@
 		}
 		$GLOBALS['phpgw']->log->commit();
 
-		$GLOBALS['phpgw']->redirect_link('/home.php');
+		$GLOBALS['phpgw']->redirect_link('mobilefrontend/home.php');
 	}
 	$GLOBALS['phpgw']->common->phpgw_footer();

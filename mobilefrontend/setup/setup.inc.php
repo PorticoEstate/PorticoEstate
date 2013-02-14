@@ -60,10 +60,11 @@
 		'versions' => array('0.9.17', '0.9.18')
 	);
 
+/*
 	$setup_info['mobilefrontend']['depends'][] = array
 	(
 		'appname'  => 'controller',
 		'versions' => array('0.1.41')
 	);
-
+*/
 
