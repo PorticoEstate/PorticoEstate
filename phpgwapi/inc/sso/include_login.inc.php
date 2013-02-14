@@ -420,6 +420,11 @@
 			}
 
 			$system_name = isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate';
+			
+			if($variables['lang_frontend'])
+			{
+				$system_name .= "::{$variables['lang_frontend']}";
+			}
 			$this->tmpl->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/'.$variables['partial_url'].'?' . http_build_query($extra_vars) );
 			$this->tmpl->set_var('registration_url',$GLOBALS['phpgw_info']['server']['webserver_url'] . '/registration/');
 			$this->tmpl->set_var('system', $system_name);
@@ -485,24 +490,37 @@ JS;
 
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/base.css") )
 			{
-				$base_css = "phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
+				$base_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
 			}
 			else
 			{
-				$base_css = 'phpgwapi/templates/base/css/base.css';
+				$base_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/css/base.css";
 			}
+
+			$system_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/css/system.css";
+
 
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/login.css") )
 			{
-				$login_css = "phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/login.css";
+				$login_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/login.css";
 			}
 			else
 			{
-				$login_css = 'phpgwapi/templates/base/css/login.css';
+				$login_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/css/login.css";
 			}
 
+			$rounded_css = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/css/rounded.css";
+			
+			$flag_no = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/images/flag_no.gif";
+			$flag_en = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/base/images/flag_en.gif";
+
+
+			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
+			$this->tmpl->set_var('rounded_css', $rounded_css);
+			$this->tmpl->set_var('flag_no', $flag_no);
+			$this->tmpl->set_var('flag_en', $flag_en);
 
 			$autocomplete = '';
 			if ( isset($GLOBALS['phpgw_info']['server']['autocomplete_login'])

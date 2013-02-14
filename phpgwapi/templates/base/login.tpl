@@ -6,12 +6,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="author" content="{system} http://www.phpgroupware.no">
 	<meta name="description" content="{system} login screen, working environment powered by phpGroupWare">
-	<meta name="keywords" content="{{system} login screen, phpgroupware, groupware, groupware suite">
+	<meta name="keywords" content="{system} login screen, phpgroupware, groupware, groupware suite">
 	<meta name="robots" content="noindex,nofollow">
 	
 	<title>{system} - {lang_login}</title>
 
-	<link rel="stylesheet" href="phpgwapi/templates/base/css/system.css" type="text/css">
+	<link rel="stylesheet" href="{system_css}" type="text/css">
 	<link rel="stylesheet" href="{login_css}" type="text/css">
 
 	<!--[if IE 7]>
@@ -22,7 +22,7 @@
 	<link href="phpgwapi/templates/base/css/ie6.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
-	<link rel="stylesheet" type="text/css" href="phpgwapi/templates/base/css/rounded.css">
+	<link rel="stylesheet" href="{rounded_css}" type="text/css">
 
 	{onload}
 </head>
@@ -38,8 +38,8 @@
 	
 	<div id="content-box">
 		<div class="rawimages">
-			<span><a href="login.php?lang=no"><img src="phpgwapi/templates/base/images/flag_no.gif" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
-			<span><a href="login.php?lang=en"><img src="phpgwapi/templates/base/images/flag_en.gif" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
+			<span><a href="login.php?lang=no"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
+			<span><a href="login.php?lang=en"><img src="{flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
 		</div>
 
 		<div class="padding">
