@@ -59,7 +59,7 @@
 													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
 												  <input type="hidden" name="status" value="0" />
                           <input type="hidden" name="type" value="control_item_type_1" />
-                          <input type="hidden" name="location_code"  value="" />
+                          <input type="hidden" name="location_code"  value="" class="required" />
 													  
                           <!--  WHAT TO DO -->
                           <div class="row what-to-do">
@@ -79,7 +79,7 @@
                             
 											    <div>
                             <label class="comment">Beskrivelse av sak</label>
-													  <textarea name="case_descr">
+													  <textarea name="case_descr" class="required">
 															<xsl:value-of select="comment"/>
 														</textarea>
 													</div>
