@@ -1878,6 +1878,10 @@ li.check_item_case .col_3 {
   margin-bottom: 10px;
 }
 
+.add-cases .expand_list {
+    padding-left: 15px;
+}
+
 .add-cases .expand_list li{
   background: none repeat scroll 0 0 #EEEEEE;
   margin-bottom: 10px;
@@ -1885,8 +1889,9 @@ li.check_item_case .col_3 {
 }
 
 .add-cases .expand_list h4 {
-    background: none repeat scroll 0 0 #EEEEEE;
-    margin-bottom: 0;
+    background: none repeat scroll 0 0 transparent;
+    margin: 0;
+    padding: 0;
 }
 
 .add-cases h3 img {
