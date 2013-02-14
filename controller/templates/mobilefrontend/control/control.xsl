@@ -12,7 +12,7 @@
 	<div id="control_details">
 		
 		<xsl:variable name="action_url">
-				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_details')" />
+				<xsl:value-of select="php:function('get_phpgw_link', 'mobilefrontend/index.php', 'menuaction:controller.uicontrol.save_control_details')" />
 			</xsl:variable>
 		<form id="frm_save_control_details" action="{$action_url}" method="post">
 			<input type="hidden" name="control_id" value="{$control_id}" />
