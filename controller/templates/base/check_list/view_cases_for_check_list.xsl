@@ -99,6 +99,9 @@
 			</xsl:attribute>
 		</a>
 	
+		<div style="margin:20px 0;">
+			<xsl:call-template name="select_buildings_on_property" />
+		</div>
 		<div id="load_view_content"></div>	
 </div>
 </xsl:template>

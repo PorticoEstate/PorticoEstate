@@ -257,12 +257,19 @@
 			$year = date("Y", $deadline_ts);
 			$month_nr = date("n", $deadline_ts);
 			
+      $level = $this->get_location_level($location_code);
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			      
 			$data = array
 			(
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'control'									=> $control,
 				'check_list' 							=> $check_list,
+        'buildings_on_property' => $buildings_on_property,
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month_nr,
@@ -275,9 +282,9 @@
       
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl( array('check_list/add_check_list', 'check_list/nav_control_plan'), $data );
+			self::render_template_xsl( array('check_list/add_check_list', 'check_list/nav_control_plan', 'check_list/select_buildings_on_property'), $data );
 		}
-		
+
 		/**
 		 * Public function for displaying the edit check list form  
 		 * 
@@ -322,10 +329,17 @@
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 			
+      $level = $this->get_location_level($location_code);
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+      
 			$data = array
 			(
 				'control' 								=> $control,
 				'check_list' 							=> $check_list,
+        '$buildings_on_property' 	=> $buildings_on_property,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -342,7 +356,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/edit_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/edit_check_list', 'check_list/select_buildings_on_property'), $data);
 		}
 		
 		/**
@@ -474,11 +488,17 @@
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+      
 			$data = array
 			(
 				'control' 								=> $control,
 				'check_list' 							=> $check_list,
-				'location_array'					=> $location_array,
+        'buildings_on_property' 	=> $buildings_on_property,
+        'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
 				'current_year' 						=> $year,
@@ -493,7 +513,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_cases_for_check_list'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_cases_for_check_list', 'check_list/select_buildings_on_property'), $data);
 		}
 		
 		public function print_check_list()
@@ -560,11 +580,18 @@
 			
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
+      
+      $level = $this->get_location_level($location_code);
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
 			
 			$data = array
 			(
 				'control' 								=> $control,
 				'check_list' 							=> $check_list,
+        'buildings_on_property'   => $buildings_on_property,
 				'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'type' 										=> $type,
@@ -576,7 +603,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_control_info'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/view_control_info', 'check_list/select_buildings_on_property'), $data);
 		}
 		
 		function view_control_details()
@@ -681,17 +708,21 @@
 			=====================================================================*/
 			//_debug_array($control_group_check_items);
 			
-			
-			
 			$level = $this->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
+      $user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+      
 			$data = array
 			(
 				'control' 													=> $control,
 				'check_list' 												=> $check_list,
-				'location_array'										=> $location_array,
+				'buildings_on_property'             => $buildings_on_property,
+        'location_array'										=> $location_array,
 				'component_array'										=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
 				'type' 															=> $type,
@@ -706,7 +737,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/add_case'), $data);
+			self::render_template_xsl(array('check_list/check_list_tab_menu', 'check_list/nav_control_plan', 'check_list/add_case', 'check_list/select_buildings_on_property'), $data);
 		}
 		
 		function view_open_cases()
@@ -731,7 +762,7 @@
 				'check_list' 									=> $check_list
 			);
 			
-			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases', 'check_list/case_row'), $data );			
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_open_cases', 'check_list/case_row', 'check_list/select_buildings_on_property'), $data );			
 		}
 		
 		function view_closed_cases()
@@ -748,7 +779,7 @@
 				'check_list' 													=> $check_list
 			);
 			
-			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases'), $data );
+			self::render_template_xsl( array('check_list/cases_tab_menu', 'check_list/view_closed_cases', 'check_list/select_buildings_on_property'), $data );
 		}
 		
 		function view_control_items()
@@ -827,4 +858,35 @@
 		}	
 		
 		public function query(){}
+    
+    function get_buildings_on_property($user_role, $location_code, $level)
+    {
+			// Property level
+			if ($level == 1)
+			{
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if ($level > 1)
+			{
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}
+
+			if ($user_role)
+			{
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+
+				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+			}
+			else
+			{
+				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+			}
+
+			return $buildings_on_property;
+		}  
 	}
