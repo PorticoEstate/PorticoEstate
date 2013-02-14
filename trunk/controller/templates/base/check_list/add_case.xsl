@@ -56,9 +56,10 @@
 												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
 													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input name="check_list_id" type="hidden"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
-												  <input name="status" type="hidden" value="0" />
-                          <input name="type" type="hidden" value="control_item_type_1" />
+													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+												  <input type="hidden" name="status" value="0" />
+                          <input type="hidden" name="type" value="control_item_type_1" />
+                          <input type="hidden" name="location_code"  value="" />
 													  
                           <!--  WHAT TO DO -->
                           <div class="row what-to-do">
