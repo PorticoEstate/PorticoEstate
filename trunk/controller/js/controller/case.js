@@ -13,7 +13,10 @@ $(document).ready(function(){
     
     $(thisForm).find("input[name=location_code]").val(location_code);
     
-		$.ajax({
+    var validate_status = validate_form( thisForm );
+    
+    if( validate_status ){
+      $.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&" + $(thisForm).serialize(),
 			  success: function(data) {
@@ -43,6 +46,7 @@ $(document).ready(function(){
 				  }
 				}
 		});
+    }
 	});
 
 	// UPDATE CASE
@@ -252,4 +256,28 @@ $(document).ready(function(){
 	});	
 });
 
+function validate_form( formObj )
+{
+  var status = true;
+  
+  $(formObj).find(".input_error_msg").remove();
+  
+  $(formObj).find(":input.required").each(function() {
+    var thisInput = $(this);
 
+    if( $(thisInput).val() == '' )
+    {
+      if( $(thisInput).attr("type") == 'hidden' )
+      {
+       	$(formObj).prepend("<div class='input_error_msg'>Du må velge bygg</div>");   
+      }else
+      {
+        $(thisInput).before("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");  
+      }
+      
+      status = false;
+    }
+  });
+  
+  return status;
+}
