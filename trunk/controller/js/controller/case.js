@@ -13,6 +13,8 @@ $(document).ready(function(){
     
     $(thisForm).find("input[name=location_code]").val(location_code);
     
+    var validate_status = validate_form(frmObj);
+    
 		$.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&" + $(thisForm).serialize(),
@@ -249,6 +251,10 @@ $(document).ready(function(){
 		});
 
 		return false;
-	});
-	
+	});	
 });
+
+function validate_form(formObj)
+{
+  
+}
