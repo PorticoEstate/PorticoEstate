@@ -190,7 +190,16 @@ HTML;
 		$method = 'index';
 	}
 
-	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
+	if(is_file(PHPGW_SERVER_ROOT. "/mobilefrontend/inc/class.{$class}.inc.php"))
+	{
+		$GLOBALS[$class] = CreateObject("{$app}.{$class}");
+	}
+	else
+	{
+		include_class('mobilefrontend', $class, "inc/{$app}/");
+		$_class = "mobilefrontend_{$class}";
+		$GLOBALS[$class] = new $_class;
+	}
 
 	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
 	if ( !$invalid_data 
