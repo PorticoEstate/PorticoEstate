@@ -49,6 +49,8 @@
 		protected $modified_date;
 		protected $modified_by;
 		protected $measurement;
+    protected $location_code;
+    
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -136,5 +138,12 @@
 		public function set_measurement($measurement)
 		{
 			$this->measurement = $measurement;
+		}
+    
+    public function get_location_code() { return $this->location_code; }
+		
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
 		}
 	}
