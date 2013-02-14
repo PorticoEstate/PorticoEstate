@@ -17,12 +17,13 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'noheader'                => true,
-		'nonavbar'                => false,
-		'currentapp'              => 'home',
-		'enable_network_class'    => true,
-		'enable_contacts_class'   => true,
-		'enable_nextmatchs_class' => true
+		'noheader'					=> true,
+		'nonavbar'					=> false,
+		'currentapp'				=> 'home',
+		'enable_network_class'		=> true,
+		'enable_contacts_class'		=> true,
+		'enable_nextmatchs_class'	=> true,
+		'template_set'				=> 'mobilefrontend'
 	);
 
 	/**
