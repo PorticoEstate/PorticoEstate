@@ -821,3 +821,21 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+	
+	$test[] = '0.1.41';
+	function controller_upgrade0_1_41()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','location_code',array(
+			'type' => 'varchar', 
+			'precision' => '30',
+			'nullable' => true
+		));
+		
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.42';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
