@@ -98,7 +98,7 @@
 	}
 	else
 	{
-		include_class('mobilefrontend', $class, "inc/{$app}/");
+		include_class('mobilefrontend', $class, "{$app}/");
 		$_class = "mobilefrontend_{$class}";
 		$GLOBALS[$class] = new $_class;
 	}
