@@ -36,7 +36,6 @@
 	{
 		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['custom_frontend'] = 'mobilefrontend';
 			parent::__construct();
 		}
 	}

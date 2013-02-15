@@ -33,8 +33,8 @@
 		<div id="wrapper">
 			<div id="header">
 				<div id="login-bar"><a href="{logout_url}">{logout_text}</a></div>
-        		<div id="logo">	</div>
-				<div id="centerimage"></div>
+        		<!--<div id="logo">	</div>
+				<div id="centerimage"></div>-->
 			</div>
 			<div class="yui-skin-sam" id='frontend'>
 				<div id="line"></div>
