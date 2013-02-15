@@ -69,9 +69,10 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
-		'noheader'   => true,
-		'currentapp' => $app,
-		'template_set'=> 'mobilefrontend'
+		'noheader'   		=> true,
+		'currentapp' 		=> $app,
+		'template_set'		=> 'mobilefrontend',
+		'custom_frontend'	=> 'mobilefrontend'
 	);
 	
 	/**
