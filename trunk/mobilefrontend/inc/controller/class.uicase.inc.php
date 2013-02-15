@@ -25,13 +25,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicontrol.inc.php 10804 2013-02-13 13:24:06Z sigurdne $
-	*/	
+ 	* @version $Id: class.uicase.inc.php 10826 2013-02-14 12:21:31Z vator $
+	*/
 
-	
-  	phpgw::import_class('controller.uicontrol');
+  	phpgw::import_class('controller.uicase');
 
-	class mobilefrontend_uicontrol extends controller_uicontrol
+	class mobilefrontend_uicase extends controller_uicase
 	{
 		public function __construct()
 		{

@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
-	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
@@ -25,13 +25,13 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.uicontrol.inc.php 10804 2013-02-13 13:24:06Z sigurdne $
+ 	* @version $Id: class.uicontrol_group_component.inc.php 10810 2013-02-13 19:49:14Z sigurdne $
 	*/	
 
-	
-  	phpgw::import_class('controller.uicontrol');
 
-	class mobilefrontend_uicontrol extends controller_uicontrol
+  	phpgw::import_class('controller.uicontrol_group_component');
+
+	class mobilefrontend_uicontrol_group_component extends controller_uicontrol_group_component
 	{
 		public function __construct()
 		{
