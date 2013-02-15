@@ -4,7 +4,7 @@
 	*
 	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
-	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -29,22 +29,12 @@
 	*/	
 
 	
-  phpgw::import_class('controller.uicase');
+	phpgw::import_class('controller.uicase');
 
 	class mobilefrontend_uicase extends controller_uicase
 	{
-		public $public_functions = array
-		(
-			'add_case'	=>	true,
-		);
-
 		public function __construct()
 		{
 			parent::__construct();
-		}
-		
-		public function add_case($case = null)
-		{
-			parent::add_case($case);
 		}
 	}

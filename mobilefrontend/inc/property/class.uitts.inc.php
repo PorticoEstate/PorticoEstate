@@ -1,10 +1,9 @@
 <?php
 
 	/**
-	 * phpGroupWare - controller: a part of a Facilities Management System.
+	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
-	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
-	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
+	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
@@ -25,13 +24,13 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package property
-	 * @subpackage controller
-	 * @version $Id: class.uicalendar.inc.php 10753 2013-02-06 06:52:12Z vator $
+	 * @subpackage tts
+	 * @version $Id: class.uitts.inc.php 10753 2013-02-06 06:52:12Z vator $
 	 */
 
-  	phpgw::import_class('controller.uicalendar');
+  	phpgw::import_class('property.uitts');
 
-	class mobilefrontend_uicalendar extends controller_uicalendar
+	class mobilefrontend_uitts extends property_uitts
 	{
 		public function __construct()
 		{

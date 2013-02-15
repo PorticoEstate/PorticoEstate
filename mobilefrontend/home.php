@@ -23,7 +23,9 @@
 		'enable_network_class'		=> true,
 		'enable_contacts_class'		=> true,
 		'enable_nextmatchs_class'	=> true,
-		'template_set'				=> 'mobilefrontend'
+		'template_set'				=> 'mobilefrontend',
+		'custom_frontend'			=> 'mobilefrontend'
+
 	);
 
 	/**
@@ -31,6 +33,7 @@
 	*/
 	require_once '../header.inc.php';
 
+/*
 	// check if forward parameter is set
 	if ( isset($_GET['phpgw_forward']) && is_array($_GET['phpgw_forward']) )
 	{
@@ -47,13 +50,14 @@
 		$GLOBALS['phpgw']->redirect_link($_GET['phpgw_forward'], $extra_vars);
 		exit;
 	}
-
+*/
 	if ( isset($GLOBALS['phpgw_info']['server']['force_default_app'])
 		&& $GLOBALS['phpgw_info']['server']['force_default_app'] != 'user_choice')
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] = $GLOBALS['phpgw_info']['server']['force_default_app'];
 	}
 
+/*
 	if (isset($_GET['cd']) && $_GET['cd']=='yes'
 		&& isset($GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'])
 		&& $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']
@@ -62,7 +66,7 @@
 		$GLOBALS['phpgw']->redirect_link('/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] . '/' . 'index.php');
 		exit;
 	}
-	else
+	else */
 	{
 		$GLOBALS['phpgw']->common->phpgw_header();
 		echo parse_navbar();

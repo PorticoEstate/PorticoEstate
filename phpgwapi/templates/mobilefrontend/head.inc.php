@@ -66,7 +66,7 @@ JS;
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	$stylesheets[] = "/phpgwapi/templates/bkbooking/css/frontend.css";
+	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/frontend.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -112,7 +112,7 @@ JS;
 	//TODO Sigurd 8.july 2010: This one should be moved to frontend config
 	$config	= CreateObject('phpgwapi.config','booking');
 	$config->read();
-	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
+	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/mobilefrontend/images/bergen_logo.png";
 
 	$bodoc = CreateObject('booking.bodocumentation');
 	
