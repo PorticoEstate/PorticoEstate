@@ -46,6 +46,7 @@
 	include_class('controller', 'date_generator', 'inc/component/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
   include_class('controller', 'date_converter', 'inc/helper/');
+  include_class('controller', 'location_finder', 'inc/helper/');
 		
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
@@ -86,7 +87,7 @@
 			$this->so_control_group_list 	= CreateObject('controller.socontrol_group_list');
 			$this->so_control_group				= CreateObject('controller.socontrol_group');
 			$this->so_control_item_list 	= CreateObject('controller.socontrol_item_list');
-      $this->location_finder = CreateObject('controller.helper.location_finder');
+      $this->location_finder        = new location_finder();
 
 			self::set_active_menu('controller::control::check_list');
 		}	
