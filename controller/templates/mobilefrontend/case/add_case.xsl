@@ -23,7 +23,12 @@
 			</xsl:choose>
 		</div>
 	</div>
-		
+	
+  <!-- ==================  CHECKLIST TAB MENU  ===================== -->
+	<xsl:call-template name="cases_menu">
+		<xsl:with-param name="active_tab">reg_case</xsl:with-param>
+	</xsl:call-template>
+    
 	<div style="margin:20px 0;">
 			<xsl:call-template name="select_buildings_on_property" />
 	</div>
