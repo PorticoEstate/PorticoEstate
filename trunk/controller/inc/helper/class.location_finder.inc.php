@@ -48,4 +48,36 @@
 			
 			return $locations;
 		}
+    
+    function get_buildings_on_property($user_role, $location_code, $level)
+		{
+
+			// Property level
+			if ($level == 1)
+			{
+				$property_location_code = $location_code;
+			}
+			// Building level
+			else if ($level > 1)
+			{
+				$split_loc_code_array = explode('-', $location_code);
+				$property_location_code = $split_loc_code_array[0];
+			}
+
+			if ($user_role)
+			{
+				$criteria = array();
+				$criteria['location_code'] = $property_location_code;
+				$criteria['field_name'] = 'loc2_name';
+				$criteria['child_level'] = '2';
+
+				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
+			}
+			else
+			{
+				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
+			}
+
+			return $buildings_on_property;
+		}
 	}

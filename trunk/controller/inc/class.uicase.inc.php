@@ -61,7 +61,9 @@
 									'updateStatusForCases' 	=> true,
 									'delete_case' 					=> true,
 									'close_case' 						=> true,
-									'open_case' 						=> true
+									'open_case' 						=> true,
+                  'view_open_cases' 			=> true,
+									'view_closed_cases' 		=> true
 								);
 
 		function __construct()
@@ -502,6 +504,48 @@
 			else{
 				return json_encode( array( "status" => "false" ) );
 			}
+		}
+    
+    function view_open_cases()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so->get_single($check_list_id);
+
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, 'return_array');
+
+			foreach($open_check_items_and_cases as $key => $check_item)
+			{
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
+        
+				$check_item['control_item']['options_array'] = $control_item_with_options->get_options_array();
+				$open_check_items_and_cases[$key] = $check_item;
+			}
+
+			$data = array
+			(
+				'open_check_items_and_cases'	=> $open_check_items_and_cases,
+				'check_list' 									=> $check_list
+			);
+			
+			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_open_cases', 'check_list/fragments/case_row', 'check_list/fragments/select_buildings_on_property'), $data );			
+		}
+		
+		function view_closed_cases()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			$check_list = $this->so->get_single($check_list_id);
+			
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, 'return_array');
+
+			$data = array
+			(
+				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
+				'check_list' 													=> $check_list
+			);
+			
+			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_closed_cases', 'check_list/fragments/select_buildings_on_property'), $data );
 		}
 		
 		function get_location_level($location_code)
