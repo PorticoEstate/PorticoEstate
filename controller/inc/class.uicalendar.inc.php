@@ -56,6 +56,7 @@
 		private $so_control_item;
 		private $so_check_list;
 		private $so_check_item;
+    private $location_finder;
 		public $public_functions = array
 			(
 			'view_calendar_for_month' => true,
@@ -83,6 +84,8 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 
+      $this->location_finder = CreateObject('controller.helper.location_finder');
+			     
 			self::set_active_menu('controller::location_check_list');
 		}
 
@@ -122,7 +125,7 @@
 				$user_role = true;
 
 				// Fetches buildings on property
-				$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
 				// Fetches controls for location within specified time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -276,7 +279,7 @@
 				$user_role = true;
 
 				// Fetches buildings on property
-				$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
 				// Fetches all controls for the location within time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -694,38 +697,6 @@
 			return $agg_open_cases_pr_month_array;
 		}
 
-		function get_buildings_on_property($user_role, $location_code, $level)
-		{
-
-			// Property level
-			if ($level == 1)
-			{
-				$property_location_code = $location_code;
-			}
-			// Building level
-			else if ($level > 1)
-			{
-				$split_loc_code_array = explode('-', $location_code);
-				$property_location_code = $split_loc_code_array[0];
-			}
-
-			if ($user_role)
-			{
-				$criteria = array();
-				$criteria['location_code'] = $property_location_code;
-				$criteria['field_name'] = 'loc2_name';
-				$criteria['child_level'] = '2';
-
-				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
-			}
-			else
-			{
-				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
-			}
-
-			return $buildings_on_property;
-		}
-
 		function get_start_month_for_control($control)
 		{
 			// Checks if control starts in the year that is displayed
@@ -773,9 +744,6 @@
 				'allrows' => false
 			);
 
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities($criteria);
-
 			if (empty($location_code))
 			{
 				$location_code = $my_locations[0]["location_code"];
@@ -794,8 +762,7 @@
 				'allrows' => false
 			);
 
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities($criteria);
+			$my_locations = $this->location_finder->get_responsibilities($criteria);
 
 			$my_washed_locations = array();
 

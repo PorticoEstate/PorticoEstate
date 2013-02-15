@@ -57,6 +57,7 @@
 		private $so_control_group_list;
 		private $so_control_group;
 		private $so_control_item_list;
+    private $location_finder;
 	
 		var $public_functions = array(
 										'index' 										=> true,
@@ -67,8 +68,6 @@
 										'view_cases_for_check_list'	=> true,
 										'print_check_list'					=> true,
 										'add_case'									=> true,
-										'view_open_cases'						=> true,
-										'view_closed_cases'					=> true,
 										'view_control_details'			=> true,
 										'view_control_items'				=> true,
 										'get_check_list_info'				=> true, 
@@ -87,6 +86,7 @@
 			$this->so_control_group_list 	= CreateObject('controller.socontrol_group_list');
 			$this->so_control_group				= CreateObject('controller.socontrol_group');
 			$this->so_control_item_list 	= CreateObject('controller.socontrol_item_list');
+      $this->location_finder = CreateObject('controller.helper.location_finder');
 
 			self::set_active_menu('controller::control::check_list');
 		}	
@@ -261,7 +261,7 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			      
 			$data = array
 			(
@@ -333,7 +333,7 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
       
 			$data = array
 			(
@@ -491,7 +491,7 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
       
 			$data = array
 			(
@@ -559,7 +559,7 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			
 			$data = array
 			(
@@ -650,7 +650,7 @@
       $user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
       
 			$data = array
 			(
@@ -675,48 +675,6 @@
       self::add_javascript('controller', 'controller', 'case.js');
 			
 			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'check_list/fragments/nav_control_plan', 'check_list/add_case', 'check_list/fragments/select_buildings_on_property'), $data);
-		}
-		
-		function view_open_cases()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			
-			$check_list = $this->so->get_single($check_list_id);
-
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, 'return_array');
-
-			foreach($open_check_items_and_cases as $key => $check_item)
-			{
-				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item['control_item_id']);
-        
-				$check_item['control_item']['options_array'] = $control_item_with_options->get_options_array();
-				$open_check_items_and_cases[$key] = $check_item;
-			}
-
-			$data = array
-			(
-				'open_check_items_and_cases'	=> $open_check_items_and_cases,
-				'check_list' 									=> $check_list
-			);
-			
-			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_open_cases', 'check_list/fragments/case_row', 'check_list/fragments/select_buildings_on_property'), $data );			
-		}
-		
-		function view_closed_cases()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			
-			$check_list = $this->so->get_single($check_list_id);
-			
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, 'return_array');
-
-			$data = array
-			(
-				'closed_check_items_and_cases'				=> $closed_check_items_and_cases,
-				'check_list' 													=> $check_list
-			);
-			
-			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_closed_cases', 'check_list/fragments/select_buildings_on_property'), $data );
 		}
 		
 		function view_control_items()
@@ -824,35 +782,4 @@
 		}	
 		
 		public function query(){}
-    
-    function get_buildings_on_property($user_role, $location_code, $level)
-    {
-			// Property level
-			if ($level == 1)
-			{
-				$property_location_code = $location_code;
-			}
-			// Building level
-			else if ($level > 1)
-			{
-				$split_loc_code_array = explode('-', $location_code);
-				$property_location_code = $split_loc_code_array[0];
-			}
-
-			if ($user_role)
-			{
-				$criteria = array();
-				$criteria['location_code'] = $property_location_code;
-				$criteria['field_name'] = 'loc2_name';
-				$criteria['child_level'] = '2';
-
-				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
-			}
-			else
-			{
-				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
-			}
-
-			return $buildings_on_property;
-		}  
 	}
