@@ -1653,6 +1653,14 @@ ul.check_items h5{
   width: 185px;
 }
 
+#check_list_menu a.first {
+  border-radius: 3px 3px 3px 3px:
+}
+
+#check_list_menu a.last {
+  border-radius: 3px 3px 3px 3px:
+}
+
 #check_list_menu a.active {
  	background: none repeat scroll 0 0 #CAE3FB;
   border: 1px solid #CAE3FB;
@@ -1860,9 +1868,9 @@ li.check_item_case .col_3 {
 .frm_register_case textarea {
   display: block;
   height: 100px;
-  margin-top: 6px;
   margin-bottom: 1em;
-  width: 63%;
+  margin-top: 6px;
+  width: 98.5%;
 }
 
 .frm_register_case label {
@@ -1879,7 +1887,7 @@ li.check_item_case .col_3 {
 }
 
 .add-cases .expand_list {
-    padding-left: 15px;
+  padding-left: 15px;
 }
 
 .add-cases .expand_list li{
@@ -1889,9 +1897,13 @@ li.check_item_case .col_3 {
 }
 
 .add-cases .expand_list h4 {
-    background: none repeat scroll 0 0 transparent;
-    margin: 0;
-    padding: 0;
+  background: none repeat scroll 0 0 transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.add-cases .expand_list h4 span{
+  padding-left: 0;
 }
 
 .add-cases h3 img {
