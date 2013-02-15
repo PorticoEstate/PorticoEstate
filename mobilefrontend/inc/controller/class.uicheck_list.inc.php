@@ -28,7 +28,7 @@
  	* @version $Id: class.uicheck_list.inc.php 10834 2013-02-14 12:57:59Z vator $
 	*/
 	
-  	phpgw::import_class('controller.uicheck_list');
+  phpgw::import_class('controller.uicheck_list');
 
 	class mobilefrontend_uicheck_list extends controller_uicheck_list
 	{
@@ -36,5 +36,81 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['custom_frontend'] = 'mobilefrontend';
 			parent::__construct();
+		}
+    
+   	/**
+		 * Public function for displaying the edit check list form  
+		 * 
+		 * @param HTTP:: check list id
+		 * @return data array
+		*/
+		function edit_check_list( $check_list = null){
+      
+			if($check_list == null)
+			{
+      	$check_list_id = phpgw::get_var('check_list_id');
+                
+				$check_list = $this->so->get_single( $check_list_id );
+			}
+
+      $control = $this->so_control->get_single($check_list->get_control_id());
+			
+			$component_id = $check_list->get_component_id();
+      
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+				$level = $this->get_location_level($location_code);
+			}
+			
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+			
+      $level = $this->get_location_level($location_code);
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+      
+			$data = array
+			(
+				'control' 								=> $control,
+				'check_list' 							=> $check_list,
+        '$buildings_on_property' 	=> $buildings_on_property,
+				'location_array'					=> $location_array,
+				'component_array'					=> $component_array,
+				'type' 										=> $type,
+				'current_year' 						=> $year,
+				'current_month_nr' 				=> $month,
+				'building_location_code' 	=> $building_location_code,
+				'location_level' 					=> $level
+			);
+			
+			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('deadline_date');
+
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			self::render_template_xsl(array('check_list/fragments/cases_menu', 'check_list/edit_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 	}
