@@ -84,7 +84,7 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 
-      $this->location_finder = CreateObject('controller.helper.location_finder');
+      $this->location_finder = new location_finder();
 			     
 			self::set_active_menu('controller::location_check_list');
 		}
