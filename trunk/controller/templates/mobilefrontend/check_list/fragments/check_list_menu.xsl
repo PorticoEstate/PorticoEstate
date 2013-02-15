@@ -3,7 +3,7 @@
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="check_list_menu">
-  <a class="btn focus first">
+  <a class="first">
     <xsl:if test="$active_tab = 'reg_cases'">
       <xsl:attribute name="class">active</xsl:attribute>
     </xsl:if>
@@ -27,7 +27,7 @@
     </xsl:attribute>
     Vis åpne saker
   </a>
-  <a>
+  <a class="last">
     <xsl:if test="$active_tab = 'view_cases'">
       <xsl:attribute name="class">active</xsl:attribute>
     </xsl:if>

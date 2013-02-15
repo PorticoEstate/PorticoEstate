@@ -1,4 +1,13 @@
 #main_content.medium {
     text-align: left;
-    width: 98%;
+    width: 96%;
+}
+
+#check-list-heading .box-1 {
+    float: none;
+    width: 100%;
+}
+
+#check_list_menu {
+    margin: 20px 0;
 }

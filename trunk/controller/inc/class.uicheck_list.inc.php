@@ -50,15 +50,15 @@
 		
 	class controller_uicheck_list extends phpgwapi_uicommon
 	{
-		private $so;
-		private $so_control;
-		private $so_control_item;
-		private $so_check_item;
-		private $so_procedure;
-		private $so_control_group_list;
-		private $so_control_group;
-		private $so_control_item_list;
-    private $location_finder;
+		protected $so;
+		protected $so_control;
+		protected $so_control_item;
+		protected $so_check_item;
+		protected $so_procedure;
+		protected $so_control_group_list;
+		protected $so_control_group;
+		protected $so_control_item_list;
+    protected $location_finder;
 	
 		var $public_functions = array(
 										'index' 										=> true,
@@ -283,7 +283,7 @@
       
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl( array('check_list/add_check_list', 'check_list/fragments/nav_control_plan', 'check_list/fragments/select_buildings_on_property'), $data );
+			self::render_template_xsl( array('check_list/add_check_list', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/fragments/select_buildings_on_property'), $data );
 		}
 
 		/**
@@ -357,7 +357,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'check_list/fragments/nav_control_plan', 'check_list/edit_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/edit_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		/**
@@ -515,7 +515,7 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
       self::add_javascript('controller', 'controller', 'case.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'check_list/fragments/nav_control_plan', 'check_list/view_cases_for_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/view_cases_for_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 	
@@ -578,7 +578,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'check_list/fragments/nav_control_plan', 'check_list/view_control_info', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/view_control_info', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		function view_control_details()
@@ -595,7 +595,6 @@
 			self::render_template_xsl('check_list/view_control_details', $data);
 		}
 						
-		// Displays control groups and control items for a check list
 		function add_case()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -675,7 +674,7 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
       self::add_javascript('controller', 'controller', 'case.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'check_list/fragments/nav_control_plan', 'check_list/add_case', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'case/add_case', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		function view_control_items()

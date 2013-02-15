@@ -27,7 +27,7 @@
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu" />
+		<xsl:call-template name="check_list_menu" />
 	</div>
 		
 	<div style="margin:20px 0;">
