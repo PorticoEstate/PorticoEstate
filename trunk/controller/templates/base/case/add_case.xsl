@@ -65,7 +65,7 @@
                           <div class="row what-to-do">
                             <label>Hva skal sjekkes:</label> 
                             <div>
-                              <xsl:value-of select="what_to_do"/>
+                              <xsl:value-of disable-output-escaping="yes" select="what_to_do"/>
                             </div>
                           </div>
 
@@ -73,7 +73,7 @@
                           <div class="row how-to-do">
                             <label>Utførelsesbeskrivelse:</label> 
                             <div>
-                              <xsl:value-of select="how_to_do"/>
+                              <xsl:value-of disable-output-escaping="yes" select="how_to_do"/>
                             </div>
                           </div>
                             
