@@ -546,7 +546,7 @@
 
 			if($custom_frontend && substr($url, 0, 4) != 'http')
 			{
-				$url = $custom_frontend . '/' . ltrim($url, '/');
+				$url = '/' . $custom_frontend . '/' . ltrim($url, '/');
 			}
 
 			//W3C Compliant in markup	
