@@ -249,7 +249,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_tab_menu', 'case/create_case_message'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
 		}
 		
 		function send_case_message(){
@@ -416,7 +416,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_tab_menu', 'case/view_case_message'), $data);
+			self::render_template_xsl(array('check_list/check_list_menu', 'case/view_case_message'), $data);
 		}
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
@@ -528,7 +528,7 @@
 				'check_list' 									=> $check_list
 			);
 			
-			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_open_cases', 'check_list/fragments/case_row', 'check_list/fragments/select_buildings_on_property'), $data );			
+			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'case/view_open_cases', 'check_list/fragments/case_row', 'check_list/fragments/select_buildings_on_property'), $data );			
 		}
 		
 		function view_closed_cases()
@@ -545,7 +545,7 @@
 				'check_list' 													=> $check_list
 			);
 			
-			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'check_list/view_closed_cases', 'check_list/fragments/select_buildings_on_property'), $data );
+			self::render_template_xsl( array('check_list/fragments/cases_tab_menu', 'case/view_closed_cases', 'check_list/fragments/select_buildings_on_property'), $data );
 		}
 		
 		function get_location_level($location_code)

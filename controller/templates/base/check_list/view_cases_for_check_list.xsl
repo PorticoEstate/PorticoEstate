@@ -84,7 +84,7 @@
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu">
+		<xsl:call-template name="check_list_menu">
 	 		<xsl:with-param name="active_tab">view_cases</xsl:with-param>
 		</xsl:call-template>
 	</div>

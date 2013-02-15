@@ -1,14 +1,20 @@
-<xsl:template name="check_list_tab_menu" xmlns:php="http://php.net/xsl">
+<xsl:template name="check_list_menu" xmlns:php="http://php.net/xsl">
 <xsl:param name="active_tab" />
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="check_list_menu">
 		<!-- ==================  LOADS VIEW CHECKLIST DETAILS   ===================== -->
 		<div class="left_btns">
-			<a>
-				<xsl:if test="$active_tab = 'view_details'">
-					<xsl:attribute name="class">active</xsl:attribute>
-				</xsl:if>
+			<a class="first">
+        <xsl:choose>
+          <xsl:when test="$active_tab = 'view_details'">
+            <xsl:attribute name="class">first active</xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="class">first</xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+				
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
@@ -32,9 +38,14 @@
 			</a>
 			<!-- ==================  LOADS INFO ABOUT CONTROL  ===================== -->
 			<a>
-				<xsl:if test="$active_tab = 'view_control_info'">
-					<xsl:attribute name="class">active</xsl:attribute>
-				</xsl:if>
+        <xsl:choose>
+          <xsl:when test="$active_tab = 'view_control_info'">
+            <xsl:attribute name="class">last active</xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="class">last</xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
 				<xsl:attribute name="href">
 					<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_info</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>

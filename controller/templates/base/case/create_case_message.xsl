@@ -63,7 +63,7 @@
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu" />
+		<xsl:call-template name="check_list_menu" />
 	</div>
 	
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->

@@ -1641,12 +1641,11 @@ ul.check_items h5{
 
 #check_list_menu a {
   background: none repeat scroll 0 0 #F4EDE3;
-  border: 1px solid #EDE4D8;
+  border: 1px solid #D9D4CE;
   color: #444444;
   cursor: pointer;
   display: inline-block;
   font-weight: bold;
-  margin-right: 3px;
   padding: 18px 0;
   text-align: center;
   text-decoration: none;
@@ -1654,16 +1653,18 @@ ul.check_items h5{
 }
 
 #check_list_menu a.first {
-  border-radius: 3px 3px 3px 3px:
+  border-radius: 4px 0 0 4px;
+  border-right: 0 none;
 }
 
 #check_list_menu a.last {
-  border-radius: 3px 3px 3px 3px:
+  border-radius: 0 4px 4px 0;
+  border-left: 0;
 }
 
 #check_list_menu a.active {
- 	background: none repeat scroll 0 0 #CAE3FB;
-  border: 1px solid #CAE3FB;
+  background: none repeat scroll 0 0 #D9D4CE;
+  border: 1px solid #D9D4CE;
 }
 
 #check_list_menu .left_btns {
