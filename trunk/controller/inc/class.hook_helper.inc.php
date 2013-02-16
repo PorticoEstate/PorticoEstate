@@ -64,7 +64,6 @@
 		 */
 		public function home($url_correction = '')
 		{
-
 			$location_array = array();
 			$component_short_desc = array();
 
@@ -265,7 +264,8 @@
 
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
 
-
+      if($url_correction != 'mobilefrontend')
+      {
 			/* =======================================  UNDONE ASSIGNED CONTROLS FOR CURRENT USER  ================================= */
 
 		// from date is set to 3 months back in time
@@ -695,7 +695,7 @@
 			}
 
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
-
+      }
 		}
 		/* ================================  FUNCTIONS  ======================================== */
 
