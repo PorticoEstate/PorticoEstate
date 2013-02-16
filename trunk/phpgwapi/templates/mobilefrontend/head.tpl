@@ -32,7 +32,10 @@
 	<body>
 		<div id="wrapper">
 			<div id="header">
-				<div id="login-bar"><a href="{logout_url}">{logout_text}</a></div>
+				<div id="login-bar">
+					<a href="{home_url}">{home_text}</a>
+					<a href="{logout_url}">{logout_text}</a>
+				</div>
         		<!--<div id="logo">	</div>
 				<div id="centerimage"></div>-->
 			</div>
