@@ -66,8 +66,6 @@
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control 			= CreateObject('controller.socontrol');
-			//$this->so_bim				= CreateObject('bim.sobimitem_impl');
-			//$this->so_bim				= new sobimitem_impl();
 
 			$this->type_id				= $this->bo->type_id;
 
@@ -282,20 +280,6 @@
 
 		public function get_component()
 		{
-
-			/*$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query					= phpgw::get_var('query');
-			$sort					= phpgw::get_var('sort');
-			$order					= phpgw::get_var('order');
-			$filter					= phpgw::get_var('filter', 'int');
-			$cat_id					= phpgw::get_var('cat_id');
-			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
-			$district_id			= phpgw::get_var('district_id', 'int');
-			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
-			$status					= phpgw::get_var('status');
-			$type_id				= phpgw::get_var('type_id', 'int');
-			$allrows				= phpgw::get_var('allrows', 'bool');
-			$location_code			= phpgw::get_var('location_code');*/
 
 			$type_id = phpgw::get_var('bim_type_id');
 
