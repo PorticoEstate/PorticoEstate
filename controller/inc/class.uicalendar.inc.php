@@ -120,7 +120,7 @@
 
 			if ($location_code != null && $location_code != "")
 			{
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 
 				$user_role = true;
 
@@ -274,7 +274,7 @@
 
 			if ($location_code != null && $location_code != "")
 			{
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 
 				$user_role = true;
 
@@ -725,13 +725,6 @@
 			}
 
 			return $to_month;
-		}
-
-		function get_location_level($location_code)
-		{
-			$level = count(explode('-', $location_code));
-
-			return $level;
 		}
 
 		function validate_location_code($location_code)

@@ -224,7 +224,7 @@
 				$location_code = phpgw::get_var('location_code');
 				$check_list->set_location_code($location_code);	
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 			}
 
 			if($type == "component")
@@ -245,7 +245,7 @@
     		$component->set_xml_short_desc( $short_desc );
 				
 				$component_array = $component->toArray();
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 				$type = "component";
 			}
 			else
@@ -258,7 +258,7 @@
 			$year = date("Y", $deadline_ts);
 			$month_nr = date("n", $deadline_ts);
 			
-      $level = $this->get_location_level($location_code);
+      $level = $this->location_finder->get_location_level($location_code);
 			$user_role = true;
 
 			// Fetches buildings on property
@@ -317,20 +317,20 @@
 				$component_array = $component->toArray();
 				
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 			}
 			
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 			
-      $level = $this->get_location_level($location_code);
+      $level = $this->location_finder->get_location_level($location_code);
 			$user_role = true;
 
 			// Fetches buildings on property
@@ -381,7 +381,7 @@
 			     
 			if($planned_date != '')
 			{
-				$planned_date_ts = phpgwapi_datetime::date_to_timestamp( $planned_date );
+				$planned_date_ts = date_converter::date_to_timestamp( $planned_date );
 			}
 			else
 			{
@@ -475,17 +475,17 @@
 				$component_array = $component->toArray();
 				
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 			}	
 			
-			$level = $this->get_location_level($location_code);
+			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
@@ -518,15 +518,13 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/view_cases_for_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
-	
-		
-		public function view_control_info()
+		function view_control_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			
+
 			$check_list = $this->so->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
-			
+
 			$component_id = $check_list->get_component_id();
 
 			if($component_id > 0)
@@ -543,20 +541,22 @@
 				$component_array = $component->toArray();
 				
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
+        echo "ok 1";
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
+        echo "ok 2";
 			}
-			
+			echo "ok 4";
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
-      
-      $level = $this->get_location_level($location_code);
+      echo "ok 5";
+      $level = $this->location_finder->get_location_level($location_code);
 			$user_role = true;
 
 			// Fetches buildings on property
@@ -579,7 +579,7 @@
 			phpgwapi_jquery::load_widget('core');
 			
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/view_control_info', 'check_list/fragments/select_buildings_on_property'), $data);
-		}
+    }
 		
 		function view_control_details()
 		{
@@ -622,7 +622,7 @@
 				$component_array = $component->toArray();
 				
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
@@ -643,7 +643,7 @@
 			}
 			
 			
-			$level = $this->get_location_level($location_code);
+			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
@@ -754,32 +754,7 @@
 			return json_encode( $check_items_with_cases );
 		}
 		
-		function get_building_location_code($location_code)
-		{
-			if( strlen( $location_code ) == 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 2);
-				$building_location_code = $location_code_arr[0];
-			}
-			else if( strlen( $location_code ) > 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 3);
-				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
-			}
-			else
-			{
-				$building_location_code = $location_code;
-			}
-			
-			return $building_location_code; 
-		}
 		
-		function get_location_level($location_code)
-		{
-			$level = count(explode('-', $location_code));
-
-			return $level;
-		}	
 		
 		public function query(){}
 	}

@@ -80,4 +80,31 @@
 
 			return $buildings_on_property;
 		}
+    
+    function get_building_location_code($location_code)
+		{
+			if( strlen( $location_code ) == 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 2);
+				$building_location_code = $location_code_arr[0];
+			}
+			else if( strlen( $location_code ) > 6 )
+			{
+				$location_code_arr = explode('-', $location_code, 3);
+				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
+			}
+			else
+			{
+				$building_location_code = $location_code;
+			}
+			
+			return $building_location_code; 
+		}
+		
+		function get_location_level($location_code)
+		{
+			$level = count(explode('-', $location_code));
+
+			return $level;
+		}	
 	}
