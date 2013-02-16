@@ -39,6 +39,8 @@
 	phpgw::import_class('controller.socheck_list');
 	phpgw::import_class('controller.socheck_item');
 	phpgw::import_class('controller.socontrol');
+  phpgw::import_class('controller.socontrol_group_list');
+  phpgw::import_class('controller.socontrol_item_list');
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
 	include_class('controller', 'component', 'inc/model/');
@@ -48,15 +50,22 @@
 	class controller_uicase extends phpgwapi_uicommon
 	{
 		private $so;
-		private $so_check_list;
-		private $so_control;
+		
+    private $so_control;
 		private $so_control_item;
 		private $so_check_item;
-		private $location_finder;
+		private $so_procedure;
+		private $so_control_group_list;
+		private $so_control_group;
+		private $so_control_item_list;
+    private $so_check_list;
+
+    private $location_finder;
     
 		var $public_functions = array(
 									'add_case' 							=> true,
 									'save_case' 						=> true,
+                  'save_case_ajax'				=> true,
 									'create_case_message' 	=> true,
 									'view_case_message' 		=> true,
 									'send_case_message' 		=> true,
@@ -72,15 +81,104 @@
 		{
 			parent::__construct();
 			
-			$this->so               = CreateObject('controller.socase');
-			$this->so_check_list    = CreateObject('controller.socheck_list');
-			$this->so_control       = CreateObject('controller.socontrol');
-			$this->so_check_item    = CreateObject('controller.socheck_item');
-			$this->so_control_item  = CreateObject('controller.socontrol_item');
-      $this->location_finder  = new location_finder();
+			$this->so                     = CreateObject('controller.socase');
+      $this->so_control 						= CreateObject('controller.socontrol');
+			$this->so_control_item				= CreateObject('controller.socontrol_item');
+			$this->so_check_item					= CreateObject('controller.socheck_item');
+			$this->so_procedure						= CreateObject('controller.soprocedure');
+			$this->so_control_group_list 	= CreateObject('controller.socontrol_group_list');
+			$this->so_control_group				= CreateObject('controller.socontrol_group');
+			$this->so_control_item_list 	= CreateObject('controller.socontrol_item_list');
+      $this->so_check_list          = CreateObject('controller.socheck_list');
+      
+      $this->location_finder        = new location_finder();
 		}	
 		
-		function add_case(){
+    function add_case()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single($check_list_id);
+      $control = $this->so_control->get_single($check_list->get_control_id());
+		
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
+		
+			$control_groups_with_items_array = array();
+			
+			$component_id = $check_list->get_component_id();
+
+			if($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				
+				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+    		
+				$component = new controller_component();
+				$component->set_location_code( $component_arr['location_code'] );
+    		$component->set_xml_short_desc( $short_desc );
+				$component_array = $component->toArray();
+				
+				$type = 'component';
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+			}
+			else
+			{
+				$location_code = $check_list->get_location_code();
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$type = 'location';
+			}
+			
+			//Populating array with saved control items for each group
+			foreach ($saved_control_groups as $control_group)
+			{	
+				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
+
+				if(count($saved_control_items) > 0)
+				{				
+					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+				}
+			}
+			
+			
+			$level = $this->location_finder->get_location_level($location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+							
+      $user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+      
+			$data = array
+			(
+				'control' 													=> $control,
+				'check_list' 												=> $check_list,
+				'buildings_on_property'             => $buildings_on_property,
+        'location_array'										=> $location_array,
+				'component_array'										=> $component_array,
+				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
+				'type' 															=> $type,
+				'location_level' 										=> $level,
+				'building_location_code' 						=> $building_location_code,
+				'current_year' 											=> $year,
+				'current_month_nr' 									=> $month,
+        'cases_view'                        => 'add_case',
+			);
+			
+      
+			phpgwapi_jquery::load_widget('core');
+
+			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+      self::add_javascript('controller', 'controller', 'case.js');
+			
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 
+                                      'check_list/fragments/check_list_top_section', 'case/add_case', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
+		}
+    /*
+		function save_case_ajax(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
@@ -144,7 +242,8 @@
 				return json_encode( array( "status" => "not_saved" ) );
 			}
 		}
-		
+		*/
+    
 		function save_case(){
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
