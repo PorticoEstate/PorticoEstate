@@ -1,6 +1,8 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
+  <xsl:call-template name="check_list_top_section" />
+  
   <div id="view_cases">
     <xsl:call-template name="cases_tab_menu">
       <xsl:with-param name="active_tab">view_open_cases</xsl:with-param>
