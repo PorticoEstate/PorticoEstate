@@ -43,6 +43,7 @@
 	include_class('controller', 'check_item_case', 'inc/model/');
 	include_class('controller', 'component', 'inc/model/');
 	include_class('controller', 'check_list_status_updater', 'inc/helper/');
+  include_class('controller', 'location_finder', 'inc/helper/');
 			
 	class controller_uicase extends phpgwapi_uicommon
 	{
@@ -51,7 +52,8 @@
 		private $so_control;
 		private $so_control_item;
 		private $so_check_item;
-		
+		private $location_finder;
+    
 		var $public_functions = array(
 									'add_case' 							=> true,
 									'save_case' 						=> true,
@@ -70,11 +72,12 @@
 		{
 			parent::__construct();
 			
-			$this->so = CreateObject('controller.socase');
-			$this->so_check_list = CreateObject('controller.socheck_list');
-			$this->so_control = CreateObject('controller.socontrol');
-			$this->so_check_item = CreateObject('controller.socheck_item');
-			$this->so_control_item = CreateObject('controller.socontrol_item');
+			$this->so               = CreateObject('controller.socase');
+			$this->so_check_list    = CreateObject('controller.socheck_list');
+			$this->so_control       = CreateObject('controller.socontrol');
+			$this->so_check_item    = CreateObject('controller.socheck_item');
+			$this->so_control_item  = CreateObject('controller.socontrol_item');
+      $this->location_finder  = new location_finder();
 		}	
 		
 		function add_case(){
@@ -205,7 +208,7 @@
     		$component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
 							
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 				$type = 'component';
 			}
 			else
@@ -215,7 +218,7 @@
 				$type = 'location';
 			}
 
-			$level = $this->get_location_level();
+			$level = $this->location_finder->get_location_level();
 			
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
@@ -380,7 +383,7 @@
 				$component_array = $component->toArray();
 							
 				$type = 'component';
-				$building_location_code = $this->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 			}
 			else
 			{
@@ -389,7 +392,7 @@
 				$type = 'location';
 			}
 			
-			$level = $this->get_location_level($location_code);
+			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 			
@@ -546,33 +549,6 @@
 			);
 			
 			self::render_template_xsl( array('case/cases_tab_menu', 'case/view_closed_cases', 'check_list/fragments/select_buildings_on_property'), $data );
-		}
-		
-		function get_location_level($location_code)
-		{
-			$level = count(explode('-', $location_code));
-
-			return $level;
-		}
-
-		function get_building_location_code($location_code)
-		{
-			if( strlen( $location_code ) == 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 2);
-				$building_location_code = $location_code_arr[0];
-			}
-			else if( strlen( $location_code ) > 6 )
-			{
-				$location_code_arr = explode('-', $location_code, 3);
-				$building_location_code = $location_code_arr[0] . "-" . $location_code_arr[1];
-			}
-			else
-			{
-				$building_location_code = $location_code;
-			}
-			
-			return $building_location_code; 
 		}
 		
 		public function query(){}
