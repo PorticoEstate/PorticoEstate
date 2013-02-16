@@ -1,4 +1,4 @@
-<xsl:template name="cases_menu" xmlns:php="http://php.net/xsl">
+<xsl:template name="check_list_menu" xmlns:php="http://php.net/xsl">
 <xsl:param name="active_tab" />
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
@@ -20,7 +20,7 @@
       <xsl:attribute name="class">active</xsl:attribute>
     </xsl:if>
     <xsl:attribute name="href">
-      <xsl:text>index.php?menuaction=controller.uicheck_list.view_cases_for_check_list</xsl:text>
+      <xsl:text>index.php?menuaction=controller.uicase.view_open_cases</xsl:text>
       <xsl:text>&amp;check_list_id=</xsl:text>
       <xsl:value-of select="check_list/id"/>
       <xsl:value-of select="$session_url"/>
@@ -32,7 +32,7 @@
       <xsl:attribute name="class">active</xsl:attribute>
     </xsl:if>
     <xsl:attribute name="href">
-      <xsl:text>index.php?menuaction=controller.uicheck_list.view_cases_for_check_list</xsl:text>
+      <xsl:text>index.php?menuaction=controller.uicase.view_closed_cases</xsl:text>
       <xsl:text>&amp;check_list_id=</xsl:text>
       <xsl:value-of select="check_list/id"/>
       <xsl:value-of select="$session_url"/>

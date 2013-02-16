@@ -1641,7 +1641,7 @@ ul.check_items h5{
 
 #check_list_menu a {
   background: none repeat scroll 0 0 #F4EDE3;
-  border: 1px solid #D9D4CE;
+  border: 1px solid #E7E1DA;
   color: #444444;
   cursor: pointer;
   display: inline-block;
@@ -1663,8 +1663,8 @@ ul.check_items h5{
 }
 
 #check_list_menu a.active {
-  background: none repeat scroll 0 0 #D9D4CE;
-  border: 1px solid #D9D4CE;
+  background: none repeat scroll 0 0 #E7E1DA;
+  border: 1px solid #E7E1DA;
 }
 
 #check_list_menu .left_btns {
