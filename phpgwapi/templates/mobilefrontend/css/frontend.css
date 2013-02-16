@@ -312,6 +312,17 @@ border-right: 1px solid #575757;
 padding: 0 0.5em;
 line-height: 1.2em;
 }
+#home-menu{
+margin: 0 0 0 16px !important;
+}
+
+
+#home-menu a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
 
 #logo{
 background: url(../images/newlayout/logo.png) no-repeat;
