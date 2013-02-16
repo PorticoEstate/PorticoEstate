@@ -2,6 +2,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
 
+ <xsl:call-template name="check_list_top_section" />
+
 <div id="view_cases">
 	<xsl:call-template name="cases_tab_menu">
 	 	<xsl:with-param name="active_tab">view_closed_cases</xsl:with-param>
