@@ -4,9 +4,14 @@
 
 <div id="check_list_menu">
   <a class="first">
-    <xsl:if test="$active_tab = 'reg_cases'">
-      <xsl:attribute name="class">active</xsl:attribute>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="cases_view = 'add_case'">
+        <xsl:attribute name="class">first active</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="class">first</xsl:attribute>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:attribute name="href">
       <xsl:text>index.php?menuaction=controller.uicheck_list.add_case</xsl:text>
       <xsl:text>&amp;check_list_id=</xsl:text>
@@ -16,7 +21,7 @@
     Registrer sak
   </a>
   <a>
-    <xsl:if test="$active_tab = 'view_cases'">
+    <xsl:if test="cases_view = 'open_cases'">
       <xsl:attribute name="class">active</xsl:attribute>
     </xsl:if>
     <xsl:attribute name="href">
@@ -28,9 +33,14 @@
     Vis åpne saker
   </a>
   <a class="last">
-    <xsl:if test="$active_tab = 'view_cases'">
-      <xsl:attribute name="class">active</xsl:attribute>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="cases_view = 'closed_cases'">
+        <xsl:attribute name="class">last active</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="class">last</xsl:attribute>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:attribute name="href">
       <xsl:text>index.php?menuaction=controller.uicase.view_closed_cases</xsl:text>
       <xsl:text>&amp;check_list_id=</xsl:text>
