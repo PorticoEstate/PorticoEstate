@@ -270,7 +270,7 @@
 				'component_array'					=> $component_array,
 				'control'									=> $control,
 				'check_list' 							=> $check_list,
-        'buildings_on_property' => $buildings_on_property,
+        'buildings_on_property'   => $buildings_on_property,
 				'type'			 							=> $type,
 				'current_year' 						=> $year,
 				'current_month_nr' 				=> $month_nr,
@@ -283,7 +283,10 @@
       
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl( array('check_list/add_check_list', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/fragments/select_buildings_on_property'), $data );
+      
+      self::render_template_xsl(array('check_list/add_check_list', 'check_list/fragments/nav_control_plan', 
+                                      'check_list/fragments/check_list_top_section', 'check_list/fragments/check_list_menu', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
 		}
 
 		/**
@@ -292,7 +295,7 @@
 		 * @param HTTP:: check list id
 		 * @return data array
 		*/
-		function edit_check_list( $check_list = null){
+		function edit_check_list( $check_list = null ){
 			if($check_list == null)
 			{
 				$check_list_id = phpgw::get_var('check_list_id');
@@ -357,7 +360,9 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/edit_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 
+                                      'check_list/fragments/check_list_top_section', 'check_list/edit_check_list', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		/**
@@ -515,7 +520,9 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
       self::add_javascript('controller', 'controller', 'case.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'check_list/view_cases_for_check_list', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 
+                                      'check_list/fragments/check_list_top_section', 'check_list/view_cases_for_check_list', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		function view_control_info()
@@ -537,7 +544,7 @@
     		
 				$component = new controller_component();
 				$component->set_location_code( $component_arr['location_code'] );
-    			$component->set_xml_short_desc( $short_desc );
+    		$component->set_xml_short_desc( $short_desc );
 				$component_array = $component->toArray();
 				
 				$type = 'component';
@@ -545,17 +552,15 @@
 			}
 			else
 			{
-        echo "ok 1";
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 				$level = $this->location_finder->get_location_level($location_code);
-        echo "ok 2";
 			}
-			echo "ok 4";
+			
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
-      echo "ok 5";
+      
       $level = $this->location_finder->get_location_level($location_code);
 			$user_role = true;
 
@@ -578,7 +583,9 @@
 
 			phpgwapi_jquery::load_widget('core');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/view_control_info', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/check_list_top_section',
+                                      'check_list/fragments/nav_control_plan', 'check_list/view_control_info', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
     }
 		
 		function view_control_details()
@@ -664,7 +671,8 @@
 				'location_level' 										=> $level,
 				'building_location_code' 						=> $building_location_code,
 				'current_year' 											=> $year,
-				'current_month_nr' 									=> $month
+				'current_month_nr' 									=> $month,
+        'cases_view'                        => 'add_case',
 			);
 			
       
@@ -674,7 +682,9 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
       self::add_javascript('controller', 'controller', 'case.js');
 			
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 'case/add_case', 'check_list/fragments/select_buildings_on_property'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 
+                                      'check_list/fragments/check_list_top_section', 'case/add_case', 
+                                      'check_list/fragments/select_buildings_on_property'), $data);
 		}
 		
 		function view_control_items()
