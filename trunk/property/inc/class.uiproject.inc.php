@@ -2591,10 +2591,8 @@
 				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
 			}
 
-
-
-			$year	= date('Y');
-			$limit	= $year + 2;
+			$year	= date('Y') - 2;
+			$limit	= $year + 4;
 
 			while ($year < $limit)
 			{
