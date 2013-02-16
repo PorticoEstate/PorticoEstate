@@ -2137,26 +2137,33 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 			 	. " WHERE fm_workorder_budget.active = 1 AND project_id = {$project_id}"
-			 	. " GROUP BY fm_workorder.id, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed";
+			 	. " GROUP BY fm_workorder.id, fm_workorder_budget.year, fm_workorder_budget.month, fm_workorder_status.closed"
+				. " ORDER BY fm_workorder_budget.year, fm_workorder_budget.month";
 //	_debug_array($sql);die();
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$_order_list = array();
 			$_orders = array();
+			$_order_info = array();
 			while ($this->db->next_record())
 			{
 				$period = $this->db->f('year') . sprintf("%02s", $this->db->f('month'));
-				$_order_list[] = $this->db->f('order_id');
-				$_orders[$period][$this->db->f('order_id')] = array
+				$_order_id = $this->db->f('order_id');
+				$_order_list[] = $_order_id;
+				$_temp_info = array
 				(
 					'combined_cost'	=> $this->db->f('combined_cost'),
 					'budget'		=> $this->db->f('budget'),
 					'actual_cost'	=> 0, //for now..
 					'closed'		=> !!$this->db->f('closed')
 				);
+
+				$_orders[$period][$_order_id] = $_temp_info;
+				$_order_info[$_order_id] = $_temp_info;
 			}
 
-//_debug_array($_orders);die();
+//_debug_array($_orders);
+//die();
 $test = 0;
 			if ( $_order_list )
 			{
@@ -2205,12 +2212,20 @@ $test = 0;
 			}
 
 
-//_debug_array($_orders);die();
+			if($_orders)
+			{
+				ksort($_orders);
+			}
+
+
+//_debug_array($_orders);
+//die();
 
 			$sort_period = array();
 			$values = array();
 //_debug_array($project_budget);die();
 //$test = 0;
+			$_current_period = date('Ym');
 			$_delay_period = 0;
 			foreach ($project_budget as $period => $_budget)
 			{
@@ -2220,7 +2235,7 @@ $test = 0;
 
 				if(isset($_orders[$period]))
 				{
-//_debug_array($_orders[$period]);die();
+//_debug_array($_orders[$period]);//die();
 
 					foreach ($_orders[$period] as $order_id => $order)
 					{
@@ -2228,13 +2243,15 @@ $test = 0;
 //_debug_array( $test+= $order['actual_cost']);
 						$_sum_orders[$order_id] += $order['combined_cost'];
 
-						if(!$order['closed'])
+						if(!$_order_info[$order_id]['closed'])
 						{
+//_debug_array($order_id);
 							$_sum_oblications[$order_id] += $order['combined_cost'];
 							$_sum_oblications[$order_id] -= $order['actual_cost'];
-
+//_debug_array($_sum_oblications[$order_id]);
 					//		if($project_total_budget >= 0)
-							if($_budget >= 0)
+					//		if($_budget >= 0)
+							if($_order_info[$order_id]['budget'] >= 0)
 							{
 
 								if($_sum_oblications[$order_id] < 0)
@@ -2257,6 +2274,12 @@ $test = 0;
 							$_delay_period += $_sum_oblications[$order_id];
 							$_sum_oblications[$order_id] = 0;
 						}
+						else if ((int)$_current_period > (int)$period)
+						{
+							$_delay_period += $_sum_oblications[$order_id];
+							$_sum_oblications[$order_id] = 0;
+						}
+						
 						//override if periode is closed
 						if(isset($closed_period[$period]) && $closed_period[$period])
 						{
@@ -2267,12 +2290,11 @@ $test = 0;
 					unset($_orders[$period]);
 				}
 
-				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period && (int) $_current_period < (int)$period)
 				{
 					$_sum_oblications[] += $_delay_period;
 					$_delay_period =0;
 				}
-
 //die();
 				$values[] = array
 				(
@@ -2288,6 +2310,15 @@ $test = 0;
 				$sort_period[] = $period;
 			}
 
+			if($_delay_period && $values)
+			{
+				$i = count($values) -1;
+				//last one
+				$values[$i]['sum_oblications'] += $_delay_period;
+				$_delay_period = 0;
+			}
+
+//_debug_array( $values);die();
 			unset($order);
 			unset($order_id);
 			unset($period);
@@ -2295,6 +2326,7 @@ $test = 0;
 			reset($_orders);
 
 			//remaining
+
 
 			foreach ($_orders as $period => $orders)
 			{
@@ -2308,7 +2340,7 @@ $test = 0;
 
 					$_sum_orders[$order_id] += $order['combined_cost'];
 
-					if(!$order['closed'])
+					if(!$_order_info[$order_id]['closed'])
 					{
 						$_sum_oblications[$order_id] -= $order['actual_cost'];
 						$_sum_oblications[$order_id] += $order['combined_cost'];
@@ -2330,10 +2362,28 @@ $test = 0;
 					}
 
 					//override if periode is closed
+					if(!isset($active_period[$period]) || !$active_period[$period])
+					{
+						$_delay_period += $_sum_oblications[$order_id];
+						$_sum_oblications[$order_id] = 0;
+					}
+					else if ((int)$_current_period > (int)$period)
+					{
+						$_delay_period += $_sum_oblications[$order_id];
+						$_sum_oblications[$order_id] = 0;
+					}
+						
+					//override if periode is closed
 					if(isset($closed_period[$period]) && $closed_period[$period])
 					{
 						$_sum_oblications[$order_id] = 0;
 					}
+				}
+
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period && (int) $_current_period < (int)$period)
+				{
+					$_sum_oblications[] += $_delay_period;
+					$_delay_period =0;
 				}
 
 				$values[] = array
@@ -2349,6 +2399,14 @@ $test = 0;
 
 				$sort_period[] = $period;
 			}
+
+			if($_delay_period && $values)
+			{
+				$i = count($values) -1;
+				//last one
+				$values[$i]['sum_oblications'] += $_delay_period;
+			}
+
 
 			if($values)
 			{
@@ -3063,6 +3121,9 @@ $test = 0;
 			{
 				return array();
 			}
+
+			$current_year = date('Y');
+			$found = false;
 			$year_list = array();
 			$sql = 'SELECT min(start_date) AS start_date, max(end_date) AS end_date FROM fm_workorder WHERE project_id = ' . (int) $id;
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -3073,6 +3134,11 @@ $test = 0;
 
 				for ($i=$start_year;$i< ($end_year+1) ;$i++)
 				{
+					if($current_year == $i)
+					{
+						$found = true;
+					}
+
 					$year_list[] = array
 					(
 						'id'	=> $i,
@@ -3080,6 +3146,22 @@ $test = 0;
 					);
 				}
 			}
+			if(!$found)
+			{
+				if($start_year < $current_year)
+				{
+					$year_list[] = array
+					(
+						'id'	=> $current_year,
+						'name'	=> $current_year
+					);
+				}
+				else
+				{
+					array_unshift ($year_list,array ('id'=>$current_year,'name'=> $current_year));
+				}
+			}
+
 			return $year_list;
 		}
 	}
