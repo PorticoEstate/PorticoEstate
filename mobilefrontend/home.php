@@ -111,6 +111,20 @@
 		}
 	}
 
+	$controller_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'controller.uicontrol.control_list') );
+	$controller_text = lang('controller');
+	$tts_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uitts.index') );
+	$tts_text = lang('ticket');
+	
+	$temp_menu = <<<HTML
+	<div id="home-menu">
+		<a href="{$controller_url}">{$controller_text}</a>
+		<a href="{$tts_url}">{$tts_text}</a>
+	</div>
+HTML;
+
+	echo $temp_menu;
+
 	$GLOBALS['phpgw']->hooks->process('home_mobilefrontend', $sorted_apps);
 
 	if ( isset($GLOBALS['portal_order']) && is_array($GLOBALS['portal_order']) )
