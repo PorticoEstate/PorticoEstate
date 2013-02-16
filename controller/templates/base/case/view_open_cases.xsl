@@ -4,6 +4,10 @@
 <div id="main_content" class="medium">
   <xsl:call-template name="check_list_top_section" />
   
+  <div style="margin:20px 0;">
+    <xsl:call-template name="select_buildings_on_property" />
+  </div>
+  
   <div id="view_cases">
     <xsl:call-template name="cases_tab_menu">
       <xsl:with-param name="active_tab">view_open_cases</xsl:with-param>
