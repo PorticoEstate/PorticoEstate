@@ -109,14 +109,6 @@ JS;
 	}
 
 	$_navbar_config			= json_encode($navbar_config);
-	//TODO Sigurd 8.july 2010: This one should be moved to frontend config
-	$config	= CreateObject('phpgwapi.config','booking');
-	$config->read();
-	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/mobilefrontend/images/bergen_logo.png";
-
-	$bodoc = CreateObject('booking.bodocumentation');
-	
-	$manual  =  $bodoc->so->getFrontendDoc();	
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -129,17 +121,7 @@ JS;
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'navbar_config' => $_navbar_config,
-		'lbl_search'   	=> lang('Search'),
-		'logofile'		=> $logofile_frontend,
-		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
-	if ($manual !== null) 
-	{
-		$tpl_vars['manual_text'] = lang('manual');
-		$tpl_vars['manual_url'] = $manual;
-#		$tpl_vars['help_text'] = lang('help');
-#		$tpl_vars['help_url'] = => '#';
-	}
 
 	$tpl_vars['home_text'] = lang('home');
 	$tpl_vars['home_url'] = 'home.php';
