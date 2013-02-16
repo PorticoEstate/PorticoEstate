@@ -29,7 +29,7 @@
 					<xsl:attribute name="class">active</xsl:attribute>
 				</xsl:if>
 				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list.view_cases_for_check_list</xsl:text>
+					<xsl:text>index.php?menuaction=controller.uicase.view_open_cases</xsl:text>
 					<xsl:text>&amp;check_list_id=</xsl:text>
 					<xsl:value-of select="check_list/id"/>
 					<xsl:value-of select="$session_url"/>

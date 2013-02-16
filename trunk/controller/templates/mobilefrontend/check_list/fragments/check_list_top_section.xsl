@@ -22,15 +22,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		
-		<div class="box-2 select-box">
-      <xsl:call-template name="nav_control_plan" />
-		</div>
-		
+				
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_menu">
-	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
-		</xsl:call-template>
-	</div>
-		
+		<xsl:call-template name="check_list_menu" />
+	</div>		
 </xsl:template>
