@@ -1,6 +1,7 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
+<div id="main_content" class="medium">
   <xsl:call-template name="check_list_top_section" />
   
   <div id="view_cases">
@@ -42,4 +43,5 @@
       </xsl:choose>
     </div>
   </div>
+</div>
 </xsl:template>

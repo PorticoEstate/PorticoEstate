@@ -1,5 +1,8 @@
-#main_content.medium {
+#main_content{
     text-align: left;
+}
+
+#main_content.medium {
     width: 96%;
 }
 

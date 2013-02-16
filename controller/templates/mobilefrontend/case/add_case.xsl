@@ -3,9 +3,9 @@
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
 <div id="main_content" class="medium">
-  
+	
 	<xsl:call-template name="check_list_top_section" />
-		
+	
 	<div style="margin:20px 0;">
 			<xsl:call-template name="select_buildings_on_property" />
 	</div>

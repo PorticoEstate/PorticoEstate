@@ -2,6 +2,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
 
+<div id="main_content" class="medium">
  <xsl:call-template name="check_list_top_section" />
 
 <div id="view_cases">
@@ -96,12 +97,12 @@
 				 	</xsl:choose>
 				</xsl:for-each>
 			</ul>
-					
 			</xsl:when>
 			<xsl:otherwise>
 				<p>Ingen lukkede saker</p>
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>
+</div>
 </div>
 </xsl:template>
