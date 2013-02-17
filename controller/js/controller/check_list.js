@@ -75,41 +75,24 @@ $(document).ready(function(){
   // UPDATE CHECKLIST STATUS
 	$("#update-check-list-status").live("submit", function(e){
     e.preventDefault();
-    
+    console.log("Oppdaterer status til sjekkliste!!!");
 		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
+		//var submitBnt = $(thisForm).find("input[type='submit']");
 		var requestUrl = $(thisForm).attr("action");
 		
      $.ajax({
 			  type: 'POST',
 			  url: requestUrl + "&" + $(thisForm).serialize(),
-			  success: function(data) {
+			   success: function(data) {
 				  if(data){
 	    			  var jsonObj = jQuery.parseJSON(data);
 		    		
 	    			  if(jsonObj.status == "saved"){
-		    			  var submitBnt = $(thisForm).find("input[type='submit']");
-		    			  $(submitBnt).val("Lagret");	
 		    			  
-		    			  clear_form( thisForm );
-			      				  
-		    			  // Changes text on save button back to original
-		    			  window.setTimeout(function() {
-		    				  if( type == "control_item_type_2")
-		    					  $(submitBnt).val('Lagre måling');
-		    				  else
-		    					  $(submitBnt).val('Lagre sak');
-		    				  
-							$(submitBnt).addClass("not_active");
-		    			  }, 1000);
-
-		    			  $(thisForm).delay(1500).slideUp(500, function(){
-		    				  $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");  
-		    			  });
+		    			  console.log("Lagret!!!");
 					  }
 				  }
 				}
-		});
-			
+		});	
 	});
 });
