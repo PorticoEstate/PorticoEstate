@@ -258,23 +258,30 @@
 			$case->set_measurement($measurement);
 			$case->set_status($case_status);
 			
-			$case_id = $this->so->store($case);
-			$case = $this->so->get_single($case_id);
-			
-			if($case_id > 0){
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );
-						
-				$check_item = $this->so_check_item->get_single($case->get_check_item_id());
-				$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
-				
-				$type = $control_item->get_type();
-				
-				return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
-			}
-			else{
-				return json_encode( array( "status" => "not_saved" ) );
-			}
+      if($case->validate())
+      {
+        $case_id = $this->so->store($case);
+        $case = $this->so->get_single($case_id);
+
+        if($case_id > 0){
+          $cl_status_updater = new check_list_status_updater();
+          $cl_status_updater->update_check_list_status( $check_list_id );
+
+          $check_item = $this->so_check_item->get_single($case->get_check_item_id());
+          $control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
+
+          $type = $control_item->get_type();
+
+          return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
+        }
+        else{
+          return json_encode( array( "status" => "not_saved" ) );
+        }
+      }
+      else
+      {
+        return json_encode( array( "status" => "error" ) );
+      }
 		}
 		
 		function create_case_message(){
@@ -680,7 +687,9 @@
 				'open_check_items_and_cases'        => $open_check_items_and_cases,
         'cases_view'                        => 'open_cases',
 			);
-			      
+			     
+      self::add_javascript('controller', 'controller', 'case.js');
+      
 			self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_open_cases', 'case/case_row', 
                                        'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 
                                        'check_list/fragments/select_buildings_on_property'), $data );			
@@ -749,6 +758,8 @@
         'cases_view'                        => 'closed_cases'
 			);
 			
+      self::add_javascript('controller', 'controller', 'case.js');
+      
       self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_closed_cases', 'case/case_row', 
                                        'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section', 
                                        'check_list/fragments/select_buildings_on_property'), $data );			

@@ -354,7 +354,6 @@
 		  	$this->error_msg_array['responsibility_id'] = "error_msg_2";
 		  }
 		  
-		  
 		  return $status;
 		}
 	}

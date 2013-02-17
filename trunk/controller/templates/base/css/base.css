@@ -1782,6 +1782,22 @@ li.check_item_case ul li {
   overflow: hidden;
 }
 
+li.check_item_case ul li.quick_edit_case {
+  padding: 0;
+}
+
+li.check_item_case .quick_edit_case h4 {
+  color: #000000;
+  margin: 0;
+  padding: 2px 10px;
+}
+
+li.check_item_case ul li .col_1 {
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
 li.check_item_case ul li .col_1 {
   float: left;
   padding: 2em 0;
@@ -1805,34 +1821,6 @@ li.check_item_case ul li .col_3 {
   width: 14.7333%;
 }
 
-li.check_item_case ul li.quick_edit_case {
-  padding: 0;
-}
-
-li.check_item_case .quick_edit_case h4 {
-  color: #000000;
-  margin: 0;
-  padding: 2px 10px;
-}
-
-li.check_item_case .col_1 {
-  display: inline-block;
-  padding: 2em 2%;
-  vertical-align: top;
-}
-
-li.check_item_case .col_2 {
-  border-left: 1px solid #DDDDDD;
-  border-right: 1px solid #DDDDDD;
-  display: inline-block;
-  padding: 1em 2%;
-  width: 73%;
-}
-li.check_item_case .col_3 {
-  display: inline-block;
-  padding: 3%;
-  vertical-align: top;
-}
 #main_content .quick_edit_case fieldset {
   padding: 5px;
 }

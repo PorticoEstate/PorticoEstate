@@ -112,7 +112,8 @@ $(document).ready(function(){
 	});
 	
 	$("a.quick_edit_case").live("click", function(e){
-		var clickElem = $(this);
+    e.preventDefault();
+    console.log("sdfsdfsd");
 		var clickRow = $(this).closest("li");
 									
 		$(clickRow).find(".case_info").hide();
@@ -122,7 +123,6 @@ $(document).ready(function(){
 	});
 	
 	$(".frm_update_case .cancel").live("click", function(e){
-		var clickElem = $(this);
 		var clickRow = $(this).closest("li");
 				
 		
