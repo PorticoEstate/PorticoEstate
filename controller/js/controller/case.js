@@ -257,14 +257,10 @@ $(document).ready(function(){
   
   $("#choose-building-on-property.view-cases").change(function () {
      var location_code = $(this).val();
-		 var thisForm = $(this).closest("form");
 
-     var url = location.href;
-console.log(url);
-     
-		 $(thisForm).find("input[name='location_code']").val(location_code);
-     console.log(location_code);
-    $(thisForm).submit();
+     var reloadPageUrl = location.pathname + location.search + "&location_code=" + location_code;
+
+     location.href = reloadPageUrl;
     });
   
 });
