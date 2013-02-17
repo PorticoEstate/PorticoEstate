@@ -1,20 +1,32 @@
 #main_content{
-    text-align: left;
-    font-family: arial;
+  text-align: left;
+  font-family: arial;
 }
 
 #main_content.medium {
-    width: 97%;
+  width: 97%;
 }
 
 #check-list-heading .box-1 {
-    float: none;
-    width: 100%;
+  float: none;
+  width: 100%;
 }
 
 #check_list_menu {
-    margin: 20px 0;
+  margin: 20px 0;
 }
 #view_cases .tab_menu {
   display: none;
+}
+
+.quick_menu a {
+  background: none repeat scroll 0 0 #4F9AEA;
+  border: 1px solid #428AD7;
+  border-radius: 4px 4px 4px 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  padding: 2px 10px;
+  text-decoration: none;
+  text-transform: capitalize;
 }
