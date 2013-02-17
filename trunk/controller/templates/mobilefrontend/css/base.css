@@ -8,8 +8,8 @@
 }
 
 #check-list-heading .box-1 {
-  float: none;
-  width: 100%;
+  margin-bottom: 15px;
+  width: 60%;
 }
 
 #check_list_menu {
@@ -29,4 +29,19 @@
   padding: 2px 10px;
   text-decoration: none;
   text-transform: capitalize;
+}
+
+#change-check-list-status {
+  float: right;
+  width: 12%;
+}
+
+#change-check-list-status .btn {
+  float:left;
+}
+
+#change-check-list-status .icon {
+    float: left;
+    margin-left: 10px;
+    vertical-align: middle;
 }
