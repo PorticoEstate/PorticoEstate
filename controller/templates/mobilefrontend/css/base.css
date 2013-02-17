@@ -31,17 +31,21 @@
   text-transform: capitalize;
 }
 
-#change-check-list-status {
+#update-check-list-status {
   float: right;
-  width: 12%;
+  width: 13%;
 }
 
-#change-check-list-status .btn {
+#update-check-list-status .btn {
   float:left;
 }
 
-#change-check-list-status .icon {
-    float: left;
-    margin-left: 10px;
-    vertical-align: middle;
+#update-check-list-status .icon {
+  float: left;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+#update-check-list-status .icon img{
+  height: 28px;
 }
