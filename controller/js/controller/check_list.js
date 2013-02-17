@@ -75,9 +75,11 @@ $(document).ready(function(){
   // UPDATE CHECKLIST STATUS
 	$("#update-check-list-status").live("submit", function(e){
     e.preventDefault();
-    console.log("Oppdaterer status til sjekkliste!!!");
+    
 		var thisForm = $(this);
-		//var submitBnt = $(thisForm).find("input[type='submit']");
+    
+    var statusClass = $(thisForm).attr("class");
+		
 		var requestUrl = $(thisForm).attr("action");
 		
      $.ajax({
@@ -88,9 +90,14 @@ $(document).ready(function(){
 	    			  var jsonObj = jQuery.parseJSON(data);
 		    		
 	    			  if(jsonObj.status == "saved"){
-		    			  
-		    			  console.log("Lagret!!!");
-					  }
+                if(statusClass == "done"){
+                  $("#update-check-list-status.not_done").show();
+                  $("#update-check-list-status.done").hide();
+                }else{
+                  $("#update-check-list-status.not_done").hide();
+                  $("#update-check-list-status.done").show();
+                }
+              }
 				  }
 				}
 		});	

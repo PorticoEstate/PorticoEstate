@@ -33,7 +33,11 @@
 
 #update-check-list-status {
   float: right;
-  width: 135px;
+  width: 180px;
+}
+
+#update-check-list-status.not_done {
+  display: none;
 }
 
 #update-check-list-status .btn {
