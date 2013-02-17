@@ -24,21 +24,17 @@
 		</div>
 		
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-    
+      <xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" /></xsl:variable>
       <form id="update-check-list-status" action="{$action_url}" method="post">
-        <xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-        <input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-        <input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+				<input type="hidden" name="check_list_id" value="{check_list/id}" /> 
         <input type="hidden" name="status" value="0" />
-        <input type="hidden" name="type" value="control_item_type_1" />
-        <input type="hidden" name="location_code"  value="" class="required" />
 
-         <span class="btn"><xsl:value-of select="php:function('lang', 'Status not done')" /></span>
-      <div class="icon">
-        <img src="/pe/controller/images/red_ring.png" />
-      </div>    
-        
-        <input type="submit" class="btn" name="save_control" value="Lagre sak" />
+        <input type="submit" class="btn">
+          <xsl:value-of select="php:function('lang', 'Status not done')" />
+        </input>
+        <div class="icon">
+          <img src="/pe/controller/images/red_ring.png" />
+        </div>
       </form>
        
 
