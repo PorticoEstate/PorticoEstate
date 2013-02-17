@@ -24,13 +24,24 @@
 		</div>
 		
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-    <div id="change-check-list-status">
-      <span class="btn"><xsl:value-of select="php:function('lang', 'Status not done')" /></span>
+    
+      <form id="update-check-list-status" action="{$action_url}" method="post">
+        <xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+        <input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+        <input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+        <input type="hidden" name="status" value="0" />
+        <input type="hidden" name="type" value="control_item_type_1" />
+        <input type="hidden" name="location_code"  value="" class="required" />
+
+         <span class="btn"><xsl:value-of select="php:function('lang', 'Status not done')" /></span>
       <div class="icon">
-        <img height="15" src="controller/images/red_ring.png" />
-      </div>      
-    </div>
-            		
+        <img src="/pe/controller/images/red_ring.png" />
+      </div>    
+        
+        <input type="submit" class="btn" name="save_control" value="Lagre sak" />
+      </form>
+       
+
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 		<xsl:call-template name="check_list_menu" />
 	</div>		
