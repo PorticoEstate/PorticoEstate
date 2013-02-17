@@ -281,3 +281,18 @@ function validate_form( formObj )
   
   return status;
 }
+
+//Updates order number for hidden field and number in front of row
+function update_order_nr_for_row(element, sign){
+	
+	var span_order_nr = $(element).find("span.order_nr");
+	var order_nr = $(span_order_nr).text();
+	
+	if(sign == "+")
+		var updated_order_nr = parseInt(order_nr) + 1;
+	else
+		var updated_order_nr = parseInt(order_nr) - 1;
+	
+	// Updating order number in front of row
+	$(span_order_nr).text(updated_order_nr);
+}
