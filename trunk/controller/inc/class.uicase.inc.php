@@ -177,7 +177,7 @@
                                       'check_list/fragments/check_list_top_section', 'case/add_case', 
                                       'check_list/fragments/select_buildings_on_property'), $data);
 		}
-    /*
+    
 		function save_case_ajax(){
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
@@ -242,7 +242,6 @@
 				return json_encode( array( "status" => "not_saved" ) );
 			}
 		}
-		*/
     
 		function save_case(){
 			$case_id = phpgw::get_var('case_id');

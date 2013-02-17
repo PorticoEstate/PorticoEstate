@@ -1769,9 +1769,11 @@ fieldset.location_details div{
 li.check_item_case h4 {
   margin: 5px 0;
 }
+
 li.check_item_case ul{
   margin-bottom: 20px;
 }
+
 li.check_item_case ul li {
   background: none repeat scroll 0 0 #E7EFF8;
   border: 1px solid #DDDDDD;
@@ -1779,27 +1781,34 @@ li.check_item_case ul li {
   margin: 10px 0 0 20px;
   overflow: hidden;
 }
+
 li.check_item_case ul li .col_1 {
   float: left;
-  padding: 2em 2%;
-  vertical-align: top;
+  padding: 2em 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 5%;
 }
+
 li.check_item_case ul li .col_2 {
   border-left: 1px solid #DDDDDD;
   border-right: 1px solid #DDDDDD;
   float: left;
   padding: 1em 2%;
-  width: 73%;
+  width: 76%;
 }
+
 li.check_item_case ul li .col_3 {
   float: left;
-  padding: 3%;
-  vertical-align: top;
+  padding: 30px 0;
+  text-align: center;
+  width: 14.7333%;
 }
 
 li.check_item_case ul li.quick_edit_case {
   padding: 0;
 }
+
 li.check_item_case .quick_edit_case h4 {
   color: #000000;
   margin: 0;
@@ -1811,6 +1820,7 @@ li.check_item_case .col_1 {
   padding: 2em 2%;
   vertical-align: top;
 }
+
 li.check_item_case .col_2 {
   border-left: 1px solid #DDDDDD;
   border-right: 1px solid #DDDDDD;
