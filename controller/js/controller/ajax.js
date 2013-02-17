@@ -550,7 +550,7 @@ $(document).ready(function(){
 	});
 
 	
-	$(".selectLocation").change(function () {
+	$(".select-location").change(function () {
 		 var location_code = $(this).val();
 		 var thisForm = $(this).parents("form");
 

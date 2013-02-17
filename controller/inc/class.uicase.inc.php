@@ -616,6 +616,7 @@
     function view_open_cases()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
+      $location_code = phpgw::get_var('location_code');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());			

@@ -127,7 +127,7 @@ function chooseLocation( label, value ){
 							</xsl:attribute>
 						</input>
 
-						<select id="choose_my_location" class="selectLocation">
+						<select id="choose-my-location" class="select-location">
 							<option>Velg bygg</option>
 							<xsl:for-each select="my_locations">
 								<xsl:choose>
