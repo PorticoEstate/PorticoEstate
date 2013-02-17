@@ -616,14 +616,13 @@
     function view_open_cases()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-      $location_code = phpgw::get_var('location_code');
+      $case_location_code = phpgw::get_var('location_code');
 			
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());			
 
-      $location_code = $check_list->get_location_code();
+      $check_list_location_code = $check_list->get_location_code();
       
-
 			$component_id = $check_list->get_component_id();
 
 			if($component_id > 0)
@@ -645,24 +644,28 @@
 			else
 			{
 				
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
 			}
       
       
-      $level = $this->location_finder->get_location_level($location_code);
+      $level = $this->location_finder->get_location_level($check_list_location_code);
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 							
       $user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
       
       if( count($buildings_on_property) > 0 )
       {
-        $building_location_code = $buildings_on_property[0]['id'];
-        $open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, $building_location_code);
+        if($case_location_code == "")
+        {
+          $case_location_code = $buildings_on_property[0]['id'];
+        }
+        
+        $open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, $case_location_code);
       }
       
 			foreach($open_check_items_and_cases as $key => $check_item)
@@ -682,7 +685,7 @@
 				'component_array'							=> $component_array,
 				'type' 												=> $type,
 				'location_level' 							=> $level,
-				'building_location_code' 			=> $building_location_code,
+				'building_location_code' 			=> $case_location_code,
 				'current_year' 								=> $year,
 				'current_month_nr' 						=> $month,
 				'open_check_items_and_cases'  => $open_check_items_and_cases,
