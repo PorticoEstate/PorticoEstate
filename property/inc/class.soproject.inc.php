@@ -752,17 +752,17 @@
 						$this->db->next_record();
 						$project['budget'] =  $this->db->f('budget');
 
-						$sql_workder  = "SELECT fm_workorder.id, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
-						. " billable_hours, closed, sum(fm_orders_paid_or_pending_view.amount) as actual_cost"
+						$sql_workder  = "SELECT fm_workorder.id,"// sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
+						. " billable_hours, closed"//, sum(fm_orders_paid_or_pending_view.amount) as actual_cost"
 						. " FROM fm_workorder"
 						. " {$this->join} fm_workorder_status ON fm_workorder.status  = fm_workorder_status.id"
-						. " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND active = 1)"
-						. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+					//	. " {$this->left_join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND active = 1)"
+					//	. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 						. " WHERE project_id = '{$project['project_id']}' {$sql_workder_date_filter}"
 						. " GROUP BY fm_workorder.id, billable_hours, closed";
 
 					}
-//~ _debug_array($sql_workder);
+_debug_array($sql_workder);
 
 					$this->db->query($sql_workder,__LINE__,__FILE__);
 
@@ -775,12 +775,15 @@
 						{
 							$this->db2->query("SELECT sum(fm_workorder_budget.budget) AS budget,"
 							 . " sum(fm_workorder_budget.combined_cost) AS combined_cost"
-//							 . " FROM fm_workorder_budget WHERE year = {$filter_year} AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
 							 . " FROM fm_workorder_budget WHERE active =1 AND order_id =" . $this->db->f('id'),__LINE__,__FILE__);
 							 $this->db2->next_record();
 
 							$_combined_cost = $this->db2->f('combined_cost');
 							$_budget = $this->db2->f('budget');
+
+							$this->db2->query("SELECT sum(fm_orders_paid_or_pending_view.amount) as actual_cost"
+							 . " FROM fm_orders_paid_or_pending_view WHERE order_id =" . $this->db->f('id'),__LINE__,__FILE__);
+							 $this->db2->next_record();
 						}
 						else
 						{
@@ -788,7 +791,7 @@
 							$_budget = $this->db->f('budget');
 						}
 
-						$_actual_cost =  $this->db->f('actual_cost') + (float)$this->db->f('pending_cost');
+						$_actual_cost =  $this->db2->f('actual_cost') + (float)$this->db->f('pending_cost');
 						if(!$this->db->f('closed'))
 						{
 //$test[] = $this->db->f('id');
