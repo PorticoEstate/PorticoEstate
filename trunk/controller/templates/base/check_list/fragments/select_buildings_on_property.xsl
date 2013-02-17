@@ -1,7 +1,11 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="select_buildings_on_property">
   		
-      <select id="choose_building_on_property" class="selectLocation">
+  <form action="#">
+    <input type="hidden" name="location_code" value="" />
+    	
+    <select id="choose-building-on-property" class="view-cases">
+      <option value="">Velg bygg</option>
       <xsl:for-each select="buildings_on_property">
         <option>
           <xsl:if test="id = //building_location_code">
@@ -14,6 +18,5 @@
         </option>
       </xsl:for-each>
     </select>					
-                
-                        				
+  </form>
 </xsl:template>
