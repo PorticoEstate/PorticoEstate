@@ -2260,13 +2260,13 @@
 				$paid_last_year = $this->db->f('paid');
 				
 				$subtract = $last_budget - $paid_last_year;
-//_debug_array($subtract);die();
-				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $subtract, $subtract, $subtract, $action = 'subtract');
+	//			$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $subtract, $subtract, $subtract, $action = 'subtract');
+				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action = 'update', true);
 
 				$new_budget = $last_budget - $paid_last_year;
 				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
 			}
-
+//die();
 			$this->db->transaction_commit();
 		}
 
