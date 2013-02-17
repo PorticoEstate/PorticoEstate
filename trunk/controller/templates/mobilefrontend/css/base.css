@@ -33,7 +33,7 @@
 
 #update-check-list-status {
   float: right;
-  width: 13%;
+  width: 135px;
 }
 
 #update-check-list-status .btn {
@@ -41,11 +41,12 @@
 }
 
 #update-check-list-status .icon {
-  float: left;
-  margin-left: 10px;
+  float: right;
+  margin: 0 4px;
   vertical-align: middle;
+  width: 23px;
 }
 
 #update-check-list-status .icon img{
-  height: 28px;
+  width: 100%;
 }
