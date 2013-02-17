@@ -1,6 +1,16 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="select_buildings_on_property">
-  <select id="choose-building-on-property" class="view-cases">
+  
+  <select id="choose-building-on-property">
+    <xsl:choose>
+      <xsl:when test="$cases_view = 'open_cases' or $cases_view = 'closed_cases'">
+        <xsl:attribute name="class">view-cases</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="class">add-case</xsl:attribute>
+      </xsl:otherwise>
+    </xsl:choose>
+    
     <option value="">Velg bygg</option>
     <xsl:for-each select="buildings_on_property">
       <option>
