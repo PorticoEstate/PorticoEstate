@@ -146,4 +146,41 @@
 		{
 			$this->location_code = $location_code;
 		}
+    
+    public function validate()
+		{
+			$status = true;
+	
+			// Validate DESCRIPTION
+			if( empty( $this->descr ) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['descr'] = "error_msg_1";
+		  }
+		  
+		  // Validate STATUS		  		  
+			if( empty( $this->status ) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['status'] = "error_msg_1";
+		  }
+			
+		  // Validate LOCATION CODE
+		  if( empty($this->location_code) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['location_code'] = "error_msg_1";
+		  }
+		 		  
+		  // Validate CHECK ITEM ID
+			if( empty($this->check_item_id) )
+		  {
+		  	$status = false;
+		  	$this->error_msg_array['check_item_id'] = "error_msg_4";
+		  }
+
+		  //to do: return $status;
+      
+      return true;
+		}    
 	}
