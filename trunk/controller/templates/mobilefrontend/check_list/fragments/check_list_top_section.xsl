@@ -25,15 +25,31 @@
 		
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
       <xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" /></xsl:variable>
-      <form id="update-check-list-status" action="{$action_url}" method="post">
+      <form id="update-check-list-status" class="done" action="{$action_url}" method="post">
+				<input type="hidden" name="check_list_id" value="{check_list/id}" /> 
+        <input type="hidden" name="status" value="1" />
+
+        <input type="submit" class="btn">
+          <xsl:attribute name="value">
+            <xsl:value-of select="php:function('lang', 'Status not done')" />
+          </xsl:attribute>
+        </input>
+        <div class="icon">
+          <img src="/pe/controller/images/red_ring.png" />
+        </div>
+      </form>
+      
+      <form id="update-check-list-status" class="not_done" action="{$action_url}" method="post">
 				<input type="hidden" name="check_list_id" value="{check_list/id}" /> 
         <input type="hidden" name="status" value="0" />
 
         <input type="submit" class="btn">
-          <xsl:value-of select="php:function('lang', 'Status not done')" />
+          <xsl:attribute name="value">
+            <xsl:value-of select="php:function('lang', 'Status done')" />
+          </xsl:attribute>
         </input>
         <div class="icon">
-          <img src="/pe/controller/images/red_ring.png" />
+          <img src="/pe/controller/images/green_ring.png" />
         </div>
       </form>
        
