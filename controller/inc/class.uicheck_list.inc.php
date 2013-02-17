@@ -608,7 +608,7 @@
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 
-			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", null, "return_array");
+			$check_items_with_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", null);
 			
 			return json_encode( $check_items_with_cases );
 		}

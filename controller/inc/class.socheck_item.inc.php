@@ -267,10 +267,9 @@
 		 * @param	$type control item registration type COMMENT/TEXTFIELD/CHECKLIST/RADIOBUTTONS 
 		 * @param	$status status for cases OPEN/CLOSED/PENDING
 		 * @param	$messageStatus is there a message registered for the case
-		 * @param	$returnType data returned as objects or arrays
 		 * @return check item objects
 		*/
-		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $return_type = "return_object")
+		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $location_code = null)
 		{
 			$check_list_id = (int) $check_list_id;
 			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, ";
@@ -311,6 +310,11 @@
 			{
 				$sql .= "AND cic.location_item_id > 0 ";
 			}
+      
+      if($location_code != null)
+			{
+				$sql .= "AND cic.location_code = '$location_code' ";
+			}
 			
 			$sql .= "ORDER BY ci.id";
 											
@@ -325,15 +329,8 @@
 					if($check_item_id)
 					{
 						$check_item->set_cases_array($cases_array);
-						
-						if($return_type == "return_array")
-						{
-							$check_items_array[] = $check_item->toArray();
-						}
-						else
-						{
-							$check_items_array[] = $check_item;
-						}
+										
+						$check_items_array[] = $check_item;
 					}
 				
 					$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id'), 'int'));
@@ -348,15 +345,8 @@
 					$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
-					if($return_type == "return_array")
-					{
-						$check_item->set_control_item($control_item->toArray());
-					}
-					else
-					{
-						$check_item->set_control_item($control_item);
-					}
-							
+					$check_item->set_control_item($control_item);
+												
 					$cases_array = array();
 				}
 				
@@ -374,14 +364,8 @@
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
 								
-					if($return_type == "return_array")
-					{
-						$cases_array[] = $case->toArray();
-					}
-					else
-					{
-						$cases_array[] = $case;
-					}
+					$cases_array[] = $case;
+					
 				}
 				
 				$check_item_id = $check_item->get_id();
@@ -390,15 +374,9 @@
 			if($check_item != null)
 			{
 				$check_item->set_cases_array($cases_array);
+							
+				$check_items_array[] = $check_item;
 				
-				if($return_type == "return_array")
-				{
-					$check_items_array[] = $check_item->toArray();
-				}
-				else
-				{
-					$check_items_array[] = $check_item;
-				}
 				return $check_items_array;
 			}
 			else
