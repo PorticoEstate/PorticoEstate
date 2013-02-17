@@ -127,6 +127,7 @@
       
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+      self::add_javascript('controller', 'controller', 'check_list.js');
 			
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 
                                       'check_list/fragments/check_list_top_section', 'case/add_case', 
