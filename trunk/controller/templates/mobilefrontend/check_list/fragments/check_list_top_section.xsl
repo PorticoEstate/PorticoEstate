@@ -29,7 +29,7 @@
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
     
     <div id="change-check-list-status">
-      <span><xsl:value-of select="php:function('lang', $status_not_done)" /></span>
+      <span><xsl:value-of select="php:function('lang', 'status_not_done')" /></span>
       <div class="icon">
         <img height="15" src="controller/images/status_icon_red_empty.png" />
       </div>      
