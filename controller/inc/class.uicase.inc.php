@@ -166,7 +166,6 @@
         'cases_view'                        => 'add_case',
 			);
 			
-      
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
@@ -687,7 +686,8 @@
 				'open_check_items_and_cases'        => $open_check_items_and_cases,
         'cases_view'                        => 'open_cases',
 			);
-			     
+      
+      phpgwapi_jquery::load_widget('core');
       self::add_javascript('controller', 'controller', 'case.js');
       
 			self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_open_cases', 'case/case_row', 
@@ -743,21 +743,22 @@
       
 			$data = array
 			(
-        'control' 													=> $control,
-				'check_list' 												=> $check_list,
-				'buildings_on_property'             => $buildings_on_property,
-        'location_array'										=> $location_array,
-				'component_array'										=> $component_array,
-				'type' 															=> $type,
-				'location_level' 										=> $level,
-				'building_location_code' 						=> $building_location_code,
-				'current_year' 											=> $year,
-				'current_month_nr' 									=> $month,
-				'closed_check_items_and_cases'      => $closed_check_items_and_cases,
-				'check_list'                        => $check_list,
-        'cases_view'                        => 'closed_cases'
+        'control' 											=> $control,
+				'check_list' 										=> $check_list,
+				'buildings_on_property'         => $buildings_on_property,
+        'location_array'								=> $location_array,
+				'component_array'								=> $component_array,
+				'type' 													=> $type,
+				'location_level' 								=> $level,
+				'building_location_code' 				=> $building_location_code,
+				'current_year' 									=> $year,
+				'current_month_nr' 							=> $month,
+				'closed_check_items_and_cases'  => $closed_check_items_and_cases,
+				'check_list'                    => $check_list,
+        'cases_view'                    => 'closed_cases'
 			);
-			
+
+      phpgwapi_jquery::load_widget('core');			
       self::add_javascript('controller', 'controller', 'case.js');
       
       self::render_template_xsl( array('check_list/fragments/check_list_menu', 'case/cases_tab_menu', 'case/view_closed_cases', 'case/case_row', 
