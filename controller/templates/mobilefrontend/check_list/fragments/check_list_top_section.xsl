@@ -22,17 +22,16 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-				
-		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_menu" />
-    
+		
     <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-    
     <div id="change-check-list-status">
-      <span><xsl:value-of select="php:function('lang', 'status_not_done')" /></span>
+      <span class="btn"><xsl:value-of select="php:function('lang', 'Status not done')" /></span>
       <div class="icon">
-        <img height="15" src="controller/images/status_icon_red_empty.png" />
+        <img height="15" src="controller/images/red_ring.png" />
       </div>      
     </div>
+            		
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
+		<xsl:call-template name="check_list_menu" />
 	</div>		
 </xsl:template>
