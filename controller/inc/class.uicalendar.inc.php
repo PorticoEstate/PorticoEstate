@@ -740,7 +740,10 @@
 			if (empty($location_code))
 			{
                 $my_locations = $this->location_finder->get_responsibilities($criteria);
-				$location_code = $my_locations[0]["location_code"];
+                if( count($my_locations) > 0 )
+                {
+                    $location_code = $my_locations[0]["location_code"];
+                }
 			}
 
 			return $location_code;
