@@ -6,9 +6,9 @@
   
 	<xsl:call-template name="check_list_top_section" />
 		
-	<div style="margin:20px 0;background:#EEEEEE;padding:10px;">
-			<xsl:call-template name="select_buildings_on_property" />
-	</div>
+	<div id="choose-building-wrp">
+    <xsl:call-template name="select_buildings_on_property" />
+  </div>
 
 	<div id="view_cases">
 

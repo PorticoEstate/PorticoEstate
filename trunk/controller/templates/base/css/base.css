@@ -2314,3 +2314,9 @@ p.no_items_msg {
 #show-control-details-box .pre {
   margin-right: 3px;
 }
+
+#choose-building-wrp {
+  margin:20px 0;
+  background:#EEEEEE;
+  padding:10px;
+}
