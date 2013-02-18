@@ -35,7 +35,9 @@
 		public function __construct()
 		{
 			parent::__construct();
-      $GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
+			
+			//FIXME
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
 		}
     
     /**
@@ -44,6 +46,7 @@
 		 * @param HTTP:: check list id
 		 * @return data array
 		*/
+/*
 		function edit_check_list( $check_list = null ){
 			if($check_list == null)
 			{
@@ -133,5 +136,5 @@
                                       'check_list/fragments/check_list_top_section', 'case/add_case', 
                                       'check_list/fragments/select_buildings_on_property'), $data);
 		}
-    
+    */
 	}
