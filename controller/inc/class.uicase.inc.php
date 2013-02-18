@@ -523,7 +523,7 @@
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			
-			self::render_template_xsl(array('check_list/check_list_menu', 'case/view_case_message'), $data);
+			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/view_case_message'), $data);
 		}
 		
 		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){

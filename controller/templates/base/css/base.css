@@ -1639,7 +1639,7 @@ ul.check_items h5{
   overflow: hidden;
 }
 
-#check_list_menu a {
+#check_list_menu a, #check_list_menu span {
   background: none repeat scroll 0 0 #F4EDE3;
   border: 1px solid #E7E1DA;
   color: #444444;
@@ -1652,17 +1652,21 @@ ul.check_items h5{
   width: 185px;
 }
 
-#check_list_menu a.first {
+#check_list_menu span {
+  cursor: default;
+}
+
+#check_list_menu a.first, #check_list_menu span.first {
   border-radius: 4px 0 0 4px;
   border-right: 0 none;
 }
 
-#check_list_menu a.last {
+#check_list_menu a.last, #check_list_menu span.last {
   border-radius: 0 4px 4px 0;
   border-left: 0;
 }
 
-#check_list_menu a.active {
+#check_list_menu a.active, #check_list_menu span.active {
   background: none repeat scroll 0 0 #E7E1DA;
   border: 1px solid #E7E1DA;
 }
@@ -1675,7 +1679,7 @@ ul.check_items h5{
   float: right;
 }
 
-#check_list_menu .right_btns a {
+#check_list_menu .right_btns a, #check_list_menu .right_btns span {
   background: none repeat scroll 0 0 #F57056;
   border-color: #EE836F -moz-use-text-color #CB563F;
   border-radius: 4px;
