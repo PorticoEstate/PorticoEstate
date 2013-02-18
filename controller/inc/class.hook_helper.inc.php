@@ -88,7 +88,7 @@
 			$styling .= " .home_portal .title { width:300px;margin:0 20px 0 0;}";
 			$styling .= " .home_portal .control-area { width:200px;}";
 			$styling .= " .home_portal .control { width:300px;}";
-			$styling .= " .home_portal .date { margin-left: 20px;width:130px;float:left;}";
+			$styling .= " .home_portal .date { margin-left: 20px;width:130px;}";
 			$styling .= " .home_portal li { overflow: hidden;margin: 10px;}";
 			$styling .= " .home_portal li div { display: block;float:left;cursor: pointer;vertical-align: middle;}";
 
@@ -609,20 +609,10 @@
 							}
 							$location_name = $location_array[$location_code]["loc1_name"];
 
-							if(count( $assigned_controls_on_date) > 1 )
-							{
-								$link = "";
-								$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
+							$link = "";
+							$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
 
-								$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-							}
-							else
-							{
-								$link = "";
-								$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code, 'deadline_ts' => $deadline_ts));
-
-								$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-							}
+							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 						}
 						else if($check_list_type == "component")
 						{
@@ -639,20 +629,10 @@
 								$short_desc_arr = $component_short_desc[$location_id][$component_id];
 							}
 
-							if(count( $assigned_controls_on_date) > 1 )
-							{
-								$link = "";
-								$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+							$link = "";
+							$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
 
-								$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-							}
-							else
-							{
-								$link = "";
-								$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.add_check_list', 'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id, 'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
-
-								$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-							}
+							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$short_desc_arr}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 						}
 					}
 					else if($check_list_status == "edit")
@@ -665,21 +645,11 @@
 							$location_array[$location_code] = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 						}
 						$location_name = $location_array[$location_code]["loc1_name"];
+						
+						$link = "";
+						$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
 
-						if(count( $assigned_controls_on_date ) > 1 )
-						{
-							$link = "";
-							$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
-
-							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-						}
-						else
-						{
-							$link = "";
-							$link = $GLOBALS['phpgw']->link("{$url_correction}/index.php", array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
-
-							$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
-						}
+						$my_assigned_controls_HTML .= "<li><a href='$link'><div class='date'>{$date_str}</div><div class='control'>{$my_control['title']}</div><div class='title'>{$location_name}</div><div class='control-area'>{$control_area_name}</div></a></li>";
 					}
 				}
 
