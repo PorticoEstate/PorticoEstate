@@ -970,6 +970,87 @@ _debug_array($sql_workder);
 			$filter_year = '';
 			if($year)
 			{
+				$filter_year = "AND fm_workorder_budget.year = {$year}";
+			}
+
+			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
+				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " WHERE project_id={$project_id} {$filter_year}",__LINE__,__FILE__);
+
+			$_orders = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'workorder_id'		=> $this->db->f('workorder_id'),
+					'title'				=> $this->db->f('title',true),
+					'vendor_id'			=> $this->db->f('vendor_id'),
+					'charge_tenant'		=> $this->db->f('charge_tenant'),
+					'status'			=> $this->db->f('status'),
+					'closed'			=> !!$this->db->f('closed'),
+					'b_account_id'		=> $this->db->f('b_account_id'),
+					'addition_percentage'	=> (int)$this->db->f('addition')
+				);
+				$_orders[] = $this->db->f('workorder_id');
+			}
+
+			if($_orders)
+			{
+				$soworkorder = CreateObject('property.soworkorder');
+				$order_budgets = array();
+				foreach ($_orders as $_order_id)
+				{
+					$order_budgets[$_order_id] = $soworkorder->get_budget($_order_id);
+				}
+			}
+
+			foreach ($values as &$entry)
+			{
+				foreach($order_budgets[$entry['workorder_id']] as $budget)
+				{
+					if($year)
+					{
+						if($budget['year'] == $year)
+						{
+							$entry['combined_cost'] += $budget['sum_orders'];
+							$entry['budget'] += $budget['budget'];
+							$entry['obligation']  += $budget['sum_oblications'];
+							$entry['actual_cost'] += $budget['actual_cost'];
+						}
+					}
+					else
+					{
+						$entry['combined_cost'] += $budget['sum_orders'];
+						$entry['budget'] += $budget['budget'];
+						$entry['obligation'] += $budget['sum_oblications'];
+						$entry['actual_cost'] += $budget['actual_cost'];
+					}
+				}
+
+		//		FIXME
+		//		$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
+		//		$_actual_cost = round($actual_cost/$_taxfactor);
+
+				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
+				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
+			}
+
+			return $values;
+		}
+
+		//FIXME
+		function project_workorder_data_old($data = array())
+		{
+			$project_id = (int) $data['project_id'];
+			$year = (int) $data['year'];
+			$values = array();
+
+			$filter_year = '';
+			if($year)
+			{
 //				$start_date = mktime(0, 0, 0, 1, 1, $year)
 //				$end_date = mktime(23, 59, 59, 12, 31, $year)
 				$filter_year = "AND fm_workorder_budget.year = {$year}";
