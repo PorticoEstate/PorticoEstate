@@ -2157,14 +2157,24 @@ _debug_array($sql_workder);
 
 			foreach ($order_budgets  as $_order_id => $order_budget )
 			{
+
+/*
+if(!$order_budget[0]['closed_order'])
+{
+//	_debug_array($order_budget);
+}
+*/
+
 				foreach ($order_budget as $budget_entry)
 				{
 					$period = $budget_entry['period'];
 					$year = $budget_entry['year'];
 
 					$_found = false;
-					if(isset($project_budget[$period]))
+					if(isset($project_budget[$period]) && !$budget_entry['closed_order'])
 					{
+//_debug_array($_order_id);
+//_debug_array($budget_entry);
 						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
 						$_orders[$period]['sum_oblications'] += $budget_entry['sum_oblications'];
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
@@ -2198,6 +2208,7 @@ _debug_array($sql_workder);
 			}
 			$sort_period = array();
 //_debug_array($_orders);
+//die();
 
 			$_values = array();
 			foreach ($project_budget as $period => $_budget)
