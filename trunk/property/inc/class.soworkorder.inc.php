@@ -1772,7 +1772,7 @@
 					'year'				=> (int)$this->db->f('year'),
 					'month'				=> (int)$this->db->f('month'),
 					'actual_cost'		=> 0, //for now..
-					'closed_order'		=> false,
+					'closed_order'		=> $this->db->f('closed'),
 				);
 
   				$active_period[$period] = $this->db->f('active');
