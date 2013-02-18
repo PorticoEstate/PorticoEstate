@@ -1842,7 +1842,7 @@
 
 			$sort_period = array();
 			$values = array();
-//_debug_array($project_budget);die();
+//_debug_array($order_budget);die();
 //$test = 0;
 			$_delay_period = 0;
 			foreach ($order_budget as $period => $_budget)
@@ -1904,6 +1904,7 @@
 					'sum_orders'			=> $_sum_orders,
 					'sum_oblications'		=> $_sum_oblications,
 					'actual_cost'			=> $_actual_cost,
+					'closed_order'			=> $_budget['closed_order']
 				);
 
 				$sort_period[] = $period;
