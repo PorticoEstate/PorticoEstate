@@ -2324,3 +2324,24 @@ p.no_items_msg {
   background:#EEEEEE;
   padding:10px;
 }
+
+#update-check-list-status {
+  float: right;
+  width: 180px;
+}
+
+
+#update-check-list-status .btn {
+  float:left;
+}
+
+#update-check-list-status .icon {
+  float: right;
+  margin: 0 4px;
+  vertical-align: middle;
+  width: 23px;
+}
+
+#update-check-list-status .icon img{
+  width: 100%;
+}
