@@ -27,6 +27,46 @@
             <xsl:call-template name="nav_control_plan" />
 		</div>
 		
+    <!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+ 		<xsl:choose>
+			<xsl:when test="check_list/id != 0">
+		      <xsl:variable name="action_url"><xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" /></xsl:variable>
+			      <form id="update-check-list-status" class="done" action="{$action_url}" method="post">
+					<input type="hidden" name="check_list_id" value="{check_list/id}" /> 
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+						        <input id='update-check-list-status-value' type="hidden" name="status" value="1" />
+						        <input id="status_submit" type="submit" class="btn">
+						          <xsl:attribute name="value">
+						            <xsl:value-of select="php:function('lang', 'Status not done')" />
+						          </xsl:attribute>
+						        </input>
+							</xsl:when>
+							<xsl:otherwise>
+						        <input id='update-check-list-status-value' type="hidden" name="status" value="0" />
+						        <input type="submit" class="btn">
+						          <xsl:attribute name="value">
+						            <xsl:value-of select="php:function('lang', 'Status done')" />
+						          </xsl:attribute>
+						        </input>
+							</xsl:otherwise>
+						</xsl:choose>
+<!--
+						 <div id ='update-check-list-status-icon' class="not_done">
+						   	<div class="icon">
+						   		<img src="controller/images/red_ring.png" />
+							</div>
+						</div>
+						<div id ='update-check-list-status-icon-done' class="done">
+						  	<div class="icon">
+								<img src="controller/images/green_ring.png" />
+							</div>
+						</div>
+-->
+			      </form>
+				</xsl:when>
+			</xsl:choose>
+      
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
         <xsl:choose>
         <xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">

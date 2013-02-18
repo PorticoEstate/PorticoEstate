@@ -611,31 +611,24 @@
          * 
          * @return json encoded array with status saved or not saved
          */
-        public function update_status()
-        {
-            $check_list_id = phpgw::get_var('check_list_id');
-            $check_list_status = phpgw::get_var('status');
+		public function update_status()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list_status = phpgw::get_var('status');
 
-            $check_list = $this->so->get_single($check_list_id);
+			$check_list = $this->so->get_single($check_list_id);
+			
+			$check_list->set_status( $check_list_status );
 
-            $check_list->set_status($check_list_status);
-
-            if($check_list->validate())
-            {
-                $save_status = $this->so->store($check_list);
-
-                if($save_status > 0)
-                {
-                    return json_encode(array("status" => "saved"));
-                } else
-                {
-                    return json_encode(array("status" => "not_saved"));
-                }
-            } else
-            {
-                return json_encode(array("status" => "not_saved"));
-            }
-        }
+			if($this->so->store($check_list))
+			{
+       			return json_encode( array( 'status' => $check_list_status) );
+			}
+			else
+			{
+				return json_encode( array( "status" => 'not_saved') );
+			}
+		}
 
         public function query()
         {
