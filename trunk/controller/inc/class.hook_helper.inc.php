@@ -242,7 +242,7 @@
 					$planned_formatted = date($dateformat, $planned_date_ts);
 
 					$check_list_id = $my_planned_control[2];
-					$location_code = $my_planned_control[3];
+					$location_code = $my_planned_control[4];
 
 					if(!isset($location_array[$location_code]) || !$location_array[$location_code])
 					{
