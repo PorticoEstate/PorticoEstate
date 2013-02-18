@@ -16,7 +16,7 @@
 							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
 						</xsl:when>
 						<xsl:otherwise>
-								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+							<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -24,13 +24,20 @@
 		</div>
 		
 		<div class="box-2 select-box">
-      <xsl:call-template name="nav_control_plan" />
+            <xsl:call-template name="nav_control_plan" />
 		</div>
 		
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_menu">
-	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
-		</xsl:call-template>
+        <xsl:choose>
+        <xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
+            <xsl:call-template name="check_list_menu">
+                <xsl:with-param name="active_tab">view_details</xsl:with-param>
+            </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="add_check_list_menu" />
+        </xsl:otherwise>
+        </xsl:choose>
 	</div>
 		
 </xsl:template>

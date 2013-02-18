@@ -24,22 +24,22 @@
 							<xsl:when test="check_list/status = 0">
 								<option value="1">Utført</option>
 								<option value="0" SELECTED="SELECTED">Ikke utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:when>
 							<xsl:when test="check_list/status = 1">
 								<option value="1" SELECTED="SELECTED">Utført</option>
 								<option value="0">Ikke utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:when>
-              <xsl:when test="check_list/status = 3">
+                            <xsl:when test="check_list/status = 3">
 								<option value="3" SELECTED="SELECTED">Kansellert</option>
 								<option value="0">Ikke utført</option>
-                <option value="1">Utført</option>
+                                <option value="1">Utført</option>
 							</xsl:when>
 							<xsl:otherwise>
 								<option value="0" SELECTED="SELECTED">Ikke utført</option>
 								<option value="1">Utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:otherwise>
 						</xsl:choose>
 					</select>
