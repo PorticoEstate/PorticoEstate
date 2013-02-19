@@ -285,7 +285,6 @@ div.allocation-list
 }
 #dt-dlg_c .underlay {overflow:hidden;}
 .inprogress {position:absolute;} /* transitional progressive enhancement state */
-}
 
 dl.controller-description {
   width: 70%;
@@ -2320,28 +2319,8 @@ p.no_items_msg {
 }
 
 #choose-building-wrp {
-  margin:20px 0;
-  background:#EEEEEE;
-  padding:10px;
-}
-
-#update-check-list-status {
-  float: right;
-  width: 180px;
-}
-
-
-#update-check-list-status .btn {
-  float:left;
-}
-
-#update-check-list-status .icon {
-  float: right;
-  margin: 0 4px;
-  vertical-align: middle;
-  width: 23px;
-}
-
-#update-check-list-status .icon img{
-  width: 100%;
+  background: none repeat scroll 0 0 #EEEEEE;
+  border: 1px solid #DDDDDD;
+  margin: 20px 0;
+  padding: 15px;
 }
