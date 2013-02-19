@@ -2167,10 +2167,19 @@
 			}
 			else if($project_type_id == 1)//operation
 			{
+/*
 				if(abs($budget['obligation']) > 0)
 				{
-					$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $budget['obligation'], $contract_sum, $combined_cost = 0, $action = 'subtract', $activate = 0);
+					$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $budget['obligation'], $contract_sum, $combined_cost = 0, $action = 'update', $activate = 0);
 				}
+*/
+				$this->db->query("SELECT sum(amount) as paid FROM fm_workorder"
+				. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$paid_last_year = $this->db->f('paid');
+
+				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action = 'update', $activate = 0);
 
 				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
 
