@@ -33,7 +33,7 @@
 			</dd>
 			<dt>
 				<label for="field_description"><xsl:value-of select="php:function('lang', 'Information about the event')" /></label>
-				<p><xsl:value-of select="php:function('lang', 'Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet')" /></p>
+				<p>Gi en kort beskrivelse av arrangementet/aktiviteten.</p>
 			</dt>
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="application/description"/></textarea>
@@ -41,7 +41,7 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
-			<p>Oppgi forventet/estimert antall deltakere. Vi vil ha det fordelt på aldersgruppeog kjønn. Dette er viktig ift. å kartlegge hvem som bruker anleggene.</p>
+			<p>Oppgi forventet/estimert antall deltakere.</p>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label></dt>
 			<dd>
 				<table id="agegroup">
@@ -71,7 +71,7 @@
 		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
-			<p>Velg hus og ressurser</p>
+			<p>Velg idrettsanlegg og ressurser.</p>
 			<dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
 			<dd>
 				<div class="autocomplete">
@@ -91,7 +91,7 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-			<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med 				timer:minutter. Du kan søke om flere tider ved å velge Legg til dato. For søknad om fast tid i en gitt periode legg inn startdato og 				klokkeslett for den første gangen her og oppgi intervall og sluttdato i felt 1: "Informasjon om aktiviteten"</p>
+			<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Du kan søke om flere tider ved å velge Legg til dato.</p>
 			<div id="dates-container">
 				<xsl:for-each select="application/dates">
 					<div class="date-container">
@@ -126,7 +126,6 @@
 		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading"><br />6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
-			<p>Oppgi ditt navn (fornavn og etternavn), e-post adresse vi kan nå deg på og telefon, mobil om du vil ha melding på SMS.</p>
 			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 			<dd>
 				<input id="field_contact_name" name="contact_name" type="text">
@@ -145,7 +144,7 @@
 					<xsl:attribute name="value"><xsl:value-of select="application/contact_email2"/></xsl:attribute>
 				</input>
 			</dd>
-			<dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
+			<dt><label for="field_contact_phone">Mobiltelefon</label></dt>
 			<dd>
 				<input id="field_contact_phone" name="contact_phone" type="text">
 					<xsl:attribute name="value"><xsl:value-of select="application/contact_phone"/></xsl:attribute>
@@ -154,18 +153,16 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
-			<p>Ut fra reglementet i pkt. 8 finner du kriterier for fakturering. Når du som privatperson skal låne noe som det ikke skal faktureres for oppgir du kun fødselsdato, men skal du leie noe som koster noe, da må vi ha hele personnummeret. Alle lag og organisasjoner skal oppgi organisasjonsnr.</p>
+			<p>I reglementet i pkt. 8 finner du kriterier for fakturering.</p>
 			<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 			<br />
 			<p>For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr. Organisasjonsnr. finner du her: www.brreg.no</p>
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<p>Alle som leier lokaler hos Stavanger kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
-			<br />
 			<div id='regulation_documents'>&nbsp;</div>
 			<br />
-			<p><xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" /></p>
+			<p>For å booke idrettsanlegg må du bekrefte at du har lest juridiske betingelser.</p>
 		</dl>
 		<div class="form-buttons">
 			<input type="submit">
