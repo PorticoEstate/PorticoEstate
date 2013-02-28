@@ -2229,7 +2229,7 @@ if(!$order_budget[0]['closed_order'])
 						'sum_oblications'		=> $_budget['sum_oblications'],
 						'actual_cost'			=> $_budget['actual_cost'],
 						'deviation_acc'			=> 0
-					);				
+					);
 				}
 			}
 
@@ -2470,7 +2470,7 @@ $test = 0;
 							$_delay_period += $_sum_oblications[$order_id];
 							$_sum_oblications[$order_id] = 0;
 						}
-						
+
 						//override if periode is closed
 						if(isset($closed_period[$period]) && $closed_period[$period])
 						{
@@ -2563,7 +2563,7 @@ $test = 0;
 						$_delay_period += $_sum_oblications[$order_id];
 						$_sum_oblications[$order_id] = 0;
 					}
-						
+
 					//override if periode is closed
 					if(isset($closed_period[$period]) && $closed_period[$period])
 					{
@@ -2877,7 +2877,7 @@ $test = 0;
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
 
-				$subtract = $last_budget - $paid_last_year;				
+				$subtract = $last_budget - $paid_last_year;
 				$_perform_subtraction = false;
 
 				if($last_budget >= 0)
@@ -2906,7 +2906,7 @@ $test = 0;
 				}
 
 				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
-				
+
 			}
 			else if($project_type_id == 1)//operation
 			{

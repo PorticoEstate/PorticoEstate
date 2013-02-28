@@ -2202,12 +2202,36 @@
 				. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
-				
-				$subtract = $last_budget - $paid_last_year;
-	//			$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $subtract, $subtract, $subtract, $action = 'subtract');
-				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action = 'update', true);
 
-				$new_budget = $last_budget - $paid_last_year;
+				$subtract = $last_budget - $paid_last_year;
+
+				$_perform_subtraction = false;
+
+				if($last_budget >= 0)
+				{
+					if($subtract > $last_budget)
+					{
+						$_perform_subtraction = true;
+					}
+				}
+				else
+				{
+					if($subtract < $last_budget)
+					{
+						$_perform_subtraction = true;
+					}
+				}
+
+				if($_perform_subtraction)
+				{
+					$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action = 'update', true);
+					$new_budget = $last_budget - $paid_last_year;
+				}
+				else
+				{
+					$new_budget = 0;
+				}
+
 				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
 			}
 //die();
