@@ -288,7 +288,7 @@ background: #fff url('../images/newlayout/bodyBg.gif') repeat-x;text-align: left
 
 #wrapper{
 background-color: #fff;
-width: 1280px;
+width: 100%;
 textalign: left;
 margin: 0 auto;
 overflow: hidden;
@@ -298,7 +298,7 @@ padding: 0 0px 40px;
 #header{
 overflow: hidden;
 line-height: 1;
-width: 1280px;
+width: 100%;
 background-image: none !important;
 height: 40px !important;
 }
@@ -355,7 +355,7 @@ background-repeat: repeat-x;
 border-top: 5px solid #B11F24; 
 clear: left;
 height: 30px;
-width: 1280px;
+width: 100%;
 margin-left: 0px;
 }
  #content{
