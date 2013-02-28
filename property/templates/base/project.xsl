@@ -437,37 +437,54 @@ Returns mixed
 													<xsl:apply-templates select="year_list/options"/>
 												</select>
 											</td>
+
 											<xsl:choose>
-											<xsl:when test="project_type_id !='3'">
-												<td>
-													<select name="values[budget_periodization]">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'periodization')"/>
-														</xsl:attribute>
-														<option value="0">
-															<xsl:value-of select="php:function('lang', 'periodization')"/>
-														</option>
-														<xsl:apply-templates select="periodization_list/options"/>
-													</select>
-												</td>
-												<td>
-													<input type="checkbox" name="values[budget_periodization_all]" value="True">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'all')"/>
-															<xsl:text> </xsl:text>
-															<xsl:value-of select="php:function('lang', 'periods')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-												<td>
-													<input type="checkbox" name="values[budget_periodization_activate]" value="1">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'activate')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</xsl:when>
-										</xsl:choose>
+												<xsl:when test="project_type_id ='3'">
+													<td>
+														<input type="checkbox" name="values[budget_reset_buffer]" value="1">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'delete')"/>
+																<xsl:text> </xsl:text>
+																<xsl:value-of select="php:function('lang', 'buffer')"/>
+																<xsl:text> </xsl:text>
+																<xsl:value-of select="php:function('lang', 'budget')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</xsl:when>
+											</xsl:choose>
+											
+											<xsl:choose>
+												<xsl:when test="project_type_id !='3'">
+													<td>
+														<select name="values[budget_periodization]">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'periodization')"/>
+															</xsl:attribute>
+															<option value="0">
+																<xsl:value-of select="php:function('lang', 'periodization')"/>
+															</option>
+															<xsl:apply-templates select="periodization_list/options"/>
+														</select>
+													</td>
+													<td>
+														<input type="checkbox" name="values[budget_periodization_all]" value="True">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'all')"/>
+																<xsl:text> </xsl:text>
+																<xsl:value-of select="php:function('lang', 'periods')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<input type="checkbox" name="values[budget_periodization_activate]" value="1">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'activate')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</xsl:when>
+											</xsl:choose>
 										</tr>
 									</table>
 								</td>
@@ -622,6 +639,9 @@ Returns mixed
 										total_records: <xsl:value-of select="total_records"/>,
 										edit_action:  <xsl:value-of select="edit_action"/>,
 										is_paginator:  <xsl:value-of select="is_paginator"/>,
+										<xsl:if test="rows_per_page">
+											rows_per_page: "<xsl:value-of select="rows_per_page"/>",
+										</xsl:if>
 										footer:<xsl:value-of select="footer"/>
 									}
 								]

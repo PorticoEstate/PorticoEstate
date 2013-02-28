@@ -15,7 +15,7 @@
 			
 		public function update_check_list_status( $check_list_id )
 		{
-      //$db_check_list = $this->so_check_list->get_db();
+            //$db_check_list = $this->so_check_list->get_db();
 			//$db_check_list->transaction_begin();
     
 			$check_list = $this->so_check_list->get_single( $check_list_id );
@@ -26,26 +26,26 @@
 			$num_pending_cases = 0;
 					
 			foreach($check_items as $check_item)
-      {
+            {
 				foreach($check_item->get_cases_array() as $case)
-        {
+                {
 					
 					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
-          {
+                    {
 						$num_open_cases++;
 					}
 					
 					if($case->get_status() == controller_check_item_case::STATUS_PENDING)
-          {
+                    {
 						$num_pending_cases++;
 					}
 				}	
 			}
 			
 			if($num_open_cases > 0)
-      {
+            {
 				$check_list->set_status(controller_check_list::STATUS_DONE);
-      }
+            }
       
 			$check_list->set_num_open_cases($num_open_cases);
 			$check_list->set_num_pending_cases($num_pending_cases);

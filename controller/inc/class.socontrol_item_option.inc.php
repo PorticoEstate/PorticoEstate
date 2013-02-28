@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.socontrol_item.inc.php 8909 2012-02-17 08:51:35Z erikhl $
+ 	* @version $Id$
 	*/	
 
 	phpgw::import_class('controller.socommon');

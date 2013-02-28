@@ -5,38 +5,8 @@
 
 <div id="main_content" class="medium">
 		
-	<!-- ==================  EDIT CHECKLIST  ========================= -->
-	
-	<div id="check-list-heading">
-		<div class="box-1">
-			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
-			<xsl:choose>
-				<xsl:when test="type = 'component'">
-					<h2><xsl:value-of select="component_array/xml_short_desc"/></h2>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="location_level = 1">
-							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
-						</xsl:when>
-						<xsl:otherwise>
-								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
-		
-		<div class="box-2 select-box">
-      <xsl:call-template name="nav_control_plan" />
-		</div>
-		
-		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<xsl:call-template name="check_list_tab_menu">
-	 		<xsl:with-param name="active_tab">view_details</xsl:with-param>
-		</xsl:call-template>
-	</div>
-	
+	<xsl:call-template name="check_list_top_section" />
+			
 	<!-- ==================  CHECKLIST DETAILS  ===================== -->
 	<div id="check_list_details">
 		<h3 class="box_header">Sjekklistedetaljer</h3>
@@ -54,22 +24,22 @@
 							<xsl:when test="check_list/status = 0">
 								<option value="1">Utført</option>
 								<option value="0" SELECTED="SELECTED">Ikke utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:when>
 							<xsl:when test="check_list/status = 1">
 								<option value="1" SELECTED="SELECTED">Utført</option>
 								<option value="0">Ikke utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:when>
-              <xsl:when test="check_list/status = 3">
+                            <xsl:when test="check_list/status = 3">
 								<option value="3" SELECTED="SELECTED">Kansellert</option>
 								<option value="0">Ikke utført</option>
-                <option value="1">Utført</option>
+                                <option value="1">Utført</option>
 							</xsl:when>
 							<xsl:otherwise>
 								<option value="0" SELECTED="SELECTED">Ikke utført</option>
 								<option value="1">Utført</option>
-                <option value="3">Kansellert</option>
+                                <option value="3">Kansellert</option>
 							</xsl:otherwise>
 						</xsl:choose>
 					</select>

@@ -78,7 +78,7 @@
 
 		public function __construct()
 		{
-			parent::__construct();
+			parent::__construct('controller');
 
 			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
 			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 

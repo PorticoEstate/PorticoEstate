@@ -40,8 +40,7 @@
 								</ul>
 							</xsl:when>
 						<xsl:otherwise>
-							<div class="empty_list"><span><xsl:value-of select="control_group/group_name"/></span></div>
-							<div>Ingen kontrollpunkt</div>
+							<div class="empty_list"><h4><xsl:value-of select="control_group/group_name"/></h4><span>(Ingen kontrollpunkt)</span></div>
 						</xsl:otherwise>
 						</xsl:choose>
 					</li>

@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version $Id: class.check_list_status_info.inc.php 8885 2012-02-16 07:41:15Z vator $
+ 	* @version $Id$
 	*/
 
 	include_class('controller', 'check_list_status_info', 'inc/component/');

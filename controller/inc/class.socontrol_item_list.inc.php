@@ -160,10 +160,9 @@
 		 * Get control item objects from database as objects or as arrays 
 		 * 
 		 * @param	$control_group_id	control group id
-		 * @param $return_type return data as objects or as arrays
 		 * @return  array with control items
 		*/
-		function get_control_items($control_group_id, $return_type = "return_object")
+		function get_control_items($control_group_id)
 		{
 			$control_group_id = (int) $control_group_id;
 
@@ -184,14 +183,7 @@
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
 
-				if($return_type == "return_object")
-				{
-					$results[] = $control_item;
-				}
-				else
-				{
-					$results[] = $control_item->toArray();
-				}
+				$results[] = $control_item;
 			}
 
 			return $results;

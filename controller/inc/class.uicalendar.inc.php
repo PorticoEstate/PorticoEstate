@@ -56,6 +56,7 @@
 		private $so_control_item;
 		private $so_check_list;
 		private $so_check_item;
+        private $location_finder;
 		public $public_functions = array
 			(
 			'view_calendar_for_month' => true,
@@ -83,6 +84,8 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 
+            $this->location_finder = new location_finder();
+			     
 			self::set_active_menu('controller::location_check_list');
 		}
 
@@ -117,12 +120,12 @@
 
 			if ($location_code != null && $location_code != "")
 			{
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 
 				$user_role = true;
 
 				// Fetches buildings on property
-				$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
 				// Fetches controls for location within specified time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -203,29 +206,29 @@
 				);
 
 				$data = array
-					(
-					'buildings_on_property' => $buildings_on_property,
-					'my_locations' => $my_locations,
-					'property_array' => $property_array,
-					'current_location' => $location_array,
-					'heading_array' => $heading_array,
-					'controls_calendar_array' => $controls_calendar_array,
+				(
+					'buildings_on_property'     => $buildings_on_property,
+					'my_locations'              => $my_locations,
+					'property_array'            => $property_array,
+					'current_location'          => $location_array,
+					'heading_array'             => $heading_array,
+					'controls_calendar_array'   => $controls_calendar_array,
 					'components_calendar_array' => $components_calendar_array,
-					'location_level' => $level,
-					'roles_array' => $roles_array,
-					'repeat_type_array' => $repeat_type_array,
-					'current_year' => $year,
-					'current_month_nr' => $month,
-					'current_role' => $role,
-					'current_repeat_type' => $repeat_type
+					'location_level'            => $level,
+					'roles_array'               => $roles_array,
+					'repeat_type_array'         => $repeat_type_array,
+					'current_year'              => $year,
+					'current_month_nr'          => $month,
+					'current_role'              => $role,
+					'current_repeat_type'       => $repeat_type
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 				self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_manager',
-																			'calendar/icon_color_map', 'calendar/select_my_locations',
-																			'calendar/select_buildings_on_property', 'calendar/nav_calendar_month',
-																			'calendar/calendar_filters'), $data);
+                                                'calendar/icon_color_map', 'calendar/select_my_locations',
+												'calendar/select_buildings_on_property', 'calendar/nav_calendar_month',
+												'calendar/calendar_filters'), $data);
 			}
 			else
 			{
@@ -271,12 +274,12 @@
 
 			if ($location_code != null && $location_code != "")
 			{
-				$level = $this->get_location_level($location_code);
+				$level = $this->location_finder->get_location_level($location_code);
 
 				$user_role = true;
 
 				// Fetches buildings on property
-				$buildings_on_property = $this->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
 				// Fetches all controls for the location within time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -421,9 +424,9 @@
 				self::add_javascript('controller', 'controller', 'ajax.js');
 
 				self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_manager',
-					'calendar/icon_color_map', 'calendar/select_my_locations',
-					'calendar/select_buildings_on_property', 'calendar/nav_calendar_year',
-					'calendar/calendar_filters'), $data);
+                                                'calendar/icon_color_map', 'calendar/select_my_locations',
+                                                'calendar/select_buildings_on_property', 'calendar/nav_calendar_year',
+                                                'calendar/calendar_filters'), $data);
 			}
 			else
 			{
@@ -557,7 +560,7 @@
 			);
 
 			self::render_template_xsl(array('calendar/view_calendar_year_for_locations', 'calendar/check_list_status_manager',
-				'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
+                                            'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -597,7 +600,7 @@
 				$repeat_type = $control->get_repeat_type();
 				$check_lists_array = $this->so->get_check_lists_for_control_and_location($control_id, $curr_location_code, $from_date_ts, $to_date_ts, $control->get_repeat_type());
 
-        $month_calendar = new month_calendar($control, $year, $month, null, $curr_location_code, "location");
+                $month_calendar = new month_calendar($control, $year, $month, null, $curr_location_code, "location");
 				$calendar_array = $month_calendar->build_calendar($check_lists_array);
 
 				$locations_with_calendar_array[] = array("location" => $location, "calendar_array" => $calendar_array);
@@ -694,38 +697,6 @@
 			return $agg_open_cases_pr_month_array;
 		}
 
-		function get_buildings_on_property($user_role, $location_code, $level)
-		{
-
-			// Property level
-			if ($level == 1)
-			{
-				$property_location_code = $location_code;
-			}
-			// Building level
-			else if ($level > 1)
-			{
-				$split_loc_code_array = explode('-', $location_code);
-				$property_location_code = $split_loc_code_array[0];
-			}
-
-			if ($user_role)
-			{
-				$criteria = array();
-				$criteria['location_code'] = $property_location_code;
-				$criteria['field_name'] = 'loc2_name';
-				$criteria['child_level'] = '2';
-
-				$buildings_on_property = execMethod('property.solocation.get_children', $criteria);
-			}
-			else
-			{
-				$buildings_on_property = execMethod('property.solocation.get_children', $property_location_code);
-			}
-
-			return $buildings_on_property;
-		}
-
 		function get_start_month_for_control($control)
 		{
 			// Checks if control starts in the year that is displayed
@@ -756,13 +727,6 @@
 			return $to_month;
 		}
 
-		function get_location_level($location_code)
-		{
-			$level = count(explode('-', $location_code));
-
-			return $level;
-		}
-
 		function validate_location_code($location_code)
 		{
 			$criteria = array
@@ -773,12 +737,13 @@
 				'allrows' => false
 			);
 
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities($criteria);
-
 			if (empty($location_code))
 			{
-				$location_code = $my_locations[0]["location_code"];
+                $my_locations = $this->location_finder->get_responsibilities($criteria);
+                if( count($my_locations) > 0 )
+                {
+                    $location_code = $my_locations[0]["location_code"];
+                }
 			}
 
 			return $location_code;
@@ -794,8 +759,7 @@
 				'allrows' => false
 			);
 
-			$location_finder = new location_finder();
-			$my_locations = $location_finder->get_responsibilities($criteria);
+			$my_locations = $this->location_finder->get_responsibilities($criteria);
 
 			$my_washed_locations = array();
 
