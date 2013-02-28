@@ -3,7 +3,7 @@
 
   <xsl:param name="location_code" />
   <xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
-
+  
   <xsl:choose>
     <xsl:when test="status = 'CONTROL_REGISTERED'">
       <a>
@@ -70,7 +70,18 @@
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
     </xsl:when>
-    <xsl:when test="status = 'CONTROL_NOT_DONE_WITH_CHECKLIST'">
+    <xsl:when test="status = 'CONTROL_REGISTERED_WITH_CHECKLIST'">
+      <a>
+        <xsl:attribute name="href">
+          <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+          <xsl:text>&amp;check_list_id=</xsl:text>
+          <xsl:value-of select="info/check_list_id"/>
+ 		 <xsl:value-of select="$session_url"/>
+        </xsl:attribute>
+        <img height="15" src="controller/images/status_icon_yellow_ring.png" />
+      </a>
+    </xsl:when>
+    <xsl:when test="status = 'CONTROL_NOT_DONE_WITH_PLANNED_DATE'">
       <a>
         <xsl:attribute name="href">
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
@@ -81,7 +92,7 @@
         <img height="15" src="controller/images/status_icon_red_cross.png" />
       </a>
     </xsl:when>
-    <xsl:when test="status = 'CONTROL_NOT_DONE_WITH_PLANNED_DATE'">
+    <xsl:when test="status = 'CONTROL_NOT_DONE_WITH_CHECKLIST'">
       <a>
         <xsl:attribute name="href">
           <xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>

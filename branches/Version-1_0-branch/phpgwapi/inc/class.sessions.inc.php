@@ -541,6 +541,14 @@
 		*/
 		public function link($url, $extravars = array(), $redirect=false, $external = false)
 		{
+
+			$custom_frontend = isset($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $GLOBALS['phpgw_info']['flags']['custom_frontend'] ? $GLOBALS['phpgw_info']['flags']['custom_frontend'] : '';
+
+			if($custom_frontend && substr($url, 0, 4) != 'http')
+			{
+				$url = '/' . $custom_frontend . '/' . ltrim($url, '/');
+			}
+
 			//W3C Compliant in markup	
 			$term = '&amp;'; 
 			if ( $redirect )

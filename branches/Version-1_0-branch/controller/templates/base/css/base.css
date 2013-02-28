@@ -285,7 +285,6 @@ div.allocation-list
 }
 #dt-dlg_c .underlay {overflow:hidden;}
 .inprogress {position:absolute;} /* transitional progressive enhancement state */
-}
 
 dl.controller-description {
   width: 70%;
@@ -719,10 +718,12 @@ ul.items li.list_item{
 /* =======================================  EXPAND LIST  ========================================= */
 
 ul.expand_list h4 {
+  background: none repeat scroll 0 0 #D0E2F8;
   cursor: pointer;
   font-size: 1.1em;
   margin-bottom: 6px;
   margin-top: 0;
+  padding: 3px 6px;
 }
 
 ul.expand_list h4 img {
@@ -1408,6 +1409,7 @@ ul#icon_color_map span {
   font-size: 21px;
   padding-left: 500px;
 }
+
 /* ===============================  CALENDAR INFO BOX ========================== */
 
 a.view_info_box {
@@ -1416,7 +1418,7 @@ a.view_info_box {
   font-size: 10px;
   font-weight: bold;
   height: 15px;
-  padding-top: 1px;
+  line-height: 15px;
   text-align: center;
   text-decoration: none;
 }
@@ -1483,15 +1485,15 @@ a.view_info_box {
 #info_box .case {
  	text-align:left; 	
 }
- 
+
 .empty_list h4{
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
 }
 
 .empty_list {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .yui-pg-first{
@@ -1636,23 +1638,36 @@ ul.check_items h5{
   overflow: hidden;
 }
 
-#check_list_menu a {
+#check_list_menu a, #check_list_menu span {
   background: none repeat scroll 0 0 #F4EDE3;
-  border: 1px solid #EDE4D8;
+  border: 1px solid #E7E1DA;
   color: #444444;
   cursor: pointer;
   display: inline-block;
   font-weight: bold;
-  margin-right: 3px;
   padding: 18px 0;
   text-align: center;
   text-decoration: none;
   width: 185px;
 }
 
-#check_list_menu a.active {
- 	background: none repeat scroll 0 0 #CAE3FB;
-  border: 1px solid #CAE3FB;
+#check_list_menu span {
+  cursor: default;
+}
+
+#check_list_menu a.first, #check_list_menu span.first {
+  border-radius: 4px 0 0 4px;
+  border-right: 0 none;
+}
+
+#check_list_menu a.last, #check_list_menu span.last {
+  border-radius: 0 4px 4px 0;
+  border-left: 0;
+}
+
+#check_list_menu a.active, #check_list_menu span.active {
+  background: none repeat scroll 0 0 #E7E1DA;
+  border: 1px solid #E7E1DA;
 }
 
 #check_list_menu .left_btns {
@@ -1663,7 +1678,7 @@ ul.check_items h5{
   float: right;
 }
 
-#check_list_menu .right_btns a {
+#check_list_menu .right_btns a, #check_list_menu .right_btns span {
   background: none repeat scroll 0 0 #F57056;
   border-color: #EE836F -moz-use-text-color #CB563F;
   border-radius: 4px;
@@ -1757,9 +1772,11 @@ fieldset.location_details div{
 li.check_item_case h4 {
   margin: 5px 0;
 }
+
 li.check_item_case ul{
   margin-bottom: 20px;
 }
+
 li.check_item_case ul li {
   background: none repeat scroll 0 0 #E7EFF8;
   border: 1px solid #DDDDDD;
@@ -1767,50 +1784,41 @@ li.check_item_case ul li {
   margin: 10px 0 0 20px;
   overflow: hidden;
 }
-li.check_item_case ul li .col_1 {
-  float: left;
-  padding: 2em 2%;
-  vertical-align: top;
-}
-li.check_item_case ul li .col_2 {
-  border-left: 1px solid #DDDDDD;
-  border-right: 1px solid #DDDDDD;
-  float: left;
-  padding: 1em 2%;
-  width: 73%;
-}
-li.check_item_case ul li .col_3 {
-  float: left;
-  padding: 3%;
-  vertical-align: top;
-}
 
 li.check_item_case ul li.quick_edit_case {
   padding: 0;
 }
+
 li.check_item_case .quick_edit_case h4 {
   color: #000000;
   margin: 0;
   padding: 2px 10px;
 }
 
-li.check_item_case .col_1 {
-  display: inline-block;
-  padding: 2em 2%;
-  vertical-align: top;
+li.check_item_case ul li .col_1 {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  float: left;
+  padding: 2em 0;
+  width: 5%;
 }
-li.check_item_case .col_2 {
+
+li.check_item_case ul li .col_2 {
   border-left: 1px solid #DDDDDD;
   border-right: 1px solid #DDDDDD;
-  display: inline-block;
+  float: left;
   padding: 1em 2%;
-  width: 73%;
+  width: 76%;
 }
-li.check_item_case .col_3 {
-  display: inline-block;
-  padding: 3%;
-  vertical-align: top;
+
+li.check_item_case ul li .col_3 {
+  float: left;
+  padding: 30px 0;
+  text-align: center;
+  width: 14.7333%;
 }
+
 #main_content .quick_edit_case fieldset {
   padding: 5px;
 }
@@ -1857,9 +1865,9 @@ li.check_item_case .col_3 {
 .frm_register_case textarea {
   display: block;
   height: 100px;
-  margin-top: 6px;
   margin-bottom: 1em;
-  width: 63%;
+  margin-top: 6px;
+  width: 98.5%;
 }
 
 .frm_register_case label {
@@ -1875,18 +1883,28 @@ li.check_item_case .col_3 {
   margin-bottom: 10px;
 }
 
+.add-cases .expand_list {
+  padding-left: 15px;
+}
+
 .add-cases .expand_list li{
   background: none repeat scroll 0 0 #EEEEEE;
   margin-bottom: 10px;
   padding: 10px; 
 }
 
-.add-cases .expand_list h4{
-  margin-bottom: 0;
+.add-cases .expand_list h4 {
+  background: none repeat scroll 0 0 transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.add-cases .expand_list h4 span{
+  padding-left: 0;
 }
 
 .add-cases h3 img {
-  height: 15px;
+  height: 18px;
   margin-right: 5px;
 }
 
@@ -2298,4 +2316,11 @@ p.no_items_msg {
 
 #show-control-details-box .pre {
   margin-right: 3px;
+}
+
+#choose-building-wrp {
+  background: none repeat scroll 0 0 #EEEEEE;
+  border: 1px solid #DDDDDD;
+  margin: 20px 0;
+  padding: 15px;
 }

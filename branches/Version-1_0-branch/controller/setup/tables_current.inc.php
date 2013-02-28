@@ -200,6 +200,7 @@
         'entry_date' 				=> array('type' => 'int', 'precision' => 8,'nullable' => false),
         'modified_date'	 		=> array('type' => 'int', 'precision' => 8,'nullable' => True),
         'modified_by' 			=> array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'location_code' 		=> array('type' => 'varchar', 'precision' => 30, 'nullable' => True)
       ),
       'pk' => array('id'),
       'fk' => array('controller_check_item' => array('check_item_id' => 'id')),
@@ -208,10 +209,10 @@
 		),
 		'controller_check_item_status' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto','nullable' => False),
-				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'open' => array('type' => 'int','precision' => '2','nullable' => True),
-				'closed' => array('type' => 'int','precision' => '2','nullable' => True),
+				'id' 			=> array('type' => 'auto','nullable' => False),
+				'name' 		=> array('type' => 'varchar','precision' => '50','nullable' => False),
+				'open' 		=> array('type' => 'int','precision' => '2','nullable' => True),
+				'closed' 	=> array('type' => 'int','precision' => '2','nullable' => True),
 				'pending' => array('type' => 'int','precision' => '2','nullable' => True),
 				'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
@@ -222,8 +223,8 @@
 		),
 		'controller_control_item_option' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
-				'option_value' =>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
+				'id' 							=> array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+				'option_value' 		=>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
 				'control_item_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  True)
 			),
 			'pk' => array('id'),

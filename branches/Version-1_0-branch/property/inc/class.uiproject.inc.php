@@ -1780,6 +1780,19 @@
 				$lang_active = lang('Check to activate period');
 				$values['sum'] = 0;
 
+				if($content_budget)
+				{
+					foreach ($content_budget as $key => $row)
+					{
+						$_year_arg[$key]  = $row['year'];
+						$_month_arg[$key] = $row['month'];
+					}
+
+					array_multisort($_year_arg, SORT_DESC, $_month_arg, SORT_ASC, $content_budget);
+
+					reset($content_budget);
+				}
+
 				foreach($content_budget as & $b_entry)
 				{
 					if($b_entry['active'])
@@ -1813,8 +1826,6 @@
 			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
 			$values['sum']  = number_format($values['sum'], 0, ',', ' ');
 			$value_remainder = number_format($value_remainder, 0, ',', ' ');
-
-//_debug_array($content_budget);die();
 
 			if( isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
@@ -1875,6 +1886,7 @@
 					'edit_action'			=> "''",
 					'permission'   			=> "''",
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> 12,
 					'footer'				=> 0
 			);
 
@@ -2591,10 +2603,8 @@
 				$entry['selected'] = $entry['id'] == $type ? 1 : 0;
 			}
 
-
-
-			$year	= date('Y');
-			$limit	= $year + 2;
+			$year	= date('Y') - 2;
+			$limit	= $year + 4;
 
 			while ($year < $limit)
 			{
