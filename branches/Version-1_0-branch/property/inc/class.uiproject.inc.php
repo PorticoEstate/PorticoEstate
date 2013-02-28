@@ -2519,9 +2519,9 @@
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'num_open','label'=>lang('open'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
-														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
 														))
@@ -2537,10 +2537,10 @@
 														array('key' => 'start_date','label'=>lang('date'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'project_type','label'=>lang('project type'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'budget','label'=>lang('budget'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'obligation','label'=>lang('obligation'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'continuous','label'=>lang('continuous'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'new_budget','label'=>lang('new'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true ,'formatter'=>'FormatterRight'),
 														array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)
