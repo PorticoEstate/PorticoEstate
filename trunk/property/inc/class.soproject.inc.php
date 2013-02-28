@@ -2877,12 +2877,36 @@ $test = 0;
 				$this->db->next_record();
 				$paid_last_year = $this->db->f('paid');
 
-				$subtract = $last_budget - $paid_last_year;
-//_debug_array($subtract);die();
-				$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
+				$subtract = $last_budget - $paid_last_year;				
+				$_perform_subtraction = false;
 
-				$new_budget = $last_budget - $paid_last_year;
+				if($last_budget >= 0)
+				{
+					if($subtract > $last_budget)
+					{
+						$_perform_subtraction = true;
+					}
+				}
+				else
+				{
+					if($subtract < $last_budget)
+					{
+						$_perform_subtraction = true;
+					}
+				}
+
+				if($_perform_subtraction)
+				{
+					$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
+					$new_budget = $last_budget - $paid_last_year;
+				}
+				else
+				{
+					$new_budget = 0;
+				}
+
 				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
+				
 			}
 			else if($project_type_id == 1)//operation
 			{
