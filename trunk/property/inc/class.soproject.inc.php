@@ -2932,7 +2932,7 @@ $test = 0;
 		{
 			if($transfer_budget_year && $execute && $new_budget)
 			{
-				echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget_year} </H1>";
+		//		echo "<H1> Overføre budsjett for valgte prosjekt/bestillinger til år {$transfer_budget_year} </H1>";
 				$soworkorder = CreateObject('property.soworkorder');
 
 				foreach($ids as $_id)
