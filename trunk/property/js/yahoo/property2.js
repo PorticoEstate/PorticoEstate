@@ -374,12 +374,17 @@
 
 		if(data[0]["is_paginator"]==1)
 		{
+			var rows_per_page = 0;
+			if(typeof(data[0]['rows_per_page'])!= 'undefined' && data[0]['rows_per_page'])
+			{
+				rows_per_page = data[0]['rows_per_page'];
+			}
 
 			myPaginatorConfig = {
 									containers			: pager,
 									totalRecords		: data[0]["total_records"],
 									pageLinks			: 10,
-									rowsPerPage			: 10
+									rowsPerPage			: rows_per_page
 								}
 
 			eval("myPaginator_"+num+" = new YAHOO.widget.Paginator(myPaginatorConfig)");

@@ -1438,6 +1438,13 @@
 					$historylog->add('B',$project['id'],$project['budget'], $old_budget);
 				}
 
+				if($project['budget_reset_buffer'])
+				{
+					$this->db->query("UPDATE fm_project SET budget = 0 WHERE id = " . (int)$project['id'],__LINE__,__FILE__);
+					$this->db->query("DELETE FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['id'],__LINE__,__FILE__);
+					$historylog->add('B',$project['id'],0, $old_budget);
+					$historylog->add('RM',$project['id'],'reset', false);
+				}
 			}
 			else // investment or operation
 			{
