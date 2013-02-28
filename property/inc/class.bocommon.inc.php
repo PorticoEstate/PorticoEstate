@@ -176,8 +176,10 @@
 		}
 
 
-		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='', $order='', $query='',$offset='', $enabled = false)
+		function get_user_list($format='',$selected='',$extra='',$default='',$start='', $sort='ASC', $order='account_lastname', $query='',$offset='', $enabled = false)
 		{
+			$order= $order ? $order : 'account_lastname';
+
 			switch($format)
 			{
 				case 'select':
@@ -208,6 +210,7 @@
 			}
 
 			$accounts = & $GLOBALS['phpgw']->accounts;
+
 			$users = $accounts->get_list('accounts', $start, $sort, $order, $query,$offset);
 
 			unset($accounts);
