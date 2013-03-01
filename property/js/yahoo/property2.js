@@ -380,11 +380,19 @@
 				rows_per_page = data[0]['rows_per_page'];
 			}
 
+			var initial_page = 1;
+
+			if(typeof(data[0]['initial_page'])!= 'undefined' && data[0]['initial_page'])
+			{
+				initial_page = data[0]['initial_page'];
+			}
+
 			myPaginatorConfig = {
 									containers			: pager,
 									totalRecords		: data[0]["total_records"],
 									pageLinks			: 10,
-									rowsPerPage			: rows_per_page
+									rowsPerPage			: rows_per_page,
+									initialPage			: initial_page
 								}
 
 			eval("myPaginator_"+num+" = new YAHOO.widget.Paginator(myPaginatorConfig)");
