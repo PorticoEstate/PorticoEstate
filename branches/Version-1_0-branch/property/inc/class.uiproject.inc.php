@@ -1771,6 +1771,8 @@
 
 			$sum_actual_cost = 0;
 			$sum_oblications = 0;
+			$rows_per_page = 10;
+			$initial_page = 1;
 
 			if($id)
 			{
@@ -1780,6 +1782,19 @@
 				$lang_active = lang('Check to activate period');
 				$values['sum'] = 0;
 
+				$_year_count = array();
+				foreach ($content_budget as $key => $row)
+				{
+					$_year_count[$row['year']]  +=1;
+					$rows_per_page = $_year_count[$row['year']];
+				}
+
+				if($content_budget)
+				{
+					$initial_page = floor(count($content_budget)/$rows_per_page);
+				}
+
+/*
 				if($content_budget)
 				{
 					foreach ($content_budget as $key => $row)
@@ -1792,7 +1807,7 @@
 
 					reset($content_budget);
 				}
-
+*/
 				foreach($content_budget as & $b_entry)
 				{
 					if($b_entry['active'])
@@ -1886,7 +1901,8 @@
 					'edit_action'			=> "''",
 					'permission'   			=> "''",
 					'is_paginator'			=> 1,
-					'rows_per_page'			=> 12,
+					'rows_per_page'			=> $rows_per_page,
+					'initial_page'			=> $initial_page,
 					'footer'				=> 0
 			);
 
