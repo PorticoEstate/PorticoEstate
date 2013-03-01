@@ -974,6 +974,7 @@
 				$_options = array
 				(
 					'_skip_import_'			=> 'Utelates fra import/implisitt',
+					'import_type'			=> 'import type',
 					'building_part'			=> 'bygningsdels kode',
 					'descr'					=> 'Tilstandbeskrivelse',
 					'title'					=> 'Tiltak',
