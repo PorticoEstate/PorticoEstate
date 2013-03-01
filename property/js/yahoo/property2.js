@@ -374,7 +374,7 @@
 
 		if(data[0]["is_paginator"]==1)
 		{
-			var rows_per_page = 0;
+			var rows_per_page = 10;
 			if(typeof(data[0]['rows_per_page'])!= 'undefined' && data[0]['rows_per_page'])
 			{
 				rows_per_page = data[0]['rows_per_page'];
