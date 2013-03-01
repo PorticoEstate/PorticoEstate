@@ -1782,15 +1782,14 @@
 				$lang_active = lang('Check to activate period');
 				$values['sum'] = 0;
 
-				$_year_count = array();
-				foreach ($content_budget as $key => $row)
+				if($content_budget && $values['periodization_id'])
 				{
-					$_year_count[$row['year']]  +=1;
-					$rows_per_page = $_year_count[$row['year']];
-				}
-
-				if($content_budget)
-				{
+					$_year_count = array();
+					foreach ($content_budget as $key => $row)
+					{
+						$_year_count[$row['year']]  +=1;
+						$rows_per_page = $_year_count[$row['year']];
+					}
 					$initial_page = floor(count($content_budget)/$rows_per_page);
 				}
 
@@ -1844,6 +1843,9 @@
 
 			if( isset($values['project_type_id']) && $values['project_type_id']==3)
 			{
+
+				$rows_per_page = 10;
+				$initial_page = 1;
 
 				$myColumnDefs[0] = array
 				(
@@ -1917,6 +1919,8 @@
 					'total_records'			=> count($content_orders),
 					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit'))),
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> 10,
+					'initial_page'			=> 1,
 					'footer'				=> 0
 				);
 
@@ -1978,6 +1982,8 @@
 					'total_records'			=> count($content_invoice),
 					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> 10,
+					'initial_page'			=> 1,
 					'footer'				=> 0
 				);
 
