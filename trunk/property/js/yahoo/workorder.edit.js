@@ -176,7 +176,7 @@ var vendor_id;
   		tmp_sum1 = getTotalSum_active('budget',0,paginator,datatable);
  		tmp_sum2 = getTotalSum_active('sum_orders',0,paginator,datatable);
   		tmp_sum3 = getTotalSum_active('sum_oblications',0,paginator,datatable);
-  		tmp_sum4 = getTotalSum('actual_cost',0,paginator,datatable);
+  		tmp_sum4 = getTotalSum_active('actual_cost',0,paginator,datatable);
   		tmp_sum5 = getTotalSum_active('diff',0,paginator,datatable);
  		tmp_sum6 = getTotalSum_active('deviation',0,paginator,datatable);
 
