@@ -642,6 +642,9 @@ Returns mixed
 										<xsl:if test="rows_per_page">
 											rows_per_page: "<xsl:value-of select="rows_per_page"/>",
 										</xsl:if>
+										<xsl:if test="initial_page">
+											initial_page: "<xsl:value-of select="initial_page"/>",
+										</xsl:if>
 										footer:<xsl:value-of select="footer"/>
 									}
 								]
