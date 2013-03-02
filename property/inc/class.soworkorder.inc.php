@@ -1681,7 +1681,6 @@
 
 			$closed_period = array();
 			$active_period = array();
-			$_dummy_period = '';
 
 			$sql = "SELECT fm_workorder_budget.budget, fm_workorder_budget.combined_cost, year, month, active, closed"
 			. " FROM fm_workorder {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -1696,7 +1695,6 @@
 							$this->db->f('year'),
 							$this->db->f('month')
 						);
-				$_dummy_period = $period;
 
 				$order_budget[$period] = array
 				(
@@ -1724,55 +1722,52 @@
  				$closed_period[$period] = $this->db->f('closed');
 			}
 
-			reset($order_budget);
-
-//			if ( $order_budget )
-			{
-				$sql = "SELECT order_id, periode, amount AS actual_cost"
-				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
-				. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
+			$sql = "SELECT order_id, periode, amount AS actual_cost"
+			. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
+			. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
 //_debug_array($sql);
-				$this->db->query($sql,__LINE__,__FILE__);
-				while ($this->db->next_record())
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$periode = $this->db->f('periode');
+				$_dummy_period = $periode ? $periode : date('Y') . '00';
+
+				if(!$periode)
 				{
-					$periode = $this->db->f('periode');
-					if(!$periode)
-					{
-						$periode = date('Ym');
-						$_dummy_period = $_dummy_period ? $_dummy_period : $periode;
-					}
+					$periode = date('Ym');
+				}
 
-					$year = substr( $periode, 0, 4 );
+				$year = substr( $periode, 0, 4 );
 
-					$_found = false;
-					if(isset($order_budget[$periode]))
+				$_found = false;
+				if(isset($order_budget[$periode]))
+				{
+					$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
+					$_found = true;
+				}
+				else
+				{
+					for ($i=0;$i<13;$i++)
 					{
-						$order_budget[$periode]['actual_cost'] += $this->db->f('actual_cost');
-						$_found = true;
-					}
-					else
-					{
-						for ($i=0;$i<13;$i++)
+						$_period = $year . sprintf("%02s", $i);
+						if(isset($order_budget[$_period]))
 						{
-							$_period = $year . sprintf("%02s", $i);
-							if(isset($order_budget[$_period]))
-							{
-								$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
+							$order_budget[$_period]['actual_cost'] += $this->db->f('actual_cost');
 //_debug_array($test+=$this->db->f('actual_cost'));
-								$_found = true;
-								break;
-							}
+							$_found = true;
+							break;
 						}
 					}
+				}
 
-					if(!$_found)
-					{
-						$order_budget[$_dummy_period]['year'] = substr( $_dummy_period, 0, 4 );
-						$order_budget[$_dummy_period]['month'] = substr( $_dummy_period, -2);
-						$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
-					}
+				if(!$_found)
+				{
+					$order_budget[$_dummy_period]['year'] = substr( $_dummy_period, 0, 4 );
+					$order_budget[$_dummy_period]['month'] = substr( $_dummy_period, -2);
+					$order_budget[$_dummy_period]['actual_cost'] += $this->db->f('actual_cost');
 				}
 			}
+
 
 			$sort_period = array();
 			$values = array();
@@ -1849,7 +1844,7 @@
 				array_multisort($sort_period, SORT_ASC, $values);
 			}
 
-
+//_debug_array($values);die();
 			foreach ($values as &$entry)
 			{
 	//			$entry['year'] = substr( $entry['period'], 0, 4 );
