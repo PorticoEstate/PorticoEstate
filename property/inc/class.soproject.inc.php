@@ -731,6 +731,11 @@
 					$budget = $this->get_budget($project['project_id']);
 					foreach($budget as $entry)
 					{
+						if($entry['active'])
+						{
+							$project['actual_cost'] += $entry['actual_cost'];
+						}
+
 						if ($filter_year && $filter_year != 'all')
 						{
 							if($entry['year'] == $filter_year)
@@ -738,12 +743,10 @@
 								$project['combined_cost'] += $entry['sum_orders'];
 								$project['budget'] += $entry['budget'];
 								$project['obligation']  += $entry['sum_oblications'];
-								$project['actual_cost'] += $entry['actual_cost'];
 							}
 						}
 						else 
 						{
-							$project['actual_cost'] += $entry['actual_cost'];
 							if($entry['active'])
 							{
 								$project['combined_cost'] += $entry['sum_orders'];
@@ -2871,11 +2874,12 @@ $test = 0;
 				$this->db->query("SELECT sum(budget) as budget FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year} AND active = 1",__LINE__,__FILE__);
 				$this->db->next_record();
 				$last_budget = $this->db->f('budget');
+/*
 				if( !abs( $last_budget ) > 0 )
 				{
 					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
 				}
-
+*/
 				//paid last year
 				$this->db->query("SELECT sum(amount) as paid FROM fm_project"
 				. " {$this->join} fm_workorder ON fm_project.id = fm_workorder.project_id"
@@ -2889,19 +2893,25 @@ $test = 0;
 
 				if($last_budget >= 0)
 				{
-					if($subtract > $last_budget)
+					if($paid_last_year <= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
 				}
 				else
 				{
-					if($subtract < $last_budget)
+					if($paid_last_year >= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
 				}
-
+/*
+_debug_array($last_budget);
+_debug_array($paid_last_year);
+_debug_array($subtract);
+_debug_array($_perform_subtraction);
+die();
+*/
 				if($_perform_subtraction)
 				{
 					$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
