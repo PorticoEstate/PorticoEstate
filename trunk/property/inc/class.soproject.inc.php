@@ -2890,14 +2890,14 @@ $test = 0;
 
 				if($last_budget >= 0)
 				{
-					if($subtract >= $last_budget)
+					if($subtract <= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
 				}
 				else
 				{
-					if($subtract <= $last_budget)
+					if($subtract >= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
