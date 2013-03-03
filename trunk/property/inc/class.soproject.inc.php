@@ -2890,19 +2890,25 @@ $test = 0;
 
 				if($last_budget >= 0)
 				{
-					if($subtract <= $last_budget)
+					if($paid_last_year <= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
 				}
 				else
 				{
-					if($subtract >= $last_budget)
+					if($paid_last_year >= $last_budget)
 					{
 						$_perform_subtraction = true;
 					}
 				}
-
+/*
+_debug_array($last_budget);
+_debug_array($paid_last_year);
+_debug_array($subtract);
+_debug_array($_perform_subtraction);
+die();
+*/
 				if($_perform_subtraction)
 				{
 					$transferred = $this->update_budget($id, $latest_year, $periodization_id, $subtract, false, 'subtract');
