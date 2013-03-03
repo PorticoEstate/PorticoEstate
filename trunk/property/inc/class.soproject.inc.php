@@ -731,6 +731,11 @@
 					$budget = $this->get_budget($project['project_id']);
 					foreach($budget as $entry)
 					{
+						if($entry['active'])
+						{
+							$project['actual_cost'] += $entry['actual_cost'];
+						}
+
 						if ($filter_year && $filter_year != 'all')
 						{
 							if($entry['year'] == $filter_year)
@@ -738,12 +743,10 @@
 								$project['combined_cost'] += $entry['sum_orders'];
 								$project['budget'] += $entry['budget'];
 								$project['obligation']  += $entry['sum_oblications'];
-								$project['actual_cost'] += $entry['actual_cost'];
 							}
 						}
 						else 
 						{
-							$project['actual_cost'] += $entry['actual_cost'];
 							if($entry['active'])
 							{
 								$project['combined_cost'] += $entry['sum_orders'];
