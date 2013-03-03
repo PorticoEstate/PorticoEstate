@@ -794,6 +794,11 @@
 				$order_budget = $this->get_budget($workorder['workorder_id']);
 				foreach($order_budget as $entry)
 				{
+					if($entry['active'])
+					{
+						$workorder['actual_cost'] += $entry['actual_cost'];
+					}
+
 					if ($filter_year && $filter_year != 'all')
 					{
 						if($entry['year'] == $filter_year)
@@ -801,12 +806,10 @@
 							$workorder['combined_cost'] += $entry['sum_orders'];
 							$workorder['budget'] += $entry['budget'];
 							$workorder['obligation']  += $entry['sum_oblications'];
-							$workorder['actual_cost'] += $entry['actual_cost'];
 						}
 					}
 					else 
 					{
-						$workorder['actual_cost'] += $entry['actual_cost'];
 						if($entry['active'])
 						{
 							$workorder['combined_cost'] += $entry['sum_orders'];
