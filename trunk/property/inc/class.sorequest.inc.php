@@ -239,9 +239,9 @@
 			. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 			. " {$filtermethod}"
-			. " GROUP BY fm_request_status.descr,fm_request.budget,"
+			. " GROUP BY fm_request_status.descr,"
 			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
-			. " fm_request.in_progress_date,fm_request.delivered_date,title,budget,score,fm_request.id,fm_request_status.descr";
+			. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
 
 			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
@@ -276,17 +276,18 @@
 			{
 				$values[] = array
 				(
-					'id'					=> $this->_db->f('request_id'),
-					'status'				=> $this->_db->f('status',true),
-					'building_part'			=> $this->_db->f('building_part'),
-					'title'					=> $this->_db->f('title',true),
-					'condition_degree'		=> $this->_db->f('condition_degree'),
-					'amount_investment'		=> $this->_db->f('amount_investment'),
-					'amount_operation'		=> $this->_db->f('amount_operation'),
-					'planned_budget'		=> $this->_db->f('planned_budget'),
-					'score'					=> $this->_db->f('score'),
-					'planned_year'			=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
-					'cat_id'				=> $this->_db->f('cat_id'),
+					'id'						=> $this->_db->f('request_id'),
+					'status'					=> $this->_db->f('status',true),
+					'building_part'				=> $this->_db->f('building_part'),
+					'title'						=> $this->_db->f('title',true),
+					'condition_degree'			=> $this->_db->f('condition_degree'),
+					'amount_investment'			=> $this->_db->f('amount_investment'),
+					'amount_operation'			=> $this->_db->f('amount_operation'),
+					'amount_potential_grants'	=> $this->_db->f('amount_potential_grants'),
+					'planned_budget'			=> $this->_db->f('planned_budget'),
+					'score'						=> $this->_db->f('score'),
+					'planned_year'				=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'cat_id'					=> $this->_db->f('cat_id'),
 				);
 			}
 			return $values;
