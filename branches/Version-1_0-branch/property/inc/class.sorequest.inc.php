@@ -37,8 +37,9 @@
 
 	class property_sorequest extends property_socommon_core
 	{
-		public $sum_budget = 0;
-		public $sum_consume = 0;
+		public $sum_investment = 0;
+		public $sum_operation = 0;
+		public $sum_potential_grants = 0;
 		public $uicols = array();
 
 		protected $global_lock = false;
@@ -231,22 +232,26 @@
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
 			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
-			. " sum(fm_request_planning.amount) as planned_budget, fm_request.budget,fm_request.score,min(fm_request_planning.date) as planned_year"
+			. " sum(fm_request_planning.amount) as planned_budget, fm_request.amount_investment,"
+			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,min(fm_request_planning.date) as planned_year"
 			. " FROM (((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
 			. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
 			. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 			. " {$filtermethod}"
-			. " GROUP BY fm_request_status.descr,fm_request.budget,"
+			. " GROUP BY fm_request_status.descr,"
 			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
-			. " fm_request.in_progress_date,fm_request.delivered_date,title,budget,score,fm_request.id,fm_request_status.descr";
+			. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
 
-			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget  FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
 			$this->_total_records = $this->_db->f('cnt');
-			$this->sum_budget	= $this->_db->f('sum_budget');
+			$this->sum_investment	= $this->_db->f('sum_investment');
+			$this->sum_operation	= $this->_db->f('sum_operation');
+			$this->sum_potential_grants	= $this->_db->f('sum_potential_grants');
+	
 //_debug_array($sql);
 
 /*
@@ -271,16 +276,18 @@
 			{
 				$values[] = array
 				(
-					'id'				=> $this->_db->f('request_id'),
-					'status'			=> $this->_db->f('status',true),
-					'building_part'		=> $this->_db->f('building_part'),
-					'title'				=> $this->_db->f('title',true),
-					'condition_degree'	=> $this->_db->f('condition_degree'),
-					'budget'			=> $this->_db->f('budget'),
-					'planned_budget'	=> $this->_db->f('planned_budget'),
-					'score'				=> $this->_db->f('score'),
-					'planned_year'		=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
-					'cat_id'			=> $this->_db->f('cat_id'),
+					'id'						=> $this->_db->f('request_id'),
+					'status'					=> $this->_db->f('status',true),
+					'building_part'				=> $this->_db->f('building_part'),
+					'title'						=> $this->_db->f('title',true),
+					'condition_degree'			=> $this->_db->f('condition_degree'),
+					'amount_investment'			=> $this->_db->f('amount_investment'),
+					'amount_operation'			=> $this->_db->f('amount_operation'),
+					'amount_potential_grants'	=> $this->_db->f('amount_potential_grants'),
+					'planned_budget'			=> $this->_db->f('planned_budget'),
+					'score'						=> $this->_db->f('score'),
+					'planned_year'				=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'cat_id'					=> $this->_db->f('cat_id'),
 				);
 			}
 			return $values;
@@ -423,13 +430,13 @@
 			$uicols['sortable'][]		= true;
 
 
-			$cols.= ",$entity_table.budget as budget";
-			$cols_return[] 				= 'budget';
-			$cols_group[] 				= 'budget';
+			$cols.= ",$entity_table.amount_investment as amount_investment";
+			$cols_return[] 				= 'amount_investment';
+			$cols_group[] 				= 'amount_investment';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'budget';
-			$uicols['descr'][]			= lang('cost estimate');
-			$uicols['statustext'][]		= lang('total cost estimate');
+			$uicols['name'][]			= 'amount_investment';
+			$uicols['descr'][]			= lang('investment');
+			$uicols['statustext'][]		= lang('cost estimate');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
@@ -437,7 +444,33 @@
 			$uicols['classname'][]		= 'rightClasss';
 			$uicols['sortable'][]		= true;
 
+			$cols.= ",$entity_table.amount_operation as amount_operation";
+			$cols_return[] 				= 'amount_operation';
+			$cols_group[] 				= 'amount_operation';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'amount_operation';
+			$uicols['descr'][]			= lang('operation');
+			$uicols['statustext'][]		= lang('cost estimate');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= 'FormatterRight';
+			$uicols['classname'][]		= 'rightClasss';
+			$uicols['sortable'][]		= true;
 
+			$cols.= ",$entity_table.amount_potential_grants as amount_potential_grants";
+			$cols_return[] 				= 'amount_potential_grants';
+			$cols_group[] 				= 'amount_potential_grants';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'amount_potential_grants';
+			$uicols['descr'][]			= lang('potential grants');
+			$uicols['statustext'][]		= lang('potential grants');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= 'FormatterRight';
+			$uicols['classname'][]		= 'rightClasss';
+			$uicols['sortable'][]		= true;
 
 //			$cols.= ",sum(amount) as consume";
 //			$cols_return[] 				= 'consume';
@@ -708,12 +741,14 @@
 
 			$this->_db->fetchmode = 'ASSOC';
 
-			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget  FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
 			$this->_total_records = $this->_db->f('cnt');
-			$this->sum_budget	= $this->_db->f('sum_budget');
+			$this->sum_investment	= $this->_db->f('sum_investment');
+			$this->sum_operation	= $this->_db->f('sum_operation');
+			$this->sum_potential_grants	= $this->_db->f('sum_potential_grants');
 
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
 			$this->_db->query($sql3,__LINE__,__FILE__);
@@ -789,36 +824,44 @@
 			$request = array();
 			if ($this->_db->next_record())
 			{
+				$amount_investment			=  $this->_db->f('amount_investment');
+				$amount_operation			=  $this->_db->f('amount_operation');
+				$amount_potential_grants	=  $this->_db->f('amount_potential_grants');
+				$budget = $amount_investment + $amount_operation;
+
 				$request = array
-					(
-						'id'					=> $this->_db->f('id'),
-						'request_id'			=> $this->_db->f('id'), // FIXME
-						'title'					=> $this->_db->f('title', true),
-						'location_code'			=> $this->_db->f('location_code'),
-						'descr'					=> $this->_db->f('descr', true),
-						'status'				=> $this->_db->f('status'),
-						'budget'				=> (int)$this->_db->f('budget'),
-						'tenant_id'				=> $this->_db->f('tenant_id'),
-						'owner'					=> $this->_db->f('owner'),
-						'coordinator'			=> $this->_db->f('coordinator'),
-						'access'				=> $this->_db->f('access'),
-						'start_date'			=> $this->_db->f('start_date'),
-						'end_date'				=> $this->_db->f('end_date'),
-						'cat_id'				=> $this->_db->f('category'),
-						'branch_id'				=> $this->_db->f('branch_id'),
-						'authorities_demands'	=> $this->_db->f('authorities_demands'),
-						'score'					=> $this->_db->f('score'),
-						'p_num'					=> $this->_db->f('p_num'),
-						'p_entity_id'			=> $this->_db->f('p_entity_id'),
-						'p_cat_id'				=> $this->_db->f('p_cat_id'),
-						'contact_phone'			=> $this->_db->f('contact_phone', true),
-						'building_part'			=> $this->_db->f('building_part'),
-						'entry_date'			=> $this->_db->f('entry_date'),
-						'closed_date'			=> $this->_db->f('closed_date'),
-						'in_progress_date'		=> $this->_db->f('in_progress_date'),
-						'delivered_date'		=> $this->_db->f('delivered_date'),
-						'regulations' 			=> explode(',', $this->_db->f('regulations'))
-					);
+				(
+					'id'						=> $this->_db->f('id'),
+					'request_id'				=> $this->_db->f('id'), // FIXME
+					'title'						=> $this->_db->f('title', true),
+					'location_code'				=> $this->_db->f('location_code'),
+					'descr'						=> $this->_db->f('descr', true),
+					'status'					=> $this->_db->f('status'),
+					'amount_investment'			=> $amount_investment,
+					'amount_operation'			=> $amount_operation,
+					'amount_potential_grants'	=> $amount_potential_grants,
+					'budget'					=> (int)$budget,
+					'tenant_id'					=> $this->_db->f('tenant_id'),
+					'owner'						=> $this->_db->f('owner'),
+					'coordinator'				=> $this->_db->f('coordinator'),
+					'access'					=> $this->_db->f('access'),
+					'start_date'				=> $this->_db->f('start_date'),
+					'end_date'					=> $this->_db->f('end_date'),
+					'cat_id'					=> $this->_db->f('category'),
+					'branch_id'					=> $this->_db->f('branch_id'),
+					'authorities_demands'		=> $this->_db->f('authorities_demands'),
+					'score'						=> $this->_db->f('score'),
+					'p_num'						=> $this->_db->f('p_num'),
+					'p_entity_id'				=> $this->_db->f('p_entity_id'),
+					'p_cat_id'					=> $this->_db->f('p_cat_id'),
+					'contact_phone'				=> $this->_db->f('contact_phone', true),
+					'building_part'				=> $this->_db->f('building_part'),
+					'entry_date'				=> $this->_db->f('entry_date'),
+					'closed_date'				=> $this->_db->f('closed_date'),
+					'in_progress_date'			=> $this->_db->f('in_progress_date'),
+					'delivered_date'			=> $this->_db->f('delivered_date'),
+					'regulations' 				=> explode(',', $this->_db->f('regulations'))
+				);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
@@ -929,23 +972,25 @@
 
 			$id = $this->next_id();
 
-			$value_set['id'] 					= $id;
-			$value_set['title']					= $this->_db->db_addslashes($request['title']);
-			$value_set['owner']					= $this->account;
-			$value_set['category']				= $request['cat_id'];
-			$value_set['descr']					= $this->_db->db_addslashes($request['descr']);
-//			$value_set['location_code']			= $request['location_code'];
-			$value_set['entry_date']			= time();
-			$value_set['budget']				= (int)$request['budget'];
-			$value_set['status']				= $request['status'];
-			$value_set['branch_id']				= $request['branch_id'];
-			$value_set['coordinator']			= $request['coordinator'];
-			$value_set['authorities_demands']	= $request['authorities_demands'];
-			$value_set['building_part']			= $request['building_part'];
-			$value_set['start_date']			= $request['start_date'];
-			$value_set['end_date']				= $request['end_date'];
-			$value_set['regulations']			= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
-			$value_set['condition_survey_id'] 	= $request['condition_survey_id'];
+			$value_set['id'] 						= $id;
+			$value_set['title']						= $this->_db->db_addslashes($request['title']);
+			$value_set['owner']						= $this->account;
+			$value_set['category']					= $request['cat_id'];
+			$value_set['descr']						= $this->_db->db_addslashes($request['descr']);
+//			$value_set['location_code']				= $request['location_code'];
+			$value_set['entry_date']				= time();
+			$value_set['amount_investment']			= (int) $request['amount_investment'];
+			$value_set['amount_operation']			= (int) $request['amount_operation'];
+			$value_set['amount_potential_grants']	= (int) $request['amount_potential_grants'];
+			$value_set['status']					= $request['status'];
+			$value_set['branch_id']					= $request['branch_id'];
+			$value_set['coordinator']				= $request['coordinator'];
+			$value_set['authorities_demands']		= $request['authorities_demands'];
+			$value_set['building_part']				= $request['building_part'];
+			$value_set['start_date']				= $request['start_date'];
+			$value_set['end_date']					= $request['end_date'];
+			$value_set['regulations']				= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
+			$value_set['condition_survey_id'] 		= $request['condition_survey_id'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -1073,19 +1118,21 @@
 
 			$value_set = array
 			(
-				'title' 				=> $this->_db->db_addslashes($request['title']),
-				'status'				=> $request['status'],
-				'category'				=> $request['cat_id'],
-				'start_date'			=> $request['start_date'],
-				'end_date'				=> $request['end_date'],
-				'coordinator'			=> $request['coordinator'],
-				'descr'					=> $this->_db->db_addslashes($request['descr']),
-				'budget'				=> (int)$request['budget'],
-				'location_code'			=> $request['location_code'],
-				'address'				=> $address,
-				'authorities_demands'	=> $request['authorities_demands'],
-				'building_part'			=> $request['building_part'],
-				'regulations'			=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : ''
+				'title' 					=> $this->_db->db_addslashes($request['title']),
+				'status'					=> $request['status'],
+				'category'					=> $request['cat_id'],
+				'start_date'				=> $request['start_date'],
+				'end_date'					=> $request['end_date'],
+				'coordinator'				=> $request['coordinator'],
+				'descr'						=> $this->_db->db_addslashes($request['descr']),
+				'amount_investment'			=> (int)$request['amount_investment'],
+				'amount_operation'			=> (int)$request['amount_operation'],
+				'amount_potential_grants'	=> (int)$request['amount_potential_grants'],
+				'location_code'				=> $request['location_code'],
+				'address'					=> $address,
+				'authorities_demands'		=> $request['authorities_demands'],
+				'building_part'				=> $request['building_part'],
+				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : ''
 			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
@@ -1108,13 +1155,15 @@
 
 			$this->_db->transaction_begin();
 
-			$this->_db->query("SELECT budget,status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
+			$this->_db->query("SELECT amount_investment, amount_operation, amount_potential_grants, status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
 			$this->_db->next_record();
 
-			$old_budget			= $this->_db->f('budget');
-			$old_status = $this->_db->f('status');
-			$old_category = $this->_db->f('category');
-			$old_coordinator = $this->_db->f('coordinator');
+			$old_investment			= $this->_db->f('amount_investment');
+			$old_operation			= $this->_db->f('amount_operation');
+			$old_potential_grants	= $this->_db->f('amount_potential_grants');
+			$old_status				= $this->_db->f('status');
+			$old_category			= $this->_db->f('category');
+			$old_coordinator		= $this->_db->f('coordinator');
 			if($old_status != $request['status'])
 			{
 				$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
@@ -1227,12 +1276,20 @@
 				{
 					$this->historylog->add('C',$request['id'],$request['coordinator'],$old_coordinator);
 				}
-
-				if ($old_budget != $request['budget'])
+/*
+				if ((int)$old_investment != (int)$request['amount_investment'])
 				{
-					$this->historylog->add('B', $request['id'], $request['budget'], $old_budget);
+					$this->historylog->add('B', $request['id'], $request['amount_investment'], $old_investment);
 				}
-
+				if ((int)$old_operation != (int)$request['amount_operation'])
+				{
+					$this->historylog->add('B', $request['id'], $request['amount_operation'], $old_operation);
+				}
+				if ((int)$old_potential_grants != (int)$request['amount_potential_grants'])
+				{
+					$this->historylog->add('B', $request['id'], $request['amount_potential_grants'], $old_potential_grants);
+				}
+*/
 				$receipt['message'][] = array('msg'=>lang('request %1 has been edited',$request['id']));
 			}
 			else

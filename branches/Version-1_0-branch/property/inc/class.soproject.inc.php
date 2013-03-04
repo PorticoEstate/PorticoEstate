@@ -2874,12 +2874,12 @@ $test = 0;
 				$this->db->query("SELECT sum(budget) as budget FROM fm_project_budget WHERE project_id = {$id} AND year = {$latest_year} AND active = 1",__LINE__,__FILE__);
 				$this->db->next_record();
 				$last_budget = $this->db->f('budget');
-/*
+
 				if( !abs( $last_budget ) > 0 )
 				{
 					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
 				}
-*/
+
 				//paid last year
 				$this->db->query("SELECT sum(amount) as paid FROM fm_project"
 				. " {$this->join} fm_workorder ON fm_project.id = fm_workorder.project_id"
@@ -2954,10 +2954,31 @@ die();
 					switch($type)
 					{
 						case 'project':
-							$this->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
+							try
+							{
+								$this->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
+							}
+							catch(Exception $e)
+							{
+								if ( $e )
+								{
+									phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+								}
+							}
 							break;
 						case 'workorder':
-							$soworkorder->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
+							try
+							{
+								$soworkorder->transfer_budget($_id, $new_budget[$_id], $transfer_budget_year);
+							}
+							catch(Exception $e)
+							{
+								if ( $e )
+								{
+									phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+								}
+							}
+
 							break;
 						default:
 							throw new Exception('property_soproject::bulk_update_status() - not a valid type');
