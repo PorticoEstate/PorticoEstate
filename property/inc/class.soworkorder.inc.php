@@ -2189,7 +2189,7 @@
 				$this->db->query("SELECT sum(combined_cost) AS budget FROM fm_workorder_budget WHERE order_id = {$id} AND year = {$latest_year}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$last_budget = $this->db->f('budget');
-				if(!$last_budget)
+				if( !abs( $last_budget ) > 0 )
 				{
 					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
 				}
