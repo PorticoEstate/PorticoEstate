@@ -1958,6 +1958,7 @@
 					'voucher_out_id'		=> $entry['voucher_out_id'],
 					'workorder_id'			=> $entry['workorder_id'],
 					'status'				=> $entry['status'],
+					'period'				=> $entry['period'],
 					'invoice_id'			=> $entry['invoice_id'],
 					'budget_account'		=> $entry['budget_account'],
 					'dima'					=> $entry['dima'],
@@ -1993,13 +1994,14 @@
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
+					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
 														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'period','label'=>lang('period'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'type','label'=>lang('type'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
