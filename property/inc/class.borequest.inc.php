@@ -41,7 +41,9 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		public $sum_budget = 0;
+		public $sum_investment = 0;
+		public $sum_operation = 0;
+		public $sum_potential_grants = 0;
 		public $sum_consume = 0;
 		public $acl_location = '.project.request';
 
@@ -479,11 +481,13 @@
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
 				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id));
 
-			$this->total_records	= $this->so->total_records;
-			$this->sum_budget		= $this->so->sum_budget;
-			$this->sum_consume		= $this->so->sum_consume;
-			$this->uicols			= $this->so->uicols;
-			$cols_extra				= $this->so->cols_extra;
+			$this->total_records			= $this->so->total_records;
+			$this->sum_investment			= $this->so->sum_investment;
+			$this->sum_operation			= $this->so->sum_operation;
+			$this->sum_potential_grants		= $this->so->sum_potential_grants;
+			$this->sum_consume				= $this->so->sum_consume;
+			$this->uicols					= $this->so->uicols;
+			$cols_extra						= $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 

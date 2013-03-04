@@ -305,13 +305,21 @@
 			$cats->supress_info = true;
 			$categories = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 
+
+/*
+		$import_types = array
+		(
+			1 => 'Hidden',
+			2 => 'Normal import',
+			3 => 'Users/Customers responsibility',
+		);
+*/
 /*
 		$cats_candidates = array
 		(
 			1 => 'Investment',
 			2 => 'Operation',
 			3 => 'Combined::Investment/Operation',
-			4 => 'Special'
 		);
 
 */
@@ -324,28 +332,29 @@
 			}
 
 
+_debug_array($import_data);die();
 			foreach ($import_data as $entry)
 			{
 
-				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && strlen($entry['building_part']) > 2)
+				if( ctype_digit($entry['condition_degree']) &&  $entry['condition_degree'] > 0 && $entry['building_part'] && (int)$entry['import_type'] > 0)
 				{
 					$request = array();
 
-					if( $entry['percentage_investment'] == 100)
+					if( $entry['amount_investment'] && !$entry['amount_operation'] )
 					{
 						if(isset($config->config_data['condition_survey_import_cat'][1]))
 						{
 							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][1];
 						}
 					}
-					else if(!$entry['percentage_investment'])
+					if( !$entry['amount_investment'] && $entry['amount_operation'] )
 					{
 						if(isset($config->config_data['condition_survey_import_cat'][2]))
 						{
 							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][2];
 						}
 					}
-					else if($entry['percentage_investment'] && $entry['percentage_investment'] < 100)
+					else
 					{
 						if(isset($config->config_data['condition_survey_import_cat'][3]))
 						{
@@ -361,19 +370,22 @@
 					$this->_check_building_part($entry['building_part'],$_update_buildingpart);
 
 
-					$request['condition_survey_id'] = $survey['id'];
-					$request['street_name']			= $location_data['street_name'];
-					$request['street_number']		= $location_data['street_number'];
-					$request['location']			= $location;
-					$request['location_code']		= $survey['location_code'];
-					$request['origin_id']			= $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
-					$request['origin_item_id']		= (int)$survey['id'];
-					$request['title']				= substr($entry['title'], 0, 255);
-					$request['descr']				= $entry['descr'];
-					$request['building_part']		= $entry['building_part'];
-					$request['coordinator']			= $survey['coordinator_id'];
-					$request['status']				= $config->config_data['condition_survey_initial_status'];
-					$request['budget']				= $entry['amount'];
+					$request['condition_survey_id'] 	= $survey['id'];
+					$request['street_name']				= $location_data['street_name'];
+					$request['street_number']			= $location_data['street_number'];
+					$request['location']				= $location;
+					$request['location_code']			= $survey['location_code'];
+					$request['origin_id']				= $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
+					$request['origin_item_id']			= (int)$survey['id'];
+					$request['title']					= substr($entry['title'], 0, 255);
+					$request['descr']					= $entry['descr'];
+					$request['building_part']			= $entry['building_part'];
+					$request['coordinator']				= $survey['coordinator_id'];
+					$request['status']					= $config->config_data['condition_survey_initial_status'];
+					$request['amount_investment']		= $entry['amount_investment'];
+					$request['amount_operation']		= $entry['amount_operation'];
+					$request['amount_potential_grants']	= $entry['amount_potential_grants'];
+
 					$request['planning_value']		= $entry['amount'];
 					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
 					$request['condition']			= array
@@ -388,16 +400,6 @@
 					);
 
 					$sorequest->add($request, $values_attribute = array());
-					if($entry['amount_extra'] > 0)
-					{
-						if(isset($config->config_data['condition_survey_import_cat'][4]))
-						{
-							$request['cat_id'] = (int)$config->config_data['condition_survey_import_cat'][4];
-						}
-						$request['planning_value']	=$entry['amount_extra'];
-						$request['budget']			=$entry['amount_extra'];
-						$sorequest->add($request, $values_attribute = array());
-					}
 				}
 			}
 
