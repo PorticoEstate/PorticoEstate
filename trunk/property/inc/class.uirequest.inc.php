@@ -883,15 +883,17 @@
 			//values for Pagination
 			$json = array
 				(
-					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-					'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-					'dir'				=> $datatable['sorting']['sort'],
-					'currentPage'		=> $datatable['sorting']['currentPage'],
-					'records'			=> array(),
-					'sum_budget'		=> $this->bo->sum_budget,
-					'sum_consume'		=> $this->bo->sum_consume
+					'recordsReturned' 		=> $datatable['pagination']['records_returned'],
+					'totalRecords' 			=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 			=> $datatable['pagination']['records_start'],
+					'sort'					=> $datatable['sorting']['order'],
+					'dir'					=> $datatable['sorting']['sort'],
+					'currentPage'			=> $datatable['sorting']['currentPage'],
+					'records'				=> array(),
+					'sum_investment'		=> $this->bo->sum_investment,
+					'sum_operation'			=> $this->bo->sum_operation,
+					'sum_potential_grants'	=> $this->bo->sum_potential_grants,
+					'sum_consume'			=> $this->bo->sum_consume
 
 				);
 
@@ -1183,12 +1185,30 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
 				}
 
-				if(isset($values['budget']) && $values['budget'])
+				if(isset($values['amount_investment']) && $values['amount_investment'])
 				{
-					$values['budget'] = str_replace(' ', '', $values['budget']);
-					if( !ctype_digit($values['budget']))
+					$values['amount_investment'] = str_replace(' ', '', $values['amount_investment']);
+					if( !ctype_digit($values['amount_investment']))
 					{
-						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+						$receipt['error'][]=array('msg'=>lang('investment') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+				}
+				if(isset($values['amount_operation']) && $values['amount_operation'])
+				{
+					$values['amount_operation'] = str_replace(' ', '', $values['amount_operation']);
+					if( !ctype_digit($values['amount_operation']))
+					{
+						$receipt['error'][]=array('msg'=>lang('operation') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
+				}
+				if(isset($values['amount_potential_grants']) && $values['amount_potential_grants'])
+				{
+					$values['amount_potential_grants'] = str_replace(' ', '', $values['amount_potential_grants']);
+					if( !ctype_digit($values['amount_potential_grants']))
+					{
+						$receipt['error'][]=array('msg'=>lang('potential grants') . ': ' . lang('Please enter an integer !'));
 						$error_id=true;
 					}
 				}
@@ -1672,6 +1692,10 @@
 					'lang_budget_statustext'			=> lang('Enter the budget'),
 					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
 					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
+
+					'value_amount_potential_grants'		=> number_format($values['amount_potential_grants'], 0, ',', ' '),
+					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ' '),
+					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ' '),
 
 					'location_data2'					=> $location_data,
 			//		'location_type'						=> 'form2',
