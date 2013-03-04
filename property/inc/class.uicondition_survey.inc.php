@@ -973,20 +973,20 @@
 			{
 				$_options = array
 				(
-					'_skip_import_'			=> 'Utelates fra import/implisitt',
-					'import_type'			=> 'import type',
-					'building_part'			=> 'bygningsdels kode',
-					'descr'					=> 'Tilstandbeskrivelse',
-					'title'					=> 'Tiltak',
-					'hjemmel'				=> 'Hjemmel/ krav',
-					'condition_degree'		=> 'Tilstandsgrad',
-					'condition_type'		=> 'Konsekvenstype',
-					'consequence'			=> 'Konsekvensgrad',
-					'probability'			=> 'Sannsynlighet',
-					'due_year'				=> 'År (innen)',
-					'percentage_investment'	=> 'Andel % aktivering (U)',
-					'amount'				=> 'Kalkyle netto totalt (VU)',
-					'amount_extra'			=> 'Merkostnad ENØK (U)',
+					'_skip_import_'				=> 'Utelates fra import/implisitt',
+					'import_type'				=> 'import type',
+					'building_part'				=> 'bygningsdels kode',
+					'descr'						=> 'Tilstandbeskrivelse',
+					'title'						=> 'Tiltak',
+					'hjemmel'					=> 'Hjemmel/ krav',
+					'condition_degree'			=> 'Tilstandsgrad',
+					'condition_type'			=> 'Konsekvenstype',
+					'consequence'				=> 'Konsekvensgrad',
+					'probability'				=> 'Sannsynlighet',
+					'due_year'					=> 'År (innen)',
+					'amount_investment'			=> 'Beløp investering',
+					'amount_operation'			=> 'Beløp drift',
+					'amount_potential_grants'	=> 'Potensial for offentlig støtte',
 				);
 
 				phpgw::import_class('phpgwapi.sbox');
