@@ -350,7 +350,6 @@ HTML;
 			1 => 'Investment',
 			2 => 'Operation',
 			3 => 'Combined::Investment/Operation',
-			4 => 'Special'
 		);
 
 		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');

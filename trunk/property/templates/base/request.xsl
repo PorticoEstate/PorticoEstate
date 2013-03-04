@@ -425,10 +425,38 @@
 							</xsl:choose>
 							
 								<dt><label>
+									<xsl:value-of select="php:function('lang', 'investment')"/>
+								</label></dt>
+								<dd>
+									<input type="text" name="values[amount_investment]" value="{value_amount_investment}">
+										<xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</dd>
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'operation')"/>
+								</label></dt>
+								<dd>
+									<input type="text" name="values[amount_operation]" value="{value_amount_operation}">
+										<xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</dd>
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'potential grants')"/>
+								</label></dt>
+								<dd>
+									<input type="text" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
+										<xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</dd>
+
+								<dt><label>
 									<xsl:value-of select="php:function('lang', 'total cost estimate')"/>
 								</label></dt>
 								<dd>
-									<input type="text" name="values[budget]" value="{value_budget}"><xsl:attribute name="title"><xsl:value-of select="lang_budget_statustext"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+									<xsl:value-of select="value_budget"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
 							
 							
