@@ -651,7 +651,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT fm_workorder.id AS id, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost,fm_location1.mva,"
+			$sql = "SELECT DISTINCT fm_workorder.id AS id, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost,fm_location1.mva,"
 				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -684,7 +684,7 @@
 			}
 
 
-			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, fm_workorder.combined_cost,fm_location1.mva,fm_workorder.start_date,"
+			$sql = "SELECT DISTINCT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, fm_workorder.combined_cost,fm_location1.mva,fm_workorder.start_date,"
 				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
