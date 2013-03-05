@@ -1357,7 +1357,7 @@
 				}
 			}
 
-			$value_set					= array();
+			$value_set	= array();
 
 			$data_attribute = $this->custom->prepare_for_db('fm_tts_tickets', $values_attribute);
 
@@ -1370,14 +1370,24 @@
 			}
 
 			$value_set['modified_date']	= time();
-			$value_set['vendor_id']		= $ticket['vendor_id'];
-			$value_set['b_account_id']	= $ticket['b_account_id'];
-			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
-			$value_set['ecodimb']		= $ticket['ecodimb'];
-			$value_set['budget']		= $ticket['budget'];
-			$value_set['branch_id']		= $ticket['branch_id'];
 
-			$value_set					= $this->db->validate_update($value_set);
+
+			// check order-rights
+			
+			$order_add 	= $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
+			$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
+
+			if($order_add || $order_edit)
+			{
+				$value_set['vendor_id']		= $ticket['vendor_id'];
+				$value_set['b_account_id']	= $ticket['b_account_id'];
+				$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
+				$value_set['ecodimb']		= $ticket['ecodimb'];
+				$value_set['budget']		= $ticket['budget'];
+				$value_set['branch_id']		= $ticket['branch_id'];
+			}
+
+			$value_set	= $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
