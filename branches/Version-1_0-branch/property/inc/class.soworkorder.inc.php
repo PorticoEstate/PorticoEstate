@@ -2191,7 +2191,10 @@
 				$last_budget = $this->db->f('budget');
 				if( !abs( $last_budget ) > 0 )
 				{
-					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
+					$this->_update_order_budget($id, $year, $periodization_id, 0, 0, 0, 'update', true);
+					$this->db->transaction_commit();
+					return;
+//					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
 				}
 
 				//paid last year
