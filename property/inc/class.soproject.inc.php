@@ -2877,7 +2877,10 @@ $test = 0;
 
 				if( !abs( $last_budget ) > 0 )
 				{
-					throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
+					$this->update_budget($id, $year, $periodization_id, 0, true, 'update', true);
+					$this->db->transaction_commit();
+					return;
+			//		throw new Exception('property_soproject::transfer_budget() - no budget to transfer for this investment project: ' . $id);
 				}
 
 				//paid last year
@@ -2927,7 +2930,7 @@ die();
 			}
 			else if($project_type_id == 1)//operation
 			{
-				if($budget['budget_amount'])
+		//		if($budget['budget_amount'])
 				{
 					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
 				}
