@@ -684,17 +684,19 @@
 			}
 
 
-			$sql = "SELECT DISTINCT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, fm_workorder.combined_cost,fm_location1.mva,fm_workorder.start_date,"
+			$sql = "SELECT DISTINCT fm_workorder.id, fm_workorder_status.closed, sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost ,fm_location1.mva,fm_workorder.start_date,"
 				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
+				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id AND fm_workorder_budget.active = 1 AND fm_workorder_budget.year = {$year})"
 				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}";
-
+				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " GROUP BY fm_workorder.id, fm_workorder_status.closed, fm_location1.mva, fm_workorder.start_date,"
+				. " fm_b_account.{$b_account_field}, district_id, fm_workorder.ecodimb";
+//_debug_array($sql);
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			$sum_actual_cost = 0;
