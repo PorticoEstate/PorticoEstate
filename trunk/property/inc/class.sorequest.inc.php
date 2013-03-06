@@ -295,26 +295,27 @@
 
 		function read($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
-			$filter			= isset($data['filter'])?$data['filter']:'';
-			$query			= isset($data['query'])?$data['query']:'';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order'])?$data['order']:'';
-			$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
-			$property_cat_id= isset($data['property_cat_id'])?$data['property_cat_id']:0;
-			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'';
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
-			$project_id		= isset($data['project_id'])?$data['project_id']:'';
-			$allrows		= isset($data['allrows'])?$data['allrows']:'';
-			$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
-			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$start_date		= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
-			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
-			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
-			$degree_id		= $data['degree_id'];
-			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
-			$condition_survey_id = $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
+			$start					= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$filter					= isset($data['filter'])?$data['filter']:'';
+			$query					= isset($data['query'])?$data['query']:'';
+			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order					= isset($data['order'])?$data['order']:'';
+			$cat_id					= isset($data['cat_id'])?$data['cat_id']:0;
+			$property_cat_id		= isset($data['property_cat_id'])?$data['property_cat_id']:0;
+			$status_id				= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'';
+			$district_id			= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+			$project_id				= isset($data['project_id'])?$data['project_id']:'';
+			$allrows				= isset($data['allrows'])?$data['allrows']:'';
+			$list_descr				= isset($data['list_descr'])?$data['list_descr']:'';
+			$dry_run				= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$p_num					= isset($data['p_num']) ? $data['p_num'] : '';
+			$start_date				= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
+			$end_date				= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
+			$building_part 			= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
+			$degree_id				= $data['degree_id'];
+			$attrib_filter			= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$condition_survey_id	= $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
+			$responsible_unit		= (int)$data['responsible_unit'];
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -689,6 +690,12 @@
 				$where= 'AND';
 			}
 
+			if ($responsible_unit)
+			{
+				$filtermethod .= " $where fm_request.responsible_unit='$responsible_unit'";
+				$where = 'AND';
+			}
+
 			if($query)
 			{
 				if(stristr($query, '.') && $p_num)
@@ -844,6 +851,8 @@
 					'tenant_id'					=> $this->_db->f('tenant_id'),
 					'owner'						=> $this->_db->f('owner'),
 					'coordinator'				=> $this->_db->f('coordinator'),
+					'responsible_unit'			=> $this->_db->f('responsible_unit'),
+					'recommended_year'			=> $this->_db->f('recommended_year'),
 					'access'					=> $this->_db->f('access'),
 					'start_date'				=> $this->_db->f('start_date'),
 					'end_date'					=> $this->_db->f('end_date'),
@@ -991,6 +1000,8 @@
 			$value_set['end_date']					= $request['end_date'];
 			$value_set['regulations']				= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
 			$value_set['condition_survey_id'] 		= $request['condition_survey_id'];
+			$value_set['responsible_unit']			= $request['responsible_unit'];
+			$value_set['recommended_year']			= $request['recommended_year'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -1132,7 +1143,9 @@
 				'address'					=> $address,
 				'authorities_demands'		=> $request['authorities_demands'],
 				'building_part'				=> $request['building_part'],
-				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : ''
+				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '',
+				'responsible_unit'			=> $request['responsible_unit'],
+				'recommended_year'			=> $request['recommended_year']
 			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))

@@ -395,11 +395,37 @@
 									</select>
 								</dd>
 							
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'responsible unit')"/>
+								</label></dt>
+								<dd>
+									<select name="values[responsible_unit]" class="forms">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set responsible unit')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="responsible_unit_list/options"/>
+									</select>
+								</dd>
+
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'recommended year')"/>
+								</label></dt>
+								<dd>
+									<input type="text" id="recommended_year" name="values[recommended_year]" size="10" value="{value_recommended_year}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'year')"/>
+										</xsl:attribute>
+									</input>
+								</dd>
+
 							<xsl:choose>
 								<xsl:when test="show_dates !=''">
 									
 										<dt><label>
-											<xsl:value-of select="lang_start_date"/>
+											<xsl:value-of select="php:function('lang', 'start date')"/>
 										</label></dt>
 										<dd>
 											<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
@@ -408,10 +434,8 @@
 												</xsl:attribute>
 											</input>
 										</dd>
-									
-									
 										<dt><label>
-											<xsl:value-of select="lang_end_date"/>
+											<xsl:value-of select="php:function('lang', 'end date')"/>
 										</label></dt>
 										<dd>
 											<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
@@ -475,7 +499,7 @@
 									<xsl:value-of select="value_diff2"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
 							
-							
+<!--							
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'planning date')"/>
 								</label></dt>
@@ -530,7 +554,7 @@
 								<dd>
 									<div id="datatable-container_3"/>
 								</dd>
-							
+-->							
 							
 								<xsl:choose>
 									<xsl:when test="notify='yes'">

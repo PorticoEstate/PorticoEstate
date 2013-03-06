@@ -1345,6 +1345,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
 reconciliation	property	no	Avstemming
+recommended year	property	no	Anbefalt år
 record	property	no	Post
 reference level	property	no	Referanse nivå
 regulations	property	no	Forskrifter
@@ -1393,6 +1394,7 @@ responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
 responsibility role	property	no	Rolle for Ansvarsmatrise
+responsible unit	property	no	Ansvarlig enhet
 result	property	no	Resultat
 return back to the list	property	no	Returner til oversikt
 revision	property	no	Revisjon

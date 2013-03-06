@@ -477,6 +477,11 @@
 							'text'	=> lang('Request status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_status') )
 						),
+						'request_responsible_unit'	=> array
+						(
+							'text'	=> lang('responsible unit'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_responsible_unit') )
+						),
 						'request_condition'	=> array
 						(
 							'text'	=> lang('Request condition_type'),

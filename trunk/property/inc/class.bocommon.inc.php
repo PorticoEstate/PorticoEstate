@@ -1423,7 +1423,6 @@
 			}
 
 			$categories = execMethod('property.sogeneric.get_list',$data);
-
 			return $this->select_list($data['selected'],$categories);
 		}
 
