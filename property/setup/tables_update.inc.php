@@ -7424,3 +7424,48 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.666 to 0.9.17.667
+	* Add recommended year
+	*/
+	$test[] = '0.9.17.666';
+	function property_upgrade0_9_17_666()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','responsible_unit',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_responsible_unit',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

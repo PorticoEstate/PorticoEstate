@@ -854,8 +854,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
-
 		'fm_request' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -885,8 +883,10 @@
 				'status' => array('type' => 'varchar','precision' => '10','nullable' => True),
 				'branch_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'coordinator' => array('type' => 'int','precision' => '4','nullable' => True),
+				'responsible_unit' => array('type' => 'int','precision' => '4','nullable' => True),
 				'authorities_demands' => array('type' => 'int','precision' => '2','default' => '0','nullable' => True),
 				'score' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
+				'recommended_year' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_date' => array('type' => 'int','precision' => '8','default' => '0','nullable' => True),
 				'end_date' => array('type' => 'int','precision' => '8','default' => '0','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
@@ -900,6 +900,19 @@
 			'ix' => array('location_code'),
 			'uc' => array()
 		),
+
+		'fm_request_responsible_unit' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '2','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
+
 		'fm_request_condition' => array(
 			'fd' => array(
 				'request_id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -945,6 +958,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+
 		'fm_request_planning' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
