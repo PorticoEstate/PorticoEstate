@@ -65,7 +65,8 @@ ul.nav li:first-child:before { display: none; }
     padding: .5em 1em 0 0;
 }
 form#search {
-    text-align: center;
+    text-align: left;
+    margin: 0 23%;
     padding-top: 0em;
 }
 input#search {
@@ -416,4 +417,9 @@ div#frontimagesbox {
 	clear: both;
 	display: inline-block;
 }
-
+div#field_freetime {
+    margin-left: -10px;
+}
+div#field_freetime2 {
+    margin-left: -18px;
+}

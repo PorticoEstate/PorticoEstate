@@ -116,7 +116,6 @@
 			</input>
 		</span>
 	</div>
-   <div style="float: right; margin-right: 250px;"><input type="submit" value="{php:function('lang', 'Search')}"/></div>
    </div>
     </form>
 	
