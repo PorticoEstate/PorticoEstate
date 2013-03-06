@@ -305,8 +305,8 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= false;
 
-				$cols .= ',fm_workorder.combined_cost';
-				$cols_return[] = 'combined_cost';
+//				$cols .= ',fm_workorder.combined_cost';
+//				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'obligation';
 				$uicols['descr'][]			= lang('sum orders');
