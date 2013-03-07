@@ -1139,6 +1139,9 @@
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
 
+			$GLOBALS['phpgw']->config->read();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
 			$soadmin_location	= CreateObject('property.soadmin_location');
 			$location_types	= $soadmin_location->select_location_type();
 			$config = $soadmin_location->read_config('');
@@ -1168,16 +1171,13 @@
 				$no_address	= true;
 			}
 
-			$GLOBALS['phpgw']->config->read();
-			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
-
 
 			$this->type_id	= $type_id;
 			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
-		//		if($_level > 1) // very expensive 
-				if($_level == 2 && in_array(2, $list_location_level))
+				if($_level > 1) // very expensive 
+		//		if($_level == 2 && in_array(2, $list_location_level))
 				{
 					$joinmethod .= " {$this->left_join} fm_location{$_level}";
 					$paranthesis .='(';

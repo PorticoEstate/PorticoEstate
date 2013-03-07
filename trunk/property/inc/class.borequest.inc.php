@@ -252,7 +252,8 @@
 			$degree_comment[1]=' - '.lang('minor symptoms');
 			$degree_comment[2]=' - '.lang('medium symptoms');
 			$degree_comment[3]=' - '.lang('serious symptoms');
-			for ($i=0; $i<=3; $i++)
+			$degree_comment[4]=' - '.lang('condition not assessed');
+			for ($i=0; $i<=4; $i++)
 			{
 				$degree_list[$i]['id'] = $i;
 				$degree_list[$i]['name'] = $i . $degree_comment[$i];

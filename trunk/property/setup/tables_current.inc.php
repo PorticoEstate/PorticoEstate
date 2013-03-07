@@ -886,7 +886,7 @@
 				'responsible_unit' => array('type' => 'int','precision' => '4','nullable' => True),
 				'authorities_demands' => array('type' => 'int','precision' => '2','default' => '0','nullable' => True),
 				'score' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
-				'recommended_year' => array('type' => 'int','precision' => '4','nullable' => True),
+				'recommended_year' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
 				'start_date' => array('type' => 'int','precision' => '8','default' => '0','nullable' => True),
 				'end_date' => array('type' => 'int','precision' => '8','default' => '0','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),

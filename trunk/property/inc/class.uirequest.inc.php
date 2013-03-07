@@ -1715,6 +1715,7 @@
 					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ' '),
 					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ' '),
 
+					'loc1'								=> $values['location_data']['loc1'],
 					'location_data2'					=> $location_data,
 			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -1750,6 +1751,7 @@
 					'lang_status_statustext'			=> lang('What is the current status of this request ?'),
 
 					'responsible_unit_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$values['responsible_unit'], 'order' => 'id', 'fields' => array('descr')))),
+					'value_recommended_year'			=> $values['recommended_year'],
 
 					'branch_list'						=> array('options' => $this->boproject->select_branch_list($values['branch_id'])),
 					'lang_branch'						=> lang('branch'),
@@ -1861,7 +1863,6 @@
 			$tabs = array
 				(
 					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'condition'		=> array('label' => lang('condition'), 'link' => '#condition'),
 					'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
 					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);

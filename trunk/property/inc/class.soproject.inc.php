@@ -2776,8 +2776,7 @@ $test = 0;
 
 		function check_request($request_id)
 		{
-			$target = $this->interlink->get_specific_relation('property', '.project.request', '.project', $request_id);
-
+			$target = $this->interlink->get_specific_relation('property', '.project.request', '.project', $request_id, 'target');
 			if ( $target)
 			{
 				return $target[0];
@@ -2788,7 +2787,7 @@ $test = 0;
 		{
 			for ($i=0;$i<count($add_request['request_id']);$i++)
 			{
-				$project_id=$this->check_request($add_request['request_id'][$i]);
+				$project_id = $this->check_request($add_request['request_id'][$i]);
 
 				if(!$project_id)
 				{
@@ -2803,7 +2802,7 @@ $test = 0;
 
 					$this->interlink->add($interlink_data);
 
-					$this->db->query("UPDATE fm_request SET project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_request SET project_id='$id' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
 				}

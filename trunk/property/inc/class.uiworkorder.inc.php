@@ -934,8 +934,7 @@
 
 					$values['location_data'] = $ticket['location_data'];
 				}
-
-				if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
+				else if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
 				{
 					$_origin = explode('.', $origin);
 					$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
@@ -944,6 +943,17 @@
 					unset($_origin);
 					unset($_boentity);
 					unset($_entity);
+				}
+				else if ( $origin == '.project.request' && $origin_id )
+				{
+					$_borequest	= CreateObject('property.borequest', false);
+					$_request = $_borequest->read_single($origin_id, array(),true);
+					$values['descr'] = $_request['descr'];
+					$values['title'] = $_request['title'];
+					$values['location_data'] = $_request['location_data'];
+					unset($_origin);
+					unset($_borequest);
+					unset($_request);
 				}
 
 				if(isset($values['origin']) && $values['origin'])
