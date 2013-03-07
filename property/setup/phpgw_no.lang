@@ -381,6 +381,7 @@ condition survey import	property	no	Import av Tilstandsanalyse
 periodization	property	no	Periodisering
 periodization start	property	no	Startperiode
 periodization outline	property	no	Periodiseringsfordeling
+planned year	property	no	Planlagt år
 planning	property	no	Planlagt
 planning date	property	no	Dato planlagt disponering
 planning value	property	no	Beløp planlagt disponering
@@ -1966,16 +1967,17 @@ checklist	property	no	Sjekkliste
 closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
 negative value for budget	property	no	Negativ verdi for kostnadsestimat
-no symptoms	property	no	Ingen Symptomer
-minor symptoms	property	no	Svake Symptomer
-medium symptoms	property	no	Middels Symptomer
-serious symptoms	property	no	Kraftige Symptomer
+no symptoms	property	no	Ingen avvik
+minor symptoms	property	no	Ikke vesentlig avvik
+medium symptoms	property	no	Vesentlig avvik
+serious symptoms	property	no	Stort eller vesentlig avvik
+condition not assessed	property	no	Ikke udersøkt. Mulig risiko
 low probability	property	no	Liten sannsynlighet
 medium probability	property	no	Middels sannsynlighet
 modified date	property	no	Oppdatert dato
 high probability	property	no	Stor sannsynlighet
-weight	property	property	no	Vekt
-risk	property	property	no	Risiko
+weight	property	no	Vekt
+risk	property	no	Risiko
 elements_pr_page	property	no	Poster pr side
 shows_from	property	no	Viser
 of_total	property	no	av

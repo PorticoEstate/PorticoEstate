@@ -367,12 +367,12 @@
 			$cols_return[] 				= "in_progress_date";
 			$cols_return[] 				= "delivered_date";
 
-			$cols_group[] 				= "{$entity_table}.start_date";
+//			$cols_group[] 				= "{$entity_table}.start_date";
 			$cols_group[] 				= "{$entity_table}.entry_date";
 			$cols_group[] 				= "{$entity_table}.closed_date";
 			$cols_group[] 				= "{$entity_table}.in_progress_date";
 			$cols_group[] 				= "{$entity_table}.delivered_date";
-
+/*
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start date');
@@ -383,14 +383,14 @@
 			$uicols['formatter'][]		= '';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
-
+*/
 
 			$cols.= ",$entity_table.title as title";
 			$cols_return[] 				= 'title';
 			$cols_group[] 				= "title";
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'title';
-			$uicols['descr'][]			= lang('request description');
+			$uicols['descr'][]			= lang('request title');
 			$uicols['statustext'][]		= lang('Request title');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
@@ -502,9 +502,23 @@
 			$uicols['sortable'][]		= true;
 
 
-			$cols.= ",min(fm_request_planning.date) as planned_year";
+			$cols.= ",recommended_year";
+			$cols_return[] 				= 'recommended_year';
+			$cols_group[] 				= 'recommended_year';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'recommended_year';
+			$uicols['descr'][]			= lang('recommended year');
+			$uicols['statustext'][]		= lang('recommended year');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
+			$cols.= ",start_date AS planned_year";
 			$cols_return[] 				= 'planned_year';
-//			$cols_group[] 				= 'planned_year';
+			$cols_group[] 				= 'start_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'planned_year';
 			$uicols['descr'][]			= lang('planned year');
@@ -835,6 +849,7 @@
 				$amount_operation			=  $this->_db->f('amount_operation');
 				$amount_potential_grants	=  $this->_db->f('amount_potential_grants');
 				$budget = $amount_investment + $amount_operation;
+				$recommended_year = $this->_db->f('recommended_year');
 
 				$request = array
 				(
@@ -852,7 +867,7 @@
 					'owner'						=> $this->_db->f('owner'),
 					'coordinator'				=> $this->_db->f('coordinator'),
 					'responsible_unit'			=> $this->_db->f('responsible_unit'),
-					'recommended_year'			=> $this->_db->f('recommended_year'),
+					'recommended_year'			=> $recommended_year ? $recommended_year : '',//hide '0' - which is needed for sorting
 					'access'					=> $this->_db->f('access'),
 					'start_date'				=> $this->_db->f('start_date'),
 					'end_date'					=> $this->_db->f('end_date'),
@@ -1001,7 +1016,7 @@
 			$value_set['regulations']				= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
 			$value_set['condition_survey_id'] 		= $request['condition_survey_id'];
 			$value_set['responsible_unit']			= $request['responsible_unit'];
-			$value_set['recommended_year']			= $request['recommended_year'];
+			$value_set['recommended_year']			= (int) $request['recommended_year'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -1145,7 +1160,7 @@
 				'building_part'				=> $request['building_part'],
 				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '',
 				'responsible_unit'			=> $request['responsible_unit'],
-				'recommended_year'			=> $request['recommended_year']
+				'recommended_year'			=> (int) $request['recommended_year'],
 			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))

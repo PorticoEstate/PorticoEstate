@@ -7436,6 +7436,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
 				'type' =>	'int',
 				'precision' => 4,
+				'default' => '0',
 				'nullable' => true
 			)
 		);
