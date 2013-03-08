@@ -352,7 +352,7 @@ HTML;
 			3 => 'Combined::Investment/Operation',
 		);
 
-		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project.request');
 		$cats->supress_info = true;
 		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
 

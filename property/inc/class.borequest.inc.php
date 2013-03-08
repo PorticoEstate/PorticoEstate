@@ -63,7 +63,7 @@
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->solocation 			= CreateObject('property.solocation');
 			$this->historylog			= CreateObject('property.historylog','request');
-			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project.request');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
 //			$this->acl_location			= '.project.request';

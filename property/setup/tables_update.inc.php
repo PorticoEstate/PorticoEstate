@@ -7432,7 +7432,7 @@
 	function property_upgrade0_9_17_666()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
+/*
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
 				'type' =>	'int',
 				'precision' => 4,
@@ -7461,7 +7461,48 @@
 				'uc' => array()
 			)
 		);
+*/
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT fm_request.category, phpgw_categories.cat_name, phpgw_categories.cat_description FROM fm_request JOIN phpgw_categories ON fm_request.category = phpgw_categories.cat_id");
+		$request_cats = array();
 
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$request_cats[]= array
+			(
+				'id'				=> $GLOBALS['phpgw_setup']->oProc->f('category'),
+				'cat_name'			=> $GLOBALS['phpgw_setup']->oProc->f('cat_name'),
+				'cat_description'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_description'),
+			);
+		}
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+
+		$i = 1;
+		foreach($request_cats as $old_cat)
+		{
+			$value_set = array
+			(
+				'cat_main'			=> 0,
+				'cat_parent'		=> 0,
+				'cat_level'			=> 0,
+				'cat_owner'			=> -1,
+				'cat_access'		=>'public',
+				'cat_appname'		=> 'property',
+				'cat_name'			=> $old_cat['cat_name'],
+				'cat_description'	=> $old_cat['cat_description'],
+				'last_mod'			=> time(),
+				'location_id'		=> $location_id
+			);
+			$i++;
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO phpgw_categories ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$cat_id = (int)$GLOBALS['phpgw_setup']->oProc->m_odb->get_last_insert_id('phpgw_categories','cat_id');
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = {$cat_id} WHERE category = {$old_cat['id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_main= {$cat_id} WHERE cat_id={$cat_id}",__LINE__,__FILE__);
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -7469,4 +7510,3 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-
