@@ -1255,6 +1255,8 @@
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
+			phpgwapi_cache::system_clear('property', "budget_order_{$workorder['id']}");
+
 			$this->db->query("SELECT status,calculation,billable_hours,approved FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
@@ -1682,6 +1684,13 @@
 				return array();
 			}
 
+			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+
+			if($cached_info)
+			{
+				return $cached_info;
+			}
+
 			$closed_period = array();
 			$active_period = array();
 
@@ -1848,11 +1857,10 @@
 			}
 
 //_debug_array($values);die();
+			$deviation_acc = 0;
+			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
-	//			$entry['year'] = substr( $entry['period'], 0, 4 );
-	//			$month = substr( $entry['period'], 4, 2 );
-	//			$entry['month'] = $month == '00' ? '' : $month;
 				if($active_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
@@ -1865,12 +1873,25 @@
 				$_deviation = $entry['budget'] - $entry['actual_cost'];
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
-				$entry['deviation_acc'] += $deviation;
+				$budget_acc +=$entry['budget'];
+
+				if($active_period[$entry['period']])
+				{
+					$deviation_acc += $deviation;
+				}
+
+				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
+
+
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
+
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
+
+			phpgwapi_cache::system_set('property', "budget_order_{$order_id}", $values);
+
 			return $values;
 		}
 
