@@ -2295,8 +2295,14 @@ if(!$order_budget[0]['closed_order'])
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
-				$deviation_acc += $deviation;
+
+				if($active_period[$entry['period']])
+				{
+					$deviation_acc += $deviation;
+				}
+
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
+
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
 				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
 				$entry['closed'] = $closed_period[$entry['period']];

@@ -786,6 +786,7 @@
 
 				foreach ($orders as $order)
 				{
+					phpgwapi_cache::system_clear('property', "budget_order_{$order['order_id']}");
 					$this->db->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
 				}
 			}
@@ -795,6 +796,8 @@
    	   	// operator="-" ved tilbakerulling
 		public function correct_actual_cost($order_id, $amount, $actual_cost_field, $operator)
 		{
+			phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+
 			$sql = "SELECT type FROM fm_orders WHERE id='{$order_id}'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
