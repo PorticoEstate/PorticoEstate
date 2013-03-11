@@ -7432,7 +7432,7 @@
 	function property_upgrade0_9_17_666()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-/*
+
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
 				'type' =>	'int',
 				'precision' => 4,
@@ -7461,7 +7461,7 @@
 				'uc' => array()
 			)
 		);
-*/
+
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT fm_request.category, phpgw_categories.cat_name, phpgw_categories.cat_description FROM fm_request JOIN phpgw_categories ON fm_request.category = phpgw_categories.cat_id");
 		$request_cats = array();
 
