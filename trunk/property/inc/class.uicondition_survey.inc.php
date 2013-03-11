@@ -400,7 +400,8 @@
 				array('key' => 'amount_operation','label'=>lang('operation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 				array('key' => 'amount_potential_grants','label'=>lang('potential grants'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
 //				array('key' => 'planned_budget','label'=>lang('planned budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),
-				array('key' => 'planned_year','label'=>lang('year'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'recommended_year','label'=>lang('recommended year'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'planned_year','label'=>lang('planned year'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'related','label'=>lang('related'),'sortable'=>false,'resizeable'=>true),
 			);
 

@@ -295,10 +295,14 @@
 				throw new Exception('property_socondition_survey::import - condition survey import categories not configured');
 			}
 
-
 			if(!isset($config->config_data['condition_survey_initial_status']) || !$config->config_data['condition_survey_initial_status'])
 			{
 				throw new Exception('property_socondition_survey::import - condition survey initial status not configured');
+			}
+
+			if(!isset($config->config_data['condition_survey_hidden_status']) || !$config->config_data['condition_survey_hidden_status'])
+			{
+				throw new Exception('property_socondition_survey::import - condition survey hidden status not configured');
 			}
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
@@ -314,6 +318,19 @@
 			3 => 'Users/Customers responsibility',
 		);
 */
+
+
+		$import_type_responsibility = array();
+		
+		$import_type_responsibility[1] = 1; //hidden => responsible_unit 1
+		$import_type_responsibility[2] = 1; //'Normal import' => responsible_unit 1
+		$import_type_responsibility[3] = 2; //'Customers' => responsible_unit 2
+		$import_type_responsibility[4] = 3; //'Customers' => responsible_unit 3
+		$import_type_responsibility[5] = 4; //'Customers' => responsible_unit 3
+		$import_type_responsibility[6] = 5; //'Customers' => responsible_unit 3
+		$import_type_responsibility[7] = 6; //'Customers' => responsible_unit 3
+		$import_type_responsibility[8] = 7; //'Customers' => responsible_unit 3
+
 /*
 		$cats_candidates = array
 		(
@@ -331,8 +348,8 @@
 				$_update_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
-
-_debug_array($import_data);die();
+//_debug_array($import_data);die();
+			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
 			{
 
@@ -375,19 +392,32 @@ _debug_array($import_data);die();
 					$request['street_number']			= $location_data['street_number'];
 					$request['location']				= $location;
 					$request['location_code']			= $survey['location_code'];
-					$request['origin_id']				= $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
+					$request['origin_id']				= $origin_id;
 					$request['origin_item_id']			= (int)$survey['id'];
 					$request['title']					= substr($entry['title'], 0, 255);
 					$request['descr']					= $entry['descr'];
 					$request['building_part']			= $entry['building_part'];
 					$request['coordinator']				= $survey['coordinator_id'];
-					$request['status']					= $config->config_data['condition_survey_initial_status'];
+
+					if($entry['import_type'] == 1)
+					{
+						$request['status']				= $config->config_data['condition_survey_hidden_status'];
+					}
+					else
+					{
+						$request['status']				= $config->config_data['condition_survey_initial_status'];					
+					}
+
 					$request['amount_investment']		= $entry['amount_investment'];
 					$request['amount_operation']		= $entry['amount_operation'];
 					$request['amount_potential_grants']	= $entry['amount_potential_grants'];
 
-					$request['planning_value']		= $entry['amount'];
-					$request['planning_date']		= mktime(13,0,0,7,1, $entry['due_year']?$entry['due_year']:date('Y'));
+					$request['planning_value']			= $entry['amount'];
+					$request['planning_date']			= mktime( 13,0,0,7,1, $entry['due_year'] ? (int) $entry['due_year'] : date('Y') );
+					$request['recommended_year']		= $entry['due_year'] ? (int)$entry['due_year'] : date('Y');
+
+					$request['responsible_unit']		= (int)$import_type_responsibility[$entry['import_type']];
+
 					$request['condition']			= array
 					(
 						array
@@ -399,6 +429,7 @@ _debug_array($import_data);die();
 						)
 					);
 
+//_debug_array($request);
 					$sorequest->add($request, $values_attribute = array());
 				}
 			}
