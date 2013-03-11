@@ -206,8 +206,11 @@
 			{
 				switch($order)
 				{
+					case 'recommended_year':
+						$ordermethod = " ORDER BY recommended_year $sort";
+						break;
 					case 'planned_year':
-						$ordermethod = " ORDER BY planned_year $sort";
+						$ordermethod = " ORDER BY start_date $sort";
 						break;
 					case 'url':
 						$ordermethod = " ORDER BY fm_request.id $sort";
@@ -232,17 +235,20 @@
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
 			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
-			. " sum(fm_request_planning.amount) as planned_budget, fm_request.amount_investment,"
-			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,min(fm_request_planning.date) as planned_year"
-			. " FROM (((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
-			. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
-			. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
+	//		. " sum(fm_request_planning.amount) as planned_budget,"
+			. " fm_request.amount_investment,"
+			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,"
+			. " fm_request.recommended_year,"
+			. " fm_request.start_date"
+			. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
+	//		. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
+	//		. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 			. " {$filtermethod}"
 			. " GROUP BY fm_request_status.descr,"
 			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
 			. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
-
+//_debug_array($sql);
 			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
@@ -252,7 +258,7 @@
 			$this->sum_operation	= $this->_db->f('sum_operation');
 			$this->sum_potential_grants	= $this->_db->f('sum_potential_grants');
 	
-//_debug_array($sql);
+
 
 /*
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
@@ -286,7 +292,8 @@
 					'amount_potential_grants'	=> $this->_db->f('amount_potential_grants'),
 					'planned_budget'			=> $this->_db->f('planned_budget'),
 					'score'						=> $this->_db->f('score'),
-					'planned_year'				=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'recommended_year'			=> $this->_db->f('recommended_year') ?  $this->_db->f('recommended_year') : '',
+					'planned_year'				=> $this->_db->f('start_date') ? date('Y', $this->_db->f('start_date')) : '',
 					'cat_id'					=> $this->_db->f('cat_id'),
 				);
 			}
@@ -302,7 +309,7 @@
 			$order					= isset($data['order'])?$data['order']:'';
 			$cat_id					= isset($data['cat_id'])?$data['cat_id']:0;
 			$property_cat_id		= isset($data['property_cat_id'])?$data['property_cat_id']:0;
-			$status_id				= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'';
+			$status_id				= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$district_id			= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
 			$project_id				= isset($data['project_id'])?$data['project_id']:'';
 			$allrows				= isset($data['allrows'])?$data['allrows']:'';
