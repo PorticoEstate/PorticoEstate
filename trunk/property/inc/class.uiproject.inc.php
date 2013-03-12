@@ -1050,8 +1050,8 @@
 				}
 
 				$bypass = phpgw::get_var('bypass', 'bool');
-
-				if ( phpgw::get_var('origin') == '.project.request' &&  phpgw::get_var('origin_id', 'int') )
+//_debug_array($_REQUEST);
+				if ( phpgw::get_var('origin') == '.project.request' &&  phpgw::get_var('origin_id', 'int') && !$bypass)
 				{
 					$id = phpgw::get_var('project_id', 'int');
 					$add_request = array('request_id'=> array(phpgw::get_var('origin_id', 'int')));
