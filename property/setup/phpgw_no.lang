@@ -118,6 +118,8 @@ add project	property	no	Legg til prosjekt
 add property	property	no	legg til prosjekt
 add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
+add to project as order	property	no	Legg bestilling til prosjekt
+add to project as relation	property	no	Kople til prosjekt
 addressmasters	common	no	AddresseMaster
 address	property	no	Adresse
 address not defined	property	no	Adresse er ikke definert
@@ -849,7 +851,7 @@ general info	property	no	generell informasjon
 generate a project from this request	property	no	generer et prosjekt basert på denne anmodningen
 generate id ?	property	no	generer ID
 generate order	property	no	Lag bestilling
-generate project	property	no	generer prosjekt
+generate project	property	no	Lag nytt prosjekt
 generate request	property	no	Registrer behov
 generate new project	property	no	Registrer nytt prosjekt
 get list	property	no	Hent liste
