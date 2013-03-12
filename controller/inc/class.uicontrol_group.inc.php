@@ -26,7 +26,7 @@
 	* @package property
 	* @subpackage controller
  	* @version $Id$
-	*/	
+	*/
 
 	/**
 	* Import the jQuery class
@@ -78,7 +78,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
-			
+
 			// Sigurd: Start categories
 			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	= true;
@@ -92,7 +92,7 @@
 				(
 					'id' 	=> $cat_list['cat_id'],
 					'name'	=> $cat_list['name'],
-				);		
+				);
 			}
 			// END categories
 			self::add_javascript('phpgwapi', 'yahoo', 'datatable.js');
@@ -271,14 +271,14 @@
 					 
 					$this->so_control_item->store($curr_control_item);
 				}
-				
+
 				// Sigurd: START as categories
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
-				
+
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-								
+
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
@@ -286,7 +286,7 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
-					);		
+					);
 				}
 				// END as categories
 
@@ -411,10 +411,10 @@
 				// Sigurd: START as categories
 				$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	= true;
-				
+
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
 				array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
-								
+
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
@@ -422,7 +422,7 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
-					);		
+					);
 				}
 				// END as categories
 
@@ -532,76 +532,92 @@
 			}
 		}
 
-		public function save_group_and_item_order(){
+		public function save_group_and_item_order()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$item_order_str = phpgw::get_var('item_order');
 			$group_order_str = phpgw::get_var('group_order');
-			
+
 			$status = 1;
-			
+
 			$group_order_arr = explode(",", $group_order_str);
 			$item_order_arr = explode(",", $item_order_str);
-			
+
 			$db_control_group_list = $this->so_control_group_list->get_db();
-			
+
 			// Saves order for control groups
-			foreach($group_order_arr as $group_id_order){
+			foreach($group_order_arr as $group_id_order)
+			{
 				$group_id_order_arr = explode(":", $group_id_order);
 				$group_id = $group_id_order_arr[0];
 				$group_order_nr = $group_id_order_arr[1];
-				
+
 				// Gets control_group_list object from db if it exists
 				$control_group_list = $this->so_control_group_list->get_group_list_by_control_and_group($control_id, $group_id);
-				
+
 				$db_control_group_list->transaction_begin();
-				
-				// Updates group order if control_group_list object exists	
-				if( $control_group_list != null ){
+
+				// Updates group order if control_group_list object exists
+				if( $control_group_list != null )
+				{
 					$control_group_list->set_order_nr( $group_order_nr );
 					$id = $this->so_control_group_list->update( $control_group_list );
-					
+
 					if($id > 0)
+					{
 						$db_control_group_list->transaction_commit();
+					}
 					else
+					{
 						$db_control_group_list->transaction_abort();
+						$status  = 0;
+					}
 				}
 				// If group is not in db, report error
-				else{
+				else
+				{
 					echo "Error: group not found";
 					$status  = 0;
 				}
-			}			
-			
+			}
+
 			$db_control_item_list = $this->so_control_item_list->get_db();
-		
-			// Saves order for control items	
-			foreach($item_order_arr as $item_id_order){
+
+			// Saves order for control items
+			foreach($item_order_arr as $item_id_order)
+			{
 				$item_id_order_arr = explode(":", $item_id_order);
 				$control_item_id = $item_id_order_arr[0];
 				$item_order_nr = $item_id_order_arr[1];
-				
+
 				$control_item_list = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
-				
+
 				$db_control_item_list->transaction_begin();
-				$status = 0;
-				
-				// Updates item order if control_item_list object exists	
-				if( $control_item_list != null ){
+
+				// Updates item order if control_item_list object exists
+				if( $control_item_list != null )
+				{
 					$control_item_list->set_order_nr( $item_order_nr );
 					$id = $this->so_control_item_list->update( $control_item_list );
-					
+
 					if($id > 0)
+					{
 						$db_control_item_list->transaction_commit();
+					}
 					else
+					{
 						$db_control_item_list->transaction_abort();
+						$status = 0;
+					}
 				}
 				// if item does not exists report error
-				else{
+				else
+				{
 					echo "Error: item not found";
-					$status  = 0;					
+					$status  = 0;
 				}
 			}
-			
+
 			return $status;
 		}
 
@@ -752,20 +768,20 @@
 			}
 			else
 				$control_groups_array = $this->so->get_control_groups_by_control_area($control_area_id);
-			
+
 			if(count($control_groups_array)>0)
 				return json_encode( $control_groups_array );
 			else
 				return null;
 		}
-		
+
 		public function get_control_area_by_control_group()
 		{
 			$control_group_id = phpgw::get_var('control_group_id');
 			if($control_group_id)
 			{
 				$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','globals' => true,'use_acl' => $this->_category_acl));
-								
+
 				$control_area_array = array();
 				foreach($control_areas['cat_list'] as $cat_list)
 				{
@@ -773,14 +789,14 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
-					);		
+					);
 				}
 			}
 			else
 			{
 				$control_areas_array = $this->so->get_control_areas_by_control_group($control_group_id);
 			}
-			
+
 			if(count($control_areas_array)>0)
 				return json_encode( $control_areas_array );
 			else
