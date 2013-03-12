@@ -210,7 +210,7 @@
 			$sql .= "FROM controller_control_group_list cgl, controller_control_group cg "; 
 			$sql .= "WHERE cgl.control_id={$control_id} ";
 			$sql .= "AND cgl.control_group_id=cg.id ";
-			$sql .= "ORDER BY cgl.order_nr";
+			$sql .= "ORDER BY cgl.order_nr ASC";
 			
 			$this->db->query($sql);
 

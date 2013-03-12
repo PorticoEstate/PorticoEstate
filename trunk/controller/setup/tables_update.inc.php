@@ -839,3 +839,30 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.42';
+	function controller_upgrade0_1_42()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_group_list','temp_order_nr',array(
+			'type' => 'int', 
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		$sql = "UPDATE controller_control_group_list SET temp_order_nr = CAST(order_nr AS integer) ";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control_group_list', array(), 'order_nr');
+		
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_control_group_list','temp_order_nr','order_nr');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.43';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+
