@@ -151,10 +151,10 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
-						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP.
 						break;
 					default:
 						$ordermethod = " ORDER BY $entity_table.$order $sort";
@@ -220,7 +220,7 @@
 
 		/**
 		 * Method for retreiving sublevels of a hierarchy.
-		 * 
+		 *
 		 * @param $data array array holding input parametres
 		 * @return array of entities
 		 */
@@ -768,7 +768,7 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
@@ -1176,10 +1176,10 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
-						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP.
 						break;
 					default:
 						$metadata = $this->db->metadata($entity_table);
@@ -2352,7 +2352,7 @@
 
 		/**
 		 * Method for retreiving inventory of bulk items.
-		 * 
+		 *
 		 * @param $data array array holding input parametres
 		 * @return array of entities
 		 */
@@ -2368,18 +2368,24 @@
 				return array();
 			}
 
-			$sql = "SELECT * FROM fm_bim_item_inventory WHERE location_id = {$location_id} AND id = {$id}";
+			$sql = "SELECT fm_bim_item_inventory.*, fm_standard_unit.name AS unit FROM fm_bim_item_inventory"
+			. " {$this->join} fm_standard_unit ON fm_bim_item_inventory.unit_id = fm_standard_unit.id"
+			. "  WHERE location_id = {$location_id} AND fm_bim_item_inventory.item_id = {$id} AND expired_on IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$inventory = array();
 			while ($this->db->next_record())
 			{
 				$inventory[] = array
 				(
-					'inventory'	=> $this->db->f('inventory'),
-					'unit_id'	=> $this->db->f('unit_id'),
+					'inventory'		=> $this->db->f('inventory'),
+					'unit'			=> $this->db->f('unit', true),
 					'remark'		=> $this->db->f('remark', true),
-					'descr'		=> $this->db->f('descr', true),
-					'is_eav'	=> $this->db->f('is_eav')
+					'p_location_id'	=> $this->db->f('p_location_id'),
+					'p_id'			=> $this->db->f('p_id'),
+					'bookable'		=> $this->db->f('bookable'),
+					'active_from'	=> $this->db->f('active_from'),
+					'active_to'		=> $this->db->f('active_to'),
+					'bookable'		=> $this->db->f('bookable'),
 				);
 			}
 
@@ -2401,7 +2407,7 @@
   expired_on bigint,
   expired_by bigint,
   remark text,
- 
+
 */
 
 

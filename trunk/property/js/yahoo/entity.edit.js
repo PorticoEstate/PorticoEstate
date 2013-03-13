@@ -35,6 +35,18 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		execute_async(myDataTable_0);
 	}
 
+	this.showlightbox_add_inventory = function(location_id, id)
+	{
+		var oArgs = {menuaction:'property.uientity.add_inventory', location_id:location_id, id: id};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true
+	//	closejs:function(){closeJS_local()}
+		});
+	}
+
+
 
 YAHOO.util.Event.addListener(window, "load", function()
 		{
