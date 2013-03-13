@@ -7489,7 +7489,7 @@
 				'cat_access'		=>'public',
 				'cat_appname'		=> 'property',
 				'cat_name'			=> $old_cat['cat_name'],
-				'cat_description'	=> $old_cat['cat_description'],
+				'cat_description'	=> $old_cat['cat_description'] ? $old_cat['cat_description'] : $old_cat['cat_name'],
 				'last_mod'			=> time(),
 				'location_id'		=> $location_id
 			);
