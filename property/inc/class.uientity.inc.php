@@ -2123,6 +2123,41 @@
 						)
 					)
 				);
+
+
+				if($category['enable_bulk'])
+				{
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory');
+
+					$_inventory = $this->get_inventory($id);
+
+					$datavalues[3] = array
+					(
+						'name'					=> "3",
+						'values' 				=> json_encode($_inventory),
+						'total_records'			=> count($_inventory),
+						'edit_action'			=> "''",
+						'is_paginator'			=> 1,
+						'footer'				=> 0
+					);
+
+	
+					$myColumnDefs[3] = array
+					(
+						'name'		=> "3",
+						'values'	=>	json_encode(array(	
+								array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'count','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+							)
+						)
+					);
+				
+				}
+
 			}
 
 			$data = array
@@ -2130,7 +2165,7 @@
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
-//					'related_link'					=> $related_link,			
+					'enable_bulk'					=> $category['enable_bulk'],
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
@@ -2809,5 +2844,10 @@
 
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
+		}
+
+		public function get_inventory($id = 0)
+		{
+			return $this->bo->get_inventory($id);
 		}
 	}

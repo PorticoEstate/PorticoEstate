@@ -560,9 +560,9 @@
 		(
 			'fd' => array
 			(
-				'location_id' => array('type' => 'int','precision' => 2,'nullable' => false),
-				'group_id' => array('type' => 'int','precision' => 2,'nullable' => true, 'default' => 0),
-				'id' => array('type' => 'int','precision' => 2,'nullable' => false),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'group_id' => array('type' => 'int','precision' => 4,'nullable' => true, 'default' => 0),
+				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'column_name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
 				'input_text' => array('type' => 'varchar','precision' => 255,'nullable' => false),
 				'statustext' => array('type' => 'varchar','precision' => '255','nullable' => false),
