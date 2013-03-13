@@ -325,7 +325,12 @@
 									</tr>
 									<xsl:choose>
 										<xsl:when test="value_id!='' and mode = 'edit'">
-
+											<xsl:variable name="lang_add_inventory">
+												<xsl:value-of select="php:function('lang', 'add inventory')"/>
+											</xsl:variable>
+											<a href="javascript:showlightbox_add_inventory({value_location_id},{value_id})" title="{$lang_add_inventory}">
+												<xsl:value-of select="$lang_add_inventory"/>
+											</a>
 										</xsl:when>
 									</xsl:choose>
 								</table>

@@ -565,7 +565,6 @@
 
 			$filtermethod = '';
 			$filtermethod_order = " WHERE (fm_workorder_budget.year = $year OR fm_workorder_status.closed IS NULL)";
-			$filtermethod_paid = " WHERE (fm_orders_paid_or_pending_view.periode > {$year}00 and fm_orders_paid_or_pending_view.periode < {$year}13)";
 
 			$where = 'AND';
 

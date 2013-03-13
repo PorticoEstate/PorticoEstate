@@ -57,9 +57,10 @@
 				'attrib_history'=> true,
 				'attrib_help'	=> true,
 				'print_pdf'		=> true,
-				'index'		=> true,
+				'index'			=> true,
 				'addfiles'		=> true,
-				'get_files'		=> true
+				'get_files'		=> true,
+				'add_inventory'	=> true
 			);
 
 		function property_uientity()
@@ -2166,6 +2167,7 @@
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
+					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
@@ -2266,6 +2268,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
 
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 
 			$criteria = array
@@ -2849,5 +2853,28 @@
 		public function get_inventory($id = 0)
 		{
 			return $this->bo->get_inventory($id);
+		}
+
+		public function add_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+_debug_array($location_id);
+_debug_array($id);
+_debug_array($system_location);
+
+			$this->acl_add 		= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+
+
+die();
 		}
 	}
