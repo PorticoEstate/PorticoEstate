@@ -1048,7 +1048,7 @@
 		{
 			$datatype_text = array(
 				'V' => 'varchar',
-				'I' => 'number',
+				'I' => 'integer',
 				'C' => 'char',
 				'N' => 'float',
 				'D' => 'date',

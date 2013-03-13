@@ -7510,3 +7510,33 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.667 to 0.9.17.668
+	* Add inventory for bulk items
+	*/
+	$test[] = '0.9.17.667';
+	function property_upgrade0_9_17_667()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_inventory',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

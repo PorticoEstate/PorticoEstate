@@ -310,6 +310,29 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+
+					<xsl:choose>
+						<xsl:when test="enable_bulk = 1">
+							<div id="inventory">
+								<table cellpadding="2" cellspacing="2" width="80%" align="center">
+									<tr>
+										<td align="left" valign="top">
+											<xsl:value-of select="php:function('lang', 'inventory')"/>
+										</td>
+										<td>
+											<div id="datatable-container_3"/>
+										</td>
+									</tr>
+									<xsl:choose>
+										<xsl:when test="value_id!='' and mode = 'edit'">
+
+										</xsl:when>
+									</xsl:choose>
+								</table>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+
 				</div>
 				<xsl:choose>
 					<xsl:when test="mode = 'edit'">

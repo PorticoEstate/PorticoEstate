@@ -2349,4 +2349,63 @@
 
 			return $entity;
 		}
+
+		/**
+		 * Method for retreiving inventory of bulk items.
+		 * 
+		 * @param $data array array holding input parametres
+		 * @return array of entities
+		 */
+
+		public function get_inventory($data = array())
+		{
+
+			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$id				= (int)$data['id'];
+
+			if(!$location_id || ! $id)
+			{
+				return array();
+			}
+
+			$sql = "SELECT * FROM fm_bim_item_inventory WHERE location_id = {$location_id} AND id = {$id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$inventory = array();
+			while ($this->db->next_record())
+			{
+				$inventory[] = array
+				(
+					'inventory'	=> $this->db->f('inventory'),
+					'unit_id'	=> $this->db->f('unit_id'),
+					'remark'		=> $this->db->f('remark', true),
+					'descr'		=> $this->db->f('descr', true),
+					'is_eav'	=> $this->db->f('is_eav')
+				);
+			}
+
+			return $inventory;
+/*
+  id integer NOT NULL DEFAULT nextval('seq_fm_bim_item_inventory'::regclass),
+  location_id integer NOT NULL,
+  item_id integer NOT NULL,
+  p_location_id integer,
+  p_id integer,
+  unit_id integer NOT NULL,
+  inventory integer NOT NULL,
+  write_off integer NOT NULL,
+  bookable smallint NOT NULL,
+  active_from bigint,
+  active_to bigint,
+  created_on bigint NOT NULL,
+  created_by integer NOT NULL,
+  expired_on bigint,
+  expired_by bigint,
+  remark text,
+ 
+*/
+
+
+
+
+		}
 	}
