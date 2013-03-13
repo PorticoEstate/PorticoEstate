@@ -1305,6 +1305,14 @@
 					);
 				}
 
+				if( phpgw::get_var('calculate_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.index',
+						'workorder_id'	=> $id,
+						)
+					);
+				}
 
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
@@ -1967,7 +1975,7 @@
 				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'						=> isset($origin)?$origin:'',
 				'value_origin_id'						=> isset($origin_id)?$origin_id:'',
-				'calculate_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
+
 				'lang_calculate'						=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'				=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
