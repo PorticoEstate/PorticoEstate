@@ -106,6 +106,18 @@
 			self::set_active_menu('controller::control');
 		}
 		
+
+		/**
+		 * Wrapper for control_list
+		 *
+		 * @return void
+		 */
+
+		public function index()
+		{
+			$this->control_list();
+		}
+
 		/**
 		 * Fetches controls and returns to datatable 
 		 *
