@@ -1294,6 +1294,18 @@
 					}
 				}
 
+
+				if( phpgw::get_var('send_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.view',
+						'workorder_id'	=> $id,
+						'from'			=>'index'
+						)
+					);
+				}
+
+
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
 
@@ -1959,7 +1971,6 @@
 				'lang_calculate'						=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'				=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
-				'send_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
 				'lang_send'								=> $this->bo->order_sent_adress ? lang('ReSend Workorder') :lang('Send Workorder'),
 				'lang_send_statustext'					=> lang('send this workorder to vendor'),
 
