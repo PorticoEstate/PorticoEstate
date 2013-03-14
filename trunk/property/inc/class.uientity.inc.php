@@ -2864,17 +2864,32 @@ _debug_array($location_id);
 _debug_array($id);
 _debug_array($system_location);
 
-			$this->acl_add 		= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
 
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 				echo lang('No Access');
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$values	= phpgw::get_var('values');
+
+			$data = array
+			(
+				'test'	=> 'test'
+			);
 
 
-die();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_inventory' => $data));
+
+
 		}
 	}

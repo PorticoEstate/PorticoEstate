@@ -7,7 +7,56 @@
 			<xsl:when test="empty">
 				<xsl:apply-templates select="empty"/>
 			</xsl:when>
+			<xsl:when test="add_inventory">
+				<xsl:apply-templates select="add_inventory"/>
+			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+
+
+	<!-- add inventory -->
+	<xsl:template xmlns:php="http://php.net/xsl" match="add_inventory">
+
+	 <fieldset>
+		<legend>
+			<xsl:value-of select="php:function('lang', 'add inventory')" />
+		</legend>
+
+
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.import')" />
+		</xsl:variable>
+
+			<form name="form" id="form" action="{$action_url}" method="post">
+		        <dl>
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/id"/>
+						<input type="hidden" name="location_id" value="{location_id}"/>
+						<input type="hidden" name="item_id" value="{item_id}"/>
+						<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
+						<input type="hidden" name="start_line" value="{start_line}"/>
+					</dd>
+
+					<dt>
+						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/title" />
+					</dd>
+
+					<dt>
+						<label><xsl:value-of select="php:function('lang', 'date')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="survey/report_date"/>
+					</dd>
+				</dl>
+			</form>
+
+	 </fieldset>
 	</xsl:template>
 
 	<!-- add / edit -->
