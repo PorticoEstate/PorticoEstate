@@ -2858,10 +2858,10 @@
 		public function add_inventory()
 		{
 			$location_id	= phpgw::get_var('location_id', 'int');
-			$id				= phpgw::get_var('id', 'int');
+			$item_id		= phpgw::get_var('id', 'int');
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
 _debug_array($location_id);
-_debug_array($id);
+_debug_array($item_id);
 _debug_array($system_location);
 
 			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
@@ -2874,9 +2874,15 @@ _debug_array($system_location);
 
 			$values	= phpgw::get_var('values');
 
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit));
+			
 			$data = array
 			(
-				'test'	=> 'test'
+				'system_location'	=> $system_location,
+				'location_id' 	=> $location_id,
+				'item_id'		=> $item_id,
+				'unit_list'		=> array('options' => $unit_list)
 			);
 
 

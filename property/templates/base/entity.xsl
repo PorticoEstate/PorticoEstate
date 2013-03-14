@@ -17,8 +17,11 @@
 	<!-- add inventory -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="add_inventory">
 
+	 <div align = 'left'>
 	 <fieldset>
 		<legend>
+			<xsl:value-of select="system_location/descr"/>
+			<xsl:text>::</xsl:text>			
 			<xsl:value-of select="php:function('lang', 'add inventory')" />
 		</legend>
 
@@ -33,30 +36,49 @@
 						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
 					</dt>
 					<dd>
-						<xsl:value-of select="survey/id"/>
+						<xsl:value-of select="location_id"/>
 						<input type="hidden" name="location_id" value="{location_id}"/>
 						<input type="hidden" name="item_id" value="{item_id}"/>
-						<input type="hidden" name="selected_sheet_id" value="{sheet_id}"/>
-						<input type="hidden" name="start_line" value="{start_line}"/>
 					</dd>
 
 					<dt>
-						<label for="name"><xsl:value-of select="php:function('lang', 'name')" /></label>
+						<label for="name"><xsl:value-of select="php:function('lang', 'unit')" /></label>
 					</dt>
 					<dd>
-						<xsl:value-of select="survey/title" />
+						<select name="values[status]" class="forms">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="unit_list/options"/>
+						</select>
+
 					</dd>
 
 					<dt>
-						<label><xsl:value-of select="php:function('lang', 'date')" /></label>
+						<label><xsl:value-of select="php:function('lang', 'remark')" /></label>
 					</dt>
 					<dd>
-						<xsl:value-of select="survey/report_date"/>
+						<textarea cols="60" rows="10" name="values[remark]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'remark')"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_remark"/>
+						</textarea>
 					</dd>
 				</dl>
 			</form>
 
 	 </fieldset>
+	 </div>
+	</xsl:template>
+
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
 
 	<!-- add / edit -->
