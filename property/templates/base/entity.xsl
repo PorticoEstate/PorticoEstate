@@ -18,6 +18,13 @@
 	<xsl:template xmlns:php="http://php.net/xsl" match="add_inventory">
 
 	 <div align = 'left'>
+
+		<xsl:variable name="action_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.add_inventory')" />
+		</xsl:variable>
+
+			<form name="form" id="form" action="{$action_url}" method="post">
+
 	 <fieldset>
 		<legend>
 			<xsl:value-of select="system_location/descr"/>
@@ -25,50 +32,155 @@
 			<xsl:value-of select="php:function('lang', 'add inventory')" />
 		</legend>
 
-
-		<xsl:variable name="action_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uicondition_survey.import')" />
-		</xsl:variable>
-
-			<form name="form" id="form" action="{$action_url}" method="post">
-		        <dl>
-					<dt>
-						<label><xsl:value-of select="php:function('lang', 'id')" /></label>
-					</dt>
-					<dd>
+			<table>
+				<tr>
+					<td>
+					<label><xsl:value-of select="php:function('lang', 'id')" /></label>
+					</td>
+					<td>
 						<xsl:value-of select="location_id"/>
 						<input type="hidden" name="location_id" value="{location_id}"/>
 						<input type="hidden" name="item_id" value="{item_id}"/>
-					</dd>
-
-					<dt>
-						<label for="name"><xsl:value-of select="php:function('lang', 'unit')" /></label>
-					</dt>
-					<dd>
-						<select name="values[status]" class="forms">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label ><xsl:value-of select="php:function('lang', 'where')" /></label>
+					</td>
+					<td>
+						<input type="text" name="values[where]" value="{value_where}" size="12">
 							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+								<xsl:value-of select="lang_where_statustext"/>
 							</xsl:attribute>
+						</input>
+					</td>
+					</tr>
+				<tr>
+					<td>
+						<label for="unit_id"><xsl:value-of select="php:function('lang', 'unit')" /></label>
+					</td>
+					<td>
+						<select id = 'unit_id' name="values[unit_id]" class="forms">
 							<xsl:apply-templates select="unit_list/options"/>
 						</select>
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<label for="inventory"><xsl:value-of select="php:function('lang', 'inventory')" /></label>
+					</td>
+					<td>
 
-					</dd>
+						<input type="text" id = 'inventory' name="values[inventory]" value="{value_inventory}" size="12">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_inventory_statustext"/>
+							</xsl:attribute>
+						</input>
+					</td>
+					</tr>
 
-					<dt>
+					<tr>
+					<td>
+						<label ><xsl:value-of select="php:function('lang', 'write off')" /></label>
+					</td>
+					<td>
+						<input type="text" name="values[write_off]" value="{value_write_off}" size="12">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_write_off_statustext"/>
+							</xsl:attribute>
+						</input>
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<label><xsl:value-of select="php:function('lang', 'bookable')" /></label>
+					</td>
+					<td>
+						<input type="checkbox" name="values[bookable]" value="1">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'bookable')"/>
+							</xsl:attribute>
+							<xsl:if test="bookable = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<label>
+							<xsl:value-of select="php:function('lang', 'active from')"/>
+						</label>
+					</td>
+					<td>
+						<input type="text" id="active_from" name="values[active_from]" size="10" value="{value_active_from}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_active_from_statustext"/>
+							</xsl:attribute>
+						</input>
+					</td>
+					</tr>
+					<tr>
+					<td>
+					<label>
+						<xsl:value-of select="php:function('lang', 'active to')"/>
+					</label>
+					</td>
+					<td>
+						<input type="text" id="active_to" name="values[active_to]" size="10" value="{value_active_to}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_active_to_statustext"/>
+							</xsl:attribute>
+						</input>
+					</td>
+					</tr>
+					<tr>
+
+					<td>
 						<label><xsl:value-of select="php:function('lang', 'remark')" /></label>
-					</dt>
-					<dd>
+					</td>
+					<td>
 						<textarea cols="60" rows="10" name="values[remark]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</xsl:attribute>
 							<xsl:value-of select="value_remark"/>
 						</textarea>
-					</dd>
-				</dl>
+					</td>
+					</tr>
+			</table>
+			 </fieldset>
+		<table>
+			<tr>
+				<td valign="bottom">
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="php:function('lang', 'save')"/>
+					</xsl:variable>
+					<input type="submit" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td align="right" valign="bottom">
+					<xsl:variable name="lang_cancel">
+						<xsl:value-of select="php:function('lang', 'cancel')"/>
+					</xsl:variable>
+					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</table>
+
 			</form>
 
-	 </fieldset>
+
+
 	 </div>
 	</xsl:template>
 

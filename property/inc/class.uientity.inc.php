@@ -2860,10 +2860,11 @@
 			$location_id	= phpgw::get_var('location_id', 'int');
 			$item_id		= phpgw::get_var('id', 'int');
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+/*
 _debug_array($location_id);
 _debug_array($item_id);
 _debug_array($system_location);
-
+*/
 			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
 
 			if(!$this->acl_add)
@@ -2872,20 +2873,29 @@ _debug_array($system_location);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$values	= phpgw::get_var('values');
-
+			$values		= phpgw::get_var('values');
+			$unit_id	= $values['unit_id'];
 			
-			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit));
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
 			
 			$data = array
 			(
 				'system_location'	=> $system_location,
-				'location_id' 	=> $location_id,
-				'item_id'		=> $item_id,
-				'unit_list'		=> array('options' => $unit_list)
+				'location_id' 		=> $location_id,
+				'item_id'			=> $item_id,
+				'unit_list'			=> array('options' => $unit_list),
+
+				'value_inventory'	=> $values['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'],
+				'value_active_from'	=> $values['active_from'],
+				'value_active_to'	=> $values['active_to'],
+				'value_remark'		=> $values['remark'],
 			);
 
 
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 

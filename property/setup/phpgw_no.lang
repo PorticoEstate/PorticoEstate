@@ -921,6 +921,8 @@ insert the date for the initial value	property	no	angi dato for initiell verdi
 insert the value at the start-date as a positive amount	property	no	angi verdie ved startdatoen som en positiv verdi
 integer	property	no	heltall
 interval	property	no	intervall
+inventory	common	no	Beholdning
+add inventory	common	no	Legg til beholdning
 investment	property	no	investering
 investment added !	property	no	Investering er lagt til
 investment history	property	no	Investerings historie
