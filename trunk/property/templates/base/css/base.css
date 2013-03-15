@@ -132,11 +132,25 @@ div.content {
 .hd img {
   vertical-align: middle;
 }
+
+fieldset {
+  padding: 1em;
+  font:80%/1 sans-serif;
+  }
+label {
+  float:left;
+  width:25%;
+  margin-right:0.5em;
+  padding-top:0.2em;
+  text-align:right;
+  font-weight:bold;
+  }
+/*
 fieldset {
   margin-top: 0.5em;
   border:1px solid #1E90FF;
 }
-
+*/
 legend {
   padding: 0.2em 0.5em;
   border:1px solid #1E90FF;
@@ -145,14 +159,14 @@ legend {
   text-align:right;
   font-weight: bolder;
 }
-
+/*
 label {
   font-size: 13px;
   font-weight: bold;
   margin-right: 5px;
   display: inline-block;
 }
-
+*/
 a{
   cursor: pointer;	
 }
@@ -507,11 +521,11 @@ input[type="text"] {
 select {
   padding: 4px;
 }
-
+/*
 fieldset {
   border-bottom:0px solid #ccc;
 }
-
+*/
 textarea{
   padding: 4px;	
 }
