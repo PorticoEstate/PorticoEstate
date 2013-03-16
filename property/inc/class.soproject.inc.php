@@ -1451,18 +1451,16 @@
 			}
 			else // investment or operation
 			{
-
-
 				if(isset($project['transfer_amount']) && $project['transfer_amount'] && isset($project['transfer_target']) && $project['transfer_target'])
 				{
 					$this->db->query("SELECT project_type_id FROM fm_project WHERE id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
 					$this->db->next_record();
-					if(!$this->db->f('project_type_id') ==3)
+					if($this->db->f('project_type_id') !=3)
 					{
 						throw new Exception('property_soproject::edit() - target project is not a buffer-project');
 					}
 
-					$this->_update_buffer_budget($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
+					$this->_update_buffer_budget_($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
 
 					$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
 					$this->db->next_record();

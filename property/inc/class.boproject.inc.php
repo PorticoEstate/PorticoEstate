@@ -833,7 +833,6 @@
 
 		function save($project,$action='',$values_attribute = array())
 		{
-
 			//_debug_array($project);
 			while (is_array($project['location']) && list(,$value) = each($project['location']))
 			{
@@ -855,7 +854,18 @@
 
 			if ($action=='edit')
 			{
-				$receipt = $this->so->edit($project, $values_attribute);
+				try
+				{
+					$receipt = $this->so->edit($project, $values_attribute);
+				}
+				catch(Exception $e)
+				{
+					if ( $e )
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$receipt['id'] = $project['id'];
+					}
+				}
 			}
 			else
 			{
