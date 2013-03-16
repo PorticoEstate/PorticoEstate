@@ -1460,7 +1460,7 @@
 						throw new Exception('property_soproject::edit() - target project is not a buffer-project');
 					}
 
-					$this->_update_buffer_budget_($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
+					$this->_update_buffer_budget($project['transfer_target'], date('Y'), $project['transfer_amount'], $project['id'],null,$project['transfer_remark']);
 
 					$this->db->query("SELECT sum(amount_in) AS amount_in, sum(amount_out) AS amount_out FROM fm_project_buffer_budget WHERE buffer_project_id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
 					$this->db->next_record();
