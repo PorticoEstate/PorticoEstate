@@ -133,6 +133,21 @@
 				$cols = $entity_table . '.location_code';
 				$cols_return[] = 'location_code';
 
+				$cols.= ",project_type_id";
+				$cols_return[] 				= 'project_type_id';
+/*
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'project_type_id';
+				$uicols['descr'][]			= '';
+				$uicols['statustext'][]		= '';
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
+*/
+
 				$cols .= ",$entity_table.id as project_id";
 				$cols_return[] 				= 'project_id';
 				$uicols['input_type'][]		= 'text';
@@ -321,7 +336,7 @@
 				//----- wo_hour_status
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true,'location_level' => 2));
 
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id,$sql);
 
@@ -728,18 +743,32 @@
 					$project['obligation'] = 0;
 					$project['actual_cost'] = 0;
 
-					$workorder_data = $this->project_workorder_data(array('project_id' => $project['project_id'], 'year' => (int)$filter_year));
-
-					foreach($workorder_data as $entry)
+					if($project['project_type_id'] == 3)//buffer
 					{
-						$project['actual_cost']		+= $entry['actual_cost'];
-						$project['combined_cost']	+= $entry['combined_cost'];
-						$project['budget']			+= $entry['budget'];
-						$project['obligation']		+= $entry['obligation'];
-					}
+						$buffer_budget = $this->get_buffer_budget($project['project_id']);
 
-					$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
-					$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
+						foreach($buffer_budget as $entry)
+						{
+							$project['budget']			+= $entry['amount_in'];
+							$project['budget']			-= $entry['amount_out'];
+
+						}
+						unset($entry);
+					}
+					else
+					{
+						$workorder_data = $this->project_workorder_data(array('project_id' => $project['project_id'], 'year' => (int)$filter_year));
+						foreach($workorder_data as $entry)
+						{
+							$project['actual_cost']		+= $entry['actual_cost'];
+							$project['combined_cost']	+= $entry['combined_cost'];
+							$project['budget']			+= $entry['budget'];
+							$project['obligation']		+= $entry['obligation'];
+						}
+						unset($entry);
+						$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
+						$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
+					}
 				}
 
 //_debug_array($values);
