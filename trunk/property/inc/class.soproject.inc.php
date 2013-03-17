@@ -731,15 +731,11 @@
 					$budget = $this->get_budget($project['project_id']);
 					foreach($budget as $entry)
 					{
-						if($entry['active'])
-						{
-							$project['actual_cost'] += $entry['actual_cost'];
-						}
-
 						if ($filter_year && $filter_year != 'all')
 						{
 							if($entry['year'] == $filter_year)
 							{
+								$project['actual_cost'] += $entry['actual_cost'];
 								$project['combined_cost'] += $entry['sum_orders'];
 								$project['budget'] += $entry['budget'];
 								$project['obligation']  += $entry['sum_oblications'];
@@ -747,6 +743,8 @@
 						}
 						else 
 						{
+							$project['actual_cost'] += $entry['actual_cost'];
+
 							if($entry['active'])
 							{
 								$project['combined_cost'] += $entry['sum_orders'];
@@ -870,7 +868,7 @@
 			$filter_year = '';
 			if($year)
 			{
-				$filter_year = "AND fm_workorder_budget.year = {$year}";
+				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NOT NULL)";
 			}
 
 			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
@@ -2164,12 +2162,18 @@ if(!$order_budget[0]['closed_order'])
 					$period = $budget_entry['period'];
 					$year = $budget_entry['year'];
 
+					$_found_actual_cost = false;
+					if(isset($project_budget[$period]))
+					{
+						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
+						$_found_actual_cost = true;
+					}
+
 					$_found = false;
 					if(isset($project_budget[$period]) && !$budget_entry['closed_order'])
 					{
 //_debug_array($_order_id);
 //_debug_array($budget_entry);
-						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
 						$_orders[$period]['sum_oblications'] += $budget_entry['sum_oblications'];
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 						$_found = true;
@@ -2181,7 +2185,11 @@ if(!$order_budget[0]['closed_order'])
 							$_period = $year . sprintf("%02s", $i);
 							if(isset($project_budget[$_period]))
 							{
-								$_orders[$_period]['actual_cost'] += $budget_entry['actual_cost'];
+								if(!$_found_actual_cost)
+								{
+									$_orders[$_period]['actual_cost'] += $budget_entry['actual_cost'];
+									$_found_actual_cost = true;
+								}
 								$_orders[$_period]['sum_oblications'] += $budget_entry['sum_oblications'];
 								$_orders[$_period]['sum_orders'] += $budget_entry['sum_orders'];
 
@@ -2191,6 +2199,10 @@ if(!$order_budget[0]['closed_order'])
 						}
 					}
 
+					if(!$_found_actual_cost)
+					{
+						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
+					}
 					if(!$_found)
 					{
 						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
@@ -2198,7 +2210,6 @@ if(!$order_budget[0]['closed_order'])
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 					}
 				}
-
 			}
 			$sort_period = array();
 //_debug_array($_orders);
