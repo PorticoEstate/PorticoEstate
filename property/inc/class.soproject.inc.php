@@ -728,35 +728,18 @@
 					$project['obligation'] = 0;
 					$project['actual_cost'] = 0;
 
-					$budget = $this->get_budget($project['project_id']);
-					foreach($budget as $entry)
-					{
-						if ($filter_year && $filter_year != 'all')
-						{
-							if($entry['year'] == $filter_year)
-							{
-								$project['actual_cost'] += $entry['actual_cost'];
-								$project['combined_cost'] += $entry['sum_orders'];
-								$project['budget'] += $entry['budget'];
-								$project['obligation']  += $entry['sum_oblications'];
-							}
-						}
-						else 
-						{
-							$project['actual_cost'] += $entry['actual_cost'];
+					$workorder_data = $this->project_workorder_data(array('project_id' => $project['project_id'], 'year' => (int)$filter_year));
 
-							if($entry['active'])
-							{
-								$project['combined_cost'] += $entry['sum_orders'];
-								$project['budget'] += $entry['budget'];
-								$project['obligation'] += $entry['sum_oblications'];
-							}
-						}
+					foreach($workorder_data as $entry)
+					{
+						$project['actual_cost']		+= $entry['actual_cost'];
+						$project['combined_cost']	+= $entry['combined_cost'];
+						$project['budget']			+= $entry['budget'];
+						$project['obligation']		+= $entry['obligation'];
 					}
 
 					$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
 					$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
-
 				}
 
 //_debug_array($values);
@@ -868,7 +851,7 @@
 			$filter_year = '';
 			if($year)
 			{
-				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NOT NULL)";
+				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
 			}
 
 			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
