@@ -650,7 +650,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,"
+			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,project_id,"
 				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -659,16 +659,25 @@
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}";
+				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " ORDER BY fm_workorder.id ASC";
 
 //			_debug_array($sql);
 			//die();
 			$this->db->query($sql,__LINE__,__FILE__);
 			$_temp_paid_info = array();
+$projects = array();
+
 
 			while ($this->db->next_record())
 			{
+
 				$_id = $this->db->f('id');
+
+
+$projects[$this->db->f('project_id')] = 0;
+$projects2[$_id] = $this->db->f('project_id');
+
 				$_temp_paid_info[$_id] = array
 				(
 					'actual_cost'			=> 0,
@@ -678,25 +687,12 @@
 					'b_account'				=> $this->db->f('b_account'),
 				);
 			}
+ksort($projects);
+//_debug_array(count($projects2));
+//_debug_array($projects2);
 
 			$soworkorder = CreateObject('property.soworkorder');
 
-			foreach ($_temp_paid_info as $order_id => &$order_info)
-			{
-				$order_budget = $soworkorder->get_budget($order_id);
-				foreach($order_budget as $budget)
-				{
-					if($budget['year'] == $year && $budget['active'])
-					{
-						$order_info['actual_cost']		+= $budget['actual_cost'];
-						$order_info['combined_cost']	+= $budget['sum_orders'];
-						$order_info['budget']			+= $budget['budget'];
-						$order_info['obligation']		+= $budget['sum_oblications'];
-					}
-				}
-			}
-
-			reset($_temp_paid_info);
 			$sum_actual_cost = 0;
 			$actual_cost = array();
 			$sum_obligation_cost = 0;
@@ -705,30 +701,49 @@
 
 			$sum_hits = count($_temp_paid_info);
 
-			foreach ($_temp_paid_info as $order_id => $order_info)
+			foreach ($_temp_paid_info as $order_id => &$order_info)
 			{
-				$_combined_cost = $order_info['combined_cost'];
+				$order_budget = $soworkorder->get_budget($order_id);
+				foreach($order_budget as $budget)
+				{
+					if($budget['year'] == $year)
+					{
+$projects3[$projects2[$order_id]]['actual_cost']+= $budget['actual_cost'];
+$projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
+$projects3[$projects2[$order_id]]['budget']+= $budget['budget'];
+$projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
-				$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
-				$_actual_cost	= round($order_info['actual_cost']/$_taxfactor);
-				$_obligation	= $order_info['obligation'];
+						$order_info['actual_cost']		+= $budget['actual_cost'];
+						$order_info['combined_cost']	+= $budget['sum_orders'];
+						$order_info['budget']			+= $budget['budget'];
+						$order_info['obligation']		+= $budget['sum_oblications'];
 
-				$sum_obligation_cost += $_obligation;
-				$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_obligation;
+						$sum_obligation_cost += $budget['sum_oblications'];
+						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
+
+
+						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
+						$_actual_cost	= round($order_info['actual_cost']/$_taxfactor);
 
 //_debug_array($_test);
-				$hits[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += 1;
-				$accout_info[$order_info['b_account']] = true;
-				$district[$order_info['district_id']] = true;
-				$ecodimb[$order_info['ecodimb']] = true;
 
-				$sum_actual_cost += $_actual_cost;
-				$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
+						$sum_actual_cost += $_actual_cost;
+						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
+
+
+
+					}
+
+					$hits[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += 1;
+					$accout_info[$order_info['b_account']] = true;
+					$district[$order_info['district_id']] = true;
+					$ecodimb[$order_info['ecodimb']] = true;
+
+
+				}
 			}
+//_debug_array($projects3);
 
-
-
-//_debug_array($_temp_paid_info);
 
 //			_debug_array($obligations);
 

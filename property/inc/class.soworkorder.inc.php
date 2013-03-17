@@ -619,7 +619,7 @@
 			if ($filter_year && $filter_year != 'all')
 			{
 				$filter_year = (int)$filter_year;
-				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year})";
+				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year} OR fm_workorder_status.closed IS NULL)";
 				$where= 'AND';
 			}
 
@@ -794,15 +794,11 @@
 				$order_budget = $this->get_budget($workorder['workorder_id']);
 				foreach($order_budget as $entry)
 				{
-					if($entry['active'])
-					{
-						$workorder['actual_cost'] += $entry['actual_cost'];
-					}
-
 					if ($filter_year && $filter_year != 'all')
 					{
 						if($entry['year'] == $filter_year)
 						{
+							$workorder['actual_cost'] += $entry['actual_cost'];
 							$workorder['combined_cost'] += $entry['sum_orders'];
 							$workorder['budget'] += $entry['budget'];
 							$workorder['obligation']  += $entry['sum_oblications'];
@@ -810,6 +806,8 @@
 					}
 					else 
 					{
+						$workorder['actual_cost'] += $entry['actual_cost'];
+
 						if($entry['active'])
 						{
 							$workorder['combined_cost'] += $entry['sum_orders'];
