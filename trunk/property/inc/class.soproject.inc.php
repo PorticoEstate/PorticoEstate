@@ -673,7 +673,7 @@
 				}
 
 				$project_list = array();
-
+//_debug_array($cols_return);
 				$count_cols_return=count($cols_return);
 
 				while ($this->db->next_record())
@@ -687,7 +687,7 @@
 				{
 					$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
 					$this->db->next_record();
-
+//_debug_array("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
 					for ($i=0;$i<$count_cols_return;$i++)
 					{
 						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
@@ -709,7 +709,7 @@
 					$project['billable_hours']	= 0;
 
 				}
-
+//_debug_array($project_list);
 				unset($project);
 
 				$_datatype = array();
