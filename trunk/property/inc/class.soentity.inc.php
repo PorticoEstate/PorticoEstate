@@ -2410,8 +2410,55 @@
 
 */
 
+		}
 
+		public function save_inventory($values)
+		{
+			$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $values['location_code'])));
+			
+			$sql = "SELECT id FROM fm_locations WHERE location_code = '{$values['location_code']}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$p_id	= $this->db->f('id');
+			
+			if(!$p_location_id && !$p_id)
+			{
+				throw new Exception('ERROR: Not a valid location');			
+			}
+			
+			$table = 'fm_bim_item_inventory';
+
+			$value_set = array
+			(
+				'location_id'		=> $values['location_id'],
+				'item_id'			=> $values['item_id'],
+				'p_location_id'		=> $p_location_id,
+				'p_id'				=> $p_id,
+				'unit_id'			=> $values['unit_id'],
+				'inventory'			=> (int)$values['inventory'],
+				'write_off'			=> (int)$values['write_off'],
+				'bookable'			=> (int)$values['bookable'],
+				'active_from'		=> $values['active_from'],
+				'active_to'			=> $values['active_to'],
+				'created_on'		=> time(),
+				'created_by'		=> $this->account,
+	//			'expired_on'		=> ,
+	//			'expired_by'		=> ,
+				'remark'			=> $this->db->db_addslashes($values['remark'])
+			);
+
+
+_debug_array($p_location_id);
+_debug_array($p_id);
+_debug_array($values);
+
+
+die();
+
+				$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($value_set)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
 
 
 		}
+
 	}

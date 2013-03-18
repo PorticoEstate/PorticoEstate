@@ -2874,12 +2874,68 @@ _debug_array($system_location);
 			}
 
 			$values		= phpgw::get_var('values');
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+				if(is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				if(!$values['location'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				}
+
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+						}
+					}
+				}
+
+				if(!isset($receipt['error']))
+				{
+					$receipt = $this->bo->save_inventory($values);
+				}
+			}
+
+
 			$unit_id	= $values['unit_id'];
 			
 			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'form',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
 			
 			$data = array
 			(
+				'location_data'		=> $location_data,
 				'system_location'	=> $system_location,
 				'location_id' 		=> $location_id,
 				'item_id'			=> $item_id,
