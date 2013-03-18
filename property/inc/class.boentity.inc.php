@@ -686,4 +686,11 @@
 			return $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
 		}
 
+		public function save_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->save_inventory($values);
+		}
+
 	}

@@ -43,18 +43,8 @@
 						<input type="hidden" name="item_id" value="{item_id}"/>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<label ><xsl:value-of select="php:function('lang', 'where')" /></label>
-					</td>
-					<td>
-						<input type="text" name="values[where]" value="{value_where}" size="12">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_where_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					</tr>
+
+				<xsl:call-template name="location_form"/>
 				<tr>
 					<td>
 						<label for="unit_id"><xsl:value-of select="php:function('lang', 'unit')" /></label>
