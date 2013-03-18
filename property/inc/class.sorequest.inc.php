@@ -593,6 +593,13 @@
 				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 				'query'=>$query,'force_location'=>true, 'location_level' => $_location_level));
 
+
+			for ($i=2; $i< ($_location_level +1); $i++)
+			{
+				$cols_group[] = "fm_location{$i}.loc{$i}_name";
+			}
+
+
 			$cols_group[] = "{$entity_table}.id";
 			$cols_group[] = 'fm_request_status.descr';
 			$cols_group[] = "{$entity_table}.address";
@@ -769,7 +776,8 @@
 
 			$this->_db->fetchmode = 'ASSOC';
 
-			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
+//			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM {$sql_arr[1]}";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
