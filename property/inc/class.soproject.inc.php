@@ -2265,33 +2265,13 @@ if(!$order_budget[0]['closed_order'])
 			}
 
 			ksort($_values);
+//_debug_array($_values);die();
 
 			$values = array();
-			$_current_period = (int)date('Ym');
-			$_delay_period = 0;
+
 			foreach ($_values as $period => $_budget)
 			{
-				if ($_current_period > (int)$period)
-				{
-					$_delay_period += $_budget['sum_oblications'];
-					$_budget['sum_oblications'] = 0;
-				}
-
-				if( $_delay_period &&  $_current_period < (int)$period)
-				{
-					$_budget['sum_oblications'] += $_delay_period;
-					$_delay_period =0;
-				}
-
 				$values[] = $_budget;
-			}
-
-
-			if($_delay_period && $values)
-			{
-				$i = count($values) -1;
-				//last one
-				$values[$i]['sum_oblications'] += $_delay_period;
 			}
 
 //_debug_array($values);die();
