@@ -38,9 +38,9 @@
 					<label><xsl:value-of select="php:function('lang', 'id')" /></label>
 					</td>
 					<td>
-						<xsl:value-of select="location_id"/>
+						<xsl:value-of select="item_id"/>
 						<input type="hidden" name="location_id" value="{location_id}"/>
-						<input type="hidden" name="item_id" value="{item_id}"/>
+						<input type="hidden" name="id" value="{item_id}"/>
 					</td>
 				</tr>
 

@@ -7519,6 +7519,8 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_bim_item_inventory',  array(
 				'fd' => array(

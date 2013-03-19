@@ -2147,9 +2147,9 @@
 					(
 						'name'		=> "3",
 						'values'	=>	json_encode(array(	
-								array('key' => 'url','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'count','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
@@ -2878,7 +2878,9 @@ _debug_array($system_location);
 
 			if (isset($values['save']) && $values['save'])
 			{
-				$insert_record 		= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $item_id;
+				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 				if(is_array($insert_record_entity))
 				{

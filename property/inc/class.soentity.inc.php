@@ -2389,6 +2389,7 @@
 				);
 			}
 
+//_debug_array($inventory);
 			return $inventory;
 /*
   id integer NOT NULL DEFAULT nextval('seq_fm_bim_item_inventory'::regclass),
@@ -2447,18 +2448,8 @@
 				'remark'			=> $this->db->db_addslashes($values['remark'])
 			);
 
-
-_debug_array($p_location_id);
-_debug_array($p_id);
-_debug_array($values);
-
-
-die();
-
-				$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($value_set)) . ') VALUES ('
+			return	$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($value_set)) . ') VALUES ('
 				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
 
-
 		}
-
 	}
