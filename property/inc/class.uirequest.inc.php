@@ -97,6 +97,7 @@
 			$this->p_num				= $this->bo->p_num;
 			$this->condition_survey_id	= $this->bo->condition_survey_id;
 			$this->nonavbar 			= phpgw::get_var('nonavbar', 'bool');
+			$this->responsible_unit		= $this->bo->responsible_unit;
 
 			if( $this->nonavbar )
 			{
@@ -124,7 +125,8 @@
 				'start_date'		=> $this->start_date,
 				'end_date'			=> $this->end_date,
 				'property_cat_id'	=> $this->property_cat_id,
-				'building_part'		=> $this->building_part
+				'building_part'		=> $this->building_part,
+				'responsible_unit'	=> $this->responsible_unit
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -261,6 +263,7 @@
 					."start_date:'{$this->start_date}',"
 					."end_date: '{$this->end_date}',"
 					."cat_id:'{$this->cat_id}',"
+					."responsible_unit:'{$this->responsible_unit}',"
 					."building_part:'{$this->building_part}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array
@@ -299,6 +302,10 @@
 				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
 
+
+				$responsible_unit_list	= $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$this->responsible_unit, 'order' => 'id', 'fields' => array('descr')));
+				array_unshift ($responsible_unit_list,array ('id'=>'0','name'=> lang('responsible unit')));
+
 				$_filter_buildingpart = array();
 				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
 			
@@ -331,8 +338,8 @@
 								'query'				=> $this->query,
 								'start_date'		=> $this->start_date,
 								'end_date' 			=> $this->end_date,
-								'building_part'		=> $this->building_part
-
+								'building_part'		=> $this->building_part,
+								'responsible_unit'	=> $this->responsible_unit,
 							)
 						),
 						'fields'	=> array
@@ -397,27 +404,38 @@
 									'tab_index' => 6
 								),
 								array
+								(
+									'id' => 'sel_responsible_unit',
+									'name' => 'responsible_unit',
+									'value'	=> lang('responsible unit'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values'	=> $responsible_unit_list,
+									'onchange'=> 'onChangeSelect("responsible_unit");',
+									'tab_index' => 7
+								),
+								array
 								( //boton 	FILTER
 									'id' => 'btn_user_id',
 									'name' => 'filter',
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 7
+									'tab_index' => 8
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_update',
 									'value'	=> lang('Update project'),
-									'tab_index' => 15
+									'tab_index' => 16
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 14
+									'tab_index' => 15
 								),
 
 								array
@@ -425,7 +443,7 @@
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 13
+									'tab_index' => 14
 								),
 								array
 								(
@@ -453,7 +471,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 12
+									'tab_index' => 13
 								),
 
 								array
@@ -463,7 +481,7 @@
 									'value'    => lang('search'),
 									'onkeypress' => 'return pulsar(event)',
 									'type' => 'button',
-									'tab_index' => 11
+									'tab_index' => 12
 								),
 								array
 								( //hidden request
@@ -480,7 +498,7 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								array
 								(
@@ -491,7 +509,7 @@
 									(
 										'menuaction' => 'property.uirequest.priority_key'))."','','left=50,top=100,width=350,height=350,scrollbars=1')",
 										'value' => lang('Priority key'),
-										'tab_index' => 9
+										'tab_index' => 10
 								),
 								array
 								(
@@ -502,7 +520,7 @@
 									(
 										'menuaction' => 'property.uirequest.columns'))."','','width=300,height=600,scrollbars=1')",
 										'value' => lang('columns'),
-										'tab_index' => 8
+										'tab_index' => 9
 								),
 							),
 							'hidden_value' => array
@@ -544,17 +562,17 @@
 
 				if(!$this->acl_manage)//priority_key
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][17]);
+					unset($datatable['actions']['form'][0]['fields']['field'][18]);
 				}
 
 				if(!$this->acl_add) //add
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][9]);
+					unset($datatable['actions']['form'][0]['fields']['field'][10]);
 				}
 
 				if(!$project_id) // update project
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][7]);
+					unset($datatable['actions']['form'][0]['fields']['field'][8]);
 				}
 
 
@@ -1697,6 +1715,7 @@
 					'value_amount_investment'			=> number_format($values['amount_investment'], 0, ',', ' '),
 					'value_amount_operation'			=> number_format($values['amount_operation'], 0, ',', ' '),
 
+					'loc1'								=> $values['location_data']['loc1'],
 					'location_data2'					=> $location_data,
 			//		'location_type'						=> 'form2',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -1730,6 +1749,9 @@
 					'lang_no_status'					=> lang('Select status'),
 					'lang_status'						=> lang('Status'),
 					'lang_status_statustext'			=> lang('What is the current status of this request ?'),
+
+					'responsible_unit_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'request_responsible_unit','selected' =>$values['responsible_unit'], 'order' => 'id', 'fields' => array('descr')))),
+					'value_recommended_year'			=> $values['recommended_year'],
 
 					'branch_list'						=> array('options' => $this->boproject->select_branch_list($values['branch_id'])),
 					'lang_branch'						=> lang('branch'),
@@ -1841,7 +1863,6 @@
 			$tabs = array
 				(
 					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'condition'		=> array('label' => lang('condition'), 'link' => '#condition'),
 					'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
 					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);

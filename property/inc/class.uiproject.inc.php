@@ -1049,9 +1049,13 @@
 					}
 				}
 
-
-
 				$bypass = phpgw::get_var('bypass', 'bool');
+//_debug_array($_REQUEST);
+				if ( phpgw::get_var('origin') == '.project.request' &&  phpgw::get_var('origin_id', 'int') && !$bypass)
+				{
+					$id = phpgw::get_var('project_id', 'int');
+					$add_request = array('request_id'=> array(phpgw::get_var('origin_id', 'int')));
+				}
 
 				if($add_request)
 				{
@@ -1076,7 +1080,6 @@
 					$origin				= phpgw::get_var('origin');
 					$origin_id			= phpgw::get_var('origin_id', 'int');
 
-					//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...
 					if($origin == '.ticket' && $origin_id && !$values['descr'])
 					{
 						$boticket= CreateObject('property.botts');

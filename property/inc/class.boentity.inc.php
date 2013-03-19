@@ -680,4 +680,18 @@
 			return $this->so->read_entity_to_link($data);
 		}
 
+		public function get_inventory($id = 0)
+		{
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
+			return $values;
+		}
+
+		public function save_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->save_inventory($values);
+		}
+
 	}

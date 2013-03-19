@@ -472,10 +472,20 @@
 							'text'	=> lang('User contact info'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.contact_info') )
 						),
+						'request_cats'	=> array
+						(
+							'text'	=> lang('request categories'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project.request', 'global_cats' => 'true', 'menu_selection' => 'admin::property::request_cats') )
+						),
 						'request_status'	=> array
 						(
 							'text'	=> lang('Request status'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_status') )
+						),
+						'request_responsible_unit'	=> array
+						(
+							'text'	=> lang('responsible unit'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'request_responsible_unit') )
 						),
 						'request_condition'	=> array
 						(

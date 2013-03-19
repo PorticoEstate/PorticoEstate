@@ -2063,7 +2063,30 @@
 			}
 
 			$GLOBALS['phpgw']->db->transaction_begin();
+			$this->db->query("SELECT * FROM fm_ecobilag WHERE id =" . (int)$line_id,__LINE__,__FILE__);
+
+			$this->db->next_record();
+			$old_janitor			=  $this->db->f('oppsynsmannid');
+			$old_supervisor			=  $this->db->f('saksbehandlerid');
+			$old_budget_responsible	=  $this->db->f('budsjettansvarligid');
+
 			$value_set = array();
+			
+			if($old_janitor != $order_info['janitor'])
+			{
+				$value_set['oppsynsigndato'] 	= '';			
+			}
+
+			if($old_supervisor != $order_info['supervisor'])
+			{
+				$value_set['saksigndato'] 	= '';			
+			}
+
+			if($old_budget_responsible != $order_info['budget_responsible'])
+			{
+				$value_set['budsjettsigndato'] 	= '';			
+			}
+
 			$value_set['pmwrkord_code']			= $order_id;
 			$value_set['dima'] 					= $order_info['dima'];
 			$value_set['dimb'] 					= $order_info['dimb'];

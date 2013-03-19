@@ -82,11 +82,13 @@
 		<script type="text/javascript">
 			function calculate_workorder()
 			{
-				document.calculate_workorder_form.submit();
+				document.getElementsByName("calculate_workorder")[0].value = 1;
+				document.form.submit();
 			}
 			function send_workorder()
 			{
-				document.send_workorder_form.submit();
+				document.getElementsByName("send_workorder")[0].value = 1;
+				document.form.submit();
 			}
 			function set_tab(tab)
 			{
@@ -166,6 +168,9 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form ENCTYPE="multipart/form-data" method="post" id='workorder_edit' name="form" action="{$form_action}">
+			<input type="hidden" name="send_workorder" value=""/>
+			<input type="hidden" name='calculate_workorder'  value=""/>
+
 			<input type="hidden" name="tab" value=""/>
 			<div class="yui-navset" id="workorder_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
@@ -943,16 +948,6 @@
 			</tr>
 		</table>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<xsl:choose>
-			<xsl:when test="mode='edit'">
-				<xsl:variable name="calculate_action"><xsl:value-of select="calculate_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
-				<form method="post" name="calculate_workorder_form" action="{$calculate_action}">
-				</form>
-				<xsl:variable name="send_action"><xsl:value-of select="send_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
-				<form method="post" name="send_workorder_form" action="{$send_action}">
-				</form>
-			</xsl:when>
-		</xsl:choose>
 	</xsl:template>
 
 	<!-- New template-->

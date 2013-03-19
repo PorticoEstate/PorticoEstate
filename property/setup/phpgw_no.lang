@@ -118,6 +118,8 @@ add project	property	no	Legg til prosjekt
 add property	property	no	legg til prosjekt
 add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
+add to project as order	property	no	Legg bestilling til prosjekt
+add to project as relation	property	no	Kople til prosjekt
 addressmasters	common	no	AddresseMaster
 address	property	no	Adresse
 address not defined	property	no	Adresse er ikke definert
@@ -381,6 +383,7 @@ condition survey import	property	no	Import av Tilstandsanalyse
 periodization	property	no	Periodisering
 periodization start	property	no	Startperiode
 periodization outline	property	no	Periodiseringsfordeling
+planned year	property	no	Planlagt år
 planning	property	no	Planlagt
 planning date	property	no	Dato planlagt disponering
 planning value	property	no	Beløp planlagt disponering
@@ -577,6 +580,7 @@ do you really want to update the categories	property	no	vil du virkelig oppdater
 do you really want to update the categories again	property	no	vil du virkelig oppdatere kategoriene igjen
 do you want to perform this action	property	no	Vil du gjennomføre denne handlingen
 draft	property	no	UTKAST
+economy and progress	property	no	Økonomi og fremdrift
 edit activity	property	no	rette aktivitet
 edit agreement	property	no	rette avtale
 edit agreement group	property	no	Rette avtale gruppe
@@ -847,7 +851,7 @@ general info	property	no	generell informasjon
 generate a project from this request	property	no	generer et prosjekt basert på denne anmodningen
 generate id ?	property	no	generer ID
 generate order	property	no	Lag bestilling
-generate project	property	no	generer prosjekt
+generate project	property	no	Lag nytt prosjekt
 generate request	property	no	Registrer behov
 generate new project	property	no	Registrer nytt prosjekt
 get list	property	no	Hent liste
@@ -917,6 +921,8 @@ insert the date for the initial value	property	no	angi dato for initiell verdi
 insert the value at the start-date as a positive amount	property	no	angi verdie ved startdatoen som en positiv verdi
 integer	property	no	heltall
 interval	property	no	intervall
+inventory	common	no	Beholdning
+add inventory	common	no	Legg til beholdning
 investment	property	no	investering
 investment added !	property	no	Investering er lagt til
 investment history	property	no	Investerings historie
@@ -1345,6 +1351,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
 reconciliation	property	no	Avstemming
+recommended year	property	no	Anbefalt år
 record	property	no	Post
 reference level	property	no	Referanse nivå
 regulations	property	no	Forskrifter
@@ -1393,6 +1400,7 @@ responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
 responsibility role	property	no	Rolle for Ansvarsmatrise
+responsible unit	property	no	Ansvarlig enhet
 result	property	no	Resultat
 return back to the list	property	no	Returner til oversikt
 revision	property	no	Revisjon
@@ -1964,16 +1972,17 @@ checklist	property	no	Sjekkliste
 closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
 negative value for budget	property	no	Negativ verdi for kostnadsestimat
-no symptoms	property	no	Ingen Symptomer
-minor symptoms	property	no	Svake Symptomer
-medium symptoms	property	no	Middels Symptomer
-serious symptoms	property	no	Kraftige Symptomer
+no symptoms	property	no	Ingen avvik
+minor symptoms	property	no	Ikke vesentlig avvik
+medium symptoms	property	no	Vesentlig avvik
+serious symptoms	property	no	Stort eller vesentlig avvik
+condition not assessed	property	no	Ikke udersøkt. Mulig risiko
 low probability	property	no	Liten sannsynlighet
 medium probability	property	no	Middels sannsynlighet
 modified date	property	no	Oppdatert dato
 high probability	property	no	Stor sannsynlighet
-weight	property	property	no	Vekt
-risk	property	property	no	Risiko
+weight	property	no	Vekt
+risk	property	no	Risiko
 elements_pr_page	property	no	Poster pr side
 shows_from	property	no	Viser
 of_total	property	no	av

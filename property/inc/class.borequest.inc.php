@@ -46,6 +46,7 @@
 		public $sum_potential_grants = 0;
 		public $sum_consume = 0;
 		public $acl_location = '.project.request';
+		public $responsible_unit;
 
 		var $public_functions = array
 			(
@@ -62,7 +63,7 @@
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->solocation 			= CreateObject('property.solocation');
 			$this->historylog			= CreateObject('property.historylog','request');
-			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project.request');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
 //			$this->acl_location			= '.project.request';
@@ -72,22 +73,23 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$property_cat_id= phpgw::get_var('property_cat_id', 'int');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$status_id		= phpgw::get_var('status_id');
-			$degree_id		= phpgw::get_var('degree_id', 'int');
-			$allrows		= phpgw::get_var('allrows', 'bool');
-			$this->p_num	= phpgw::get_var('p_num');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$property_cat_id	= phpgw::get_var('property_cat_id', 'int');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$status_id			= phpgw::get_var('status_id');
+			$degree_id			= phpgw::get_var('degree_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
+			$this->p_num		= phpgw::get_var('p_num');
 
-			$start_date		= phpgw::get_var('start_date');
-			$end_date		= phpgw::get_var('end_date');
-			$building_part	= phpgw::get_var('building_part');
+			$start_date			= phpgw::get_var('start_date');
+			$end_date			= phpgw::get_var('end_date');
+			$building_part		= phpgw::get_var('building_part');
+			$responsible_unit	= phpgw::get_var('responsible_unit', 'int');
 
 			$this->condition_survey_id = phpgw::get_var('condition_survey_id', 'int', 'REQUEST', 0);
 
@@ -141,6 +143,11 @@
 				$this->building_part = $building_part;
 			}
 
+			if(isset($_POST['responsible_unit']) || isset($_GET['responsible_unit']))
+			{
+				$this->responsible_unit = $responsible_unit;
+			}
+
 			if($allrows)
 			{
 				$this->allrows = $allrows;
@@ -180,6 +187,7 @@
 			$this->status_id		= $data['status_id'];
 			$this->degree_id		= $data['degree_id'];
 			$this->building_part	= $data['building_part'];
+			$this->responsible_unit	= $data['responsible_unit'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
 		}
@@ -244,7 +252,8 @@
 			$degree_comment[1]=' - '.lang('minor symptoms');
 			$degree_comment[2]=' - '.lang('medium symptoms');
 			$degree_comment[3]=' - '.lang('serious symptoms');
-			for ($i=0; $i<=3; $i++)
+			$degree_comment[4]=' - '.lang('condition not assessed');
+			for ($i=0; $i<=4; $i++)
 			{
 				$degree_list[$i]['id'] = $i;
 				$degree_list[$i]['name'] = $i . $degree_comment[$i];
@@ -479,7 +488,8 @@
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
 				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part,
-				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id));
+				'degree_id' => $this->degree_id, 'attrib_filter' => $attrib_filter, 'condition_survey_id' => $this->condition_survey_id,
+				'responsible_unit' => $this->responsible_unit));
 
 			$this->total_records			= $this->so->total_records;
 			$this->sum_investment			= $this->so->sum_investment;

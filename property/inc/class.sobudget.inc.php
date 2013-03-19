@@ -565,7 +565,6 @@
 
 			$filtermethod = '';
 			$filtermethod_order = " WHERE (fm_workorder_budget.year = $year OR fm_workorder_status.closed IS NULL)";
-			$filtermethod_paid = " WHERE (fm_orders_paid_or_pending_view.periode > {$year}00 and fm_orders_paid_or_pending_view.periode < {$year}13)";
 
 			$where = 'AND';
 
@@ -651,130 +650,100 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT fm_workorder.id AS id, sum(fm_orders_paid_or_pending_view.amount) AS actual_cost,fm_location1.mva,"
-				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
+			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,project_id,"
+				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"
 				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
-				. " {$this->left_join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " {$filtermethod_paid}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
-				. " GROUP BY fm_workorder.id, fm_location1.mva,"
-				. " fm_b_account.{$b_account_field}, district_id, fm_workorder.ecodimb";
+				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " ORDER BY fm_workorder.id ASC";
 
 //			_debug_array($sql);
 			//die();
 			$this->db->query($sql,__LINE__,__FILE__);
 			$_temp_paid_info = array();
+$projects = array();
+
 
 			while ($this->db->next_record())
 			{
+
 				$_id = $this->db->f('id');
+
+
+$projects[$this->db->f('project_id')] = 0;
+$projects2[$_id] = $this->db->f('project_id');
+
 				$_temp_paid_info[$_id] = array
 				(
-					'actual_cost'			=> $this->db->f('actual_cost'),
+					'actual_cost'			=> 0,
 					'mva'					=> (int)$this->db->f('mva'),
 					'district_id'			=> (int)$this->db->f('district_id'),
 					'ecodimb'				=> (int)$this->db->f('ecodimb'),
-					$b_account_field		=> $this->db->f($b_account_field),
+					'b_account'				=> $this->db->f('b_account'),
 				);
 			}
+ksort($projects);
+//_debug_array(count($projects2));
+//_debug_array($projects2);
 
-
-			$sql = "SELECT fm_workorder.id, fm_workorder_status.closed, fm_workorder.budget, fm_workorder.combined_cost,fm_location1.mva,fm_workorder.start_date,"
-				. " fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
-				. " FROM fm_workorder"
-				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
-				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
-				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
-				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
-				. " {$_join_district}"
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
-				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}";
-
-			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			$soworkorder = CreateObject('property.soworkorder');
 
 			$sum_actual_cost = 0;
 			$actual_cost = array();
 			$sum_obligation_cost = 0;
 			$obligations = array();
 			$sum_hits = 0;
-			$_local_combined_cost = array();
-//$_test=array();
-			while ($this->db->next_record())
+
+			$sum_hits = count($_temp_paid_info);
+
+			foreach ($_temp_paid_info as $order_id => &$order_info)
 			{
-				$_id = $this->db->f('id');
-				if (!isset($_local_combined_cost[$_id]) && ! $_combined_cost = $_local_combined_cost[$_id])
+				$order_budget = $soworkorder->get_budget($order_id);
+				foreach($order_budget as $budget)
 				{
-					$_local_combined_cost[$_id] = round($this->db->f('combined_cost'));
-					$_combined_cost = $_local_combined_cost[$_id];
-				}
-
-				$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mva')]/100);
-				$_actual_cost = isset($_temp_paid_info[$_id]['actual_cost']) && $_temp_paid_info[$_id]['actual_cost'] ? round($_temp_paid_info[$_id]['actual_cost']/$_taxfactor) : 0;
-		//		$_actual_cost = round($_temp_paid_info[$_id]['actual_cost']);
-				$_obligation = $_combined_cost - $_actual_cost;
-
-				unset($_temp_paid_info[$_id]);
-				unset($_id);
-
-				// only the current year
-				if($this->db->f('start_date') < $start_date)
-				{
-//					$_actual_cost = 0;
-				}
-
-				$sum_hits += 1;
-
-				if(!$this->db->f('closed'))
-				{
-					if((int)$this->db->f('budget') >= 0)
+					if($budget['year'] == $year)
 					{
-						if($_obligation < 0)
-						{
-//$_test[] = $_obligation;
-							$_obligation = 0;
-						}
-					}
-					else
-					{
-						if($_obligation > 0)
-						{
-							$_obligation = 0;
-						}
-					}
+$projects3[$projects2[$order_id]]['actual_cost']+= $budget['actual_cost'];
+$projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
+$projects3[$projects2[$order_id]]['budget']+= $budget['budget'];
+$projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
-					$sum_obligation_cost += $_obligation;
-					$obligations[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_obligation;
-				}
+						$order_info['actual_cost']		+= $budget['actual_cost'];
+						$order_info['combined_cost']	+= $budget['sum_orders'];
+						$order_info['budget']			+= $budget['budget'];
+						$order_info['obligation']		+= $budget['sum_oblications'];
+
+						$sum_obligation_cost += $budget['sum_oblications'];
+						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
+
+
+						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
+						$_actual_cost	= round($order_info['actual_cost']/$_taxfactor);
+
 //_debug_array($_test);
-				$hits[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += 1;
-				$accout_info[$this->db->f($b_account_field)] = true;
-				$district[$this->db->f('district_id')] = true;
-				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 
-				$sum_actual_cost += $_actual_cost;
-				$actual_cost[$this->db->f($b_account_field)][(int)$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $_actual_cost;
+						$sum_actual_cost += $_actual_cost;
+						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
 
+
+
+					}
+
+					$hits[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += 1;
+					$accout_info[$order_info['b_account']] = true;
+					$district[$order_info['district_id']] = true;
+					$ecodimb[$order_info['ecodimb']] = true;
+
+
+				}
 			}
+//_debug_array($projects3);
 
-
-//			_debug_array($_temp_paid_info);
-			
-			foreach ($_temp_paid_info as $_id => $_paid)
-			{
-				$accout_info[$_paid[$b_account_field]] = true;
-				$district[$_paid['district_id']] = true;
-				$ecodimb[$_paid['ecodimb']] = true;
-
-				$_taxfactor = 1 + ($_taxcode[(int)$_paid['mva']]/100);
-				$_actual_cost =  round($_paid['actual_cost']/$_taxfactor);
-				$sum_actual_cost += $_actual_cost;
-				$actual_cost[$_paid[$b_account_field]][(int)$_paid['district_id']][(int)$_paid['ecodimb']] += $_actual_cost;
-			}
 
 //			_debug_array($obligations);
 

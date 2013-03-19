@@ -7424,3 +7424,121 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.666 to 0.9.17.667
+	* Add recommended year
+	*/
+	$test[] = '0.9.17.666';
+	function property_upgrade0_9_17_666()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','recommended_year',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'default' => '0',
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','responsible_unit',array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_responsible_unit',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT fm_request.category, phpgw_categories.cat_name, phpgw_categories.cat_description FROM fm_request JOIN phpgw_categories ON fm_request.category = phpgw_categories.cat_id");
+		$request_cats = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$request_cats[]= array
+			(
+				'id'				=> $GLOBALS['phpgw_setup']->oProc->f('category'),
+				'cat_name'			=> $GLOBALS['phpgw_setup']->oProc->f('cat_name'),
+				'cat_description'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_description'),
+			);
+		}
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+
+		$i = 1;
+		foreach($request_cats as $old_cat)
+		{
+			$value_set = array
+			(
+				'cat_main'			=> 0,
+				'cat_parent'		=> 0,
+				'cat_level'			=> 0,
+				'cat_owner'			=> -1,
+				'cat_access'		=>'public',
+				'cat_appname'		=> 'property',
+				'cat_name'			=> $old_cat['cat_name'],
+				'cat_description'	=> $old_cat['cat_description'] ? $old_cat['cat_description'] : $old_cat['cat_name'],
+				'last_mod'			=> time(),
+				'location_id'		=> $location_id
+			);
+			$i++;
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set));
+			$sql = "INSERT INTO phpgw_categories ({$cols}) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			$cat_id = (int)$GLOBALS['phpgw_setup']->oProc->m_odb->get_last_insert_id('phpgw_categories','cat_id');
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET category = {$cat_id} WHERE category = {$old_cat['id']}");
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_main= {$cat_id} WHERE cat_id={$cat_id}",__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.667 to 0.9.17.668
+	* Add inventory for bulk items
+	*/
+	$test[] = '0.9.17.667';
+	function property_upgrade0_9_17_667()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_inventory',  array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
