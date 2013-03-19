@@ -305,8 +305,8 @@
 				$uicols['classname'][]		= 'rightClasss';
 				$uicols['sortable'][]		= false;
 
-				$cols .= ',fm_workorder.combined_cost';
-				$cols_return[] = 'combined_cost';
+//				$cols .= ',fm_workorder.combined_cost';
+//				$cols_return[] = 'combined_cost';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'obligation';
 				$uicols['descr'][]			= lang('sum orders');
@@ -408,7 +408,7 @@
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'location_table'=>$location_table,'cols'=>$cols,'cols_return'=>$cols_return,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,
-					'force_location'=>true, 'no_address' => $no_address));
+					'force_location'=>true, 'no_address' => $no_address,'location_level' => 2));
 
 				$this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group,$sql);
 
@@ -619,7 +619,7 @@
 			if ($filter_year && $filter_year != 'all')
 			{
 				$filter_year = (int)$filter_year;
-				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year})";
+				$filtermethod .= " $where (fm_workorder_budget.year={$filter_year} OR fm_workorder_status.closed IS NULL)";
 				$where= 'AND';
 			}
 
@@ -794,15 +794,11 @@
 				$order_budget = $this->get_budget($workorder['workorder_id']);
 				foreach($order_budget as $entry)
 				{
-					if($entry['active'])
-					{
-						$workorder['actual_cost'] += $entry['actual_cost'];
-					}
-
 					if ($filter_year && $filter_year != 'all')
 					{
 						if($entry['year'] == $filter_year)
 						{
+							$workorder['actual_cost'] += $entry['actual_cost'];
 							$workorder['combined_cost'] += $entry['sum_orders'];
 							$workorder['budget'] += $entry['budget'];
 							$workorder['obligation']  += $entry['sum_oblications'];
@@ -810,6 +806,8 @@
 					}
 					else 
 					{
+						$workorder['actual_cost'] += $entry['actual_cost'];
+
 						if($entry['active'])
 						{
 							$workorder['combined_cost'] += $entry['sum_orders'];
@@ -1255,6 +1253,8 @@
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',','.', $workorder['billable_hours']);
 
+			phpgwapi_cache::system_clear('property', "budget_order_{$workorder['id']}");
+
 			$this->db->query("SELECT status,calculation,billable_hours,approved FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
@@ -1682,6 +1682,13 @@
 				return array();
 			}
 
+			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
+
+			if($cached_info)
+			{
+				return $cached_info;
+			}
+
 			$closed_period = array();
 			$active_period = array();
 
@@ -1848,11 +1855,10 @@
 			}
 
 //_debug_array($values);die();
+			$deviation_acc = 0;
+			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
-	//			$entry['year'] = substr( $entry['period'], 0, 4 );
-	//			$month = substr( $entry['period'], 4, 2 );
-	//			$entry['month'] = $month == '00' ? '' : $month;
 				if($active_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
@@ -1865,12 +1871,25 @@
 				$_deviation = $entry['budget'] - $entry['actual_cost'];
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
-				$entry['deviation_acc'] += $deviation;
+				$budget_acc +=$entry['budget'];
+
+				if($active_period[$entry['period']])
+				{
+					$deviation_acc += $deviation;
+				}
+
+				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
+
+
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$entry['budget'] * 100;
+				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
+
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}
+
+			phpgwapi_cache::system_set('property', "budget_order_{$order_id}", $values);
+
 			return $values;
 		}
 

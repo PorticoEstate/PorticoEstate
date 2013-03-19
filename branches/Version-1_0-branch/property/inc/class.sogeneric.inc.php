@@ -1193,6 +1193,37 @@
 					);
 				break;
 
+			case 'request_responsible_unit':
+				$_lang_responsible_unit = lang('responsible unit');
+				$info = array
+					(
+						'table' 			=> 'fm_request_responsible_unit',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit') . ' ' . $_lang_responsible_unit,
+						'add_msg'			=> lang('add') . ' ' . $_lang_responsible_unit,
+						'name'				=> $_lang_responsible_unit,
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::request_responsible_unit'
+					);
+				break;
+
+
 				//-------- ID type varchar
 			case 'project_status':
 				$info = array

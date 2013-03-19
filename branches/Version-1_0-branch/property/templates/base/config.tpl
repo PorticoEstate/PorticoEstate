@@ -522,6 +522,14 @@
 		</td>
 	</tr>
 
+	<tr class="row_off">
+		<td>{lang_hidden_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_hidden_status]">
+				{hook_condition_survey_hidden_status}
+			</select>
+		</td>
+	</tr>
 
 		<!--
 		groupnotification

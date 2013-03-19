@@ -1087,7 +1087,7 @@
 						<xsl:value-of select="php:function('lang', 'done')"/>
 					</xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
+						<input type="submit" name="done" value="{$lang_done}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
 							</xsl:attribute>
@@ -1109,7 +1109,7 @@
 								<xsl:variable name="lang_generate_request">
 									<xsl:value-of select="php:function('lang', 'Generate Request')"/>
 								</xsl:variable>
-								<input type="submit" name="location" value="{$lang_generate_request}" onMouseout="window.status='';return true;">
+								<input type="submit" name="location" value="{$lang_generate_request}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'click this to generate a request with this information')"/>
 									</xsl:attribute>
@@ -1128,7 +1128,7 @@
 								<xsl:variable name="lang_generate_project">
 									<xsl:value-of select="php:function('lang', 'generate new project')"/>
 								</xsl:variable>
-								<input type="submit" name="location" value="{$lang_generate_project}" onMouseout="window.status='';return true;">
+								<input type="submit" name="location" value="{$lang_generate_project}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
 									</xsl:attribute>
@@ -1143,7 +1143,7 @@
 								<xsl:variable name="lang_add_to_project">
 									<xsl:value-of select="php:function('lang', 'add to project')"/>
 								</xsl:variable>
-								<input type="submit" name="location" value="{$lang_add_to_project}" onMouseout="window.status='';return true;">
+								<input type="submit" name="location" value="{$lang_add_to_project}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
 									</xsl:attribute>

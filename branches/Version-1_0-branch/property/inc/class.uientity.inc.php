@@ -57,9 +57,10 @@
 				'attrib_history'=> true,
 				'attrib_help'	=> true,
 				'print_pdf'		=> true,
-				'index'		=> true,
+				'index'			=> true,
 				'addfiles'		=> true,
-				'get_files'		=> true
+				'get_files'		=> true,
+				'add_inventory'	=> true
 			);
 
 		function property_uientity()
@@ -2123,6 +2124,41 @@
 						)
 					)
 				);
+
+
+				if($category['enable_bulk'])
+				{
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory');
+
+					$_inventory = $this->get_inventory($id);
+
+					$datavalues[3] = array
+					(
+						'name'					=> "3",
+						'values' 				=> json_encode($_inventory),
+						'total_records'			=> count($_inventory),
+						'edit_action'			=> "''",
+						'is_paginator'			=> 1,
+						'footer'				=> 0
+					);
+
+	
+					$myColumnDefs[3] = array
+					(
+						'name'		=> "3",
+						'values'	=>	json_encode(array(	
+								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+							)
+						)
+					);
+				
+				}
+
 			}
 
 			$data = array
@@ -2130,7 +2166,8 @@
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
-//					'related_link'					=> $related_link,			
+					'enable_bulk'					=> $category['enable_bulk'],
+					'value_location_id' 			=> $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location),
 					'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
@@ -2231,6 +2268,8 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit', 'property' );
 
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 
 			$criteria = array
@@ -2809,5 +2848,122 @@
 
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,$entity['name'] . '_' . str_replace(' ','_',$GLOBALS['phpgw']->accounts->id2name($this->account)));
+		}
+
+		public function get_inventory($id = 0)
+		{
+			return $this->bo->get_inventory($id);
+		}
+
+		public function add_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$item_id		= phpgw::get_var('id', 'int');
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+/*
+_debug_array($location_id);
+_debug_array($item_id);
+_debug_array($system_location);
+*/
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$values		= phpgw::get_var('values');
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $item_id;
+				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+				if(is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				if(!$values['location'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				}
+
+				if(isset($values_attribute) && is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
+						}
+					}
+				}
+
+				if(!isset($receipt['error']))
+				{
+					$receipt = $this->bo->save_inventory($values);
+				}
+			}
+
+
+			$unit_id	= $values['unit_id'];
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'form',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
+			
+			$data = array
+			(
+				'location_data'		=> $location_data,
+				'system_location'	=> $system_location,
+				'location_id' 		=> $location_id,
+				'item_id'			=> $item_id,
+				'unit_list'			=> array('options' => $unit_list),
+
+				'value_inventory'	=> $values['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'],
+				'value_active_from'	=> $values['active_from'],
+				'value_active_to'	=> $values['active_to'],
+				'value_remark'		=> $values['remark'],
+			);
+
+
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add_inventory' => $data));
+
+
 		}
 	}

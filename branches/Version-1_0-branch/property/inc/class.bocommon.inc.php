@@ -1048,7 +1048,7 @@
 		{
 			$datatype_text = array(
 				'V' => 'varchar',
-				'I' => 'number',
+				'I' => 'integer',
 				'C' => 'char',
 				'N' => 'float',
 				'D' => 'date',
@@ -1139,6 +1139,9 @@
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
 
+			$GLOBALS['phpgw']->config->read();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+
 			$soadmin_location	= CreateObject('property.soadmin_location');
 			$location_types	= $soadmin_location->select_location_type();
 			$config = $soadmin_location->read_config('');
@@ -1168,23 +1171,20 @@
 				$no_address	= true;
 			}
 
-			$GLOBALS['phpgw']->config->read();
-			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
-
 
 			$this->type_id	= $type_id;
 			$_level = 1;
 			for ($i=0; $i<$type_id; $i++)
 			{
-		//		if($_level > 1) // very expensive 
-				if($_level == 2 && in_array(2, $list_location_level))
+				if($_level > 1) // very expensive 
+		//		if($_level == 2 && in_array(2, $list_location_level))
 				{
 					$joinmethod .= " {$this->left_join} fm_location{$_level}";
 					$paranthesis .='(';
 					$on = 'ON';
 					for ($k=($_level-1); $k>0; $k--)
 					{
-						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k} AND  fm_location{$_level}.loc{$_level} = $entity_table.loc{$_level})";
 						$on = 'AND';
 						if($k==1)
 						{
@@ -1193,18 +1193,30 @@
 					}
 				}
 				$_level ++;
-
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
-				$uicols['descr'][]			= $location_types[$i]['name'];
-				$uicols['statustext'][]		= $location_types[$i]['descr'];
-				$uicols['exchange'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= $i === 0;
 			}
+
+			unset($_level);
+
+			foreach ($list_location_level as $_key => $_level)
+			{
+				if($_level)
+				{
+					$i = $_level -1;
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
+					$uicols['descr'][]			= $location_types[$i]['name'];
+					$uicols['statustext'][]		= $location_types[$i]['descr'];
+					$uicols['exchange'][]		= false;
+					$uicols['align'][] 			= '';
+					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+					$uicols['sortable'][]		= $_level === 1;
+				}
+			}
+
+
+//_debug_array($uicols);die();
 //_debug_array($joinmethod);die();
 			unset($soadmin_location);
 
@@ -1215,6 +1227,7 @@
 
 			for ($i=1;$i<($type_id+1);$i++)
 			{
+				$cols.= ",loc{$i}_name";
 				$cols_return[] 				= "loc{$i}_name";
 				$cols_extra[] 				= "loc{$i}_name";
 				$cols_return_lookup[] 		= "loc{$i}_name";
@@ -1423,7 +1436,6 @@
 			}
 
 			$categories = execMethod('property.sogeneric.get_list',$data);
-
 			return $this->select_list($data['selected'],$categories);
 		}
 

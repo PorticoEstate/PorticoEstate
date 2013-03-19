@@ -206,8 +206,11 @@
 			{
 				switch($order)
 				{
+					case 'recommended_year':
+						$ordermethod = " ORDER BY recommended_year $sort";
+						break;
 					case 'planned_year':
-						$ordermethod = " ORDER BY planned_year $sort";
+						$ordermethod = " ORDER BY start_date $sort";
 						break;
 					case 'url':
 						$ordermethod = " ORDER BY fm_request.id $sort";
@@ -232,17 +235,20 @@
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
 			. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 			. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
-			. " sum(fm_request_planning.amount) as planned_budget, fm_request.amount_investment,"
-			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,min(fm_request_planning.date) as planned_year"
-			. " FROM (((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
-			. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
-			. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
+	//		. " sum(fm_request_planning.amount) as planned_budget,"
+			. " fm_request.amount_investment,"
+			. " fm_request.amount_operation,fm_request.amount_potential_grants,fm_request.score,"
+			. " fm_request.recommended_year,"
+			. " fm_request.start_date"
+			. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
+	//		. " LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id)"
+	//		. " LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id)"
 			. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 			. " {$filtermethod}"
 			. " GROUP BY fm_request_status.descr,"
 			. " building_part,fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
 			. " fm_request.in_progress_date,fm_request.delivered_date,title,amount_investment,amount_operation,amount_potential_grants,score,fm_request.id,fm_request_status.descr";
-
+//_debug_array($sql);
 			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
@@ -252,7 +258,7 @@
 			$this->sum_operation	= $this->_db->f('sum_operation');
 			$this->sum_potential_grants	= $this->_db->f('sum_potential_grants');
 	
-//_debug_array($sql);
+
 
 /*
 			$sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
@@ -286,7 +292,8 @@
 					'amount_potential_grants'	=> $this->_db->f('amount_potential_grants'),
 					'planned_budget'			=> $this->_db->f('planned_budget'),
 					'score'						=> $this->_db->f('score'),
-					'planned_year'				=> $this->_db->f('planned_year') ? date('Y', $this->_db->f('planned_year')) : '',
+					'recommended_year'			=> $this->_db->f('recommended_year') ?  $this->_db->f('recommended_year') : '',
+					'planned_year'				=> $this->_db->f('start_date') ? date('Y', $this->_db->f('start_date')) : '',
 					'cat_id'					=> $this->_db->f('cat_id'),
 				);
 			}
@@ -295,26 +302,27 @@
 
 		function read($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
-			$filter			= isset($data['filter'])?$data['filter']:'';
-			$query			= isset($data['query'])?$data['query']:'';
-			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order'])?$data['order']:'';
-			$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
-			$property_cat_id= isset($data['property_cat_id'])?$data['property_cat_id']:0;
-			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'';
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
-			$project_id		= isset($data['project_id'])?$data['project_id']:'';
-			$allrows		= isset($data['allrows'])?$data['allrows']:'';
-			$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
-			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			$start_date		= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
-			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
-			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
-			$degree_id		= $data['degree_id'];
-			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
-			$condition_survey_id = $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
+			$start					= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$filter					= isset($data['filter'])?$data['filter']:'';
+			$query					= isset($data['query'])?$data['query']:'';
+			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order					= isset($data['order'])?$data['order']:'';
+			$cat_id					= isset($data['cat_id'])?$data['cat_id']:0;
+			$property_cat_id		= isset($data['property_cat_id'])?$data['property_cat_id']:0;
+			$status_id				= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
+			$district_id			= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+			$project_id				= isset($data['project_id'])?$data['project_id']:'';
+			$allrows				= isset($data['allrows'])?$data['allrows']:'';
+			$list_descr				= isset($data['list_descr'])?$data['list_descr']:'';
+			$dry_run				= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$p_num					= isset($data['p_num']) ? $data['p_num'] : '';
+			$start_date				= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
+			$end_date				= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
+			$building_part 			= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
+			$degree_id				= $data['degree_id'];
+			$attrib_filter			= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$condition_survey_id	= $data['condition_survey_id'] ? (int) $data['condition_survey_id'] : 0;
+			$responsible_unit		= (int)$data['responsible_unit'];
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -366,12 +374,12 @@
 			$cols_return[] 				= "in_progress_date";
 			$cols_return[] 				= "delivered_date";
 
-			$cols_group[] 				= "{$entity_table}.start_date";
+//			$cols_group[] 				= "{$entity_table}.start_date";
 			$cols_group[] 				= "{$entity_table}.entry_date";
 			$cols_group[] 				= "{$entity_table}.closed_date";
 			$cols_group[] 				= "{$entity_table}.in_progress_date";
 			$cols_group[] 				= "{$entity_table}.delivered_date";
-
+/*
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start date');
@@ -382,14 +390,14 @@
 			$uicols['formatter'][]		= '';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
-
+*/
 
 			$cols.= ",$entity_table.title as title";
 			$cols_return[] 				= 'title';
 			$cols_group[] 				= "title";
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'title';
-			$uicols['descr'][]			= lang('request description');
+			$uicols['descr'][]			= lang('request title');
 			$uicols['statustext'][]		= lang('Request title');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
@@ -501,9 +509,23 @@
 			$uicols['sortable'][]		= true;
 
 
-			$cols.= ",min(fm_request_planning.date) as planned_year";
+			$cols.= ",recommended_year";
+			$cols_return[] 				= 'recommended_year';
+			$cols_group[] 				= 'recommended_year';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'recommended_year';
+			$uicols['descr'][]			= lang('recommended year');
+			$uicols['statustext'][]		= lang('recommended year');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
+			$cols.= ",start_date AS planned_year";
 			$cols_return[] 				= 'planned_year';
-//			$cols_group[] 				= 'planned_year';
+			$cols_group[] 				= 'start_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'planned_year';
 			$uicols['descr'][]			= lang('planned year');
@@ -570,6 +592,13 @@
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 				'query'=>$query,'force_location'=>true, 'location_level' => $_location_level));
+
+
+			for ($i=2; $i< ($_location_level +1); $i++)
+			{
+				$cols_group[] = "fm_location{$i}.loc{$i}_name";
+			}
+
 
 			$cols_group[] = "{$entity_table}.id";
 			$cols_group[] = 'fm_request_status.descr';
@@ -689,6 +718,12 @@
 				$where= 'AND';
 			}
 
+			if ($responsible_unit)
+			{
+				$filtermethod .= " $where fm_request.responsible_unit='$responsible_unit'";
+				$where = 'AND';
+			}
+
 			if($query)
 			{
 				if(stristr($query, '.') && $p_num)
@@ -741,7 +776,8 @@
 
 			$this->_db->fetchmode = 'ASSOC';
 
-			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
+//			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM {$sql_arr[1]}";
 
 			$this->_db->query($sql2,__LINE__,__FILE__);
 			$this->_db->next_record();
@@ -828,6 +864,7 @@
 				$amount_operation			=  $this->_db->f('amount_operation');
 				$amount_potential_grants	=  $this->_db->f('amount_potential_grants');
 				$budget = $amount_investment + $amount_operation;
+				$recommended_year = $this->_db->f('recommended_year');
 
 				$request = array
 				(
@@ -844,6 +881,8 @@
 					'tenant_id'					=> $this->_db->f('tenant_id'),
 					'owner'						=> $this->_db->f('owner'),
 					'coordinator'				=> $this->_db->f('coordinator'),
+					'responsible_unit'			=> $this->_db->f('responsible_unit'),
+					'recommended_year'			=> $recommended_year ? $recommended_year : '',//hide '0' - which is needed for sorting
 					'access'					=> $this->_db->f('access'),
 					'start_date'				=> $this->_db->f('start_date'),
 					'end_date'					=> $this->_db->f('end_date'),
@@ -991,6 +1030,8 @@
 			$value_set['end_date']					= $request['end_date'];
 			$value_set['regulations']				= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
 			$value_set['condition_survey_id'] 		= $request['condition_survey_id'];
+			$value_set['responsible_unit']			= $request['responsible_unit'];
+			$value_set['recommended_year']			= (int) $request['recommended_year'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->_db->validate_insert(array_values($value_set));
@@ -1132,7 +1173,9 @@
 				'address'					=> $address,
 				'authorities_demands'		=> $request['authorities_demands'],
 				'building_part'				=> $request['building_part'],
-				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : ''
+				'regulations'				=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '',
+				'responsible_unit'			=> $request['responsible_unit'],
+				'recommended_year'			=> (int) $request['recommended_year'],
 			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))

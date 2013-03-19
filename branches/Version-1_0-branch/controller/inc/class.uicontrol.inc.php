@@ -106,6 +106,18 @@
 			self::set_active_menu('controller::control');
 		}
 		
+
+		/**
+		 * Wrapper for control_list
+		 *
+		 * @return void
+		 */
+
+		public function index()
+		{
+			$this->control_list();
+		}
+
 		/**
 		 * Fetches controls and returns to datatable 
 		 *
@@ -367,15 +379,18 @@
 		 * @param HTTP:: control id 
 		 * @return data array 
 		 */
-		public function view_control_groups(){
+		public function view_control_groups()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);	
 									
 			// Fetches saved control groups from db
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+
 			$saved_control_group_ids = array();
 			
-			foreach($saved_control_groups as $control_group){
+			foreach($saved_control_groups as $control_group)
+			{
 				$saved_control_group_ids[] = $control_group->get_id();
 			}
 			
@@ -384,10 +399,12 @@
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
 			$control_groups = array();
-			foreach($control_groups_as_array as $control_group){
+			foreach($control_groups_as_array as $control_group)
+			{
 				$control_group_id = $control_group['id'];
 				
-				if( in_array($control_group_id, $saved_control_group_ids )){
+				if( in_array($control_group_id, $saved_control_group_ids ))
+				{
 					$control_groups[] = array("checked" => 1, "control_group" => $control_group);
 				}
 				else
@@ -400,10 +417,10 @@
 			
 			$data = array
 			(
-				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-				'view'						=> "control_groups",
-				'editable' 				=> true,
-				'control'					=> $control,
+				'tabs'				=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'				=> "control_groups",
+				'editable' 			=> true,
+				'control'			=> $control,
 				'control_area'		=> $control_area,
 				'control_groups'	=> $control_groups,
 			);

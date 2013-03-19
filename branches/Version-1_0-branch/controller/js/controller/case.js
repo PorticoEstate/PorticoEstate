@@ -113,7 +113,7 @@ $(document).ready(function(){
 	
 	$("a.quick_edit_case").live("click", function(e){
     e.preventDefault();
-    console.log("sdfsdfsd");
+ //   console.log("sdfsdfsd");
 		var clickRow = $(this).closest("li");
 									
 		$(clickRow).find(".case_info").hide();

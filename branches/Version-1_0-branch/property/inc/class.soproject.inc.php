@@ -133,6 +133,21 @@
 				$cols = $entity_table . '.location_code';
 				$cols_return[] = 'location_code';
 
+				$cols.= ",project_type_id";
+				$cols_return[] 				= 'project_type_id';
+/*
+				$uicols['input_type'][]		= 'hidden';
+				$uicols['name'][]			= 'project_type_id';
+				$uicols['descr'][]			= '';
+				$uicols['statustext'][]		= '';
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
+*/
+
 				$cols .= ",$entity_table.id as project_id";
 				$cols_return[] 				= 'project_id';
 				$uicols['input_type'][]		= 'text';
@@ -321,7 +336,7 @@
 				//----- wo_hour_status
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true,'location_level' => 2));
 
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id,$sql);
 
@@ -658,7 +673,7 @@
 				}
 
 				$project_list = array();
-
+//_debug_array($cols_return);
 				$count_cols_return=count($cols_return);
 
 				while ($this->db->next_record())
@@ -672,7 +687,7 @@
 				{
 					$this->db->query("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
 					$this->db->next_record();
-
+//_debug_array("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
 					for ($i=0;$i<$count_cols_return;$i++)
 					{
 						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
@@ -694,7 +709,7 @@
 					$project['billable_hours']	= 0;
 
 				}
-
+//_debug_array($project_list);
 				unset($project);
 
 				$_datatype = array();
@@ -728,37 +743,32 @@
 					$project['obligation'] = 0;
 					$project['actual_cost'] = 0;
 
-					$budget = $this->get_budget($project['project_id']);
-					foreach($budget as $entry)
+					if($project['project_type_id'] == 3)//buffer
 					{
-						if($entry['active'])
-						{
-							$project['actual_cost'] += $entry['actual_cost'];
-						}
+						$buffer_budget = $this->get_buffer_budget($project['project_id']);
 
-						if ($filter_year && $filter_year != 'all')
+						foreach($buffer_budget as $entry)
 						{
-							if($entry['year'] == $filter_year)
-							{
-								$project['combined_cost'] += $entry['sum_orders'];
-								$project['budget'] += $entry['budget'];
-								$project['obligation']  += $entry['sum_oblications'];
-							}
+							$project['budget']			+= $entry['amount_in'];
+							$project['budget']			-= $entry['amount_out'];
+
 						}
-						else 
-						{
-							if($entry['active'])
-							{
-								$project['combined_cost'] += $entry['sum_orders'];
-								$project['budget'] += $entry['budget'];
-								$project['obligation'] += $entry['sum_oblications'];
-							}
-						}
+						unset($entry);
 					}
-
-					$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
-					$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
-
+					else
+					{
+						$workorder_data = $this->project_workorder_data(array('project_id' => $project['project_id'], 'year' => (int)$filter_year));
+						foreach($workorder_data as $entry)
+						{
+							$project['actual_cost']		+= $entry['actual_cost'];
+							$project['combined_cost']	+= $entry['combined_cost'];
+							$project['budget']			+= $entry['budget'];
+							$project['obligation']		+= $entry['obligation'];
+						}
+						unset($entry);
+						$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
+						$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
+					}
 				}
 
 //_debug_array($values);
@@ -870,7 +880,7 @@
 			$filter_year = '';
 			if($year)
 			{
-				$filter_year = "AND fm_workorder_budget.year = {$year}";
+				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
 			}
 
 			$this->db->query("SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
@@ -1451,13 +1461,11 @@
 			}
 			else // investment or operation
 			{
-
-
 				if(isset($project['transfer_amount']) && $project['transfer_amount'] && isset($project['transfer_target']) && $project['transfer_target'])
 				{
 					$this->db->query("SELECT project_type_id FROM fm_project WHERE id = " . (int)$project['transfer_target'],__LINE__,__FILE__);
 					$this->db->next_record();
-					if(!$this->db->f('project_type_id') ==3)
+					if($this->db->f('project_type_id') !=3)
 					{
 						throw new Exception('property_soproject::edit() - target project is not a buffer-project');
 					}
@@ -2166,12 +2174,18 @@ if(!$order_budget[0]['closed_order'])
 					$period = $budget_entry['period'];
 					$year = $budget_entry['year'];
 
+					$_found_actual_cost = false;
+					if(isset($project_budget[$period]))
+					{
+						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
+						$_found_actual_cost = true;
+					}
+
 					$_found = false;
 					if(isset($project_budget[$period]) && !$budget_entry['closed_order'])
 					{
 //_debug_array($_order_id);
 //_debug_array($budget_entry);
-						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
 						$_orders[$period]['sum_oblications'] += $budget_entry['sum_oblications'];
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 						$_found = true;
@@ -2183,7 +2197,11 @@ if(!$order_budget[0]['closed_order'])
 							$_period = $year . sprintf("%02s", $i);
 							if(isset($project_budget[$_period]))
 							{
-								$_orders[$_period]['actual_cost'] += $budget_entry['actual_cost'];
+								if(!$_found_actual_cost)
+								{
+									$_orders[$_period]['actual_cost'] += $budget_entry['actual_cost'];
+									$_found_actual_cost = true;
+								}
 								$_orders[$_period]['sum_oblications'] += $budget_entry['sum_oblications'];
 								$_orders[$_period]['sum_orders'] += $budget_entry['sum_orders'];
 
@@ -2193,6 +2211,10 @@ if(!$order_budget[0]['closed_order'])
 						}
 					}
 
+					if(!$_found_actual_cost)
+					{
+						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
+					}
 					if(!$_found)
 					{
 						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
@@ -2200,7 +2222,6 @@ if(!$order_budget[0]['closed_order'])
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 					}
 				}
-
 			}
 			$sort_period = array();
 //_debug_array($_orders);
@@ -2295,8 +2316,14 @@ if(!$order_budget[0]['closed_order'])
 				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
-				$deviation_acc += $deviation;
+
+				if($active_period[$entry['period']])
+				{
+					$deviation_acc += $deviation;
+				}
+
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
+
 				$entry['deviation_percent_period'] = $deviation/$entry['budget'] * 100;
 				$entry['deviation_percent_acc'] = $entry['deviation_acc']/$budget_acc * 100;
 				$entry['closed'] = $closed_period[$entry['period']];
@@ -2776,8 +2803,7 @@ $test = 0;
 
 		function check_request($request_id)
 		{
-			$target = $this->interlink->get_specific_relation('property', '.project.request', '.project', $request_id);
-
+			$target = $this->interlink->get_specific_relation('property', '.project.request', '.project', $request_id, 'target');
 			if ( $target)
 			{
 				return $target[0];
@@ -2788,7 +2814,7 @@ $test = 0;
 		{
 			for ($i=0;$i<count($add_request['request_id']);$i++)
 			{
-				$project_id=$this->check_request($add_request['request_id'][$i]);
+				$project_id = $this->check_request($add_request['request_id'][$i]);
 
 				if(!$project_id)
 				{
@@ -2803,7 +2829,7 @@ $test = 0;
 
 					$this->interlink->add($interlink_data);
 
-					$this->db->query("UPDATE fm_request SET project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
+					$this->db->query("UPDATE fm_request SET project_id='$id' WHERE id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);
 
 					$receipt['message'][] = array('msg'=>lang('request %1 has been added',$add_request['request_id'][$i]));
 				}

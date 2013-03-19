@@ -151,10 +151,10 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
-						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP.
 						break;
 					default:
 						$ordermethod = " ORDER BY $entity_table.$order $sort";
@@ -220,7 +220,7 @@
 
 		/**
 		 * Method for retreiving sublevels of a hierarchy.
-		 * 
+		 *
 		 * @param $data array array holding input parametres
 		 * @return array of entities
 		 */
@@ -768,7 +768,7 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
@@ -1176,10 +1176,10 @@
 				switch($order)
 				{
 					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
 						break;
 					case 'loc1_name':
-						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP.
 						break;
 					default:
 						$metadata = $this->db->metadata($entity_table);
@@ -2348,5 +2348,108 @@
 			}
 
 			return $entity;
+		}
+
+		/**
+		 * Method for retreiving inventory of bulk items.
+		 *
+		 * @param $data array array holding input parametres
+		 * @return array of entities
+		 */
+
+		public function get_inventory($data = array())
+		{
+
+			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$id				= (int)$data['id'];
+
+			if(!$location_id || ! $id)
+			{
+				return array();
+			}
+
+			$sql = "SELECT fm_bim_item_inventory.*, fm_standard_unit.name AS unit FROM fm_bim_item_inventory"
+			. " {$this->join} fm_standard_unit ON fm_bim_item_inventory.unit_id = fm_standard_unit.id"
+			. "  WHERE location_id = {$location_id} AND fm_bim_item_inventory.item_id = {$id} AND expired_on IS NULL";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$inventory = array();
+			while ($this->db->next_record())
+			{
+				$inventory[] = array
+				(
+					'inventory'		=> $this->db->f('inventory'),
+					'unit'			=> $this->db->f('unit', true),
+					'remark'		=> $this->db->f('remark', true),
+					'p_location_id'	=> $this->db->f('p_location_id'),
+					'p_id'			=> $this->db->f('p_id'),
+					'bookable'		=> $this->db->f('bookable'),
+					'active_from'	=> $this->db->f('active_from'),
+					'active_to'		=> $this->db->f('active_to'),
+					'bookable'		=> $this->db->f('bookable'),
+				);
+			}
+
+//_debug_array($inventory);
+			return $inventory;
+/*
+  id integer NOT NULL DEFAULT nextval('seq_fm_bim_item_inventory'::regclass),
+  location_id integer NOT NULL,
+  item_id integer NOT NULL,
+  p_location_id integer,
+  p_id integer,
+  unit_id integer NOT NULL,
+  inventory integer NOT NULL,
+  write_off integer NOT NULL,
+  bookable smallint NOT NULL,
+  active_from bigint,
+  active_to bigint,
+  created_on bigint NOT NULL,
+  created_by integer NOT NULL,
+  expired_on bigint,
+  expired_by bigint,
+  remark text,
+
+*/
+
+		}
+
+		public function save_inventory($values)
+		{
+			$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $values['location_code'])));
+			
+			$sql = "SELECT id FROM fm_locations WHERE location_code = '{$values['location_code']}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$p_id	= $this->db->f('id');
+			
+			if(!$p_location_id && !$p_id)
+			{
+				throw new Exception('ERROR: Not a valid location');			
+			}
+			
+			$table = 'fm_bim_item_inventory';
+
+			$value_set = array
+			(
+				'location_id'		=> $values['location_id'],
+				'item_id'			=> $values['item_id'],
+				'p_location_id'		=> $p_location_id,
+				'p_id'				=> $p_id,
+				'unit_id'			=> $values['unit_id'],
+				'inventory'			=> (int)$values['inventory'],
+				'write_off'			=> (int)$values['write_off'],
+				'bookable'			=> (int)$values['bookable'],
+				'active_from'		=> $values['active_from'],
+				'active_to'			=> $values['active_to'],
+				'created_on'		=> time(),
+				'created_by'		=> $this->account,
+	//			'expired_on'		=> ,
+	//			'expired_by'		=> ,
+				'remark'			=> $this->db->db_addslashes($values['remark'])
+			);
+
+			return	$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($value_set)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
+
 		}
 	}

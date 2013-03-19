@@ -934,8 +934,7 @@
 
 					$values['location_data'] = $ticket['location_data'];
 				}
-
-				if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
+				else if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
 				{
 					$_origin = explode('.', $origin);
 					$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
@@ -944,6 +943,17 @@
 					unset($_origin);
 					unset($_boentity);
 					unset($_entity);
+				}
+				else if ( $origin == '.project.request' && $origin_id )
+				{
+					$_borequest	= CreateObject('property.borequest', false);
+					$_request = $_borequest->read_single($origin_id, array(),true);
+					$values['descr'] = $_request['descr'];
+					$values['title'] = $_request['title'];
+					$values['location_data'] = $_request['location_data'];
+					unset($_origin);
+					unset($_borequest);
+					unset($_request);
 				}
 
 				if(isset($values['origin']) && $values['origin'])
@@ -1282,6 +1292,26 @@
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 						}
 					}
+				}
+
+
+				if( phpgw::get_var('send_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.view',
+						'workorder_id'	=> $id,
+						'from'			=>'index'
+						)
+					);
+				}
+
+				if( phpgw::get_var('calculate_workorder', 'bool') && !$receipt['error'])
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=>'property.uiwo_hour.index',
+						'workorder_id'	=> $id,
+						)
+					);
 				}
 
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -1945,11 +1975,10 @@
 				'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 				'value_origin_type'						=> isset($origin)?$origin:'',
 				'value_origin_id'						=> isset($origin_id)?$origin_id:'',
-				'calculate_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiwo_hour.index')),
+
 				'lang_calculate'						=> lang('Calculate Workorder'),
 				'lang_calculate_statustext'				=> lang('Calculate workorder by adding items from vendors prizebook or adding general hours'),
 
-				'send_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'property.uiwo_hour.view', 'from'=>'index')),
 				'lang_send'								=> $this->bo->order_sent_adress ? lang('ReSend Workorder') :lang('Send Workorder'),
 				'lang_send_statustext'					=> lang('send this workorder to vendor'),
 

@@ -100,7 +100,7 @@
                             </div>
                         </xsl:if>
                         <label>Fristdato</label>
-                        <input type="text" id="deadline_date" name="deadline_date" class="date">
+                        <input type="text" id="deadline_date" name="deadline_date" class="date" readonly="readonly" >
                             <xsl:attribute name="value">
                                 <xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
                             </xsl:attribute>
@@ -109,7 +109,7 @@
                     <!-- PLANNED DATE -->
                     <div class="row">
                         <label>Planlagt dato</label>
-                        <input type="text" id="planned_date" name="planned_date" class="date">
+                        <input type="text" id="planned_date" name="planned_date" class="date" readonly="readonly">
                             <xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">
                                 <xsl:attribute name="value">
                                     <xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/>
@@ -128,7 +128,7 @@
                             </div>
                         </xsl:if>
                         <label>Utført dato</label>
-                        <input type="text" id="completed_date" name="completed_date" class="date">
+                        <input type="text" id="completed_date" name="completed_date" class="date" readonly="readonly" >
                             <xsl:if test="check_list/completed_date != 0 and check_list/completed_date != ''">
                                 <xsl:attribute name="value">
                                     <xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
