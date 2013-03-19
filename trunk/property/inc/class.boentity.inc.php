@@ -683,7 +683,8 @@
 		public function get_inventory($id = 0)
 		{
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
-			return $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
+			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
+			return $values;
 		}
 
 		public function save_inventory($values)
