@@ -1714,7 +1714,7 @@
 					'year'				=> (int)$this->db->f('year'),
 					'month'				=> (int)$this->db->f('month'),
 					'actual_cost'		=> 0, //for now..
-					'closed_order'		=> $this->db->f('closed'),
+					'closed_order'		=> (int)$this->db->f('closed'),
 				);
 
   				$active_period[$period] = $this->db->f('active');
@@ -1729,7 +1729,7 @@
 				. " AND fm_project_budget.year = {$_budget['year']}"
 				. " AND fm_project_budget.month = {$_budget['month']}" ,__LINE__,__FILE__);
 				$this->db->next_record();
- 				$closed_period[$period] = $this->db->f('closed');
+ 				$closed_period[$period] = (int)$this->db->f('closed');
 			}
 
 			$sql = "SELECT order_id, periode, amount AS actual_cost"
@@ -1783,7 +1783,9 @@
 			$values = array();
 //_debug_array($order_budget);die();
 //$test = 0;
-			$_delay_period = 0;
+			$_current_period = date('Ym');
+			$_delay_period_sum = 0;
+			$_delay_period = false;
 			foreach ($order_budget as $period => $_budget)
 			{
 				$_sum_orders = 0;
@@ -1816,23 +1818,32 @@
 					}
 				}
 
+/*
+				if(($period < $_current_period) && $active_period[$period] && !$closed_period[$period])
+				{
+					$_delay_period = true;
+					$_delay_period_sum += $_sum_oblications;
+					$_sum_oblications = 0;
+				}
+*/
 				//override if periode is closed
 				if(!isset($active_period[$period]) || !$active_period[$period])
 				{
-					$_delay_period += $_sum_oblications;
 					$_sum_oblications = 0;
 				}
+
 				//override if periode is closed
 				if(isset($closed_period[$period]) && $closed_period[$period])
 				{
 					$_sum_oblications = 0;
 				}
 
-				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period_sum && !$_delay_period)
 				{
-					$_sum_oblications[] += $_delay_period;
-					$_delay_period =0;
+					$_sum_oblications += $_delay_period_sum;
+					$_delay_period_sum =0;
 				}
+				$_delay_period = false;
 //die();
 				$values[] = array
 				(
