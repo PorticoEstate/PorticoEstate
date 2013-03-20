@@ -680,10 +680,18 @@
 			return $this->so->read_entity_to_link($data);
 		}
 
-		public function get_inventory($id = 0)
+		public function get_inventory($location_id, $id = 0)
 		{
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
+
+			$interlink 	= CreateObject('property.interlink');
+
+			foreach ($values as &$entry)
+			{
+				$link_info = $interlink->get_location_link($entry['p_location_id'], $entry['p_id'],'view');
+				$entry['where'] = "<a href='{$link_info['link']}'>{$link_info['name']}</a>";
+			}
+
 			return $values;
 		}
 
