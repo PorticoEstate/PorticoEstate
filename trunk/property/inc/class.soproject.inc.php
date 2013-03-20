@@ -757,6 +757,40 @@
 					}
 					else
 					{
+
+						$year = (int)$filter_year;
+						$project_budget = $this->get_budget($project['project_id']);
+						foreach ($project_budget as $entry)
+						{
+							if($year && $entry['year'] == $year)
+							{
+								$project['combined_cost'] += $entry['sum_orders'];
+								if($entry['active'])
+								{
+									$project['budget'] += $entry['budget'];
+									if(!$entry['closed'])
+									{
+										$project['obligation']  += $entry['sum_oblications'];
+									}
+								}
+								$project['actual_cost'] += $entry['actual_cost'];
+							}
+							else if (!$year)
+							{
+								$project['combined_cost'] += $entry['sum_orders'];
+								if($entry['active'])
+								{
+									$project['budget'] += $entry['budget'];
+									if(!$entry['closed'])
+									{
+										$project['obligation']  += $entry['sum_oblications'];
+									}
+								}
+								$project['actual_cost'] += $entry['actual_cost'];
+							}
+						}
+/*
+
 						$workorder_data = $this->project_workorder_data(array('project_id' => $project['project_id'], 'year' => (int)$filter_year));
 						foreach($workorder_data as $entry)
 						{
@@ -765,9 +799,13 @@
 							$project['budget']			+= $entry['budget'];
 							$project['obligation']		+= $entry['obligation'];
 						}
+
 						unset($entry);
+*/
 						$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
 						$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
+
+
 					}
 				}
 
