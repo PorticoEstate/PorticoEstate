@@ -2184,6 +2184,7 @@
 //~ * For Driftsbestillinger settes Betalt til null, Budsjett settes til restforpliktelse (budsjett tidligere trekkes ned med restforpliktelse)
 //~ * For Investeringsbestillinger skal disse ikke se på år
 
+			phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 
 			if($continuous)
 			{
