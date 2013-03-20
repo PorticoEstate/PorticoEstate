@@ -1503,7 +1503,9 @@
 
 				while ($this->db->next_record())
 				{
-					$workorders[] = $this->db->f('id');
+					$workorder_id = $this->db->f('id');
+					$workorders[] = $workorder_id;
+					phpgwapi_cache::system_clear('property', "budget_order_{$workorder_id}");
 				}
 
 				if ($workorders)
