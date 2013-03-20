@@ -803,9 +803,14 @@
 						unset($entry);
 */
 						$_diff_start = abs($project['budget']) > 0 ? $project['budget'] : $project['combined_cost'];
-						$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
-
-
+						if(abs($_diff_start) > 0)
+						{
+							$project['diff'] = $_diff_start - $project['obligation'] - $project['actual_cost'];
+						}
+						else
+						{
+							$project['diff'] = 0;
+						}
 					}
 				}
 
