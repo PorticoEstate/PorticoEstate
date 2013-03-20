@@ -23,7 +23,7 @@
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.add_inventory')" />
 		</xsl:variable>
 
-			<form name="form" id="form" action="{$action_url}" method="post">
+		<form name="form" id="form" action="{$action_url}" method="post">
 
 	 <fieldset>
 		<legend>
@@ -33,6 +33,15 @@
 		</legend>
 
 			<table>
+				<xsl:choose>
+					<xsl:when test="msgbox_data != ''">
+						<tr>
+							<td align="left" colspan="3">
+								<xsl:call-template name="msgbox"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
 				<tr>
 					<td>
 					<label><xsl:value-of select="php:function('lang', 'id')" /></label>
@@ -51,6 +60,9 @@
 					</td>
 					<td>
 						<select id = 'unit_id' name="values[unit_id]" class="forms">
+							<xsl:if test="lock_unit = 1">
+								<xsl:attribute name="disabled" value="disabled"/>
+							</xsl:if>
 							<xsl:apply-templates select="unit_list/options"/>
 						</select>
 					</td>
@@ -132,7 +144,7 @@
 						<label><xsl:value-of select="php:function('lang', 'remark')" /></label>
 					</td>
 					<td>
-						<textarea cols="60" rows="10" name="values[remark]">
+						<textarea cols="60" rows="4" name="values[remark]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</xsl:attribute>

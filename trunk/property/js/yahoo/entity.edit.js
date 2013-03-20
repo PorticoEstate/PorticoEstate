@@ -1,7 +1,8 @@
 var  myDataSource, myDataTable, myContextMenu;
 var  myPaginator_0, myDataTable_0
 var  myPaginator_1, myDataTable_1;
-
+var  myPaginator_2, myDataTable_2;
+var  myPaginator_3, myDataTable_3;
 /********************************************************************************/
 var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 {
@@ -12,7 +13,44 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.myParticularRenderEvent = function()
 	{
+		this.addFooterDatatable3(myPaginator_3,myDataTable_3);
 	}
+
+
+	var FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+
+  	this.addFooterDatatable3 = function(paginator,datatable)
+  	{
+  		//call getSumPerPage(name of column) in property.js
+  		tmp_sum1 = getTotalSum('inventory',0,paginator,datatable);
+
+  		if(typeof(tableYUI)=='undefined')
+  		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[3].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+  		}
+  		else
+  		{
+  			tableYUI.deleteTFoot();
+  		}
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		td_sum('Sum');
+		td_empty(1);
+		td_sum(tmp_sum1);
+		td_empty(6);
+
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR);
+	}
+
 
 	this.fileuploader = function()
 	{
@@ -40,12 +78,19 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		var oArgs = {menuaction:'property.uientity.add_inventory', location_id:location_id, id: id};
 		var sUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:450,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
-		close: true
-	//	closejs:function(){closeJS_local()}
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true,
+		closejs:function(){refresh_inventory(location_id, id)}
 		});
 	}
 
+
+	this.refresh_inventory = function(location_id, id)
+	{
+		var oArgs = {menuaction:'property.uientity.get_inventory', location_id:location_id, id: id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		execute_async(myDataTable_3, oArgs);
+	}
 
 
 YAHOO.util.Event.addListener(window, "load", function()

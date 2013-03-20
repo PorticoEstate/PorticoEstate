@@ -60,6 +60,7 @@
 				'index'			=> true,
 				'addfiles'		=> true,
 				'get_files'		=> true,
+				'get_inventory'	=> true,
 				'add_inventory'	=> true
 			);
 
@@ -2139,7 +2140,7 @@
 						'total_records'			=> count($_inventory),
 						'edit_action'			=> "''",
 						'is_paginator'			=> 1,
-						'footer'				=> 0
+						'footer'				=> 1
 					);
 
 	
@@ -2149,8 +2150,8 @@
 						'values'	=>	json_encode(array(	
 								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
 							)
@@ -2852,19 +2853,45 @@
 
 		public function get_inventory($id = 0)
 		{
-			return $this->bo->get_inventory($id);
+			if(!$id)
+			{
+				$location_id	= phpgw::get_var('location_id', 'int');
+				$id			= phpgw::get_var('id', 'int');
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location = explode('.',$system_location['location']);
+				$this->bo->type = $location[1];
+				$this->bo->entity_id = $location[1];
+				$this->bo->cat_id = $location[3];
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+
+			$inventory =  $this->bo->get_inventory($location_id, $id);
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($inventory))
+				{
+					return json_encode($inventory);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+			return $inventory;
 		}
 
 		public function add_inventory()
 		{
 			$location_id	= phpgw::get_var('location_id', 'int');
-			$item_id		= phpgw::get_var('id', 'int');
+			$id				= phpgw::get_var('id', 'int');
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-/*
-_debug_array($location_id);
-_debug_array($item_id);
-_debug_array($system_location);
-*/
+
 			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
 
 			if(!$this->acl_add)
@@ -2873,13 +2900,24 @@ _debug_array($system_location);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory($location_id, $id) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
 			$values		= phpgw::get_var('values');
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
 			
 
 			if (isset($values['save']) && $values['save'])
 			{
 				$values['location_id']	= $location_id;
-				$values['item_id'] 		= $item_id;
+				$values['item_id'] 		= $id;
 				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 				if(is_array($insert_record_entity))
@@ -2897,30 +2935,19 @@ _debug_array($system_location);
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
 				}
 
-				if(isset($values_attribute) && is_array($values_attribute))
+				if(!$values['unit_id'])
 				{
-					foreach ($values_attribute as $attribute )
-					{
-						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-						{
-							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-
-						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
-						{
-							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
-						}
-					}
+					$receipt['error'][]=array('msg'=>lang('Please select a unit !'));
 				}
-
 				if(!isset($receipt['error']))
 				{
-					$receipt = $this->bo->save_inventory($values);
+					$this->bo->save_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
 				}
 			}
 
-
-			$unit_id	= $values['unit_id'];
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			
 			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
 
@@ -2937,12 +2964,13 @@ _debug_array($system_location);
 			
 			$data = array
 			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'		=> $location_data,
 				'system_location'	=> $system_location,
 				'location_id' 		=> $location_id,
-				'item_id'			=> $item_id,
+				'item_id'			=> $id,
 				'unit_list'			=> array('options' => $unit_list),
-
+				'lock_unit'			=> $lock_unit,
 				'value_inventory'	=> $values['inventory'],
 				'value_write_off'	=> $values['write_off'],
 				'bookable'			=> $values['bookable'],
