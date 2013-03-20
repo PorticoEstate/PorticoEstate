@@ -764,9 +764,9 @@
 						{
 							if($year && $entry['year'] == $year)
 							{
-								$project['combined_cost'] += $entry['sum_orders'];
 								if($entry['active'])
 								{
+									$project['combined_cost'] += $entry['sum_orders'];
 									$project['budget'] += $entry['budget'];
 									if(!$entry['closed'])
 									{
@@ -777,9 +777,9 @@
 							}
 							else if (!$year)
 							{
-								$project['combined_cost'] += $entry['sum_orders'];
 								if($entry['active'])
 								{
+									$project['combined_cost'] += $entry['sum_orders'];
 									$project['budget'] += $entry['budget'];
 									if(!$entry['closed'])
 									{
