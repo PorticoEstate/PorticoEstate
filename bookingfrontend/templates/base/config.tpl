@@ -12,15 +12,6 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
-		<tr class="row_off">
-			<td>{lang_auth_provider}:</td>
-			<td>
-				<select name="newsettings[auth_provider]">
-					<option value="altinn1" {selected_auth_provider_altinn1}>Altinn I</option>
-					<option value="altinn2" {selected_auth_provider_altinn2}>Altinn II</option>
-				</select>
-			</td>
-		</tr>
 	   <tr class="row_on">
 	    <td>{lang_remote_authentication}:</td>
 	    <td>
