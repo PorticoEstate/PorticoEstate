@@ -2149,6 +2149,8 @@
 						'name'		=> "3",
 						'values'	=>	json_encode(array(	
 								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+								array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
 								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
