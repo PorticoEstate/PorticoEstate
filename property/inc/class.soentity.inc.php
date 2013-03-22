@@ -2377,6 +2377,7 @@
 			{
 				$inventory[] = array
 				(
+					'id'			=> $this->db->f('id'),
 					'inventory'		=> $this->db->f('inventory'),
 					'unit_id'		=> $this->db->f('unit_id'),
 					'unit'			=> $this->db->f('unit', true),

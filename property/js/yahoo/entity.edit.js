@@ -17,6 +17,13 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	}
 
 
+
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+
 	var FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
 	{
 		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
