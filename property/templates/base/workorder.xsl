@@ -884,6 +884,12 @@
 									total_records: <xsl:value-of select="total_records"/>,
 									edit_action:  <xsl:value-of select="edit_action"/>,
 									is_paginator:  <xsl:value-of select="is_paginator"/>,
+									<xsl:if test="rows_per_page">
+										rows_per_page: "<xsl:value-of select="rows_per_page"/>",
+									</xsl:if>
+									<xsl:if test="initial_page">
+										initial_page: "<xsl:value-of select="initial_page"/>",
+									</xsl:if>
 									footer:<xsl:value-of select="footer"/>
 								}
 							]
