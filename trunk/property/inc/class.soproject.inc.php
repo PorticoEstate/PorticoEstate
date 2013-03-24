@@ -2328,21 +2328,30 @@ if(!$order_budget[0]['closed_order'])
 				$entry['year'] = substr( $entry['period'], 0, 4 );
 				$month = substr( $entry['period'], 4, 2 );
 				$entry['month'] = $month == '00' ? '' : $month;
-				if($active_period[$entry['period']])
+
+	//			if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+
+					$_deviation = $entry['budget'] - $entry['actual_cost'];
+	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+					$deviation = $_deviation;
+
+
 				}
 				else
 				{
 					$entry['diff'] =  0;
+					$deviation = 0;
 				}
-				$_deviation = $entry['budget'] - $entry['actual_cost'];
-				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
 
-				if($active_period[$entry['period']])
+	//			if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$deviation_acc += $deviation;
 				}

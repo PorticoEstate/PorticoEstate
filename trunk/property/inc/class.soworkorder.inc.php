@@ -1715,11 +1715,12 @@
 					'month'				=> (int)$this->db->f('month'),
 					'actual_cost'		=> 0, //for now..
 					'closed_order'		=> (int)$this->db->f('closed'),
+					'active_period'		=> (int)$this->db->f('active'),
 				);
 
   				$active_period[$period] = $this->db->f('active');
 			}
-
+//_debug_array($order_budget);die();
 			foreach ($order_budget as $period => $_budget)
 			{
 				$this->db->query("SELECT closed FROM fm_workorder"
@@ -1786,6 +1787,7 @@
 			$_current_period = date('Ym');
 			$_delay_period_sum = 0;
 			$_delay_period = false;
+
 			foreach ($order_budget as $period => $_budget)
 			{
 				$_sum_orders = 0;
@@ -1796,8 +1798,10 @@
 //_debug_array( $test+= $_budget['actual_cost']);
 				$_sum_orders += $_budget['combined_cost'];
 
-				if(!$_budget['closed_order'])
+				if(!$_budget['closed_order'])// && $active_period[$period])
 				{
+					if($active_period[$period])
+					{
 					$_sum_oblications += $_budget['combined_cost'];
 					$_sum_oblications -= $_budget['actual_cost'];
 
@@ -1815,6 +1819,7 @@
 						{
 							$_sum_oblications = 0;
 						}
+					}
 					}
 				}
 
@@ -1851,6 +1856,7 @@
 					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '',
 					'period'				=> $period,
 					'budget'				=> $_budget['budget'],
+					'combined_cost'			=> $_budget['combined_cost'],
 					'sum_orders'			=> $_sum_orders,
 					'sum_oblications'		=> $_sum_oblications,
 					'actual_cost'			=> $_actual_cost,
@@ -1870,21 +1876,28 @@
 			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
-				if($active_period[$entry['period']])
+			//	if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+
+					$_deviation = $entry['budget'] - $entry['actual_cost'];
+	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+					$deviation = $_deviation;
+
 				}
 				else
 				{
 					$entry['diff'] =  0;
+					$deviation = 0;
 				}
-				$_deviation = $entry['budget'] - $entry['actual_cost'];
-				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
 
-				if($active_period[$entry['period']])
+	//			if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$deviation_acc += $deviation;
 				}

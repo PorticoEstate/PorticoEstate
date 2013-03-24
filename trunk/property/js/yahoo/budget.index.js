@@ -8,9 +8,9 @@
 		{order:0, var_URL:'year',			name:'btn_year',			style:'',dependiente:[1,3]},
 		{order:1, var_URL:'revision',		name:'btn_revision',		style:'',dependiente:[]},
 		{order:2, var_URL:'district_id',	name:'btn_district_id',		style:'',dependiente:[]},
-		{order:3, var_URL:'grouping',		name:'btn_grouping',		style:'',dependiente:[]},
-		{order:4, var_URL:'cat_id',			name:'btn_cat_id',			style:'',dependiente:[]},
-		{order:5, var_URL:'dimb_id',		name:'btn_dimb_id',			style:'',dependiente:[]}
+		{order:3, var_URL:'grouping',		name:'btn_grouping',		style:'',dependiente:[]}
+//		{order:4, var_URL:'cat_id',			name:'btn_cat_id',			style:'',dependiente:[]},
+//		{order:5, var_URL:'dimb_id',		name:'btn_dimb_id',			style:'',dependiente:[]}
 		]
 
 		// define buttons
@@ -40,6 +40,22 @@
 		}
 
 		var tableYUI;
+
+		this.onChangeSelect = function(type)
+		{
+			var myselect=document.getElementById("sel_"+ type);
+			for (var i=0; i<myselect.options.length; i++)
+			{
+				if (myselect.options[i].selected==true)
+				{
+					break;
+				}
+			}
+			eval("path_values." +type +"='"+myselect.options[i].value+"'");
+			execute_ds();
+		}
+
+
 	/********************************************************************************/
 		var myFormatDate = function(elCell, oRecord, oColumn, oData)
 		{

@@ -515,6 +515,7 @@
 			$order		= isset($data['order']) ? $data['order'] : '';
 			$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
 			$paid		= isset($data['paid']) ? $data['paid'] : '';
+			$year		= isset($data['year']) ? $data['year'] : '';
 			$project_id	= isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
 			$order_id 	= isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0 ;//might be bigint
 
@@ -562,12 +563,18 @@
 				$where = 'AND';
 			}
 
+			if ($year)
+			{
+				$filtermethod .= " {$where} ({$table}.periode > {$year}00 AND {$table}.periode < {$year}13)";
+				$where = 'AND';
+			}
+
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
 				. " currency,budsjettansvarligid,org_name,periode";
 
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name,periode"
-				. " FROM $table"
+				. " FROM {$table}"
 				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"

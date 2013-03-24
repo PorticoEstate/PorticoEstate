@@ -188,13 +188,27 @@
 					$values_combo_box[3][] = $default_value;
 				}
 
-				$values_combo_box[4] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => True));
-				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[4]['cat_list'],$default_value);
+				$cat_filter =  $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True,'link_data' => $link_data));
+				foreach($cat_filter['cat_list'] as $_cat)
+				{
+					$values_combo_box[4][] = array
+					(
+						'id' => $_cat['cat_id'],
+						'name' => $_cat['name'],
+						'selected' => $_cat['selected'] ? 1 : 0
+					);
+				}
+				
+				array_unshift ($values_combo_box[4],array ('id'=>'', 'name'=>lang('no category')));
 
 				$values_combo_box[5]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[5] as & $_dimb)
+				{
+					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
+				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
 				array_unshift ($values_combo_box[5],$default_value);
+
 
 				$datatable['actions']['form'] = array
 					(
@@ -247,21 +261,26 @@
 									'tab_index' => 4
 								),
 								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_cat_id',
-									'name' 		=> 'cat_id',
-									'value'		=> lang('category'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
+								( //boton 	USER
+									//	'id' => 'btn_user_id',
+									'id' => 'sel_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[4],
+									'onchange'=> 'onChangeSelect("cat_id");',
 									'tab_index' => 5
 								),
 								array
-								( //boton 	GROUPING
-									'id' 		=> 'btn_dimb_id',
-									'name' 		=> 'dimb_id',
-									'value'		=> lang('dimb'),
-									'type' 		=> 'button',
-									'style' 	=> 'filter',
+								( 
+									'id' => 'sel_dimb_id',
+									'name' => 'dimb_id',
+									'value'	=> lang('dimb'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[5],
+									'onchange'=> 'onChangeSelect("dimb_id");',
 									'tab_index' => 6
 								),
 								array
@@ -320,6 +339,7 @@
 									'id' => 'values_combo_box_3',
 									'value'	=> $this->bocommon->select2String($values_combo_box[3])
 								),
+/*
 								array
 								( //div values  combo_box_4
 									'id' => 'values_combo_box_4',
@@ -330,6 +350,7 @@
 									'id' => 'values_combo_box_5',
 									'value'	=> $this->bocommon->select2String($values_combo_box[5])
 								)
+*/
 							)
 						)
 					)
