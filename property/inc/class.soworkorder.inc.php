@@ -511,7 +511,7 @@
 				{
 					$cat_filter[] = $_category['id'];
 				}
-				$filtermethod .= " {$where} fm_project.category IN (" .  implode(',', $cat_filter) .')';
+				$filtermethod .= " {$where} fm_workorder.category IN (" .  implode(',', $cat_filter) .')';
 
 				$where= 'AND';
 			}

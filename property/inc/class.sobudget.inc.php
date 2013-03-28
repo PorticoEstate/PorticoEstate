@@ -576,7 +576,7 @@
 
 			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_project.category IN (". implode(',', $cat_ids) . ')';
+				$filtermethod .= " $where fm_workorder.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
