@@ -79,7 +79,7 @@ add a part of town	property	no	Legg til en bydel
 add a project	property	no	leg til prosjekt
 add a property	property	no	legg til eiendom
 add a rental agreement	property	no	Legg til en utleieavtale
-add a request	property	no	legg til anmodning
+add a request	property	no	legg til behov
 add a service agreement	property	no	Legg til en service avtale
 add a standard	property	no	legg til standard
 add a template	property	no	legg til mal
@@ -309,7 +309,7 @@ choose charge tenant if the tenant i to pay for this project	property	no	Kryss a
 choose columns	common	no	Velg kolonner
 choose copy hour to copy this hour to a new hour	property	no	Kryss av for å kopiere denne posten til en ny post
 choose copy project to copy this project to a new project	property	no	Kryss av for å kopiere dette prosjektet til et nytt prosjekt
-choose copy request to copy this request to a new request	property	no	Kryss av for å kopiere denne anmodningen til en ny anmodning
+choose copy request to copy this request to a new request	property	no	Kryss av for å kopiere dette behovet til et nytt behov
 choose copy workorder to copy this workorder to a new workorder	property	no	Kryss av for å kopiere denne bestillingen til en ny bestilling
 choose generate id to automaticly assign new id based on type-prefix	property	no	Kryss av for generere ny ID basert på type-prefiks
 choose the end date for the next period	property	no	Velg slutt-dato for neste periode
@@ -337,7 +337,7 @@ click this link to select tenant	property	no	klikk her for å velge leietaker
 click this link to select vendor	property	no	klikk her for å velge leverandør
 click this link to view the remark	property	no	klikk her for å vise merknad
 click this to add an order to an existing project	property	no	klikk her for å legge til en ny bestilling til et eksisterende prosjekt
-click this to generate a request with this information	property	no	klikk her for å generere en anmodning med basis denne informasjonen
+click this to generate a request with this information	property	no	klikk her for å generere et behov med basis i denne informasjonen
 click this to generate a project with this information	property	no	klikk her for å lage ett nytt prosjekt med informasjon fra denne saken
 click to view file	property	no	Klikk for vise fil
 close	property	no	Avslutt
@@ -404,7 +404,7 @@ coordinator	property	no	Koordinator
 coordinator changed	property	no	endret koordinator
 copy hour ?	property	no	kopier post ?
 copy project ?	property	no	kopier prosjekt ?
-copy request ?	property	no	kopier anmodning ?
+copy request ?	property	no	kopier behov ?
 copy workorder ?	property	no	Kopier bestilling ?
 correct error	property	no	Rett opp feil
 cost	property	no	kostnad
@@ -474,7 +474,7 @@ delete part of town	property	no	Slett bydel
 delete prize-index	property	no	slett pris-indeks
 delete project	property	no	slett prosjekt
 delete property	property	no	slett eiendom
-delete request	property	no	slett anmodning
+delete request	property	no	slett behov
 delete template	property	no	slett mal
 delete the actor	property	no	Slett aktør
 delete the agreement	property	no	Slett avtale
@@ -515,7 +515,7 @@ delete this equipment	property	no	slett utstyr
 delete this hour	property	no	slett post
 delete this item	property	no	Slett denne posten
 delete this project	property	no	slett prosjekt
-delete this request	property	no	slett anmodning
+delete this request	property	no	slett behov
 delete this value from the list of multiple choice	property	no	Slett denne verdien fra listen over fler-valg
 delete this vendor from this activity	property	no	slett denne leverandøren fra denne aktiviteten
 delete this workorder	property	no	slett bestilling
@@ -611,10 +611,10 @@ edit method	property	no	Rette metode
 edit period	property	no	rette periode
 edit pricing	property	no	rette prising
 edit priority key	property	no	rette prioriterings nøkkel
-edit project	property	no	rette prosjekt
-edit property	property	no	rette eiendom
-edit request	property	no	rette anmodning
-edit standard	property	no	rette standard
+edit project	property	no	editer prosjekt
+edit property	property	no	editer eiendom
+edit request	property	no	editer behov
+edit standard	property	no	editer standard
 edit status	property	no	Endre status
 edit template	property	no	rette mal
 edit the account	property	no	Endre kontoen
@@ -643,7 +643,7 @@ edit the pricebook	property	no	rette prisbok
 edit the project	property	no	rette prosjekt
 edit the property	property	no	rette eiendom
 edit the r_agreement	property	no	Rette utleieavtalen
-edit the request	property	no	rette anmodning
+edit the request	property	no	endre behov
 edit the s_agreement	property	no	Rette serviceavtalen
 edit the standard	property	no	rette standard
 edit the template	property	no	rette mal
@@ -652,8 +652,8 @@ edit this activity	property	no	rette aktivitet
 edit this entity	property	no	Endre entiteten
 edit this entry	property	no	rette post
 edit this entry equipment	property	no	rett utstyr
-edit this entry project	property	no	rette prosjekt
-edit this entry request	property	no	rett anmodning
+edit this entry project	property	no	endre prosjekt
+edit this entry request	property	no	endre behov
 edit this entry workorder	property	no	rett bestilling
 edit this meter	property	no	rett måler
 edit workorder	property	no	Endre bestilling
@@ -848,7 +848,7 @@ general	property	no	Generelt
 generic	property	no	Generelt
 general address	property	no	Generell adresse
 general info	property	no	generell informasjon
-generate a project from this request	property	no	generer et prosjekt basert på denne anmodningen
+generate a project from this request	property	no	generer et prosjekt basert på dette behovet
 generate id ?	property	no	generer ID
 generate order	property	no	Lag bestilling
 generate project	property	no	Lag nytt prosjekt
@@ -1016,7 +1016,7 @@ list pricebook	property	no	list prisbok
 list pricebook per vendor	property	no	List prisbok pr leverandør
 list project	property	no	List Prosjekt
 list property	property	no	List eiendom
-list request	property	no	List Anmodning
+list request	property	no	List Behov
 list standard description	property	no	List standard beskrivelse
 list status	property	no	List status
 list street	property	no	List gate
@@ -1251,7 +1251,7 @@ please enter an integer for order!	property	no	Angi heltall for bestillingsnr
 Please - enter a invoice number	property	no	Angi FakturaNr
 please enter a project name !	property	no	Angi prosjekt navn
 please enter a property id !	property	no	Angi eiendoms ID
-please enter a request title !	property	no	Angi tittel for anmodning
+please enter a request title !	property	no	Angi tittel for Behov
 please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	angi enten material kostnader, arbeidskostnader eller begge
 please enter a workorder title !	property	no	Angi en bestillings tittel
@@ -1302,7 +1302,7 @@ please type a subject for this ticket !	property	no	angi overskrift for denne me
 popup calendar	property	no	Kalender
 post	property	no	post
 power meter	property	no	Strømmåler
-potential grants	property	no	Potensiell offentlig støtte
+potential grants	property	no	Pos.Off.St
 precision	property	no	Presisjon
 prefix	property	no	prefiks
 preview html	property	no	Forhåndsvis som HTML
@@ -1371,21 +1371,22 @@ repeat	property	no	serie
 repeat type	property	no	type serie
 repeat day	property	no	gjenta dag
 request	property	no	Behov
+set the status of the request	property	no	Sett status for Behovet
 reset approval	property	no	Nullstill
 project.request	property	no	Behov
 request attributes	property	no	Behov::attributter
 request an email receipt	property	no	Be om kvittering
 request a confirmation email when your email is opened by the recipient	property	no	Be om epost som kvittering når mottaker åpner eposten.
-request %1 has been edited	property	no	anmodning %1 er oppdater
-request %1 has been saved	property	no	anmodning %1 er lagret
+request %1 has been edited	property	no	Behov %1 er oppdatert
+request %1 has been saved	property	no	Behov %1 er lagret
 request budget	property	no	Budsjett for tiltak
 request condition type	property	no	Behov::konsekvenstype
 request descr	property	no	Beskrivelse av tiltak
-request end date	property	no	anmodning frist
+request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
-request id	property	no	Anmodnings ID
-request start date	property	no	anmodning startdato
-request status	property	no	Behov::status
+request id	property	no	Behov ID
+request start date	property	no	Behov startdato
+request status	property	no	Status Behov
 request title	property	no	Tiltak tittel
 request description	property	no	Tilstandbeskrivelse
 requirement	property	no	Behov/pålegg
@@ -1440,7 +1441,7 @@ save the part of town and return back to the list	property	no	Lagre bydel og ret
 save the project	property	no	lagre prosjekt
 save the property	property	no	lagre eiendom
 save the rental agreement and return back to the list	property	no	Lagre utleieavtale og returner til oversikten
-save the request	property	no	lagre anmodning
+save the request	property	no	lagre Behov
 save the service agreement and return back to the list	property	no	Lagre serviceavtale og returner til oversikten
 save the standard	property	no	lagre standard
 save the status	property	no	Lagre status
@@ -1524,7 +1525,7 @@ select the appropriate consequence by breakdown of this component for this theme
 select the appropriate propability for worsening of the condition	property	no	velg sannsynlighet for forverring
 select the appropriate tax code	property	no	velg mva-kode
 select the branches for this project	property	no	velg fag for dette prosjektet
-select the branches for this request	property	no	velg fag for denne anmodningen
+select the branches for this request	property	no	velg fag for dette behovet
 select the branch for this activity.	property	no	velg fag for denne aktiviteten
 select the branch for this document	property	no	velg fag for dette dokumentet
 select the budget responsible	property	no	Velg anviser
@@ -1548,7 +1549,7 @@ select the category the pricebook belongs to. to do not use a category select no
 select the category the project belongs to. to do not use a category select no category	property	no	velg kategori prosjekt tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the property belongs to. to do not use a category select no category	property	no	velg kategori eiendom tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the r_agreement belongs to. to do not use a category select no category	property	no	Velg kategorien denne utleieavtalen tilhører
-select the category the request belongs to. to do not use a category select no category	property	no	velg kategori anmodning tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the request belongs to. to do not use a category select no category	property	no	velg kategori behovet tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the s_agreement belongs to. to do not use a category select no category	property	no	Velg kategorien denne serviceavtalen tilhører
 select the category the ticket belongs to. to do not use a category select no category	property	no	velg kategori melding tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the workorder belongs to. to do not use a category select no category	property	no	velg kategori bestillingen tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
@@ -1556,7 +1557,7 @@ select the category. to do not use a category select no category	property	no	Vel
 select the chapter (for tender) for this activity.	property	no	velg tilbudskapittel for denne posten
 select the coordinator the document belongs to. to do not use a category select no user	property	no	velg koordinator dokument tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
 select the coordinator the project belongs to. to do not use a category select no user	property	no	velg koordinator prosjekt tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
-select the coordinator the request belongs to. to do not use a category select no user	property	no	velg koordinator anmodning tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
+select the coordinator the request belongs to. to do not use a category select no user	property	no	velg koordinator behovet tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
 select the customer by clicking this link	property	no	Velg kunde
 select the date for the first value	property	no	angi dato for første verdi
 select the date for the update	property	no	angi dato for oppdatering
@@ -1569,7 +1570,7 @@ select the equipment type the document belongs to. to do not use a type select n
 select the estimated date for closing the task	property	no	Velg beregnet dato for lukking av oppgave
 select the estimated end date for the agreement	property	no	Angi estimert slutt-dato for avtalen
 select the estimated end date for the project	property	no	Angi estimert sluttdato for prosjektet
-select the estimated end date for the request	property	no	Angi estimert sluttdato for anmodningen
+select the estimated end date for the request	property	no	Angi estimert sluttdato for behovet
 select the estimated termination date	property	no	Angi estimert terminerings-dato
 select the file to import from	property	no	velg fil å importere
 select the filter. to show all entries select show all	property	no	Velg filter. For å vise alle - velg VIS ALLE
@@ -1605,7 +1606,7 @@ select the users supervisor	property	no	Velg brukers overordnet
 select the user the alarm belongs to.	property	no	Velg bruker
 select the user the document belongs to. to do not use a category select no user	property	no	velg bruker dokument tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the project belongs to. to do not use a category select no user	property	no	velg bruker prosjekt tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
-select the user the request belongs to. to do not use a category select no user	property	no	velg bruker anmodning tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the request belongs to. to do not use a category select no user	property	no	velg bruker behovet tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the selection belongs to. to do not use a user select no user	property	no	velg bruker utvalg tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the template belongs to. to do not use a category select no user	property	no	velg bruker mal tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the workorder belongs to. to do not use a category select no user	property	no	velg bruker bestillingen tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
@@ -1875,7 +1876,7 @@ view meter	property	no	vise måler
 view or edit prizing history of this element	property	no	vis eller oppdater pris-historikk for dette elementet
 view project	property	no	vis prosjekt
 view property	property	no	vis eiendom
-view request	property	no	vis anmodning
+view request	property	no	vis behov
 view template detail	property	no	vis mal-detaljer
 view tender	property	no	Vis beskrivelse
 view the apartment	property	no	vis leilighet
@@ -1897,7 +1898,7 @@ view the method	property	no	Vis metoden
 view the part of town	property	no	Vis bydelen
 view the project	property	no	vis prosjekt
 view the property	property	no	vis eiendom
-view the request	property	no	vis anmodning
+view the request	property	no	vis behov
 view the standard	property	no	vis standard
 view the template	property	no	vis mal
 view the ticket	property	no	vis melding
@@ -1923,7 +1924,7 @@ weight for prioritising	property	no	Vekting av prioritering
 what is the current status of this document ?	property	no	hva er status for dette dokumentet ?
 what is the current status of this equipment ?	property	no	hva er status for dette utstyret ?
 what is the current status of this project ?	property	no	hva er status for dette prosjektet ?
-what is the current status of this request ?	property	no	hva er status for denne anmodningen ?
+what is the current status of this request ?	property	no	hva er status for dette behovet ?
 what is the current status of this workorder ?	property	no	hva er status for denne bestillingen ?
 where	property	no	Hvor
 where to deliver the key	property	no	Nøkler leveres

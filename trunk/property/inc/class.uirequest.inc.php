@@ -57,7 +57,8 @@
 				'priority_key'	=> true,
 				'view_file'		=> true,
 				'download'		=> true,
-				'columns'		=> true
+				'columns'		=> true,
+				'get_related'	=> true
 			);
 
 		function property_uirequest()
@@ -1548,11 +1549,13 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$related = $this->get_related($id);
+
 			$datavalues[2] = array
 				(
 					'name'					=> "2",
-					'values' 				=> json_encode($values['planning']),
-					'total_records'			=> count($values['planning']),
+					'values' 				=> json_encode($related),
+					'total_records'			=> count($related),
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
@@ -1563,31 +1566,14 @@
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
-					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
-														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
+					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'status','label'=>lang('status'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false)))
 				);
-
-			$datavalues[3] = array
-				(
-					'name'					=> "3",
-					'values' 				=> json_encode($values['consume']),
-					'total_records'			=> count($values['consume']),
-					'edit_action'			=> "''",
-					'is_paginator'			=> 0,
-					'footer'				=> 0
-				);
-
-
-
-			$myColumnDefs[3] = array
-				(
-					'name'		=> "3",
-					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
-														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
-				);
-
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1739,7 +1725,8 @@
 
 					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
-					'lang_coordinator'					=> lang('Coordinator'),
+					'lang_coordinator'					=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
+
 					'lang_user_statustext'				=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
 					'select_user_name'					=> 'values[coordinator]',
 					'lang_no_user'						=> lang('Select coordinator'),
@@ -1857,6 +1844,100 @@
 			}
 			$this->edit($mode = 'view');
 		}
+
+
+		function get_related($id)
+		{
+			if( !$this->acl_read)
+			{
+				return array();
+			}
+		
+			$interlink 	= CreateObject('property.interlink');
+			$target = $interlink->get_relation('property', $this->acl_location, $id, 'target');
+
+			$values = array();
+			if($target)
+			{
+				foreach($target as $_target_section)
+				{
+
+					foreach ($_target_section['data'] as $_target_entry)
+					{
+						switch($_target_section['location'])
+						{
+							case '.ticket':
+								$ticket		= execMethod('property.sotts.read_single',(int)$_target_entry['id']);
+								$budget		= $ticket['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							case '.project':
+								$project	= execMethod('property.soproject.read_single',(int)$_target_entry['id']);
+								$budget		= $project['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($project['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								$end_date = $GLOBALS['phpgw']->common->show_date($project['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							case '.project.workorder':
+								$workorder	= execMethod('property.soworkorder.read_single',(int)$_target_entry['id']);
+								$budget		= $workorder['budget'];
+								$start_date = $GLOBALS['phpgw']->common->show_date($workorder['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								$end_date = $GLOBALS['phpgw']->common->show_date($workorder['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+								break;
+							default:
+							// nothing
+						}
+
+						$values[] = array
+						(
+							'id'			=> "<a href=\"{$_target_entry['link']}\" > {$_target_entry['id']}</a>",
+							'type'			=> ucfirst($_target_section['descr']),
+							'title'			=> $_target_entry['title'],
+							'status'		=> $_target_entry['statustext'],
+							'budget'		=> $budget,
+							'start_date'	=> $start_date,
+							'end_date'		=> $end_date,
+						);
+					}
+				}
+			}
+
+//_debug_Array($values);die();
+
+/*
+					'values'	=>	json_encode(array(	array('key' => 'id','label'=>lang('id'),'sortable'=>true,'resizeable'=>false, 'formatter' => FormatterRight),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false)))
+
+*/
+
+//------ Start pagination
+
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+
+			$total_records = count($values);
+
+			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
+
+			if($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil( ( $start / $total_records ) * ($total_records/ $num_rows) );
+				$values_part = array_chunk($values, $num_rows);
+				$out = $values_part[$page];
+			}
+
+//------ End pagination
+
+			return $out;
+		}
+
+
 
 		protected function _generate_tabs()
 		{

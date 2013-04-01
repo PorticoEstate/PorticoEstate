@@ -410,6 +410,11 @@
 
 
 		<tr class="row_on">
+			<td>{lang_lang_request_coordinator}:</td>
+			<td><input name="newsettings[lang_request_coordinator]" value="{value_lang_request_coordinator}"></td>
+		</tr>
+
+		<tr class="row_on">
 			<td>{lang_meter_table}:</td>
 			<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
 		</tr>
