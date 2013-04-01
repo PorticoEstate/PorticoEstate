@@ -891,7 +891,7 @@
 
 			if($project)
 			{
-				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = $project_id",__LINE__,__FILE__);
+				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE project_id = $project_id AND active = 1",__LINE__,__FILE__);
 				$this->db->next_record();
 				$project['budget'] =(int)$this->db->f('sum_budget');
 			}

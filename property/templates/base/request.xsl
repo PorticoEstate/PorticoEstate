@@ -214,9 +214,49 @@
 										<dd>
 											<xsl:value-of select="value_request_id"/>
 										</dd>
+	
+								</xsl:when>
+							</xsl:choose>
 
-	 					</xsl:when>
-					</xsl:choose>
+							
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'responsible unit')"/>
+								</label></dt>
+								<dd>
+									<select name="values[responsible_unit]" class="forms">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set responsible unit')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select')"/>
+										</option>
+										<xsl:apply-templates select="responsible_unit_list/options"/>
+									</select>
+								</dd>
+
+								<dt><label>
+									<xsl:value-of select="lang_coordinator"/>
+								</label></dt>
+								<dd>
+									<xsl:call-template name="user_id_select"/>
+								</dd>
+							
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'request status')"/>
+								</label></dt>
+								<dd>
+									<select name="values[status]" class="forms">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set the status of the request')"/>
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'no status')"/>
+										</option>
+										<xsl:apply-templates select="status_list/options"/>
+									</select>
+								</dd>
+
+
 
  <fieldset>
   <legend>
@@ -318,20 +358,6 @@
 								</xsl:otherwise>
 							</xsl:choose>
 
-								<dt><label>
-									<xsl:value-of select="php:function('lang', 'building part')"/>
-								</label></dt>
-								<dd>
-									<select name="values[building_part]">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'select building part')"/>
-										</xsl:attribute>
-										<option value="0">
-											<xsl:value-of select="php:function('lang', 'select building part')"/>
-										</option>
-										<xsl:apply-templates select="building_part_list/options"/>
-									</select>
-								</dd>
 
 							<xsl:choose>
 								<xsl:when test="suppressmeter =''">
@@ -358,6 +384,21 @@
 			<xsl:value-of select="php:function('lang', 'description')"/>
   </legend>
 						<dl class="proplist-col">
+
+							<dt><label>
+								<xsl:value-of select="php:function('lang', 'building part')"/>
+							</label></dt>
+							<dd>
+								<select name="values[building_part]">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select building part')"/>
+									</xsl:attribute>
+									<option value="0">
+										<xsl:value-of select="php:function('lang', 'select building part')"/>
+									</option>
+									<xsl:apply-templates select="building_part_list/options"/>
+								</select>
+							</dd>
 
 							<dt><label>
 								<xsl:value-of select="php:function('lang', 'category')"/>
@@ -517,43 +558,6 @@
   </legend>
 
 						<dl class="proplist-col">					
-							
-								<dt><label>
-									<xsl:value-of select="php:function('lang', 'status')"/>
-								</label></dt>
-								<dd>
-									<select name="values[status]" class="forms">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
-										</xsl:attribute>
-										<option value="0">
-											<xsl:value-of select="php:function('lang', 'no status')"/>
-										</option>
-										<xsl:apply-templates select="status_list/options"/>
-									</select>
-								</dd>
-							
-								<dt><label>
-									<xsl:value-of select="php:function('lang', 'responsible unit')"/>
-								</label></dt>
-								<dd>
-									<select name="values[responsible_unit]" class="forms">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Set responsible unit')"/>
-										</xsl:attribute>
-										<option value="0">
-											<xsl:value-of select="php:function('lang', 'select')"/>
-										</option>
-										<xsl:apply-templates select="responsible_unit_list/options"/>
-									</select>
-								</dd>
-
-								<dt><label>
-									<xsl:value-of select="lang_coordinator"/>
-								</label></dt>
-								<dd>
-									<xsl:call-template name="user_id_select"/>
-								</dd>
 							
 
 								<dt><label>
@@ -754,6 +758,14 @@
 								</xsl:choose>
 							
 						</dl>
+ </fieldset>
+ <fieldset>
+  <legend>
+			<xsl:value-of select="php:function('lang', 'related')"/>
+  </legend>
+
+					<div id="datatable-container_2"/>
+
  </fieldset>
 					</div>
 					<div id="documents">
