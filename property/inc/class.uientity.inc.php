@@ -48,20 +48,21 @@
 
 		var $public_functions = array
 			(
-				'columns'		=> true,
-				'download'		=> true,
-				'view'	 		=> true,
-				'edit'	 		=> true,
-				'delete' 		=> true,
-				'view_file'		=> true,
-				'attrib_history'=> true,
-				'attrib_help'	=> true,
-				'print_pdf'		=> true,
-				'index'			=> true,
-				'addfiles'		=> true,
-				'get_files'		=> true,
-				'get_inventory'	=> true,
-				'add_inventory'	=> true
+				'columns'			=> true,
+				'download'			=> true,
+				'view'	 			=> true,
+				'edit'	 			=> true,
+				'delete' 			=> true,
+				'view_file'			=> true,
+				'attrib_history'	=> true,
+				'attrib_help'		=> true,
+				'print_pdf'			=> true,
+				'index'				=> true,
+				'addfiles'			=> true,
+				'get_files'			=> true,
+				'get_inventory'		=> true,
+				'add_inventory'		=> true,
+				'edit_inventory'	=> true
 			);
 
 		function property_uientity()
@@ -2156,6 +2157,9 @@
 								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'location_id','hidden'=>true),
+								array('key' => 'id','hidden'=>true),
+								array('key' => 'inventory_id','hidden'=>true),
 							)
 						)
 					);
@@ -2886,6 +2890,24 @@
 			}
 			
 			return $inventory;
+		}
+
+		public function edit_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$inventory_id	= phpgw::get_var('inventory_id', 'int');
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+		
 		}
 
 		public function add_inventory()
