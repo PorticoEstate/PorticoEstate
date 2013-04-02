@@ -16,7 +16,13 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		this.addFooterDatatable3(myPaginator_3,myDataTable_3);
 	}
 
-
+	var FormatterEdit = function(elCell, oRecord, oColumn, oData)
+	{
+		var location_id = oRecord.getData('location_id');
+		var id = oRecord.getData('id');
+		var inventory_id = oRecord.getData('inventory_id');
+	  	elCell.innerHTML = "<a href=\"javascript:showlightbox_edit_inventory(" + location_id + ',' + id + ',' + inventory_id + ')">' + 'Editer' + "</a>";
+	}	
 
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{
@@ -91,6 +97,16 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		});
 	}
 
+	this.showlightbox_edit_inventory = function(location_id, id, inventory_id)
+	{
+		var oArgs = {menuaction:'property.uientity.edit_inventory', location_id:location_id, id: id, inventory_id: inventory_id};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		close: true,
+		closejs:function(){refresh_inventory(location_id, id)}
+		});
+	}
 
 	this.refresh_inventory = function(location_id, id)
 	{
