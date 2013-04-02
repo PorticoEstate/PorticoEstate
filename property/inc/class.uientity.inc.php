@@ -2907,6 +2907,104 @@
 				echo lang('No Access');
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory($location_id, $id, $inventory_id) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$location_code = execMethod('property.solocation.get_location_code',$inventory[0]['p_id']);
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
+			$values		= phpgw::get_var('values');
+
+			$bolocation		= CreateObject('property.bolocation');
+			$values['location_data'] = $bolocation->read_single($location_code,array('view' => true));
+
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $id;
+				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
+				if(is_array($insert_record_entity))
+				{
+					for ($j=0;$j<count($insert_record_entity);$j++)
+					{
+						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
+					}
+				}
+
+				$values = $this->bocommon->collect_locationdata($values,$insert_record);
+
+				if(!$values['location'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
+				}
+
+				if(!$values['unit_id'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a unit !'));
+				}
+				if(!isset($receipt['error']))
+				{
+					$this->bo->save_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
+				}
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'view',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
+			
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'location_data'		=> $location_data,
+				'system_location'	=> $system_location,
+				'location_id' 		=> $location_id,
+				'item_id'			=> $id,
+				'unit_list'			=> array('options' => $unit_list),
+				'lock_unit'			=> $lock_unit,
+				'value_inventory'	=> $values['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'] ? $values['bookable'] : $inventory[0]['bookable'],
+				'value_active_from'	=> $values['active_from'] ? $values['active_from'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_from'],$dateformat ),
+				'value_active_to'	=> $values['active_to'] ? $values['active_to'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_to'],$dateformat ),
+				'value_remark'		=> $values['remark'] ? $values['remark'] : $inventory[0]['remark'],
+			);
+
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_inventory' => $data));
 		
 		}
 
@@ -2985,7 +3083,7 @@
 				'lookup_entity'	=> $lookup_entity,
 				'entity_data'	=> isset($values['p'])?$values['p']:''
 			));
-			
+
 			$data = array
 			(
 				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
