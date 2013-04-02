@@ -204,10 +204,7 @@
 			$name = 'N∕A';
 			if( preg_match('/.location./i', $system_location['location']) )
 			{
-				$sql = "SELECT location_code FROM fm_locations WHERE id = '{$id}'";
-				$this->_db->query($sql,__LINE__,__FILE__);
-				$this->_db->next_record();
-				$id = $this->_db->f('location_code');
+				$id = execMethod('property.solocation.get_location_code',$id);
 				$name = $id;
 			}
 			else if( preg_match('/.entity./i', $system_location['location']) )

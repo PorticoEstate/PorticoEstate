@@ -2359,18 +2359,28 @@
 
 		public function get_inventory($data = array())
 		{
-
 			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$id				= (int)$data['id'];
+			$inventory_id  	= isset($data['inventory_id']) && $data['inventory_id'] ? (int)$data['inventory_id'] : 0;
 
 			if(!$location_id || ! $id)
 			{
 				return array();
 			}
+			
+			if($inventory_id)
+			{
+				$filtermethod = "WHERE fm_bim_item_inventory.id = {$inventory_id}";
+			}
+			else
+			{
+				$filtermethod = "WHERE location_id = {$location_id} AND fm_bim_item_inventory.item_id = {$id} AND expired_on IS NULL";			
+			}
 
 			$sql = "SELECT fm_bim_item_inventory.*, fm_standard_unit.name AS unit FROM fm_bim_item_inventory"
 			. " {$this->join} fm_standard_unit ON fm_bim_item_inventory.unit_id = fm_standard_unit.id"
-			. "  WHERE location_id = {$location_id} AND fm_bim_item_inventory.item_id = {$id} AND expired_on IS NULL";
+			. " {$filtermethod}";
+
 			$this->db->query($sql,__LINE__,__FILE__);
 			$inventory = array();
 			while ($this->db->next_record())
