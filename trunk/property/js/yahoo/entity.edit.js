@@ -55,9 +55,9 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 		newTR = document.createElement('tr');
 
 		td_sum('Sum');
-		td_empty(1);
+		td_empty(3);
 		td_sum(tmp_sum1);
-		td_empty(6);
+		td_empty(5);
 
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");
@@ -112,6 +112,7 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	{
 		var oArgs = {menuaction:'property.uientity.get_inventory', location_id:location_id, id: id};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
+//alert(requestUrl);
 		execute_async(myDataTable_3, oArgs);
 	}
 

@@ -19,6 +19,16 @@
 
 	<!-- edit inventory -->
 	<xsl:template xmlns:php="http://php.net/xsl" match="edit_inventory">
+		<script type="text/javascript">
+			function edit_inventory()
+			{
+				var location_id = '<xsl:value-of select="location_id"/>';
+				var item_id = '<xsl:value-of select="item_id"/>';
+				document.form.submit();
+		//		parent.refresh_inventory(location_id, item_id);
+				parent.TINY.box.hide();
+			}
+		</script>
 
 	 <div align = 'left'>
 
@@ -56,6 +66,7 @@
 						<xsl:value-of select="item_id"/>
 						<input type="hidden" name="location_id" value="{location_id}"/>
 						<input type="hidden" name="id" value="{item_id}"/>
+						<input type="hidden" name="inventory_id" value="{inventory_id}"/>
 					</td>
 				</tr>
 
@@ -101,18 +112,6 @@
 					</td>
 					</tr>
 
-					<tr>
-					<td>
-						<label ><xsl:value-of select="php:function('lang', 'write off')" /></label>
-					</td>
-					<td>
-						<input type="text" name="values[write_off]" value="{value_write_off}" size="12">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_write_off_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					</tr>
 					<tr>
 					<td>
 						<label><xsl:value-of select="php:function('lang', 'bookable')" /></label>
@@ -180,7 +179,8 @@
 					<xsl:variable name="lang_save">
 						<xsl:value-of select="php:function('lang', 'save')"/>
 					</xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}">
+					<input type="hidden" name="values[save]" value="1"/>
+					<input type="button" name="send" value="{$lang_save}" onClick="edit_inventory();">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
 						</xsl:attribute>
@@ -272,7 +272,7 @@
 						</input>
 					</td>
 					</tr>
-
+<!--
 					<tr>
 					<td>
 						<label ><xsl:value-of select="php:function('lang', 'write off')" /></label>
@@ -285,6 +285,7 @@
 						</input>
 					</td>
 					</tr>
+-->
 					<tr>
 					<td>
 						<label><xsl:value-of select="php:function('lang', 'bookable')" /></label>

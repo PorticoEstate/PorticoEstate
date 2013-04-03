@@ -697,11 +697,18 @@
 			return $values;
 		}
 
-		public function save_inventory($values)
+		public function add_inventory($values)
 		{
 			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
 			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
-			return $this->so->save_inventory($values);
+			return $this->so->add_inventory($values);
+		}
+
+		public function edit_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->edit_inventory($values);
 		}
 
 	}

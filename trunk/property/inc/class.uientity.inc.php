@@ -2159,6 +2159,7 @@
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'location_id','hidden'=>true),
 								array('key' => 'id','hidden'=>true),
+							//	array('key' => 'inventory_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>false),
 								array('key' => 'inventory_id','hidden'=>true),
 							)
 						)
@@ -2931,30 +2932,10 @@
 			{
 				$values['location_id']	= $location_id;
 				$values['item_id'] 		= $id;
-				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
-
-				if(is_array($insert_record_entity))
-				{
-					for ($j=0;$j<count($insert_record_entity);$j++)
-					{
-						$insert_record['extra'][$insert_record_entity[$j]]	= $insert_record_entity[$j];
-					}
-				}
-
-				$values = $this->bocommon->collect_locationdata($values,$insert_record);
-
-				if(!$values['location'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
-				}
-
-				if(!$values['unit_id'])
-				{
-					$receipt['error'][]=array('msg'=>lang('Please select a unit !'));
-				}
+				$values['inventory_id'] = $inventory_id;
 				if(!isset($receipt['error']))
 				{
-					$this->bo->save_inventory($values);
+					$this->bo->edit_inventory($values);
 					$receipt['message'][]=array('msg'=> 'Ok');
 					$values = array();					
 				}
@@ -2984,6 +2965,7 @@
 				'system_location'	=> $system_location,
 				'location_id' 		=> $location_id,
 				'item_id'			=> $id,
+				'inventory_id'		=> $inventory_id,
 				'unit_list'			=> array('options' => $unit_list),
 				'lock_unit'			=> $lock_unit,
 				'value_inventory'	=> $values['inventory'] ? $values['inventory'] : $inventory[0]['inventory'],
@@ -3063,7 +3045,7 @@
 				}
 				if(!isset($receipt['error']))
 				{
-					$this->bo->save_inventory($values);
+					$this->bo->add_inventory($values);
 					$receipt['message'][]=array('msg'=> 'Ok');
 					$values = array();					
 				}
