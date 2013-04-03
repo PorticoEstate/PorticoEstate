@@ -2379,7 +2379,8 @@
 
 			$sql = "SELECT fm_bim_item_inventory.*, fm_standard_unit.name AS unit FROM fm_bim_item_inventory"
 			. " {$this->join} fm_standard_unit ON fm_bim_item_inventory.unit_id = fm_standard_unit.id"
-			. " {$filtermethod}";
+			. " {$filtermethod}"
+			. " ORDER BY p_location_id, p_id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$inventory = array();
@@ -2401,38 +2402,14 @@
 				);
 			}
 
-//_debug_array($inventory);
 			return $inventory;
-/*
-  id integer NOT NULL DEFAULT nextval('seq_fm_bim_item_inventory'::regclass),
-  location_id integer NOT NULL,
-  item_id integer NOT NULL,
-  p_location_id integer,
-  p_id integer,
-  unit_id integer NOT NULL,
-  inventory integer NOT NULL,
-  write_off integer NOT NULL,
-  bookable smallint NOT NULL,
-  active_from bigint,
-  active_to bigint,
-  created_on bigint NOT NULL,
-  created_by integer NOT NULL,
-  expired_on bigint,
-  expired_by bigint,
-  remark text,
-
-*/
-
 		}
 
-		public function save_inventory($values)
+		public function add_inventory($values)
 		{
 			$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $values['location_code'])));
 			
-			$sql = "SELECT id FROM fm_locations WHERE location_code = '{$values['location_code']}'";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			$p_id	= $this->db->f('id');
+			$p_id = execMethod('property.solocation.get_item_id',$values['location_code']);
 			
 			if(!$p_location_id && !$p_id)
 			{
@@ -2464,4 +2441,61 @@
 				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
 
 		}
+
+
+		public function edit_inventory($values)
+		{
+			$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $values['location_code'])));
+			
+			$p_id = execMethod('property.solocation.get_item_id',$values['location_code']);
+
+			$inventory_id = (int)$values['inventory_id'];
+		
+			if(!$inventory_id)
+			{
+				throw new Exception('ERROR: Not a valid id');			
+			}
+			
+			$this->db->transaction_begin();
+
+			$table = 'fm_bim_item_inventory';
+
+			$value_set = array
+			(
+				'expired_on'		=> time(),
+				'expired_by'		=> $this->account,
+			);
+
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->query("UPDATE {$table} SET $value_set WHERE id = {$inventory_id}",__LINE__,__FILE__);
+
+			$sql = "SELECT * FROM fm_bim_item_inventory WHERE id = {$inventory_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$inventory = array();
+			$this->db->next_record();
+
+			$value_set = array
+			(
+				'location_id'		=> $this->db->f('location_id'),
+				'item_id'			=> $this->db->f('item_id'),
+				'p_location_id'		=> $this->db->f('p_location_id'),
+				'p_id'				=> $this->db->f('p_id'),
+				'unit_id'			=> $this->db->f('unit_id'),
+				'inventory'			=> (int)$values['inventory'],
+				'write_off'			=> (int)$values['write_off'],
+				'bookable'			=> (int)$values['bookable'],
+				'active_from'		=> $values['active_from'],
+				'active_to'			=> $values['active_to'],
+				'created_on'		=> time(),
+				'created_by'		=> $this->account,
+				'remark'			=> $this->db->db_addslashes($values['remark'])
+			);
+
+			$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($value_set)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($value_set)) . ')',__LINE__,__FILE__);
+
+			return $this->db->transaction_commit();
+		}
+
 	}
