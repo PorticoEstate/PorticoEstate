@@ -2986,7 +2986,7 @@
 				'item_id'			=> $id,
 				'unit_list'			=> array('options' => $unit_list),
 				'lock_unit'			=> $lock_unit,
-				'value_inventory'	=> $values['inventory'],
+				'value_inventory'	=> $values['inventory'] ? $values['inventory'] : $inventory[0]['inventory'],
 				'value_write_off'	=> $values['write_off'],
 				'bookable'			=> $values['bookable'] ? $values['bookable'] : $inventory[0]['bookable'],
 				'value_active_from'	=> $values['active_from'] ? $values['active_from'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_from'],$dateformat ),

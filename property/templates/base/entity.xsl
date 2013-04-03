@@ -23,7 +23,10 @@
 	 <div align = 'left'>
 
 		<xsl:variable name="action_url">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.add_inventory')" />
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:property.uientity.edit_inventory')" />
+		</xsl:variable>
+		<xsl:variable name="lang_inventory">
+				<xsl:value-of select="php:function('lang', 'inventory')" />
 		</xsl:variable>
 
 		<form name="form" id="form" action="{$action_url}" method="post">
@@ -72,7 +75,21 @@
 					</tr>
 					<tr>
 					<td>
-						<label for="inventory"><xsl:value-of select="php:function('lang', 'inventory')" /></label>
+						<label for="old_inventory">
+							<xsl:value-of select="$lang_inventory"/>
+						</label>
+					</td>
+					<td>
+						<xsl:value-of select="value_inventory"/>
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<label for="inventory">
+							<xsl:value-of select="php:function('lang', 'new')" />
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$lang_inventory"/>
+						</label>
 					</td>
 					<td>
 
@@ -173,9 +190,9 @@
 					<xsl:variable name="lang_cancel">
 						<xsl:value-of select="php:function('lang', 'cancel')"/>
 					</xsl:variable>
-					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+					<input type="button" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
 						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
+							<xsl:value-of select="$lang_cancel"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -345,7 +362,7 @@
 					<xsl:variable name="lang_cancel">
 						<xsl:value-of select="php:function('lang', 'cancel')"/>
 					</xsl:variable>
-					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+					<input type="button" name="values[cancel]" value="{$lang_cancel}" onClick="parent.TINY.box.hide();">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Back to the list')"/>
 						</xsl:attribute>
