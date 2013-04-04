@@ -2036,65 +2036,9 @@
 
 			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
 
-			$config	= CreateObject('phpgwapi.config','property');
-			$config->read_repository();
-			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-//			$this->db->query("UPDATE fm_project_budget SET order_amount = 0",__LINE__,__FILE__);
-/**
- * FIXME: won't work for periodized order that last several years
- *
- **/
 
-/*
-			foreach ($orders as $id => $dummy)
-			{
-				$this->db->query("SELECT project_id, start_date, combined_cost, budget,calculation,contract_sum,addition,ecodimb FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
-				$this->db->next_record();
 
-				$old_combined_cost	= $this->db->f('combined_cost');
-				$budget				= $this->db->f('budget');
-				$calculation		= $this->db->f('calculation');
-				$contract_sum		= $this->db->f('contract_sum');
-				$addition			= $this->db->f('addition');
-				$project_id			= $this->db->f('project_id');
-				$start_date			= $this->db->f('start_date');
-				$old_ecodimb		= (int)$this->db->f('ecodimb');
-
-				if ( abs((int)$contract_sum) > 0)
-				{
-					$addition = 1 + ((int)$addition/100);
-					$combined_cost = (int)$contract_sum * $addition;
-				}
-				else if (abs($calculation) > 0)
-				{
-					$combined_cost = $calculation * $tax;
-				}
-				else
-				{
-					$combined_cost = (int)$budget;
-				}
-
-				if($old_combined_cost != $combined_cost)
-				{
-					//_debug_array(array($old_combined_cost,$combined_cost));
-					$this->db->query("UPDATE fm_workorder SET combined_cost = '{$combined_cost}' WHERE id = {$id}",__LINE__,__FILE__);
-				}
-
-				$this->db->query("SELECT periodization_id,ecodimb FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
-				$this->db->next_record();
-				$periodization_id	= $this->db->f('periodization_id');
-				$ecodimb			= (int)$this->db->f('ecodimb');
-
-				if($old_ecodimb != $ecodimb)
-				{
-					$this->db->query("UPDATE fm_workorder SET ecodimb = {$ecodimb} WHERE id = {$id}",__LINE__,__FILE__);
-				}
-
-		//		$this->_update_project_budget($project_id, date('Y', $start_date), $periodization_id, $combined_cost);
-				$this->_update_order_budget($id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
-			}
-*/
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
 
@@ -2175,7 +2119,14 @@
 		public function transfer_budget($id, $budget, $year)
 		{
 //_debug_array($budget);die();
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$id = (int) $id;
 			$year = (int) $year;
@@ -2236,7 +2187,11 @@
 				if( !abs( $last_budget ) > 0 )
 				{
 					$this->_update_order_budget($id, $year, $periodization_id, 0, 0, 0, 'update', true);
-					$this->db->transaction_commit();
+					if ( !$this->global_lock )
+					{
+						$this->db->transaction_commit();
+					}
+
 					return;
 //					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
 				}
@@ -2280,7 +2235,11 @@
 				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
 			}
 //die();
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
 		}
 
 		/**
