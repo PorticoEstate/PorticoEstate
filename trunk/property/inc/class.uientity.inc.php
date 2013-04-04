@@ -33,6 +33,12 @@
 	 */
 	phpgw::import_class('phpgwapi.yui');
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+
 	class property_uientity
 	{
 		var $grants;
@@ -1757,10 +1763,14 @@
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
+				
+								
+				$active_tab = phpgw::get_var('active_tab');
+				
 				if($category['location_level'] > 0)
 				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location');
-					$active_tab = 'location';
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')");
+					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
@@ -1777,7 +1787,7 @@
 						{
 							$_tab_name = str_replace(' ', '_', $group['name']);
 							$active_tab = $active_tab ? $active_tab : $_tab_name;
-							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'function' => "set_tab('{$_tab_name}')");
 							$group['link'] = $_tab_name;
 							$attributes[] = $group;
 							$i ++;
@@ -1804,7 +1814,7 @@
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
-					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'function' => "set_tab('files')");
 				}
 /*
 				if($category['jasperupload'])
@@ -2041,12 +2051,12 @@
 
 					if($documents)
 					{
-						$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+						$tabs['document']	= array('label' => lang('document'), 'link' => '#document', 'function' => "set_tab('document')");
 						$documents = json_encode($documents);				
 					}
 				}
 
-				$tabs['related']	= array('label' => lang('log'), 'link' => '#related');
+				$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
 				{
@@ -2130,7 +2140,7 @@
 
 				if($category['enable_bulk'])
 				{
-					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory');
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
 
 					$_inventory = $this->get_inventory($id);
 
@@ -2151,7 +2161,7 @@
 						'values'	=>	json_encode(array(	
 								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
-								array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
+							//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
 								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
@@ -2159,7 +2169,6 @@
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'location_id','hidden'=>true),
 								array('key' => 'id','hidden'=>true),
-							//	array('key' => 'inventory_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>false),
 								array('key' => 'inventory_id','hidden'=>true),
 							)
 						)
@@ -2236,6 +2245,7 @@
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+					'active_tab'					=> $active_tab,
 					'integration'					=> $integration,
 				//	'value_integration_src'			=> $integration_src,
 					'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
@@ -2939,6 +2949,30 @@
 					$receipt['message'][]=array('msg'=> 'Ok');
 					$values = array();					
 				}
+
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+
+					$result['receipt'] = $receipt;
+					return $result;
+				}
+
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -2981,7 +3015,9 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.add_inventory', 'property' );
+			phpgwapi_jquery::load_widget('core');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit_inventory', 'property' );
 
 			$function_msg	= lang('add inventory');
 
