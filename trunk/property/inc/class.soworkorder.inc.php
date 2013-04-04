@@ -2118,7 +2118,6 @@
 
 		public function transfer_budget($id, $budget, $year)
 		{
-//_debug_array($budget);die();
 			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
