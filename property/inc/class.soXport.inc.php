@@ -803,7 +803,7 @@
 					{
 						try
 						{
-							$soworkorder->transfer_budget($order['order_id'], $amount, $year);
+							$soworkorder->transfer_budget($order['order_id'], array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
 						}
 						catch(Exception $e)
 						{
