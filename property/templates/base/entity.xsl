@@ -39,7 +39,7 @@
 				<xsl:value-of select="php:function('lang', 'inventory')" />
 		</xsl:variable>
 
-		<form name="form" id="form" action="{$action_url}" method="post">
+		<form name="form" id="edit_inventory" action="{$action_url}" method="post">
 
 	 <fieldset>
 		<legend>
@@ -48,6 +48,7 @@
 			<xsl:value-of select="php:function('lang', 'edit inventory')" />
 		</legend>
 
+			<div id="receipt"></div>
 			<table>
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
@@ -180,7 +181,7 @@
 						<xsl:value-of select="php:function('lang', 'save')"/>
 					</xsl:variable>
 					<input type="hidden" name="values[save]" value="1"/>
-					<input type="button" name="send" value="{$lang_save}" onClick="edit_inventory();">
+					<input type="submit" name="send" value="{$lang_save}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'save values and exit')"/>
 						</xsl:attribute>
@@ -399,6 +400,11 @@
 			</xsl:when>
 		</xsl:choose>
 		<script type="text/javascript">
+			function set_tab(active_tab)
+			{
+				document.form.active_tab.value = active_tab;			
+			}
+
 			var property_js = <xsl:value-of select="property_js"/>;
 			var base_java_url = <xsl:value-of select="base_java_url"/>;
 			var datatable = new Array();
@@ -425,6 +431,7 @@
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
 			<form id="form" name="form" action="{$form_action}" method="post" ENCTYPE="multipart/form-data">
+				<input type="hidden" name="active_tab" value="{active_tab}"/>
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<xsl:choose>
 						<xsl:when test="msgbox_data != ''">

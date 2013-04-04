@@ -2445,12 +2445,7 @@
 
 		public function edit_inventory($values)
 		{
-			$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $values['location_code'])));
-			
-			$p_id = execMethod('property.solocation.get_item_id',$values['location_code']);
-
 			$inventory_id = (int)$values['inventory_id'];
-		
 			if(!$inventory_id)
 			{
 				throw new Exception('ERROR: Not a valid id');			
@@ -2469,10 +2464,14 @@
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->query("UPDATE {$table} SET $value_set WHERE id = {$inventory_id}",__LINE__,__FILE__);
 
+			if(!(int)$values['inventory'])
+			{
+				return $this->db->transaction_commit();			
+			}
+
 			$sql = "SELECT * FROM fm_bim_item_inventory WHERE id = {$inventory_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-			$inventory = array();
 			$this->db->next_record();
 
 			$value_set = array
@@ -2497,5 +2496,4 @@
 
 			return $this->db->transaction_commit();
 		}
-
 	}
