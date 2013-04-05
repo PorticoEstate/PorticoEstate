@@ -58,18 +58,19 @@
 
 		var $public_functions = array
 			(
-				'download'				=> true,
-				'index'					=> true,
-				'view'					=> true,
-				'edit'					=> true,
-				'delete'				=> true,
-				'date_search'			=> true,
-				'columns'				=> true,
-				'bulk_update_status'	=> true,
-				'project_group'			=> true,
-				'view_file'				=> true,
-				'get_orders'			=> true,
-				'get_vouchers'			=> true
+				'download'						=> true,
+				'index'							=> true,
+				'view'							=> true,
+				'edit'							=> true,
+				'delete'						=> true,
+				'date_search'					=> true,
+				'columns'						=> true,
+				'bulk_update_status'			=> true,
+				'project_group'					=> true,
+				'view_file'						=> true,
+				'get_orders'					=> true,
+				'get_vouchers'					=> true,
+				'check_missing_project_budget'	=> true
 			);
 
 		function property_uiproject()
@@ -130,9 +131,15 @@
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
+			$values 	= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function check_missing_project_budget()
+		{
+			$values 	= $this->bo->get_missing_project_budget();
+			$this->bocommon->download( $values, array('project_id', 'year'), array(lang('project'), lang('year')) );
 		}
 
 		function view_file()
