@@ -3035,4 +3035,28 @@ die();
 
 			return $year_list;
 		}
+
+
+		public function get_missing_project_budget()
+		{
+			$values = array();
+
+			$sql = "SELECT fm_project_budget_year_from_order_view.project_id,fm_project_budget_year_from_order_view.year"
+			. " FROM fm_project_budget_year_from_order_view"
+			. " {$this->left_join} fm_project_budget_year_view ON (fm_project_budget_year_from_order_view.project_id = fm_project_budget_year_view.project_id AND fm_project_budget_year_from_order_view.year = fm_project_budget_year_view.year)"
+			. " WHERE fm_project_budget_year_view.project_id IS NULL"
+			. " ORDER BY fm_project_budget_year_from_order_view.project_id,fm_project_budget_year_from_order_view.year";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'project_id'	=> $this->db->f('project_id'),
+					'year'			=> $this->db->f('year'),
+				);
+			}
+			return $values;
+		}
 	}

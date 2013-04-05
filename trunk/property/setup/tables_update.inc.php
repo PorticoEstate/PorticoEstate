@@ -7510,9 +7510,10 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
 	/**
 	* Update property version from 0.9.17.667 to 0.9.17.668
-	* Add inventory for bulk items
+	* Add check for missing budgets
 	*/
 	$test[] = '0.9.17.667';
 	function property_upgrade0_9_17_667()
@@ -7521,24 +7522,25 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
 
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'fm_bim_item_inventory',  array(
-				'fd' => array(
-					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-					'name' => array('type' => 'varchar','precision' => 50,'nullable' => False),
-					'descr' => array('type' => 'text','nullable' => True)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()
-			)
-		);
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+ 			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
+ 			. ' FROM fm_workorder_budget'
+ 			. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
+ 			. ' ORDER BY fm_workorder.project_id';
 
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
+ 			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
+ 			. ' FROM fm_project_budget'
+ 			. ' ORDER BY fm_project_budget.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.667';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.668';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
