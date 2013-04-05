@@ -132,6 +132,15 @@
 
 			if($values = phpgw::get_var('values'))
 			{
+				$order = execMethod('property.soworkorder.read_single',$values['order_id']);
+				$project = execMethod('property.soproject.read_single', $order['project_id']);
+				
+				if($project['closed'])
+				{
+					$receipt['error'][]=true;				
+					phpgwapi_cache::message_set(lang('Project is closed'), 'error');
+				}
+				
 				$approve = execMethod('property.boinvoice.get_approve_role',  $values['dim_b']);
 
 				if(!$approve)
