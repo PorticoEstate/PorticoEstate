@@ -833,7 +833,9 @@
 		{
 			$project_id = (int) $project_id;
 			$project = array();
-			$sql = "SELECT * FROM fm_project WHERE id={$project_id}";
+			$sql = "SELECT fm_project.*, fm_project_status.closed FROM fm_project"
+			. " {$this->join} fm_project_status ON fm_project.status = fm_project_status.id" 
+			. " WHERE fm_project.id={$project_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -853,6 +855,7 @@
 					'key_responsible'		=> $this->db->f('key_responsible'),
 					'descr'					=> $this->db->f('descr', true),
 					'status'				=> $this->db->f('status'),
+					'closed'				=> $this->db->f('closed'),
 					'budget'				=> (int)$this->db->f('budget'),
 			//		'planned_cost'			=> (int)$this->db->f('planned_cost'),
 					'reserve'				=> (int)$this->db->f('reserve'),

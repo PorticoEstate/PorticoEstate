@@ -1330,6 +1330,7 @@ project end date	property	no	Prosjekt sluttdato
 project group	property	no	Agresso prosjekt
 project id	property	no	Prosjekt ID
 project info	property	no	Prosjekt info.
+Project is closed	property	no	Prosjektet er avsluttet.
 project name	property	no	Prosjekt navn
 .project.request	property	no	Behov
 project start date	property	no	prosjekt startdato
