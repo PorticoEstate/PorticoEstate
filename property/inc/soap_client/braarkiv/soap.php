@@ -43,6 +43,8 @@
 		'noapi'						=> true		// this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 
+	$GLOBALS['phpgw_info']['flags']['session_name'] = 'soapclientsession';
+
 	/**
 	* Include phpgroupware header
 	*/
