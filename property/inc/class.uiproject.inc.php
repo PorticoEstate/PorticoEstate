@@ -58,17 +58,19 @@
 
 		var $public_functions = array
 			(
-				'download'				=> true,
-				'index'					=> true,
-				'view'					=> true,
-				'edit'					=> true,
-				'delete'				=> true,
-				'date_search'			=> true,
-				'columns'				=> true,
-				'bulk_update_status'	=> true,
-				'project_group'			=> true,
-				'view_file'				=> true,
-				'get_orders'			=> true
+				'download'						=> true,
+				'index'							=> true,
+				'view'							=> true,
+				'edit'							=> true,
+				'delete'						=> true,
+				'date_search'					=> true,
+				'columns'						=> true,
+				'bulk_update_status'			=> true,
+				'project_group'					=> true,
+				'view_file'						=> true,
+				'get_orders'					=> true,
+				'get_vouchers'					=> true,
+				'check_missing_project_budget'	=> true
 			);
 
 		function property_uiproject()
@@ -129,9 +131,15 @@
 		{
 			$start_date = urldecode(phpgw::get_var('start_date'));
 			$end_date 	= urldecode(phpgw::get_var('end_date'));
-			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
+			$values 	= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols		= $this->bo->uicols;
-			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+			$this->bocommon->download($values,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function check_missing_project_budget()
+		{
+			$values 	= $this->bo->get_missing_project_budget();
+			$this->bocommon->download( $values, array('project_id', 'year'), array(lang('project'), lang('year')) );
 		}
 
 		function view_file()
@@ -1945,38 +1953,11 @@
 
 
 			$invoices = array();
+			$content_invoice = array();
+
 			if ($id)
 			{
-				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $id, 'paid' => true));
-				$invoices = array_merge($active_invoices,$historical_invoices);
-			}
-
-			$content_invoice = array();
-			foreach($invoices as $entry)
-			{
-				$content_invoice[] = array
-				(
-					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
-					'voucher_out_id'		=> $entry['voucher_out_id'],
-					'workorder_id'			=> $entry['workorder_id'],
-					'status'				=> $entry['status'],
-					'period'				=> $entry['period'],
-					'invoice_id'			=> $entry['invoice_id'],
-					'budget_account'		=> $entry['budget_account'],
-					'dima'					=> $entry['dima'],
-					'dimb'					=> $entry['dimb'],
-					'dimd'					=> $entry['dimd'],
-					'type'					=> $entry['type'],
-					'amount'				=> $entry['amount'],
-					'approved_amount'		=> $entry['approved_amount'],
-					'vendor'				=> $entry['vendor'],
-					'project_group'			=> $entry['project_id'],
-					'currency'				=> $entry['currency'],
-					'budget_responsible'	=> $entry['budget_responsible'],
-					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				);
+				$content_invoice = $this->get_vouchers($id, date('Y'));
 			}
 
 			$datavalues[2] = array
@@ -1998,18 +1979,18 @@
 				(
 					'name'		=> "2",
 					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
+														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>true,'resizeable'=>true,'formatter'=>$_formatter_voucher_link),
 														array('key' => 'voucher_out_id','hidden'=>true),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'period','label'=>lang('period'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterAmount2'),
+														array('key' => 'period','label'=>lang('period'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'type','label'=>lang('type'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>true,'resizeable'=>true),
 														))
 
 				);
@@ -2372,6 +2353,62 @@
 			}
 
 			$content = $this->bo->get_orders(array('project_id'=> $project_id,'year'=> $year));
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content))
+				{
+					return json_encode($content);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content;
+		}
+
+		public function get_vouchers($project_id = 0, $year = 0)
+		{
+			if(!$project_id)
+			{
+				$project_id = phpgw::get_var('project_id', 'int');
+			}
+			if(!$year)
+			{
+				$year = phpgw::get_var('year', 'int');
+			}
+
+			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year));
+			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array('project_id' => $project_id, 'year' => $year, 'paid' => true));
+			$invoices = array_merge($active_invoices,$historical_invoices);
+
+			foreach($invoices as $entry)
+			{
+				$content[] = array
+				(
+					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_out_id'		=> $entry['voucher_out_id'],
+					'workorder_id'			=> $entry['workorder_id'],
+					'status'				=> $entry['status'],
+					'period'				=> $entry['period'],
+					'invoice_id'			=> $entry['invoice_id'],
+					'budget_account'		=> $entry['budget_account'],
+					'dima'					=> $entry['dima'],
+					'dimb'					=> $entry['dimb'],
+					'dimd'					=> $entry['dimd'],
+					'type'					=> $entry['type'],
+					'amount'				=> $entry['amount'],
+					'approved_amount'		=> $entry['approved_amount'],
+					'vendor'				=> $entry['vendor'],
+					'project_group'			=> $entry['project_id'],
+					'currency'				=> $entry['currency'],
+					'budget_responsible'	=> $entry['budget_responsible'],
+					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+				);
+			}
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{

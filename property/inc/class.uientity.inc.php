@@ -33,6 +33,12 @@
 	 */
 	phpgw::import_class('phpgwapi.yui');
 
+	/**
+	* Import the jQuery class
+	*/
+	phpgw::import_class('phpgwapi.jquery');
+
+
 	class property_uientity
 	{
 		var $grants;
@@ -48,19 +54,21 @@
 
 		var $public_functions = array
 			(
-				'columns'		=> true,
-				'download'		=> true,
-				'view'	 		=> true,
-				'edit'	 		=> true,
-				'delete' 		=> true,
-				'view_file'		=> true,
-				'attrib_history'=> true,
-				'attrib_help'	=> true,
-				'print_pdf'		=> true,
-				'index'			=> true,
-				'addfiles'		=> true,
-				'get_files'		=> true,
-				'add_inventory'	=> true
+				'columns'			=> true,
+				'download'			=> true,
+				'view'	 			=> true,
+				'edit'	 			=> true,
+				'delete' 			=> true,
+				'view_file'			=> true,
+				'attrib_history'	=> true,
+				'attrib_help'		=> true,
+				'print_pdf'			=> true,
+				'index'				=> true,
+				'addfiles'			=> true,
+				'get_files'			=> true,
+				'get_inventory'		=> true,
+				'add_inventory'		=> true,
+				'edit_inventory'	=> true
 			);
 
 		function property_uientity()
@@ -1755,10 +1763,14 @@
 				}
 
 				phpgwapi_yui::tabview_setup('entity_edit_tabview');
+				
+								
+				$active_tab = phpgw::get_var('active_tab');
+				
 				if($category['location_level'] > 0)
 				{
-					$tabs['location']	= array('label' => lang('location'), 'link' => '#location');
-					$active_tab = 'location';
+					$tabs['location']	= array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')");
+					$active_tab = $active_tab ? $active_tab : 'location';
 				}
 
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
@@ -1775,7 +1787,7 @@
 						{
 							$_tab_name = str_replace(' ', '_', $group['name']);
 							$active_tab = $active_tab ? $active_tab : $_tab_name;
-							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => '#' . $_tab_name);
+							$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}", 'function' => "set_tab('{$_tab_name}')");
 							$group['link'] = $_tab_name;
 							$attributes[] = $group;
 							$i ++;
@@ -1802,7 +1814,7 @@
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
-					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
+					$tabs['files']	= array('label' => lang('files'), 'link' => '#files', 'function' => "set_tab('files')");
 				}
 /*
 				if($category['jasperupload'])
@@ -2039,12 +2051,12 @@
 
 					if($documents)
 					{
-						$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+						$tabs['document']	= array('label' => lang('document'), 'link' => '#document', 'function' => "set_tab('document')");
 						$documents = json_encode($documents);				
 					}
 				}
 
-				$tabs['related']	= array('label' => lang('log'), 'link' => '#related');
+				$tabs['related']	= array('label' => lang('log'), 'link' => '#related', 'function' => "set_tab('related')");
 				$_target = array();
 				if(isset($values['target']) && $values['target'])
 				{
@@ -2128,7 +2140,7 @@
 
 				if($category['enable_bulk'])
 				{
-					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory');
+					$tabs['inventory']	= array('label' => lang('inventory'), 'link' => '#inventory', 'function' => "set_tab('inventory')");
 
 					$_inventory = $this->get_inventory($id);
 
@@ -2139,7 +2151,7 @@
 						'total_records'			=> count($_inventory),
 						'edit_action'			=> "''",
 						'is_paginator'			=> 1,
-						'footer'				=> 0
+						'footer'				=> 1
 					);
 
 	
@@ -2148,11 +2160,16 @@
 						'name'		=> "3",
 						'values'	=>	json_encode(array(	
 								array('key' => 'where','label'=>lang('where'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'edit','label'=>lang('edit'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterEdit'),
+							//	array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'unit','label'=>lang('unit'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true),
-								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'inventory','label'=>lang('count'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterAmount0'),
+								array('key' => 'bookable','label'=>lang('bookable'),'sortable'=>false,'resizeable'=>true, 'formatter' => 'FormatterCenter'),
 								array('key' => 'calendar','label'=>lang('calendar'),'sortable'=>false,'resizeable'=>true),
 								array('key' => 'remark','label'=>lang('remark'),'sortable'=>false,'resizeable'=>true),
+								array('key' => 'location_id','hidden'=>true),
+								array('key' => 'id','hidden'=>true),
+								array('key' => 'inventory_id','hidden'=>true),
 							)
 						)
 					);
@@ -2228,6 +2245,7 @@
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+					'active_tab'					=> $active_tab,
 					'integration'					=> $integration,
 				//	'value_integration_src'			=> $integration_src,
 					'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
@@ -2852,19 +2870,168 @@
 
 		public function get_inventory($id = 0)
 		{
-			return $this->bo->get_inventory($id);
+			if(!$id)
+			{
+				$location_id	= phpgw::get_var('location_id', 'int');
+				$id			= phpgw::get_var('id', 'int');
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location = explode('.',$system_location['location']);
+				$this->bo->type = $location[1];
+				$this->bo->entity_id = $location[1];
+				$this->bo->cat_id = $location[3];
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+
+			$inventory =  $this->bo->get_inventory($location_id, $id);
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($inventory))
+				{
+					return json_encode($inventory);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			
+			return $inventory;
+		}
+
+		public function edit_inventory()
+		{
+			$location_id	= phpgw::get_var('location_id', 'int');
+			$id				= phpgw::get_var('id', 'int');
+			$inventory_id	= phpgw::get_var('inventory_id', 'int');
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
+
+			if(!$this->acl_add)
+			{
+				echo lang('No Access');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory($location_id, $id, $inventory_id) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$location_code = execMethod('property.solocation.get_location_code',$inventory[0]['p_id']);
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
+			$values		= phpgw::get_var('values');
+
+			$bolocation		= CreateObject('property.bolocation');
+			$values['location_data'] = $bolocation->read_single($location_code,array('view' => true));
+
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
+			
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$values['location_id']	= $location_id;
+				$values['item_id'] 		= $id;
+				$values['inventory_id'] = $inventory_id;
+				if(!isset($receipt['error']))
+				{
+					$this->bo->edit_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
+				}
+
+
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+
+					if(!$receipt['error'])
+					{
+						$result =  array
+						(
+							'status'	=> 'updated'
+						);
+					}
+					else
+					{
+						$result =  array
+						(
+							'status'	=> 'error'
+						);
+					}
+
+					$result['receipt'] = $receipt;
+					return $result;
+				}
+
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			
+			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
+
+			$location_data = execMethod('property.bolocation.initiate_ui_location', array
+			(
+				'values'		=> $values['location_data'],
+				'type_id'		=> 5,
+				'no_link'		=> false,
+				'lookup_type'	=> 'view',
+				'tenant'		=> false,
+				'lookup_entity'	=> $lookup_entity,
+				'entity_data'	=> isset($values['p'])?$values['p']:''
+			));
+			
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'location_data'		=> $location_data,
+				'system_location'	=> $system_location,
+				'location_id' 		=> $location_id,
+				'item_id'			=> $id,
+				'inventory_id'		=> $inventory_id,
+				'unit_list'			=> array('options' => $unit_list),
+				'lock_unit'			=> $lock_unit,
+				'value_inventory'	=> $values['inventory'] ? $values['inventory'] : $inventory[0]['inventory'],
+				'value_write_off'	=> $values['write_off'],
+				'bookable'			=> $values['bookable'] ? $values['bookable'] : $inventory[0]['bookable'],
+				'value_active_from'	=> $values['active_from'] ? $values['active_from'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_from'],$dateformat ),
+				'value_active_to'	=> $values['active_to'] ? $values['active_to'] : $GLOBALS['phpgw']->common->show_date($inventory[0]['active_to'],$dateformat ),
+				'value_remark'		=> $values['remark'] ? $values['remark'] : $inventory[0]['remark'],
+			);
+
+			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
+			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
+			$GLOBALS['phpgw']->xslttpl->add_file(array('entity','attributes_form', 'files'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+			phpgwapi_jquery::load_widget('core');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.edit_inventory', 'property' );
+
+			$function_msg	= lang('add inventory');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $system_location['appname'] . '::' . $system_location['descr'] . '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_inventory' => $data));
+		
 		}
 
 		public function add_inventory()
 		{
 			$location_id	= phpgw::get_var('location_id', 'int');
-			$item_id		= phpgw::get_var('id', 'int');
+			$id				= phpgw::get_var('id', 'int');
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-/*
-_debug_array($location_id);
-_debug_array($item_id);
-_debug_array($system_location);
-*/
+
 			$this->acl_add 	= $this->acl->check($system_location['location'], PHPGW_ACL_ADD, $system_location['appname']);
 
 			if(!$this->acl_add)
@@ -2873,13 +3040,24 @@ _debug_array($system_location);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$unit_id = '';
+			if( $inventory = $this->bo->get_inventory($location_id, $id) )
+			{
+				$unit_id	= $inventory[0]['unit_id'];			
+			}
+
+			$lock_unit = !!$unit_id;
+
+			$receipt = array();
 			$values		= phpgw::get_var('values');
+			
+			$values['unit_id'] = $values['unit_id'] ? $values['unit_id'] : $unit_id;
 			
 
 			if (isset($values['save']) && $values['save'])
 			{
 				$values['location_id']	= $location_id;
-				$values['item_id'] 		= $item_id;
+				$values['item_id'] 		= $id;
 				$insert_record 			= $GLOBALS['phpgw']->session->appsession('insert_record','property');
 
 				if(is_array($insert_record_entity))
@@ -2897,30 +3075,19 @@ _debug_array($system_location);
 					$receipt['error'][]=array('msg'=>lang('Please select a location !'));
 				}
 
-				if(isset($values_attribute) && is_array($values_attribute))
+				if(!$values['unit_id'])
 				{
-					foreach ($values_attribute as $attribute )
-					{
-						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-						{
-							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-
-						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
-						{
-							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
-						}
-					}
+					$receipt['error'][]=array('msg'=>lang('Please select a unit !'));
 				}
-
 				if(!isset($receipt['error']))
 				{
-					$receipt = $this->bo->save_inventory($values);
+					$this->bo->add_inventory($values);
+					$receipt['message'][]=array('msg'=> 'Ok');
+					$values = array();					
 				}
 			}
 
-
-			$unit_id	= $values['unit_id'];
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			
 			$unit_list = execMethod('property.bogeneric.get_list', array('type' => 'unit',	'selected' => $unit_id));
 
@@ -2934,15 +3101,16 @@ _debug_array($system_location);
 				'lookup_entity'	=> $lookup_entity,
 				'entity_data'	=> isset($values['p'])?$values['p']:''
 			));
-			
+
 			$data = array
 			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'		=> $location_data,
 				'system_location'	=> $system_location,
 				'location_id' 		=> $location_id,
-				'item_id'			=> $item_id,
+				'item_id'			=> $id,
 				'unit_list'			=> array('options' => $unit_list),
-
+				'lock_unit'			=> $lock_unit,
 				'value_inventory'	=> $values['inventory'],
 				'value_write_off'	=> $values['write_off'],
 				'bookable'			=> $values['bookable'],

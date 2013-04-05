@@ -925,4 +925,10 @@
 			$values = $this->so->get_order_time_span($id);
 			return $this->bocommon->select_list(date('Y'), $values);
 		}
+
+		public function get_missing_project_budget()
+		{
+			return $this->so->get_missing_project_budget();
+		}
+		
 	}

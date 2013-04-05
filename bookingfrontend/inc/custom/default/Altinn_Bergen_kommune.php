@@ -34,32 +34,63 @@
 	 * @subpackage bookingfrontend
 	 */
 
-	/**
-	* START WRAPPER
-	*/
-
-	class booking_external_user
+	class bookingfrontend_external_user extends bookingfrontend_bouser
 	{
-		/**
-		 * The resulting external user
-		 * @access public
-		 * @var string
-		 */
-		public $login = 0;
-
-		/**
-		 * Debug for testing
-		 * @access public
-		 * @var bool
-		 */
-		public $debug = false;
-
-		public function __construct($wsdl, $options, $userid, $debug = false)
+		public function __construct()
 		{
-			if($debug)
+			parent::__construct();
+		}
+
+		public function get_user_org_id()
+		{
+
+			$header_key = isset($this->config->config_data['header_key']) && $this->config->config_data['header_key'] ? $this->config->config_data['header_key'] : 'Osso-User-Dn';
+			$header_regular_expression = isset($this->config->config_data['header_regular_expression']) && $this->config->config_data['header_regular_expression'] ? $this->config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
+
+			$headers = getallheaders();
+
+			if(isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
 			{
 				$this->debug = true;
+				echo 'headers:<br>';
+				_debug_array($headers);
 			}
+
+			if(isset($headers[$header_key]) && $headers[$header_key])
+			{
+				$matches = array();
+				preg_match_all($header_regular_expression,$headers[$header_key], $matches);
+				$userid = $matches[1][0];
+
+				if($this->debug)
+				{
+					echo 'matches:<br>';
+					_debug_array($matches);
+				}
+
+			}
+
+			$options = array();
+			$options['soap_version'] = SOAP_1_1;
+			$options['location']	= isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
+			$options['uri']			= isset($this->config->config_data['soap_uri']) && $this->config->config_data['soap_uri'] ? $this->config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
+			$options['trace']		= 1;
+
+			if(isset($this->config->config_data['soap_proxy_host']) && $this->config->config_data['soap_proxy_host'])
+			{
+				$options['proxy_host']	= $this->config->config_data['soap_proxy_host'];
+			}
+
+			if(isset($this->config->config_data['soap_proxy_port']) && $this->config->config_data['soap_proxy_port'])
+			{
+				$options['proxy_port']	= $this->config->config_data['soap_proxy_port'];
+			}
+			$options['encoding']	= isset($this->config->config_data['soap_encoding']) && $this->config->config_data['soap_encoding'] ? $this->config->config_data['soap_encoding'] : 'UTF-8';
+			$options['login']		= isset($this->config->config_data['soap_login']) && $this->config->config_data['soap_login'] ? $this->config->config_data['soap_login'] : '';
+			$options['password']	= isset($this->config->config_data['soap_password']) && $this->config->config_data['soap_password'] ? $this->config->config_data['soap_password'] : '';
+
+			$wsdl = isset($this->config->config_data['soap_wsdl']) && $this->config->config_data['soap_wsdl'] ? $this->config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
+
 			try
 			{
 				$BrukerService	= new BrukerService($wsdl, $options);
@@ -75,29 +106,35 @@
 				}
 			}
 
-			if(isset($BrukerService) && $BrukerService)
+			$ctx			= new UserContext();
+
+			$ctx->appid = 'portico';
+			$ctx->onBehalfOfId= $userid;
+			$ctx->userid = $userid;
+			$ctx->transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
+
+			$request = new retrieveBruker();
+			$request->userContext = $ctx;
+			$request->userid = $userid;
+
+			$response = $BrukerService->retrieveBruker($request);
+			$Bruker = $response->return;
+
+			try
 			{
-				$ctx			= new UserContext();
-
-				$ctx->appid = 'portico';
-				$ctx->onBehalfOfId= $userid;
-				$ctx->userid = $userid;
-				$ctx->transactionid = $GLOBALS['phpgw_info']['server']['install_id']; // KAN UTELATES. BENYTTES I.F.M SUPPORT. LEGG INN EN FOR DEG UNIK ID.
-
-				$request = new retrieveBruker();
-				$request->userContext = $ctx;
-				$request->userid = $userid;
-
-				$response = $BrukerService->retrieveBruker($request);
-				$Bruker = $response->return;
-				$this->login = $Bruker->ou; // organisasjons nr
+				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($Bruker->ou);
+			}
+			catch (sfValidatorError $e)
+			{
+				if($this->debug)
+				{
+					echo $e->getMessage();
+					die();
+				}
+				return null;
 			}
 		}
 	}
-
-	/**
-	* END WRAPPER - custom code beyond this point
-	*/
 
 	/**
 	 * soap client for altinn supported external login service at Bergen Kommune

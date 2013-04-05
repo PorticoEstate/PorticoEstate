@@ -393,7 +393,7 @@
 				array('key' => 'url','label'=>lang('id'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true,'width' => '100'),//width not working...
 				array('key' => 'status','label'=>lang('status'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
+//				array('key' => 'category','label'=>lang('category'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'condition_degree','label'=>lang('condition degree'),'sortable'=>false,'resizeable'=>true),
 				array('key' => 'score','label'=>lang('score'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'amount_investment','label'=>lang('investment'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.portico.FormatterAmount0'),

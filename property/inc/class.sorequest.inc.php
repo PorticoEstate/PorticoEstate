@@ -330,6 +330,8 @@
 
 			$entity_table = 'fm_request';
 
+			$GLOBALS['phpgw']->config->read();
+
 			$uicols = array();
 			$cols .= "{$entity_table}.location_code";
 			$cols_return[] 				= 'location_code';
@@ -566,7 +568,7 @@
 			$cols_group[]				= 'coordinator';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'coordinator';
-			$uicols['descr'][]			= lang('Coordinator');
+			$uicols['descr'][]			= isset($GLOBALS['phpgw']->config->config_data['lang_request_coordinator']) && $GLOBALS['phpgw']->config->config_data['lang_request_coordinator'] ? $GLOBALS['phpgw']->config->config_data['lang_request_coordinator'] : lang('Coordinator');
 			$uicols['statustext'][]		= lang('Project coordinator');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
@@ -574,7 +576,6 @@
 			$uicols['formatter'][]		= '';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= false;
-
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->_left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
@@ -587,7 +588,6 @@
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->_left_join} fm_request_condition ON {$entity_table}.id = fm_request_condition.request_id)";
 
-			$GLOBALS['phpgw']->config->read();
 			$_location_level = isset($GLOBALS['phpgw']->config->config_data['request_location_level']) && $GLOBALS['phpgw']->config->config_data['request_location_level'] ? $GLOBALS['phpgw']->config->config_data['request_location_level'] : 0;
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
@@ -1387,4 +1387,10 @@
 
 			return $values;
 		}
+
+		public function update_status_from_related($data = array())
+		{
+
+		}
+
 	}
