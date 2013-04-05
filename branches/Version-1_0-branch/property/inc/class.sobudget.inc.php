@@ -576,7 +576,7 @@
 
 			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_project.category IN (". implode(',', $cat_ids) . ')';
+				$filtermethod .= " $where fm_workorder.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
@@ -611,7 +611,7 @@
 
 			if ($grouping > 0)
 			{
-				$filtermethod .= " $where fm_b_account.category='$grouping' ";
+				$filtermethod .= " $where fm_b_account.category='{$grouping}' ";
 				$where = 'AND';
 			}
 
@@ -704,6 +704,8 @@ ksort($projects);
 			foreach ($_temp_paid_info as $order_id => &$order_info)
 			{
 				$order_budget = $soworkorder->get_budget($order_id);
+//_debug_array($order_budget);
+				$_count = false;
 				foreach($order_budget as $budget)
 				{
 					if($budget['year'] == $year)
@@ -713,33 +715,31 @@ $projects3[$projects2[$order_id]]['combined_cost']+= $budget['sum_orders'];
 $projects3[$projects2[$order_id]]['budget']+= $budget['budget'];
 $projects3[$projects2[$order_id]]['obligation']+= $budget['sum_oblications'];
 
-						$order_info['actual_cost']		+= $budget['actual_cost'];
-						$order_info['combined_cost']	+= $budget['sum_orders'];
-						$order_info['budget']			+= $budget['budget'];
-						$order_info['obligation']		+= $budget['sum_oblications'];
+					//	$order_info['actual_cost']		= $budget['actual_cost'];
+					//	$order_info['combined_cost']	= $budget['sum_orders'];
+					//	$order_info['budget']			= $budget['budget'];
+					//	$order_info['obligation']		= $budget['sum_oblications'];
 
 						$sum_obligation_cost += $budget['sum_oblications'];
 						$obligations[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $budget['sum_oblications'];
 
-
 						$_taxfactor		= 1 + ($_taxcode[(int)$order_info['mva']]/100);
-						$_actual_cost	= round($order_info['actual_cost']/$_taxfactor);
+						$_actual_cost	= round($budget['actual_cost']/$_taxfactor);
 
 //_debug_array($_test);
 
 						$sum_actual_cost += $_actual_cost;
 						$actual_cost[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += $_actual_cost;
-
-
-
 					}
 
-					$hits[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += 1;
-					$accout_info[$order_info['b_account']] = true;
-					$district[$order_info['district_id']] = true;
-					$ecodimb[$order_info['ecodimb']] = true;
-
-
+					if(!$_count)
+					{
+						$hits[$order_info['b_account']][$order_info['district_id']][$order_info['ecodimb']] += 1;
+						$accout_info[$order_info['b_account']] = true;
+						$district[$order_info['district_id']] = true;
+						$ecodimb[$order_info['ecodimb']] = true;
+						$_count = true;
+					}
 				}
 			}
 //_debug_array($projects3);

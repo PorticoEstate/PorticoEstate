@@ -1843,6 +1843,20 @@
 			$lang_close = lang('Check to close period');
 			$lang_active = lang('Check to activate period');
 
+			$rows_per_page = 10;
+			$initial_page = 1;
+
+			if($content_budget && $project['periodization_id'])
+			{
+				$_year_count = array();
+				foreach ($content_budget as $key => $row)
+				{
+					$_year_count[$row['year']]  +=1;
+					$rows_per_page = $_year_count[$row['year']];
+				}
+				$initial_page = floor(count($content_budget)/$rows_per_page);
+			}
+
 			foreach($content_budget as & $b_entry)
 			{
 				$checked = $b_entry['active'] ? 'checked="checked"' : '';
@@ -1864,6 +1878,8 @@
 					'total_records'			=> count($content_budget),
 					'edit_action'			=> "''",
 					'is_paginator'			=> 1,
+					'rows_per_page'			=> $rows_per_page,
+					'initial_page'			=> $initial_page,
 					'footer'				=> 0
 				);
 

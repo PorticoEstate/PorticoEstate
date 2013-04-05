@@ -769,6 +769,8 @@
 
 		public function update_actual_cost_from_archive($orders_affected)
 		{
+			$soworkorder = CreateObject('property.soworkorder');
+
 			$orders = array();
 			if($orders_affected)
 			{
@@ -788,6 +790,29 @@
 				{
 					phpgwapi_cache::system_clear('property', "budget_order_{$order['order_id']}");
 					$this->db->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
+
+
+					$this->db->query("SELECT max(periode) AS period, max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order['order_id']}",__LINE__,__FILE__);
+					$this->db->next_record();
+					$period		=	$this->db->f('period');
+					$amount		=	$this->db->f('amount');
+					$year		= 	$period ? (int) substr($period,0,4) : date('Y');
+
+					$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order['order_id']} AND year = {$year}",__LINE__,__FILE__);
+					if(!$this->db->next_record())
+					{
+						try
+						{
+							$soworkorder->transfer_budget($order['order_id'], array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
+						}
+						catch(Exception $e)
+						{
+							if ( $e )
+							{
+								phpgwapi_cache::message_set($e->getMessage(), 'error'); 
+							}
+						}
+					}
 				}
 			}
 		}

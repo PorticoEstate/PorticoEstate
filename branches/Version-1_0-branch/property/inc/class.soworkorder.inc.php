@@ -511,7 +511,7 @@
 				{
 					$cat_filter[] = $_category['id'];
 				}
-				$filtermethod .= " {$where} fm_project.category IN (" .  implode(',', $cat_filter) .')';
+				$filtermethod .= " {$where} fm_workorder.category IN (" .  implode(',', $cat_filter) .')';
 
 				$where= 'AND';
 			}
@@ -1714,12 +1714,13 @@
 					'year'				=> (int)$this->db->f('year'),
 					'month'				=> (int)$this->db->f('month'),
 					'actual_cost'		=> 0, //for now..
-					'closed_order'		=> $this->db->f('closed'),
+					'closed_order'		=> (int)$this->db->f('closed'),
+					'active_period'		=> (int)$this->db->f('active'),
 				);
 
   				$active_period[$period] = $this->db->f('active');
 			}
-
+//_debug_array($order_budget);die();
 			foreach ($order_budget as $period => $_budget)
 			{
 				$this->db->query("SELECT closed FROM fm_workorder"
@@ -1729,7 +1730,7 @@
 				. " AND fm_project_budget.year = {$_budget['year']}"
 				. " AND fm_project_budget.month = {$_budget['month']}" ,__LINE__,__FILE__);
 				$this->db->next_record();
- 				$closed_period[$period] = $this->db->f('closed');
+ 				$closed_period[$period] = (int)$this->db->f('closed');
 			}
 
 			$sql = "SELECT order_id, periode, amount AS actual_cost"
@@ -1783,7 +1784,10 @@
 			$values = array();
 //_debug_array($order_budget);die();
 //$test = 0;
-			$_delay_period = 0;
+			$_current_period = date('Ym');
+			$_delay_period_sum = 0;
+			$_delay_period = false;
+
 			foreach ($order_budget as $period => $_budget)
 			{
 				$_sum_orders = 0;
@@ -1794,8 +1798,10 @@
 //_debug_array( $test+= $_budget['actual_cost']);
 				$_sum_orders += $_budget['combined_cost'];
 
-				if(!$_budget['closed_order'])
+				if(!$_budget['closed_order'])// && $active_period[$period])
 				{
+					if($active_period[$period])
+					{
 					$_sum_oblications += $_budget['combined_cost'];
 					$_sum_oblications -= $_budget['actual_cost'];
 
@@ -1814,25 +1820,35 @@
 							$_sum_oblications = 0;
 						}
 					}
+					}
 				}
 
+/*
+				if(($period < $_current_period) && $active_period[$period] && !$closed_period[$period])
+				{
+					$_delay_period = true;
+					$_delay_period_sum += $_sum_oblications;
+					$_sum_oblications = 0;
+				}
+*/
 				//override if periode is closed
 				if(!isset($active_period[$period]) || !$active_period[$period])
 				{
-					$_delay_period += $_sum_oblications;
 					$_sum_oblications = 0;
 				}
+
 				//override if periode is closed
 				if(isset($closed_period[$period]) && $closed_period[$period])
 				{
 					$_sum_oblications = 0;
 				}
 
-				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period)
+				if(isset($active_period[$period]) && $active_period[$period] && $_delay_period_sum && !$_delay_period)
 				{
-					$_sum_oblications[] += $_delay_period;
-					$_delay_period =0;
+					$_sum_oblications += $_delay_period_sum;
+					$_delay_period_sum =0;
 				}
+				$_delay_period = false;
 //die();
 				$values[] = array
 				(
@@ -1840,6 +1856,7 @@
 					'month'					=> $_budget['month'] > 0 ? sprintf("%02s", $_budget['month']) : '',
 					'period'				=> $period,
 					'budget'				=> $_budget['budget'],
+					'combined_cost'			=> $_budget['combined_cost'],
 					'sum_orders'			=> $_sum_orders,
 					'sum_oblications'		=> $_sum_oblications,
 					'actual_cost'			=> $_actual_cost,
@@ -1859,21 +1876,28 @@
 			$budget_acc = 0;
 			foreach ($values as &$entry)
 			{
-				if($active_period[$entry['period']])
+			//	if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
+
+					$_deviation = $entry['budget'] - $entry['actual_cost'];
+	//				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+					$deviation = $_deviation;
+
 				}
 				else
 				{
 					$entry['diff'] =  0;
+					$deviation = 0;
 				}
-				$_deviation = $entry['budget'] - $entry['actual_cost'];
-				$deviation = abs($entry['actual_cost']) > 0 ? $_deviation : 0;
+
 				$entry['deviation_period'] = $deviation;
 				$budget_acc +=$entry['budget'];
 
-				if($active_period[$entry['period']])
+	//			if($active_period[$entry['period']])
+				if($closed_period[$entry['period']])
 				{
 					$deviation_acc += $deviation;
 				}
@@ -2012,65 +2036,9 @@
 
 			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
 
-			$config	= CreateObject('phpgwapi.config','property');
-			$config->read_repository();
-			$tax = 1+(($config->config_data['fm_tax'])/100);
 
-//			$this->db->query("UPDATE fm_project_budget SET order_amount = 0",__LINE__,__FILE__);
-/**
- * FIXME: won't work for periodized order that last several years
- *
- **/
 
-/*
-			foreach ($orders as $id => $dummy)
-			{
-				$this->db->query("SELECT project_id, start_date, combined_cost, budget,calculation,contract_sum,addition,ecodimb FROM fm_workorder WHERE id = {$id}",__LINE__,__FILE__);
-				$this->db->next_record();
 
-				$old_combined_cost	= $this->db->f('combined_cost');
-				$budget				= $this->db->f('budget');
-				$calculation		= $this->db->f('calculation');
-				$contract_sum		= $this->db->f('contract_sum');
-				$addition			= $this->db->f('addition');
-				$project_id			= $this->db->f('project_id');
-				$start_date			= $this->db->f('start_date');
-				$old_ecodimb		= (int)$this->db->f('ecodimb');
-
-				if ( abs((int)$contract_sum) > 0)
-				{
-					$addition = 1 + ((int)$addition/100);
-					$combined_cost = (int)$contract_sum * $addition;
-				}
-				else if (abs($calculation) > 0)
-				{
-					$combined_cost = $calculation * $tax;
-				}
-				else
-				{
-					$combined_cost = (int)$budget;
-				}
-
-				if($old_combined_cost != $combined_cost)
-				{
-					//_debug_array(array($old_combined_cost,$combined_cost));
-					$this->db->query("UPDATE fm_workorder SET combined_cost = '{$combined_cost}' WHERE id = {$id}",__LINE__,__FILE__);
-				}
-
-				$this->db->query("SELECT periodization_id,ecodimb FROM fm_project WHERE id = {$project_id}",__LINE__,__FILE__);
-				$this->db->next_record();
-				$periodization_id	= $this->db->f('periodization_id');
-				$ecodimb			= (int)$this->db->f('ecodimb');
-
-				if($old_ecodimb != $ecodimb)
-				{
-					$this->db->query("UPDATE fm_workorder SET ecodimb = {$ecodimb} WHERE id = {$id}",__LINE__,__FILE__);
-				}
-
-		//		$this->_update_project_budget($project_id, date('Y', $start_date), $periodization_id, $combined_cost);
-				$this->_update_order_budget($id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
-			}
-*/
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
 
@@ -2150,8 +2118,14 @@
 
 		public function transfer_budget($id, $budget, $year)
 		{
-//_debug_array($budget);die();
-			$this->db->transaction_begin();
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$id = (int) $id;
 			$year = (int) $year;
@@ -2173,6 +2147,7 @@
 //~ * For Driftsbestillinger settes Betalt til null, Budsjett settes til restforpliktelse (budsjett tidligere trekkes ned med restforpliktelse)
 //~ * For Investeringsbestillinger skal disse ikke se på år
 
+			phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 
 			if($continuous)
 			{
@@ -2211,7 +2186,11 @@
 				if( !abs( $last_budget ) > 0 )
 				{
 					$this->_update_order_budget($id, $year, $periodization_id, 0, 0, 0, 'update', true);
-					$this->db->transaction_commit();
+					if ( !$this->global_lock )
+					{
+						$this->db->transaction_commit();
+					}
+
 					return;
 //					throw new Exception('property_workorder::transfer_budget() - no budget to transfer for this investment order: ' . $id);
 				}
@@ -2255,7 +2234,11 @@
 				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
 			}
 //die();
-			$this->db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
 		}
 
 		/**

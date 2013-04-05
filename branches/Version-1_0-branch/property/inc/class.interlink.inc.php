@@ -191,6 +191,47 @@
 		/**
 		 * Get relation of the interlink
 		 *
+		 * @param integer $location_id the location
+		 * @param integer $id			the id of the referenced item
+		 *
+		 * @return string the linkt to the the related item
+		 */
+
+		public function get_location_link($location_id, $id, $action = 'view')
+		{
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$name = 'N∕A';
+			if( preg_match('/.location./i', $system_location['location']) )
+			{
+				$id = execMethod('property.solocation.get_location_code',$id);
+				$name = $id;
+			}
+			else if( preg_match('/.entity./i', $system_location['location']) )
+			{
+				$name = execMethod('property.soentity.get_short_description', 
+							array('location_id' => $location_id, 'id' => $id));
+			}
+
+			$link = $this->get_relation_link($system_location['location'], $id, $action);
+			if ($link)
+			{
+				return array
+				(
+					'name'	=> $name,
+					'link'	=> $link
+				);
+			}
+			else
+			{
+				return array();
+			}
+		}
+
+
+		/**
+		 * Get relation of the interlink
+		 *
 		 * @param array   $linkend_location the location
 		 * @param integer $id			   the id of the referenced item
 		 *
@@ -272,6 +313,15 @@
 			else if($type == '.checklist')
 			{
 				$link = array('menuaction' => 'controller.uicheck_list.view_control_info', 'check_list_id' => $id);
+			}
+			else if( substr($type, 1, 8) == 'location' )
+			{
+				$type		= explode('.',$type);
+				$link =	array
+					(
+						'menuaction'	=> "property.uilocation.{$function}",
+						'location_code'	=> $id,
+					);
 			}
 
 			return $GLOBALS['phpgw']->link('/index.php',$link);	

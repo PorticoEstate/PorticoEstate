@@ -275,7 +275,16 @@
 						(
 							'text'	=> lang('Accounting voucher type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'voucher_type') )
+						),
+						'check_missing_project_budget'	=> array
+						(
+							'text'	=> lang('check missing project budget'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.check_missing_project_budget') )
 						)
+
+
+
+
 					);
 
 				$admin_children_agreement = array

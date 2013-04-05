@@ -1820,6 +1820,15 @@
 			return $this->db->f('id');
 		}
 
+
+		public function get_location_code($id)
+		{
+			$sql = "SELECT location_code FROM fm_locations WHERE id = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('location_code');
+		}
+
 		function get_children($criteria = '')
 		{
 			$join_method = '';

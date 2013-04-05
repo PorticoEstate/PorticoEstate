@@ -920,20 +920,28 @@
 				}
 				$this->check_pending_action($ticket, $id);
 
-				//Close cases at controller
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-				{
-					$check_new_custom = (int) trim($ticket['status'],'C');
-					$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
-					$this->db->next_record();
+				//Close cases
+				$check_new_custom = (int) trim($ticket['status'],'C');
+				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+				$this->db->next_record();
 
-					if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+					// at controller
+					if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
 					{
-						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
-	 					$controller = CreateObject('controller.uicase'); 
-	 					$controller->updateStatusForCases($location_id, $id, 1);
+						$controller = CreateObject('controller.uicase'); 
+						$controller->updateStatusForCases($location_id, $id, 1);
 					}
+					// at request
+					execMethod('property.sorequest.update_status_from_related', array(
+						'location_id'	=> $location_id,
+						'id' 			=> $id,
+						'status'		=> 'closed')
+					);
 				}
+
 			}
 
 			if ($this->fields_updated)
@@ -1109,19 +1117,26 @@
 				}
 				$this->check_pending_action($ticket, $id);
 
-				//Close cases at controller
-				if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-				{
-					$check_new_custom = (int) trim($ticket['status'],'C');
-					$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
-					$this->db->next_record();
+				//Close cases at related
+				$check_new_custom = (int) trim($ticket['status'],'C');
+				$this->db->query("SELECT closed from fm_tts_status WHERE id = {$check_new_custom}",__LINE__,__FILE__);
+				$this->db->next_record();
 
-					if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				if(($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status!='X' && !$old_closed))
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+					// at controller
+					if(isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
 					{
-						$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
- 						$controller = CreateObject('controller.uicase'); 
- 						$controller->updateStatusForCases($location_id, $id, 1);
+						$controller = CreateObject('controller.uicase'); 
+						$controller->updateStatusForCases($location_id, $id, 1);
 					}
+					// at request
+					execMethod('property.sorequest.update_status_from_related', array(
+						'location_id'	=> $location_id,
+						'id' 			=> $id,
+						'status'		=> 'closed')
+					);
 				}
 			}
 

@@ -680,18 +680,35 @@
 			return $this->so->read_entity_to_link($data);
 		}
 
-		public function get_inventory($id = 0)
+		public function get_inventory($location_id, $id, $inventory_id = 0)
 		{
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
-			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id) );
+			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id) );
+
+			$interlink 	= CreateObject('property.interlink');
+
+			foreach ($values as &$entry)
+			{
+				$link_info = $interlink->get_location_link($entry['p_location_id'], $entry['p_id'],'view');
+				$entry['where'] = "<a href='{$link_info['link']}'>{$link_info['name']}</a>";
+				$entry['location_id'] = $location_id;
+				$entry['id'] = $id;
+			}
+
 			return $values;
 		}
 
-		public function save_inventory($values)
+		public function add_inventory($values)
 		{
 			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
 			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
-			return $this->so->save_inventory($values);
+			return $this->so->add_inventory($values);
+		}
+
+		public function edit_inventory($values)
+		{
+			$values['active_from']	= $this->bocommon->date_to_timestamp($values['active_from']);
+			$values['active_to']	= $this->bocommon->date_to_timestamp($values['active_to']);
+			return $this->so->edit_inventory($values);
 		}
 
 	}
