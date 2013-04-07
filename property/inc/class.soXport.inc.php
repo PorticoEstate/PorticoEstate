@@ -789,25 +789,20 @@
 				foreach ($orders as $order)
 				{
 					$this->db->query("UPDATE fm_workorder SET actual_cost = '{$order['actual_cost']}' WHERE id = '{$order['order_id']}'",__LINE__,__FILE__);
-				}
 
-				foreach ($orders_affected as $order_id => $dummy)
-				{
-					phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
-
-					$this->db->query("SELECT max(periode) AS period, max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order_id} AND periode IS NOT NULL",__LINE__,__FILE__);
+					$this->db->query("SELECT max(periode) AS period, max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order['order_id']} AND periode IS NOT NULL",__LINE__,__FILE__);
 					$this->db->next_record();
 					$period		=	$this->db->f('period');
 					$amount		=	$this->db->f('amount');
 					$year		= 	$period ? (int) substr($period,0,4) : date('Y');
 
-					$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order_id} AND year = {$year}",__LINE__,__FILE__);
+					$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order['order_id']} AND year = {$year}",__LINE__,__FILE__);
 
 					if (!$this->db->next_record())
 					{
 						try
 						{
-							$soworkorder->transfer_budget($order_id, array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
+							$soworkorder->transfer_budget($order['order_id'], array('budget_amount' => $amount, 'latest_year' => ($year -1)), $year);
 						}
 						catch(Exception $e)
 						{
@@ -818,14 +813,21 @@
 						}
 					}
 
+				}
+
+				reset($orders_affected);
+
+				foreach ($orders_affected as $order_id => $dummy)
+				{
+					phpgwapi_cache::system_clear('property', "budget_order_{$order_id}");
+
 					// Not yet processed
-					$this->db->query("SELECT max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order_id} AND periode IS NULL",__LINE__,__FILE__);
-
-					if($this->db->next_record())
+					$this->db->query("SELECT max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id = {$order_id} AND periode IS NULL",__LINE__,__FILE__);
+					$this->db->next_record();
+					$amount		=	$this->db->f('amount');
+					if($amount)
 					{
-						$amount		=	$this->db->f('amount');
 						$year		= 	date('Y');
-
 						$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order_id} AND year = {$year}",__LINE__,__FILE__);
 
 						if (!$this->db->next_record())
