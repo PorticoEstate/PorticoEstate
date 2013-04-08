@@ -576,19 +576,19 @@
 
 			if($cat_ids)
 			{
-				$filtermethod .= " $where fm_workorder.category IN (". implode(',', $cat_ids) . ')';
+				$filtermethod .= " {$where} fm_workorder.category IN (". implode(',', $cat_ids) . ')';
 				$where = 'AND';
 			}
 
 			if ($district_id > 0)
 			{
-				$filtermethod .= " $where district_id=" . (int)$district_id;
+				$filtermethod .= " {$where} district_id=" . (int)$district_id;
 				$where = 'AND';
 			}
 
 			if ($dimb_id > 0)
 			{
-				$filtermethod .= " $where fm_workorder.ecodimb={$dimb_id}";
+				$filtermethod .= " {$where} fm_project.ecodimb={$dimb_id}";
 				$where = 'AND';
 			}
 
@@ -605,7 +605,7 @@
 
 			if($_department_dimb)
 			{
-				$filtermethod .= " $where fm_workorder.ecodimb IN (" . implode(',', $_department_dimb) . ')';
+				$filtermethod .= " $where fm_project.ecodimb IN (" . implode(',', $_department_dimb) . ')';
 				$where = 'AND';
 			}
 
@@ -651,7 +651,7 @@
 			}
 
 			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,project_id,"
-				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_workorder.ecodimb"
+				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_project.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON (fm_workorder.id = fm_workorder_budget.order_id)"

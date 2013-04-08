@@ -883,13 +883,50 @@ $solocation->update_location();
 			. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
-		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
-			. ' SELECT fm_orders.id as order_id, sum(godkjentbelop) AS actual_cost FROM fm_ecobilagoverf join fm_orders ON fm_ecobilagoverf.pmwrkord_code = fm_orders.id GROUP BY fm_orders.id';
-		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
 		$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
 			. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
 		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+			. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+ 			. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_orders_paid_or_pending_view AS
+		 SELECT orders_paid_or_pending.order_id, orders_paid_or_pending.periode, orders_paid_or_pending.amount
+ 			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
+                   FROM fm_ecobilagoverf
+                 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
+        		UNION ALL 
+                 	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
+                   FROM fm_ecobilag
+                 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+ 			. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
+ 			. ' FROM fm_workorder_budget'
+ 			. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
+ 			. ' ORDER BY fm_workorder.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
+ 			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
+ 			. ' FROM fm_project_budget'
+ 			. ' ORDER BY fm_project_budget.project_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
 
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')",__LINE__,__FILE__);
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')",__LINE__,__FILE__);
