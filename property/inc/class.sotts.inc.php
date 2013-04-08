@@ -141,15 +141,6 @@
 			$branch_id		= isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id']:0;
 			$order_dim1		= isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1']:0;
 
-			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
-
-			if(!$this->grants)
-			{
-				$GLOBALS['phpgw']->acl->set_account_id($this->account);
-				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
-				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
-			}
-
 			$result_order_field = '';
 			if ($order)
 			{
@@ -183,44 +174,53 @@
 
 			$GLOBALS['phpgw']->config->read();
 
-			$public_user_list = array();
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
-			{
-				$categories = $GLOBALS['phpgw']->locations->get_subs('property', '.ticket.category');
-
-				$category_grants = array();
-				foreach ($categories as $location)
-				{
-					$category_grants	= array_merge($category_grants, $GLOBALS['phpgw']->acl->get_grants('property',$location));
-				}
-
-				foreach($category_grants as $user => $right)
-				{
-					$public_user_list[] = $user;
-				}
-			}
-
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
-			{
-				$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
-				if($access_location)
-				{
-					$filtermethod .= " $where fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
-					$where= 'AND';
-				}
-			}
-
-			if (is_array($this->grants))
-			{
-				$grants = & $this->grants;
-				foreach($grants as $user => $right)
-				{
-					$public_user_list[] = $user;
-				}
-			}
-
 			if(!isset($GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets']) || !$GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets'])
 			{
+				$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
+
+				if(!$this->grants)
+				{
+					$GLOBALS['phpgw']->acl->set_account_id($this->account);
+					$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
+					$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
+				}
+
+				$public_user_list = array();
+				if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+				{
+					$categories = $GLOBALS['phpgw']->locations->get_subs('property', '.ticket.category');
+
+					$category_grants = array();
+					foreach ($categories as $location)
+					{
+						$category_grants	= array_merge($category_grants, $GLOBALS['phpgw']->acl->get_grants('property',$location));
+					}
+
+					foreach($category_grants as $user => $right)
+					{
+						$public_user_list[] = $user;
+					}
+				}
+
+				if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
+				{
+					$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
+					if($access_location)
+					{
+						$filtermethod .= " $where fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
+						$where= 'AND';
+					}
+				}
+
+				if (is_array($this->grants))
+				{
+					$grants = & $this->grants;
+					foreach($grants as $user => $right)
+					{
+						$public_user_list[] = $user;
+					}
+				}
+
 				if($public_user_list)
 				{
 					$public_user_list = array_unique($public_user_list);
