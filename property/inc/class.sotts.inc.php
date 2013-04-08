@@ -219,12 +219,15 @@
 				}
 			}
 
-			if($public_user_list)
+			if(!isset($GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets']) || !$GLOBALS['phpgw']->config->config_data['bypass_acl_at_tickets'])
 			{
-				$public_user_list = array_unique($public_user_list);
-				reset($public_user_list);
-				$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
-				$where= 'AND';
+				if($public_user_list)
+				{
+					$public_user_list = array_unique($public_user_list);
+					reset($public_user_list);
+					$filtermethod .= " $where ( fm_tts_tickets.user_id IN(" . implode(',',$public_user_list) . "))";
+					$where= 'AND';
+				}
 			}
 
 			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','property'))

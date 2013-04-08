@@ -443,6 +443,15 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_Bypass_ACL_for_accessing_tickets}.</td>
+			<td>
+				<select name="newsettings[bypass_acl_at_tickets]">
+					<option value="" {selected_bypass_acl_at_tickets_}>NO</option>
+					<option value="1" {selected_bypass_acl_at_tickets_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
 			<td>{lang_Use_ACL_for_helpdesk_categories}.</td>
 			<td>
 				<select name="newsettings[acl_at_tts_category]">
