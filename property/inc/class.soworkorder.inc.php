@@ -212,7 +212,7 @@
 				$cols_return[] 				= 'start_date';
 				$cols .= ",fm_workorder.end_date as end_date";
 				$cols_return[] 				= 'end_date';
-				$cols.= ",fm_workorder.ecodimb";
+				$cols.= ",fm_project.ecodimb";
 				$cols_return[] 				= 'ecodimb';
 				$cols.= ",fm_workorder.contract_sum";
 				$cols_return[] 				= 'contract_sum';
@@ -471,7 +471,7 @@
 						$order_field = ", fm_workorder.end_date";
 						break;
 					case 'ecodimb':
-						$order_field = ", fm_workorder.ecodimb";
+						$order_field = ", fm_project.ecodimb";
 						break;
 					case 'budget':
 						$order_field = ", fm_workorder.budget";
@@ -563,7 +563,7 @@
 
 			if ($ecodimb)
 			{
-				$filtermethod .= " $where fm_workorder.ecodimb =" . (int) $ecodimb;
+				$filtermethod .= " $where fm_project.ecodimb =" . (int) $ecodimb;
 				$where= 'AND';
 			}
 
@@ -2035,9 +2035,6 @@
 			}
 
 			execMethod('property.soXport.update_actual_cost_from_archive',$orders);
-
-
-
 
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
