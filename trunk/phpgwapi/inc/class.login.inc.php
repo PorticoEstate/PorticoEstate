@@ -64,6 +64,11 @@
 				$partial_url = 'phpgwapi/inc/sso/login_server.php';
 			}
 
+			if($frontend)
+			{
+				$GLOBALS['phpgw']->hooks->process('set_auth_type', array($frontend));
+			}
+			
 			/* Program starts here */
 			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
