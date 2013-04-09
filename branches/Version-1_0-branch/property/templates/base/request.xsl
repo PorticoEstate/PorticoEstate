@@ -195,30 +195,15 @@
  
  							<xsl:choose>
 								<xsl:when test="value_request_id!=''">
-									
-										<dt><label>
-											<xsl:value-of select="lang_copy_request"/>
-										</label></dt>
-										<dd>
-											<input type="checkbox" name="values[copy_request]" value="True">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_copy_request_statustext"/>
-												</xsl:attribute>
-											</input>
-										</dd>
-									
-									
 										<dt><label>
 											<xsl:value-of select="lang_request_id"/>
 										</label></dt>
 										<dd>
 											<xsl:value-of select="value_request_id"/>
 										</dd>
-	
+
 								</xsl:when>
 							</xsl:choose>
-
-							
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'responsible unit')"/>
 								</label></dt>
@@ -240,7 +225,7 @@
 								<dd>
 									<xsl:call-template name="user_id_select"/>
 								</dd>
-							
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'request status')"/>
 								</label></dt>
@@ -267,16 +252,16 @@
 							<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
 							<xsl:choose>
 								<xsl:when test="value_request_id!=''">
-								
+
 									<xsl:for-each select="value_origin">
-										
+
 											<dt><label>
 												<xsl:value-of select="descr"/>
 											</label></dt>
 											<dd>
 												<table>
 													<xsl:for-each select="data">
-														
+
 															<td class="th_text" align="left">
 																<a href="{link}" title="{statustext}">
 																	<xsl:value-of select="id"/>
@@ -292,39 +277,39 @@
 																	</xsl:when>
 																</xsl:choose>
 															</td>
-														
+
 													</xsl:for-each>
 												</table>
 											</dd>
-										
+
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:for-each select="value_origin">
-										
+
 											<dt><label>
 												<xsl:value-of select="descr"/>
 											</label></dt>
 											<dd>
 												<table>
 													<xsl:for-each select="data">
-														
+
 															<td class="th_text" align="left">
 																<a href="{link}" title="{statustext}">
 																	<xsl:value-of select="id"/>
 																</a>
 																<xsl:text> </xsl:text>
 															</td>
-														
+
 													</xsl:for-each>
 												</table>
 											</dd>
-										
+
 									</xsl:for-each>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:for-each select="value_target">
-								
+
 									<dt><label>
 										<xsl:value-of select="descr"/>
 									</label></dt>
@@ -336,7 +321,7 @@
 											<xsl:text> </xsl:text>
 										</xsl:for-each>
 									</dd>
-								
+
 							</xsl:for-each>
 
 							<xsl:choose>
@@ -352,7 +337,7 @@
 											</label></dt>
 											<dd>
 												<xsl:value-of select="contact_phone"/>
-											</dd>											
+											</dd>
 										</xsl:when>
 									</xsl:choose>
 								</xsl:otherwise>
@@ -361,7 +346,7 @@
 
 							<xsl:choose>
 								<xsl:when test="suppressmeter =''">
-									
+
 										<dt><label>
 											<xsl:value-of select="lang_power_meter"/>
 										</label></dt>
@@ -372,7 +357,7 @@
 												</xsl:attribute>
 											</input>
 										</dd>
-									
+
 								</xsl:when>
 							</xsl:choose>
 
@@ -400,17 +385,10 @@
 								</select>
 							</dd>
 
-							<dt><label>
-								<xsl:value-of select="php:function('lang', 'category')"/>
-							</label></dt>
-							<dd>
-								<xsl:call-template name="categories"/>
-							</dd>
-
 							<xsl:variable name="lang_request_title">
 								<xsl:value-of select="php:function('lang', 'enter request title')"/>
 							</xsl:variable>
-							
+
 								<dt><label title="{$lang_request_title}">
 									<xsl:value-of select="php:function('lang', 'request title')"/>
 								</label></dt>
@@ -418,11 +396,11 @@
 									<input type="text" name="values[title]" value="{value_title}" size="60" title="{$lang_request_title}">
 									</input>
 								</dd>
-							
+
 							<xsl:variable name="lang_request_description">
 								<xsl:value-of select="php:function('lang', 'enter a description of the request')"/>
 							</xsl:variable>
-							
+
 								<dt><label title="{$lang_request_description}">
 									<xsl:value-of select="php:function('lang', 'request description')"/>
 								</label></dt>
@@ -431,7 +409,7 @@
 										<xsl:value-of select="value_descr"/>
 									</textarea>
 								</dd>
-							
+
 						</dl>
  </fieldset>
  <fieldset>
@@ -557,8 +535,8 @@
 			<xsl:value-of select="php:function('lang', 'economy and progress')"/>
   </legend>
 
-						<dl class="proplist-col">					
-							
+						<dl class="proplist-col">
+
 
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'recommended year')"/>
@@ -573,7 +551,7 @@
 
 							<xsl:choose>
 								<xsl:when test="show_dates !=''">
-									
+
 										<dt><label>
 											<xsl:value-of select="php:function('lang', 'start date')"/>
 										</label></dt>
@@ -594,7 +572,7 @@
 												</xsl:attribute>
 											</input>
 										</dd>
-									
+
 								</xsl:when>
 							</xsl:choose>
 
@@ -604,23 +582,23 @@
 										<dd>
 											<xsl:value-of select="value_entry_date"/>
 										</dd>
-<!--									
+<!--
 										<dt><label>
 											<xsl:value-of select="php:function('lang', 'in progress date')"/>
 										</label></dt>
 										<dd>
 											<xsl:value-of select="value_in_progress_date"/>
 										</dd>
-									
-									
+
+
 										<dt><label>
 											<xsl:value-of select="php:function('lang', 'delivered date')"/>
 										</label></dt>
 										<dd>
 											<xsl:value-of select="value_delivered_date"/>
 										</dd>
-									
-									
+
+
 										<dt><label>
 											<xsl:value-of select="php:function('lang', 'closed date')"/>
 										</label></dt>
@@ -628,7 +606,13 @@
 											<xsl:value-of select="value_closed_date"/>
 										</dd>
 -->
-							
+								<dt><label>
+									<xsl:value-of select="php:function('lang', 'category')"/>
+								</label></dt>
+								<dd>
+									<xsl:call-template name="categories"/>
+								</dd>
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'investment')"/>
 								</label></dt>
@@ -663,24 +647,24 @@
 								<dd>
 									<xsl:value-of select="value_budget"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
-<!--							
-							
+<!--
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'not allocated')"/>
 								</label></dt>
 								<dd>
 									<xsl:value-of select="value_diff"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'residual demand')"/>
 								</label></dt>
 								<dd>
 									<xsl:value-of select="value_diff2"/><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'planning date')"/>
 								</label></dt>
@@ -691,24 +675,24 @@
 										</xsl:attribute>
 									</input>
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'planning value')"/>
 								</label></dt>
 								<dd>
 									<input type="text" id="values_planning_value" name="values[planning_value]" size="10" value="{value_planning}"><xsl:attribute name="title"><xsl:value-of select="php:function('lang', 'planning value')"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'planning serie')"/>
 								</label></dt>
 								<dd>
 									<div id="datatable-container_2"/>
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'consume date')"/>
 								</label></dt>
@@ -719,24 +703,24 @@
 										</xsl:attribute>
 									</input>
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'consume value')"/>
 								</label></dt>
 								<dd>
 									<input type="text" id="values_consume_value" name="values[consume_value]" size="10" value="{value_consume}"><xsl:attribute name="title"><xsl:value-of select="php:function('lang', 'consume value')"/></xsl:attribute></input><xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</dd>
-							
-							
+
+
 								<dt><label>
 									<xsl:value-of select="php:function('lang', 'consume history')"/>
 								</label></dt>
 								<dd>
 									<div id="datatable-container_3"/>
 								</dd>
--->							
-							
+-->
+
 								<xsl:choose>
 									<xsl:when test="notify='yes'">
 										<dt><label>
@@ -756,7 +740,7 @@
 										</dd>
 									</xsl:when>
 								</xsl:choose>
-							
+
 						</dl>
  </fieldset>
  <fieldset>

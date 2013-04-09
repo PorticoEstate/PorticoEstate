@@ -1572,7 +1572,7 @@
 														array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'start_date','label'=>lang('start date'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'end_date','label'=>lang('end date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false)))
+														array('key' => 'budget','label'=>lang('budget'),'sortable'=>true,'resizeable'=>false, 'formatter' => 'FormatterRight')))
 				);
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
