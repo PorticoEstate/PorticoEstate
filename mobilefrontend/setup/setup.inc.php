@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['mobilefrontend']['name']		= 'mobilefrontend';
-	$setup_info['mobilefrontend']['version']	= '0.1.1';
+	$setup_info['mobilefrontend']['version']	= '0.1.2';
 	$setup_info['mobilefrontend']['app_order']	= 80;
 	$setup_info['mobilefrontend']['enable']		= 1;
 	$setup_info['mobilefrontend']['app_group']	= 'office';
@@ -36,6 +36,7 @@
 	<b>Mobilefrontend</b> for:
 	<ol>
 		<li>Conntroller</li>
+		<li>Property::tickets</li>
 	</ol>
 
 	<b>Mobilefrontend</b> is organized as a set of submodules as extensions to their backend-parents.
@@ -51,6 +52,7 @@
 	(
 		'config',
 		'home',
+		'set_auth_type'	=> 'mobilefrontend.hook_helper.set_auth_type'
 	);
 
 	/* Dependencies for this app to work */
