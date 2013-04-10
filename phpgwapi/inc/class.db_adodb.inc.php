@@ -568,7 +568,7 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return stripslashes($this->resultSet->fields[$name]);
+						return htmlspecialchars_decode(stripslashes($this->resultSet->fields[$name]));
 					}
 					else
 					{
