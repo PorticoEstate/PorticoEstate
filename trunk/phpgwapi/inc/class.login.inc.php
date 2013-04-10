@@ -230,7 +230,13 @@
 						$receipt[] = lang('Info: you have changed domain from "%1" to "%2"', $_COOKIE['domain'], $logindomain);
 					}
 				}
+/*
+unset($GLOBALS['phpgw']->auth);
+$GLOBALS['phpgw']->auth			= createObject('phpgwapi.auth');
+_debug_array($GLOBALS['phpgw']->auth);die();
 
+//_debug_array($GLOBALS['phpgw_info']['server']);die();
+*/
 				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 				if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
