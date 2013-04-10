@@ -40,6 +40,15 @@
 		public function set_auth_type()
 		{
 			//get from local config
-			$GLOBALS['phpgw_info']['server']['auth_type'] = 'sql';
+
+			$config		= CreateObject('phpgwapi.config','mobilefrontend');
+			$config->read();
+			
+			if(isset($config->config_data['auth_type']) && $config->config_data['auth_type'])
+			{
+				$GLOBALS['phpgw_info']['server']['auth_type'] = $config->config_data['auth_type'];
+			}
+
+//_debug_array($GLOBALS['phpgw_info']['server']);die();
 		}
 	}
