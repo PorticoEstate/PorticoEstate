@@ -52,7 +52,8 @@
 	(
 		'config',
 		'home',
-		'set_auth_type'	=> 'mobilefrontend.hook_helper.set_auth_type'
+		'set_auth_type'	=> 'mobilefrontend.hook_helper.set_auth_type',
+		'menu'			=> 'mobilefrontend.menu.get_menu'
 	);
 
 	/* Dependencies for this app to work */
