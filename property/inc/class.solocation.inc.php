@@ -1327,7 +1327,7 @@
 					{
 						$input_name='category';
 					}
-					$value_set[$input_name]	= $value;
+					$value_set[$input_name]	= $this->db->db_addslashes($value);
 				}
 			}
 
