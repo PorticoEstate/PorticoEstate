@@ -64,6 +64,11 @@
 				$partial_url = 'phpgwapi/inc/sso/login_server.php';
 			}
 
+			if($frontend)
+			{
+				$GLOBALS['phpgw']->hooks->process('set_auth_type', array($frontend));
+			}
+			
 			/* Program starts here */
 			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
@@ -156,7 +161,7 @@
 				$extra_vars['cd'] = 'yes';
 
 				$GLOBALS['phpgw']->hooks->process('login');
-				$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
+				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
 
 			//----------------- End login ntlm
 			}
@@ -192,6 +197,47 @@
 				unset($key);
 				unset($val);
 				unset($sslattributes);
+			}
+
+			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'custom_sso' && !isset($_GET['cd']))
+			{
+				//Reset auth object
+				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
+				$login = $GLOBALS['phpgw']->auth->get_username();
+
+				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
+
+				if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
+				{
+					$cd_array = array();
+					if ($GLOBALS['phpgw']->session->cd_reason)
+					{
+						$cd_array['cd']			 = $GLOBALS['phpgw']->session->cd_reason;
+					}
+					$cd_array['skip_remote'] = true;
+
+					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					exit;
+				}
+
+				$forward = phpgw::get_var('phpgw_forward');
+				if ($forward)
+				{
+					$extra_vars['phpgw_forward'] = $forward;
+					foreach ($_GET as $name => $value)
+					{
+						if (ereg('phpgw_', $name))
+						{
+							$name				 = urlencode($name);
+							$extra_vars[$name]	 = urlencode($value);
+						}
+					}
+				}
+
+				$extra_vars['cd'] = 'yes';
+
+				$GLOBALS['phpgw']->hooks->process('login');
+				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
 			}
 
 			if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))

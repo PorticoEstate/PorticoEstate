@@ -626,7 +626,6 @@ HTML;
 	unset($server_info_cache);
 */
 
-
 	// In case we use virtual hosts - some of them but not all with ntlm auth. 
 	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && !isset($_SERVER['REMOTE_USER']))
 	{
