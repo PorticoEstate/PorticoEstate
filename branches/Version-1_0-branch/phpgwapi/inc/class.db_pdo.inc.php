@@ -810,7 +810,7 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return stripslashes($this->Record[$name]);
+						return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 					}
 					else
 					{

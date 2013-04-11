@@ -153,6 +153,7 @@
 					'uicol_address'=> true
 				));
 
+
 				$this->bocommon->fm_cache('sql_document_' . $entity_id,$sql);
 
 				$this->uicols		= $this->bocommon->uicols;
@@ -181,6 +182,9 @@
 
 				$groupmethod.= " ,fm_document.p_entity_id,fm_entity_category.name,fm_document.p_num,fm_document.p_cat_id";
 			}
+
+			//FIXME
+			$groupmethod = '';
 
 			if ($order)
 			{

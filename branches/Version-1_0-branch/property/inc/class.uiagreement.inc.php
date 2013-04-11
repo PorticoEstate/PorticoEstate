@@ -1516,7 +1516,13 @@
 
 		function download()
 		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
 			$id	= phpgw::get_var('id', 'int');
+			$this->bo->allrows	= true;
 			if($id)
 			{
 				$list = $this->bo->read_details($id);
@@ -2188,6 +2194,13 @@
 					'values'	=>	json_encode(array(array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true)))
 				);
 
+
+			$link_download = array
+				(
+					'menuaction'	=> 'property.uiagreement.download',
+					'id'		=>$agreement_id
+				);
+
 			$data = array
 				(
 					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
@@ -2256,7 +2269,13 @@
 					'lang_status'				=> lang('Status'),
 					'status_list'				=> $this->bo->select_status_list('select',$agreement['status']),
 					'textareacols'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-					'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6
+					'textarearows'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+
+					'lang_download'				=> 'download',
+					'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
+					'lang_download_help'		=> lang('Download table to your browser'),
+
+
 				);
 
 			//---datatable settings--------------------

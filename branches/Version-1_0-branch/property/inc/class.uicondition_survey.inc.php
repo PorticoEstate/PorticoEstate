@@ -432,12 +432,16 @@
 				'ColumnDefs'	=> $summation_def
 			);
 
+			$this->config				= CreateObject('phpgwapi.config','property');
+			$this->config->read();
+
 			$data = array
 			(
 				'datatable_def'					=> $datatable_def,
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'survey'						=> $values,
-				'location_data2'					=> $location_data,
+				'location_data2'				=> $location_data,
+				'lang_coordinator'				=> isset($this->config->config_data['lang_request_coordinator']) && $this->config->config_data['lang_request_coordinator'] ? $this->config->config_data['lang_request_coordinator'] : lang('coordinator'),
 				'categories'					=> array('options' => $categories),
 				'status_list'					=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'condition_survey_status', 'selected' => $values['status_id'], 'add_empty' => true))),
 				'editable' 						=> $mode == 'edit',

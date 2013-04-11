@@ -169,7 +169,7 @@
 
 					</dd>
 					<dt>
-						<label for="coordinator"><xsl:value-of select="php:function('lang', 'coordinator')" /></label>
+						<label for="coordinator"><xsl:value-of select="lang_coordinator" /></label>
 					</dt>
 					<dd>
 

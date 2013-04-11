@@ -386,14 +386,14 @@
 
 		function read_details($data)
 		{
-				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
-				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'none';
-				$query 			= isset($data['query']) ? $data['query'] : '';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order			= isset($data['order']) ? $data['order'] : '';
-				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-				$agreement_id	= isset($data['agreement_id']) ? $data['agreement_id'] : '';
+			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'none';
+			$query 			= isset($data['query']) ? $data['query'] : '';
+			$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$agreement_id	= isset($data['agreement_id']) ? $data['agreement_id'] : '';
 
 			$allrows = true; // return all..
 

@@ -63,7 +63,7 @@
 			try
 			{
 				$db->connect();
-				$connected = true;
+				$this->connected = true;
 			}
 			catch(Exception $e)
 			{
