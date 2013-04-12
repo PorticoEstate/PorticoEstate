@@ -12,6 +12,17 @@ body
 	padding: 0;
 }
 
+
+#app-menu{
+margin: 0 0 0 16px !important;
+}
+
+#app-menu a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
 img, input[type=image]
 {
 	border: 0;
