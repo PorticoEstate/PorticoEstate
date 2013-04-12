@@ -2,14 +2,10 @@
 
 	function parse_navbar($force = False)
 	{
-		$navbar = array();
-//		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
-		{
-			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
-		}
 
 		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
+/*
 		$var = array
 		(
 			'home_url'		=> $GLOBALS['phpgw']->link('/home.php'),
@@ -22,6 +18,38 @@
 			'user_fullname' => $user->__toString()
 		);
 
+*/
+
+		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
+		{
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$applications = '';
+			$exclude = array('home', 'about', 'logout');
+			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
+			prepare_navbar($navbar);
+			foreach ( $navbar as $app => $app_data )
+			{
+				if ( in_array($app, $exclude) )
+				{
+					continue;
+				}
+				if ( $app == $currentapp)
+				{
+					$app_data['text'] = "[<b>{$app_data['text']}</b>]";
+				}
+
+				$applications .= <<<HTML
+					<a href="{$app_data['url']}">{$app_data['text']}</a>
+HTML;
+			}
+
+			$var['applications'] = $applications;
+
+			$menu_array = execMethod('phpgwapi.menu.get_local_menu', $currentapp);
+			$var['app_menu'] = phpgwapi_menu::render_horisontal_menu($menu_array);
+		}
+
+/*
 		if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 		{
 			$var['preferences_url'] = $GLOBALS['phpgw']->link('/preferences/index.php');
@@ -54,13 +82,21 @@
 			$var['debug_text'] = lang('debug');
 			$var['debug_icon'] = 'icon icon-debug';
 		}
-
+*/
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
 		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+//
+
+	$controller_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'controller.uicontrol.control_list') );
+	$controller_text = lang('controller');
+	$tts_url = $GLOBALS['phpgw']->link( '/index.php', array('menuaction' => 'property.uitts.index') );
+	$tts_text = lang('ticket');
+
+//
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');

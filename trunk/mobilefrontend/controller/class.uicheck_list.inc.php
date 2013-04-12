@@ -35,7 +35,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;			
 			//FIXME
 			$GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
 		}

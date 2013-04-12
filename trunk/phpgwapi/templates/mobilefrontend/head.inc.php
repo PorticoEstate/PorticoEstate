@@ -59,29 +59,6 @@
 		}
 	}
 
-	// Construct navbar_config by taking into account the current selected menu
-	// The only problem with this loop is that leafnodes will be included
-	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
-
-	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
-	{
-		if(!isset($navbar_config))
-		{
-			$navbar_config = array();
-		}
-
-		$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
-
-		while($current_selection)
-		{
-			$navbar_config["navbar::$current_selection"] = true;
-			$current_selection = implode("::", explode("::", $current_selection, -1));
-		}
-
-		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
-	}
-
-	$_navbar_config			= json_encode($navbar_config);
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -93,7 +70,7 @@
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'navbar_config' => $_navbar_config,
+		'current_app_header' => isset($GLOBALS['phpgw_info']['flags']['app_header']) && $GLOBALS['phpgw_info']['flags']['app_header'] ? $GLOBALS['phpgw_info']['flags']['app_header'] : ''
 	);
 
 	$tpl_vars['home_text'] = lang('home');

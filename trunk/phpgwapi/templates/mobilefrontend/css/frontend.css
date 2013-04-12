@@ -322,6 +322,26 @@ padding: 0 0.5em;
 line-height: 1.2em;
 }
 
+#app-menu{
+margin: 0 0 0 16px !important;
+}
+
+#app-menu a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
+#applications{
+margin: 0 0 0 16px !important;
+}
+
+#applications a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
 
 #logo{
 background: url(../images/newlayout/logo.png) no-repeat;
