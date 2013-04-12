@@ -74,9 +74,9 @@
 	);
 
 	$tpl_vars['home_text'] = lang('home');
-	$tpl_vars['home_url'] = 'home.php';
+	$tpl_vars['home_url'] = $GLOBALS['phpgw']->link('/home.php');
 	$tpl_vars['logout_text'] = lang('logout');
-	$tpl_vars['logout_url'] = 'logout.php';
+	$tpl_vars['logout_url'] = $GLOBALS['phpgw']->link('/logout.php');
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
