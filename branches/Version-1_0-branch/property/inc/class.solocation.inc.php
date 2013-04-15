@@ -1610,7 +1610,7 @@
 				$type_id=4;
 			}
 
-			$entity_table = 'fm_location' . $type_id ;
+			$entity_table = "fm_location{$type_id}";
 			$cols_return = array();
 			$paranthesis = '';
 
@@ -1663,12 +1663,35 @@
 			$uicols['descr'][]	= lang('number');
 			$uicols['input_type'][]	= 'text';
 
-			$joinmethod= "$this->join $entity_table"."_category on $entity_table.category=$entity_table"."_category.id";
+			$this->uicols		= $uicols;
 
-			$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
-				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'no_address'=>true,'location_level'=>$type_id));
+			$joinmethod = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
+			$paranthesis .='(';
+			$joinmethod .= " {$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id))";
+			$paranthesis .='(';
 
-			$sql = str_replace(',fm_location1.loc1_name', '', $sql);
+			$_level = 2;
+			for ($i=1; $i<$type_id; $i++)
+			{
+				$joinmethod .= " {$this->join} fm_location{$_level}";
+				$paranthesis .='(';
+				$on = 'ON';
+				for ($k=($_level-1); $k>0; $k--)
+				{
+					$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level-1) . ".loc{$k})";
+					$on = 'AND';
+					if($k==1)
+					{
+						$joinmethod .= ")";
+					}
+				}
+				$_level ++;
+			}
+
+			$joinmethod.= " {$this->join} {$entity_table}_category ON ($entity_table.category = {$entity_table}_category.id))";
+			$paranthesis .='(';
+
+			$sql = "SELECT $cols FROM $paranthesis fm_location1 $joinmethod";
 
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 
@@ -1676,16 +1699,14 @@
 			while ($this->db->next_record())
 			{
 				$summary[]=array
-					(
-						'number'		=> $this->db->f('number'),
-						'type'			=> '[' . $this->db->f('category') . '] ' .$this->db->f('type'),
-						'part_of_town'	=> $this->db->f('part_of_town'),
-						'district_id'	=> $this->db->f('district_id')
-					);
+				(
+					'number'		=> $this->db->f('number'),
+					'type'			=> '[' . $this->db->f('category') . '] ' .$this->db->f('type'),
+					'part_of_town'	=> $this->db->f('part_of_town'),
+					'district_id'	=> $this->db->f('district_id')
+				);
 			}
 
-
-			$this->uicols		= $uicols;
 			return $summary;
 		}
 

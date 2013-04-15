@@ -25,6 +25,7 @@
 		$tpl->set_block('navbartpl','navbar');
 
 		$var['img_root'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/verdilak/images';
+		$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		$applications = '';
 		$exclude = array('home', 'preferences', 'about', 'logout');
 		$navbar = execMethod('phpgwapi.menu.get', 'navbar');
@@ -35,6 +36,16 @@
 			{
 				continue;
 			}
+			if ( $app == $currentapp)
+			{
+				$app_data['text'] = "[<b>{$app_data['text']}</b>]";
+			}
+
+			$applications .= <<<HTML
+				<br>
+				<a href="{$app_data['url']}">{$app_data['text']}</a>
+HTML;
+/*
 			$icon = $GLOBALS['phpgw']->common->image($app_data['image'][0], $app_data['image'][1]);
 			$applications .= <<<HTML
 				<br>
@@ -43,10 +54,11 @@
 				</a>
 
 HTML;
+*/
 		}
 
-		$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-		$menu_array = execMethod('phpgwapi.menu.get_local_menu', $app);
+
+		$menu_array = execMethod('phpgwapi.menu.get_local_menu', $currentapp);
 		$var['app_menu'] = phpgwapi_menu::render_horisontal_menu($menu_array);
 
 		$var['applications'] = $applications;

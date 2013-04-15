@@ -36,9 +36,12 @@
 					<a href="{home_url}">{home_text}</a>
 					<a href="{logout_url}">{logout_text}</a>
 				</div>
+	 			<div id="app_header">{current_app_header}</div>
         		<!--<div id="logo">	</div>
 				<div id="centerimage"></div>-->
 			</div>
 			<div class="yui-skin-sam" id='frontend'>
 				<div id="line"></div>
 				<div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
+
+

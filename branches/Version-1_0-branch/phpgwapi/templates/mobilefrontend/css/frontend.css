@@ -291,7 +291,6 @@ background-color: #fff;
 width: 100%;
 textalign: left;
 margin: 0 auto;
-overflow: hidden;
 padding: 0 0px 40px;
 }
 
@@ -318,6 +317,26 @@ margin: 0 0 0 16px !important;
 
 
 #home-menu a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
+#app-menu{
+margin: 0 0 0 16px !important;
+}
+
+#app-menu a{
+border-right: 1px solid #575757;
+padding: 0 0.5em;
+line-height: 1.2em;
+}
+
+#applications{
+margin: 0 0 0 16px !important;
+}
+
+#applications a{
 border-right: 1px solid #575757;
 padding: 0 0.5em;
 line-height: 1.2em;
