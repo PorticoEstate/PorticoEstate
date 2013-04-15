@@ -446,7 +446,7 @@
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-				$datatable['menu']					= $this->bocommon->get_menu();
+//				$datatable['menu']					= $this->bocommon->get_menu();
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'		=> 'property.uitts.index',
@@ -1357,6 +1357,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', $this->simple ? 'tts.index.simple' : 'tts.index' , 'property' );
+
 		}
 
 		function index2()

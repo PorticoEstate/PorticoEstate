@@ -37,5 +37,6 @@
 		public function __construct()
 		{
 			parent::__construct();
+			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 		}
 	}
