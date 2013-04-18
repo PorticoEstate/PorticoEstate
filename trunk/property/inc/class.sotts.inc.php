@@ -620,7 +620,7 @@
 				$ticket['cat_id']			= $this->db->f('cat_id');
 				$ticket['subject']			= $this->db->f('subject', true);
 				$ticket['priority']			= $this->db->f('priority');
-				$ticket['details']			= htmlspecialchars ($this->db->f('details', true));
+				$ticket['details']			= $this->db->f('details', true);
 				$ticket['location_code']	= $this->db->f('location_code');
 				$ticket['contact_phone']	= $this->db->f('contact_phone');
 				$ticket['contact_email']	= $this->db->f('contact_email',true);
