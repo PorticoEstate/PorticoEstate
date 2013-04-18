@@ -1684,7 +1684,22 @@
 			$_short_description = array();
 			foreach ($prop_array['attributes'] as $attribute)
 			{
-				$short_description[] = "{$attribute['input_text']}: {$attribute['value']}";
+				$description_value = $attribute['value'];
+
+				if(isset($cache_attributes[$location_id]['attributes'][$attribute['value']]['choice']) && $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'])
+				{
+					$choice = $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'];
+					foreach($choice as $choice_value)
+					{
+						if ($choice_value['id'] == $attribute['value'])
+						{
+							$description_value = $choice_value['value'];
+							break;
+						}
+					}
+				}
+
+				$short_description[] = "{$attribute['input_text']}: {$description_value}";
 			}
 
 			$short_description = implode(', ', $short_description);
