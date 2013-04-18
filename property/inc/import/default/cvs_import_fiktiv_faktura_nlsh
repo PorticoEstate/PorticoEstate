@@ -1,0 +1,123 @@
+<?php
+	class import_conversion
+	{
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		public $debug = true;
+		protected $is_eav;
+		protected $location_id;
+		protected $bim_type_id;
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->join			= $this->db->join;
+		}
+
+		public function add($data)
+		{
+
+_debug_array($data);
+//die();
+
+
+/*
+    [0] => Hovedgruppering
+    [1] => Art
+    [2] => Hjelpetekst
+    [3] => Koststed
+    [4] => Beløp
+    [5] => Best.nr
+*/
+			$error = false;
+
+			if(!$data[4])
+			{
+				$this->errors[] = "Mangler Beløp, hopper over: {$data[0]}";
+				return true;
+			}
+			if(!$data[5])
+			{
+				$this->errors[] = "Mangler Best.nr, hopper over: {$data[0]}";
+				return true;
+			}
+
+//_debug_array($location_code);
+
+
+//			$_location_data = execMethod('property.solocation.read_single', $location_code );
+
+
+			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
+			$entry_date = time();
+
+//_debug_array($entry_date_info);
+//_debug_array($entry_date);
+			$value_set = array();
+
+			$value_set['num'] 					= sprintf('%04s',$id);
+    		$value_set['loc1']					= $location_data['loc1'];
+    		$value_set['loc2']					= $location_data['loc2'];
+			$value_set['user_id']				= $this->account;
+			$value_set['location_code']			= $location_code;
+			$value_set['address']				= $address;
+			$value_set['entry_date']			= $entry_date;
+			$value_set['museumsnr']				= $this->db->db_addslashes($data[0]);
+			$value_set['betegnelse']			= $this->db->db_addslashes($data[1]);
+			$value_set['beskrivelse']			= $this->db->db_addslashes(str_replace('"', '', $data[6])); // tittel
+     		$value_set['juridisk_person']		= $this->db->db_addslashes($data[4]);
+     		$value_set['datering']				= $this->db->db_addslashes($data[5]);
+     		$value_set['avbildet_person']		= $this->db->db_addslashes($data[7]);
+     		$value_set['avbildet_sted']			= $this->db->db_addslashes($data[8]);
+     		$value_set['teknikk']				= $this->db->db_addslashes($data[9]);
+     		$value_set['maal']					= $this->db->db_addslashes($data[10]);
+     		$value_set['historikk']				= $this->db->db_addslashes($data[11]);
+			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
+     		$value_set['tilstandsgrad']			= (int)substr($data[12],0,1) + 1;
+     		$value_set['paafort_text']			= $this->db->db_addslashes($data[13]);
+
+			$ok = $this->_add_sql($id,$value_set);
+
+			return true;
+
+		}
+
+		private function _add_sql($id,$value_set)
+		{
+			$request_ok = false;
+			$table = 'fm_entity_4_1';
+
+			$value_set['id'] = $id;
+			$this->warnings[] = "Denne er ny: {$id}, legger til";
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+
+			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+
+			if($this->debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			if(!$request_ok)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
+				$ok = false;
+			}
+			return $ok;
+
+		}
+	}
