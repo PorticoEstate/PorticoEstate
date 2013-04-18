@@ -517,7 +517,7 @@
 						'activity_id'		=> $this->db->f('activity_id'),
 						'id'				=> $this->db->f('id'),
 						'num'				=> $this->db->f('num'),
-						'descr'				=> htmlspecialchars_decode($this->db->f('descr',true)),
+						'descr'				=> $this->db->f('descr',true),
 						'unit'				=> $this->db->f('unit'),
 						'unit_name'			=> $this->db->f('unit_name'),
 						'm_cost'			=> $this->db->f('m_cost'),
