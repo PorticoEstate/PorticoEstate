@@ -276,8 +276,8 @@
 						'unit_name'		=> $this->db->f('unit_name'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420_id'		=> $this->db->f('ns3420'),
-						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true)),
-						'base_descr'	=> htmlspecialchars_decode($this->db->f('base_descr',true)),
+						'descr'			=> $this->db->f('descr',true),
+						'base_descr'	=> $this->db->f('base_descr',true),
 						'index_count'	=> $this->db->f('index_count'),
 						'agreement_id'	=> $this->db->f('fm_agreement.id')
 					);
@@ -512,13 +512,13 @@
 					(
 						'activity_id'	=> $this->db->f('activity_id'),
 						'num'			=> $this->db->f('num'),
-						'base_descr'	=> htmlspecialchars_decode($this->db->f('base_descr',true)),
+						'base_descr'	=> $this->db->f('base_descr',true),
 						'branch'		=> $this->db->f('branch'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420'		=> $this->db->f('ns3420'),
 						'unit'			=> $this->db->f('unit'),
 						'unit_name'		=> $this->db->f('unit_name'),
-						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true))
+						'descr'			=> $this->db->f('descr',true)
 					);
 			}
 			//		_debug_array($pricebook);
@@ -612,8 +612,8 @@
 				$activity['unit']		= $this->db->f('unit');
 				$activity['cat_id']		= $this->db->f('agreement_group_id');
 				$activity['ns3420_id']	= $this->db->f('ns3420');
-				$activity['descr']		= htmlspecialchars_decode($this->db->f('descr',true));
-				$activity['base_descr']	= htmlspecialchars_decode($this->db->f('base_descr',true));
+				$activity['descr']		= $this->db->f('descr',true);
+				$activity['base_descr']	= $this->db->f('base_descr',true);
 				$activity['dim_d']		= $this->db->f('dim_d');
 				$activity['branch_id']	= $this->db->f('branch_id');
 
@@ -632,7 +632,7 @@
 				$agreement_group['agreement_group_id']	= $id;
 				$agreement_group['num']			= $this->db->f('num');
 				$agreement_group['status']		= $this->db->f('status');
-				$agreement_group['descr']			= stripslashes($this->db->f('descr'));
+				$agreement_group['descr']		= $this->db->f('descr',true);
 
 				return $agreement_group;
 			}

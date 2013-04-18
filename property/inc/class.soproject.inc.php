@@ -2711,7 +2711,7 @@ die();
 					'id'				=> $this->db->f('id'),
 					'project_id'		=> $this->db->f('project_id'),
 					'closed'			=> $this->db->f('closed'),
-					'title'				=> htmlspecialchars_decode($this->db->f('title',true)),
+					'title'				=> $this->db->f('title',true),
 					'status'			=> $this->db->f('status',true),
 					'actual_cost'		=> (float)$this->db->f('actual_cost'),
 					'start_date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'),$dateformat),

@@ -127,7 +127,7 @@
 					(
 						'hour_id'			=> $this->db->f('id'),
 						'activity_num'		=> $this->db->f('activity_num'),
-						'hours_descr'		=> htmlspecialchars_decode($this->db->f('hours_descr',true)),
+						'hours_descr'		=> $this->db->f('hours_descr',true),
 						'owner'				=> $this->db->f('owner'),
 						'quantity'			=> $this->db->f('quantity'),
 						'grouping_id'		=> $this->db->f('grouping_id'),
@@ -548,7 +548,7 @@
 				$hour['activity_id']		= $this->db->f('activity_id');
 				$hour['activity_num']		= $this->db->f('activity_num');
 				$hour['grouping_id']		= $this->db->f('grouping_id');
-				$hour['hours_descr']		= htmlspecialchars_decode($this->db->f('hours_descr',true));
+				$hour['hours_descr']		= $this->db->f('hours_descr',true);
 				$hour['remark']				= $this->db->f('remark');
 				$hour['billperae']			= $this->db->f('billperae');
 				$hour['unit']				= $this->db->f('unit');
