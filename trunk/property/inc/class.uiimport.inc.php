@@ -183,7 +183,7 @@
 		
 					foreach ($this->messages as $message)
 					{
-						echo '<li class="info">' . $message . '</li>';
+						echo '<li class="info">Message: ' . $message . '</li>';
 					}
 					echo "</ul>";
 				}
