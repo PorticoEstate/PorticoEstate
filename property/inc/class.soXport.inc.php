@@ -720,7 +720,16 @@
 		{
 			$orders_affected = array();
 			$_dateformat = $this->db->date_format();
-			$this->db->transaction_begin();
+
+			if ( $this->db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 
 			$this->add($values, $skip_update_voucher_id);
 
@@ -763,7 +772,13 @@
 
 			$this->delete_voucher_from_fm_ecobilag($values[0]['bilagsnr']);
  			$this->update_actual_cost_from_archive($orders_affected);
-			return $this->db->transaction_commit();
+
+			if ( !$this->global_lock )
+			{
+				$this->db->transaction_commit();
+			}
+
+			return true;
 		}
 
 
