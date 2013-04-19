@@ -6,9 +6,8 @@
 		public $warnings = array();
 		public $errors = array();
 		public $debug = true;
-		protected $is_eav;
-		protected $location_id;
-		protected $bim_type_id;
+		protected $period;
+		protected $date;
 
 		public function __construct()
 		{
@@ -16,14 +15,30 @@
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= $this->db->join;
+			$this->boinvoice	= CreateObject('property.boinvoice');
+			$this->soinvoice	= CreateObject('property.soinvoice');
+			$this->boworkorder	= CreateObject('property.boworkorder');
+
+			$this->config		= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+
+			$file_info = pathinfo($_FILES['file']['name']);
+			$this->period = substr($file_info['filename'],-6);
+			
+			if(!ctype_digit($this->period))
+			{
+				throw new Exception("Ikke en periode: {$this->period}" );
+			}
+
+			$_year = substr($this->period,0,4);
+			$_month = substr($this->period,-2);
+			$_date = mktime(0, 0, 0, $_month, 15, $_year);
+
+			$this->date = $GLOBALS['phpgw']->common->show_date($_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 		}
 
 		public function add($data)
 		{
-
-_debug_array($data);
-//die();
-
 
 /*
     [0] => Hovedgruppering
@@ -33,90 +48,98 @@ _debug_array($data);
     [4] => Beløp
     [5] => Best.nr
 */
+			$amount   = str_replace(array(' ',','),array('','.'),$data[4]);
+			$order_id = $data[5];
 			$error = false;
 
-			if(!$data[4])
+			if(!$amount)
 			{
-				$this->errors[] = "Mangler Beløp, hopper over: {$data[0]}";
+				$this->warnings[] = "Linje mangler Beløp, hopper over: {$data[0]}";
 				return true;
 			}
-			if(!$data[5])
+			if(!$order_id)
 			{
-				$this->errors[] = "Mangler Best.nr, hopper over: {$data[0]}";
+				$this->warnings[] = "Linje mangler bestillingsnummer, hopper over: {$data[0]}";
 				return true;
 			}
 
-//_debug_array($location_code);
+			if(!execMethod('property.soXport.check_order',$order_id))
+			{
+				$this->errors[] ="Ikke gyldig bestillingsnummer: {$order_id}";
+				return false;
+			}
 
 
 //			$_location_data = execMethod('property.solocation.read_single', $location_code );
 
+			$workorder = $this->boworkorder->read_single($order_id);
 
-			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
-			$entry_date = time();
+			$project	= execMethod('property.boproject.read_single_mini',$workorder['project_id']);
 
-//_debug_array($entry_date_info);
-//_debug_array($entry_date);
-			$value_set = array();
+			$values = array();
 
-			$value_set['num'] 					= sprintf('%04s',$id);
-    		$value_set['loc1']					= $location_data['loc1'];
-    		$value_set['loc2']					= $location_data['loc2'];
-			$value_set['user_id']				= $this->account;
-			$value_set['location_code']			= $location_code;
-			$value_set['address']				= $address;
-			$value_set['entry_date']			= $entry_date;
-			$value_set['museumsnr']				= $this->db->db_addslashes($data[0]);
-			$value_set['betegnelse']			= $this->db->db_addslashes($data[1]);
-			$value_set['beskrivelse']			= $this->db->db_addslashes(str_replace('"', '', $data[6])); // tittel
-     		$value_set['juridisk_person']		= $this->db->db_addslashes($data[4]);
-     		$value_set['datering']				= $this->db->db_addslashes($data[5]);
-     		$value_set['avbildet_person']		= $this->db->db_addslashes($data[7]);
-     		$value_set['avbildet_sted']			= $this->db->db_addslashes($data[8]);
-     		$value_set['teknikk']				= $this->db->db_addslashes($data[9]);
-     		$value_set['maal']					= $this->db->db_addslashes($data[10]);
-     		$value_set['historikk']				= $this->db->db_addslashes($data[11]);
-			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
-     		$value_set['tilstandsgrad']			= (int)substr($data[12],0,1) + 1;
-     		$value_set['paafort_text']			= $this->db->db_addslashes($data[13]);
+			$values['order_id']		= $order_id;
+			$values['vendor_id']	= 99;
+			$values['invoice_id']	= $this->boinvoice->get_auto_generated_invoice_num($values['vendor_id']);
+			$values['amount']		= $amount;
 
-			$ok = $this->_add_sql($id,$value_set);
-
-			return true;
-
-		}
-
-		private function _add_sql($id,$value_set)
-		{
-			$request_ok = false;
-			$table = 'fm_entity_4_1';
-
-			$value_set['id'] = $id;
-			$this->warnings[] = "Denne er ny: {$id}, legger til";
-			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
-
-			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
-
-			if($this->debug)
+			$order_info['janitor']			= $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->lid;
+			$supervisor_user_id				= $this->soinvoice->get_default_dimb_role_user(2, $project['ecodimb']);
+			if($supervisor_user_id)
 			{
-				_debug_array($sql);
+				$values['supervisor']			= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+			}
+
+			$budget_responsible_user_id			= $this->soinvoice->get_default_dimb_role_user(3, $project['ecodimb']);
+			if($budget_responsible_user_id)
+			{
+				$values['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			}
+
+			if(!$values['budget_responsible'])
+			{
+				$values['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
+			}
+
+			$values['project_group']		= $project['project_group'];
+			$values['dimb']					= $project['ecodimb'];
+
+			$location_arr	= explode('-', $workorder['location_code']);
+
+			$i = 1;
+			foreach ($location_arr as $_loc)
+			{
+				$values['location']["loc{$i}"] = $_loc;
+				$i++;
+			}
+
+
+			$values['invoice_date']		= $this->date;
+			$values['payment_date']		= $this->date;
+			$values['paid_date']		= $this->date;
+			
+			$values['typeid']			= 5; // administrasjon
+			$values['artid']			= 4; // fiktiv
+
+			$values['regtid'] 			= date($GLOBALS['phpgw']->db->datetime_format());
+
+			$receipt					= $this->boinvoice->add_manual_invoice($values);
+
+			$ok	= false;
+
+			if(!isset($receipt['error']) || !$receipt['error'])
+			{
+
+				$this->messages[] = "Importerer faktura med beløp {$amount} til bestilling {$order_id}";
+				$ok	= true;
 			}
 			else
 			{
-				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+				$this->errors[] = "Noe feilet med bestilling {$order_id}";
 			}
 
-			if(!$request_ok)
-			{
-				$this->messages[] = "Successfully imported location: Title ({$data['betegnelse']})";
-				$ok = true;
-			}
-			else
-			{
-				$this->errors[] = "Error importing location: Title ({$data['betegnelse']})";
-				$ok = false;
-			}
+			execMethod('property.soXport.update_actual_cost_from_archive',array($order_id => true));
+
 			return $ok;
 
 		}
