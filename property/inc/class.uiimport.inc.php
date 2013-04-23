@@ -25,6 +25,7 @@
 		protected $steps = 0;
 		protected $fields = array();
 		protected $table;
+		protected $debug;
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -96,7 +97,8 @@
 				}
 
 				$this->import_conversion = new import_conversion;
-				$this->import_conversion->debug	= phpgw::get_var('debug', 'bool');
+				$this->debug = phpgw::get_var('debug', 'bool');
+				$this->import_conversion->debug	= $this->debug;
 
 				// Get the path for user input or use a default path
 
@@ -344,7 +346,15 @@ HTML;
 			if($ok)
 			{
 				$this->messages[] = "Imported data. (" . (time() - $start_time) . " seconds)";
-				$this->db->transaction_commit();
+				if($this->debug)
+				{
+					$this->db->transaction_abort();
+					$this->messages[] = "Dry Run: transaction abortet";
+				}
+				else
+				{
+					$this->db->transaction_commit();
+				}
 				return true;
 			}
 			else
