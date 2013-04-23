@@ -13,15 +13,19 @@ var tableYUI;
   	this.addFooterDatatable = function(paginator,datatable)
   	{
   		//call getSumPerPage(name of column) in property.js
-  		tmp_sum1 = getSumPerPage('budget',2,paginator,datatable);
-  		tmp_sum2 = getSumPerPage('calculation',2,paginator,datatable);
+  		tmp_sum1 = getSumPerPage('budget_hidden',0,paginator,datatable);
+  		tmp_sum2 = getSumPerPage('calculation_hidden',0,paginator,datatable);
+  		tmp_sum3 = getSumPerPage('actual_cost_hidden',0,paginator,datatable);
 
 		//Create ROW
 		newTR = document.createElement('tr');
 		td_sum('Sum');
 		td_sum(tmp_sum1);
+		td_empty(1);
 		td_sum(tmp_sum2);
-		td_empty(7);
+		td_empty(1);
+		td_sum(tmp_sum3);
+		td_empty(6);
 
 		//Add to Table
 		myfoot = tableYUI.createTFoot();
@@ -37,6 +41,26 @@ var tableYUI;
 		addFooterDatatable(myPaginator_0,myDataTable_0);
 	}
 /********************************************************************************/
+
+	var FormatterAmount0 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+
+	var FormatterAmount2 = function(elCell, oRecord, oColumn, oData)
+	{
+		var amount = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+		elCell.innerHTML = "<div align=\"right\">"+amount+"</div>";
+	}	
+
+	var FormatterCenter = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<center>"+oData+"</center>";
+	}
+
+
+
 	YAHOO.util.Event.addListener(window, "load", function()
 	{
 		loader = new YAHOO.util.YUILoader();
