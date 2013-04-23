@@ -450,16 +450,67 @@
 					'enable_bulk'				=> $this->db->f('enable_bulk'),
 					'jasperupload'				=> $this->db->f('jasperupload'),
 					'parent_id'					=> $this->db->f('parent_id'),
-					'level'						=> $this->db->f('level')
-
+					'level'						=> $this->db->f('level'),
+					'location_id'				=> $this->db->f('location_id')
 					);
-
-				$category['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 
 
 			return $category;
 		}
+
+		/**
+		* Get entity category based on location_id
+		* @param int $location_id the system location id
+		* @return array info about the entity category
+		*/
+		function get_single_category($location_id)
+		{
+			$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+			
+			$type_arr = explode('.',  $loc_arr['location']);
+			
+			if(!count($type_arr) == 3)
+			{
+				return array();
+			}
+
+			$type = $type_arr[1];
+
+			$sql = "SELECT * FROM fm_{$type}_category WHERE location_id =" . (int)$location_id;
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$category = array();
+			if ($this->db->next_record())
+			{
+				$category = array
+				(
+					'id'						=> $this->db->f('id'),
+					'name'						=> $this->db->f('name',true),
+					'descr'						=> $this->db->f('descr',true),
+					'prefix'					=> $this->db->f('prefix',true),
+					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+					'tracking'					=> $this->db->f('tracking'),
+					'location_level'			=> $this->db->f('location_level'),
+					'location_link_level'		=> $this->db->f('location_link_level'),
+					'fileupload'				=> $this->db->f('fileupload'),
+					'loc_link'					=> $this->db->f('loc_link'),
+					'start_project'				=> $this->db->f('start_project'),
+					'start_ticket'				=> $this->db->f('start_ticket'),
+					'is_eav'					=> $this->db->f('is_eav'),
+					'enable_bulk'				=> $this->db->f('enable_bulk'),
+					'jasperupload'				=> $this->db->f('jasperupload'),
+					'parent_id'					=> $this->db->f('parent_id'),
+					'level'						=> $this->db->f('level'),
+					'location_id'				=> $location_id
+					);
+
+			}
+
+			return $category;
+		}
+
 
 		function read_category_name($entity_id,$cat_id)
 		{
