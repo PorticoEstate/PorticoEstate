@@ -52,9 +52,16 @@
 				echo 'headers:<br>';
 				_debug_array($headers);
 			}
+/*
+			$headers['Osso-User-Dn'] = 'cn=02035701829,cn=users,dc=usrv,dc=ubergenkom,dc=no';// test
+//			$fodsels_nr = substr($headers['Osso-User-Dn'],3, 11);
+*/
 
-			$fodsels_nr = substr($headers['Osso-User-Dn'],2, 11);
-	//		$fodsels_nr = '02035701829'; // test
+			$header_regular_expression =  '/^cn=(.*),cn=users.*$/';
+			$header_key = 'Osso-User-Dn';
+			$matches = array();
+			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
+			$fodsels_nr = $matches[1][0];
 
 			if($this->debug)
 			{

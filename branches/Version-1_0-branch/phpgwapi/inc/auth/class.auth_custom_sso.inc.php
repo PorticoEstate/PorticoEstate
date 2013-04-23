@@ -104,9 +104,16 @@
 			}
 
 			$headers = getallheaders();
-			$fodsels_nr = substr($headers['Osso-User-Dn'],2, 11);
 
-			$sql = "SELECT V_ORG_PERSON.BRUKERNAVN FROM V_ORG_PERSON WHERE FODSELSNR ='{$fodsels_nr}'";
+//			$headers['Osso-User-Dn'] = 'cn=02035701829,cn=users,dc=usrv,dc=ubergenkom,dc=no';// test
+
+			$header_regular_expression =  '/^cn=(.*),cn=users.*$/';
+			$header_key = 'Osso-User-Dn';
+			$matches = array();
+			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
+			$fodsels_nr = $matches[1][0];
+
+			$sql = "SELECT BRUKERNAVN FROM V_IDM_KOBLINGER WHERE FODSELSNR ='{$fodsels_nr}'";
 			$db->query($sql,__LINE__,__FILE__);			
 			$db->next_record();
 			return $db->f('BRUKERNAVN',true);

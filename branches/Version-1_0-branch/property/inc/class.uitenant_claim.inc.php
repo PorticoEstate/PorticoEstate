@@ -670,6 +670,8 @@
 			//_debug_array($values);
 
 			$project_values	= $this->boproject->read_single($values['project_id'], array(), true);
+			
+			$project_values['workorder_budget'] = $this->boproject->get_orders(array('project_id'=> $values['project_id'],'year'=> 0));
 
 			$soinvoice	= CreateObject('property.soinvoice');
 
@@ -683,9 +685,7 @@
 				else
 				{
 					$vouchers = $soinvoice->read_invoice(array('workorder_id' => $workorder['workorder_id'], 'user_lid' => 'all'));
-
 					$workorder['voucher_id'] = isset($vouchers[0]['voucher_id']) ? $vouchers[0]['voucher_id'] : '';
-					$workorder['actual_cost'] =  isset($vouchers[0]['approved_amount']) ? $vouchers[0]['approved_amount'] : '';
 				}
 			}
 
@@ -797,10 +797,17 @@
 
 				if($project_values['workorder_budget'][$d]['selected']==1)
 				{
+					
+					$project_values['workorder_budget'][$d]['budget_hidden'] = $project_values['workorder_budget'][$d]['budget'];
+					$project_values['workorder_budget'][$d]['calculation_hidden'] = $project_values['workorder_budget'][$d]['calculation'];
+					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = $project_values['workorder_budget'][$d]['actual_cost'];
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" checked value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
 				else
 				{
+					$project_values['workorder_budget'][$d]['budget_hidden'] = 0;
+					$project_values['workorder_budget'][$d]['calculation_hidden'] = 0;
+					$project_values['workorder_budget'][$d]['actual_cost_hidden'] = 0;
 					$project_values['workorder_budget'][$d]['selected']='<input type="checkbox" name="values[workorder][]" value="'.$project_values['workorder_budget'][$d]['workorder_id'].'">';
 				}
 			}
@@ -823,11 +830,14 @@
 				(
 					'name'			=> "0",
 					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
-															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
-															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
+															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'budget_hidden','hidden'=>true),
+															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'calculation_hidden','hidden'=>true),
+															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterAmount0'),
+															array('key' => 'actual_cost_hidden','hidden'=>true),
 															array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
-															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
+															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter'),
 															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
 															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
 															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
