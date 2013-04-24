@@ -36,6 +36,7 @@
 		protected $id;
 		protected $requirement_id;
 		protected $resource_id;
+		protected $inventory;
 		protected $location_id;
 		protected $create_user;
 		
@@ -85,6 +86,17 @@
 		public function get_resource_id()
 		{
 			return $this->resource_id;
+		}
+
+
+		public function set_inventory_id($inventory_id)
+		{
+			$this->inventory_id = $inventory_id;
+		}
+
+		public function get_inventory_id()
+		{
+			return $this->inventory_id;
 		}
 
 		public function set_location_id($location_id)
@@ -189,6 +201,7 @@
 				'resource_type_descr'	=> $this->get_resource_type_descr(),
 				'requirement_id' 		=> $this->get_requirement_id(),
 				'resource_id' 			=> $this->get_resource_id(),
+				'inventory_id' 			=> $this->get_inventory_id(),
 				'location_id'	 		=> $this->get_location_id(),
 				'location_code' 		=> $this->get_location_code(),
 				'fm_bim_item_address'	=> $this->get_fm_bim_item_address(),
