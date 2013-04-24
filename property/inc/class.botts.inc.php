@@ -132,10 +132,8 @@
 			$branch_id				= phpgw::get_var('branch_id', 'int');
 			$order_dim1				= phpgw::get_var('order_dim1', 'int');
 
+			$this->start			= $start 							? $start 			: 0;
 
-//			$this->start			= $start 							? $start 			: 0;
-
-			$this->start			= isset($_REQUEST['start']) 		? $start			: $this->start;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
 			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
 			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
