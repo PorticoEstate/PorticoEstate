@@ -298,6 +298,7 @@
 			}
 
 //			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
+			$allocation_suggestions = array();
 
 			if($requirement)
 			{
@@ -350,11 +351,25 @@
 
 					$criterias_array['conditions'][] = $condition;
 				}
-			}
-		    
-			$allocation_suggestions = execMethod('property.soentity.get_eav_list', $criterias_array);
 
+
+				$entity_category = execMethod('property.soadmin_entity.get_single_category', $location_id);
+
+				$allocation_suggestions = execMethod('property.soentity.get_eav_list', $criterias_array);
+				
+				if($entity_category['enable_bulk'])
+				{
+					foreach ($allocation_suggestions as &$entry)
+					{
+						$entry['inventory'] = execMethod('property.soentity.get_inventory', array('location_id' => $location_id, 'id' => $entry['id']));
+					}
+				}
+
+			}
 //Start fuzzy
+
+//_debug_array($allocation_suggestions);die();
+
 			$suggestion_ids = array();
 
 
