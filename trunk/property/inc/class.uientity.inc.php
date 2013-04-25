@@ -2885,7 +2885,7 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 			}
 
-			$inventory =  $this->bo->get_inventory($location_id, $id);
+			$inventory =  $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id));
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -2919,7 +2919,7 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			$unit_id = '';
-			if( $inventory = $this->bo->get_inventory($location_id, $id, $inventory_id) )
+			if( $inventory = $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id)) )
 			{
 				$unit_id	= $inventory[0]['unit_id'];			
 			}
@@ -3041,7 +3041,7 @@
 			}
 
 			$unit_id = '';
-			if( $inventory = $this->bo->get_inventory($location_id, $id) )
+			if( $inventory = $this->bo->get_inventory(array('id' => $id, 'location_id' => $location_id)) )
 			{
 				$unit_id	= $inventory[0]['unit_id'];			
 			}

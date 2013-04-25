@@ -238,10 +238,41 @@
 						$requirement['fm_bim_item_name'] = $short_desc;
 					}
 
-					$delete_href = self::link(
-																array('menuaction' => 'logistic.uirequirement_resource_allocation.delete', 
-																			'id' => $requirement['id'], 
-																			'phpgw_return_as' => 'json')
+					if($requirement['inventory_id'])
+					{
+						$inventory = execMethod('property.soentity.get_inventory',array('inventory_id' => $requirement['inventory_id']));
+
+						$system_location = $GLOBALS['phpgw']->locations->get_name($inventory[0]['p_location_id']);
+
+						$name = 'N∕A';
+						if( preg_match('/.location./i', $system_location['location']) )
+						{
+							$location_code = execMethod('property.solocation.get_location_code', $inventory[0]['p_id']);
+							$location = execMethod('property.solocation.read_single', $location_code);
+							$location_arr = explode('-', $location_code);
+							$i=1;
+							$name_arr = array();
+							foreach($location_arr as $_dummy)
+							{
+								$name_arr[] = $location["loc{$i}_name"];
+								$i++;
+							}
+
+							$name = implode('::', $name_arr);
+						}
+						else if( preg_match('/.entity./i', $system_location['location']) )
+						{
+							$name = execMethod('property.soentity.get_short_description', 
+										array('location_id' => $inventory[0]['p_location_id'], 'id' => $inventory[0]['p_id']));
+						}
+
+						$requirement['location_code'] = $location_code;
+						$requirement['fm_bim_item_address'] = $name;
+					}
+					
+					$delete_href = self::link(array('menuaction' => 'logistic.uirequirement_resource_allocation.delete', 
+																	'id' => $requirement['id'],
+																	'phpgw_return_as' => 'json')
 																);
 					$requirement['delete_link'] = "<a class=\"btn-sm delete\" href=\"{$delete_href}\">Slett</a>";
 					$rows[] = $requirement;
@@ -416,6 +447,13 @@
 					$allocation_suggestion['allocated_date'] = implode('; ', $allocated_date);
 					$allocation_suggestion['allocated_where'] = implode('; ', $allocated_where);
 				}
+				if(isset($allocation_suggestion['inventory']))
+				{
+					foreach ($allocation_suggestion['inventory'] as & $inventory)
+					{
+						$inventory['allocated_amount'] = $allocated['inventory'][$inventory['inventory_id']];
+					}
+				}
 			}
 
 			$activity = $this->so_activity->get_single( $requirement->get_activity_id() );
@@ -446,7 +484,10 @@
 			$chosen_resources = phpgw::get_var('chosen_resources');
 			
 			$inventory_ids = phpgw::get_var('inventory_ids');
+			$inventory_ids_orig = phpgw::get_var('inventory_ids_orig');
+			//FIXME: Bruk 'allocation_id' i staden.
 
+//_debug_array($inventory_ids_orig);die();
 			$filters = array('requirement_id' => $requirement->get_id());
 			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);
 							 
@@ -456,9 +497,9 @@
 
 			if($inventory_ids)
 			{
-				foreach ($inventory_ids as $resource => $inventory)
+				foreach ($inventory_ids as $resource => $allocated_amount)
 				{
-					if($inventory)
+					if($allocated_amount)
 					{
 						$resource_arr = explode('_', $resource);
 						$resource_id = $resource_arr[0];
@@ -467,9 +508,9 @@
 						$resource_alloc = new logistic_requirement_resource_allocation();
 						$resource_alloc->set_requirement_id( $requirement->get_id() );
 						$resource_alloc->set_resource_id( $resource_id );
-						//FIXME:
-_debug_array($inventory_id);
 						$resource_alloc->set_inventory_id( $inventory_id );
+						$resource_alloc->set_allocated_amount( $allocated_amount );
+						$resource_alloc->set_allocated_amount_orig( $inventory_ids_orig[$resource] );
 						$resource_alloc->set_location_id( $requirement->get_location_id() );
 						$resource_alloc->set_create_user( $user_id );
 						$resource_alloc->set_start_date( $requirement->get_start_date() );

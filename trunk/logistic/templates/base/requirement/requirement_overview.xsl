@@ -114,6 +114,7 @@
 			        {key:"id", label:'Id', sortable:true},
 			        {key:"fm_bim_item_name", label:'Navn på ressurs', sortable:true},
 			        {key:"resource_type_descr", label:'Ressurstype', sortable:true}, 
+			        {key:"allocated_amount", label:'Antall', sortable:true},
 			        {key:"location_code", label:'Lokasjonskode', sortable:true},
 			        {key:"fm_bim_item_address", label:'Adresse', sortable:true},
 			        {key:"delete_link", label:'Slett bestilling', sortable:true}

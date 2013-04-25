@@ -49,14 +49,15 @@
 
 			$value_set = array
 			(
-				'location_id'		=> $resource_alloc->get_location_id(),
-				'item_id'			=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
-				'item_inventory_id'	=> $this->marshal($resource_alloc->get_inventory_id(), 'int'),
-				'allocation_id'		=> 0,//not known yet
-				'create_user'		=> $resource_alloc->get_create_user(),
-				'create_date'		=> time(),
-				'start_date'		=> $resource_alloc->get_start_date(),
-				'end_date'			=> $resource_alloc->get_end_date(),
+				'location_id'			=> $resource_alloc->get_location_id(),
+				'item_id'				=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
+				'item_inventory_id'		=> $this->marshal($resource_alloc->get_inventory_id(), 'int'),
+				'item_inventory_amount'	=> $this->marshal($resource_alloc->get_allocated_amount(), 'int'),
+				'allocation_id'			=> 0,//not known yet
+				'create_user'			=> $resource_alloc->get_create_user(),
+				'create_date'			=> time(),
+				'start_date'			=> $resource_alloc->get_start_date(),
+				'end_date'				=> $resource_alloc->get_end_date(),
 			);
 
 			$sql = 'INSERT INTO lg_calendar (' . implode(',', array_keys($value_set)) . ') VALUES (' . implode(',', array_values($value_set)) . ')';
@@ -123,6 +124,30 @@
 			}
 		}
 
+
+		public function count_allocated($requirement_id)
+		{
+
+			$requirement_id = (int) $requirement_id;
+
+			$sql = "SELECT item_inventory_amount as count FROM lg_requirement_resource_allocation"
+			. " {$this->join } lg_calendar ON lg_requirement_resource_allocation.id = lg_calendar.allocation_id"
+			. " WHERE lg_requirement_resource_allocation.requirement_id = {$requirement_id}";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+			$sum = 0;
+			while ($this->db->next_record())
+			{
+				if(!$count = $this->db->f('count'))
+				{
+					$count = 1;
+				}
+				$sum += $count;
+			}
+			
+			return $sum;
+		}
+
 		protected function get_id_field_name()
 		{
 			if(!$extended_info)
@@ -169,6 +194,7 @@
 
 
 			$tables = "lg_requirement_resource_allocation allocation";
+			$joins .= " {$this->join } lg_calendar ON allocation.id = lg_calendar.allocation_id";
 			$joins .= "	{$this->left_join} phpgw_locations ON (phpgw_locations.location_id = allocation.location_id)";
 			$joins .= "	{$this->left_join} fm_bim_item ON (fm_bim_item.location_id = allocation.location_id and fm_bim_item.id = allocation.resource_id )";
 			 
@@ -179,6 +205,8 @@
 			else
 			{
 				$cols .= "allocation.*, ";
+				$cols .= "lg_calendar.item_inventory_amount as count,";
+				$cols .= "lg_calendar.item_inventory_id as inventory_id,";
 				$cols .= "phpgw_locations.descr AS resource_type_descr, ";
 				$cols .= "fm_bim_item.location_code AS location_code, (xpath('//address/node()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_address, (xpath('//navn[1]/text()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_name ";
 			}
@@ -201,6 +229,8 @@
 				$allocation->set_resource_type_descr($this->unmarshal($this->db->f('resource_type_descr'), 'string'));
 				$allocation->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$allocation->set_fm_bim_item_address($this->unmarshal($this->db->f('fm_bim_item_address'), 'string'));
+				$allocation->set_allocated_amount($this->unmarshal($this->db->f('count'), 'int'));
+				$allocation->set_inventory_id($this->unmarshal($this->db->f('inventory_id'), 'int'));
 				
 				$fm_bim_name = $this->unmarshal( $this->db->f('fm_bim_item_name'), 'string');
 				
@@ -220,13 +250,14 @@
 			$location_id = (int)$location_id;
 			$values = array();
 			$items = array();
+			$inventory = array();
 			
 			if (!$ids)
 			{
 				return $values;
 			}
-			$sql = "SELECT lg_calendar.item_id, lg_requirement.activity_id,"
-			. " lg_calendar.start_date, lg_calendar.end_date"
+			$sql = "SELECT lg_calendar.item_id,lg_calendar.item_inventory_id,lg_calendar.item_inventory_amount,"
+			. " lg_requirement.activity_id, lg_calendar.start_date, lg_calendar.end_date"
 			. " FROM lg_requirement_resource_allocation"
 			. " {$this->join} lg_calendar ON lg_requirement_resource_allocation.calendar_id = lg_calendar.id"
 			. " {$this->join} lg_requirement ON lg_requirement_resource_allocation.requirement_id = lg_requirement.id"
@@ -238,16 +269,21 @@
 			while ($this->db->next_record())
 			{
 				$item_id = $this->db->f('item_id');
+				$item_inventory_id = $this->db->f('item_inventory_id');
+				$item_allocated_amount = $this->db->f('item_inventory_amount');
 				$items[$item_id] = true;
+				$inventory[$item_inventory_id] = $item_allocated_amount;
 				$values[$item_id][] = array
 				(
-					'start_date'	=> $this->db->f('start_date'),
-					'end_date'		=> $this->db->f('end_date'),
-					'activity_id'	=> $this->db->f('activity_id'),
-					'item_id'		=> $item_id
+					'start_date'			=> $this->db->f('start_date'),
+					'end_date'				=> $this->db->f('end_date'),
+					'activity_id'			=> $this->db->f('activity_id'),
+					'item_id'				=> $item_id,
+					'item_inventory_id'		=> $item_inventory_id,
+					'item_allocated_amount'	=> $item_inventory_amount
 				);
 			}
-			return array('calendar' => $values, 'items' => $items);
+			return array('calendar' => $values, 'items' => $items, 'inventory' => $inventory);
 		}
 
 		function delete($resource_allocation_id)
