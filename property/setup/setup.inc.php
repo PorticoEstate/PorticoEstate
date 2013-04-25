@@ -215,19 +215,20 @@
 		'manual',
 		'settings',
 		'help',
-		'menu'			=> 'property.menu.get_menu',
-		'cat_add'		=> 'property.cat_hooks.cat_add',
-		'cat_delete'	=> 'property.cat_hooks.cat_delete',
-		'cat_edit'		=> 'property.cat_hooks.cat_edit',
 		'config',
-		'home',
-		'addaccount'	=> 'property.hook_helper.clear_userlist',
-		'editaccount'	=> 'property.hook_helper.clear_userlist',
-		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
-		'addgroup'		=> 'property.hook_helper.clear_userlist',
-		'deletegroup'	=> 'property.hook_helper.clear_userlist',
-		'editgroup'		=> 'property.hook_helper.clear_userlist',
-		'registration'	=> 'property.hook_helper.add_location_contact'
+		'menu'					=> 'property.menu.get_menu',
+		'cat_add'				=> 'property.cat_hooks.cat_add',
+		'cat_delete'			=> 'property.cat_hooks.cat_delete',
+		'cat_edit'				=> 'property.cat_hooks.cat_edit',
+		'home'					=> 'property.hook_helper.home_backend',
+		'home_mobilefrontend'	=> 'property.hook_helper.home_mobilefrontend',
+		'addaccount'			=> 'property.hook_helper.clear_userlist',
+		'editaccount'			=> 'property.hook_helper.clear_userlist',
+		'deleteaccount'			=> 'property.hook_helper.clear_userlist',
+		'addgroup'				=> 'property.hook_helper.clear_userlist',
+		'deletegroup'			=> 'property.hook_helper.clear_userlist',
+		'editgroup'				=> 'property.hook_helper.clear_userlist',
+		'registration'			=> 'property.hook_helper.add_location_contact'
 	);
 
 	/* Dependencies for this app to work */

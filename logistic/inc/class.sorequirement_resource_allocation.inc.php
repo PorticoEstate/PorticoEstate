@@ -51,6 +51,7 @@
 			(
 				'location_id'		=> $resource_alloc->get_location_id(),
 				'item_id'			=> $this->marshal($resource_alloc->get_resource_id(), 'int'),
+				'item_inventory_id'	=> $this->marshal($resource_alloc->get_inventory_id(), 'int'),
 				'allocation_id'		=> 0,//not known yet
 				'create_user'		=> $resource_alloc->get_create_user(),
 				'create_date'		=> time(),

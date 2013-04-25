@@ -361,7 +361,7 @@
 				{
 					foreach ($allocation_suggestions as &$entry)
 					{
-						$entry['inventory'] = execMethod('property.soentity.get_inventory', array('location_id' => $location_id, 'id' => $entry['id']));
+						$entry['inventory'] = execMethod('property.boentity.get_inventory', array('location_id' => $location_id, 'id' => $entry['id']));
 					}
 				}
 
@@ -444,6 +444,8 @@
 
 			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 			$chosen_resources = phpgw::get_var('chosen_resources');
+			
+			$inventory_ids = phpgw::get_var('inventory_ids');
 
 			$filters = array('requirement_id' => $requirement->get_id());
 			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);
@@ -452,7 +454,33 @@
 
 			$num_allowed_bookings = $num_required - $num_allocated;
 
-			if( count($chosen_resources) <=  $num_allowed_bookings)
+			if($inventory_ids)
+			{
+				foreach ($inventory_ids as $resource => $inventory)
+				{
+					if($inventory)
+					{
+						$resource_arr = explode('_', $resource);
+						$resource_id = $resource_arr[0];
+						$inventory_id = $resource_arr[1];
+
+						$resource_alloc = new logistic_requirement_resource_allocation();
+						$resource_alloc->set_requirement_id( $requirement->get_id() );
+						$resource_alloc->set_resource_id( $resource_id );
+						//FIXME:
+_debug_array($inventory_id);
+						$resource_alloc->set_inventory_id( $inventory_id );
+						$resource_alloc->set_location_id( $requirement->get_location_id() );
+						$resource_alloc->set_create_user( $user_id );
+						$resource_alloc->set_start_date( $requirement->get_start_date() );
+						$resource_alloc->set_end_date( $requirement->get_start_date() );
+						$resource_alloc_id = $this->so->store( $resource_alloc );
+
+					}
+				}
+
+			}
+			else if( count($chosen_resources) <=  $num_allowed_bookings)
 			{
 				foreach($chosen_resources as $resource_id)
 				{
@@ -467,12 +495,10 @@
 					$resource_alloc_id = $this->so->store( $resource_alloc );
 				}
 
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
 			}
-			else
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
-			}
+
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiactivity.view_resource_allocation', 'activity_id' => $requirement->get_activity_id()));
+
 		}
 
 		public function delete()
