@@ -112,7 +112,7 @@
 											<span class="loc_code">
 												<input type="text" value="{allocated_amount}" name="inventory_ids[{//allocation_suggestions/id}_{inventory_id}]" size='4'>
 												</input>
-												<input type="hidden" value="{allocated_amount}" name="inventory_ids_orig[{//allocation_suggestions/id}_{inventory_id}]">
+												<input type="hidden" value="{allocation_id}" name="allocations[{//allocation_suggestions/id}_{inventory_id}]">
 												</input>
 											</span>
 											<span class="loc_code"><xsl:value-of disable-output-escaping="yes" select="where" /></span>
