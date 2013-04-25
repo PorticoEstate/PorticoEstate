@@ -452,6 +452,7 @@
 					foreach ($allocation_suggestion['inventory'] as & $inventory)
 					{
 						$inventory['allocated_amount'] = $allocated['inventory'][$inventory['inventory_id']];
+						$inventory['allocation_id'] = $allocated['allocations'][$inventory['inventory_id']];
 					}
 				}
 			}
@@ -484,7 +485,7 @@
 			$chosen_resources = phpgw::get_var('chosen_resources');
 			
 			$inventory_ids = phpgw::get_var('inventory_ids');
-			$inventory_ids_orig = phpgw::get_var('inventory_ids_orig');
+			$allocations = phpgw::get_var('allocations');
 			//FIXME: Bruk 'allocation_id' i staden.
 
 //_debug_array($inventory_ids_orig);die();
@@ -510,7 +511,7 @@
 						$resource_alloc->set_resource_id( $resource_id );
 						$resource_alloc->set_inventory_id( $inventory_id );
 						$resource_alloc->set_allocated_amount( $allocated_amount );
-						$resource_alloc->set_allocated_amount_orig( $inventory_ids_orig[$resource] );
+						$resource_alloc->set_id( $allocations[$resource] );
 						$resource_alloc->set_location_id( $requirement->get_location_id() );
 						$resource_alloc->set_create_user( $user_id );
 						$resource_alloc->set_start_date( $requirement->get_start_date() );
