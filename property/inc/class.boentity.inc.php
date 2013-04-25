@@ -680,9 +680,13 @@
 			return $this->so->read_entity_to_link($data);
 		}
 
-		public function get_inventory($location_id, $id, $inventory_id = 0)
+		/**
+		*  array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id)
+		*/
+
+		public function get_inventory($data)
 		{
-			$values = $this->so->get_inventory( array('id' => $id, 'location_id' => $location_id, 'inventory_id' => $inventory_id) );
+			$values = $this->so->get_inventory( $data );
 
 			$interlink 	= CreateObject('property.interlink');
 

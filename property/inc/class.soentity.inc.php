@@ -2378,11 +2378,8 @@
 			$id				= (int)$data['id'];
 			$inventory_id  	= isset($data['inventory_id']) && $data['inventory_id'] ? (int)$data['inventory_id'] : 0;
 
-			if(!$location_id || ! $id)
-			{
-				return array();
-			}
-			
+			$filtermethod = '';
+
 			if($inventory_id)
 			{
 				$filtermethod = "WHERE fm_bim_item_inventory.id = {$inventory_id}";
@@ -2390,6 +2387,11 @@
 			else
 			{
 				$filtermethod = "WHERE location_id = {$location_id} AND fm_bim_item_inventory.item_id = {$id} AND expired_on IS NULL";			
+			}
+
+			if(!$filtermethod)
+			{
+				return array();
 			}
 
 			$sql = "SELECT fm_bim_item_inventory.*, fm_standard_unit.name AS unit FROM fm_bim_item_inventory"

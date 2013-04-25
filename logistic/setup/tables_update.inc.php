@@ -182,6 +182,12 @@
 			'nullable' => true
 		));
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('lg_calendar','item_inventory_amount',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['logistic']['currentver'] = '0.0.6';
