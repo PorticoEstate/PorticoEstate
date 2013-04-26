@@ -411,7 +411,7 @@
 
 			reset($allocation_suggestions);
 
-			$allocated = $this->so->check_calendar($location_id, $suggestion_ids, $requirement->get_start_date(), $requirement->get_end_date() );
+			$allocated = $this->so->check_calendar($requirement, $suggestion_ids);
 //_debug_array($allocated);die();
 //end fuzzy
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -451,8 +451,26 @@
 				{
 					foreach ($allocation_suggestion['inventory'] as & $inventory)
 					{
+						
+						//Allocated to another requirement:
+						if(isset($allocated['allocations'][$inventory['inventory_id']]['requirement_id']) && $requirement->get_id() != $allocated['allocations'][$inventory['inventory_id']]['requirement_id'])
+						{
+							$inventory['disabled'] = true;
+						}
+						
 						$inventory['allocated_amount'] = $allocated['inventory'][$inventory['inventory_id']];
-						$inventory['allocation_id'] = $allocated['allocations'][$inventory['inventory_id']];
+
+						$inventory['bookable_amount'] = (int)$inventory['inventory'] - (int)$allocated['allocations'][$inventory['inventory_id']]['total_allocated'];
+
+						$inventory['allocation_id'] = $allocated['allocations'][$inventory['inventory_id']]['allocation_id'];
+						
+						if($allocated['allocations'][$inventory['inventory_id']]['start_date'])
+						{
+							$inventory['allocated_date'] = $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['start_date'] ,$dateformat)
+											. ' - ' . $GLOBALS['phpgw']->common->show_date($allocated['allocations'][$inventory['inventory_id']]['end_date'] ,$dateformat);
+						}
+
+
 					}
 				}
 			}

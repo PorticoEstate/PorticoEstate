@@ -162,7 +162,7 @@
 								<input type="hidden" name="query" value="{loc1}"/>
 								<input type="submit" name="location" value="{php:function('lang', 'add to project as relation')}">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
+										<xsl:value-of select="php:function('lang', 'click this to link this request to an existing project')"/>
 									</xsl:attribute>
 								</input>
 							</form>

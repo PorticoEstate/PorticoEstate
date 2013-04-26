@@ -338,7 +338,8 @@ click this link to select vendor	property	no	klikk her for å velge leverandør
 click this link to view the remark	property	no	klikk her for å vise merknad
 click this to add an order to an existing project	property	no	klikk her for å legge til en ny bestilling til et eksisterende prosjekt
 click this to generate a request with this information	property	no	klikk her for å generere et behov med basis i denne informasjonen
-click this to generate a project with this information	property	no	klikk her for å lage ett nytt prosjekt med informasjon fra denne saken
+click this to generate a project with this information	property	no	klikk her for å lage et nytt prosjekt med informasjon fra denne saken
+click this to link this request to an existing project	property	no	klikk her for å lenke dette behovet til et eksisterende prosjekt
 click to view file	property	no	Klikk for vise fil
 close	property	no	Avslutt
 closed	property	no	Avsluttet
