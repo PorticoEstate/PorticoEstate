@@ -255,6 +255,7 @@ building	property	no	Bygning
 building common	property	no	Bygnings felles
 building has been edited	property	no	Bygning er endret
 building has been saved	property	no	Bygning er lagret
+buildingname	property	no	BygningsNavn
 building id	property	no	bygnings ID
 building part	property	no	Bygningsdel
 building_part	property	no	Bygningsdel

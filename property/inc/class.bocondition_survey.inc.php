@@ -185,6 +185,11 @@
 		public function read($data = array())
 		{
 			$values = $this->so->read($data);
+			foreach($values as & $entry)
+			{
+				$entry['year'] = date('Y', $entry['entry_date']);
+			}
+
 			$this->total_records = $this->so->total_records;
 			return $values;
 		}

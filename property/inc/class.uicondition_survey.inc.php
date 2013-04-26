@@ -184,8 +184,13 @@
 						),
 						array(
 							'key' => 'address',
-							'label' => lang('address'),
+							'label' => lang('buildingname'),
 							'sortable' => true
+						),
+						array(
+							'key' => 'year',
+							'label' => lang('year'),
+							'sortable' => true,
 						),
 						array(
 							'key' => 'cnt',
