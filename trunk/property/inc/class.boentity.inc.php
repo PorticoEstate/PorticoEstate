@@ -694,8 +694,9 @@
 			{
 				$link_info = $interlink->get_location_link($entry['p_location_id'], $entry['p_id'],'view');
 				$entry['where'] = "<a href='{$link_info['link']}'>{$link_info['name']}</a>";
-				$entry['location_id'] = $location_id;
-				$entry['id'] = $id;
+				$entry['where_name'] = $link_info['name'];
+				$entry['location_id'] = $data['location_id'];
+				$entry['id'] = $data['id'];
 			}
 
 			return $values;

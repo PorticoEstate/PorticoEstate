@@ -260,9 +260,13 @@
 		* Finds allocated items within timespan
 		*
 		*/
-		public function check_calendar($location_id = 0, $ids = array(), $start_date, $end_date)
+		public function check_calendar($requirement, $ids = array())
 		{
-			$location_id = (int)$location_id;
+			$start_date			= $requirement->get_start_date();
+			$end_date			= $requirement->get_end_date();
+			$location_id		= $requirement->get_location_id();
+			$requirement_id		= (int)$requirement->get_id();
+
 			$values = array();
 			$items = array();
 			$inventory = array();
@@ -272,15 +276,19 @@
 			{
 				return $values;
 			}
+
+			// for this requirement
 			$sql = "SELECT lg_calendar.item_id,lg_calendar.item_inventory_id,lg_calendar.item_inventory_amount,"
-			. " lg_requirement.activity_id, lg_calendar.start_date, lg_calendar.end_date,"
+			. " lg_requirement.id AS requirement_id,lg_requirement.activity_id, lg_calendar.start_date, lg_calendar.end_date,"
 			. " lg_requirement_resource_allocation.id AS allocation_id"
 			. " FROM lg_requirement_resource_allocation"
 			. " {$this->join} lg_calendar ON lg_requirement_resource_allocation.calendar_id = lg_calendar.id"
 			. " {$this->join} lg_requirement ON lg_requirement_resource_allocation.requirement_id = lg_requirement.id"
 			. " WHERE lg_calendar.location_id = {$location_id}"
 			. " AND lg_calendar.item_id IN (" . implode(',', $ids) . ')'
-			. " AND lg_calendar.end_date >= {$start_date} AND lg_calendar.start_date <= {$end_date}";
+			. " AND lg_calendar.end_date >= {$start_date} AND lg_calendar.start_date <= {$end_date}"
+			. " AND lg_requirement.id = {$requirement_id}";
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -289,19 +297,52 @@
 				$item_id = $this->db->f('item_id');
 				$item_inventory_id = $this->db->f('item_inventory_id');
 				$item_allocated_amount = $this->db->f('item_inventory_amount');
+				$start_date		= $this->db->f('start_date');
+				$end_date		= $this->db->f('end_date');
+
+
 				$items[$item_id] = true;
 				$inventory[$item_inventory_id] = $item_allocated_amount;
-				$allocations[$item_inventory_id] = $allocation_id;
+				$allocations[$item_inventory_id] = array
+				(
+					'requirement_id'		=> $this->db->f('requirement_id'),
+					'allocation_id' 		=> $allocation_id,
+					'start_date'			=> $start_date,
+					'end_date'				=> $end_date
+				);
+					
 				$values[$item_id][] = array
 				(
-					'start_date'			=> $this->db->f('start_date'),
-					'end_date'				=> $this->db->f('end_date'),
+					'start_date'			=> $start_date,
+					'end_date'				=> $end_date,
 					'activity_id'			=> $this->db->f('activity_id'),
 					'item_id'				=> $item_id,
 					'item_inventory_id'		=> $item_inventory_id,
 					'item_allocated_amount'	=> $item_inventory_amount
 				);
 			}
+
+
+			//total
+			$sql = "SELECT lg_calendar.item_id,lg_calendar.item_inventory_id,lg_calendar.item_inventory_amount,"
+			. " lg_requirement.id AS requirement_id,lg_requirement.activity_id, lg_calendar.start_date, lg_calendar.end_date,"
+			. " lg_requirement_resource_allocation.id AS allocation_id"
+			. " FROM lg_requirement_resource_allocation"
+			. " {$this->join} lg_calendar ON lg_requirement_resource_allocation.calendar_id = lg_calendar.id"
+			. " {$this->join} lg_requirement ON lg_requirement_resource_allocation.requirement_id = lg_requirement.id"
+			. " WHERE lg_calendar.location_id = {$location_id}"
+			. " AND lg_calendar.item_id IN (" . implode(',', $ids) . ')'
+			. " AND lg_calendar.end_date >= {$start_date} AND lg_calendar.start_date <= {$end_date}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$allocation_id = $this->db->f('allocation_id');
+				$item_inventory_id = $this->db->f('item_inventory_id');
+				$allocations[$item_inventory_id]['total_allocated'] += $this->db->f('item_inventory_amount');
+			}
+
 			return array('calendar' => $values, 'items' => $items, 'inventory' => $inventory, 'allocations' => $allocations);
 		}
 
