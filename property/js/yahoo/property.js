@@ -1483,7 +1483,7 @@
 		iframe:sUrl,
 		boxid:'frameless',
 		width:750,
-		height:450,
+		height:500,
 		fixed:false,
 		maskid:'darkmask',
 		maskopacity:40,
