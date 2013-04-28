@@ -935,12 +935,32 @@
 			return $receipt;
 		}
 
-		function update_single_line($values)
+		function update_single_line($values, $paid = false)
 		{
-			$table ='fm_ecobilag';
+			$this->db->transaction_begin();
+
 			$id = (int)$values['id'];
 
-			$this->db->transaction_begin();
+			$table ='fm_ecobilag';
+
+			if($paid) // only minor corrections are allowed
+			{
+				$table = 'fm_ecobilagoverf';
+
+				$value_set = array
+				(
+		//			'project_id'	=> $values['project_group'] ? $values['project_group'] : '',
+					'pmwrkord_code'	=> $values['order_id'],
+		//			'process_log'	=> $this->db->db_addslashes($values['process_log']),
+		//			'process_code'	=> $values['process_code'],
+				);
+
+				$value_set	= $this->db->validate_update($value_set);
+
+				$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+
+				return $this->db->transaction_commit();
+			}
 
 			if( $values['approve'] != $values['sign_orig'] )
 			{
@@ -973,12 +993,6 @@
 						break;
 				}
 
-	//			$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
-	//			$this->db->query($sql,__LINE__,__FILE__);
-	//			$this->db->next_record();
-	//			$bilagsnr = (int)$this->db->f('bilagsnr');
-	//			$value_set	= $this->db->validate_update($value_set);
-	//			$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
 
 				if(isset($value_set['budsjettansvarligid']) && !$value_set['budsjettansvarligid'])
 				{
@@ -1054,7 +1068,7 @@
 				$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$new_id}" ,__LINE__,__FILE__);
 			}
 
-			$this->db->transaction_commit();
+			return $this->db->transaction_commit();
 		}
 
 		function read_remark($id='',$paid='')
@@ -1412,9 +1426,13 @@
 			$this->db->query("DELETE FROM fm_ecobilag WHERE bilagsnr ='" . $bilagsnr  ."'",__LINE__,__FILE__);
 		}
 
-		function read_single_voucher($bilagsnr = 0, $id = 0)
+		function read_single_voucher($bilagsnr = 0, $id = 0, $paid = false)
 		{
 			$table = 'fm_ecobilag';
+			if($paid)
+			{
+				$table = 'fm_ecobilagoverf';
+			}
 
 			$bilagsnr =(int)$bilagsnr;
 			$id = (int)$id;
@@ -1803,9 +1821,9 @@
 		}
 
 
-		public function get_single_line($id)
+		public function get_single_line($id,$paid = false)
 		{
-			$line = $this->read_single_voucher(0, $id);
+			$line = $this->read_single_voucher(0, $id, $paid);
 			return $line[0];
 		}
 
