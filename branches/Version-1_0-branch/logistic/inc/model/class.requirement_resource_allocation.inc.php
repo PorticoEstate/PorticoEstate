@@ -36,7 +36,8 @@
 		protected $id;
 		protected $requirement_id;
 		protected $resource_id;
-		protected $inventory;
+		protected $inventory_id;
+		protected $inventory_amount;
 		protected $location_id;
 		protected $create_user;
 		
@@ -46,7 +47,8 @@
 		protected $fm_bim_item_name;
 		protected $start_date;
 		protected $end_date;
-		
+		protected $allocated_amount;
+		protected $allocated_amount_orig;
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -97,6 +99,16 @@
 		public function get_inventory_id()
 		{
 			return $this->inventory_id;
+		}
+
+		public function set_inventory_amount($inventory_amount)
+		{
+			$this->inventory_amount = $inventory_amount;
+		}
+
+		public function get_inventory_amount()
+		{
+			return $this->inventory_amount;
 		}
 
 		public function set_location_id($location_id)
@@ -180,6 +192,27 @@
 			return $this->start_date;
 		}
 
+		public function set_allocated_amount($allocated_amount)
+		{
+			$this->allocated_amount = $allocated_amount ? $allocated_amount : 1;
+		}
+
+		public function get_allocated_amount()
+		{
+			return $this->allocated_amount;
+		}
+
+		public function set_allocated_amount_orig($allocated_amount)
+		{
+			$this->allocated_amount_orig = $allocated_amount ? $allocated_amount : 1;
+		}
+
+		public function get_allocated_amount_orig()
+		{
+			return $this->allocated_amount_orig;
+		}
+
+
 		/**
 		* Get a static reference to the storage object associated with this model object
 		*
@@ -196,12 +229,16 @@
 
 		public function serialize()
 		{
-			return array(
+			$values = array
+			(
 				'id' 					=> $this->get_id(),
 				'resource_type_descr'	=> $this->get_resource_type_descr(),
 				'requirement_id' 		=> $this->get_requirement_id(),
 				'resource_id' 			=> $this->get_resource_id(),
 				'inventory_id' 			=> $this->get_inventory_id(),
+				//FIXME
+				'inventory_amount' 		=> $this->get_inventory_amount(),
+				'allocated_amount' 		=> $this->get_allocated_amount(),
 				'location_id'	 		=> $this->get_location_id(),
 				'location_code' 		=> $this->get_location_code(),
 				'fm_bim_item_address'	=> $this->get_fm_bim_item_address(),
@@ -209,5 +246,7 @@
 				'start_date'			=> $this->get_start_date(),
 				'end_date'				=> $this->get_end_date()
 			);
+
+			return $values;
 		}
 	}

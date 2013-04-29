@@ -108,25 +108,45 @@
 							  	<xsl:when test="inventory != ''">
 									<xsl:for-each select="inventory">
 										<div>
-											<span class="loc_code"></span>
+											<span class="loc_code"><xsl:value-of select="unit" /></span>
 											<span class="loc_code">
-												<input type="text" value="{allocated}" name="inventory_ids[{//allocation_suggestions/id}_{inventory_id}]" size='4'>
+												<input type="text" value="{allocated_amount}" name="inventory_ids[{//allocation_suggestions/id}_{inventory_id}]" size='4'>
+													<xsl:if test="disabled = '1'">
+														<xsl:attribute name="disabled">
+															<xsl:text>disabled</xsl:text>
+														</xsl:attribute>
+													</xsl:if>
+												</input>
+												<input type="hidden" value="{allocation_id}" name="allocations[{//allocation_suggestions/id}_{inventory_id}]">
 												</input>
 											</span>
-											<span class="loc_code"><xsl:value-of disable-output-escaping="yes" select="where" /></span>
-											<span class="loc_code"><xsl:value-of select="unit" /></span>
-											<span class="loc_code"><xsl:value-of select="inventory" /></span>
-											
+											<span class="loc_code">
+												<xsl:value-of select="bookable_amount" />
+												<xsl:text> ( </xsl:text>
+												<xsl:value-of select="inventory" />
+												<xsl:text> )</xsl:text>
+											</span>
+											<span class="loc_code"><xsl:value-of disable-output-escaping="yes" select="where_name" /></span>
+
+											<xsl:choose>
+											  	<xsl:when test="allocated_amount != ''">
+													<span class="loc_code">
+														<xsl:value-of select="allocated_amount" />
+														<xsl:text> ( </xsl:text>
+														<xsl:value-of select="allocated_date" />
+														<xsl:text> )</xsl:text>
+													</span>											
+											    </xsl:when>
+										  	</xsl:choose>
 										</div>
 									</xsl:for-each>
 							    </xsl:when>
 							    <xsl:otherwise>
-							<span class="loc_id"><xsl:value-of select="location_id" /></span>
-						<!--	<span class="type"><xsl:value-of select="type_lokale" /></span> -->
-							<span class="loc_code"><xsl:value-of select="location_code" /></span>
-							<span class="loc_code"><xsl:value-of select="allocated_date" /></span>
-							<span class="loc_code"><xsl:value-of select="allocated_where" /></span>
-
+									<span class="loc_id"><xsl:value-of select="location_id" /></span>
+							<!--	<span class="type"><xsl:value-of select="type_lokale" /></span> -->
+									<span class="loc_code"><xsl:value-of select="location_code" /></span>
+									<span class="loc_code"><xsl:value-of select="allocated_date" /></span>
+									<span class="loc_code"><xsl:value-of select="allocated_where" /></span>
 							    </xsl:otherwise>
 						  	</xsl:choose>
 

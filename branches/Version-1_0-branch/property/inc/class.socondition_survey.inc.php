@@ -56,6 +56,15 @@
 			$table = 'fm_condition_survey';
 			if ($sort)
 			{
+				switch($sort)
+				{
+					case 'year':
+						$sort = 'entry_date';
+						break;
+					default:
+					//
+				}
+				
 				$metadata = $this->_db->metadata($table);
 				if(isset($metadata[$sort]))
 				{

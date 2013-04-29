@@ -217,8 +217,7 @@
 				
 				$num_required = $entry['no_of_items'];
 	  
-				$filters = array('requirement_id' => $entry['id']);
-				$num_allocated = $this->so_resource_allocation->get_count($search_for, $search_type, $filters);
+				$num_allocated = $this->so_resource_allocation->count_allocated($entry['id']);
 				
 				$entry['allocated'] = $num_allocated;
 				$entry['select'] = "<input class=\"select_line\" type =\"radio\" {$_checked} name=\"values[select_line]\" value=\"{$entry['id']}\">";
