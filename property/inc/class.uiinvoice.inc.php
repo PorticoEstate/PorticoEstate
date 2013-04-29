@@ -2210,7 +2210,8 @@ JS;
 							'menuaction'		=> 'property.uiinvoice.edit',
 							'voucher_id'		=> $voucher_id,
 							'user_lid'			=> $this->user_lid,
-							'target'			=> '_lightbox'
+							'target'			=> '_tinybox',
+							'paid'				=> $paid
 						)),
 						'parameters'	=> $parameters
 					);
@@ -2260,6 +2261,12 @@ JS;
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 
+
+			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
+
+
+
 			//Title of Page
 			$appname = lang('location');
 			if ($paid)
@@ -2285,6 +2292,7 @@ JS;
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 
+			$paid 		= phpgw::get_var('paid', 'bool');
 			$id			= phpgw::get_var('id', 'int', 'GET' , 0);
 			$user_lid	= phpgw::get_var('user_lid', 'string', 'GET');
 			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
@@ -2349,11 +2357,11 @@ JS;
 				{
 					$redirect = true;
 					$values['id'] = $id;
-					$line = $this->bo->update_single_line($values);
+					$line = $this->bo->update_single_line($values,$paid);
 				}
 			}
 
-			$line = $this->bo->get_single_line($id);
+			$line = $this->bo->get_single_line($id, $paid);
 
 //			_debug_array($line);
 
@@ -2437,7 +2445,7 @@ JS;
 
 			$data = array
 			(
-					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id, 'paid' => $paid)) : null,
 					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
@@ -2451,7 +2459,8 @@ JS;
 					'value_amount'			=> $line['amount'],
 					'value_approved_amount'	=> $line['approved_amount'],
 					'value_currency'		=> $line['currency'],
-					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
+					'value_process_log'		=> isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log'],
+					'paid'					=> $paid
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');

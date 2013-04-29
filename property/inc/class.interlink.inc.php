@@ -204,8 +204,19 @@
 			$name = 'N∕A';
 			if( preg_match('/.location./i', $system_location['location']) )
 			{
-				$id = execMethod('property.solocation.get_location_code',$id);
-				$name = $id;
+				$location_code = execMethod('property.solocation.get_location_code',$id);
+
+				$location = execMethod('property.solocation.read_single', $location_code);
+				$location_arr = explode('-', $location_code);
+				$i=1;
+				$name_arr = array();
+				foreach($location_arr as $_dummy)
+				{
+					$name_arr[] = $location["loc{$i}_name"];
+					$i++;
+				}
+
+				$name = implode('::', $name_arr);
 			}
 			else if( preg_match('/.entity./i', $system_location['location']) )
 			{

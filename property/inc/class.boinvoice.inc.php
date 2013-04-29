@@ -235,9 +235,9 @@
 			return $this->so->update_invoice_sub($values);
 		}
 
-		function update_single_line($values)
+		function update_single_line($values, $paid = false)
 		{
-			return $this->so->update_single_line($values);
+			return $this->so->update_single_line($values, $paid);
 		}
 
 		function select_account_class($selected='')
@@ -770,9 +770,9 @@
 			return $values;
 		}
 
-		public function get_single_line($id)
+		public function get_single_line($id, $paid = false)
 		{
-			$line = $this->so->get_single_line($id);
+			$line = $this->so->get_single_line($id, $paid);
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
