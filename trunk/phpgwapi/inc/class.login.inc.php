@@ -69,6 +69,11 @@
 				$GLOBALS['phpgw']->hooks->process('set_auth_type', array($frontend));
 			}
 			
+			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try
+			{
+				$GLOBALS['phpgw_info']['server']['auth_type'] = $GLOBALS['phpgw_remote_user_fallback'];
+			}
+
 			/* Program starts here */
 			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
@@ -201,6 +206,7 @@
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'custom_sso' && !isset($_GET['cd']))
 			{
+
 				//Reset auth object
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
@@ -239,6 +245,7 @@
 				$GLOBALS['phpgw']->hooks->process('login');
 				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
 			}
+
 
 			if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 			{
