@@ -2158,7 +2158,6 @@ if(!$order_budget[0]['closed_order'])
 					}
 					if(!$_found)
 					{
-						$_orders[$period]['actual_cost'] += $budget_entry['actual_cost'];
 						$_orders[$period]['sum_oblications'] += $budget_entry['sum_oblications'];
 						$_orders[$period]['sum_orders'] += $budget_entry['sum_orders'];
 					}
