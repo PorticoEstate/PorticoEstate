@@ -51,6 +51,11 @@
 		private $so_control_item_list;
 		private $so_control_group_list;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+
 		public $public_functions = array
 		(
 			'index'																=>	true,
@@ -71,11 +76,17 @@
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_group";
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 		}
 
 		public function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
+			if(phpgw::get_var('phpgw_return_as') == 'json')
+			{
 				return $this->query();
 			}
 
@@ -204,6 +215,12 @@
 
 			if(isset($_POST['save_control_group'])) // The user has pressed the save button
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.index'));
+				}
+
 				if(isset($control_group)) // Add new values to the control item
 				{
 					$control_group->set_group_name(phpgw::get_var('group_name'));
@@ -260,6 +277,12 @@
 			}
 			else if(isset($_POST['remove_control_group_items']))
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.index'));
+				}
+
 				$control_item_ids = array();
 				// Fetching selected control items
 				$control_tag_ids = phpgw::get_var('item_remove_ids');
@@ -388,6 +411,12 @@
 			}
 			else if(isset($_POST['save_control_group_items']))
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.index'));
+				}
+
 				$tab_to_display = 'control_group_items';
 				//update control items with control group id
 				//$control_group_id = phpgw::get_var('control_group_id');
@@ -534,6 +563,12 @@
 
 		public function save_group_and_item_order()
 		{
+			if(!$this->add && !$this->edit)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol_group.index'));
+			}
+
 			$control_id = phpgw::get_var('control_id');
 			$item_order_str = phpgw::get_var('item_order');
 			$group_order_str = phpgw::get_var('group_order');
@@ -644,7 +679,8 @@
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
-			else {
+			else
+			{
 				$user_rows_per_page = 10;
 			}
 
@@ -767,12 +803,18 @@
 				$control_groups_array = $this->so->get_all_control_groups_array();
 			}
 			else
+			{
 				$control_groups_array = $this->so->get_control_groups_by_control_area($control_area_id);
+			}
 
 			if(count($control_groups_array)>0)
+			{
 				return json_encode( $control_groups_array );
+			}
 			else
+			{
 				return null;
+			}
 		}
 
 		public function get_control_area_by_control_group()
@@ -798,9 +840,13 @@
 			}
 
 			if(count($control_areas_array)>0)
+			{
 				return json_encode( $control_areas_array );
+			}
 			else
+			{
 				return null;
+			}
 		}
 
 	}

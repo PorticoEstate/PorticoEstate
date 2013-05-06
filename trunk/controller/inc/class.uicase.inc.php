@@ -61,7 +61,12 @@
         private $so_check_list;
 
         private $location_finder;
-    
+
+ 	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+   
 		var $public_functions = array(
             'add_case' 				=> true,
 			'save_case' 			=> true,
@@ -92,7 +97,12 @@
             $this->so_check_list            = CreateObject('controller.socheck_list');
       
             $this->location_finder          = new location_finder();
-		}	
+
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+ 		}	
 		
         function add_case()
 		{
@@ -178,7 +188,13 @@
                                       'check_list/fragments/select_buildings_on_property'), $data);
 		}
     
-		function save_case_ajax(){
+		function save_case_ajax()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				return json_encode( array( "status" => "not_saved" ) );
+			}
+
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
@@ -194,7 +210,8 @@
 			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
 							
 			// Makes a check item if there isn't already made one  
-			if($check_item == null){
+			if($check_item == null)
+			{
 				$new_check_item = new controller_check_item();
 				$new_check_item->set_check_list_id( $check_list_id );
 				$new_check_item->set_control_item_id( $control_item_id );
@@ -219,31 +236,44 @@
             $case->set_location_code( $location_code );
 
 			// Saves selected value from  or measurement
-			if($type == 'control_item_type_2'){
+			if($type == 'control_item_type_2')
+			{
 				$measurement = phpgw::get_var('measurement');
 				$case->set_measurement( $measurement );
-			}else if($type == 'control_item_type_3'){
+			}
+			else if($type == 'control_item_type_3')
+			{
 				$option_value = phpgw::get_var('option_value');
 				$case->set_measurement( $option_value );
-			}else if($type == 'control_item_type_4'){
+			}
+			else if($type == 'control_item_type_4')
+			{
 				$option_value = phpgw::get_var('option_value');
 				$case->set_measurement( $option_value );
 			}
 			
 			$case_id = $this->so->store($case);
 			
-			if($case_id > 0){
+			if($case_id > 0)
+			{
 				$cl_status_updater = new check_list_status_updater();
 				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "saved" ) );
 			}
-			else{
+			else
+			{
 				return json_encode( array( "status" => "not_saved" ) );
 			}
 		}
     
-		function save_case(){
+		function save_case()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				return json_encode( array( "status" => "not_saved" ) );
+			}
+
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
 			$case_status = phpgw::get_var('case_status');
@@ -258,33 +288,36 @@
 			$case->set_measurement($measurement);
 			$case->set_status($case_status);
 			
-      if($case->validate())
-      {
-        $case_id = $this->so->store($case);
-        $case = $this->so->get_single($case_id);
+ 			if($case->validate())
+			{
+				$case_id = $this->so->store($case);
+				$case = $this->so->get_single($case_id);
 
-        if($case_id > 0){
-          $cl_status_updater = new check_list_status_updater();
-          $cl_status_updater->update_check_list_status( $check_list_id );
+				if($case_id > 0)
+				{
+					$cl_status_updater = new check_list_status_updater();
+					$cl_status_updater->update_check_list_status( $check_list_id );
 
-          $check_item = $this->so_check_item->get_single($case->get_check_item_id());
-          $control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
+					$check_item = $this->so_check_item->get_single($case->get_check_item_id());
+					$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
 
-          $type = $control_item->get_type();
+					$type = $control_item->get_type();
 
-          return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
-        }
-        else{
-          return json_encode( array( "status" => "not_saved" ) );
-        }
-      }
-      else
-      {
-        return json_encode( array( "status" => "error" ) );
-      }
+					return json_encode( array( "status" => "saved", "type" => $type, "caseObj" => $case->toArray() ) );
+				}
+				else
+				{
+					return json_encode( array( "status" => "not_saved" ) );
+				}
+			}
+			else
+			{
+				return json_encode( array( "status" => "error" ) );
+			}
 		}
 		
-		function create_case_message(){
+		function create_case_message()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
@@ -360,13 +393,20 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
 		}
 		
-		function send_case_message(){
+		function send_case_message()
+		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$location_code = phpgw::get_var('location_code');
 			$message_title = phpgw::get_var('message_title');
 			$message_cat_id = phpgw::get_var('message_cat_id');
 			$case_ids = phpgw::get_var('case_ids');
 			
+			if(!$this->add && !$this->edit)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));
+			}
+
 			$check_list = $this->so_check_list->get_single($check_list_id);
 						
 			$control_id = $check_list->get_control_id();
@@ -388,7 +428,8 @@
 			
 			// Generates message details from comment field in check item 
 			$counter = 1;
-			foreach($case_ids as $case_id){
+			foreach($case_ids as $case_id)
+			{
 				$case = $this->so->get_single($case_id);
 				$message_details .= "Gjøremål $counter: ";
 				$message_details .=  $case->get_descr() . "<br>";
@@ -443,7 +484,8 @@
 						
 			// Registers message and updates check items with message ticket id
 
-			foreach($case_ids as $case_id){
+			foreach($case_ids as $case_id)
+			{
 				$case = $this->so->get_single($case_id);
 				$case->set_location_id($location_id_ticket);
 				$case->set_location_item_id($message_ticket_id);
@@ -527,11 +569,17 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/view_case_message'), $data);
 		}
 		
-		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0){
-			
+		public function updateStatusForCases($location_id, $location_item_id, $updateStatus = 0)
+		{
+			if(!$this->add && !$this->edit)
+			{
+				return;
+			}
+
 			$cases_array = $this->so->get_cases_by_message( $location_id, $location_item_id );
 
-			if(!empty ( $cases_array ) ){
+			if(!empty ( $cases_array ) )
+			{
 				// Updates status for cases related to message  
 				foreach($cases_array as $case){
 					$case->set_status( $updateStatus );
@@ -556,24 +604,36 @@
 		
 		public function delete_case()
 		{
+			if(!$this->delete)
+			{
+				return json_encode( array( "status" => "not_deleted" ) );
+			}
+
 			$case_id = phpgw::get_var('case_id');
 			$check_list_id = phpgw::get_var('check_list_id');
 				
 			$status = $this->so->delete($case_id);
 		
-			if($status){
+			if($status)
+			{
 				$cl_status_updater = new check_list_status_updater();
 				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "deleted" ) );
 			}
-			else{
+			else
+			{
 				return json_encode( array( "status" => "not_deleted" ) );
 			}
 		}
 		
 		public function close_case()
 		{
+			if(!$this->add && !$this->edit)
+			{
+				return json_encode( array( "status" => "false" ) );
+			}
+
 			$case_id = phpgw::get_var('case_id');
 			$check_list_id = phpgw::get_var('check_list_id');
 				
@@ -588,13 +648,19 @@
 						
 				return json_encode( array( "status" => "true" ) );
 			}
-			else{
+			else
+			{
 				return json_encode( array( "status" => "false" ) );
 			}
 		}
 		
 		public function open_case()
 		{
+			if(!$this->add && !$this->edit)
+			{
+				return json_encode( array( "status" => "false" ) );
+			}
+
 			$case_id = phpgw::get_var('case_id');
 			$check_list_id = phpgw::get_var('check_list_id');
 				
@@ -603,13 +669,15 @@
 			
 			$case_id = $this->so->store($case);
 					
-			if($case_id > 0){
+			if($case_id > 0)
+			{
 				$cl_status_updater = new check_list_status_updater();
 				$cl_status_updater->update_check_list_status( $check_list_id );
 						
 				return json_encode( array( "status" => "true" ) );
 			}
-			else{
+			else
+			{
 				return json_encode( array( "status" => "false" ) );
 			}
 		}
