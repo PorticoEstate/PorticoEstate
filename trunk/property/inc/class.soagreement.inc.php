@@ -854,6 +854,8 @@
 			$value_set['descr']	= $values['descr'];
 			$value_set['group_id']	= $values['group_id'];
 			$value_set['status']	= $values['status'];
+			$value_set['vendor_id']	= $values['vendor_id'];
+
 			if($value_set)
 			{
 				$value_set	= ',' . $this->db->validate_update($value_set);
