@@ -42,6 +42,11 @@
 		private $so_control_group_list;
 		private $so_control_group;
 
+	    private $read;
+	    private $add;
+	    private $edit;
+	    private $delete;
+
 		public $public_functions = array
 		(
 			'index'							=>	true,
@@ -65,6 +70,11 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+
 			$config	= CreateObject('phpgwapi.config','controller');
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
@@ -180,6 +190,12 @@
 
 			if(isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));
+				}
+
 				if(isset($procedure)) // Edit procedure
 				{
 					$description_txt = phpgw::get_var('description','html');
@@ -238,6 +254,12 @@
 			}
 			else if(isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
 			{
+				if(!$this->add && !$this->edit)
+				{
+					phpgwapi_cache::message_set('No access', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));
+				}
+
 				$old_procedure = $this->so->get_single($procedure_id);
 				if(isset($procedure)) // Edit procedure
 				{
@@ -533,7 +555,8 @@
 			}
 		}
 
-		public function view_procedures_for_control(){
+		public function view_procedures_for_control()
+		{
 			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			
@@ -567,7 +590,8 @@
 			self::render_template_xsl('procedure/view_procedures_for_control', $data);
 		}
 		
-		public function print_procedure(){
+		public function print_procedure()
+		{
 			$procedure_id = phpgw::get_var('procedure_id');
 			$location_code = phpgw::get_var('location_code');
 			$control_id = phpgw::get_var('control_id');
@@ -590,7 +614,8 @@
 				'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
 			);
 			
-			if( !empty($control_group_id) ){
+			if( !empty($control_group_id) )
+			{
 				$control_group = $this->so_control_group->get_single($control_group_id);
 				$data['control_group'] = $control_group->toArray(); 
 			}
@@ -693,7 +718,7 @@
 
 		}
 
-			public function add_actions(&$value, $key, $params)
+		public function add_actions(&$value, $key, $params)
 		{
 			//Defining new columns
 			$value['ajax'] = array();
