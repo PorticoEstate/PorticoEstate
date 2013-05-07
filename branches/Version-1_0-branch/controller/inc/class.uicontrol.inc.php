@@ -60,6 +60,11 @@
     private $so_check_item;
     private $_category_acl;		
 
+    private $read;
+    private $add;
+    private $edit;
+    private $delete;
+
     public $public_functions = array
     (
 			'index'													=>	true,
@@ -80,12 +85,12 @@
 		{
 			parent::__construct('controller');
 
-			$read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
-			$add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
-			$edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
-			$delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
+			$this->read    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
+			$this->add     = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
+			$this->edit    = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4 
+			$this->delete  = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8 
 			
-			$manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
+			$this->manage  = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 
 			//if(!$manage)
 			
@@ -323,7 +328,13 @@
 		 * @param HTTP:: control id, control details fields
 		 * @return redirect to function view_control_groups
 		 */
-		public function save_control_details(){
+		public function save_control_details()
+		{
+			if(!$this->add && !$this->edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol.index'));
+			}
+
 			$control_id = phpgw::get_var('control_id');
 			
 			// Update existing control details
@@ -366,7 +377,8 @@
 				
 				$control_id = $this->so->store($control);
 				$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id' => $control_id));	
-			}else
+			}
+			else
 			{
 					$this->view_control_details($control);
 			}
@@ -439,6 +451,11 @@
 		 */
 		public function save_control_groups()
 		{
+			if(!$this->add && !$this->edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'controller.uicontrol.index'));
+			}
+
 			$control_id = phpgw::get_var('control_id');
 			$control_group_ids = phpgw::get_var('control_group_ids');
 

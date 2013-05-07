@@ -7,26 +7,26 @@
  */
 class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
 {
-    
+
     protected function parseImplementation($var, $type, $allow_null) {
         if ($allow_null && $var === null) return null;
         switch ($type) {
             // Note: if code "breaks" from the switch, it triggers a generic
             // exception to be thrown. Specific errors can be specifically
             // done here.
-            case 'mixed':
-            case 'istring':
-            case 'string':
-            case 'text':
-            case 'itext':
+            case self::MIXED :
+            case self::ISTRING :
+            case self::STRING :
+            case self::TEXT :
+            case self::ITEXT :
                 return $var;
-            case 'int':
+            case self::INT :
                 if (is_string($var) && ctype_digit($var)) $var = (int) $var;
                 return $var;
-            case 'float':
+            case self::FLOAT :
                 if ((is_string($var) && is_numeric($var)) || is_int($var)) $var = (float) $var;
                 return $var;
-            case 'bool':
+            case self::BOOL :
                 if (is_int($var) && ($var === 0 || $var === 1)) {
                     $var = (bool) $var;
                 } elseif (is_string($var)) {
@@ -39,9 +39,9 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
                     }
                 }
                 return $var;
-            case 'list':
-            case 'hash':
-            case 'lookup':
+            case self::ALIST :
+            case self::HASH :
+            case self::LOOKUP :
                 if (is_string($var)) {
                     // special case: technically, this is an array with
                     // a single empty string item, but having an empty
@@ -56,13 +56,13 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
                     }
                     // remove spaces
                     foreach ($var as $i => $j) $var[$i] = trim($j);
-                    if ($type === 'hash') {
+                    if ($type === self::HASH) {
                         // key:value,key2:value2
                         $nvar = array();
                         foreach ($var as $keypair) {
                             $c = explode(':', $keypair, 2);
                             if (!isset($c[1])) continue;
-                            $nvar[$c[0]] = $c[1];
+                            $nvar[trim($c[0])] = trim($c[1]);
                         }
                         $var = $nvar;
                     }
@@ -70,8 +70,8 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
                 if (!is_array($var)) break;
                 $keys = array_keys($var);
                 if ($keys === array_keys($keys)) {
-                    if ($type == 'list') return $var;
-                    elseif ($type == 'lookup') {
+                    if ($type == self::ALIST) return $var;
+                    elseif ($type == self::LOOKUP) {
                         $new = array();
                         foreach ($var as $key) {
                             $new[$key] = true;
@@ -79,8 +79,15 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
                         return $new;
                     } else break;
                 }
-                if ($type === 'lookup') {
+                if ($type === self::ALIST) {
+                    trigger_error("Array list did not have consecutive integer indexes", E_USER_WARNING);
+                    return array_values($var);
+                }
+                if ($type === self::LOOKUP) {
                     foreach ($var as $key => $value) {
+                        if ($value !== true) {
+                            trigger_error("Lookup array has non-true value at key '$key'; maybe your input array was not indexed numerically", E_USER_WARNING);
+                        }
                         $var[$key] = true;
                     }
                 }
@@ -90,5 +97,7 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
         }
         $this->errorGeneric($var, $type);
     }
-    
+
 }
+
+// vim: et sw=4 sts=4
