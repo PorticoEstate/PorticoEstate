@@ -203,7 +203,7 @@
 							$saksbehandlerid = 'ho1330';
 							break;
 						case '2':
-							$saksbehandlerid = 'jl9258';
+							$saksbehandlerid = 'ef584';
 							break;
 						case '3':
 							$saksbehandlerid = 'shl5631';
