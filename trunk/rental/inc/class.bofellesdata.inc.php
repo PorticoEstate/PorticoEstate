@@ -459,7 +459,7 @@
 		{
 			$this->log(__class__, __function__);
 
-			$columns = "count(*)";
+			$columns = "count(*) as COUNT";
 			$tables = "V_ORG_ENHET";
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
 						"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
@@ -500,7 +500,7 @@
 			
 			if($db->next_record())
 			{
-				return $db->f('count');
+				return $db->f('COUNT');
 			}
 			return 0;
 		}
