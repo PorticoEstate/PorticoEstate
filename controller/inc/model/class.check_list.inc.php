@@ -48,6 +48,8 @@
 		protected $location_code;
 		protected $component_id;
 		protected $location_id;
+		protected $assigned_to;
+		protected $billable_hours;
 		
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
@@ -175,21 +177,43 @@
 		{
 			$this->error_msg_array = $error_msg_array;
 		}
+
+		public function set_assigned_to($assigned_to)
+		{
+			$this->assigned_to = $assigned_to;
+		}
+		
+		public function get_assigned_to()
+		{
+			return $this->assigned_to;
+		}
+
+		public function set_billable_hours($billable_hours)
+		{
+			$this->billable_hours = $billable_hours;
+		}
+		
+		public function get_billable_hours()
+		{
+			return $this->billable_hours;
+		}
 		
 		public function serialize()
 		{
 			return array(
-				'id' 							=> $this->get_id(),
-				'control_id' 			=> $this->get_control_id(),
-				'status' 					=> $this->get_status(),
-				'comment' 				=> $this->get_comment(),
-				'deadline' 				=> $this->get_deadline(),
+				'id' 				=> $this->get_id(),
+				'control_id' 		=> $this->get_control_id(),
+				'status' 			=> $this->get_status(),
+				'comment' 			=> $this->get_comment(),
+				'deadline' 			=> $this->get_deadline(),
 				'planned_date' 		=> $this->get_planned_date(),
 				'completed_date' 	=> $this->get_completed_date(),
 				'location_code' 	=> $this->get_location_code(),
 				'component_id' 		=> $this->get_component_id(),
 				'location_id' 		=> $this->get_location_id(),
-				'num_open_cases' 	=> $this->get_num_open_cases()
+				'num_open_cases' 	=> $this->get_num_open_cases(),
+				'assigned_to'		=> $this->get_assigned_to(),
+				'billable_hours'	=> $this->get_billable_hours()
 			);
 		}
 		
@@ -199,40 +223,40 @@
 	
 			// Validate CONTROL ID
 			if( empty( $this->control_id ) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['control_id'] = "error_msg_4";
-		  }
+			{
+				$status = false;
+				$this->error_msg_array['control_id'] = "error_msg_4";
+			}
 		 
-		  // Validate STATUS		  		  
+			// Validate STATUS		  		  
 			if( ($this->status != controller_check_list::STATUS_NOT_DONE) && ($this->status != controller_check_list::STATUS_DONE) && ($this->status != controller_check_list::STATUS_CANCELED))
-		  { 
-		  	$status = false;
-		  	$this->error_msg_array['status'] = "error_msg_2";
-		  }
+			{ 
+				$status = false;
+				$this->error_msg_array['status'] = "error_msg_2";
+			}
 		    
-		  // Validate COMPLETED DATE when STATUS:DONE		  		  
+			// Validate COMPLETED DATE when STATUS:DONE		  		  
 			if( ($this->status == controller_check_list::STATUS_DONE) && empty($this->completed_date) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['completed_date'] = "error_msg_5";
-		  }
+			{
+				$status = false;
+				$this->error_msg_array['completed_date'] = "error_msg_5";
+			}
 	
-		  // Validate DEADLINE	  		  
+			// Validate DEADLINE	  		  
 			if( empty( $this->deadline ) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['deadline'] = "error_msg_1";
-		  }
+			{
+				$status = false;
+				$this->error_msg_array['deadline'] = "error_msg_1";
+			}
 	
 			// Validate connection to COMPONENT/LOCATION
 			if( empty( $this->location_code ) && empty( $this->component_id ) )
-		  {
-		  	echo "FAILED: " . $this->location_code; 
-		  	$status = false;
-		  	$this->error_msg_array['location_code'] = "error_msg_6";
-		  }
+			{
+				echo "FAILED: " . $this->location_code; 
+				$status = false;
+				$this->error_msg_array['location_code'] = "error_msg_6";
+			}
 	
-		  return $status;
+			return $status;
 		}
 	}
