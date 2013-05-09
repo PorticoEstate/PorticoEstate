@@ -33,6 +33,32 @@
 	* @param $config
 	* @return string HTML checkboxes to be placed in a table
 	*/
+	function fmtts_assign_group_candidates($config)
+	{
+		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups_assigned = isset($config['fmtts_assign_group_candidates']) ? $config['fmtts_assign_group_candidates'] : array();
+		$out = '';
+		foreach ( $groups as $group => $label)
+		{
+			$checked = '';
+			if ( in_array($group, $groups_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[fmtts_assign_group_candidates][]" value="{$group}" {$checked}><label>{$label}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
+	* Get HTML checkbox with groups that are candidates for simplified tts interface
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
 	function fmttssimple_group($config)
 	{
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');

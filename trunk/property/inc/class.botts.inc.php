@@ -316,7 +316,49 @@
 			return $columns;
 		}
 
+		function get_group_list($selected = 0)
+		{
+			$query='';
+			$group_list	= $this->bocommon->get_group_list('select', $selected, $start=-1, $sort='ASC', $order='account_firstname', $query, $offset=-1);
+			$_candidates = array();
+			if(isset($this->config->config_data['fmtts_assign_group_candidates']) && is_array($this->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach($this->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if( $group_candidate )
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
 
+			if( $_candidates )
+			{
+				if($selected)
+				{
+					if( !in_array( $selected, $_candidates) )
+					{
+						$_candidates[] = $selected;
+					}
+				}
+
+				$values = array();
+				foreach ($group_list as $group)
+				{
+					if( in_array( $group['id'], $_candidates) )
+					{
+						$values[] = $group;
+					}
+				}
+
+				return $values;
+			}
+			else
+			{
+				return $group_list;
+
+			}
+		}
 
 		function filter($data=0)
 		{
