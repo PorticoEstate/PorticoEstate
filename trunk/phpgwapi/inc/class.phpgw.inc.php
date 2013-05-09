@@ -418,6 +418,7 @@
 
 					case 'float':
 					case 'double':
+						$value = str_replace(array(' ',','),array('','.'), $value);
 						if ( (float) $value == $value )
 						{
 								return (float) $value;
