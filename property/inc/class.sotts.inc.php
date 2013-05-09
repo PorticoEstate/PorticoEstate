@@ -1009,7 +1009,7 @@
 			$old_status  			= $this->db->f('status');
 			$ticket['old_status']	= $old_status; // used for custom functions
 			$old_budget  			= $this->db->f('budget');
-			$old_billable_hours		= $this->db->f('billable_hours');
+			$old_billable_hours		= (float)$this->db->f('billable_hours');
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject			= $this->db->f('subject');
 			$old_contact_id			= $this->db->f('contact_id');
@@ -1215,9 +1215,10 @@
 			if($ticket['billable_hours'])
 			{
 				$ticket['billable_hours'] = (float)str_replace(',','.', $ticket['billable_hours']);
-			}
-			if ((float)$old_billable_hours != $ticket['billable_hours'])
-			{
+				$ticket['billable_hours'] += (float)$old_billable_hours;
+//			}
+//			if ((float)$old_billable_hours != $ticket['billable_hours'])
+//			{
 				$this->db->query("UPDATE fm_tts_tickets SET billable_hours='{$ticket['billable_hours']}'"
 					. " WHERE id='{$id}'",__LINE__,__FILE__);
 				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);

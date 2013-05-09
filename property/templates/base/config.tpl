@@ -238,7 +238,26 @@
 				{lang_default}: {lang_Open}</td>
 			<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
 		</tr>
+		<tr class="row_off">
+			<td valign = 'top'>{lang_TTS_assign_group_candidates}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[fmtts_assign_group_candidates][]" value="">
+				<table>
+					{hook_fmtts_assign_group_candidates}
+				</table>
+			</td>
+		</tr>
 		<tr class="row_on">
+			<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
+			<td>
+				<select name="newsettings[tts_disable_userassign_on_add]">
+					<option value="" {selected_tts_disable_userassign_on_add_}>NO</option>
+					<option value="1" {selected_tts_disable_userassign_on_add_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
 			<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 			<td>
 				<!--to be able to blank the setting - need an empty value-->
@@ -266,7 +285,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Owner_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[ownernotification]">
@@ -275,7 +294,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Assigned_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[assignednotification]">
@@ -284,7 +303,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Group_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[groupnotification]">
