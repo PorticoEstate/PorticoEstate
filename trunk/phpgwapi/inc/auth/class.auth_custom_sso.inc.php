@@ -8,7 +8,7 @@
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
 	* @package phpgwapi
 	* @subpackage accounts
-	* @version $Id: class.auth_custom_sso.inc.php 10127 2012-10-07 17:06:01Z sigurdne $
+	* @version $Id: class.auth_sql.inc.php 10166 2012-10-09 07:54:03Z sigurdne $
 	*/
 
 	/*
@@ -44,13 +44,13 @@
 		}
 
 		/**
-		* Authenticate a user based on SSO
+		* Authenticate a user
 		*
 		* @param string $username the login to authenticate
 		* @param string $passwd the password supplied by the user
 		* @return bool did the user sucessfully authenticate
 		*/
-		public function authenticate($username, $passwd='')
+		public function authenticate($username, $passwd)
 		{
 			$username = $GLOBALS['phpgw']->db->db_addslashes($username);
 
@@ -60,6 +60,7 @@
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			return !!$GLOBALS['phpgw']->db->next_record();
+	
 		}
 
 		/* php ping function
@@ -69,6 +70,7 @@
 	        exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
 	        return $rval === 0;
 		}
+
 
 		public function get_username()
 		{
