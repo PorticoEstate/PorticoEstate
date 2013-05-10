@@ -83,7 +83,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
-        $case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 					
 				return $case;
 			}
@@ -123,7 +123,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
-        $case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
+				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				
 				$cases_array[] = $case;
 			}
@@ -139,6 +139,8 @@
 		*/
 		function add(&$case)
 		{
+			$this->db->transaction_begin();
+
 			$cols = array(
 					'check_item_id',
 					'status',
@@ -150,7 +152,7 @@
 					'modified_date',
 					'modified_by',
 					'measurement',
-          'location_code'
+					'location_code'
 			);
 
 			$values = array(
@@ -164,13 +166,76 @@
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
 				$this->marshal($case->get_measurement(), 'string'),
-        $this->marshal($case->get_location_code(), 'string')
+				$this->marshal($case->get_location_code(), 'string')
 			);
 
-      $sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
-      $result = $this->db->query( $sql, __LINE__,__FILE__);
+			$sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
+			$this->db->query( $sql, __LINE__,__FILE__);
+			$case_id = $this->db->get_last_insert_id('controller_check_item_case', 'id');
+			
+//--------
 
-			return $result ? $this->db->get_last_insert_id('controller_check_item_case', 'id') : 0;
+			$this->update_cases_on_check_list($case->get_check_item_id());
+			
+
+//------
+
+			if($this->db->transaction_commit())
+			{
+				return $case_id;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+
+		function update_cases_on_check_list($check_item_id = 0)
+		{
+			$check_item_id = (int) $check_item_id;
+			$sql = "SELECT check_list_id  FROM controller_check_item WHERE id = {$check_item_id}";
+
+			$this->db->query($sql, __LINE__,__FILE__);
+			$this->db->next_record();
+			$check_list_id = (int) $this->db->f('check_list_id');
+		
+			$so_check_item = CreateObject('controller.socheck_item');
+			$check_items = $so_check_item->get_check_items_with_cases($check_list_id, $control_item_type = null, $status = null, $messageStatus = null);
+	
+			$num_open_cases = 0;
+			$num_pending_cases = 0;
+					
+			foreach($check_items as $check_item)
+			{
+				foreach($check_item->get_cases_array() as $case)
+				{
+					
+					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					{
+						$num_open_cases++;
+					}
+					
+					if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					{
+						$num_pending_cases++;
+					}
+				}	
+			}
+			
+			$values = array
+			(
+				'num_open_cases' => $num_open_cases,
+				'num_pending_cases' => $num_pending_cases,
+			);
+
+			if($num_open_cases > 0)
+			{
+				$values['status'] = controller_check_list::STATUS_DONE;
+			}
+
+			$value_set	= $this->db->validate_update($values);
+			$this->db->query("UPDATE controller_check_list SET {$value_set} WHERE id = '{$check_list_id}'",__LINE__,__FILE__);
 		}
 
 		/**
@@ -181,6 +246,8 @@
 		*/
 		function update($case)
 		{
+			$this->db->transaction_begin();
+
 			$id = (int) $case->get_id();
 			
 			$values = array(
@@ -194,12 +261,14 @@
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
 				'measurement = ' . $this->marshal($case->get_measurement(), 'string'),
-        'location_code = ' . $this->marshal($case->get_location_code(), 'string')
+				'location_code = ' . $this->marshal($case->get_location_code(), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_check_item_case SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
-			if( $result )
+			$this->update_cases_on_check_list($case->get_check_item_id());
+
+			if($this->db->transaction_commit())
 			{
 				return $id;
 			}
