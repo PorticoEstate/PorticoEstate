@@ -929,20 +929,25 @@
 		}
 
 		/**
-		 * Get the user_id for a particular responsibility
+		 * Get the user_id for a particular responsibility at a location
 		 *
-		 * @param integer $person_id the ID of the given contact
+		 * @param array 
 		 *
 		 * @return user_id
 		 */
 
-		public function get_responsible_user_id($responsibility_id)
+		public function get_responsible_user_id($data = array())
 		{
-			$responsibility_id = (int)$responsibility_id;
+			$responsibility_id = (int)$data['responsibility_id'];
+			$location_code = $data['location_code'];
 			$now = time();
+
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
 				. " {$this->join} fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
-				. " AND active = 1 AND active_from < {$now} AND active_to > {$now} AND expired_on IS NULL";
+				. " WHERE fm_responsibility.id = {$responsibility_id}"
+				. " AND active_from < {$now}"
+				. " AND expired_on IS NULL"
+				. " AND location_code = '{$location_code}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record(); 
