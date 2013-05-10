@@ -443,6 +443,8 @@
 
 		public function view_calendar_year_for_locations()
 		{
+			static $_location_name = array();
+
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
 			$year = phpgw::get_var('year');
@@ -530,6 +532,28 @@
 				foreach ($components_for_control_array as $component)
 				{
 					$short_desc_arr = execMethod('property.soentity.get_short_description', array('location_id' => $component->get_location_id(), 'id' => $component->get_id()));
+
+					//FIXME - make generic
+					
+				/*=>*/
+					if(!isset($_location_name[$component->get_location_code()]))
+					{
+						$_location = execMethod('property.solocation.read_single', $component->get_location_code());
+						$location_arr = explode('-', $component->get_location_code());
+						$i=1;
+						$name_arr = array();
+						foreach($location_arr as $_dummy)
+						{
+							$name_arr[] = $_location["loc{$i}_name"];
+							$i++;
+						}
+
+						$_location_name[$component->get_location_code()]= implode('::', $name_arr);
+					}
+
+					$short_desc_arr .= ' ['. $_location_name[$component->get_location_code()] . ']';
+				/*<=*/
+
 					$component->set_xml_short_desc($short_desc_arr);
 
 					$repeat_type = $control->get_repeat_type();
