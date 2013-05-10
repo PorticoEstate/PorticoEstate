@@ -241,6 +241,7 @@
 				$level = $this->location_finder->get_location_level($location_code);
 			}
 
+
 			if($type == "component")
 			{
 				if($check_list != null)
@@ -252,6 +253,15 @@
 				}
 
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+
+//
+				$location_code = $component_arr['location_code'];
+
+				$check_list->set_location_code($location_code);
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
+				$level = $this->location_finder->get_location_level($location_code);
+
+//
 				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
@@ -260,6 +270,7 @@
 
 				$component_array = $component->toArray();
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+
 				$type = "component";
 			}
 			else
