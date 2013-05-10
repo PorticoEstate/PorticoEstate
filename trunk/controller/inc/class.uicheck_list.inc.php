@@ -44,7 +44,6 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
-	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 	include_class('controller', 'date_converter', 'inc/helper/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 
@@ -500,9 +499,6 @@
 			{
 				$check_list_id = $this->so->store($check_list);
 
-//				$cl_status_updater = new check_list_status_updater();
-//				$cl_status_updater->update_check_list_status($check_list_id);
-//die();
 				if($check_list_id > 0)
 				{
 					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list', 'check_list_id' => $check_list_id));

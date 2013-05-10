@@ -49,7 +49,7 @@
 		protected $modified_date;
 		protected $modified_by;
 		protected $measurement;
-    protected $location_code;
+		protected $location_code;
     
 		
 		/**

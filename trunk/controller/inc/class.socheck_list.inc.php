@@ -854,7 +854,6 @@ class controller_socheck_list extends controller_socommon
 
 		$sql = 'UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id = {$id}";
 
-_debug_array($sql);
 		$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if($result)
