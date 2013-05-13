@@ -989,7 +989,7 @@
 					'import_type'				=> 'import type',
 					'building_part'				=> 'bygningsdels kode',
 					'descr'						=> 'Tilstandbeskrivelse',
-					'title'						=> 'Tiltak',
+					'title'						=> 'Tiltak/overskrift',
 					'hjemmel'					=> 'Hjemmel/ krav',
 					'condition_degree'			=> 'Tilstandsgrad',
 					'condition_type'			=> 'Konsekvenstype',
