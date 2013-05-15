@@ -77,6 +77,30 @@
 			      </xsl:if>
 			    </input>
 		    </div>
+				<!-- ASSIGNMET -->
+				<div class="row">
+					<label>Tildelt</label>
+					<select name="assigned_to">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'select')"/>
+						</xsl:attribute>
+						<option value="0">
+							<xsl:value-of select="php:function('lang', 'select')"/>
+						</option>
+						<xsl:apply-templates select="user_list/options"/>
+					</select>
+				</div>
+		    <div class="row">
+				<label>Egne Timer</label>
+				<input class="date">
+			      <xsl:attribute name="id">billable_hours</xsl:attribute>
+			      <xsl:attribute name="name">billable_hours</xsl:attribute>
+			      <xsl:attribute name="type">text</xsl:attribute>
+			    </input>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="check_list/billable_hours"/>
+		    </div>
+
 		    </fieldset>
 		    <fieldset class="col_2">
 			    <div class="row">
@@ -105,3 +129,14 @@
 		</div>
 	</div>
 </xsl:template>
+
+
+	<!-- New template-->
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected"/>
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>

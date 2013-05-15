@@ -44,7 +44,6 @@
 	
 	include_class('controller', 'check_item_case', 'inc/model/');
 	include_class('controller', 'component', 'inc/model/');
-	include_class('controller', 'check_list_status_updater', 'inc/helper/');
     include_class('controller', 'location_finder', 'inc/helper/');
 			
 	class controller_uicase extends phpgwapi_uicommon
@@ -256,9 +255,6 @@
 			
 			if($case_id > 0)
 			{
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );
-						
 				return json_encode( array( "status" => "saved" ) );
 			}
 			else
@@ -295,9 +291,6 @@
 
 				if($case_id > 0)
 				{
-					$cl_status_updater = new check_list_status_updater();
-					$cl_status_updater->update_check_list_status( $check_list_id );
-
 					$check_item = $this->so_check_item->get_single($case->get_check_item_id());
 					$control_item = $this->so_control_item->get_single($check_item->get_control_item_id());
 
@@ -595,10 +588,6 @@
 				// Gets check_list from check_item
 				$check_item = $this->so_check_item->get_single( $check_item_id );
 				$check_list_id = $check_item->get_check_list_id(); 
-				
-				// Updates number of open cases for check list 
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );	
 			}
 		}
 		
@@ -616,9 +605,6 @@
 		
 			if($status)
 			{
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );
-						
 				return json_encode( array( "status" => "deleted" ) );
 			}
 			else
@@ -642,10 +628,8 @@
 			
 			$case_id = $this->so->store($case);
 					
-			if($case_id > 0){
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );
-						
+			if($case_id > 0)
+			{
 				return json_encode( array( "status" => "true" ) );
 			}
 			else
@@ -671,9 +655,6 @@
 					
 			if($case_id > 0)
 			{
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status( $check_list_id );
-						
 				return json_encode( array( "status" => "true" ) );
 			}
 			else

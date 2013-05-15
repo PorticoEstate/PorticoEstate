@@ -73,7 +73,9 @@
 				'location_code' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'num_open_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'num_pending_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'assigned_to' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

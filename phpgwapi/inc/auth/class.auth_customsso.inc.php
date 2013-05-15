@@ -32,7 +32,7 @@
 	* @package phpgwapi
 	* @subpackage accounts
 	*/
-	class phpgwapi_auth_custom_sso extends phpgwapi_auth_
+	class phpgwapi_auth_customsso extends phpgwapi_auth_
 	{
 
 		/**
@@ -60,7 +60,7 @@
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			return !!$GLOBALS['phpgw']->db->next_record();
-	
+
 		}
 
 		/* php ping function
@@ -76,14 +76,14 @@
 		{
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
-			
+
 			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
 			{
 				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
 				return false;
 			}
-			
+
 			$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->debug = !!$config->config_data['external_db_debug'];
@@ -116,7 +116,7 @@
 			$fodsels_nr = $matches[1][0];
 
 			$sql = "SELECT BRUKERNAVN FROM V_IDM_KOBLINGER WHERE FODSELSNR ='{$fodsels_nr}'";
-			$db->query($sql,__LINE__,__FILE__);			
+			$db->query($sql,__LINE__,__FILE__);
 			$db->next_record();
 			return $db->f('BRUKERNAVN',true);
 		}
@@ -137,7 +137,7 @@
 			{
 				$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			
+
 			if ( $GLOBALS['phpgw_info']['flags']['currentapp'] == 'login')
 			{
 				if ( !$this->authenticate($GLOBALS['phpgw']->accounts->id2lid($account_id), $old_passwd) )
@@ -160,7 +160,7 @@
 			}
 			return '';
 		}
-		
+
 		/**
 		* Update when the user last logged in
 		*

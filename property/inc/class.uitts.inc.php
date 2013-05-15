@@ -1999,9 +1999,10 @@
 					'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 					'select_user_name'				=> 'values[assignedto]',
 					'user_list'						=> $this->bocommon->get_user_list_right2('select',4,$values['assignedto'],$this->acl_location),
+					'disable_userassign_on_add'		=> isset($this->bo->config->config_data['tts_disable_userassign_on_add'])?$this->bo->config->config_data['tts_disable_userassign_on_add']:'',
 
 					'lang_no_group'					=> lang('No group'),
-					'group_list'					=> $this->bocommon->get_group_list('select',$values['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+					'group_list'					=> $this->bo->get_group_list(),
 					'select_group_name'				=> 'values[group_id]',
 
 					'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
@@ -3163,7 +3164,9 @@
 					'user_list'						=> $this->bocommon->get_user_list_right2('select',4,$ticket['assignedto'],$this->acl_location),
 
 					'lang_no_group'					=> lang('No group'),
-					'group_list'					=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+//					'group_list'					=> $this->bocommon->get_group_list('select',$ticket['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+					'group_list'					=> $this->bo->get_group_list($ticket['group_id']),
+
 					'select_group_name'				=> 'values[group_id]',
 					'value_group_id'				=> $ticket['group_id'],
 

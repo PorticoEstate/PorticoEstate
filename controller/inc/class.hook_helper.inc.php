@@ -55,14 +55,14 @@
 		 */
 		public function home_mobilefrontend()
 		{
-			$this->home('mobilefrontend');
+			$this->home();
 		}
 		/**
 		 * Show info for homepage
 		 *
 		 * @return void
 		 */
-		public function home($url_correction = '')
+		public function home()
 		{
 			$location_array = array();
 			$component_short_desc = array();
@@ -265,7 +265,7 @@
 
 			echo "\n".'<!-- BEGIN checklist info -->'."\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div></div>\n".'<!-- END checklist info -->'."\n";
 
- //     if($url_correction != 'mobilefrontend')
+
       {
 			/* =======================================  UNDONE ASSIGNED CONTROLS FOR CURRENT USER  ================================= */
 
@@ -678,41 +678,41 @@
 			foreach($my_locations as $location)
 			{
 
-			$controls = array();
-			$components_with_controls_array = array();
-			$location_code = $location["location_code"];
+				$controls = array();
+				$components_with_controls_array = array();
+				$location_code = $location["location_code"];
 
-			$controls_at_location = $so_control->get_controls_by_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"] );
+				$controls_at_location = $so_control->get_controls_by_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"] );
 
-			$level = count(explode('-', $location_code));
+				$level = count(explode('-', $location_code));
 
-			if($level == 1)
-			{
-				// Fetches all controls for the components for a location within time period
-				$filter = "bim_item.location_code = '$location_code' ";
-				$components_with_controls_array = $so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"], $filter);
-			}
-			else
-			{
-				// Fetches all controls for the components for a location within time period
-				$filter = "bim_item.location_code LIKE '$location_code%' ";
-				$components_with_controls_array = $so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"], $filter);
-			}
-
-			if( count($controls_at_location) > 0 )
-			{
-				// Saves location code, location type and an array containing controls at locations
-				$my_controls[] = array( $location_code, 'location', $controls_at_location );
-			}
-
-			if( count($components_with_controls_array) > 0 )
-			{
-				foreach($components_with_controls_array as $component)
+				if($level == 1)
 				{
-				// Saves location code, location type, an array containing controls at locations and component object
-				$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
+					// Fetches all controls for the components for a location within time period
+					$filter = "bim_item.location_code = '$location_code' ";
+					$components_with_controls_array = $so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"], $filter);
 				}
-			}
+				else
+				{
+					// Fetches all controls for the components for a location within time period
+					$filter = "bim_item.location_code LIKE '$location_code%' ";
+					$components_with_controls_array = $so_control->get_controls_by_component($from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"], $filter);
+				}
+
+				if( count($controls_at_location) > 0 )
+				{
+					// Saves location code, location type and an array containing controls at locations
+					$my_controls[] = array( $location_code, 'location', $controls_at_location );
+				}
+
+				if( count($components_with_controls_array) > 0 )
+				{
+					foreach($components_with_controls_array as $component)
+					{
+					// Saves location code, location type, an array containing controls at locations and component object
+					$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
+					}
+				}
 			}
 
 			return $my_controls;

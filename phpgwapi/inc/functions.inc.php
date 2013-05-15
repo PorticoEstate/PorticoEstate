@@ -129,7 +129,8 @@
 				$link_data[trim($__param_set[0])] = trim($__param_set[1]);
 			}
 		}
-		$ret = $GLOBALS['phpgw']->link($path, $link_data, true);
+		
+		$ret = $GLOBALS['phpgw']->link($path, $link_data, true);//true: want '&';rather than '&amp;'; 
 		return $ret;
 	}
 

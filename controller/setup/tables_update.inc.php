@@ -865,4 +865,27 @@
 		}
 	}
 
+	$test[] = '0.1.43';
+	function controller_upgrade0_1_43()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','assigned_to',array(
+			'type' => 'int', 
+			'precision' => '4',
+			'nullable' => true
+		));
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','billable_hours',array(
+			'type' => 'decimal', 
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.44';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}

@@ -89,16 +89,20 @@
 										<xsl:call-template name="group_select"/>
 									</td>
 								</tr>
-								<tr>
-									<td valign="top">
-										<label>
-											<xsl:value-of select="php:function('lang', 'Assign to')"/>
-										</label>
-									</td>
-									<td>
-										<xsl:call-template name="user_id_select"/>
-									</td>
-								</tr>
+								<xsl:choose>
+									<xsl:when test="disable_userassign_on_add !='1'">
+										<tr>
+											<td valign="top">
+												<label>
+													<xsl:value-of select="php:function('lang', 'Assign to')"/>
+												</label>
+											</td>
+											<td>
+												<xsl:call-template name="user_id_select"/>
+											</td>
+										</tr>
+									</xsl:when>
+								</xsl:choose>
 								<xsl:call-template name="contact_form"/>
 								<tr>
 									<td>
@@ -650,7 +654,12 @@
 													</label>
 												</td>
 												<td>
-													<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}">
+													<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'enter the billable hour for the task')"/>
+														</xsl:attribute>
+													</input>
+													<input type="text" id="values_billable_hour_orig" name="values[billable_hours_orig]" size="10" value="{value_billable_hours}" readonly="readonly">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'enter the billable hour for the task')"/>
 														</xsl:attribute>

@@ -44,7 +44,6 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'date_generator', 'inc/component/');
-	include_class('controller', 'check_list_status_updater', 'inc/helper/');
 	include_class('controller', 'date_converter', 'inc/helper/');
 	include_class('controller', 'location_finder', 'inc/helper/');
 
@@ -64,6 +63,7 @@
 		private $add;
 		private $edit;
 		private $delete;
+		private $acl_location;
 
 		var $public_functions = array(
 			'index' => true,
@@ -93,6 +93,8 @@
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 
 			$this->location_finder = new location_finder();
+
+			$this->acl_location = '.control';
 
 			$this->read	= $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller');//1 
 			$this->add	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2 
@@ -239,6 +241,7 @@
 				$level = $this->location_finder->get_location_level($location_code);
 			}
 
+
 			if($type == "component")
 			{
 				if($check_list != null)
@@ -250,6 +253,15 @@
 				}
 
 				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id, 'id' => $component_id));
+
+//
+				$location_code = $component_arr['location_code'];
+
+				$check_list->set_location_code($location_code);
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
+				$level = $this->location_finder->get_location_level($location_code);
+
+//
 				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
 
 				$component = new controller_component();
@@ -258,6 +270,7 @@
 
 				$component_array = $component->toArray();
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+
 				$type = "component";
 			}
 			else
@@ -266,6 +279,14 @@
 			}
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			$responsible_user_id = execMethod('property.soresponsible.get_responsible_user_id',
+					array
+					(
+						'responsibility_id' => $control->get_responsibility_id(),
+						'location_code' => $location_code
+					)
+				);
 
 			$year = date("Y", $deadline_ts);
 			$month_nr = date("n", $deadline_ts);
@@ -276,8 +297,22 @@
 			// Fetches buildings on property
 			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
+
+			$user_list_options = array();
+			foreach ($users as $user)
+			{
+				$user_list_options[] = array
+				(
+					'id' => $user['account_id'],
+					'name' => $user['account_lastname'] . ', ' . $user['account_firstname'],
+					'selected'	=> $responsible_user_id == $user['account_id'] ? 1 : 0
+				);
+			}
+			
 			$data = array
 			(
+				'user_list' => array('options' => $user_list_options),
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'control' => $control,
@@ -354,8 +389,24 @@
 			// Fetches buildings on property
 			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
+
+			$responsible_user_id = $check_list->get_assigned_to();
+
+			$user_list_options = array();
+			foreach ($users as $user)
+			{
+				$user_list_options[] = array
+				(
+					'id' => $user['account_id'],
+					'name' => $user['account_lastname'] . ', ' . $user['account_firstname'],
+					'selected'	=> $responsible_user_id == $user['account_id'] ? 1 : 0
+				);
+			}
+			
 			$data = array
 			(
+				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
 				'$buildings_on_property' => $buildings_on_property,
@@ -403,6 +454,8 @@
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
+			$assigned_to = phpgw::get_var('assigned_to', 'int');
+			$billable_hours = phpgw::get_var('billable_hours', 'float');
 
 			$deadline_date_ts = date_converter::date_to_timestamp($deadline_date);
 
@@ -450,13 +503,12 @@
 			$check_list->set_deadline($deadline_date_ts);
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
+			$check_list->set_assigned_to($assigned_to);
+			$check_list->set_billable_hours($billable_hours);
 
 			if($check_list->validate())
 			{
 				$check_list_id = $this->so->store($check_list);
-
-				$cl_status_updater = new check_list_status_updater();
-				$cl_status_updater->update_check_list_status($check_list_id);
 
 				if($check_list_id > 0)
 				{
@@ -472,7 +524,8 @@
 				if($check_list->get_id() > 0)
 				{
 					$this->edit_check_list($check_list);
-				} else
+				}
+				else
 				{
 					$this->add_check_list($check_list);
 				}
