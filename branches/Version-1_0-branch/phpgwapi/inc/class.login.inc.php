@@ -204,7 +204,7 @@
 				unset($sslattributes);
 			}
 
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'custom_sso' && !isset($_GET['cd']))
+			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'customsso' && !isset($_GET['cd']))
 			{
 
 				//Reset auth object

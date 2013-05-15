@@ -18,7 +18,7 @@
 				<select name="newsettings[auth_type]">
 					<option value="0" {selected_auth_type_0}>Same as framework</option>
 					<option value="sql" {selected_auth_type_sql}>SQL</option>
-					<option value="custom_sso" {selected_auth_type_custom_sso}>Custom SSO</option>
+					<option value="customsso" {selected_auth_type_customsso}>Custom SSO</option>
 				</select>
 			</td>
 		</tr>

@@ -61,7 +61,7 @@ class controller_socheck_list extends controller_socommon
 	public function get_single($check_list_id)
 	{
 		$check_list_id = (int) $check_list_id;
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, "; 
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date,assigned_to, billable_hours, "; 
 		$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
@@ -81,7 +81,10 @@ class controller_socheck_list extends controller_socommon
 		$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 		$check_list->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 		$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
-		$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));	
+		$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+		$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
+		$check_list->set_billable_hours($this->db->f('billable_hours'));
+
 			
 		if($check_list != null)
 		{
@@ -104,7 +107,7 @@ class controller_socheck_list extends controller_socommon
 	public function get_single_with_check_items($check_list_id, $status, $type)
 	{
 		$check_list_id = (int) $check_list_id;
-		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date, num_open_cases, location_code, num_pending_cases, ";
+		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date,assigned_to, num_open_cases, location_code, num_pending_cases, ";
 		$sql .= "ci.id as ci_id, control_item_id, check_list_id, "; 
 		$sql .= "coi.title as coi_title, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id, coi.type "; 
@@ -145,6 +148,8 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
 				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+				$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
+				
 			}
 						
 			if($this->db->f('ci_id'))
@@ -189,7 +194,7 @@ class controller_socheck_list extends controller_socommon
 	{
 		$control_id = (int) $control_id;
 
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, assigned_to, "; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "ci.id as ci_id, control_item_id, check_list_id ";
 		$sql .= "FROM controller_check_list cl, controller_check_item ci ";
@@ -221,6 +226,7 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));
 				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+				$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 				
 				$check_items_array = array();
 			}
@@ -266,7 +272,7 @@ class controller_socheck_list extends controller_socommon
 		{
 			$sql .= "AND status = {$status} ";
 		}  
-    
+	
 		$this->db->query($sql);
 		
 		$check_list = null;
@@ -282,6 +288,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 		}
 				
 		return $check_list;
@@ -308,7 +315,7 @@ class controller_socheck_list extends controller_socommon
 			$component_filter = " AND component_id = {$component_id} AND location_id = {$location_id} ";
 		}
 
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, "; 
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, assigned_to,"; 
 		$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "WHERE cl.control_id = {$control_id} ";
@@ -340,6 +347,7 @@ class controller_socheck_list extends controller_socommon
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));	
 				$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+				$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			}
 			$check_list_id =  $check_list->get_id();
 		}
@@ -371,12 +379,12 @@ class controller_socheck_list extends controller_socommon
 		
 		if($cl_criteria->get_component_id() > 0 && $cl_criteria->get_location_id() > 0)
 		{
-		    $sql .= "WHERE cl.component_id = {$cl_criteria->get_component_id()} ";
-		    $sql .= "AND cl.location_id = {$cl_criteria->get_location_id()} ";
+			$sql .= "WHERE cl.component_id = {$cl_criteria->get_component_id()} ";
+			$sql .= "AND cl.location_id = {$cl_criteria->get_location_id()} ";
 		}
 		else
 		{
-		    $sql .= "WHERE cl.location_code = '{$cl_criteria->get_location_code()}' ";
+			$sql .= "WHERE cl.location_code = '{$cl_criteria->get_location_code()}' ";
 		}
 		
 		$sql .= "AND c.id = {$cl_criteria->get_control_id()} ";
@@ -410,7 +418,7 @@ class controller_socheck_list extends controller_socommon
 	function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type_expr = null )
 	{
 		$sql = 	"SELECT c.id as c_id, ";
-		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
@@ -454,6 +462,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			
 			$check_lists_array[] = $check_list;
 
@@ -484,7 +493,7 @@ class controller_socheck_list extends controller_socommon
 		$component_id = (int) $component_id;
 
 		$sql = 	"SELECT c.id as c_id, ";
-		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
 		$sql .= "cl.component_id, cl.location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_control c ";
 		$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
@@ -530,7 +539,8 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
-			
+			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
+
 			$check_lists_array[] = $check_list;
 
 			$control_id =  $control->get_id();
@@ -559,7 +569,7 @@ class controller_socheck_list extends controller_socommon
 	{
 		$control_id = (int) $control_id;
 
-		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
@@ -587,6 +597,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			
 			$check_lists_array[] = $check_list;
 		}
@@ -610,7 +621,7 @@ class controller_socheck_list extends controller_socommon
 		$location_id = (int) $location_id;
 		$component_id = (int) $component_id;
 
-		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
+		$sql = 	"SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
 		$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases "; 
 		$sql .= "FROM controller_check_list cl ";
 		$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
@@ -640,6 +651,7 @@ class controller_socheck_list extends controller_socommon
 			$check_list->set_location_code($this->unmarshal($this->db->f('cl_location_code', true), 'string'));
 			$check_list->set_num_open_cases($this->unmarshal($this->db->f('num_open_cases'), 'int'));
 			$check_list->set_num_pending_cases($this->unmarshal($this->db->f('num_pending_cases'), 'int'));
+			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			
 			$check_lists_array[] = $check_list;
 		}
@@ -753,7 +765,8 @@ class controller_socheck_list extends controller_socommon
 				'num_open_cases',
 				'num_pending_cases',
 				'location_id',
-				'status'
+				'status',
+				'assigned_to'
 		);
 				
 		$values = array(
@@ -767,7 +780,8 @@ class controller_socheck_list extends controller_socommon
 			$this->marshal($check_list->get_num_open_cases(), 'int'),
 			$this->marshal($check_list->get_num_pending_cases(), 'int'),
 			$this->marshal($check_list->get_location_id(), 'int'),
-			$check_list->get_status()
+			$check_list->get_status(),
+			$this->marshal($check_list->get_assigned_to(), 'int'),
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_check_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -777,7 +791,50 @@ class controller_socheck_list extends controller_socommon
 	
 	function update($check_list)
 	{
-		$id = intval($check_list->get_id());
+		$id = (int)$check_list->get_id();
+
+		$sql = "SELECT billable_hours FROM controller_check_list WHERE controller_check_list.id = {$id}";
+		
+		$this->db->query($sql);
+		$this->db->next_record();
+			
+		$old_billable_hours = (float) $this->db->f('billable_hours');
+
+		$billable_hours = $old_billable_hours + $check_list->get_billable_hours();
+
+//--------
+		$so_check_item = CreateObject('controller.socheck_item');
+		$check_items = $so_check_item->get_check_items_with_cases($id, $control_item_type = null, $status = null, $messageStatus = null);
+	
+		$num_open_cases = 0;
+		$num_pending_cases = 0;
+					
+		foreach($check_items as $check_item)
+		{
+			foreach($check_item->get_cases_array() as $case)
+			{
+				
+				if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+				{
+					$num_open_cases++;
+				}
+					
+				if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+				{
+					$num_pending_cases++;
+				}
+			}	
+		}
+			
+		if($num_open_cases > 0)
+		{
+			$check_list->set_status(controller_check_list::STATUS_DONE);
+		}
+	  
+		$check_list->set_num_open_cases($num_open_cases);
+		$check_list->set_num_pending_cases($num_pending_cases);
+
+//-------
 
 		$values = array(
 			'control_id = ' . $this->marshal($check_list->get_control_id(), 'int'),
@@ -790,10 +847,14 @@ class controller_socheck_list extends controller_socommon
 			'component_id = ' . $this->marshal($check_list->get_component_id(), 'int'),
 			'location_id = ' . $this->marshal($check_list->get_location_id(), 'int'),
 			'num_open_cases = ' . $this->marshal($check_list->get_num_open_cases(), 'int'),
-			'num_pending_cases = ' . $this->marshal($check_list->get_num_pending_cases(), 'int')
+			'num_pending_cases = ' . $this->marshal($check_list->get_num_pending_cases(), 'int'),
+			'assigned_to = ' . $this->marshal($check_list->get_assigned_to(), 'int'),
+			'billable_hours = ' . $billable_hours 
 		);
 
-		$result = $this->db->query('UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+		$sql = 'UPDATE controller_check_list SET ' . join(',', $values) . " WHERE id = {$id}";
+
+		$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if($result)
 		{
