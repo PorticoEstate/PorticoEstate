@@ -123,6 +123,81 @@
 		 * @param $role_id responsible role for carrying out the control  
 		 * @return array with controls as objects or arrays
 		 */
+		public function get_assigned_controls_at_location($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		{
+			$user_id = (int) $user_id;
+			$repeat_type = (int) $repeat_type;
+
+			$controls_array = array();
+			
+			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. " procedure_id,requirement_id,costresponsibility_id,control_area_id,description, start_date, end_date,"
+				. " control_area_id, repeat_type,repeat_interval, title"
+				. " FROM controller_check_list"
+				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
+				. " {$this->join} controller_control_location_list ON controller_control_location_list.control_id = controller_control.id"
+				. " WHERE assigned_to = {$user_id}";
+			
+			if( $repeat_type )
+			{
+				$sql .= "AND controller_control.repeat_type = $repeat_type ";
+			}
+
+			
+			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			
+//_debug_array($sql);
+			$this->db->query($sql);
+
+			while($this->db->next_record())
+			{
+				$control = new controller_control($this->unmarshal($this->db->f('control_id'), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+		//		$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
+		//		$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				
+				if($return_type == "return_object")
+				{
+					$controls_array[] = $control;
+				}
+				else
+				{
+					$controls_array[] = $control->toArray();
+				}
+			}
+
+			if( count( $controls_array ) > 0 )
+			{
+				return $controls_array; 
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/**
+		 * Get controls that should be carried out on a location within period
+		 *
+		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $from_date start date for period
+		 * @param $to_date end date for period
+		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $return_type return data as objects or as arrays
+		 * @param $role_id responsible role for carrying out the control  
+		 * @return array with controls as objects or arrays
+		 */
 		public function get_controls_by_location($location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0)
 		{
 			$role_id = (int) $role_id;

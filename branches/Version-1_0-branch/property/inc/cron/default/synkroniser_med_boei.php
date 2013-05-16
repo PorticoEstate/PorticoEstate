@@ -292,11 +292,13 @@
 
 		function legg_til_gateadresse_phpgw()
 		{
-			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM  fm_streetaddress RIGHT OUTER JOIN "
+			//legg til
+			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM fm_streetaddress RIGHT OUTER JOIN "
 			        . " v_Gateadresse ON fm_streetaddress.id = v_Gateadresse.gateadresse_id"
 					. " WHERE (fm_streetaddress.id IS NULL)";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$gate = array();
 			while ($this->db_boei->next_record())
 			{
 				$gate[]= array (
@@ -323,6 +325,29 @@
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
 				$this->db_boei->query($sql2_latin,__LINE__,__FILE__);
 				$gate_msg[]=utf8_encode($gate[$i]['descr']);
+			}
+
+
+			//oppdater gatenavn - om det er endret
+
+			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM v_Gateadresse";
+
+			$this->db_boei->query($sql,__LINE__,__FILE__);
+			$gate = array();
+			while ($this->db_boei->next_record())
+			{
+				$gate[]= array
+				(
+					'id' 		=> $this->db_boei->f('gateadresse_id'),
+					'descr' 	=> $this->db_boei->f('gatenavn')
+				);
+			}
+			
+			foreach ($gate as $gate_info)
+			{
+				$descr = utf8_encode($gate_info['descr']);
+				$sql_utf = "UPDATE fm_streetaddress SET descr = '{$descr}' WHERE id = " . (int)$gate_info['id'];
+				$this->db->query($sql_utf,__LINE__,__FILE__);
 			}
 
 			$this->db->transaction_commit();
