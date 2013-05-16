@@ -44,7 +44,6 @@
 
 		public function get_user_org_id()
 		{
-		
 			$headers = getallheaders();
 			if(isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
 			{
@@ -52,10 +51,6 @@
 				echo 'headers:<br>';
 				_debug_array($headers);
 			}
-/*
-			$headers['Osso-User-Dn'] = 'cn=02035701829,cn=users,dc=usrv,dc=ubergenkom,dc=no';// test
-//			$fodsels_nr = substr($headers['Osso-User-Dn'],3, 11);
-*/
 
 			$header_regular_expression =  '/^cn=(.*),cn=users.*$/';
 			$header_key = 'Osso-User-Dn';
@@ -74,13 +69,14 @@
 				 xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
 				 xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
 				 xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
-				 xmlns:v1=\"http://bergen.kommune.no/biz/bk/altinn/altinnreporteesservice/v1\">
+				 xmlns:v1=\"http://bergen.kommune.no/biz/bk/authorization/ReporteesService/v1\">
 				<soapenv:Body>
 					<v1:getOrganisasjonsAvgivere>
 						<fodselsNr>{$fodsels_nr}</fodselsNr>
 					</v1:getOrganisasjonsAvgivere>
 				</soapenv:Body>
 			</soapenv:Envelope>";
+
 
 			$location_URL = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : "http://wsm01e-t.usrv.ubergenkom.no:8888/gateway/services/AltinnReporteesService"; #A-test
 		
@@ -93,7 +89,6 @@
 			try
 			{
 				$response = $client->__doRequest($request,$location_URL,$location_URL,1);
-
 				$reader = new XMLReader();
 				$reader->xml($response);
 
