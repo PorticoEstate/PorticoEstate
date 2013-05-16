@@ -710,11 +710,14 @@
 					foreach($components_with_controls_array as $component)
 					{
 					// Saves location code, location type, an array containing controls at locations and component object
-					$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
+						$my_controls[] = array( $location_code, 'component', $component['controls_array'], $component );
 					}
 				}
 			}
 
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$assigned_controls_at_location = $so_control->get_assigned_controls_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+//_debug_array($assigned_controls);
 			return $my_controls;
 		}
 
