@@ -717,6 +717,8 @@
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			$assigned_controls_at_location = $so_control->get_assigned_controls_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+			$assigned_controls_at_component = $so_control->get_assigned_controls_by_component( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+//_debug_array($assigned_controls);
 //_debug_array($assigned_controls);
 			return $my_controls;
 		}
