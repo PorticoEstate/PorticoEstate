@@ -187,6 +187,135 @@
 			}
 		}
 
+
+//---------
+
+
+		/**
+		 * Get components and populates array of controls that should be carried out on the components on a location within period
+		 *
+		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $from_date start date for period
+		 * @param $to_date end date for period
+		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $return_type return data as objects or as arrays
+		 * @param $role_id responsible role for carrying out the control  
+		 * @return array of components as objects or arrays
+		 */
+		public function get_assigned_controls_by_component($from_date, $to_date, $repeat_type, $user_id, $return_type = "return_object")
+		{
+			$repeat_type = $repeat_type;
+			$user_id = (int)$user_id;
+
+			$controls_array = array();
+			
+			$sql  = "SELECT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. " procedure_id,requirement_id,costresponsibility_id,control_area_id, controller_control.description, start_date, end_date,"
+				. " control_area_id, repeat_type,repeat_interval, title,"
+				. " bim_item.guid,bim_item.type as component_type, bim_item.id as component_id, bim_item.address,"
+				. " bim_item.loc1"
+				. " FROM controller_check_list"
+				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
+				. " {$this->join} controller_control_component_list ON controller_control_component_list.control_id = controller_control.id"
+				. " {$this->join} fm_bim_item bim_item ON controller_control_component_list.component_id = bim_item.id"
+				. " {$this->join} fm_bim_type bim_type ON controller_control_component_list.location_id = bim_type.location_id"
+				. " WHERE assigned_to = {$user_id}";
+
+			if( $repeat_type )
+			{
+				$sql .= "AND controller_control.repeat_type = $repeat_type ";
+			}
+
+			$sql .= "AND ((controller_control.start_date <= $to_date AND controller_control.end_date IS NULL) ";
+			$sql .= "OR (controller_control.start_date <= $to_date AND controller_control.end_date > $from_date ))";
+			$sql .= "ORDER BY bim_item.id ";
+			 
+			$this->db->query($sql);
+			
+			$component_id = 0;
+			$component = null;
+			while($this->db->next_record()) 
+			{
+				if( $this->db->f('component_id') != $component_id )
+				{
+					if($component_id != 0)
+					{
+						$component->set_controls_array($controls_array);
+						$controls_array = array();
+						
+						if($return_type == "return_array")
+						{
+							$components_array[] = $component->toArray();
+						}
+						else
+						{
+							$components_array[] = $component;
+						}
+					}
+					
+					$component = new controller_component();
+					$component->set_type($this->unmarshal($this->db->f('component_type'), 'int'));
+					$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
+					$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
+					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+					$component->set_loc_1($this->unmarshal($this->db->f('loc1', true), 'string'));
+					$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
+				}
+				
+				$control = new controller_control($this->unmarshal($this->db->f('control_id'), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+			
+				if($return_type == "return_object")
+				{
+					$controls_array[] = $control;
+				}
+				else
+				{
+					$controls_array[] = $control->toArray();
+				}
+							
+				$component_id = $component->get_id();
+			}
+					
+			if($component != null)
+			{
+				$component->set_controls_array($controls_array);
+				
+				if($return_type == "return_array")
+				{
+					$components_array[] = $component->toArray();
+				}
+				else
+				{
+					$components_array[] = $component;
+				}
+				
+				return $components_array;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+
+//--------
+
+
 		/**
 		 * Get controls that should be carried out on a location within period
 		 *
