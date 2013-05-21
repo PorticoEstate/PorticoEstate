@@ -333,6 +333,9 @@
 			$sql = "SELECT v_Gateadresse.gateadresse_id, v_Gateadresse.gatenavn FROM v_Gateadresse";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
+
+			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
+
 			$gate = array();
 			while ($this->db_boei->next_record())
 			{
@@ -353,7 +356,7 @@
 			$this->db->transaction_commit();
 			$this->db_boei->transaction_commit();
 
-			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
+
 			$this->receipt['message'][]=array('msg'=> $msg);
 			unset ($gate);
 			unset ($gate_msg);
