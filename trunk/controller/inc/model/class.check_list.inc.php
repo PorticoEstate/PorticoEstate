@@ -39,10 +39,14 @@
 		const STATUS_CANCELED = 3;
 		
 		protected $id;
+		protected $title;//
+		protected $description;//
 		protected $control_id;
 		protected $status;
 		protected $comment;
 		protected $deadline;
+		protected $start_date;
+		protected $end_date;
 		protected $planned_date;
 		protected $completed_date;
 		protected $location_code;
@@ -50,7 +54,8 @@
 		protected $location_id;
 		protected $assigned_to;
 		protected $billable_hours;
-		
+		protected $control_area_id;		
+
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
 		protected $num_pending_cases;
@@ -79,6 +84,46 @@
 		}
 		
 		public function get_id() { return $this->id; }
+
+		public function set_title($title)
+		{
+			$this->title = $title;
+		}
+		
+		public function get_title()
+		{
+			return $this->title;
+		}
+
+		public function set_description($description)
+		{
+			$this->description = $description;
+		}
+		
+		public function get_description()
+		{
+			return $this->description;
+		}
+
+		public function set_end_date($end_date)
+		{
+			$this->end_date = $end_date;
+		}
+		
+		public function get_end_date()
+		{
+			return $this->end_date;
+		}
+		
+		public function set_start_date($start_date)
+		{
+			$this->start_date = $start_date;
+		}
+		
+		public function get_start_date()
+		{
+			return $this->start_date;
+		}
 
 		public function set_control_id($control_id)
 		{
@@ -178,6 +223,16 @@
 			$this->error_msg_array = $error_msg_array;
 		}
 
+		public function set_control_area_id($control_area_id)
+		{
+			$this->control_area_id = $control_area_id;
+		}
+		
+		public function get_control_area_id()
+		{
+			return $this->control_area_id;
+		}
+
 		public function set_assigned_to($assigned_to)
 		{
 			$this->assigned_to = $assigned_to;
@@ -202,12 +257,17 @@
 		{
 			return array(
 				'id' 				=> $this->get_id(),
+				'title' 			=> $this->get_title(),
+				'description' 		=> $this->get_description(),
 				'control_id' 		=> $this->get_control_id(),
 				'status' 			=> $this->get_status(),
 				'comment' 			=> $this->get_comment(),
 				'deadline' 			=> $this->get_deadline(),
 				'planned_date' 		=> $this->get_planned_date(),
 				'completed_date' 	=> $this->get_completed_date(),
+				'start_date' 		=> $this->get_start_date(),
+				'end_date'			=> $this->get_end_date(),
+				'control_area_id'	=> $this->get_control_area_id(),
 				'location_code' 	=> $this->get_location_code(),
 				'component_id' 		=> $this->get_component_id(),
 				'location_id' 		=> $this->get_location_id(),
