@@ -222,11 +222,12 @@
 			{
 				$id	= $db->f('id');
 				$this->category_tree[] = array
-					(
-						'id'		=> $id,
-						'name'		=> str_repeat('..',$level).$db->f('name'),
-						'parent_id'	=> $db->f('parent_id')
-					);
+				(
+					'id'			=> $id,
+					'name'			=> str_repeat('..',$level).$db->f('name'),
+					'parent_id'		=> $db->f('parent_id'),
+					'location_id'	=> $db->f('location_id')
+				);
 				$this->get_children2($entity_id, $id, $level+1);
 			}
 			return $this->category_tree;
@@ -245,11 +246,12 @@
 			{
 				$id	= $this->db->f('id');
 				$categories[$id] = array
-					(
-						'id'			=> $id,
-						'name'			=> $this->db->f('name',true),
-						'parent_id'		=> 0
-					);
+				(
+					'id'			=> $id,
+					'name'			=> $this->db->f('name',true),
+					'parent_id'		=> 0,
+					'location_id'	=> $this->db->f('location_id')
+				);
 			}
 
 			foreach($categories as $category)
@@ -284,8 +286,6 @@
 			while ($this->db2->next_record())
 			{
 				$id	= $this->db2->f('id');
-		//		$location = ".entity.{$entity_id}.{$id}";
-		//		$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
 
 				$children[$id] = array
 					(
@@ -296,7 +296,7 @@
 						'level'			=> (int)$this->db2->f('level'),
 						'parent_id'		=> (int)$this->db2->f('parent_id'),
 						'owner'			=> (int)$this->db2->f('owner'),
-						'location_id'	=> $location_id
+						'location_id'	=> (int)$this->db2->f('location_id')
 					);
 			}
 
@@ -328,7 +328,7 @@
 			{
 				$id	= $this->db2->f('id');
 				$location = ".entity.{$entity_id}.{$id}";
-	//			$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
+
 				if ( !$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])) )
 				{
 					$categories[$id] = array
@@ -339,7 +339,7 @@
 							'descr'			=> $this->db2->f('descr',true),
 							'level'			=> 0,
 							'parent_id'		=> 0,
-							'location_id'	=> $location_id
+							'location_id'	=> $this->db2->f('location_id')
 						);
 				}
 			}
