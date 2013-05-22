@@ -172,6 +172,8 @@
 			$my_controls = array();
 			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
 
+			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
+
 			$my_planned_controls = array();
 
 			// Generates an array with planned controls
@@ -278,6 +280,8 @@
 
 		// Fetches controls current user is responsible for 3 months back in time
 			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
+
+			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
 
 			$my_undone_controls = array();
 
@@ -671,15 +675,37 @@
 		/* ================================  FUNCTIONS  ======================================== */
 
 
+		function get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type)
+		{
+			$check_list_array = array();
+
+			$so_control = CreateObject('controller.socontrol');
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$assigned_check_list_at_location = $so_control->get_assigned_check_list_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+
+			foreach ($assigned_check_list_at_location as $assigned_check_list)
+			{
+				$check_list_array[$assigned_check_list['id']] = $assigned_check_list;
+			}
+
+			$assigned_check_list_at_component = $so_control->get_assigned_check_list_by_component( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
+
+//_debug_array($check_list_array);
+//_debug_array($assigned_check_list_at_component);
+
+
+		}
+
+
 		function get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type)
 		{
 			$so_control = CreateObject('controller.socontrol');
 
 			foreach($my_locations as $location)
 			{
-
-				$controls = array();
-				$components_with_controls_array = array();
+				$my_controls = array();
+		//		$components_with_controls_array = array();
 				$location_code = $location["location_code"];
 
 				$controls_at_location = $so_control->get_controls_by_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_array", $location["role_id"] );
@@ -715,11 +741,8 @@
 				}
 			}
 
-			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$assigned_controls_at_location = $so_control->get_assigned_controls_at_location( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
-			$assigned_controls_at_component = $so_control->get_assigned_controls_by_component( $from_date_ts, $to_date_ts, $repeat_type, $user_id,"return_array");
-//_debug_array($assigned_controls);
-//_debug_array($assigned_controls);
+
+
 			return $my_controls;
 		}
 
