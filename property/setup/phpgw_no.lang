@@ -1793,7 +1793,7 @@ this order is sent by %1 on behalf of %2	property	no	Denne bestillinga er bestil
 this property id does not exist!	property	no	Denne eiendoms ID eksisterer ikke
 this user has not defined an email address !	property	no	Denne brukeren har ikke definert en epost adresse !
 this vendor is already registered for this activity	property	no	Denne leverandøren er allerede registert for denne aktiviteten
-ticket	property	no	melding
+ticket	common	no	Melding
 .ticket	property	no	Melding
 ticket %1 has been deleted	property	no	Melding %1 er slettet
 ticket categories	property	no	Meldinger kategorier
