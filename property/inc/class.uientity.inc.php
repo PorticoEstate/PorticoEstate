@@ -1125,7 +1125,15 @@
 			}
 
 			// path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -2178,9 +2186,17 @@
 
 			}
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
-				(
-					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+			(
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
 					'enable_bulk'					=> $category['enable_bulk'],
@@ -2624,23 +2640,30 @@
 			);				
 
 			//----------------------------------------------datatable settings--------			
-			$data = array
-				(
-					'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-					'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
-					'datatable'			=> $datavalues,
-					'myColumnDefs'		=> $myColumnDefs,
+			$property_js = "/property/js/yahoo/property2.js";
 
-					'allow_allrows'		=> false,
-					'start_record'		=> $this->start,
-					'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-					'num_records'		=> count($values),
-					'all_records'		=> $this->bo->total_records,
-					'link_url'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'img_path'		=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-					'values' 		=> $content,
-					'table_header'		=> $table_header,
-				);
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$data = array
+			(
+				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
+				'base_java_url'		=> json_encode(array(menuaction => "property.uientity.attrib_history")),
+				'datatable'			=> $datavalues,
+				'myColumnDefs'		=> $myColumnDefs,
+				'allow_allrows'		=> false,
+				'start_record'		=> $this->start,
+				'record_limit'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'num_records'		=> count($values),
+				'all_records'		=> $this->bo->total_records,
+				'link_url'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'			=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'values' 			=> $content,
+				'table_header'		=> $table_header,
+			);
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
