@@ -62,6 +62,19 @@
 		*/
 		function get_css_links()
 		{
+			/**
+			* 'combine' Won't work for referencing images.
+			* The image URLs are relative to CSS file location.
+			* So if you have slashes in URL, you will have to use absolute URLs or reference images from the root of the site.
+			*/
+
+			$combine = false;
+			
+			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
+			{
+				$combine = false;
+			}
+
 			$links = '';
 						
 			$links .= "<!--CSS Imports from phpGW css class -->\n";
@@ -79,10 +92,21 @@
 								foreach($files as $file => $ignored)
 								{
 
-									$links .= <<<HTML
-					<link rel="stylesheet" type="text/css" href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css">
+									if($combine)
+									{
+										// Add file path to array and replace path separator with "--" for URL-friendlyness
+							//			$cssfiles[] = str_replace('/', '--', "{$app}/templates/{$tpl}/css/{$file}.css");
+									}
+									else
+									{
+										//echo "file: {$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css <br>";
+										$links .= <<<HTML
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css" type="text/css" rel="stylesheet">
 
 HTML;
+
+
+									}
 								}
 							}
 						}
@@ -90,16 +114,36 @@ HTML;
 				}				
 			}
 			
+
 			if ( !empty($this->external_files) && is_array($this->external_files) )
 			{
 				foreach($this->external_files as $file)
 				{					
-					$links .= <<<HTML
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" type="text/css"  rel="stylesheet">
+					if($combine)
+					{
+						// Add file path to array and replace path separator with "--" for URL-friendlyness
+						$cssfiles[] = str_replace('/', '--', $file);
+					}
+					else
+					{
+						$links .= <<<HTML
+						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" type="text/css"  rel="stylesheet">
 
 HTML;
+					}
 				}
 			}
+
+
+
+			if($combine)
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$cssfiles = implode(',', $cssfiles);
+				$links .= "<link type=\"text/css\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=css&files={$cssfiles}\">\n";
+				unset($cssfiles);
+			}
+
 			
 			return $links;
 		}
