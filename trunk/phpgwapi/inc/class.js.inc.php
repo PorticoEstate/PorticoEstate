@@ -176,6 +176,25 @@
 				}
 			}
 
+			if ( !empty($this->external_files) && is_array($this->external_files) )
+			{
+				foreach($this->external_files as $file)
+				{					
+					if($combine)
+					{
+						// Add file path to array and replace path separator with "--" for URL-friendlyness
+						$jsfiles[] = str_replace('/', '--', ltrim($file,'/'));
+					}
+					else
+					{
+						$links .= <<<HTML
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
+						</script>
+HTML;
+					}
+				}
+			}
+
 			if($combine)
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
@@ -185,20 +204,6 @@
 					. "</script>\n";
 				unset($jsfiles);
 			}
-
-
-			if ( !empty($this->external_files) && is_array($this->external_files) )
-			{
-				foreach($this->external_files as $file)
-				{					
-					$links .= <<<HTML
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
-					</script>
-HTML;
-				}
-			}
-
-
 
 			return $links;
 		}
