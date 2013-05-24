@@ -138,6 +138,10 @@
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
 	unset($tpl_vars);
 
+	flush();
+
+	echo '<body class="yui-skin-sam">';
+
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
 		register_shutdown_function('parse_footer_end_noframe');
