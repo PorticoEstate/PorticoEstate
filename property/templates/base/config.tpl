@@ -564,6 +564,15 @@
 		</td>
 	</tr>
 
+	<tr class="row_on">
+		<td>{lang_obsolete_status_that_are_to_be_set_for_old_records_when_condition_survey_are_imported}:</td>
+		<td>
+			<select name="newsettings[condition_survey_obsolete_status]">
+				{hook_condition_survey_obsolete_status}
+			</select>
+		</td>
+	</tr>
+
 		<!--
 		groupnotification
 		-->

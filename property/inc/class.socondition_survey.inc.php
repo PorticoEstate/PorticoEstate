@@ -325,8 +325,8 @@
 			*/
 			if(isset($config->config_data['condition_survey_obsolete_status'])  && $config->config_data['condition_survey_obsolete_status'])
 			{
-				$this->_db->query("UPDATE_ fm_request SET status = '{$config->config_data['condition_survey_obsolete_status']}'"
-				 . "WHERE location_code {$this->_db->like} '{$survey['location_code']}%'",__LINE__,__FILE__);
+				$this->_db->query("UPDATE fm_request SET status = '{$config->config_data['condition_survey_obsolete_status']}'"
+				 . " WHERE location_code {$this->_db->like} '{$survey['location_code']}%'",__LINE__,__FILE__);
 			}
 			else
 			{
@@ -376,7 +376,15 @@
 				$_update_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
-//_debug_array($import_data);die();
+			foreach ($import_data as &$entry)
+			{
+				$entry['amount_investment'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_investment']);
+				$entry['amount_operation'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_operation']);
+				$entry['amount_potential_grants'] = (int) str_replace(array(' ', ','),array('','.'),$entry['amount_potential_grants']);
+			}
+
+			unset($entry);
+
 			$origin_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.condition_survey');
 			foreach ($import_data as $entry)
 			{
