@@ -299,6 +299,12 @@
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read();
 
+			if(!$survey['location_code'])
+			{
+				throw new Exception('property_socondition_survey::import - condition survey location_code not configured');
+			}
+
+			//FIXME
 			if(!isset($config->config_data['condition_survey_import_cat']) || !is_array($config->config_data['condition_survey_import_cat']))
 			{
 				throw new Exception('property_socondition_survey::import - condition survey import categories not configured');
@@ -312,6 +318,19 @@
 			if(!isset($config->config_data['condition_survey_hidden_status']) || !$config->config_data['condition_survey_hidden_status'])
 			{
 				throw new Exception('property_socondition_survey::import - condition survey hidden status not configured');
+			}
+
+			/**
+			* Park old request on the location and below as obsolete
+			*/
+			if(isset($config->config_data['condition_survey_obsolete_status'])  && $config->config_data['condition_survey_obsolete_status'])
+			{
+				$this->_db->query("UPDATE_ fm_request SET status = '{$config->config_data['condition_survey_obsolete_status']}'"
+				 . "WHERE location_code {$this->_db->like} '{$survey['location_code']}%'",__LINE__,__FILE__);
+			}
+			else
+			{
+				throw new Exception('property_socondition_survey::import - condition survey obsolete status not configured');
 			}
 
 			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.project');
