@@ -829,7 +829,15 @@
 				);
 
 			//path for property.js
-			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+			$property_js = "/property/js/yahoo/property.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js;
 
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
@@ -2140,8 +2148,17 @@
 			$selected_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
-				(
+			(
+					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 					'project_types'						=> array('options' => $this->bo->get_project_types($project_type_id)),
 					'project_type_id'					=> $values['project_type_id'],
 					'inherit_location'					=> $id ? $values['inherit_location'] : 1,
@@ -2153,7 +2170,6 @@
 					'b_account_data'					=> $b_account_data,
 					'ecodimb_data'						=> $ecodimb_data,
 					'contact_data'						=> $contact_data,
-					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
@@ -2680,10 +2696,18 @@
 				$year++;
 			}
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
 			(
+				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'year_list'				=> array('options' => $year_list),
-				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'				=> $datavalues,
 				'myColumnDefs'			=> $myColumnDefs,
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -2866,13 +2890,21 @@
 
 			//----------------------------------------------datatable settings--------
 
+			$property_js = "/property/js/yahoo/property2.js";
+
+			if (!isset($GLOBALS['phpgw_info']['server']['no_jscombine']) || !$GLOBALS['phpgw_info']['server']['no_jscombine'])
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$property_js = "/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files=" . str_replace('/', '--', ltrim($property_js,'/'));
+			}
+
 			$data = array
 			(
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url'] . $property_js),
 				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
 				'ecodimb_data'						=> $ecodimb_data,
 				'contact_data'						=> $contact_data,
-				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
 				'myButtons'							=> $myButtons,
