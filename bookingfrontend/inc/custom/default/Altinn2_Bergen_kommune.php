@@ -186,7 +186,7 @@ HTML;
 				</head>
 				<body>
 					<h2>{$message}</h2>
-					<form action="{$action}" method="get">
+					<form action="{$action}" method="post">
 						<fieldset>
 							<legend>
 								Organisasjon
