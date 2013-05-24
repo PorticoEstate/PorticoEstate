@@ -2664,7 +2664,7 @@
 				{
 					foreach ( $values['attributes'] as &$attr )
 					{
-						$attr['value'] 	= $this->_db->f($attr['column_name']);
+						$attr['value'] 	= $this->_db->f($attr['column_name'], true);
 					}
 				}
 			}

@@ -597,7 +597,7 @@
 				$sum_deviation+= $entry['deviation'];
 
 				$entry['cost'] = $entry['combined_cost'];
-				$entry['title']=htmlspecialchars_decode($entry['title']);
+		//		$entry['title']=htmlspecialchars_decode($entry['title']);
 
 				if(isset($entry['vendor_id']) && $entry['vendor_id'])
 				{
