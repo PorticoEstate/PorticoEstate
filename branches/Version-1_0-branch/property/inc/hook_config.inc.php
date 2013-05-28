@@ -473,3 +473,32 @@ HTML;
 
 		return $out;
 	}
+
+	/**
+	* Get HTML listbox with obsolete status that are to be set when condition survey are imported
+	*
+	* @param $config
+	* @return string HTML listboxes to be placed in a table
+	*/
+	function condition_survey_obsolete_status($config)
+	{
+		$status_entries = execMethod('property.sorequest.select_status_list');
+
+		$status_assigned = isset($config['condition_survey_obsolete_status']) ? $config['condition_survey_obsolete_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
