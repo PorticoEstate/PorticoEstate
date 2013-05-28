@@ -309,7 +309,7 @@
 					$invoice[$i]['voucher_out_id']			= $invoice_temp['voucher_out_id'];
 					$invoice[$i]['invoice_count']			= $invoice_temp['invoice_count'];
 					$invoice[$i]['vendor_id']				= $this->db->f('spvend_code');
-					$invoice[$i]['vendor']					= $this->db->f('org_name');
+					$invoice[$i]['vendor']					= $this->db->f('org_name',true);
 					$invoice[$i]['is_janitor']				= $role['is_janitor'];
 					$invoice[$i]['is_supervisor']			= $role['is_supervisor'];
 					$invoice[$i]['is_budget_responsible']	= $role['is_budget_responsible'];
@@ -471,7 +471,7 @@
 				//		'project_id'			=> $this->db->f('project_id'),
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
 						'order_id'				=> $this->db->f('pmwrkord_code'),
-						'status'				=> $this->db->f('status'),
+						'status'				=> $this->db->f('status',true),
 						'closed'				=> !!$this->db->f('closed'),
 						'project_type_id'		=> $this->db->f('project_type_id'),
 						'periodization_id'		=> $this->db->f('periodization_id'),
@@ -484,12 +484,12 @@
 						'dimb'					=> $this->db->f('dimb'),
 						'dimd'					=> $this->db->f('dimd'),
 						'dime'					=> $this->db->f('dime'),
-						'remark' 				=> !!$this->db->f('merknad'),
+						'remark' 				=> !!$this->db->f('merknad',true),
 						'tax_code'				=> $this->db->f('mvakode'),
 						'amount'				=> $this->db->f('belop'),
 						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'charge_tenant'			=> $this->db->f('charge_tenant'),
-						'vendor'				=> $this->db->f('org_name'),
+						'vendor'				=> $this->db->f('org_name',true),
 			//			'paid_percent'			=> $this->db->f('paid_percent'),
 						'project_group'			=> $this->db->f('project_id'),
 						'external_ref'			=> $this->db->f('external_ref'),
@@ -594,7 +594,7 @@
 					'invoice_id'			=> $this->db->f('fakturanr'),
 					'amount'				=> $this->db->f('belop'),
 					'approved_amount'		=> $this->db->f('godkjentbelop'),
-					'vendor'				=> $this->db->f('org_name'),
+					'vendor'				=> $this->db->f('org_name',true),
 					'currency'				=> $this->db->f('currency'),
 					'period'				=> $this->db->f('periode'),
 					'budget_responsible'	=> $this->db->f('budsjettansvarligid')
@@ -2449,7 +2449,7 @@
 				$bilagsnr = $this->db->f('bilagsnr');
 
 				$values[$bilagsnr]['bilagsnr_ut']		= $this->db->f('bilagsnr_ut');
-				$values[$bilagsnr]['org_name']			= $this->db->f('org_name');
+				$values[$bilagsnr]['org_name']			= $this->db->f('org_name', true);
 				$values[$bilagsnr]['currency']			= $this->db->f('currency');
 				$values[$bilagsnr]['kreditnota']		= $this->db->f('kreditnota');
 				$values[$bilagsnr]['type']				= $this->db->f('type');
