@@ -158,7 +158,7 @@
 			{
 				foreach ($headers['header'] as $header)
 				{
-					if(!$header['seen'])
+		//			if(!$header['seen'])
 					{
 						$sms[$j]['message'] = utf8_encode($header['subject']);
 						$bodyParts = $bofelamimail->getMessageBody($header['uid']);
