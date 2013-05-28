@@ -343,7 +343,7 @@
 				{
 					$dataset[$j][$field] = array
 						(
-							'value'		=> $this->_db->f($field),
+							'value'		=> $this->_db->f($field,true),
 							'datatype'	=> $uicols['datatype'][$key],
 							'attrib_id'	=> $uicols['attib_id'][$key]
 						);
