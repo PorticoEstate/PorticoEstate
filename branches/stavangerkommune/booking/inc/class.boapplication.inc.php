@@ -42,7 +42,7 @@
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
-				$buildingemail = $this->get_building_email($application['building_id']);
+				$buildingemail = $this->get_tilsyn_email($application['building_id']);
 				$resourcename = implode(",",$this->get_resource_name($application['resources']));
 				$dates = "";
 				foreach ($application['dates'] as $date) {

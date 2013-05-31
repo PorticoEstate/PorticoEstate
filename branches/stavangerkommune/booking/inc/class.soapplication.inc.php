@@ -115,9 +115,9 @@
 						 'name' => $this->db->f('name', false));
 		}
 
-		function get_building_email($id)
+		function get_tilsyn_email($id)
 		{
-			$this->db->limit_query("SELECT email FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT tilsyn_email FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
 			if(!$this->db->next_record())
 			{
 				return False;
