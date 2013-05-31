@@ -176,12 +176,6 @@ function array_minus($a, $b)
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
-        
-        function getTimestamp($last){ 
-            $now = floor(microtime(true)*1000);
-            return $now-$last;
-        } 
-
 		function building_schedule($building_id, $date)
 		{
 
