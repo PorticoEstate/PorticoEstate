@@ -26,7 +26,7 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'tilsyn_name', 'tilsyn_email', 'tilsyn_phone', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage');
 		}
 		
 		public function properties()

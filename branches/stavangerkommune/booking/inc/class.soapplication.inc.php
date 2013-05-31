@@ -115,6 +115,29 @@
 						 'name' => $this->db->f('name', false));
 		}
 
+		function get_building_email($id)
+		{
+			$this->db->limit_query("SELECT email FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('email', false);
+		}
+
+		function get_resource_name($id)
+		{
+			$list = implode(",",$id);
+			$results = array();		
+			$this->db->query("SELECT name FROM bb_resource where id IN ($list)",__LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('name', false);
+			}
+			return $results;
+
+		}
+
 		function get_building($id)
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);

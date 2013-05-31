@@ -143,7 +143,7 @@ JS;
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
 	{
-		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
+		$tpl_vars['login_text'] = $bouser->orgname . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';
 	}
 	else

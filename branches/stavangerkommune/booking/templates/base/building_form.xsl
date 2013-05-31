@@ -74,6 +74,17 @@
 					</dd>
 				</xsl:if>
 			</dl>
+			<dl class="form-col">
+				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Tilsyns vakt name')" /></label></dt>
+				<dd><input name="name" type="text" value="{building/tilsyn_name}"/></dd>
+
+				<dt><label for="field_phone"><xsl:value-of select="php:function('lang', 'Tilsyns vakt telephone')" /></label></dt>
+				<dd><input id="field_phone" name="phone" type="text" value="{building/tilsyn_phone}"/></dd>
+
+				<dt><label for="field_email"><xsl:value-of select="php:function('lang', 'Tilsyns vakt email')" /></label></dt>
+				<dd><input id="field_email" name="email" type="text" value="{building/tilsyn_email}"/></dd>
+			</dl>
+
 			<div class="clr"/>
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">

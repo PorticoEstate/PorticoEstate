@@ -34,7 +34,7 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div>Velkommen til Bergen kommune og AktivBy.<br />
+		<div>Velkommen til Stavanger kommune og AktivBy.<br />
 			Her finner du informasjon om bygg, anlegg<br />
 			som leies ut av Idrett, Kultur og Grønn etat.</div>
 		

@@ -3,8 +3,8 @@
 	{
 		const ORGNR_SESSION_KEY = 'orgnr';
 		
-		public
-			$orgnr = null;
+		public $orgnr = null;
+		public $orgname = null;
 
 		protected
 			$default_module = 'bookingfrontend',
@@ -20,8 +20,20 @@
 		public function __construct() {
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
+			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
 		}
 		
+		protected function get_orgname_from_db($orgnr) 
+		{
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->db->limit_query("select name from bb_organization where organization_number ='" .$orgnr."'", 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return $orgnr;
+			}
+			return $this->db->f('name', false);
+
+		}
 		protected function set_module($module = null)
 		{
 			$this->module = is_string($module) ? $module : $this->default_module;
@@ -31,11 +43,12 @@
 		{
 			return $this->module;
 		}
-		
+
 		public function log_in()
 		{
 			$this->log_off();
 			$this->orgnr = $this->get_user_orgnr_from_auth_header();
+			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_auth_header());
 
 /*
 			try 
@@ -73,6 +86,7 @@
 		protected function clear_user_orgnr()
 		{
 			$this->orgnr = null;
+			$this->orgname = null;
 		}
 		
 		public function get_user_orgnr()
@@ -150,64 +164,82 @@
 				return null;
 			}
 		}
+
 		
 		protected function get_user_orgnr_from_auth_header()
 		{
 			$config		= CreateObject('phpgwapi.config','bookingfrontend');
 			$config->read();
 
-			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
-			$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
+#			echo "<pre>\n";
 
-			$headers = getallheaders();
+#			$xmldata = simplexml_load_file('/srv/portico/stavangerkommune_xml/KnutHelle.xml');
+			$xmldata = simplexml_load_file('/srv/portico/stavangerkommune_xml/AneYrjaHolter.xml');
+#			$xmldata = simplexml_load_file('/srv/portico/stavangerkommune_xml/HanneDale.xml');
 
-			if(isset($config->config_data['debug']) && $config->config_data['debug'])
-			{
-				$this->debug = true;
-				echo 'headers:<br>';
-				_debug_array($headers);
+#			print_r($xmldata);
+#			echo "\n";
+			$myorgnr = null;
+			foreach ($xmldata->melding->roller->enhet->orgnr as $key => $value) {
+				$myorgnr = $value;
 			}
 
-			if(isset($headers[$header_key]) && $headers[$header_key])
-			{
-				$matches = array();
-				preg_match_all($header_regular_expression,$headers[$header_key], $matches);
-				$userid = $matches[1][0];
+			$external_user = (object) 'ciao'; $external_user->login = $myorgnr;
 
-				if($this->debug)
-				{
-					echo 'matches:<br>';
-					_debug_array($matches);
-				}
+#			exit;
 
-			}
+#			$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
+#			$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
 
-			$options = array();
-			$options['soap_version'] = SOAP_1_1;
-			$options['location']	= isset($config->config_data['soap_location']) && $config->config_data['soap_location'] ? $config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
-			$options['uri']			= isset($config->config_data['soap_uri']) && $config->config_data['soap_uri'] ? $config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
-			$options['trace']		= 1;
+#			$headers = getallheaders();
 
-			if(isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'])
-			{
-				$options['proxy_host']	= $config->config_data['soap_proxy_host'];
-			}
+#			if(isset($config->config_data['debug']) && $config->config_data['debug'])
+#			{
+#				$this->debug = true;
+#				echo 'headers:<br>';
+#				_debug_array($headers);
+#			}
 
-			if(isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'])
-			{
-				$options['proxy_port']	= $config->config_data['soap_proxy_port'];
-			}
-			$options['encoding']	= isset($config->config_data['soap_encoding']) && $config->config_data['soap_encoding'] ? $config->config_data['soap_encoding'] : 'UTF-8';
-			$options['login']		= isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';
-			$options['password']	= isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';
+#			if(isset($headers[$header_key]) && $headers[$header_key])
+#			{
+#				$matches = array();
+#				preg_match_all($header_regular_expression,$headers[$header_key], $matches);
+#				$userid = $matches[1][0];
 
-			$wsdl = isset($config->config_data['soap_wsdl']) && $config->config_data['soap_wsdl'] ? $config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
+#				if($this->debug)
+#				{
+#					echo 'matches:<br>';
+#					_debug_array($matches);
+#				}
 
-			$authentication_method	= isset($config->config_data['authentication_method']) && $config->config_data['authentication_method'] ? $config->config_data['authentication_method'] : '';
+#			}
 
-			require_once PHPGW_SERVER_ROOT."/bookingfrontend/inc/custom/default/{$authentication_method}";
-			
-			$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
+#			$options = array();
+#			$options['soap_version'] = SOAP_1_1;
+#			$options['location']	= isset($config->config_data['soap_location']) && $config->config_data['soap_location'] ? $config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
+#			$options['uri']			= isset($config->config_data['soap_uri']) && $config->config_data['soap_uri'] ? $config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
+#			$options['trace']		= 1;
+
+#			if(isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'])
+#			{
+#				$options['proxy_host']	= $config->config_data['soap_proxy_host'];
+#			}
+
+#			if(isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'])
+#			{
+#				$options['proxy_port']	= $config->config_data['soap_proxy_port'];
+#			}
+#			$options['encoding']	= isset($config->config_data['soap_encoding']) && $config->config_data['soap_encoding'] ? $config->config_data['soap_encoding'] : 'UTF-8';
+#			$options['login']		= isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';
+#			$options['password']	= isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';
+
+#			$wsdl = isset($config->config_data['soap_wsdl']) && $config->config_data['soap_wsdl'] ? $config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
+
+#			$authentication_method	= isset($config->config_data['authentication_method']) && $config->config_data['authentication_method'] ? $config->config_data['authentication_method'] : '';
+
+#			require_once PHPGW_SERVER_ROOT."/bookingfrontend/inc/custom/default/{$authentication_method}";
+#			
+#			$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
 			// test values
 			//$external_user = (object) 'ciao'; $external_user->login = 994239929;
 

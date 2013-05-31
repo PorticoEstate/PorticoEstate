@@ -5,7 +5,7 @@
 	$setup_info['bookingfrontend']['enable'] = 1;
 	$setup_info['bookingfrontend']['app_group']	= 'office';
 
-	$setup_info['bookingfrontend']['description'] = 'Bergen kommune bookingfrontend';
+	$setup_info['bookingfrontend']['description'] = 'Stavanger kommune bookingfrontend';
 
 	$setup_info['bookingfrontend']['author'][] = array
 	(

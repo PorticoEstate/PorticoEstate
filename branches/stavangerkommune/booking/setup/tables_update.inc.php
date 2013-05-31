@@ -2657,4 +2657,24 @@
 		}
 	}
 
+	$test[] = '0.2.10';
+	/**
+	* Update booking version from 0.2.10 to 0.2.11
+	* add description to bb_office
+	* 
+	*/
+	function booking_upgrade0_2_10()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_name varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_email varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN tilsyn_phone varchar(50)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.11';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

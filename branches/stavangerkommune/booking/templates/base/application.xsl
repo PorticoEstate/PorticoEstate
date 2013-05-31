@@ -212,7 +212,7 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
-			<p><xsl:value-of select="php:function('lang', 'All that borrow premises from Bergen Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" /></p>
+			<p><xsl:value-of select="php:function('lang', 'All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.')" /></p>
 			<br />
 			<div id='regulation_documents'>&nbsp;</div>
 			<br />

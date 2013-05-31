@@ -275,6 +275,8 @@ function array_minus($a, $b)
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
+                unset($booking['audience']);
+                unset($booking['agegroups']);
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
 
@@ -285,6 +287,9 @@ function array_minus($a, $b)
 			{
 				$event['name'] = $event['description'];
 				$event['type'] = 'event';
+                unset($event['comments']);
+                unset($event['audience']);
+                unset($event['agegroups']);
 			}
 			$bookings = array_merge($allocations, $bookings);
 			$bookings = $this->_remove_event_conflicts($bookings, $events);

@@ -64,6 +64,23 @@
 								<xsl:value-of select="district"/>
 							</dd>
 						</xsl:if>
+
+						<xsl:if test="tilsyn_name and normalize-space(tilsyn_name)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></dt>
+							<dd><xsl:value-of select="tilsyn_name"/></dd>
+						</xsl:if>
+
+						<xsl:if test="tilsyn_email and normalize-space(tilsyn_email)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></dt>
+							<dd><a href='mailto:{tilsyn_email}'><xsl:value-of select="tilsyn_email"/></a></dd>
+						</xsl:if>
+					
+						<xsl:if test="tilsyn_phone and normalize-space(tilsyn_phone)">
+							<dt><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></dt>
+							<dd><xsl:value-of select="tilsyn_phone"/></dd>
+						</xsl:if>
+
+
 					</dl>
 				</xsl:if>
 				

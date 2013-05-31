@@ -1,5 +1,47 @@
 booking	common	no	Booking
 bookingfrontend	common	no	Bookingfrontend
+global configuration	common	no	Global konfigurasjon
+global message	common	no	Globale beskjeder
+manage users	common	no	Administrere brukere
+manage groups	common	no	Administrere grupper
+clear cache	common	no	Slett cache
+Global Categories	common	no	Globale kategorier
+View Sessions	common	no	Vis sesjoner
+View Access Log	common	no	Vis Access logger
+Find and Register all Application Hooks	common	no	Finn og register alle applikasjons koblinger
+Asynchronous timed services	common	no	Asynkrone tidsbestemte tjenester
+list users	common	no	bruker liste
+list groups	common	no	gruppe liste
+firstname	common	no	Fornavn
+lastname	common	no	Etternavn
+description	common	no	Beskrivelse
+add sub	common	no	Legg til underkategori
+color	common	no	Farge
+apply	common	no	Aktiver
+enabled	common	no	aktiv
+no category	common	no	Ingen kategori
+inactive	common	no	Inaktiv
+inactive and hidden	common	no	Inaktiv og gjemt
+status	common	no	Status
+contact	common	no	Kontakt
+user data	common	no	Bruker data
+Application	common	no	Applikasjon
+User access	common	no	Bruker tilgang
+edit user	common	no	Rediger bruker
+edit user account	common	no	Rediger bruker konto
+group data	common	no	Gruppe data 
+edit group	common	no	Rediger gruppe
+group	common	no	Gruppe
+all users	common	no	Alle brukere
+members	common	no	Medlemer
+applications	common	no	Applikasjoner
+You do not have edit access to addressmaster contacts	common	no	Du har ikke tilgang til AddresseMaster kontakter  
+Can change password	common	no	Kan bytte passord
+Anonymous User (not shown in list sessions)	common	no	Anonym bruker (vises ikke i sesjons liste)
+expires	common	no	Uløpsdato
+Never	common	no	Aldri
+quota	common	no	Kvote
+are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache
 current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
@@ -444,7 +486,7 @@ Event created, Overlaps with existing booking, Remember to send a notification	b
 Print as PDF	booking	no	Skriv ut som PDF
 Pending	booking	no	UNDER BEHANDLING
 This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mot en sesong
-Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
+Message from Bergen county - AktivBy	booking	no	Melding fra Stavanger kommune - AktivBy
 Organization shortname	booking	no	Kortnavn
 Group shortname	booking	no	Kortnavn
 contacts[0][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 1
@@ -536,11 +578,11 @@ Cancelation of bookings and allocations from	booking	no	Avbestilling av bookinge
 Cancelation of bookings from	booking	no	Avbestilling av bookinger fra
 Booking system settings	booking	no	Bookingmodul systeminnstillinger
 Frontend users can delete bookings and allocations	booking	no	Brukere av frontend kan slette bookinger og tildelinger direkte
-All that borrow premises from Bergen Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
-Delete information	bookingfrontend	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
-Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-Booking Delete information	bookingfrontend	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
-Booking  Delete information2	bookingfrontend	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+All that borrow premises from Stavanger Kommune must verify that they have read the terms and conditions, this is usually fire regulations and house rules.	booking	no	Alle som leier lokaler hos Stavanger kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.
+Delete Information	booking	no	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+Booking Delete information	booking	no	Hvis du skal slette booking på valgt dato, velg Slett-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
+Booking  Delete information2	booking	no	Skal du slette flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 There is a cost of %1 assosiated with the allocation you are useing	booking	no	Det er en kostnad på %1kr knyttet til den tildelingen du bruker.
 Export	booking	no	Eksport
 Upload	booking	no	Last opp
@@ -556,3 +598,17 @@ Agegroups can not be larger than 9999 peoples	booking	no	Det kan ikke være mer 
 Resourcenumber is wrong, 5 or 6 characters long	booking	no	Ressursnummer er feil, skal være 5 eller 6 tegn langt.
 office	booking	no	Kontor
 office user	booking	no	Saksbehandler
+Mail Settings	booking	no	E-post oppsett
+Application Settings	booking	no	Søknads oppsett
+Booking application settings	booking	no	Booking søknads oppsett.
+Booking email settings	booking	no	Booking epost oppsett.
+System name	booking	no	System navn
+Subject	booking	no	Subject
+Mail text for application created	booking	no	Epost tekst for søknad opprettet.
+Mail text for application pending	booking	no	Epost tekst for søknad under behandling.
+Mail text for application accepted	booking	no	Epost tekst for søknad akseptert.
+Mail text for application rejected	booking	no	Epost tekst for søknad avist.
+Signature	booking	no	Signatur
+Tilsynsvakt name	booking	no	Tilsynsvakt navn
+Tilsynsvakt email	booking	no	Tilsynsvakt epost
+Tilsynsvakt telephone	booking	no	Tilsynsvakt telefon

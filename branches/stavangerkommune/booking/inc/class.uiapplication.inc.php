@@ -418,6 +418,9 @@
 
     public function add()
 		{
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$application_text = $config->config_data;
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -517,7 +520,7 @@
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
-			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+			self::render_template('application_new', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,'config' => $application_text));
 		}
 
 		public function edit()
@@ -636,6 +639,9 @@
 		
 		public function show()
 		{
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$application_text = $config->config_data;
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
 
@@ -735,6 +741,6 @@
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations,'comments' => $comments));
+								  'num_associations'=>$num_associations,'comments' => $comments,'config' => $application_text));
 		}
 	}

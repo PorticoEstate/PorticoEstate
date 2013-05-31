@@ -20,34 +20,47 @@
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
+			$subject = $config->config_data['application_mail_subject'];
 
-			$subject = 'Melding fra Bergen kommune - AktivBy';
 			$link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id='.$application['id'].'&secret='.$application['secret'];
 
 			if ($created) {
-				$body = '<p>Din søknad om leie/lån er mottatt.</p>';
-				$body .= '<p>Praktisk informasjon finner du i dokumenter knyttet til bygget, ref. juridiske betingelser pk.8 i søknad.</p>';
-				$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
-				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body = "<pre>".$config->config_data['application_mail_created']."</pre>";
+				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 
 			} elseif ($application['status'] == 'PENDING') {
-				$body = '<p>Din søknad i AktivBy? om leie/lån er '.lang($application['status']).'.<br />Saksbehandler trenger ytterligere informasjon, ber om at du klikker på linken under og gir nødvendig tilbakemeldinger slik at saken kan ferdigbehandles.</p>';
-				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
+				$body .= "<pre>".$config->config_data['application_mail_pending']."</pre>";
+				$body .= '<p><a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></p>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
 			} elseif ($application['status'] == 'ACCEPTED') {
-				$body = '<p>Din søknad i AktivBy om leie/lån er '.lang($application['status']).'.<br /> For å skrive ut en bekreftelse eller ha dialog med saksbehandler bruk <a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
+				$body .= '<pre>'.$config->config_data['application_mail_pending'].' <a href="'.$link.'">Link til '.$config->config_data
+['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
+				$buildingemail = $this->get_building_email($application['building_id']);
+				$resourcename = implode(",",$this->get_resource_name($application['resources']));
+				$dates = "";
+				foreach ($application['dates'] as $date) {
+					$dates .=implode(", ",$date)." ";
+				}
+				$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." i ".$application[building_name]."</p>"; 
+				$bbody .= "<p>Den ".$dates."er Godkjent</p>";
+
+				$send->msg('email', $buildingemail, $subject, $bbody, '', '', '', $from, '', 'html');
+		
 			} elseif ($application['status'] == 'REJECTED') {
-				$body = '<p>Din søknad i AktivBy om leie/lån er '.lang($application['status']).'.<br />For ytterligere informasjon se <a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
+				$body .= '<pre>'.$config->config_data['application_mail_rejected'].'<a href="'.$link.'">Link til '.$config->config_data['application_mail_systemname'].': søknad #'.$application['id'].'</a></pre>';
 				if ($application['comment'] != '') {
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
 			}
-			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';
+			$body .= "<p>".$config->config_data['application_mail_signature']."</p>";
 
 			try
 			{

@@ -118,7 +118,7 @@
 			{
 				$body .= "Hvem: %WHO%\n";
 			}
-			$body .= "\nBergen kommune fører statistikk på bruk av lokaler og ber derfor om at dere \n";
+			$body .= "\nStavanger kommune fører statistikk på bruk av lokaler og ber derfor om at dere \n";
 			$body .= "\netter arrangementet melder inn korrekt deltakertall til oss.\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor.\n\n%URL%";
 
