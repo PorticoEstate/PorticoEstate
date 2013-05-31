@@ -75,14 +75,14 @@
 				</xsl:if>
 			</dl>
 			<dl class="form-col">
-				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
-				<dd><input name="name" type="text" value="{building/tilsyn_name}"/></dd>
+				<dt><label for="field_tilsyn_name"><xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" /></label></dt>
+				<dd><input name="tilsyn_name" type="text" value="{building/tilsyn_name}"/></dd>
 
-				<dt><label for="field_phone"><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></label></dt>
-				<dd><input id="field_phone" name="phone" type="text" value="{building/tilsyn_phone}"/></dd>
+				<dt><label for="field_tilsyn_phone"><xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" /></label></dt>
+				<dd><input id="field_tilsyn_phone" name="tilsyn_phone" type="text" value="{building/tilsyn_phone}"/></dd>
 
-				<dt><label for="field_email"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
-				<dd><input id="field_email" name="email" type="text" value="{building/tilsyn_email}"/></dd>
+				<dt><label for="field_tilsyn_email"><xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" /></label></dt>
+				<dd><input id="field_tilsyn_email" name="tilsyn_email" type="text" value="{building/tilsyn_email}"/></dd>
 			</dl>
 
 			<div class="clr"/>
