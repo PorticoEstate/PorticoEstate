@@ -50,8 +50,15 @@
 				}
 				$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." i ".$application[building_name]."</p>"; 
 				$bbody .= "<p>Den ".$dates."er Godkjent</p>";
-
-				$send->msg('email', $buildingemail, $subject, $bbody, '', '', '', $from, '', 'html');
+				
+				try
+				{
+					$send->msg('email', $buildingemail, $subject, $bbody, '', '', '', $from, '', 'html');
+				}
+				catch (phpmailerException $e)
+				{
+					// TODO: Inform user if something goes wrong
+				}
 		
 			} elseif ($application['status'] == 'REJECTED') {
 				$body = "<p>Din søknad i ".$config->config_data['application_mail_systemname']." om leie/lån er".lang($application['status']); 
