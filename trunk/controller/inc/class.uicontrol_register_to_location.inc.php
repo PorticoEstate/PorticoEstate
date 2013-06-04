@@ -299,11 +299,19 @@
 				'className' => ''
 			);
 
-
 			$count_fields = count($uicols['name']);
 
 			for ($i=0;$i<$count_fields;$i++)
 			{
+				switch($uicols['datatype'][$i])
+				{
+					case 'link':
+						$formatter = 'link';
+						break;
+					default:
+						$formatter = $uicols['formatter'][$i];
+				}
+				
 				if( $uicols['name'][$i])
 				{
 					$columndef[] = array
@@ -311,7 +319,7 @@
 						'key'		=> $uicols['name'][$i],
 						'label'		=> $uicols['descr'][$i],
 						'sortable'	=> !!$uicols['sortable'][$i],
-						'formatter'	=> $uicols['formatter'][$i],
+						'formatter'	=> $formatter,
 						'hidden'	=> $uicols['input_type'][$i] == 'hidden' ? true : false	,		
 						'className'	=> $uicols['classname'][$i],
 					);
@@ -352,9 +360,11 @@
 			$results 			= phpgw::get_var('results', 'int');
 			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
+			$results = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : $results;
+
 			$this->bo->results = $results;			
-            $this->bo->sort =  phpgw::get_var('dir');
-            $this->bo->order =  phpgw::get_var('sort');
+            $this->bo->sort =  'ASC';
+            $this->bo->order =  'location_code';
             $this->bo->start =  phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 
 			$values = $this->bo->read(array('control_registered' => $control_registered,
@@ -380,8 +390,6 @@
 				}
 			}
 			
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
-
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $this->bo->total_records,
@@ -389,8 +397,8 @@
 					'sortKey' => 'location_code', 
 					'sortDir' => "ASC", 
 					'Result' => $values,
-					'pageSize' => $num_rows,
-					'activePage' => floor($this->bo->start / $num_rows) + 1
+					'pageSize' => $results,
+					'activePage' => floor($this->bo->start / $results) + 1
 				)
 			);
 
