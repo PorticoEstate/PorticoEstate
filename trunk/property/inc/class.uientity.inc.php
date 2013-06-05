@@ -795,7 +795,7 @@
 			$entity_list = array();
 
 			$entity_list = $this->bo->read(array('start_date'=>$start_date,'end_date'=>$end_date, 'dry_run' => $dry_run));
-
+//_debug_array($entity_list);
 			$uicols = $this->bo->uicols;
 
 			$uicols['name'][]		= 'img_id';
@@ -849,15 +849,24 @@
 				{
 					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
 
-					$_files = $vfs->ls(array(
-						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
-						'relatives' => array(RELATIVE_NONE)));
-	
-					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+					if(false)
 					{
-						$entity_entry['file_name']	= urlencode($_files[0]['name']);
-						$entity_entry['directory']	= urlencode($_files[0]['directory']);
-						$entity_entry['img_id']		= $_files[0]['file_id'];
+						$entity_entry['file_name']	= $entity_entry['museumsnr'];
+						$entity_entry['directory']	= urlencode('external_source');
+						$entity_entry['img_id']		= $entity_entry['museumsnr'];
+					}
+					else
+					{
+						$_files = $vfs->ls(array(
+							'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+							'relatives' => array(RELATIVE_NONE)));
+	
+						if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+						{
+							$entity_entry['file_name']	= urlencode($_files[0]['name']);
+							$entity_entry['directory']	= urlencode($_files[0]['directory']);
+							$entity_entry['img_id']		= $_files[0]['file_id'];
+						}
 					}
 
 					for ($i=0;$i<count($uicols['name']);$i++)
