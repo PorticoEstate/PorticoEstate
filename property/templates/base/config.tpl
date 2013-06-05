@@ -461,7 +461,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Bypass_ACL_for_accessing_tickets}.</td>
 			<td>
 				<select name="newsettings[bypass_acl_at_tickets]">
@@ -471,6 +471,17 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_Bypass_ACL_for_accessing_entities}.</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[bypass_acl_at_entity][]" value="">
+				<table>
+					{hook_bypass_acl_at_entity}
+				</table>
+			</td>
+		</tr>
+
+		<tr class="row_on">
 			<td>{lang_Use_ACL_for_helpdesk_categories}.</td>
 			<td>
 				<select name="newsettings[acl_at_tts_category]">
