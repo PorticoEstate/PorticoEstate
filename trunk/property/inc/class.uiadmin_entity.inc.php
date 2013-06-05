@@ -1244,7 +1244,14 @@
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+					return "Go away!";
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 8, 'acl_location'=> $this->acl_location));
+				}
 			}
 
 			$entity_id		= phpgw::get_var('entity_id', 'int');
