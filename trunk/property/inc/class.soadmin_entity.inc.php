@@ -955,7 +955,7 @@
 		function delete_entity($id)
 		{
 			$id = (int) $id;
-			$category_list=$this->read_category(array('entity_id'=>$id));
+			$category_list=$this->read_category(array('allrows'=>true, 'entity_id'=>$id));
 			$locations = array();
 			$locations[] = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$id}");
 			$subs = $GLOBALS['phpgw']->locations->get_subs( $this->type_app[$this->type], ".{$this->type}.{$id}");
@@ -969,7 +969,7 @@
 			$this->db->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_locations WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
 			$this->db->query('DELETE FROM phpgw_acl WHERE location_id IN (' . implode(',', $locations) . ')',__LINE__,__FILE__);
-			if (isset($category_list) AND is_array($category_list))
+			if (isset($category_list) && is_array($category_list))
 			{
 				$this->init_process();
 
