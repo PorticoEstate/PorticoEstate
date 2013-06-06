@@ -91,7 +91,7 @@ $(document).ready(function()
 
 	var oArgs = {menuaction:'property.bolocation.get_locations_by_name'};
 	var baseUrl = phpGWLink('index.php', oArgs, true);
-
+	var location_type = 1;
 	$("#search-location-name").autocomplete({
 		source: function( request, response ) {
 			location_type = $("#location_type").val();

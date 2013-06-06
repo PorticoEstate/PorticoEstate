@@ -91,6 +91,37 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		private function get_external_source($file, $thumb)
+		{
+			$file = ltrim($file,'external_source/');
+			
+			$url = "bkbilde.bergen.kommune.no/fotoweb/cmdrequest/rest/PreviewAgent.fwx?ar=5008&rs=0&pg=0&username=FDV&password=FDV123&sr={$file}*";
+			
+			if($thumb)
+			{
+				$url .= '&sz=50';
+			}
+			else
+			{
+				header('Content-Type: image/jpeg');			
+			}
+
+/*
+			$file = 'http://somehosted.com/file.pdf'; // URL to the file
+
+			$contents = file_get_contents($file); // read the remote file
+*/
+
+			$ch = curl_init ($url);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+			$raw=curl_exec($ch);
+			curl_close ($ch);
+			echo $raw;
+
+		}
+		
 		function view_file()
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
@@ -107,6 +138,11 @@
 
 
 			$directory = explode('/', $file);
+			
+			if($directory[0] == 'external_source')
+			{
+				return $this->get_external_source($file, $thumb);
+			}
 
 			$location_info = $this->bo->get_location($directory);
 

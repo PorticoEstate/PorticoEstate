@@ -502,3 +502,31 @@ HTML;
 
 		return $out;
 	}
+
+	/**
+	* Get HTML checkbox with entities to bypass ACL
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function bypass_acl_at_entity($config)
+	{
+		$entity_list = execMethod('property.soadmin_entity.read',array('allrows' => true));
+
+		$acl_bypass = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
+		$out = '';
+		foreach ( $entity_list as $dummy => $entity)
+		{
+			$checked = '';
+			if ( in_array($entity['id'], $acl_bypass))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[bypass_acl_at_entity][]" value="{$entity['id']}" {$checked}><label>{$entity['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+

@@ -483,11 +483,19 @@
 				$where= 'AND';
 			}
 
+			$bypass_acl_at_entity = false;
+			if(isset($_config->config_data['bypass_acl_at_entity'])
+				&& is_array($_config->config_data['bypass_acl_at_entity'])
+				&& in_array($entity_id, $_config->config_data['bypass_acl_at_entity']))
+			{
+				$bypass_acl_at_entity = true;
+			}
+
 			unset($_config);
 
 			if ($filter=='all')
 			{
-				if (is_array($grants))
+				if (is_array($grants) && !$bypass_acl_at_entity)
 				{
 					foreach($grants as $user => $right)
 					{
@@ -1208,11 +1216,19 @@
 				$where= 'AND';
 			}
 
+			$bypass_acl_at_entity = false;
+			if(isset($_config->config_data['bypass_acl_at_entity'])
+				&& is_array($_config->config_data['bypass_acl_at_entity'])
+				&& in_array($entity_id, $_config->config_data['bypass_acl_at_entity']))
+			{
+				$bypass_acl_at_entity = true;
+			}
+
 			unset($_config);
 
 			if ($filter=='all')
 			{
-				if (is_array($grants))
+				if (is_array($grants) && !$bypass_acl_at_entity)
 				{
 					foreach($grants as $user => $right)
 					{

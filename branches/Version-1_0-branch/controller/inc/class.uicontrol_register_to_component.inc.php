@@ -294,6 +294,8 @@
 			$results 			= phpgw::get_var('results', 'int');
 			$control_registered	= phpgw::get_var('control_registered', 'bool');
 
+			$results = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : $results;
+
 			if(!$entity_id && !$cat_id)
 			{
 				$values = array();
@@ -325,8 +327,6 @@
 				}
 			}
 			
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;			
-
 			$data = array(
 				 'ResultSet' => array(
 					'totalResultsAvailable' => $boentity->total_records,
@@ -334,14 +334,12 @@
 					'sortKey' => 'location_code', 
 					'sortDir' => "ASC", 
 					'Result' => $values,
-					'pageSize' => $num_rows,
-					'activePage' => floor($boentity->start / $num_rows) + 1
+					'pageSize' => $results,
+					'activePage' => floor($boentity->start / $results) + 1
 				)
 			);
 
 			return $data;
-
-
 
 			$return_data['recordsReturned'] = count($values);
 			$return_data['totalRecords'] = $boentity->total_records;
