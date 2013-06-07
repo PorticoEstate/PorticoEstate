@@ -492,14 +492,12 @@
 
 		public function get_summation($id)
 		{
-			$table = 'fm_request';
-
 			$condition_survey_id		= (int)$id;
 			$sql = "SELECT left(building_part,1) as building_part_,"
 			. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 			. " recommended_year as year"
-			." FROM {$table}"
-			." WHERE condition_survey_id={$condition_survey_id}"
+			." FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
+			." WHERE condition_survey_id={$condition_survey_id} AND fm_request_status.closed IS NULL"
 			." GROUP BY building_part_ , year ORDER BY building_part_";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
