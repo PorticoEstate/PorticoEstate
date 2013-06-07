@@ -553,13 +553,34 @@
 		public function delete($id)
 		{
 			$id = (int) $id;
+			$interlink 	= CreateObject('property.interlink');
 			$this->_db->transaction_begin();
+			
+			$requests = array();
+			$this->_db->query("SELECT id AS request_id FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
+			while ($this->_db->next_record())
+			{
+				$requests[] = $this->_db->f('request_id');
+			}
 
 			try
 			{
 				$this->_db->Exception_On_Error = true;
-				$this->_db->query("DELETE FROM fm_condition_survey WHERE id={$id}",__LINE__,__FILE__);
-				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id={$id}",__LINE__,__FILE__);
+				if($requests)
+				{
+					$this->_db->query('DELETE FROM fm_request_planning WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
+					$this->_db->query('DELETE FROM fm_request_consume WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
+					$this->_db->query('DELETE FROM fm_request_condition WHERE request_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
+					$this->_db->query('DELETE FROM fm_request_history  WHERE  history_record_id IN (' . implode(',', $requests) . ')',__LINE__,__FILE__);
+				}
+				$this->_db->query("DELETE FROM fm_request WHERE condition_survey_id = {$id}",__LINE__,__FILE__);
+				$this->_db->query("DELETE FROM fm_condition_survey WHERE id = {$id}",__LINE__,__FILE__);
+			
+				foreach ($requests as $request_id)
+				{
+					$interlink->delete_at_target('property', '.project.request', $request_id, $this->_db);
+				}
+
 				$this->_db->Exception_On_Error = false;
 			}
 
@@ -567,6 +588,7 @@
 			{
 				if ( $e )
 				{
+					$this->_db->transaction_abort();
 					throw $e;
 				}
 			}
