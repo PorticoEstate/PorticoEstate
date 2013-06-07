@@ -318,10 +318,10 @@
 			$i=0;
 			foreach ($data as $entry)
 			{
-				$i = $entry['building_part'] . '_' . $entry['cat_id'];
+				$i = $entry['building_part'] . '_' . $entry['category'];
 				
 				$values[$i]['building_part'] = $entry['building_part'];
-				$values[$i]['category'] = $this->get_category_name($entry['cat_id']);
+				$values[$i]['category'] = $entry['category'];
 				
 				$diff = $entry['year'] - date('Y');
 				if($diff < 0)
