@@ -495,12 +495,12 @@
 			$table = 'fm_request';
 
 			$condition_survey_id		= (int)$id;
-			$sql = "SELECT category as cat_id, left(building_part,1) as building_part_,"
+			$sql = "SELECT left(building_part,1) as building_part_,"
 			. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 			. " recommended_year as year"
 			." FROM {$table}"
 			." WHERE condition_survey_id={$condition_survey_id}"
-			." GROUP BY building_part_ ,category, year ORDER BY building_part_";
+			." GROUP BY building_part_ , year ORDER BY building_part_";
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -512,13 +512,41 @@
 				$values[] = array
 				(
 					'building_part'		=> $this->_db->f('building_part_'),
-					'amount'			=> $amount,
+					'amount_investment'	=> $this->_db->f('investment'),
+					'amount_operation'	=> $this->_db->f('operation'),
 					'year'				=> $this->_db->f('year'),
-					'cat_id'			=> $this->_db->f('cat_id'),
 				);
 			}
 
-			return $values;
+			$lang_operation = lang('operation');
+			$lang_investment = lang('investment');
+
+			$return = array();
+			foreach ($values as $entry)
+			{
+				if ($entry['amount_investment'])
+				{
+					$return[] = array
+					(
+						'building_part'	=> $entry['building_part'],
+						'amount'		=> $entry['amount_investment'],
+						'year'			=> $entry['year'],
+						'category'		=> $lang_investment,
+					);
+				}
+				if ($entry['amount_operation'])
+				{
+					$return[] = array
+					(
+						'building_part'	=> $entry['building_part'],
+						'amount'		=> $entry['amount_operation'],
+						'year'			=> $entry['year'],
+						'category'		=> $lang_operation,
+					);
+				}
+			}
+
+			return $return;
 		}
 
 
