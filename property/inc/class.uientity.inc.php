@@ -2006,6 +2006,19 @@ JS;
 
 					foreach ($output as $_dummy => $_substitute)
 					{
+
+						/**
+						* Alternative
+						
+						$regex = "/__([\w]+)__/";
+						preg_match_all($regex, $_substitute, $matches);
+						foreach($matches[1] as $__substitute)
+						{
+							$_values[] = urlencode($values[$__substitute]);									
+						}
+						*/
+
+
 						$_keys[] = $_substitute;
 	
 						$__value = false;
