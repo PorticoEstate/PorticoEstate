@@ -265,6 +265,9 @@
 								<xsl:if test="parameters">
 									parameters: <xsl:value-of select="parameters"/>,
 							    </xsl:if>
+								<xsl:if test="confirm_msg">
+									confirm_msg: "<xsl:value-of select="confirm_msg"/>",
+							    </xsl:if>
 								action: "<xsl:value-of select="action"/>"
 							}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 						</xsl:for-each>
