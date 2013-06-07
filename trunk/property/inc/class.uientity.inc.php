@@ -2009,11 +2009,11 @@ JS;
 						$_keys[] = $_substitute;
 	
 						$__value = false;
-						if(!$__value = urlencode($values[trim($_substitute, '_')]))
+						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
 						{
 							foreach ($values['attributes'] as $_attribute)
 							{
-								if(trim($_substitute, '_') == $_attribute['name'])
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
 								{
 									$__value = urlencode($_attribute['value']);
 									break;
@@ -2414,6 +2414,9 @@ JS;
 			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('core');
+
 
 			$criteria = array
 				(
@@ -2424,11 +2427,6 @@ JS;
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			if($custom_functions)
-			{
-				phpgw::import_class('phpgwapi.jquery');
-				phpgwapi_jquery::load_widget('core');
-			}
 
 			foreach ( $custom_functions as $entry )
 			{
