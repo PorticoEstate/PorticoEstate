@@ -473,6 +473,31 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 
+
+///// integration
+/*
+			integration_tab
+			integration_height
+			integration_url
+			integration_parametres
+			integration_action
+			integration_action_view
+			integration_action_edit
+			integration_auth_key_name
+			integration_auth_url
+			integration_auth_hash_name
+			integration_auth_hash_value
+			integration_location_data
+ */
+
+
+
+
+			$_integration_set = array();
+
+///// integration
+
+
 				$datatable['menu']						=	$this->bocommon->get_menu($this->type_app[$this->type]);
 
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
@@ -766,8 +791,45 @@
 					}
 				}
 
-				$code = 'var ' . implode(',', $button_def)  . ";\n";
+
+				$NormalButton_def[] = "oNormalButton_0";
+				$NormalButton_def[] = "oNormalButton_1";
+				$NormalButton_def[] = "oNormalButton_2";
+				$NormalButton_inner[] = "{order:0, name:'btn_search',funct:'onSearchClick'}";
+				$NormalButton_inner[] = "{order:1, name:'btn_new',	funct:'onNewClick'}";
+				$NormalButton_inner[] = "{order:2, name:'btn_export',funct:'onDownloadClick'}";
+
+
+				foreach ($_integration_set as $i => $_integration)
+				{	
+
+					$NormalButton_def[] = 'oNormalButton_' . ($i + 3); 
+					$NormalButton_inner[] = "{order:" . ($i + 3)  .", name:'btn_integration_{$i}',funct:'onIntegrationClick_{$i}'}";
+
+					$datatable['actions']['form'][0]['fields']['field'][] =  array
+					(
+						'type'	=> 'button',
+						'id'	=> "btn_integration_{$i}",
+						'value'	=> $_integration['name'],
+						'tab_index' => 10 + $i
+					);
+
+					$_js_functions .= <<<JS
+						this.onIntegrationClick_{$i} = function()
+						{
+							window.open(values_ds.integrationurl_{$i},'window');
+						}
+JS;
+				}
+
+				$code = 'var ' . implode(',', $NormalButton_def)  . ";\n";
+				$code .= 'var normalButtons = [' . "\n" . implode(",\n",$NormalButton_inner) . "\n];";
+
+
+				$code .= 'var ' . implode(',', $button_def)  . ";\n";
 				$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+				//new
+				$code .= $_js_functions;
 
 				$GLOBALS['phpgw']->js->add_code('', $code);
 
@@ -827,19 +889,57 @@
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'show_picture';
 			$uicols['input_type'][]	= '';
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
+
+			$remote_image_in_table = false;
+			foreach ($_config as $_config_section => $_config_section_data)
+			{
+
+				if($_config_section_data['image_in_table'])
+				{
+			
+					$remote_image_in_table = true;
+					$js = <<<JS
+	var show_picture_remote = function(elCell, oRecord, oColumn, oData)
+	{
+		if(oRecord.getData('img_id'))
+		{
+			sUrl = '{$_config_section_data['url']}';
+			sUrl += '&{$_config_section_data['img_key_remote']}=' + oRecord.getData('img_id');
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('file_name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&{$_config_section_data['thumbnail_flag']}\" alt=\""+oRecord.getData('file_name')+"\" /></a>";
+		}
+	}
+JS;
+					$GLOBALS['phpgw']->js->add_code('', $js);
+
+					break;
+				}
+			}
 
 
-			$img_types = array
-			(
-				'image/jpeg',
-				'image/png',
-				'image/gif'
-			);
+			if(!$remote_image_in_table)
+			{
+
+				$uicols['formatter'][]	= 'show_picture';
+
+				$vfs = CreateObject('phpgwapi.vfs');
+				$vfs->override_acl = 1;
+
+				$img_types = array
+				(
+					'image/jpeg',
+					'image/png',
+					'image/gif'
+				);
+			}
+			else
+			{
+				$uicols['formatter'][]	= 'show_picture_remote';			
+			}
 
 			$content = array();
 			$j=0;
@@ -849,11 +949,11 @@
 				{
 					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
 
-					if(false)
+					if($remote_image_in_table)
 					{
-						$entity_entry['file_name']	= $entity_entry['museumsnr'];
-						$entity_entry['directory']	= urlencode('external_source');
-						$entity_entry['img_id']		= $entity_entry['museumsnr'];
+						$entity_entry['file_name']	= $entity_entry[$_config_section_data['img_key_local']];
+					//	$entity_entry['directory']	= urlencode('external_source');
+						$entity_entry['img_id']		= $entity_entry[$_config_section_data['img_key_local']];
 					}
 					else
 					{
@@ -1906,14 +2006,27 @@
 
 					foreach ($output as $_dummy => $_substitute)
 					{
+
+						/**
+						* Alternative
+						
+						$regex = "/__([\w]+)__/";
+						preg_match_all($regex, $_substitute, $matches);
+						foreach($matches[1] as $__substitute)
+						{
+							$_values[] = urlencode($values[$__substitute]);									
+						}
+						*/
+
+
 						$_keys[] = $_substitute;
 	
 						$__value = false;
-						if(!$__value = urlencode($values[trim($_substitute, '_')]))
+						if(!$__value = urlencode($values[str_replace(array('__','*'),array('',''), $_substitute)]))
 						{
 							foreach ($values['attributes'] as $_attribute)
 							{
-								if(trim($_substitute, '_') == $_attribute['name'])
+								if(str_replace(array('__','*'),array('',''), $_substitute) == $_attribute['name'])
 								{
 									$__value = urlencode($_attribute['value']);
 									break;
@@ -2314,6 +2427,9 @@
 			$GLOBALS['phpgw']->js->validate_file( 'tinybox2', 'packed', 'phpgwapi' );
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('core');
+
 
 			$criteria = array
 				(
@@ -2324,11 +2440,6 @@
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			if($custom_functions)
-			{
-				phpgw::import_class('phpgwapi.jquery');
-				phpgwapi_jquery::load_widget('core');
-			}
 
 			foreach ( $custom_functions as $entry )
 			{
