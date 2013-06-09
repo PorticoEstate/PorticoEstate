@@ -43,6 +43,7 @@
 			'add'				=> true,
 			'edit'				=> true,
 			'save'				=> true,
+			'delete'			=> true,
 			'get_vendors'		=> true,
 			'get_users'			=> true,
 			'edit_survey_title'	=> true,
@@ -219,6 +220,17 @@
 
 			$data['datatable']['actions'][] = array
 					(
+						'my_name'		=> 'view_survey',
+						'text' 			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.view'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+
+			$data['datatable']['actions'][] = array
+					(
 						'my_name'		=> 'edit_survey',
 						'text' 			=> lang('edit'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -238,6 +250,22 @@
 						)),
 						'parameters'	=> json_encode($parameters)
 					);
+
+
+			if($GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				$data['datatable']['actions'][] = array
+					(
+						'my_name'		=> 'delete_survey',
+						'text' 			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry') . '?',
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicondition_survey.delete'
+						)),
+						'parameters'	=> json_encode($parameters)
+					);
+			}
 
 			self::render_template_xsl('datatable_common', $data);
 		}
@@ -1195,6 +1223,36 @@
 				}
 				return 'OK';
 			}
+		}
+
+		/**
+		* Delete survey and all related info
+		*
+		* @param int  $id  id of entity
+		*
+		* @return string text to appear in ui as receipt on action
+		*/
+
+		public function delete()
+		{
+			if(!$GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_DELETE, 'property'))
+			{
+				return 'No access';
+			}
+			$id = phpgw::get_var('id', 'int', 'GET');
+
+			try
+			{
+				$this->bo->delete($id);
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					return $e->getMessage(); 
+				}
+			}
+			return 'Deleted';
 		}
 
 		/*
