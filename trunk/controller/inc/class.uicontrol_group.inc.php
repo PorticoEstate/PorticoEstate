@@ -529,8 +529,43 @@
 				}
 				phpgwapi_yui::tabview_setup('control_group_tabview');
 
+
+
+				//--- sigurd 10.juni 13
+				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
+
+				if($location_id)
+				{
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+					$entity_arr = explode('.',$loc_arr['location']);
+
+					$entity = $entity_so->read_single($entity_arr[2]);
+					$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+					foreach ($entity_list as &$e)
+					{
+						if($e['id'] == $entity['id'])
+						{
+							$e['selected'] = 1;
+						}
+					}
+					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$entity_arr[2]));
+					foreach ($category_list as &$c)
+					{
+						if($c['id'] == $category['id'])
+						{
+							$c['selected'] = 1;
+						}
+					}
+				}
+				//---
+
+
 				$data = array
 				(
+					'entities' => $entity_list,
+					'categories' => $category_list,
+
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
 					'editable' 					=> true,
@@ -557,6 +592,7 @@
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
