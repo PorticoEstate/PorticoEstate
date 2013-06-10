@@ -67,8 +67,56 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							</dt>
+							<dd>
+								<select name="entity_id" id="entity_id">
+									<xsl:for-each select="entities">
+										<option value="{id}">
+											<xsl:if test="selected">
+												<xsl:attribute name="selected" value="selected" />
+											</xsl:if>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							</dt>
+							<dd>
+								<select name="category_id" id="category_id">
+									<xsl:for-each select="categories">
+										<option value="{id}">
+											<xsl:if test="selected">
+												<xsl:attribute name="selected" value="selected" />
+											</xsl:if>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</dd>
+						</xsl:when>
+						<xsl:otherwise>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Entity')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="entity/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Category')" /></label>
+							</dt>
+							<dd>
+								<xsl:value-of select="category/name" />
+							</dd>
+						</xsl:otherwise>
+					</xsl:choose>
 				</dl>
-				
+
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">
