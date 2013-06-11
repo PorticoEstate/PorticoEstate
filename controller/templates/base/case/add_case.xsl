@@ -24,9 +24,13 @@
 					<li>
 						<h3 class="expand-trigger"><img src="controller/images/arrow_right.png" /><xsl:value-of select="control_group/group_name"/></h3>				
 						<ul class="expand_list" style="display:none;">
+								<select name="component_id" id="component_id">
+									<xsl:apply-templates select="components_at_location/component_options"/>
+								</select>
+
 							<xsl:for-each select="control_items">
 								<li>
-									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>	
+									<h4><img src="controller/images/arrow_right.png" /><span><xsl:value-of select="title"/></span></h4>
 										<xsl:choose>
 											<xsl:when test="type = 'control_item_type_1'">
 												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
@@ -188,3 +192,13 @@
 </div>
 </div>
 </xsl:template>
+
+<xsl:template match="component_options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of select="id"/> - <xsl:value-of disable-output-escaping="yes" select="short_description"/>
+	</option>
+</xsl:template>
+

@@ -223,6 +223,7 @@
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 
 				if($returnType == "array")
 				{

@@ -231,6 +231,7 @@
 			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 
@@ -243,6 +244,10 @@
 			$__querymethod = array();
 
 //			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
+			if($location_code)
+			{
+				$__querymethod = array("fm_bim_item.location_code {$this->like} '{$location_code}%'");
+			}
 
 			$attribute_table = 'phpgw_cust_attribute';
 

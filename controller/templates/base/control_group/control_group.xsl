@@ -74,14 +74,7 @@
 							</dt>
 							<dd>
 								<select name="entity_id" id="entity_id">
-									<xsl:for-each select="entities">
-										<option value="{id}">
-											<xsl:if test="selected">
-												<xsl:attribute name="selected" value="selected" />
-											</xsl:if>
-											<xsl:value-of select="name"/>
-										</option>
-									</xsl:for-each>
+									<xsl:apply-templates select="entities/options"/>
 								</select>
 							</dd>
 							<dt>
@@ -89,14 +82,7 @@
 							</dt>
 							<dd>
 								<select name="category_id" id="category_id">
-									<xsl:for-each select="categories">
-										<option value="{id}">
-											<xsl:if test="selected">
-												<xsl:attribute name="selected" value="selected" />
-											</xsl:if>
-											<xsl:value-of select="name"/>
-										</option>
-									</xsl:for-each>
+									<xsl:apply-templates select="categories/options"/>
 								</select>
 							</dd>
 						</xsl:when>
