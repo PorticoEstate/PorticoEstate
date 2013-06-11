@@ -459,6 +459,7 @@
 					(
 						'id' 	=> $cat_list['cat_id'],
 						'name'	=> $cat_list['name'],
+						'selected' => $control_group->get_control_area_id() == $cat_list['cat_id'] ? 1 : 0
 					);
 				}
 				// END as categories
@@ -472,46 +473,15 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
-/*				foreach ($control_area_array as $control_area)
-				{
-					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$control_area_options[] = array
-						(
-							'id'	=> $control_area->get_id(),
-							'name'	=> $control_area->get_title()
-						);
-					}
-				}*/
 
 				foreach ($procedure_array as $procedure)
 				{
-					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
-					{
-						$procedure_options[] = array
-						(
-							'id'	=> $procedure->get_id(),
-							'name'	=> $procedure->get_title(),
-							'selected' => 'yes'
-						);
-					}
-					else
-					{
-						$procedure_options[] = array
-						(
-							'id'	=> $procedure->get_id(),
-							'name'	=> $procedure->get_title()
-						);
-					}
+					$procedure_options[] = array
+					(
+						'id'	=> $procedure->get_id(),
+						'name'	=> $procedure->get_title(),
+						'selected' => $procedure->get_id() == $control_group->get_procedure_id() ? 1 : 0
+					);
 				}
 				array_unshift($procedure_options,array ('id'=>'','name'=> lang('select value')));
 
@@ -574,8 +544,8 @@
 
 				$data = array
 				(
-					'entities' 					=> $entity_list,
-					'categories'				=> $category_list,
+					'entities' 					=> array('options' => $entity_list),
+					'categories'				=> array('options' => $category_list),
 
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,

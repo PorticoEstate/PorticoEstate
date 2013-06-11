@@ -138,17 +138,53 @@
 				$type = 'location';
 			}
 			
+//_debug_array($saved_control_groups);
 			//Populating array with saved control items for each group
 			foreach ($saved_control_groups as $control_group)
 			{	
 				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
 
+//_debug_array($control_group);
 				if(count($saved_control_items) > 0)
 				{				
-					$control_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
+					$component_location_id = $control_group->get_component_location_id();
+					if($component_location_id)
+					{
+						//// start components
+						$criterias_array = array();
+						$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+						$criterias_array['location_id'] = $component_location_id;
+						$criterias_array['location_code'] = $location_code;
+						$criterias_array['allrows'] = true;
+						$components_at_location = execMethod('property.soentity.get_eav_list', $criterias_array);
+						/// end components
+
+						if($components_at_location)
+						{
+							$control_groups_with_items_array[] = array
+							(
+								'control_group'				=> $control_group->toArray(),
+								'control_items'				=> $saved_control_items,
+								'components_at_location'	=> array('component_options' => $components_at_location)
+							);
+						}
+					}
+					else
+					{
+						$control_groups_with_items_array[] = array
+						(
+							'control_group' => $control_group->toArray(),
+							'control_items' => $saved_control_items
+						);
+					}
 				}
-			}
+
+
+//_debug_array($control_groups_with_items_array);
+//_debug_array($components_at_location);
+//die();
 			
+			}
 			
 			$level = $this->location_finder->get_location_level($location_code);
 			$year = date("Y", $check_list->get_deadline());
@@ -158,7 +194,7 @@
 
 			// Fetches buildings on property
 			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
-      
+
 			$data = array
 			(
 				'control' 							=> $control,
