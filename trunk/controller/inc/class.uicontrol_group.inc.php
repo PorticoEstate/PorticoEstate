@@ -221,12 +221,20 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.index'));
 				}
 
+				$entity_id = phpgw::get_var('entity_id', 'int');
+				$category_id = phpgw::get_var('category_id', 'int');
+				$component_location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
+
+//_debug_array($_POST);
+//die();
+
 				if(isset($control_group)) // Add new values to the control item
 				{
 					$control_group->set_group_name(phpgw::get_var('group_name'));
 					$control_group->set_procedure_id( phpgw::get_var('procedure') );
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
 					$control_group->set_building_part_id( phpgw::get_var('building_part') );
+					$control_group->set_component_location_id($component_location_id);
 
 					//$this->so->store($control_item);
 
@@ -532,12 +540,15 @@
 
 
 				//--- sigurd 10.juni 13
-				$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
+				$entity_so	= CreateObject('property.soadmin_entity');
+				$entity_list = $entity_so->read(array('allrows' => true));
+
 				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
 
-				if($location_id)
+				$component_location_id = $control_group->get_component_location_id();
+				if($component_location_id)
 				{
-					$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
+					$loc_arr = $GLOBALS['phpgw']->locations->get_name($component_location_id);
 					$entity_arr = explode('.',$loc_arr['location']);
 
 					$entity = $entity_so->read_single($entity_arr[2]);
@@ -563,8 +574,8 @@
 
 				$data = array
 				(
-					'entities' => $entity_list,
-					'categories' => $category_list,
+					'entities' 					=> $entity_list,
+					'categories'				=> $category_list,
 
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
@@ -592,7 +603,7 @@
 
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
-				self::add_javascript('logistic', 'logistic', 'resource_type_requirement.js');
+				self::add_javascript('controller', 'controller', 'control_group_to_component.js');
 				self::render_template_xsl(array('control_group/control_group_tabs','control_group/control_group','control_group/control_group_items'), $data);
 			}
 		}
@@ -768,6 +779,8 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 
+			$entity_so	= CreateObject('property.soadmin_entity');
+
 			$tabs = array
 			(
 				'control_group'		=> array('label' => lang('Control_group'), 'link' => '#control_group'),
@@ -802,6 +815,13 @@
 				$control_group_array = $control_group->toArray();
 				//var_dump($control_group_array);
 
+				$loc_arr = $GLOBALS['phpgw']->locations->get_name($control_group->get_component_location_id());
+				$entity_arr = explode('.',$loc_arr['location']);
+
+				$entity = $entity_so->read_single($entity_arr[2]);
+				$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
+
+
 				$control_items_array = $this->so_control_item_list->get_control_items($control_group_id);
 
 				$control_items = array();
@@ -818,6 +838,8 @@
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_group'),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
 					'control_group'				=> $control_group_array,
+					'entity'					=> $entity,
+					'category'					=> $category,
 					'selected_control_items'	=> $control_items,
 				);
 
