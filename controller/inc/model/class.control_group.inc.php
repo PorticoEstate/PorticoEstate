@@ -43,6 +43,7 @@
 		protected $building_part_id;
 		protected $building_part_descr;
 		protected $order_nr;
+		protected $component_location_id;
 				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -118,6 +119,18 @@
 		
 		public function get_order_nr(){ return $this->order_nr; }
 
+
+		public function set_component_location_id($component_location_id)
+		{
+			$this->component_location_id = $component_location_id;
+		}
+		
+		public function get_component_location_id()
+		{
+			return $this->component_location_id;
+		}
+
+
 		public function serialize()
 		{
 			$result = array();
@@ -127,6 +140,7 @@
 			$result['control_area'] = $this->get_control_area_name();
 			$result['building_part'] = $this->get_building_part_descr();
 			$result['order_nr'] = $this->get_order_nr();
+			$result['component_location_id'] = $this->get_component_location_id();
 			
 			return $result;
 		}
