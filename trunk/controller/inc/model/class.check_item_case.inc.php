@@ -50,6 +50,7 @@
 		protected $modified_by;
 		protected $measurement;
 		protected $location_code;
+		protected $component_id;
     
 		
 		/**
@@ -140,47 +141,57 @@
 			$this->measurement = $measurement;
 		}
     
-    public function get_location_code() { return $this->location_code; }
+    	public function get_location_code() { return $this->location_code; }
 		
 		public function set_location_code($location_code)
 		{
 			$this->location_code = $location_code;
 		}
+
+    	public function get_component_id()
+    	{
+    		return $this->component_id;
+    	}
+		
+		public function set_component_id($component_id)
+		{
+			$this->component_id = $component_id;
+		}
     
-    public function validate()
+	    public function validate()
 		{
 			$status = true;
 	
 			// Validate DESCRIPTION
 			if( empty( $this->descr ) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['descr'] = "error_msg_1";
-		  }
+			{
+				$status = false;
+				$this->error_msg_array['descr'] = "error_msg_1";
+			}
 		  
 		  // Validate STATUS		  		  
 			if( empty( $this->status ) && ( (intval($this->status) == self::STATUS_OPEN) || (intval($this->status) == self::STATUS_CLOSED) || (intval($this->status) == self::STATUS_PENDING)) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['status'] = "error_msg_1";
-		  }
+			{
+		  		$status = false;
+		  		$this->error_msg_array['status'] = "error_msg_1";
+			}
 			
 		  // Validate LOCATION CODE
-		  if( empty($this->location_code) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['location_code'] = "error_msg_1";
-		  }
+			if( empty($this->location_code) )
+			{
+				$status = false;
+				$this->error_msg_array['location_code'] = "error_msg_1";
+			}
 		 		  
 		  // Validate CHECK ITEM ID
 			if( empty($this->check_item_id) )
-		  {
-		  	$status = false;
-		  	$this->error_msg_array['check_item_id'] = "error_msg_4";
-		  }
+			{
+				$status = false;
+				$this->error_msg_array['check_item_id'] = "error_msg_4";
+			}
 
 		  //to do: return $status;
       
-      return true;
+			return true;
 		}    
 	}

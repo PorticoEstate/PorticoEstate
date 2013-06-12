@@ -907,3 +907,22 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.45';
+	function controller_upgrade0_1_45()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','component_id',array(
+			'type' => 'int', 
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.46';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+	

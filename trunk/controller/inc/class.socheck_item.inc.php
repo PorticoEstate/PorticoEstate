@@ -272,10 +272,14 @@
 		public function get_check_items_with_cases($check_list_id, $type = "control_item_type_1", $status = "open", $messageStatus = null, $location_code = null)
 		{
 			$check_list_id = (int) $check_list_id;
-			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, ";
+			$sql  = "SELECT ci.id as ci_id, control_item_id, check_list_id, component_location_id,";
 			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
-			$sql .= "FROM controller_check_item ci "; 
+		//	$sql .= "FROM controller_check_item ci "; 
+
+			$sql .= "FROM controller_control_group JOIN controller_control_item ON controller_control_item.control_group_id=controller_control_group.id ";
+			$sql .= "JOIN controller_check_item ci ON ci.control_item_id = controller_control_item.id "; 
+
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 			$sql .= "WHERE ci.check_list_id = {$check_list_id} ";
@@ -311,7 +315,7 @@
 				$sql .= "AND cic.location_item_id > 0 ";
 			}
       
-      if($location_code != null)
+      		if($location_code != null)
 			{
 				$sql .= "AND cic.location_code = '$location_code' ";
 			}
@@ -343,6 +347,7 @@
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 					$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
+					$control_item->set_component_location_id($this->db->f('component_location_id'), 'int');
 					$control_item->set_type($this->db->f('type', true), 'string');
 				
 					$check_item->set_control_item($control_item);
@@ -363,7 +368,7 @@
 					$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
-								
+					$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));								
 					$cases_array[] = $case;
 					
 				}
@@ -395,10 +400,11 @@
 		{
 			$message_ticket_id = (int) $message_ticket_id;
 
-			$sql  = "SELECT ci.id as ci_id, control_item_id, "; 
+			$sql  = "SELECT ci.id as ci_id, control_item_id, component_location_id,"; 
 			$sql .= "check_list_id, cic.id as cic_id, cic.status as cic_status, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
-			$sql .= "FROM controller_check_item ci "; 
+			$sql .= "FROM controller_control_group JOIN controller_control_item ON controller_control_item.control_group_id=controller_control_group.id ";
+			$sql .= "JOIN controller_check_item ci ON ci.control_item_id = controller_control_item.id "; 
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 			$sql .= "WHERE cic.location_item_id = {$message_ticket_id}";
@@ -428,6 +434,7 @@
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 					$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
+					$control_item->set_component_location_id($this->db->f('component_location_id'), 'int');
 					$control_item->set_type($this->db->f('type', true), 'string');
 									
 					$check_item->set_control_item($control_item);
