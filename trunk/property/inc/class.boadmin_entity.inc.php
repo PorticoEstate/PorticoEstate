@@ -86,7 +86,8 @@
 			'save'				=> true,
 			'delete'			=> true,
 			'check_perms'		=> true,
-			'get_category_list'	=> true
+			'get_category_list'	=> true,
+			'get_attrib_list'	=> true
 		);
 		var $type_app		 = array
 			(
@@ -220,6 +221,18 @@
 		{
 			$entity_id		= phpgw::get_var('entity_id','int');
 			return $this->so->read_category(array('allrows'=>true,'entity_id'=>$entity_id));
+		}
+
+
+		/**
+		* Fetch custom attributes for an given komponent type
+		*/
+		public function get_attrib_list()
+		{
+			$entity_id		= phpgw::get_var('entity_id');
+			$cat_id			= phpgw::get_var('cat_id');
+
+			return $attrib_data = $this->custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
 		}
 
 

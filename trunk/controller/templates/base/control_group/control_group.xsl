@@ -85,6 +85,28 @@
 									<xsl:apply-templates select="categories/options"/>
 								</select>
 							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Attributes')" /></label>
+							</dt>
+							<dd>
+								<div id="attributes">
+									<xsl:if test="req_type/cust_attribute_id">
+										<xsl:for-each select="attributes">
+											<xsl:if test="input_text">
+												<xsl:choose>
+													<xsl:when test="checked">
+														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}' checked='checked'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
+													</xsl:when>
+													<xsl:otherwise>
+														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:if>
+								</div>
+							</dd>
+
 						</xsl:when>
 						<xsl:otherwise>
 							<dt>
@@ -98,6 +120,14 @@
 							</dt>
 							<dd>
 								<xsl:value-of select="category/name" />
+							</dd>
+							<dt>
+								<label><xsl:value-of select="php:function('lang', 'Chosen attributes')" /></label>
+							</dt>
+							<dd>
+								<xsl:for-each select="attributes">
+									<xsl:value-of select="input_text" /> (<xsl:value-of select="trans_datatype" />)<br/>
+								</xsl:for-each>
 							</dd>
 						</xsl:otherwise>
 					</xsl:choose>

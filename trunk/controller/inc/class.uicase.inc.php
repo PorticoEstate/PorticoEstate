@@ -106,7 +106,7 @@
         function add_case()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$selected_location_code = phpgw::get_var('location_code');
+			$case_location_code = phpgw::get_var('location_code');
 			$check_list = $this->so_check_list->get_single($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 		
@@ -135,7 +135,7 @@
 			else
 			{
 				$location_code = $check_list->get_location_code();
-				$location_code_search_components = $selected_location_code ? $selected_location_code : $location_code;
+				$location_code_search_components = $case_location_code ? $case_location_code : $location_code;
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 			}
@@ -207,14 +207,14 @@
 			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			foreach ( $buildings_on_property as &$building)
 			{
-				$building['selected'] = $building['id'] == $selected_location_code ? 1 : 0;
+				$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 			}
 //_debug_array($control_groups_with_items_array);
 			$data = array
 			(
 				'control' 							=> $control,
 				'check_list' 						=> $check_list,
-				'buildings_on_property'			 => $buildings_on_property,
+				'buildings_on_property'				=> $buildings_on_property,
 			    'location_array'					=> $location_array,
 				'component_array'					=> $component_array,
 				'control_groups_with_items_array' 	=> $control_groups_with_items_array,
@@ -232,7 +232,8 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::add_javascript('controller', 'controller', 'case.js');
 			self::add_javascript('controller', 'controller', 'check_list.js');
-			
+			self::add_javascript('controller', 'controller', 'check_list_update_status.js');			
+
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan', 
 									  'check_list/fragments/check_list_top_section', 'case/add_case', 
 									  'check_list/fragments/select_buildings_on_property'), $data);
@@ -764,7 +765,7 @@
       
 			if( count($buildings_on_property) > 0 )
 			{
-				$case_location_code = $case_location_code ? $case_location_code : $buildings_on_property[0]['id'];
+		//		$case_location_code = $case_location_code ? $case_location_code : $buildings_on_property[0]['id'];
 
 				$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $type = null, 'open_or_waiting', null, $case_location_code);
 
@@ -780,8 +781,17 @@
 				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
 				
 				$component_location_id = $check_item->get_control_item()->get_component_location_id();
-				//FIXME
-				//GET 'Short description' for component_id
+				
+				foreach($check_item->get_cases_array() as &$case)
+				{
+
+					$component_id = $case->get_component_id();
+					if($component_id)
+					{
+						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+						$case->set_component_descr($short_desc);
+					}
+				}
 
 			    $check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
 				$open_check_items_and_cases[$key] = $check_item;
@@ -861,11 +871,38 @@
 			if( count($buildings_on_property) > 0 )
 			{
 		//		$building_location_code = $buildings_on_property[0]['id'];
-				$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $building_location_code);
+				$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code);
 				foreach ( $buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
+
+//---------
+				foreach($closed_check_items_and_cases as $key => $check_item)
+				{
+	//				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
+				
+					$component_location_id = $check_item->get_control_item()->get_component_location_id();
+				
+					foreach($check_item->get_cases_array() as &$case)
+					{
+
+						$component_id = $case->get_component_id();
+						if($component_id)
+						{
+							$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id, 'id' => $component_id));
+							$case->set_component_descr($short_desc);
+						}
+					}
+
+	//				$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
+	//				$closed_check_items_and_cases[$key] = $check_item;
+				}
+
+
+//-------
+
+
 			}
 
 			$data = array
