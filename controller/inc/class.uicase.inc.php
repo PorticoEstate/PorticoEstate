@@ -781,12 +781,9 @@
 				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
 				
 				$component_location_id = $check_item->get_control_item()->get_component_location_id();
-				
-				//FIXME: 13.juni 13
-				//foreach($check_item->get_cases_array() as &$case)
+
 				foreach($check_item->get_cases_array() as $case)
 				{
-
 					$component_id = $case->get_component_id();
 					if($component_id)
 					{
@@ -885,13 +882,9 @@
 	//				$control_item_with_options = $this->so_control_item->get_single_with_options( $check_item->get_control_item_id() );
 				
 					$component_location_id = $check_item->get_control_item()->get_component_location_id();
-				
 
-					//FIXME: 13.juni 13
-				//	foreach($check_item->get_cases_array() as &$case)
 					foreach($check_item->get_cases_array() as $case)
 					{
-
 						$component_id = $case->get_component_id();
 						if($component_id)
 						{
