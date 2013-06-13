@@ -271,6 +271,7 @@
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+			return True;
 		}
 
 		public function update_id_string() 

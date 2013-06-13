@@ -28,6 +28,19 @@
 				)
 			);
 		}
+
+		function get_metainfo($id)
+		{
+			$this->db->limit_query("SELECT name, district, city, description FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return array('name' => $this->db->f('name', false),
+						  'district' => $this->db->f('district', false),
+						  'city' => $this->db->f('city', false),
+						  'description' => $this->db->f('description', false));
+		}
 		
 		/**
 		 * Returns buildings used by the organization with the specified id

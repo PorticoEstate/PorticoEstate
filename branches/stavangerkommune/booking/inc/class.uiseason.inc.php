@@ -155,7 +155,12 @@
 				$season = extract_values($_POST, $this->fields);
 				$season['active'] = '1';
 				array_set_default($_POST, 'resources', array());
+				$from =  strtotime($season['from_']);
+				$to =  strtotime($season['to_']);
+				$season['from_'] = date("Y-m-d",$from);
+				$season['to_'] = date("Y-m-d",$to);
 				$errors = $this->bo->validate($season);
+				
 				if(!$errors)
 				{
 					try {
@@ -188,6 +193,10 @@
 			$season = $this->bo->read_single($id);
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $season['building_id']));
+			$from =  strtotime($season['from_']);
+			$to =  strtotime($season['to_']);
+			$season['from_'] = date("Y-m-d",$from);
+			$season['to_'] = date("Y-m-d",$to);
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -358,8 +367,11 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$step = phpgw::get_var('create', 'POST') ? 3 : 2;
-				$from_ = phpgw::get_var('from_', 'POST');
-				$to_ = phpgw::get_var('to_', 'POST');
+				$from =  strtotime(phpgw::get_var('from_', 'POST'));
+				$to =  strtotime(phpgw::get_var('to_', 'POST'));
+				$from_ = date("Y-m-d",$from);
+				$to_ = date("Y-m-d",$to);
+
 				$interval = phpgw::get_var('field_interval', 'POST');
 				if($from_ < $season['from_'])
 				{

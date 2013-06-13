@@ -9,7 +9,7 @@
 			$this->so = CreateObject('booking.soapplication');
 		}
 
-		function send_notification($application, $created=false)
+		function send_notification($application, $created=false, $assocciated=false)
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
@@ -43,21 +43,23 @@
 					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
 				}
 				$buildingemail = $this->get_tilsyn_email($application['building_id']);
-				$resourcename = implode(",",$this->get_resource_name($application['resources']));
-				$dates = "";
-				foreach ($application['dates'] as $date) {
-					$dates .=implode(", ",$date)." ";
-				}
-				$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." i ".$application[building_name]."</p>"; 
-				$bbody .= "<p>Den ".$dates."er Godkjent</p>";
+				if ($buildingemail != '') {
+					$resourcename = implode(",",$this->get_resource_name($application['resources']));
+					$dates = "";
+					foreach ($application['dates'] as $date) {
+						$dates .=implode(", ",$date)." ";
+					}
+					$bbody = "<p>".$application['contact_name']." sin søknad  om leie/lån av ".$resourcename." i ".$application[building_name]."</p>"; 
+					$bbody .= "<p>Den ".$dates."er Godkjent</p>";
 				
-				try
-				{
-					$send->msg('email', $buildingemail, $subject, $bbody, '', '', '', $from, '', 'html');
-				}
-				catch (phpmailerException $e)
-				{
+					try
+					{
+						$send->msg('email', $buildingemail, $subject, $bbody, '', '', '', $from, '', 'html');
+					}
+					catch (phpmailerException $e)
+					{
 					// TODO: Inform user if something goes wrong
+					}
 				}
 		
 			} elseif ($application['status'] == 'REJECTED') {
@@ -90,6 +92,11 @@
 			$applications = array();
 			$this->db = & $GLOBALS['phpgw']->db;
 
+#			$sql = "select distinct ap.id
+#					from bb_application ap
+#					inner join bb_application_resource ar on ar.application_id = ap.id
+#					inner join bb_resource re on re.id = ar.resource_id
+#					inner join bb_building bu on bu.id = re.building_id";
 			$sql = "select distinct ap.id
 					from bb_application ap
 					inner join bb_application_resource ar on ar.application_id = ap.id

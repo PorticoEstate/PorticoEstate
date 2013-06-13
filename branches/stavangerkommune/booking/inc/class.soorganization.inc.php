@@ -52,6 +52,19 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
+		function get_metainfo($id)
+		{
+			$this->db->limit_query("SELECT name, shortname, district, city, description FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return array('name' => $this->db->f('name', false),
+						  'shortname' => $this->db->f('shortname', false),
+						  'district' => $this->db->f('district', false),
+						  'city' => $this->db->f('city', false),
+						  'description' => $this->db->f('description', false));
+		}
         function get_groups($organization_id)
         {
             static $groups = null;

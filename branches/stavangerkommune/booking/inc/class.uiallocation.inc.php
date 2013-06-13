@@ -395,7 +395,6 @@
 
 		public function delete()
 		{
-			
 			$id = intval(phpgw::get_var('allocation_id', 'GET'));
 			$outseason = phpgw::get_var('outseason', 'GET');
 			$recurring = phpgw::get_var('recurring', 'GET');
@@ -409,6 +408,7 @@
 			$invalid_dates = array();
 			$valid_dates = array();
 
+			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$from_date = $_POST['from_'];

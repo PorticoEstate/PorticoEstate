@@ -245,10 +245,12 @@
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
             #The string replace is a workaround for a problem at Bergen Kommune 
+
             $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
             $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
 			$time_from = split(" ",phpgw::get_var('from_', 'str', 'GET'));
 			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
+
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
 			if (! isset($allocation_id)) $noallocation = 1;
@@ -278,6 +280,11 @@
 			{
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+
+				$timestamp =  strtotime($booking['from_']);
+				$booking['from_'] =  date("Y-m-d H:i:s",$timestamp);
+				$timestamp =  strtotime($booking['to_']);
+				$booking['to_'] =  date("Y-m-d H:i:s",$timestamp);
 
 				if(strlen($_POST['from_']) < 6) 
 				{

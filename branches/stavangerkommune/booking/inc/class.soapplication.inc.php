@@ -161,6 +161,38 @@
 			return $results;
 		}
 
+		function set_inactive($id,$type)
+		{
+ 			if ($type == 'event') {
+				$sql = "UPDATE bb_event SET active = 0 where id = ($id)";
+     		} elseif ($type == 'allocation') {
+				$sql = "UPDATE bb_allocation SET active = 0 where id = ($id)";
+			} elseif ($type == 'booking') {
+				$sql = "UPDATE bb_booking SET active = 0 where id = ($id)";
+			} else {
+				throw new UnexpectedValueException('Encountered an unexpected error');
+			}
+			$this->db->query($sql, __LINE__, __FILE__);
+			return;
+
+		}
+
+		function set_active($id,$type)
+		{
+ 			if ($type == 'event') {
+				$sql = "UPDATE bb_event SET active = 1 where id = ($id)";
+     		} elseif ($type == 'allocation') {
+				$sql = "UPDATE bb_allocation SET active = 1 where id = ($id)";
+			} elseif ($type == 'booking') {
+				$sql = "UPDATE bb_booking SET active = 1 where id = ($id)";
+			} else {
+				throw new UnexpectedValueException('Encountered an unexpected error');
+			}
+			$this->db->query($sql, __LINE__, __FILE__);
+			return;
+
+		}
+
         function get_activities_main_level()
         {
 		    $results = array();
@@ -235,7 +267,7 @@
 					'id'					=> array('type' => 'int'),
 					'application_id'		=> array('type' => 'int'),
 					'type'	=> array('type' => 'string', 'required' => true),
-					'from_'	=> array('type' => 'timestamp'),
+					'from_'	=> array('type' => 'timestamp','query' => true),
 					'to_'	=> array('type' => 'timestamp')));
 		}
 	}

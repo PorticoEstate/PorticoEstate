@@ -114,6 +114,10 @@
 							'label' => lang('To')
 						),
 						array(
+							'key' => 'active',
+							'label' => lang('Active')
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -356,6 +360,7 @@
 
 				if (!$_POST['application_id'])
 				{
+					$event['active'] = '0';
                     $temp_errors = array();
 					foreach( $event['dates'] as $checkdate)				
 					{

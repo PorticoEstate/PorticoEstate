@@ -4,10 +4,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
-		<meta name="description" content="phpGroupWare">
-		<meta name="keywords" content="phpGroupWare">
-		<meta name="robots" content="none">
+		{metainfo_author}
+		{metainfo_description}
+		{metainfo_keywords}
+		{metainfo_robots}
 		<title>{site_title}</title>
 		<link rel="icon" href="{img_icon}" type="image/x-ico">
 		<link rel="shortcut icon" href="{img_icon}">

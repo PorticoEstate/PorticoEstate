@@ -204,6 +204,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index', 'phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 'created', 'dir' => 'asc'),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -229,6 +230,10 @@
 						array(
 							'key' => 'modified',
 							'label' => lang('last modified')
+						),
+						array(
+							'key' => 'from_',
+							'label' => lang('From')
 						),
 						array(
 							'key' => 'activity_name',
@@ -276,13 +281,18 @@
                 }
                 
 			} else {
+				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
 				if (phpgw::get_var('status') == 'none')
 				{
 					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				} 
+				}
+				elseif (isset($test)) 
+				{
+	                $filters['status'] = phpgw::get_var('status');
+				}
 				else
 				{
-                $filters['status'] = phpgw::get_var('status');
+	                $filters['status'] = 'NEW';
 				}
                 $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
@@ -317,6 +327,12 @@
 					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 				}
 
+				$dates = array();
+				foreach ($application['dates'] as $data) {
+					$dates[] = $data['from_'];
+					break;
+				}
+				$application['from_'] = implode(',',$dates);
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
@@ -430,6 +446,16 @@
 				array_set_default($_POST, 'to_', array());
 
 				$application = $this->extract_form_data();
+
+				foreach ($_POST['from_'] as &$from) {
+					$timestamp =  strtotime($from);
+					$from =  date("Y-m-d H:i:s",$timestamp);
+				}
+				foreach ($_POST['to_'] as &$to) {
+					$timestamp =  strtotime($to);
+					$to =  date("Y-m-d H:i:s",$timestamp);
+				}
+
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
@@ -550,7 +576,18 @@
 				}
 
 				$errors = $this->validate($application);
+
+				foreach ($_POST['from_'] as &$from) {
+					$timestamp =  strtotime($from);
+					$from =  date("Y-m-d H:i:s",$timestamp);
+				}
+				foreach ($_POST['to_'] as &$to) {
+					$timestamp =  strtotime($to);
+					$to =  date("Y-m-d H:i:s",$timestamp);
+				}
+
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($application);
@@ -690,6 +727,21 @@
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$application['status'] = $_POST['status'];
+
+					if ($application['status'] == 'REJECTED') {
+						$test = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+						foreach ($test['results'] as $app) {
+							$this->bo->so->set_inactive($app['id'],$app['type']);						
+						}
+					}
+
+					if ($application['status'] == 'ACCEPTED') {
+						$test = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+						foreach ($test['results'] as $app) {
+							$this->bo->so->set_active($app['id'],$app['type']);						
+						}
+					}
+
 					$update = true;
 					$notify = true;
 				}
@@ -736,7 +788,7 @@
 			$audience = $audience['results'];
 			$application['status'] = $application['status'];
 			// Check if any bookings, allocations or events are associated with this application
-			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
+			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id']),'sort'=>'from_', 'dir' => 'asc'));
 			$num_associations = $associations['total_records'];
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
