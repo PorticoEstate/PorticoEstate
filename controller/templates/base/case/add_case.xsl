@@ -24,9 +24,13 @@
 					<li>
 						<h3 class="expand-trigger"><img src="controller/images/arrow_right.png" /><xsl:value-of select="control_group/group_name"/></h3>				
 						<ul class="expand_list" style="display:none;">
-								<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}">
-									<xsl:apply-templates select="components_at_location/component_options"/>
-								</select>
+								<xsl:choose>
+									<xsl:when test="components_at_location/child::node()">
+										<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}">
+											<xsl:apply-templates select="components_at_location/component_options"/>
+										</select>
+								</xsl:when>
+							</xsl:choose>
 							<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 							<xsl:for-each select="control_items">
 								<li>
@@ -37,13 +41,7 @@
 						            	<input type="hidden" name="component_id"  value="" />
 
 										<xsl:choose>
-											<xsl:when test="type = 'control_item_type_1'">
-													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
-													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
-													<input type="hidden" name="status" value="0" />
-									            	<input type="hidden" name="type" value="control_item_type_1" />
-													  
+											<xsl:when test="what_to_do !=''">
 												  <!--  WHAT TO DO -->
 												  <div class="row what-to-do">
 												    <label>Hva skal sjekkes:</label> 
@@ -51,14 +49,28 @@
 												      <xsl:value-of disable-output-escaping="yes" select="what_to_do"/>
 												    </div>
 												  </div>
+											</xsl:when>
+										</xsl:choose>
 
-												  <!--  HOW TO DO -->
-												  <div class="row how-to-do">
-												    <label>Utførelsesbeskrivelse:</label> 
+										<xsl:choose>
+											<xsl:when test="how_to_do !=''">
+												<!--  HOW TO DO -->
+												<div class="row how-to-do">
+													<label>Utførelsesbeskrivelse:</label> 
 												    <div>
 												      <xsl:value-of disable-output-escaping="yes" select="how_to_do"/>
 												    </div>
-													</div>
+												</div>
+											</xsl:when>
+										</xsl:choose>
+
+										<xsl:choose>
+											<xsl:when test="type = 'control_item_type_1'">
+													<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+													<input type="hidden" name="control_item_id" value="{$control_item_id}" /> 
+													<input type="hidden" name="check_list_id"><xsl:attribute name="value"><xsl:value-of select="//check_list/id"/></xsl:attribute></input>
+													<input type="hidden" name="status" value="0" />
+									            	<input type="hidden" name="type" value="control_item_type_1" />
 												    
 													<div>
 												    <label class="comment">Beskrivelse av sak</label>

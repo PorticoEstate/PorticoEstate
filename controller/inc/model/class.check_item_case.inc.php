@@ -51,6 +51,7 @@
 		protected $measurement;
 		protected $location_code;
 		protected $component_id;
+		protected $component_descr;
     
 		
 		/**
@@ -157,7 +158,18 @@
 		{
 			$this->component_id = $component_id;
 		}
-    
+
+
+    	public function get_component_descr()
+    	{
+    		return $this->component_descr;
+    	}
+
+		public function set_component_descr($component_descr)
+		{
+			$this->component_descr = $component_descr;
+		}
+
 	    public function validate()
 		{
 			$status = true;

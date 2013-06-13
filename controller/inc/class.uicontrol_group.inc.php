@@ -511,6 +511,7 @@
 
 				//--- sigurd 10.juni 13
 				$entity_so	= CreateObject('property.soadmin_entity');
+				$custom	= createObject('phpgwapi.custom_fields');
 				$entity_list = $entity_so->read(array('allrows' => true));
 
 				array_unshift($entity_list,array ('id'=>'','name'=> lang('select value')));
@@ -538,6 +539,20 @@
 							$c['selected'] = 1;
 						}
 					}
+
+					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+					$selected_attributes = array();//
+					
+					/*FIXME
+					*$selected_attributes = $this->so->get_selected_attributes($location_id, $project_type_id);
+					*/
+					foreach ($attributes as &$a)
+					{
+						if(in_array($a['id'], $selected_attributes))
+						{
+							$a['checked'] = 'checked';
+						}
+					}
 				}
 				//---
 
@@ -546,7 +561,7 @@
 				(
 					'entities' 					=> array('options' => $entity_list),
 					'categories'				=> array('options' => $category_list),
-
+					'attributes'				=> $attributes,
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
 					'value_id'					=> !empty($control_group) ? $control_group->get_id() : 0,
 					'editable' 					=> true,
