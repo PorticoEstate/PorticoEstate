@@ -782,7 +782,9 @@
 				
 				$component_location_id = $check_item->get_control_item()->get_component_location_id();
 				
-				foreach($check_item->get_cases_array() as &$case)
+				//FIXME: 13.juni 13
+				//foreach($check_item->get_cases_array() as &$case)
+				foreach($check_item->get_cases_array() as $case)
 				{
 
 					$component_id = $case->get_component_id();
@@ -884,7 +886,10 @@
 				
 					$component_location_id = $check_item->get_control_item()->get_component_location_id();
 				
-					foreach($check_item->get_cases_array() as &$case)
+
+					//FIXME: 13.juni 13
+				//	foreach($check_item->get_cases_array() as &$case)
+					foreach($check_item->get_cases_array() as $case)
 					{
 
 						$component_id = $case->get_component_id();
