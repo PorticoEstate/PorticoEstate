@@ -23,6 +23,10 @@
 					<xsl:attribute name="value"><xsl:value-of select="config_data/metatag_robots"/></xsl:attribute>
 				</input>
             </dd>
+            <dt><label for="field_frontpagetext"><xsl:value-of select="php:function('lang', 'Frontpage text')"/></label></dt>
+			<dd>
+				<textarea id="field_frontpagetext" class="full-width" name="frontpagetext"><xsl:value-of select="config_data/frontpagetext"/></textarea>
+			</dd>
         </dl>
 
 		<div class="form-buttons">

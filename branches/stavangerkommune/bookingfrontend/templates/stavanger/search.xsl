@@ -34,9 +34,7 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div>Velkommen til Stavanger kommune og AktivBy.<br />
-			Her finner du informasjon om idrettsanlegg som leies ut<br />
-			av idrettsavdelingen.</div>
+		<div class="frontpagetext"><xsl:value-of select="frontpagetext"/></div>
 		
 		</div>
 		<div style="text-align:center;">

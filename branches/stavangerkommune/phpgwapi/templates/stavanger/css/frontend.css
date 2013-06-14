@@ -368,4 +368,6 @@ padding-top: 1.5em;
 text-align: center;
 }
 
-
+.frontpagetext {
+	white-space: pre;
+}
