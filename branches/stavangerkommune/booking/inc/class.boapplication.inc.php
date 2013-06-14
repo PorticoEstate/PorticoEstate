@@ -126,7 +126,6 @@
 			} else {
 				$where_clauses[] = "(%%table%%.case_officer_id = ".intval($for_case_officer_id[1]).')';
 			}
-
 			
 			if ($building_id = phpgw::get_var('filter_building_id', 'int', 'GET', false)) {
 				$where_clauses[] = "(%%table%%.id IN (SELECT DISTINCT a.id FROM bb_application a, bb_application_resource ar, bb_resource r WHERE ar.application_id = a.id AND ar.resource_id = r.id AND r.building_id = ".intval($building_id)."))";

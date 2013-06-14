@@ -59,7 +59,7 @@
             if(!$type || $type == "event") {
 				$now = date('Y-m-d');
 				$expired_conditions = "(bb_event.active != 0 AND bb_event.completed = 0 AND bb_event.from_ > '{$now}' AND bb_event.description != '')";
-                $event_result = $this->soevent->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array("active" => "1",'where' => $expired_conditions)));
+                $event_result = $this->soevent->read(array("query"=>$searchterm, "sort"  => "name", "dir" => "asc",  "filters" => array('where' => $expired_conditions)));
                 foreach($event_result['results'] as &$event)
                 {
                     $event['name'] = $event['building_name']. ' / ' . $event['description'];

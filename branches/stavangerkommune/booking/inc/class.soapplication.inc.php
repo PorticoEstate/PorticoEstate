@@ -268,6 +268,7 @@
 					'application_id'		=> array('type' => 'int'),
 					'type'	=> array('type' => 'string', 'required' => true),
 					'from_'	=> array('type' => 'timestamp','query' => true),
-					'to_'	=> array('type' => 'timestamp')));
+					'to_'	=> array('type' => 'timestamp'),
+					'active' => array('type' => 'int')));
 		}
 	}

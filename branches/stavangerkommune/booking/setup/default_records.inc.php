@@ -12,11 +12,11 @@
 
 			$GLOBALS['phpgw_setup']->oProc->query(
 				"CREATE OR REPLACE VIEW bb_application_association AS ".
-				"SELECT 'booking' AS type, application_id, id, from_, to_ FROM bb_booking WHERE application_id IS NOT NULL ".
+				"SELECT 'booking' AS type, application_id, id, from_, to_, active FROM bb_booking WHERE application_id IS NOT NULL ".
 				"UNION ".
-				"SELECT 'allocation' AS type, application_id, id, from_, to_ FROM bb_allocation  WHERE application_id IS NOT NULL ".
+				"SELECT 'allocation' AS type, application_id, id, from_, to_, active FROM bb_allocation  WHERE application_id IS NOT NULL ".
 				"UNION ".
-				"SELECT 'event' AS type, application_id, id, from_, to_ FROM bb_event  WHERE application_id IS NOT NULL"
+				"SELECT 'event' AS type, application_id, id, from_, to_, active FROM bb_event  WHERE application_id IS NOT NULL"
 			);
 			break;
 		default:

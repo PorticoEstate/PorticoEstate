@@ -334,7 +334,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
 		{key: 'type', label: lang['Type']},
 		{key: 'from_', label: lang['From']},
-		{key: 'to_', label: lang['To']}];
+		{key: 'to_', label: lang['To']},
+		{key: 'active', label: lang['Active']}];
 	    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
     }
 

@@ -320,6 +320,7 @@ E-mail address	bookingfrontend	no	E-postadresse
 Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	bookingfrontend	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	no	Kortnavn er for langt, maks 11 tegn
+Lengt of name is to long, max 50 characters long	bookingfrontend	no	Navn er for langt, maks 50 tegn
 Go back to calendar	bookingfrontend	no	Tilbake til kalender
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	no	Estimert antall deltakere kan ikke være større en 9999 personer
 Contact information name is to long. max 50 characters	bookingfrontend	no	Navn i kontakt informasjon er for langt. Maks 50 tegn

@@ -510,6 +510,7 @@ E-mail address	booking	no	E-postadresse
 Confirm e-mail address	booking	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	booking	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	booking	no	Kortnavn er for langt, maks 11 tegn
+Lengt of name is to long, max 50 characters long	booking	no	Navn er for langt, maks 50 tegn
 The organization number is wrong or not present	booking	no	Det er ikke registrert fakturainformasjon på denne organisasjonen
 The resource number is wrong or not present	booking	no	Det er ikke registert et ressursnummer på denne organisasjonen
 Recurring allocation	booking	no	Gjenta tildelingen

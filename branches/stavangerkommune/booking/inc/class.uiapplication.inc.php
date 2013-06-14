@@ -363,6 +363,7 @@
 				$association['to_'] = pretty_timestamp($association['to_']);
 				$association['link'] = self::link(array('menuaction' => 'booking.ui'.$association['type'].'.edit', 'id'=>$association['id']));
 				$association['type'] = lang($association['type']);
+
 			}
 			return $this->yui_results($associations);
 		}
