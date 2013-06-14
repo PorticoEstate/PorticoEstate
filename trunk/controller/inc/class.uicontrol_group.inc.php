@@ -225,9 +225,6 @@
 				$category_id = phpgw::get_var('category_id', 'int');
 				$component_location_id = $GLOBALS['phpgw']->locations->get_id('property',".entity.{$entity_id}.{$category_id}");
 
-//_debug_array($_POST);
-//die();
-
 				if(isset($control_group)) // Add new values to the control item
 				{
 					$control_group->set_group_name(phpgw::get_var('group_name'));
@@ -235,8 +232,7 @@
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
 					$control_group->set_building_part_id( phpgw::get_var('building_part') );
 					$control_group->set_component_location_id($component_location_id);
-
-					//$this->so->store($control_item);
+					$control_group->set_component_criteria( phpgw::get_var('attributes') );
 
 					if(isset($control_group_id) && $control_group_id > 0)
 					{
@@ -532,6 +528,7 @@
 						}
 					}
 					$category_list = $entity_so->read_category(array('allrows'=>true,'entity_id'=>$entity_arr[2]));
+					array_unshift($category_list,array ('id'=>'','name'=> lang('select value')));
 					foreach ($category_list as &$c)
 					{
 						if($c['id'] == $category['id'])

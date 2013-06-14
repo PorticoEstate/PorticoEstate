@@ -14,7 +14,7 @@ $(document).ready(function(){
 			{
 				if( data != null)
 				{
-					htmlString  = "<option>Velg</option>"
+					htmlString  = "<option value = ''>Velg</option>";
 
 					$.each(data, function(i) {
 						var selected = '';
