@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	 $("#entity_id").change(function () {
+		$("#attributes").html( '' );
 		 var oArgs = {menuaction:'property.boadmin_entity.get_category_list', entity_id: $(this).val()};
 		 var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -14,7 +15,7 @@ $(document).ready(function(){
 			{
 				if( data != null)
 				{
-					htmlString  = "<option>Velg</option>"
+					htmlString  = "<option value = ''>Velg</option>";
 
 					$.each(data, function(i) {
 						var selected = '';
@@ -25,7 +26,6 @@ $(document).ready(function(){
 				}
 				else
 				{
-					htmlString  += "";
 					$("#category_id").html( htmlString );
 				}
 			}
@@ -46,10 +46,32 @@ $(document).ready(function(){
 			{
 				if( data != null)
 				{
+					htmlString  += '<table>';
 					$.each(data, function(i) {
-						htmlString  += "<input type='checkbox' name='attributes[]' id='attributes[]' value='" + data[i].id + "'/>" + data[i].input_text + "&nbsp;(" + data[i].trans_datatype + ")<br/>";
+						htmlString  += "<tr>";
+						htmlString  += "<td>" + data[i].input_text + "&nbsp;(" + data[i].trans_datatype + ')</td>';
+						htmlString  += "<td>";
+						if(typeof(data[i].choice)!='undefined')
+						{
+							htmlString  += "&nbsp;<select name='attributes["+ data[i].id +"]' id='attribute_"+ data[i].id +"'>";
+							htmlString  += "<option value = ''>Velg</option>";
+							choice = data[i].choice;
+							$.each(choice, function(j) {
+								selected = '';
+								htmlString  += "<option value='" + choice[j].id + "'" + selected + ">" + choice[j].value + "</option>";
+							});
+							htmlString  += "</select>";							
+						}
+						else
+						{
+							htmlString  += "&nbsp;<input type= 'text' name='attributes["+ data[i].id +"]' id='attribute_"+ data[i].id +"'/>";						
+						}
+						
+						
+						htmlString  += "</td></tr>";
 		  		});
 
+					htmlString  += '</table>';
 					$("#attributes").html( htmlString );
 				}
 				else

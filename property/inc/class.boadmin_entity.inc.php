@@ -232,7 +232,7 @@
 			$entity_id		= phpgw::get_var('entity_id');
 			$cat_id			= phpgw::get_var('cat_id');
 
-			return $attrib_data = $this->custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
+			return $this->custom->find('property',".entity.{$entity_id}.{$cat_id}", 0, '','','',true, true);
 		}
 
 

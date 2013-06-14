@@ -44,6 +44,7 @@
 		protected $building_part_descr;
 		protected $order_nr;
 		protected $component_location_id;
+		protected $component_criteria = array();
 				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -130,6 +131,15 @@
 			return $this->component_location_id;
 		}
 
+		public function set_component_criteria($component_criteria)
+		{
+			$this->component_criteria = $component_criteria;
+		}
+		
+		public function get_component_criteria()
+		{
+			return $this->component_criteria;
+		}
 
 		public function serialize()
 		{
@@ -141,6 +151,7 @@
 			$result['building_part'] = $this->get_building_part_descr();
 			$result['order_nr'] = $this->get_order_nr();
 			$result['component_location_id'] = $this->get_component_location_id();
+			$result['component_criteria'] = $this->get_component_criteria();
 			
 			return $result;
 		}
