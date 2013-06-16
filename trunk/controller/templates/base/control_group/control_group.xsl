@@ -90,20 +90,35 @@
 							</dt>
 							<dd>
 								<div id="attributes">
-									<xsl:if test="req_type/cust_attribute_id">
+									<table>
 										<xsl:for-each select="attributes">
-											<xsl:if test="input_text">
-												<xsl:choose>
-													<xsl:when test="checked">
-														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}' checked='checked'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
-													</xsl:when>
-													<xsl:otherwise>
-														<input type='checkbox' name='attributes[]' id='attributes[]' value='{id}'/><xsl:value-of select="input_text" /> <xsl:value-of select="trans_datatype" /><br/>
-													</xsl:otherwise>
-												</xsl:choose>
-											</xsl:if>
+											<tr>
+												<td>
+													<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
+												</td>
+												<td>
+													<xsl:choose>
+														<xsl:when test="choice!=''">
+															<select name='attributes[{id}]' id='attribute_{id}'>;
+																<option value = ''>Velg</option>";
+																<xsl:for-each select="choice">
+																	<option value="{id}">
+																		<xsl:if test="selected != 0">
+																			<xsl:attribute name="selected" value="selected" />
+																		</xsl:if>
+																		<xsl:value-of disable-output-escaping="yes" select="value"/>
+																	</option>
+																</xsl:for-each>
+															</select>
+														</xsl:when>
+														<xsl:otherwise>
+															<input type= 'text' name='attributes[{id}]' id='attribute_{id}' value = '{value}'/>			
+														</xsl:otherwise>
+													</xsl:choose>
+												</td>
+											</tr>
 										</xsl:for-each>
-									</xsl:if>
+									</table>
 								</div>
 							</dd>
 
@@ -125,9 +140,36 @@
 								<label><xsl:value-of select="php:function('lang', 'Chosen attributes')" /></label>
 							</dt>
 							<dd>
-								<xsl:for-each select="attributes">
-									<xsl:value-of select="input_text" /> (<xsl:value-of select="trans_datatype" />)<br/>
-								</xsl:for-each>
+								<table>
+									<xsl:for-each select="attributes">
+										<xsl:choose>
+											<xsl:when test="value!=''">
+												<tr>
+													<td>
+														<xsl:value-of select="input_text" /> &nbsp;( <xsl:value-of select="trans_datatype" /> )
+													</td>
+													 <td>
+														 <xsl:text>	=> </xsl:text>
+													 </td> 
+													<td>
+														<xsl:choose>
+															<xsl:when test="choice!=''">
+																<xsl:for-each select="choice">
+																	<xsl:if test="selected != 0">
+																		<xsl:value-of disable-output-escaping="yes" select="value"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of disable-output-escaping="yes" select="value"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</td>
+												</tr>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:for-each>
+								</table>
 							</dd>
 						</xsl:otherwise>
 					</xsl:choose>

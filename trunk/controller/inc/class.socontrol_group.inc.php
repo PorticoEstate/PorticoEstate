@@ -63,7 +63,8 @@
 					'procedure_id',
 					'control_area_id',
 					'building_part_id',
-					'component_location_id'
+					'component_location_id',
+					'component_criteria'
 			);
 
 			$values = array(
@@ -72,6 +73,7 @@
 				$this->marshal($control_group->get_control_area_id(), 'int'),
 				$this->marshal($control_group->get_building_part_id(), 'string'),
 				$this->marshal($control_group->get_component_location_id(), 'int'),
+				$this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
 			$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -104,6 +106,7 @@
 				'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int'),
 				'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'string'),
 				'component_location_id = '. $this->marshal($control_group->get_component_location_id(), 'int'),
+				'component_criteria = ' . $this->marshal(serialize($control_group->get_component_criteria()), 'string')
 			);
 
 			$result = $this->db->query('UPDATE controller_control_group SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -140,7 +143,8 @@
 			$control_group->set_control_area_name($category[0]['name']);
 
 			$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
-
+			$component_criteria = $this->db->f('component_criteria') ? unserialize($this->db->f('component_criteria',true)) : array();
+			$control_group->set_component_criteria($component_criteria);
 
 			return $control_group;
 		}
