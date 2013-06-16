@@ -111,6 +111,7 @@
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'building_part_id' => array('type' => 'varchar', 'precision' => 30, 'nullable' => True),
 				'component_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'component_criteria'   => array('type' => 'text', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

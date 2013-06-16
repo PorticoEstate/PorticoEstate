@@ -139,8 +139,7 @@
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 			}
-			
-//_debug_array($saved_control_groups);
+
 			//Populating array with saved control items for each group
 			//Cache result
 			$components_at_location = array();
@@ -149,7 +148,6 @@
 			{	
 				$saved_control_items = $this->so_control_item_list->get_control_items_and_options_by_control_and_group($control->get_id(), $control_group->get_id(), "return_array");
 
-//_debug_array($control_group);
 				if(count($saved_control_items) > 0)
 				{				
 					$component_location_id = $control_group->get_component_location_id();
@@ -161,6 +159,22 @@
 						$criterias_array['location_id'] = $component_location_id;
 						$criterias_array['location_code'] = $location_code_search_components;
 						$criterias_array['allrows'] = true;
+
+						$component_criteria = $control_group->get_component_criteria();
+						$conditions = array();
+						foreach ($component_criteria as $attribute_id => $condition_value)
+						{
+							if($condition_value)
+							{
+								$conditions[] = array
+								(
+									'attribute_id'	=> $attribute_id,
+									'operator'		=> 'equal',
+									'value'			=> $condition_value,
+								);
+							}
+						}
+						$criterias_array['conditions'] = $conditions;
 						
 						if( !isset($components_at_location[$component_location_id][$location_code_search_components])  || !$_components_at_location = $components_at_location[$component_location_id][$location_code_search_components])
 						{

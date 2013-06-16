@@ -538,21 +538,25 @@
 					}
 
 					$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
-					$selected_attributes = array();//
-					
-					/*FIXME
-					*$selected_attributes = $this->so->get_selected_attributes($location_id, $project_type_id);
-					*/
-					foreach ($attributes as &$a)
+
+					$component_criteria = $control_group->get_component_criteria();
+					foreach ($attributes as $key => &$a)
 					{
-						if(in_array($a['id'], $selected_attributes))
+						if(isset($component_criteria[$key]) && $component_criteria[$key])
 						{
-							$a['checked'] = 'checked';
+							$a['value'] = $component_criteria[$key];
+							if(isset($a['choice']) && $a['choice'])
+							{
+								foreach($a['choice'] as &$choise)
+								{
+									$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+								}
+							}
 						}
 					}
 				}
-				//---
 
+			//---
 
 				$data = array
 				(
@@ -803,6 +807,24 @@
 				$entity = $entity_so->read_single($entity_arr[2]);
 				$category = $entity_so->read_single_category($entity_arr[2],$entity_arr[3]);
 
+				$custom	= createObject('phpgwapi.custom_fields');
+				$attributes = $custom->find('property',".entity.{$entity_arr[2]}.{$entity_arr[3]}", 0, '','','',true, true);
+
+				$component_criteria = $control_group->get_component_criteria();
+				foreach ($attributes as $key => &$a)
+				{
+					if(isset($component_criteria[$key]) && $component_criteria[$key])
+					{
+						$a['value'] = $component_criteria[$key];
+						if(isset($a['choice']) && $a['choice'])
+						{
+							foreach($a['choice'] as &$choise)
+							{
+								$choise['selected'] = $choise['id'] == $component_criteria[$key] ? 1 : 0;
+							}
+						}
+					}
+				}
 
 				$control_items_array = $this->so_control_item_list->get_control_items($control_group_id);
 
@@ -822,6 +844,7 @@
 					'control_group'				=> $control_group_array,
 					'entity'					=> $entity,
 					'category'					=> $category,
+					'attributes'				=> $attributes,
 					'selected_control_items'	=> $control_items,
 				);
 
