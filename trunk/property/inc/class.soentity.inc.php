@@ -1703,13 +1703,14 @@
 			$prop_array = $this->read_single($params, $cache_attributes[$location_id]);
 
 			$_short_description = array();
-			foreach ($prop_array['attributes'] as $attribute)
+
+			foreach ($prop_array['attributes'] as $key => $attribute)
 			{
 				$description_value = $attribute['value'];
 
-				if(isset($cache_attributes[$location_id]['attributes'][$attribute['value']]['choice']) && $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'])
+				if(isset($cache_attributes[$location_id]['attributes'][$key]['choice']) && $cache_attributes[$location_id]['attributes'][$key]['choice'])
 				{
-					$choice = $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'];
+					$choice = $cache_attributes[$location_id]['attributes'][$key]['choice'];
 					foreach($choice as $choice_value)
 					{
 						if ($choice_value['id'] == $attribute['value'])
@@ -1720,7 +1721,10 @@
 					}
 				}
 
-				$short_description[] = "{$attribute['input_text']}: {$description_value}";
+				if($description_value)
+				{
+					$short_description[] = "{$attribute['input_text']}: {$description_value}";
+				}
 			}
 
 			$short_description = implode(', ', $short_description);
