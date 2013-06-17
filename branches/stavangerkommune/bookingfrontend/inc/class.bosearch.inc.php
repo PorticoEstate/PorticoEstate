@@ -65,10 +65,11 @@
                     $event['name'] = $event['building_name']. ' / ' . $event['description'];
                     $event['type'] = "Event";
 					$date = date('Y-m-d',strtotime($event['from_']));								
-					$res = $this->soresource->read(array('filters' => array('id' => $event['resources'][0])));
-                    $event['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $res['results'][0]['building_id'], 'date' => $date));
+					$event_res = $this->soresource->read(array('filters' => array('id' => $event['resources'][0])));
+                    $event['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $event_res['results'][0]['building_id'], 'date' => $date));
                 }
             }
+
 			$final_array = array_merge_recursive($bui_result, $org_result, $res_result, $event_result);
 			$final_array['total_records_sum']	=	array_sum((array)$final_array['total_records']);
 			return $final_array;
