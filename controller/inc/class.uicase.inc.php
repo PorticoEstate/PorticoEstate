@@ -204,11 +204,6 @@
 					}
 				}
 
-
-//_debug_array($control_groups_with_items_array);
-//_debug_array($components_at_location);
-//die();
-			
 			}
 			
 			$level = $this->location_finder->get_location_level($location_code);
@@ -223,7 +218,7 @@
 			{
 				$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 			}
-//_debug_array($control_groups_with_items_array);
+
 			$data = array
 			(
 				'control' 							=> $control,
