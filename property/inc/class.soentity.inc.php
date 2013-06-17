@@ -246,7 +246,7 @@
 //			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
 			if($location_code)
 			{
-				$__querymethod = array("fm_bim_item.location_code {$this->like} '{$location_code}%'");
+				$_querymethod = array("fm_bim_item.location_code {$this->like} '{$location_code}%'");
 			}
 
 			$attribute_table = 'phpgw_cust_attribute';
@@ -272,7 +272,7 @@
 							case '=':
 							case 'equal':
 							case 'eq':
-								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$_querymethod[]= "xmlexists_('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 								break;
 							case 'gt':
 							case '>':
