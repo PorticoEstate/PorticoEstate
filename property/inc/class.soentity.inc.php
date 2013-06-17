@@ -231,6 +231,7 @@
 			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$location_id  	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$conditions		= isset($data['conditions']) && $data['conditions'] ? $data['conditions'] : array();
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 
@@ -243,6 +244,10 @@
 			$__querymethod = array();
 
 //			$__querymethod = array("fm_bim_item.id = -1"); // block query waiting for conditions
+			if($location_code)
+			{
+				$_querymethod = array("fm_bim_item.location_code {$this->like} '{$location_code}%'");
+			}
 
 			$attribute_table = 'phpgw_cust_attribute';
 
@@ -267,7 +272,7 @@
 							case '=':
 							case 'equal':
 							case 'eq':
-								$_querymethod[]= "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$_querymethod[]= "xmlexists_('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
 								break;
 							case 'gt':
 							case '>':
@@ -1698,13 +1703,14 @@
 			$prop_array = $this->read_single($params, $cache_attributes[$location_id]);
 
 			$_short_description = array();
-			foreach ($prop_array['attributes'] as $attribute)
+
+			foreach ($prop_array['attributes'] as $key => $attribute)
 			{
 				$description_value = $attribute['value'];
 
-				if(isset($cache_attributes[$location_id]['attributes'][$attribute['value']]['choice']) && $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'])
+				if(isset($cache_attributes[$location_id]['attributes'][$key]['choice']) && $cache_attributes[$location_id]['attributes'][$key]['choice'])
 				{
-					$choice = $cache_attributes[$location_id]['attributes'][$attribute['value']]['choice'];
+					$choice = $cache_attributes[$location_id]['attributes'][$key]['choice'];
 					foreach($choice as $choice_value)
 					{
 						if ($choice_value['id'] == $attribute['value'])
@@ -1715,7 +1721,10 @@
 					}
 				}
 
-				$short_description[] = "{$attribute['input_text']}: {$description_value}";
+				if($description_value)
+				{
+					$short_description[] = "{$attribute['input_text']}: {$description_value}";
+				}
 			}
 
 			$short_description = implode(', ', $short_description);

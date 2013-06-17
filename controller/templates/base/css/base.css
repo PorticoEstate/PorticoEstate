@@ -1339,6 +1339,7 @@ ul#icon_color_map span {
 #calendar .location-name, #calendar .component-type {
   width: 150px;
   text-align: left;
+  white-space: nowrap;
 }
 
 #calendar .frequency {

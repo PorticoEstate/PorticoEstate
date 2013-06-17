@@ -122,7 +122,7 @@
 					|| count($reservation['resources']) <= 0) 
 			{
 				
-				//Note that the loggin is stupidly enough done in the database so if the transaction fails
+				//Note that if the transaction fails
 				//we may very well not get anything in the log
 				if(is_object($GLOBALS['phpgw']->log))
 				{

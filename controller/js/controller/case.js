@@ -10,8 +10,11 @@ $(document).ready(function(){
 		var requestUrl = $(thisForm).attr("action");
     
     var location_code = $("#choose-building-on-property  option:selected").val();
-    
-    $(thisForm).find("input[name=location_code]").val(location_code);
+    $(thisForm).find("input[name=location_code]").val(location_code);    
+
+    var control_group_id = $(thisForm).find("input[name=control_group_id]").val();
+    var component_id = $("#component_at_control_group_" + control_group_id).val();
+	$(thisForm).find("input[name=component_id]").val(component_id);
     
     var validate_status = validate_form( thisForm );
     
@@ -32,9 +35,13 @@ $(document).ready(function(){
 		    			  // Changes text on save button back to original
 		    			  window.setTimeout(function() {
 		    				  if( type == "control_item_type_2")
+		    				  {
 		    					  $(submitBnt).val('Lagre måling');
+		    				  }
 		    				  else
+		    				  {
 		    					  $(submitBnt).val('Lagre sak');
+		    				  }
 		    				  
 							$(submitBnt).addClass("not_active");
 		    			  }, 1000);
@@ -255,14 +262,29 @@ $(document).ready(function(){
 		return false;
 	});	
   
+  $("#choose-building-on-property").change(function () {
+	var location_code = $(this).val();
+	var search = location.search.substring(1);
+	var oArgs = search?JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
+									function(key, value) { return key===""?value:decodeURIComponent(value) }):{}
+
+	oArgs.location_code = location_code;
+	delete oArgs.click_history;
+	var reloadPageUrl = phpGWLink('index.php', oArgs);
+	//var reloadPageUrl = location.pathname + location.search + "&location_code=" + location_code;
+     location.href = reloadPageUrl;
+    });
+
+
+/*
   $("#choose-building-on-property.view-cases").change(function () {
      var location_code = $(this).val();
 
      var reloadPageUrl = location.pathname + location.search + "&location_code=" + location_code;
-
+alert(reloadPageUrl);
      location.href = reloadPageUrl;
     });
-  
+ */ 
 });
 
 function validate_form( formObj )
@@ -278,7 +300,7 @@ function validate_form( formObj )
     {
       if( $(thisInput).attr("type") == 'hidden' )
       {
-       	$(formObj).prepend("<div class='input_error_msg'>Du må velge bygg</div>");   
+       	$(formObj).prepend("<div class='input_error_msg'>Du må spesifisere lokalisering</div>");   
       }else
       {
         $(thisInput).before("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");  

@@ -4,6 +4,7 @@ control	controller	no	Kontroll
 controller	common	no	Kontroll
 Register control item	controller	no	Legg til nytt kontrollpunkt
 Edit control item	controller	no	Endre kontrollpunkt
+Entity	controller	no	Komponentregister
 View control item	controller	no	Vis kontrollpunkt
 control_item_type_1	controller	no	Ved innskriving av kommentar
 control_item_type_2	controller	no	Ved innskriving av måling i et tekstfelt
@@ -236,6 +237,7 @@ status_before	controller	no	før
 status_date	controller	no	den
 status_unknown	controller	no	Ukjent status
 status	controller	no	Status
+status not done	controller	no	Ikke utført
 Success	controller	no	Suksess
 sum	controller	no	Sum
 System setting for responsibility id for the current user must be 6 characters.	controller	no	Systeminnstilling for ansvar må være seks tegn.

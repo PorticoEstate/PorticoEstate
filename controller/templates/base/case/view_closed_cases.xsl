@@ -37,7 +37,25 @@
 										
 											<!--  =============== SHOW CASE INFO ============= -->
 											<div class="case_info">
-																																				
+																								
+												 <xsl:choose>
+													  <xsl:when test="component_descr != ''">
+														  <div class="row">
+															<label>
+																<xsl:value-of select="php:function('lang','component')" />
+															</label> 
+														  </div>
+														   <div class="component_descr">
+															<xsl:value-of select="component_descr"/>
+														  </div>
+													 </xsl:when>
+												</xsl:choose>
+
+											  <!--  DESCRIPTION -->
+											  <div class="row">
+												<label>Beskrivelse:</label> 
+											  </div>
+
 												<!--  DESCRIPTION -->
 												<div class="case_descr"><xsl:value-of select="descr"/></div>
 												<!-- === QUICK EDIT MENU === -->

@@ -68,7 +68,7 @@
 		    </div>
 		    <div class="row">
 				<label>Utført dato</label>
-				<input class="date" readonly="readonly">
+				<input class="date" >
 			      <xsl:attribute name="id">completed_date</xsl:attribute>
 			      <xsl:attribute name="name">completed_date</xsl:attribute>
 			      <xsl:attribute name="type">text</xsl:attribute>
