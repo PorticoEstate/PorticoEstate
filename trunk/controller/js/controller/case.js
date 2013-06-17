@@ -300,7 +300,7 @@ function validate_form( formObj )
     {
       if( $(thisInput).attr("type") == 'hidden' )
       {
-       	$(formObj).prepend("<div class='input_error_msg'>Du må velge bygg</div>");   
+       	$(formObj).prepend("<div class='input_error_msg'>Du må spesifisere lokalisering</div>");   
       }else
       {
         $(thisInput).before("<div class='input_error_msg'>Du må fylle ut dette feltet</div>");  

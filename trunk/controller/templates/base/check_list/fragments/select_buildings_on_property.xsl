@@ -1,7 +1,7 @@
 <!-- $Id: view_calendar_month.xsl 9200 2012-04-21 20:05:34Z vator $ -->
 <xsl:template name="select_buildings_on_property">
   
-  <span style="display: block;font-size: 16px;margin-bottom: 8px;">Velg hvilket bygg du vil registrere saken pa</span>
+  <span style="display: block;font-size: 16px;margin-bottom: 8px;">Spesifiser lokalisering du vil registrere saken pa</span>
   <select id="choose-building-on-property">
     <xsl:choose>
       <xsl:when test="cases_view = 'open_cases' or cases_view = 'closed_cases'">
@@ -12,7 +12,7 @@
       </xsl:otherwise>
     </xsl:choose>
     
-    <option value="">Velg bygg</option>
+    <option value="">Velg lokalisering</option>
     <xsl:for-each select="buildings_on_property">
       <option>
         <xsl:if test="selected = 1">
